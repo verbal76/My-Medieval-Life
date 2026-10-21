@@ -58,8 +58,8 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 |---|---|
 | Complete | 31 |
 | In progress | 12 |
-| Pending testing | 15 |
-| Not started | 38 |
+| Pending testing | 17 |
+| Not started | 36 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -130,7 +130,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | In progress | Harness built (economy_sim --scenario/--at); four intervention scenarios x seeds 1-2 x 100 days recorded in LONG_RUN_SIMULATION.md, all balanced, 0 script errors; the four-seed 365-day inactive runs on Actions remain | Reproducible inactive-player runs on several seeds and starting conditions; All listed measures recorded; No consistent spiral into extinction, starvation, permanent unemployment or economic paralysis; Separate intervent | economy_sim.gd scenarios; world_test.gd | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  | Required feature | M |
 | EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less re | Not started |  | confirm with seed 2's day-365 figures, then close |  |  |  | Testing and verification | S |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | In progress | owner's five-build roadmap reconciliation 2026-10-20 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 |  | Required feature | L |
-| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | Not started |  | Read the caravan's buying code (World caravan) and replace its fixed order with need-ranked buying |  |  |  | Required feature | M |
+| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | Pending testing | The caravan buys one unit at a time from the line with the highest need (the seller's surplus share plus the share of its missing inputs' cost its coins cannot pay); no fixed order, no equal split; deterministic; od16_te | Owner to confirm the reading of need (the seller's need to sell); measure in the four-seed runs | `5cce264`, od16_test::test_caravan_buys_by_need |  |  | Required feature | M |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | In progress | Villagers live, work, trade and age without the player; 0 houses built in 365 days (B14R-12) | Idle-player construction and housing (B7-017, B14R-12) |  |  |  | Testing and verification | M |
 
 ### Families and orphans
@@ -233,7 +233,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
-| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesse | Not started |  | Theft caught in the act is reported by the victim and witnesses who saw it through the existing witness and report rules; unseen thefts unknown to the guards; no alarm cry by default; consistent with PAR-05; tests |  | after OD-20 |  | Required feature | S |
+| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesse | Pending testing | A caught pickpocket no longer raises a cry; the victim and villagers who saw it report it through report_crime (PAR-05 rules); unseen thefts known to nobody; a guard told of a theft fines only with the thief in sight, ne | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight | `b018185`, world_test::_pick01_reports | after OD-20 |  | Required feature | S |
 
 ### Judgment gate
 
@@ -335,6 +335,19 @@ recorded on its entries with a history line; an approval is not an implementatio
    the new wording.
 4. **The earlier report's OD-17 recommendation ("as in the entry") was empty:** the entry holds no recommendation. The
    entry is presented below as it stands.
+
+**Readings made while implementing (2026-10-21), for the owner to confirm or correct** (implemented as described, each
+easy to change):
+
+5. **EQ-22, what "need" means.** The caravan buys the village's surplus, so need is read as the seller's need to sell: the
+   share of its holding that is surplus, plus the share of its missing trade inputs' cost that its coins cannot pay.
+   "Competing demand" is read as competition for the caravan's purse; village buyers wanting the same good are not a term.
+6. **PICK-01, the Stealth perk `guard_radius`.** The perk acted only on the pickpocket's cry, which OD-20 removes. It now
+   narrows how far a caught try is seen (the witness radius times the perk's factor), so fewer people can report it; the
+   victim always knows. The alternative is to remove the perk from Stealth tiers 6, 8 and 10.
+7. **PICK-01, a guard told of a theft.** The existing rules do not say what a guard does when told. Implemented: the guard
+   knows; if the thief is in the guard's sight when the report arrives, the guard stops and fines them (the existing
+   caught-thief fine); never a chase (that is assault's response). The alternative is knowledge only.
 
 **OD-17, still blocked: the entry as recorded** (source `docs/game-designer/SPEC_RECONCILIATION.md` section 4):
 

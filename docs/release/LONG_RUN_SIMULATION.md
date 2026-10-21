@@ -1206,3 +1206,11 @@ part households now roasting their own meat (a log a roast); the next year runs 
   part of the classification.
 
 **Classification (WDR-022):** integrity held on every seed (no script errors, coins and goods balanced).
+
+**Seed 4's two deaths (FSE-16 method, a watched local run of `d6d80a4`):** Adam and Bartholomew Holt, children of
+household 20 (two merchants, two cooks and their children, every member at 0 coins), starved on day 239 in the same
+hour. The family chest held 7 raw meat and no log; one member, a merchant, carried 18 logs as trade stock (a merchant's
+goods stay in the pack for sale, FSE-18). The household's reckoning counted every store (FSE-17, the owner's answer), so
+the meat counted as roastable (2.16 days) and relief did not come, but the logs never reached the hearth: the chest's
+top-up for traders took food only. **A defect**, the same class as Simon Brook's (seed 2), fixed in the next commit: a
+trader home puts in the logs to roast the chest's meat, up to the reserve horizon, from trade stock if need be.

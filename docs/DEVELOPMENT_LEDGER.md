@@ -11,10 +11,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 96 |
+| APPROVED — NOT STARTED | 94 |
 | ACTIVE DEVELOPMENT | 10 |
 | PARTIALLY IMPLEMENTED | 36 |
-| IMPLEMENTED — TESTING REQUIRED | 20 |
+| IMPLEMENTED — TESTING REQUIRED | 22 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
@@ -129,7 +129,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | approved | PARTIALLY IMPLEMENTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied | approved | APPROVED — NOT STARTED |  | a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17) |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
-| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | approved | APPROVED — NOT STARTED |  |  |
+| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | IMPLEMENTED — TESTING REQUIRED |  | a new mechanic; Build 16 is long-term equilibrium across generations, and Build 15 must not be delayed |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | approved | IMPLEMENTED — TESTING REQUIRED |  | needs a kinship-distance function (today Life.kin covers parents and siblings only) |
 | FAM-04 | Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree | approved | IMPLEMENTED — TESTING REQUIRED |  | with FAM-02 |
@@ -159,7 +159,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | PARTIALLY IMPLEMENTED |  |  |
-| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions 2026-10-21 |
+| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner decisions 2026-10-21 |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
@@ -450,7 +450,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (96)
+## APPROVED — NOT STARTED (94)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -475,7 +475,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-03 | Humans and nature affect each other through real NPC decisions | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied | Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md) |  |  | confirm with seed 2's day-365 figures, then close |
-| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | docs/release/LONG_RUN_SIMULATION.md |  |  | Read the caravan's buying code (World caravan) and replace its fixed order with need-ranked buying |
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
@@ -512,7 +511,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-D |  |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-E |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
-| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md |  | after OD-20 |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -607,7 +605,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (20)
+## IMPLEMENTED — TESTING REQUIRED (22)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -615,6 +613,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) | `9db091b`; reserve_test (B7-015 checks), run_tests (weighted need) |  | Four-seed 365-day runs on the new staging head; classify any death |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
+| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | docs/release/LONG_RUN_SIMULATION.md | `5cce264`; od16_test::test_caravan_buys_by_need |  | Owner to confirm the reading of need (the seller's need to sell); measure in the four-seed runs |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3 | game/tests/family_test.gd |  |  |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2 | game/tests/family_test.gd | after FAM-02 |  |
@@ -629,6 +628,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; furniture_test (FSE-B11 checks) |  | Look at the player's hearth craft window in play (a screenshot) |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; world_test::_fse_defects (FSE-B12) |  | Measure in the next four-seed runs |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
+| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | docs/directives/2026-10-20_od21_time_model.md | `99e7448`; aging_test::test_time_units; gate identical | after TIME-01 | Update the older docs' key names (DECISIONS, BUILD_DECISIONS, audits) where they cite renamed keys |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
