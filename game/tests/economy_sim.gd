@@ -41,6 +41,9 @@ var scenario_log := {}
 var watch_from := -1           # B7-015, FSE-16: from this day, log every hour the households with someone near starving
 var watch_alive := {}          # npc id -> alive, for --watch-from's death lines
 var watch_lost := {}           # households that lost someone to hunger while watched
+var herd_log: Array = []       # FARM-08B: each pen kind's herd, a row on every day it changed (read only, changes nothing)
+var herd_last := {}            # kind -> the last row's key, to keep only the days that changed
+var herd_care := {}            # kind -> hours a pen had a hungry animal and too little in the trough, and why it was not fed
 
 
 func _init() -> void:
@@ -77,6 +80,7 @@ func _init() -> void:
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
 	var samples: Array = [_sample(start)]
+	_herd_day(0)
 	_print_sample(samples[0])
 	var per_day := int(1440.0 / float(GameData.b("game_minutes_per_second")) / STEP)
 	var hp_before := w.player.hp
@@ -103,6 +107,7 @@ func _init() -> void:
 					player_attacked += 1
 				hp_before = w.player.hp
 				player_min_hp = minf(player_min_hp, w.player.hp)
+		_herd_day(d + 1)
 		if (d + 1) % every == 0 or d + 1 == days:
 			var ts := Time.get_ticks_usec()
 			samples.append(_sample(start))
@@ -122,7 +127,7 @@ func _init() -> void:
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
-			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows}, " ", false))
+			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty()
 	w.dispose()
@@ -325,6 +330,75 @@ func _hourly() -> void:
 	for i in w.deposits.size():
 		if int(w.deposits[i].amount) <= 0 and not exhausted_day.has(i):
 			exhausted_day[i] = w.day() + 1
+	_herd_hour()
+
+
+## FARM-08B: an hour in which a pen holds a hungry animal and its trough cannot feed it, and what the keeper was doing:
+## none (no keeper), asleep, holding grain (in hand or at home: a care failure), or without grain (feed short).
+func _herd_hour() -> void:
+	var below := float(GameData.b("animal_eat_below"))
+	for id in w.fauna.pens:
+		var pen: Dictionary = w.fauna.pens[id]
+		var k := str(pen.kind)
+		var feed := int(GameData.b("animals")[k].feed)
+		var hungry := false
+		for a: Animal in w.fauna.animals:
+			if a.alive and a.area == pen.id and a.hunger < below:
+				hungry = true
+				break
+		if not hungry or int(pen.trough) >= feed:
+			continue
+		var row: Dictionary = herd_care.get(k, {"hours": 0, "no_keeper": 0, "asleep": 0, "keeper_has_grain": 0, "no_grain": 0})
+		row.hours = int(row.hours) + 1
+		var kp: NPC = w.pen_keeper(pen)
+		var has := kp != null and (kp.inv.has("wheat") or (kp.household >= 0 and (w.households[kp.household].pantry as Inventory).has("wheat")))
+		var why := "no_keeper" if kp == null or not kp.alive else ("asleep" if w.asleep(kp) else ("keeper_has_grain" if has else "no_grain"))
+		row[why] = int(row[why]) + 1
+		herd_care[k] = row
+
+
+## FARM-08B: the herds at the end of a day: adults by sex, young, the well fed, the females ready to breed and whether a
+## mate is there, the trough, and the running counts of births and deaths by cause; kept only when something changed.
+func _herd_day(day: int) -> void:
+	var now: float = w.minutes
+	var wheat := {"farmers": 0, "granary": w.granary.count("wheat"), "pantries": 0, "others": 0}
+	for o: NPC in w.npcs:
+		if o.alive:
+			wheat["farmers" if o.job == "farmer" else "others"] += o.inv.count("wheat")
+	for hh in w.households:
+		wheat.pantries += (hh.pantry as Inventory).count("wheat")
+	for id in w.fauna.pens:
+		var pen: Dictionary = w.fauna.pens[id]
+		var k := str(pen.kind)
+		var r := {"m": 0, "f": 0, "young": 0, "elderly": 0, "fed": 0, "ready_f": 0, "mate": false}
+		for a: Animal in w.fauna.animals:
+			if not a.alive or a.area != pen.id:
+				continue
+			if not a.adult(now):
+				r.young += 1
+				continue
+			r[a.sex] += 1
+			if a.elderly(now):
+				r.elderly += 1
+			if w.fauna.well_fed(a):
+				r.fed += 1
+				if a.sex == "f" and a.breeds(now) and now >= a.next_birth:
+					r.ready_f += 1
+				if a.sex == "m" and a.breeds(now):
+					r.mate = true
+		var st := {}
+		for key in w.stats:
+			var sk := str(key)
+			if sk.ends_with("_" + k) and (sk.begins_with("born_") or sk.begins_with("starved_") or sk.begins_with("old_age_") \
+					or sk.begins_with("slaughter_") or sk.begins_with("keeper_no_feed_") or sk.begins_with("farm_bought_")) \
+					or sk.begins_with("eaten_%s_by_" % k) or sk.begins_with("fox_took_" + k):
+				st[sk] = int(w.stats[key])
+		var key_now := str([r, st])
+		if herd_last.get(k, "") == key_now:
+			continue
+		herd_last[k] = key_now
+		herd_log.append({"day": day, "season": w.season(), "kind": k, "herd": r, "trough": int(pen.trough),
+			"need": w.fauna.daily_need(pen), "keeper": w.pen_keeper(pen) != null, "stats": st, "wheat": wheat})
 
 
 # ---------------------------------------------------------------- sampling -------------------

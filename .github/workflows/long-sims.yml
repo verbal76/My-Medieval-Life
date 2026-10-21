@@ -142,6 +142,19 @@ jobs:
           echo "OUT=$out" >> "$GITHUB_ENV"
           cat "$out/summary.json"                                      # the outcome at the end, in the log (artifacts are not always reachable)
           python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print('FARMLINE', json.dumps({'sets': sys.argv[2], 'seed': int(sys.argv[3]), 'farm': d['samples'][-1].get('farm'), 'wheat': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('wheat'), 'wheat_seed': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('wheat_seed'), 'milk': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('milk'), 'food': {k: d['samples'][-1]['food'].get(k) for k in ('starvation_deaths', 'missed_meal_no_money', 'missed_meal_no_food_for_sale', 'relief_grain', 'mean_hunger')}, 'famine_samples': sum(1 for x in d['samples'] if (x.get('farm') or {}).get('famine')), 'samples': len(d['samples'])}))" "$out/sim.json" "$SETS" "$SEED" || true
+          python3 - "$out/sim.json" "$SETS" "$SEED" <<'PY' || true
+          import json, sys
+          d = json.load(open(sys.argv[1]))
+          cows = [h for h in d.get('herd', []) if h['kind'] == 'cow']
+          ev, prev = [], {}
+          for h in cows:                     # FARM-08B: each day the cattle's births or deaths changed, with the herd after it
+              delta = {k: v - prev.get(k, 0) for k, v in h['stats'].items() if v != prev.get(k, 0)}
+              if delta:
+                  r = h['herd']
+                  ev.append([h['day'], h['season'][:2], delta, '%dm%df%dy%de r%d%s t%d' % (r['m'], r['f'], r['young'], r['elderly'], r['ready_f'], '+' if r['mate'] else '-', h['trough']), h['wheat']])
+              prev = h['stats']
+          print('HERDLINE', json.dumps({'sets': sys.argv[2], 'seed': int(sys.argv[3]), 'start': cows[0] if cows else None, 'end': cows[-1] if cows else None, 'care': d.get('herd_care', {}), 'events': ev}))
+          PY
           tail -n 30 "$out/sim.log"
           if [ "$code" -ne 0 ]; then
             echo "::error::the simulation or its ledger checks failed (exit $code); see sim.log"

@@ -1311,7 +1311,7 @@ func _keeper(n: NPC) -> bool:
 		if cut != null and w.fauna.count(pen.id, pen.kind) > int(GameData.b("animals")[pen.kind].keep) + 1:
 			once("famine_cull_%d_%d" % [n.id, w.day()], "Food is short: %s %s slaughters the %s down to the breeding stock." % [n.name, n.family, GameData.b("animals")[pen.kind].name.to_lower()])
 			n.doing = "slaughtering a %s for the hungry" % pen.kind
-			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cut.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cut.id, "why": "famine"}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 			return true
 	if int(pen.trough) < need * 2:
 		var feed_step := work(15, "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
@@ -1332,16 +1332,17 @@ func _keeper(n: NPC) -> bool:
 				return true
 		# no feed to be had and not enough for tomorrow morning: cull beyond the breeding stock and
 		# sell the meat for feed money
+		w.stat("keeper_no_feed_" + str(pen.kind))       # FARM-08B: a keeper found no grain to feed with (counted, changes nothing)
 		var cull: Animal = w.fauna.surplus(pen, true) if int(pen.trough) < need else null
 		if cull != null:
 			once("cull_%d_%d" % [n.id, w.day()], "%s %s has no feed for the %s and culls one." % [n.name, n.family, GameData.b("animals")[pen.kind].name.to_lower()])
 			n.doing = "culling a %s" % pen.kind
-			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cull.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cull.id, "why": "no_feed"}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 			return true
 	var spare: Animal = w.fauna.surplus(pen)
 	if spare != null:
 		n.doing = "slaughtering a %s" % pen.kind
-		n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": spare.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+		n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": spare.id, "why": "surplus"}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 		return true
 	return false
 
@@ -2272,6 +2273,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				return true
 			once("slaughter_%d_%d" % [n.id, w.day()], "%s %s slaughtered a %s." % [n.name, n.family, beast.label()])
 			w.stat("slaughtered_" + beast.species)
+			w.stat("slaughter_%s_%s" % [str(a.get("why", "other")), beast.species])     # FARM-08B: why (famine, no_feed, surplus)
 			Skills.gain(n, "combat", Skills.kill_xp(beast.species, n.damage * Skills.value(n, "combat", "damage_mult", 1.0)))     # as the player's kill (FSE-B12)
 			var meat: Inventory = w.fauna.kill(beast)
 			for id in meat.ids():
