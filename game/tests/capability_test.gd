@@ -32,6 +32,7 @@ func _init() -> void:
 	test_no_double_counting()
 	test_never_blocks()
 	test_determinism()
+	test_hook()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -247,3 +248,36 @@ func test_determinism() -> void:
 				a.append(SettlementIndustries.output_multiplier(ind, l, prof))
 				b.append(SettlementIndustries.output_multiplier(ind, l, prof))
 	check(a == b, "the same profile, industry and level always give the same multiplier (%d values)" % a.size())
+
+
+# X18-SIM: the live hook is off in the game and, when an analysis run forces a level, only shortens work and raises
+# the manor's quarry and mending wages; a level-10 miner in the real World still cannot take more than a seam holds.
+func test_hook() -> void:
+	CapabilityHook.off()
+	check(CapabilityHook.work_time(25.0, "mining", 0.8) == 25.0 * 0.8 and CapabilityHook.pay(6, "mining") == 6 and CapabilityHook.time(90.0, "farming") == 90.0,
+		"the hook is off in the game: every work time and wage is exactly the existing one")
+	check(CapabilityHook.recipe_industry("smelt_iron") == "smithing" and CapabilityHook.recipe_industry("saw_planks") == "carpentry"
+		and CapabilityHook.recipe_industry("tan_leather") == "tanning" and CapabilityHook.recipe_industry("build_handcart") == "carpentry"
+		and CapabilityHook.recipe_industry("cook_pottage") == "", "recipes map to their industry by station and inputs; cooking has none (not faked)")
+	CapabilityHook.forced = {"mining": 10, "carpentry": 10}
+	CapabilityHook.profile = "aggressive"
+	check(CapabilityHook.work_time(25.0, "mining", 1.0) < 25.0 and CapabilityHook.pay(6, "carpentry") > 6 and CapabilityHook.time(90.0, "farming") == 90.0,
+		"forced: mining is faster, the mending wage higher; an industry not forced (farming) is untouched")
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 1)
+	var miner: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "miner":
+			miner = n
+			break
+	var seam: Dictionary = {}
+	for d in w.deposits:
+		if str(d.ore) == "iron_ore" and int(d.amount) > 0:
+			seam = d
+			break
+	seam.amount = 3
+	var got := 0
+	for i in 10:                                  # ten swings by a miner while mining is forced to level 10
+		got += int(w.work_mine(miner, seam, miner.inv).get("n", 0))
+	check(int(seam.amount) == 0 and got == 3, "a level-10 miner in the real World takes the seam's 3 ore and no more (%d taken, %d left)" % [got, int(seam.amount)])
+	CapabilityHook.off()
