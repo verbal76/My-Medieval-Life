@@ -198,11 +198,19 @@ func clear_refusal(level: int, c: Vector2i) -> String:
 	return ""
 
 
-## Why `who` cannot cut a unit from `c` with `tool` ("" if they can): a pickaxe, standing at the face on that level.
+## The kind of tool cell `c` of `level` is worked with next (owner MIN-E-Q4, 2026-10-21: loose earth with a shovel, rock
+## with a pickaxe): the rubble or fill a cell holds is loose spoil, shovelled out; rock is cut with `tool` (a pickaxe).
+func tool_kind(level: int, c: Vector2i) -> String:
+	return "shovel" if held_at(level, c) > 0 else str(cfg().tool)
+
+
+## Why `who` cannot cut a unit from `c` with `tool` ("" if they can): a tool of the cell's kind (tool_kind: a pickaxe
+## for rock, a shovel for rubble or fill), standing at the face on that level.
 func dig_refusal(who, c: Vector2i, tool := "pickaxe") -> String:
-	if tool == "" or not who.inv.has(tool) or str(GameData.item(tool).get("tool", "")) != str(cfg().tool):
-		return "You need a pickaxe to cut rock."
 	var level := level_of(who)
+	var kind := tool_kind(level, c)
+	if tool == "" or not who.inv.has(tool) or str(GameData.item(tool).get("tool", "")) != kind:
+		return "You need a pickaxe to cut rock." if kind == str(cfg().tool) else "You need a shovel to dig out the loose spoil."
 	var why := clear_refusal(level, c) if held_at(level, c) > 0 else rock_refusal(level, c)
 	if why != "":
 		return why

@@ -119,6 +119,7 @@ static func build() -> Wiki:
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
 	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
+	add_provider(WikiExcavation.add_pages)     # Build 17: shovels and pickaxes, trial-pit earth, where to dig, capability
 	add_provider(WikiMineEquipment.add_pages)     # MIN-EQUIP, MIN-COLLAPSE (wiki_mine_equipment.gd)
 	for c in providers:
 		if c.is_valid():

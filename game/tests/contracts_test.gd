@@ -146,6 +146,9 @@ func test_window() -> void:
 				site = Vector2i(x, y)
 	var pit := w.pits.open_pit(World.PLAYER, site) if site.x >= 0 else {}
 	var m2 := miner(w)
+	if not m2.inv.has("shovel"):
+		m2.inv.add("shovel")                      # MIN-E-Q4: a pit's earth is dug with a shovel
+	w.player.pos = m2.pos
 	w.player.coins = 500
 	ui.show_contract(m2)
 	check(not pit.is_empty() and _press("Dig your open pit") and _shows("units at"), "the window offers to hire the miner to dig the player's open pit")

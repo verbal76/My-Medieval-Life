@@ -847,13 +847,13 @@
       "match": {
         "kind": "pit"
       },
-      "where": "Staked on clear common ground of the village by the player (with a pickaxe in hand) or by the manor (for a find no trial pit can reach any more): a square of size cells (open_pit.json) with a clear border and spoil heaps beside it; on the surface only (OD-29)",
+      "where": "Staked on clear common ground of the village by the player (with a pickaxe or a shovel in hand) or by the manor (for a find no trial pit can reach any more): a square of size cells (open_pit.json) with a clear border and spoil heaps beside it; on the surface only (OD-29)",
       "verb": "Digging",
       "action_label": "Dig the open pit",
       "action": "interact",
       "tool": "pickaxe",
       "tool_required": true,
-      "tool_hint": "You need a pickaxe to dig. The smith sells them, or forge one at the anvil (2 iron bars and a plank).",
+      "tool_hint": "Earth (topsoil, dirt, spoil) is dug with a shovel, the rock with a pickaxe (owner MIN-E-Q4). The carpenter makes shovels to order for the goods merchant (a haft fitted with the smith's blade at the workbench); the smith sells pickaxes, or forge one at the anvil (2 iron bars and a plank).",
       "skill": "mining",
       "level": 1,
       "minutes": 25,
@@ -861,7 +861,7 @@
       "action_cost": {
         "stamina": 0,
         "tool_wear": 1,
-        "note": "No stamina. The pickaxe wears `wear` (1) a unit unless the Mining tool_wear_save effect spares it; each unit earns `xp` (4) Mining xp."
+        "note": "No stamina. The layer's tool (a shovel for earth, a pickaxe for rock) wears `wear` (1) a unit unless the Mining tool_wear_save effect spares it; each unit earns `xp` (4) Mining xp."
       },
       "yields": {
         "topsoil": 1,

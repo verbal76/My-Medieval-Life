@@ -89,6 +89,8 @@ func _miner(w: World) -> NPC:
 		n = w.brain._first_with_job("miner")
 	if not n.inv.has("pickaxe"):
 		n.inv.add("pickaxe")
+	if not n.inv.has("shovel"):
+		n.inv.add("shovel")                       # MIN-E-Q4: a trial pit's earth is dug with a shovel
 	return n
 
 
@@ -147,10 +149,11 @@ func _test_trial_parity() -> void:
 	var h := _hit_clue(w)
 	check(not h.is_empty(), "seed 1 has a clue whose body a trial pit can reach")
 	var c: Dictionary = h.clue
-	p.inv.durability.erase("pickaxe")
-	if not p.inv.has("pickaxe"):
-		p.inv.add("pickaxe")
-	check(dv.trial_refusal(n, c, h.miss, "") != "" and dv.trial_refusal(n, c, h.miss, "axe").contains("pickaxe"), "a trial pit needs a pickaxe")
+	p.inv.durability.erase("shovel")
+	if not p.inv.has("shovel"):
+		p.inv.add("shovel")
+	check(dv.trial_refusal(n, c, h.miss, "") != "" and dv.trial_refusal(n, c, h.miss, "axe").contains("shovel") and dv.trial_refusal(n, c, h.miss, "pickaxe").contains("shovel"),
+			"a trial pit needs a shovel (owner MIN-E-Q4: earth is dug with a shovel; a pickaxe will not do)")
 	var coins0 := _coins(w)
 	var deps0 := w.deposits.size()
 	var cells := dv.dig_cells(c, World.PLAYER)
@@ -162,17 +165,17 @@ func _test_trial_parity() -> void:
 			break
 	var pxp := int(p.skills.get("mining", 0))
 	var nxp := int(n.skills.get("mining", 0))
-	var rp := dv.trial_dig(p, c, h.miss, "pickaxe")
-	var rn := dv.trial_dig(n, c, miss2, "pickaxe") if miss2.x >= 0 else {"result": "skip"}
+	var rp := dv.trial_dig(p, c, h.miss, "shovel")
+	var rn := dv.trial_dig(n, c, miss2, "shovel") if miss2.x >= 0 else {"result": "skip"}
 	check(rp.result == "ok" and (rp.found as Dictionary).is_empty(), "the player's trial pit away from the body finds nothing")
 	check(rn.result == "ok" and (rn.found as Dictionary).is_empty(), "a villager's trial pit away from the body finds nothing")
 	check(int(p.skills.get("mining", 0)) - pxp == int(n.skills.get("mining", 0)) - nxp and int(p.skills.get("mining", 0)) - pxp == int(Discovery.cfg().trial.xp),
 			"the same Mining xp for both (%d)" % int(Discovery.cfg().trial.xp))
 	check(_st(w, "trial_pits") == 2 and _st(w, "trial_misses") == 2 and dv.trials_left(c) == int(Discovery.cfg().trial.per_clue) - 2, "both pits are recorded and counted")
-	check(dv.trial_dig(p, c, h.miss, "pickaxe").result == "refused", "a cell dug once cannot be dug again")
+	check(dv.trial_dig(p, c, h.miss, "shovel").result == "refused", "a cell dug once cannot be dug again")
 	check(w.deposits.size() == deps0 and _coins(w) == coins0, "a miss adds no deposit and moves no coin")
 	# the hit: within reach of the body, by the villager
-	var r := dv.trial_dig(n, c, h.hit, "pickaxe")
+	var r := dv.trial_dig(n, c, h.hit, "shovel")
 	var d: Dictionary = r.get("found", {})
 	check(r.result == "ok" and not d.is_empty() and str(d.ore) == str(c.body.ore) and str(d.found) == str(c.id),
 			"a trial pit within reach of the body opens it: a seam of %s" % str(c.body.ore))
@@ -180,13 +183,13 @@ func _test_trial_parity() -> void:
 			"the seam is one ordinary deposit record of the body's finite amount (%d) with its host rock" % int(d.get("amount", 0)))
 	check(_st(w, "found_" + str(c.body.ore)) == int(d.amount) and _st(w, "found_stone") == int(d.host.amount), "the find enters the books as found_<ore> and found_stone")
 	check(w.map.is_solid(h.hit) and w.deposit_at(h.hit) == d and ResourceNodes.def_for_deposit(d).size() > 0, "it is solid rock found by deposit_at, a node of the same resources.json kind")
-	check(dv.trial_dig(p, c, cells[cells.size() - 1], "pickaxe").why.contains("already been opened") or dv.trials_left(c) <= 0, "once opened, no more pits round that stain")
+	check(dv.trial_dig(p, c, cells[cells.size() - 1], "shovel").why.contains("already been opened") or dv.trials_left(c) <= 0, "once opened, no more pits round that stain")
 	check(_coins(w) == coins0, "trial pits move no coins")
 	# a misleading stain never yields, and a clue takes at most per_clue pits
 	var f := _false_clue(w)
 	var dug := 0
 	for cell: Vector2i in dv.dig_cells(f, World.PLAYER):
-		var rr := dv.trial_dig(p, f, cell, "pickaxe")
+		var rr := dv.trial_dig(p, f, cell, "shovel")
 		if rr.result == "ok":
 			dug += 1
 			if not (rr.found as Dictionary).is_empty():
@@ -198,7 +201,7 @@ func _test_trial_parity() -> void:
 	var w2 := _world(1)
 	var n2 := _miner(w2)
 	var c2 := w2.prospecting.clue(str(c.id))
-	var r2 := w2.discovery.trial_dig(n2, c2, h.hit, "pickaxe")
+	var r2 := w2.discovery.trial_dig(n2, c2, h.hit, "shovel")
 	check(not (r2.found as Dictionary).is_empty() and int(r2.found.amount) == int(d.amount) and str(r2.found.ore) == str(d.ore),
 			"the same seed and the same pit give the same seam (deterministic)")
 
@@ -209,7 +212,7 @@ func _test_opened_seam() -> void:
 	var dv := w.discovery
 	var h := _hit_clue(w)
 	var n := _miner(w)
-	var d: Dictionary = dv.trial_dig(n, h.clue, h.hit, "pickaxe").found
+	var d: Dictionary = dv.trial_dig(n, h.clue, h.hit, "shovel").found
 	var amt := int(d.amount)
 	var ore := str(d.ore)
 	var p := w.player
@@ -256,11 +259,12 @@ func _test_capability() -> void:
 	var lv0 := dv.level()
 	check(lv0 == 1, "the settlers start at mining level 1: surface extraction (seams, miners, pickaxes, carrying) (level %d)" % lv0)
 	check(not dv.evaluate().holds[1], "not level 2: no prospector, kit or recorded discovery")
+	w.player.home = ""                          # MIN-D2: a player with no home here is no resident (parity_mining_test covers one who is)
 	var picks := _strip(w, "pickaxe")
 	w.player.inv.add("pickaxe", 3)
 	dv.dawn()
 	check(dv.level() == 0 and dv.history.size() == 1 and int(dv.history[0].to) == 0 and str(dv.history[0].why).contains("pickaxe"),
-			"with every pickaxe gone the level falls to 0 (the player's own do not count); the history says why: %s" % str(dv.history[-1].why))
+			"with every pickaxe gone the level falls to 0 (a player with no home in the village is no resident: theirs do not count); the history says why: %s" % str(dv.history[-1].why))
 	var n := _miner(w)
 	dv.dawn()
 	check(dv.level() == 1 and dv.history.size() == 2, "a villager's pickaxe again: level 1 again (%d pickaxes were taken)" % picks)
@@ -271,7 +275,7 @@ func _test_capability() -> void:
 	w.brain._change_job(pro, Prospecting.JOB, "a test")
 	w.player.inv.add(Prospecting.KIT)
 	dv.dawn()
-	check(dv.level() == 1 and (dv.evaluate().unmet.get(2, []) as Array).has(GameData.item_name(Prospecting.KIT).to_lower()), "a prospector without a kit (the player's does not count): still level 1")
+	check(dv.level() == 1 and (dv.evaluate().unmet.get(2, []) as Array).has(GameData.item_name(Prospecting.KIT).to_lower()), "a prospector without a kit (the non-resident player's does not count): still level 1")
 	pro.inv.add(Prospecting.KIT)
 	dv.dawn()
 	check(dv.level() == 1 and (dv.evaluate().unmet.get(2, []) as Array) == ["a recorded discovery"], "with a kit but no discovery the manor knows: still level 1")
@@ -380,7 +384,7 @@ func _test_commissioned() -> void:
 	var goods1: Dictionary = Census.goods(w)
 	check(int(goods1.get(Prospecting.ITEM, 0)) - int(goods0.get(Prospecting.ITEM, 0)) == _st(w, "mined_" + Prospecting.ITEM) - _st(w, "used_" + Prospecting.ITEM),
 			"every sample is held or was assayed")
-	# level 2: the manor's best find gets a trial pit, dug by a villager with a pickaxe
+	# level 2: the manor's best find gets a trial pit, dug by a villager with a shovel
 	var h := _hit_clue(w)
 	var c: Dictionary = h.clue
 	var rec := {"id": 9000, "sample": 9000, "clue": str(c.id), "x": h.hit.x, "y": h.hit.y, "ore": str(c.body.ore), "grade": int(c.body.grade),
@@ -399,7 +403,7 @@ func _test_commissioned() -> void:
 	var deps0 := w.deposits.size()
 	var pits0 := _st(w, "trial_pits")
 	var coins1 := _coins(w)
-	check(mw.take(t, dref) and mw.plan(digger), "a labourer with a pickaxe takes it")
+	check(mw.take(t, dref) and mw.plan(digger), "a labourer with a shovel takes it")
 	for i in 1600:
 		w.update(0.5)
 		if not mw.jobs.has(t):
@@ -415,8 +419,8 @@ func _test_saves() -> void:
 	var dv := w.discovery
 	var h := _hit_clue(w)
 	var n := _miner(w)
-	dv.trial_dig(n, h.clue, h.miss, "pickaxe")
-	var d: Dictionary = dv.trial_dig(n, h.clue, h.hit, "pickaxe").found
+	dv.trial_dig(n, h.clue, h.miss, "shovel")
+	var d: Dictionary = dv.trial_dig(n, h.clue, h.hit, "shovel").found
 	w.work_mine(n, d, n.inv)
 	dv.history.append({"day": 1, "industry": "mining", "from": 1, "to": 0, "why": "test"})
 	w.treasury = 5000

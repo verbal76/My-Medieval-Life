@@ -7,19 +7,20 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
+| Open entries (rules excluded) | 231 | 196 still open, 35 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 250 (109 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 197 still open from the baseline + 109 added and open |
+| Entries added since | | 255 (110 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 196 still open from the baseline + 110 added and open |
 | Open entries moved to another build | | 2 |
 
-## Closed since the baseline (34)
+## Closed since the baseline (35)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: docs/assets/SPRITE_NEEDS.md lists 53 missing or weak sprites found in the code (3 characters, 10 animals, 18 items and icons, 10 buildings and stations, 5 terrain and props, 2 effects, 5 UI), each with where it is used, what stands in now, why it is weak and the size needed; tools/assets/sprite_package.py builds a pixel-grid copy and a real-size Aseprite file for each into out/sprite_package.zip (107 files); grid copies looked at |
 | B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: 365-day runs on af60f94 (Actions 39396414426, local re-runs with the same fingerprints): every wild species alive at day 365 on both seeds, and the population grows from 100 to 115 and 122 |
+| B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | approved | BLOCKED | 17 | COMPLETE AND VERIFIED | 17 | 2026-10-21: Disposition recorded |
 | B7-008 | Player can drain buyers to 0, kill all wildlife | approved | BLOCKED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Both halves done: wildlife verified earlier; the buyer half answered by the owner (OD-18.2) and implemented as PAR-02 |
 | B7-015 | Missed meals while food piles up | approved | BLOCKED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94 |
@@ -64,7 +65,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (250)
+## Added since the baseline (255)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -163,7 +164,7 @@ None.
 | INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | approved | APPROVED — NOT STARTED | owner decision |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | COMPLETE AND VERIFIED | 15 |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | COMPLETE AND VERIFIED | 15 |
-| JOB-01 | Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| JOB-01 | Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking | approved | COMPLETE AND VERIFIED | 17 |
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | approved | APPROVED — NOT STARTED | owner decision |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | APPROVED — NOT STARTED | owner decision |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision |
@@ -186,8 +187,8 @@ None.
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | decision | COMPLETE AND VERIFIED | owner decision |
-| MIN-D2 | The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2) | approved | ACTIVE DEVELOPMENT | 17 |
-| MIN-D3 | Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3) | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-D2 | The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| MIN-D3 | Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | MIN-E-Q1 | What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q2 | Should there be a spade (and its recipe) for digging earth? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | decision | COMPLETE AND VERIFIED | owner decision |
@@ -203,9 +204,9 @@ None.
 | MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
-| MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | ACTIVE DEVELOPMENT | 17 |
-| MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | ACTIVE DEVELOPMENT | 17 |
-| MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |
@@ -305,8 +306,13 @@ None.
 | STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | approved | APPROVED — NOT STARTED | 18 |
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | approved | APPROVED — NOT STARTED | 18 |
-| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | BLOCKED | owner decision |
+| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | approved | APPROVED — NOT STARTED | 18 |
+| STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | approved | APPROVED — NOT STARTED | 18 |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | approved | APPROVED — NOT STARTED | 18 |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | COMPLETE AND VERIFIED | owner decision |
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) | decision | COMPLETE AND VERIFIED |  |
+| STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 | decision | COMPLETE AND VERIFIED |  |
+| STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 | decision | COMPLETE AND VERIFIED |  |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |

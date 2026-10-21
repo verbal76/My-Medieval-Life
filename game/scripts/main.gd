@@ -2655,13 +2655,13 @@ func _use() -> void:
 			elif step == "sample":
 				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "dig":
-				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "pickaxe")
+				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "shovel")
 			elif step == "excavate":
 				var pit := world.pits.pit(int(mj.pit))
 				var cell := mw.excavate_cell(mj)
-				var pick := p.tool_of("pickaxe")
+				var pick := OpenPits.held_tool(p, world.pits.tool_needed(pit, cell)) if not pit.is_empty() and cell.x >= 0 else ""
 				if pit.is_empty() or cell.x < 0 or pick == "":
-					ui.message("You need a pickaxe to dig." if pick == "" else "There is nothing in the pit that can be dug now.")
+					ui.message("There is nothing in the pit you can dig now: earth needs a shovel, rock a pickaxe." if OpenPits.kinds_held(p).size() < 2 else "There is nothing in the pit that can be dug now.")
 					return
 				start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), pick), func():
 					var was: int = mj.load.total()
@@ -2669,7 +2669,7 @@ func _use() -> void:
 					if ok and mj.load.total() > was:
 						ui.message("Dug for the manor: %d of %d. %s" % [mj.load.total(), int(mj.qty), ui._manor_next(mj)])
 					else:
-						finish.call(ok), "swing", "pickaxe")
+						finish.call(ok), "swing", pick)
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
 
@@ -2693,10 +2693,11 @@ func _prospect_targets(cands: Array) -> Array:
 		elif pr.samples_left(c) > 0:
 			out.append({"kind": "sample", "id": key, "clue": c, "cell": cell,
 					"label": "Take a rock sample here (%s nearby; %d samples left round it)" % [pr.stain(c), pr.samples_left(c)]})
-	# MIN-D: a trial pit on clear ground of a clue's area in front of the player, with a pickaxe (Discovery.trial_dig)
+	# MIN-D: a trial pit on clear ground of a clue's area in front of the player, with a shovel (Discovery.trial_dig;
+	# owner MIN-E-Q4: earth is dug with a shovel)
 	var ahead := Vector2i((p.pos + facing_vec() * 1.0).floor())
 	var ca := pr.area_at(ahead)
-	var pick := p.tool_of("pickaxe")
+	var pick := p.tool_of(str(Discovery.cfg().trial.get("tool", "shovel")))
 	if not ca.is_empty() and pick != "" and world.discovery.ground_refusal(ca, ahead) == "":
 		out.append({"kind": "trial_dig", "id": "%s@%d,%d" % [ca.id, ahead.x, ahead.y], "clue": ca, "cell": ahead, "tool": pick,
 				"label": "Dig a trial pit here (%s nearby; %d hours; %d pits left round it)" % [pr.stain(ca), roundi(float(Discovery.cfg().trial.minutes) / 60.0), world.discovery.trials_left(ca)]})
@@ -2740,7 +2741,7 @@ func _pit_targets(cands: Array) -> Array:
 		if pit.is_empty() or str(pit.owner) != World.PLAYER:
 			continue
 		var i := OpenPits.index(pit, cell)
-		var pick := p.tool_of("pickaxe")
+		var pick := OpenPits.held_tool(p, pp.tool_needed(pit, cell))      # MIN-E-Q4: a shovel for earth, a pickaxe for rock
 		if pick != "" and pp.dig_ground_refusal(pit, cell) == "":
 			var item := OpenPits.item_of(int(pit.dug[i]))
 			out.append({"kind": "pit_dig", "id": "pit@%d,%d" % [cell.x, cell.y], "pit": pit, "cell": cell, "tool": pick,
@@ -2750,7 +2751,7 @@ func _pit_targets(cands: Array) -> Array:
 					"label": "Put back a unit of %s" % GameData.item_name(OpenPits.item_of(int(pit.dug[i]) - 1)).to_lower()})
 		if not out.is_empty():
 			break
-	if out.is_empty() and cands.is_empty() and p.tool != "" and GameData.item(p.tool).get("tool", "") == "pickaxe":
+	if out.is_empty() and cands.is_empty() and p.tool != "" and str(GameData.item(p.tool).get("tool", "")) in ["pickaxe", "shovel"]:
 		var origin := OpenPits.origin_ahead(ahead, facing_vec())
 		var key := "%d,%d" % [origin.x, origin.y]
 		if str(_pit_site.get("key", "")) != key or int(_pit_site.get("at", -1)) != int(world.minutes):
@@ -2776,7 +2777,7 @@ func _pit_stake(origin: Vector2i) -> void:
 		ui.message(why)
 		return
 	world.pits.open_pit(World.PLAYER, origin)
-	ui.message("You mark out an open pit. Dig it with your pickaxe; tip the earth on its spoil heaps.")
+	ui.message("You mark out an open pit. Dig its earth with a shovel and its rock with a pickaxe; tip the earth on its spoil heaps.")
 
 
 ## MIN-E: dig a unit from cell `cell` of the player's pit, timed as a mining swing (OpenPits.dig: the unit to the pack,
@@ -2796,8 +2797,8 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 		if not (r.exposed as Dictionary).is_empty():
 			ui.message("The pit strikes %s: a new seam is opened." % GameData.item_name(str(r.exposed.ore)).to_lower())
 		if r.broke:
-			ui.message("Your pickaxe broke.")
-		_level_up("mining", int(r.up)), "swing", "pickaxe")
+			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
+		_level_up("mining", int(r.up)), "swing", tool)
 
 
 ## B14 carts: the one you pull can be let go anywhere; a cart beside you on `level` can be pulled (yours) or opened.
@@ -2833,7 +2834,7 @@ func _works_targets() -> Array:
 	var mine := Vector2i(p.pos.floor())
 	var ahead := Vector2i((p.pos + facing_vec() * 0.9).floor())
 	if lv != 0:
-		var pick := p.tool_of("pickaxe")
+		var pick := ""
 		for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
 			var c: Vector2i = ahead + dc
 			if c == mine or maxi(absi(c.x - mine.x), absi(c.y - mine.y)) > 1 or not world.underground.is_solid(lv, c) or not world.deposit_at(c, lv).is_empty():
@@ -2842,13 +2843,15 @@ func _works_targets() -> Array:
 				continue                                 # a shaft's mouth: its own offers below
 			var why := mw.cut_refusal(lv, c)
 			var held := mw.held_at(lv, c)
+			pick = p.tool_of(mw.tool_kind(lv, c))         # MIN-E-Q4: rock a pickaxe; rubble or fill a shovel
 			if why == "" and pick != "":
 				out.append({"kind": "tunnel_cut", "id": "cut@%d,%d" % [c.x, c.y], "cell": c, "tool": pick,
 						"label": ("Dig out the %s (%d units of spoil)" % ["fallen rock" if mw.rubble_at(lv, c) > 0 else "backfill", held]) if held > 0
 						else "Cut into the rock (%d of %d units left here: stone, then spoil)" % [MineWorks.cell_units() - mw.cut_at(lv, c), MineWorks.cell_units()]})
 			elif why.begins_with("Set up a timber support") or (why == "" and pick == ""):
-				out.append({"kind": "info", "id": "face@%d,%d" % [c.x, c.y], "text": why if why != "" else "You need a pickaxe to cut rock.",
-						"label": "The rock face: " + (why if why != "" else "cut it with a pickaxe").to_lower().trim_suffix(".")})
+				var need := "a shovel to dig out" if held > 0 else "a pickaxe to cut"
+				out.append({"kind": "info", "id": "face@%d,%d" % [c.x, c.y], "text": why if why != "" else "You need %s it." % need,
+						"label": "The rock face: " + (why if why != "" else "needs %s it" % need).to_lower().trim_suffix(".")})
 			break
 		if p.inv.has(str(MineWorks.cfg().support.item)):
 			for c in [ahead, mine]:
@@ -2923,8 +2926,8 @@ func _tunnel_cut(cell: Vector2i, tool: String) -> void:
 		if r.opened:
 			ui.message("The rock is cut through: the tunnel goes on.")
 		if r.broke:
-			ui.message("Your pickaxe broke.")
-		_level_up("mining", int(r.up)), "swing", "pickaxe")
+			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
+		_level_up("mining", int(r.up)), "swing", tool)
 
 
 ## MIN-F: set up a timber support or lay a track section (MineWorks), timed by its minutes as a building job.
@@ -3032,9 +3035,10 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 			ui.message("The trial pit finds no ore.")
 		else:
 			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower())
+		ui.message("The earth you dug lies in a spoil pile beside the pit.")
 		if r.broke:
-			ui.message("Your pickaxe broke.")
-		_level_up("mining", int(r.up)), "swing", "pickaxe")
+			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
+		_level_up("mining", int(r.up)), "swing", tool)
 
 
 ## MIN-C: smith `n` assays the oldest rock sample the player carries (Prospecting.assay: the fee, the coal, the forge
@@ -4470,6 +4474,7 @@ func _pit_shot(full: bool) -> void:
 	if n == null:
 		n = world.npcs[0]
 	n.inv.add("pickaxe", 40)
+	n.inv.add("shovel", 40)                       # MIN-E-Q4: the earth is dug with a shovel
 	var far := Vector2(world.manor_work.yard_cell()) + Vector2(0.5, 0.5)
 	for o: NPC in world.npcs:
 		if OpenPits.rect(pit).grow(2).has_point(o.cell()):
@@ -4482,7 +4487,7 @@ func _pit_shot(full: bool) -> void:
 		if c.x < 0:
 			break
 		n.pos = Vector2(pp.stand_for(pit, OpenPits.index(pit, c), n.cell())) + Vector2(0.5, 0.5)
-		if pp.dig(n, pit, c, n.inv, "pickaxe").result != "ok":
+		if pp.dig(n, pit, c, n.inv, OpenPits.held_tool(n, pp.tool_needed(pit, c))).result != "ok":
 			break
 		units += 1
 		pp.tip(pit, n.inv)

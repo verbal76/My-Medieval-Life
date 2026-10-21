@@ -49,7 +49,7 @@ static func _collapse(w: Wiki, mining: Array) -> void:
 		Wiki.h("If they die"),
 		Wiki.p("A villager who dies in a cave-in dies like anyone else in the village: what they owned passes to their heir, their family remembers it, and the death is in the village's record. If it is you, your heir takes over, as after any death."),
 		Wiki.h("If they live"),
-		Wiki.p("A survivor scrambles out into an open passage right beside the cave-in, if there is one. If every way beside it is rock or rubble, they are trapped where they stand and can do nothing until someone digs the fallen rock out of that passage (you can dig at it from inside). They still grow hungry while they wait. Nobody comes to rescue a trapped villager on purpose: only digging out the rubble frees them."),
+		Wiki.p("A survivor scrambles out into an open passage right beside the cave-in, if there is one. If every way beside it is rock or rubble, they are trapped where they stand and can do nothing until someone digs the fallen rock out of that passage with a shovel (you can dig at it from inside, if you have one). They still grow hungry while they wait. Nobody comes to rescue a trapped villager on purpose: only digging out the rubble frees them."),
 		Wiki.note("Injuries, wounds and their treatment are not in the game yet: a cave-in leaves you either unhurt or dead."),
 		Wiki.links(["sys:mine_equipment", "sys:inheritance", "place:mine"] + mining),
 	], "", "cave-in collapse mine tunnel trapped rubble death survive")

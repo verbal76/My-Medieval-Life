@@ -2982,7 +2982,7 @@
    "id": "B7-006",
    "title": "Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed)",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 47)",
@@ -2990,8 +2990,8 @@
    "acceptance": [
     "As recorded in the source document; evidence named in implementation and tests"
    ],
-   "implementation": "(B7_ISSUES:49) | \"Diagnosed; proposal awaits owner\" (B7_ISSUES:49); listed awaiting in B8_READINESS:81 | AWAIT-OWNER | — | Owner: P3.4 / mine wage 15+ | Owner explicitly did NOT approve \"mining wage 15+\" (DECISIONS:17)",
-   "tests": "",
+   "implementation": "No change: starting kit (balance.json player_start_items, start_coins_player), World.work_mine, World.player_sell_many; evidence game/tests/early_game_test.gd",
+   "tests": "early_game_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -3001,7 +3001,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Check whether a new player can still afford an axe for the woodcutting job (the item's second half)",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -3021,12 +3021,28 @@
      "date": "2026-10-21",
      "change": "BLOCKED -> PARTIALLY IMPLEMENTED; next_action",
      "why": "OD-01 answers the mine part: no mining wage, the shift quest retired, miners earn by sale or CON-01 contracts. The woodcutting-axe part of the original item is not covered by OD-01 and stays to be checked"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Axe half measured on Build 17 (cca7f2b+, probe not committed): seeds 1 and 2, days 0-3, the cheapest axe for sale (smith or merchant) costs 45-46 coins; the player starts with 20 coins, a rusty pickaxe and no axe. Without an axe the player can still earn: manor board quarrying (6 coins a job, the starting pickaxe qualifies), mending (4), carrying (2), mining and selling ore or stone. So an axe takes a few days' work, not never. No mechanism is broken (WDR-022: an economic outcome, measured, no hidden help); no change made"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests; implementation; next_action",
+     "why": "Closed — Working as Designed (owner, 2026-10-21, docs/directives/2026-10-21_build17_early_game_progression.md). Verified on wip/build17 by game/tests/early_game_test.gd (18 checks, 0 failures, seeds 1 and 2): the player starts with 20 coins, a rusty pickaxe (serves as a pickaxe) and a rusty sword, no axe; the starting pickaxe mines real stone, iron ore and coal deposits (6/6/8 and 6/6/7 units) and these sold to the raw-goods merchant for 32 and 31 coins paid from their own purses, total coins conserved, giving 51-52 coins against an axe at 45-46. Bandits carry only their own 5-14 coins and a copper sword and drop what they carried (play_test); a dangerous, conditional route. On day 0 the manor's board had no work open to a new player (treasury 270; work appears as the reeve posts it), conditional. Starting economy kept: no free axe, no extra coins, no price change"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "resolution",
+     "why": "Disposition recorded"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "the mine wage belongs with mining labour economics; still the owner's call (OD-01)"
+   "roadmap_reason": "the mine wage belongs with mining labour economics; still the owner's call (OD-01)",
+   "resolution": "Closed — Working as Designed (owner, 2026-10-21)"
   },
   {
    "id": "B7-007",
@@ -15168,7 +15184,7 @@
    "id": "JOB-01",
    "title": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Salaried manor hands remain eligible to take appropriate work from the same job board used by independent workers and the player.",
    "description": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
    "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
@@ -15176,8 +15192,8 @@
    "acceptance": [
     "Hands take board jobs unpaid; pickaxe and survey exclusions kept; first come, no priority; one job at a time"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/manor_work.gd (open_for, take, can_fund, is_staff); game/tests/job_board_test.gd",
+   "tests": "job_board_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15202,6 +15218,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "As built (ManorWork.open_for/can_fund/is_staff: staff unpaid, one job per worker, quarry/trial/excavate need a pickaxe, surveys exclude staff, no staff priority); a focused test of 'no priority, no double booking' is still to be written"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "Focused test game/tests/job_board_test.gd (16 checks, 0 failures): the same open jobs in the same order for a hand and a labourer (no priority), first come, a taken job is nobody else's, one job at a time, hands unpaid, wages set aside and returned with the treasury conserved, pickaxe and survey exclusions held for hands. Added to tests.yml"
     }
    ],
    "target_build": "17"
@@ -16637,7 +16658,7 @@
    "id": "MIN-D2",
    "title": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -16645,20 +16666,22 @@
    "acceptance": [
     "Same eligibility and contribution for player and villagers; no ownership transfer; no bonus or exclusion; recalculated on leaving; deterministic; never a gate"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-D",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16676,6 +16699,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
     }
    ],
    "target_build": "17"
@@ -16684,7 +16712,7 @@
    "id": "MIN-D3",
    "title": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -16692,20 +16720,22 @@
    "acceptance": [
     "Each trial-pit unit removed becomes a counted item stored or heaped; hauling, reuse and disposal accounted; layers consistent with MIN-E; saves; no autonomous tunnel backfill"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-D",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16723,6 +16753,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
     }
    ],
    "target_build": "17"
@@ -17689,7 +17724,7 @@
    "id": "MIN-RIGHTS",
    "title": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17697,20 +17732,22 @@
    "acceptance": [
     "No manor rights, royalties, permits or quotas; digging on land another owns refused without consent or agreement; tested for pits, trial pits and tunnels"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-E",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17728,6 +17765,16 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "No code change needed: the existing refusals held; parity_mining_test covers them"
     }
    ],
    "target_build": "17"
@@ -17736,7 +17783,7 @@
    "id": "MIN-SHOVEL",
    "title": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17744,20 +17791,22 @@
    "acceptance": [
     "Shovel from carpenter-made wooden part and smith-made metal part with labour, tools, facilities, time; earth layers dug with a shovel; wear, repair or replacement through existing processes; parity; older saves and open jobs not stranded"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-E",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17775,6 +17824,16 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Not yet looked at on screen: the shovel icons and the trial-earth pile (headless only); visual review before the readiness report"
     }
    ],
    "target_build": "17"
@@ -17783,7 +17842,7 @@
    "id": "MIN-SKILLCAP",
    "title": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17791,20 +17850,22 @@
    "acceptance": [
     "Capability evaluation reads skills and equipment rather than job names; excavation open to any equipped worker; specialisation from experience; same rules for the player"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-E",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17822,6 +17883,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
     }
    ],
    "target_build": "17"
@@ -23623,6 +23689,11 @@
      "date": "2026-10-21",
      "change": "commit 8eec56e; tests; branch",
      "why": "Rounds 1-3 on wip/expansion18-preparation (8eec56e): capability and specialization (mining read-only from MIN-D through an adapter; one-evaluator merge plan in docs/expansion18/DESIGN.md section 8), settlement holdings and reports, regional supply and demand, routes and haulage, competition and cooperation, caravan comparison harness; Q18-9 (levels scale pay and output, factors 1.0) and Q18-10 (any party buys, fetches or pays a carter) applied; settlement_test 63, regional_test 67, caravan_compare 50 checks; regression suites pass. SET-D not started (Q18-6, Q18-7, Q18-12, Q18-13, live CON-01)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Reconciliation note from MIN-D2/MIN-SKILLCAP (wip/build17 fbdc8fc): the Expansion 18 evaluator in industries.gd does not read capabilities.json's new optional tool key nor count the resident player; unchanged it would over-count practitioners. To be handled at Expansion 18's reconciliation gate (docs/build17/MIN_PARITY_SHOVELS.md)"
     }
    ],
    "target_build": "18"
@@ -28670,7 +28741,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Full CI and the gate re-baseline on wip/build17; owner questions STONE-Q1..Q3 (fittings and mending on blocks, dressing waste, a mason trade)",
+   "next_action": "Determinism gate re-baseline once after the parity and equipment merges",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28695,6 +28766,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "STONE-Q1 (Option C) checked against the build: blocks for houses, workshops and rooms; raw stone for fittings, gate and mending already matches where the system distinguishes; the finer split is STONE-03; personal dressing by non-labourer villagers is STONE-02"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "CI Tests run 39678592892 on 0a086af (the STONE-01 + wiki merge) passed"
     }
    ],
    "target_build": "17"
@@ -28792,10 +28868,160 @@
    "target_build": "18"
   },
   {
+   "id": "STONE-04",
+   "title": "Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Stone dressing efficiency depends on the actual skill of the person performing the work. Less experienced workers produce more waste. More experienced workers recover a greater proportion of usable building material. The same mechanics apply to players, independent homeowners, ordinary NPCs, and professional stonecutters. Occupation titles do not grant automatic production bonuses. ... The owner has not approved specific conversion ratios or skill thresholds.",
+   "description": "Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers)",
+   "source": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md",
+   "approval": "Owner decision 2026-10-21 (STONE-Q2, Option C), Expansion 18",
+   "acceptance": [
+    "The STONE-01 dress_stone process, extended: blocks out depend on the worker's skill in the existing skill and capability systems; no title bonus; same rule for player, homeowners, villagers and stonecutters",
+    "Every stone accounted for: what is not a block is conserved waste, chips or spoil in an existing material; never destroyed, never turned back into blocks without an approved recovery process; no unlimited recycling loop",
+    "Before values are locked, a proposed skill-to-efficiency model is presented to the owner with its effects on depletion, construction costs, production economics and NPC viability; no ratio, percentage or table invented",
+    "Tests on implementation: conservation, determinism, parity, economic consequences"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q2"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 keeps 1:1 (dress_stone: 2 stone to 2 blocks, exact). Governed by Stoneworking (STONE-05) per STONE-Q3. Owner question for Expansion 18 design: the skill-to-efficiency values, with effects on depletion, construction affordability, stoneworker profitability and settlement viability. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-06.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner STONE-Q3: the efficiency is governed by the new Stoneworking skill (STONE-05), not Crafting"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-05",
+   "title": "Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Introduce Stoneworking as a distinct skill using the existing player and NPC skill architecture. It must behave consistently with existing skills such as Mining, Smithing, and Cooking. Stoneworking proficiency is gained through actual stoneworking activity under the game's normal skill-progression rules. A character's general Crafting proficiency must not automatically make them an expert stonecutter.",
+   "description": "Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q3, 1B), Expansion 18",
+   "acceptance": [
+    "A stoneworking skill in the existing skills (player and NPC), raised only by stoneworking under the normal progression; dress_stone uses it instead of Crafting; it governs the STONE-04 efficiency",
+    "One rule for players, villagers for their own needs, general workers, professional stonecutters and hired services; no occupation needed, none grants levels",
+    "Saves migrate by the existing skill conventions without corruption or invented history; the starting level and any migration credit are put to the owner before being chosen; player and NPC skill displays updated; deterministic",
+    "Focused tests: parity, progression, efficiency, save migration"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q3",
+    "STONE-04"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 unaffected (Crafting and the mallet; 2 stone to 2 blocks). Owner questions for the Expansion 18 design phase (not Build 17): starting Stoneworking levels and migration credit; skill-to-efficiency values (STONE-04); chisel durability and wear; chisel recipe quantities where conventions do not settle them. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-04.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-06",
+   "title": "Iron chisel: smith-made, worn by use, needed with the mallet to dress stone",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Stone dressing will require both: 1. A mallet. 2. An iron chisel. The chisel is a real, physically conserved inventory item. Blacksmiths manufacture chisels using the existing smithing and production systems. ... Do not invent a permanent chisel durability value, wear rate, production recipe quantity, or market price without first checking existing conventions and obtaining owner approval where a new balancing decision is needed.",
+   "description": "Iron chisel: smith-made, worn by use, needed with the mallet to dress stone",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q3, 2B), Expansion 18",
+   "acceptance": [
+    "A chisel item made by smiths at the forge or anvil from real inputs with labour and time, through the existing smithing recipes; sold, transferred and procured by the ordinary systems; nobody gets one free",
+    "dress_stone needs a usable mallet and chisel for everyone, professionals included; missing tools refuse the work by the normal rules; chisels wear with use and are replaced",
+    "Durability, wear, recipe quantities and price follow existing conventions where they settle them, otherwise go to the owner before being fixed",
+    "Focused tests: production, wear, missing-tool behaviour, conservation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q3"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 unaffected (Crafting and the mallet; 2 stone to 2 blocks). Owner questions for the Expansion 18 design phase (not Build 17): starting Stoneworking levels and migration credit; skill-to-efficiency values (STONE-04); chisel durability and wear; chisel recipe quantities where conventions do not settle them. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-04.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "STONE-Q",
    "title": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "1. Should fittings and the manor's mending use blocks? (recommend raw stone). 2. Should dressing waste stone, e.g. 3 to 2? (recommend 1:1 until balance review). 3. A dedicated mason trade, Stoneworking skill or chisel? (recommend revisiting with the labour-market work)",
    "description": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "source": "docs/build17/STONE_01_BLOCKS.md",
@@ -28814,7 +29040,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Present part 2 (dressing waste ratio) to the owner",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28849,6 +29075,16 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Clarification: the directive settles the mason trade (general activity plus an Expansion 18 profession); whether that profession needs its own Stoneworking skill or a chisel is not settled and is left to X18-STONECUT's design, under the existing capability system"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Owner answered part 2 (STONE-Q2, Option C: skill-based efficiency in Expansion 18, STONE-04; Build 17 stays 1:1). Part 3 to present"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; next_action",
+     "why": "All three parts answered by the owner on 2026-10-21: STONE-Q1 (Option C, materials match the work), STONE-Q2 (Option C, skill-based efficiency, STONE-04), STONE-Q3 (1B + 2B, Stoneworking skill STONE-05 and iron chisel STONE-06); all implementation in Expansion 18, Build 17 unchanged"
     }
    ],
    "target_build": "owner decision"
@@ -28886,6 +29122,78 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    }
+   ]
+  },
+  {
+   "id": "STONE-Q2",
+   "title": "STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Decision: Option C approved. The owner approves skill-based stone dressing efficiency as part of Expansion 18. ... Build 17 retains its existing 1:1 stone-to-block conversion.",
+   "description": "STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18",
+   "source": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md",
+   "approval": "Owner decision 2026-10-21: Option C approved",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    }
+   ]
+  },
+  {
+   "id": "STONE-Q3",
+   "title": "STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "1B: A dedicated Stoneworking skill within the existing character skill system. 2B: Stone dressing requires both a mallet and an iron chisel. Implementation assignment: Expansion 18. Build 17: No changes required or authorized by this decision.",
+   "description": "STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21: OWNER DECISION: 1B + 2B APPROVED",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
     }
    ]
   },
@@ -31041,6 +31349,11 @@
      "date": "2026-10-21",
      "change": "commit 0147066; tests; next_action",
      "why": "Merged wip/b17-wiki (0147066): wiki_mining.gd (mining, prospecting, open pits, underground, minecarts, shafts, stability, backfill), sys:manor_jobs, 15 not-yet-in-game entries incl. 6 health placeholders, docs/build17/README.md; and STONE-01's sys:stoneworking. wiki_test passes on the merge. Gaps open: capability levels cap at 2 (no excavator job; with MIN-SKILLCAP), stability page lacks the collapse outcome (MIN-COLLAPSE), code names on non-mining node pages, prospector JOB_TEXT without a Population job, stale owner questions in MIN_F_UNDERGROUND.md section 4"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Parity merge: wiki_excavation.gd (shovels and pickaxes, trial-pit earth, where you may dig, mining capability) and contracts hiring text; lead corrected wiki_mining.gd (open pits and trial pits dug with a shovel for earth, fallen rock dug out with a shovel). wiki_test passes. Remaining: collapse outcome (equipment worker), code names on non-mining node pages, prospector JOB_TEXT orphan, MIN_F_UNDERGROUND.md section 4"
     }
    ],
    "target_build": "17"

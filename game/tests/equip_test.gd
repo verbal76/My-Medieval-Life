@@ -175,6 +175,14 @@ func _test_manor_procurement_and_shoring() -> void:
 		if c.inv.has(str(x.tool)):
 			made += 1
 	check(made == 2, "the carpenters make the support and the mallet they were ordered (%d of 2)" % made)
+	var mx: Array = w.manor_orders.filter(func(x): return str(x.tool) == "mallet")
+	if not mx.is_empty():
+		var mc: NPC = w.npc(int(mx[0].smith))
+		var held := mc.inv.count("mallet")
+		var kept_one: bool = w.brain.keeps(mc, "mallet") if held == 1 else true
+		mc.inv.add("mallet", 2 - held)
+		check(kept_one and not w.brain.keeps(mc, "mallet"), "the carpenter holds back the manor's mallet, but a second one is for sale (a labourer may buy it)")
+		mc.inv.remove("mallet", 2 - held)
 	w.brain._deliver_orders()
 	check(w.manor_work.yard.count("timber_support") == 1 and w.manor_work.yard.count("mallet") == 1, "both are delivered to the works yard")
 	w.manor_work.post_shore()
@@ -439,12 +447,14 @@ func _test_survivors() -> void:
 	digger.pos = Vector2(opened_by_test[0]) + Vector2(0.5, 0.5)
 	if not digger.inv.has("pickaxe"):
 		digger.inv.add("pickaxe")
+	if not digger.inv.has("shovel"):
+		digger.inv.add("shovel")                 # fallen rock is loose spoil, dug with a shovel (MIN-SHOVEL)
 	digger.inv.add("timber_support")
 	digger.inv.add("mallet")
 	w2.mine_works.place_support(digger, opened_by_test[0])
 	var freed := false
 	for k in MineWorks.cell_units():
-		w2.mine_works.dig(digger, c2, digger.inv)
+		w2.mine_works.dig(digger, c2, digger.inv, "shovel")
 		if not w2.mine_works.is_trapped(n2):
 			freed = true
 			break

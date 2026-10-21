@@ -64,13 +64,15 @@ func _sites(w: World) -> Array:
 	return out
 
 
-## A labourer (or miner) with a pickaxe, moved off the pit.
+## A labourer (or miner) with a pickaxe and a shovel, moved off the pit.
 func _digger(w: World) -> NPC:
 	var n: NPC = w.brain._first_with_job("laborer")
 	if n == null:
 		n = w.brain._first_with_job("miner")
 	if not n.inv.has("pickaxe"):
 		n.inv.add("pickaxe")
+	if not n.inv.has("shovel"):
+		n.inv.add("shovel")
 	return n
 
 
@@ -157,6 +159,11 @@ func _test_sites() -> void:
 	check(not w.map.is_solid(inside) and not w.map.is_solid(heap), "a staked pit blocks nothing until it is dug, an empty heap nothing")
 
 
+## MIN-E-Q4: the tool `who` digs cell `c` of pit `p` with next (a shovel for earth, a pickaxe for rock).
+func _tool(pp: OpenPits, who, p: Dictionary, c: Vector2i) -> String:
+	return OpenPits.held_tool(who, pp.tool_needed(p, c))
+
+
 # ---------------------------------------------------------------- parity ---------------------
 func _test_parity() -> void:
 	var w := _world(1)
@@ -166,25 +173,28 @@ func _test_parity() -> void:
 	var pl := w.player
 	if not pl.inv.has("pickaxe"):
 		pl.inv.add("pickaxe")
+	if not pl.inv.has("shovel"):
+		pl.inv.add("shovel")
 	var n := _digger(w)
 	var a := OpenPits.cell_of(p, 0)
 	var b := OpenPits.cell_of(p, 4)
-	check(pp.dig_refusal(n, p, a, "").contains("pickaxe") and pp.dig_refusal(pl, p, a, "axe").contains("pickaxe"), "digging needs a pickaxe, for both")
+	check(pp.dig_refusal(n, p, a, "").contains("shovel") and pp.dig_refusal(pl, p, a, "axe").contains("shovel") and pp.dig_refusal(pl, p, a, "pickaxe").contains("shovel"),
+			"digging topsoil needs a shovel, for both (owner MIN-E-Q4; a pickaxe will not do)")
 	var pxp := int(pl.skills.get("mining", 0))
 	var nxp := int(n.skills.get("mining", 0))
 	var t0 := pl.inv.count("topsoil")
-	var rp := pp.dig(pl, p, a, pl.inv, "pickaxe")
-	var rn := pp.dig(n, p, b, n.inv, "pickaxe")
+	var rp := pp.dig(pl, p, a, pl.inv, _tool(pp, pl, p, a))
+	var rn := pp.dig(n, p, b, n.inv, _tool(pp, n, p, b))
 	check(rp.result == "ok" and rn.result == "ok" and str(rp.item) == "topsoil" and str(rn.item) == "topsoil", "the player and a villager dig the same layer by the same rule")
 	check(int(pl.skills.get("mining", 0)) - pxp == int(OpenPits.cfg().xp) and int(n.skills.get("mining", 0)) - nxp == int(OpenPits.cfg().xp),
 			"the same Mining xp for both (%d a unit)" % int(OpenPits.cfg().xp))
 	check(pl.inv.count("topsoil") == t0 + 1 and n.inv.count("topsoil") >= 1 and _st(w, "dug_topsoil") == 2, "each unit goes to the digger and is counted dug_topsoil")
 	check(not w.map.is_solid(a), "a cell with topsoil left is still walkable ground")
-	pp.dig(pl, p, a, pl.inv, "pickaxe")
+	pp.dig(pl, p, a, pl.inv, _tool(pp, pl, p, a))
 	check(w.map.is_solid(a) and OpenPits.depth_of(int(p.dug[0])) == 1, "stripped of its topsoil, an edge cell is a step down: solid")
 	var ramp := OpenPits.cell_of(p, OpenPits.size() / 2)
-	pp.dig(n, p, ramp, n.inv, "pickaxe")
-	pp.dig(n, p, ramp, n.inv, "pickaxe")
+	pp.dig(n, p, ramp, n.inv, _tool(pp, n, p, ramp))
+	pp.dig(n, p, ramp, n.inv, _tool(pp, n, p, ramp))
 	check(not w.map.is_solid(ramp), "the ramp stays walkable as it is dug")
 
 
@@ -196,6 +206,7 @@ func _test_conservation() -> void:
 	_clear(w, p)
 	var n := _digger(w)
 	n.inv.add("pickaxe", 30)
+	n.inv.add("shovel", 30)
 	var g0 := Census.goods(w)
 	var digs := 0
 	var ledger_ok := true
@@ -206,13 +217,15 @@ func _test_conservation() -> void:
 		if c.x < 0:
 			break
 		n.pos = Vector2(pp.stand_for(p, OpenPits.index(p, c), n.cell())) + Vector2(0.5, 0.5)
-		var r := pp.dig(n, p, c, n.inv, "pickaxe")
+		var r := pp.dig(n, p, c, n.inv, _tool(pp, n, p, c))
 		if r.result != "ok":
 			stuck = true
 			break
 		digs += 1
 		if not n.inv.has("pickaxe"):
 			n.inv.add("pickaxe")
+		if not n.inv.has("shovel"):
+			n.inv.add("shovel")
 		if digs % 12 == 0:
 			pp.tip(p, n.inv)
 			ledger_ok = ledger_ok and _pit_ledger_ok(w)
@@ -264,15 +277,15 @@ func _test_cut_off() -> void:
 	var s := OpenPits.size()
 	var at := func(x: int, y: int) -> Vector2i: return OpenPits.cell_of(p, y * s + x)
 	for xy in [[4, 3], [3, 4], [3, 2]]:
-		pp.dig(n, p, at.call(xy[0], xy[1]), n.inv, "pickaxe")
-		pp.dig(n, p, at.call(xy[0], xy[1]), n.inv, "pickaxe")
+		pp.dig(n, p, at.call(xy[0], xy[1]), n.inv, _tool(pp, n, p, at.call(xy[0], xy[1])))
+		pp.dig(n, p, at.call(xy[0], xy[1]), n.inv, _tool(pp, n, p, at.call(xy[0], xy[1])))
 	var d: Vector2i = at.call(2, 3)
 	var x: Vector2i = at.call(3, 3)
-	check(pp.dig(n, p, d, n.inv, "pickaxe").result == "ok", "the first unit of a cell that holds the way to another is dug (it stays level)")
-	var r := pp.dig(n, p, d, n.inv, "pickaxe")
+	check(pp.dig(n, p, d, n.inv, _tool(pp, n, p, d)).result == "ok", "the first unit of a cell that holds the way to another is dug (it stays level)")
+	var r := pp.dig(n, p, d, n.inv, _tool(pp, n, p, d))
 	check(r.result == "refused" and str(r.why).contains("cut off") and not w.map.is_solid(d), "the dig that would wall a level cell in is refused (%s)" % str(r.why))
-	check(pp.dig(n, p, x, n.inv, "pickaxe").result == "ok" and pp.dig(n, p, x, n.inv, "pickaxe").result == "ok", "the enclosed cell itself can be dug first")
-	check(pp.dig(n, p, d, n.inv, "pickaxe").result == "ok" and _reachable(w, p), "then the other, and the pit stays reachable")
+	check(pp.dig(n, p, x, n.inv, _tool(pp, n, p, x)).result == "ok" and pp.dig(n, p, x, n.inv, _tool(pp, n, p, x)).result == "ok", "the enclosed cell itself can be dug first")
+	check(pp.dig(n, p, d, n.inv, _tool(pp, n, p, d)).result == "ok" and _reachable(w, p), "then the other, and the pit stays reachable")
 
 
 # ---------------------------------------------------------------- exposure -------------------
@@ -310,6 +323,7 @@ func _test_exposure() -> void:
 		_clear(w, p)
 		var n := _digger(w)
 		n.inv.add("pickaxe", 20)
+		n.inv.add("shovel", 20)
 		var deps := w.deposits.size()
 		var seam := {}
 		var guard := 0
@@ -318,7 +332,7 @@ func _test_exposure() -> void:
 			var cell := pp.next_dig(p, n.cell())
 			if cell.x < 0:
 				break
-			var r := pp.dig(n, p, cell, n.inv, "pickaxe")
+			var r := pp.dig(n, p, cell, n.inv, _tool(pp, n, p, cell))
 			if r.result == "ok" and not (r.exposed as Dictionary).is_empty():
 				seam = r.exposed
 			pp.tip(p, n.inv)
@@ -339,7 +353,7 @@ func _test_exposure() -> void:
 		var mr := w.work_mine(n, seam, n.inv)
 		check(stand.x >= 0 and mr.result in ["ok", "gold"] and (mr.result == "gold" or (int(seam.amount) < a0 and _st(w, "mined_" + str(seam.ore)) == m0 + a0 - int(seam.amount))),
 				"the seam is mined by work_mine from the pit beside it, counted mined_ (%s)" % str(mr.result))
-		check(w.discovery.trial_dig(n, c, sc, "pickaxe").result == "refused", "the clue is opened: no trial pit finds it again")
+		check(w.discovery.trial_dig(n, c, sc, "shovel").result == "refused", "the clue is opened: no trial pit finds it again")
 	check(found, "seed 1 or 7 has a body an open pit can reach")
 
 
@@ -394,6 +408,8 @@ func _test_manor() -> void:
 		mw.do_step(j, who, n.inv)
 		if not n.inv.has("pickaxe"):
 			n.inv.add("pickaxe")
+		if not n.inv.has("shovel"):
+			n.inv.add("shovel")
 	var dug := _st(w, "dug_topsoil") + _st(w, "dug_dirt") + _st(w, "dug_spoil") + _st(w, "dug_stone")
 	check(mw.job_of(who).is_empty() and dug == int(j.qty) and n.coins - c0 == int(j.wage) and t0 - w.treasury == int(j.wage),
 			"the load is dug and tipped, the wage paid from the treasury (%d units, %d coins)" % [dug, n.coins - c0])
@@ -426,25 +442,35 @@ func _test_manor() -> void:
 # ---------------------------------------------------------------- Q18-9 ----------------------
 func _test_level0() -> void:
 	var w := _world(2)
-	for n: NPC in w.npcs:
-		if n.job in ["miner", "laborer"]:
-			n.job = "manor_hand"
+	w.player.home = ""                            # MIN-D2: no resident player
+	for o: NPC in w.npcs:                         # MIN-SKILLCAP: level 1 needs a resident able to mine (a pickaxe), not a job title
+		o.inv.remove("pickaxe", o.inv.count("pickaxe"))
+	for hh in w.households:
+		hh.pantry.remove("pickaxe", hh.pantry.count("pickaxe"))
+	w.manor_work.yard.remove("pickaxe", w.manor_work.yard.count("pickaxe"))
 	var dv := w.discovery
-	check(dv.evaluate().level == 0, "a village with no miner or labourer is at mining level 0")
+	check(dv.evaluate().level == 0, "a village where nobody holds a pickaxe is at mining level 0")
 	var pp := w.pits
 	var p := pp.open_pit(World.PLAYER, _sites(w)[0])
 	_clear(w, p)
-	var n: NPC = w.brain._first_with_job("manor_hand")
+	var n: NPC = w.brain._first_with_job("laborer")
+	if n == null:
+		n = w.brain._first_with_job("miner")
 	if not n.inv.has("pickaxe"):
 		n.inv.add("pickaxe")
+	if not n.inv.has("shovel"):
+		n.inv.add("shovel")
 	var ok := true
 	for i in OpenPits.size() * OpenPits.size():
 		if OpenPits.is_ramp(i):
 			while int(p.dug[i]) < OpenPits.cap(i):
-				ok = ok and pp.dig(n, p, OpenPits.cell_of(p, i), n.inv, "pickaxe").result == "ok"
+				ok = ok and pp.dig(n, p, OpenPits.cell_of(p, i), n.inv, _tool(pp, n, p, OpenPits.cell_of(p, i))).result == "ok"
 				if not n.inv.has("pickaxe"):
 					n.inv.add("pickaxe")
+				if not n.inv.has("shovel"):
+					n.inv.add("shovel")
 	check(ok and pp.ramp_done(p), "a level-0 village's villager still digs (the ramp, to its floor): levels gate nothing (Q18-9)")
+	n.inv.remove("pickaxe", n.inv.count("pickaxe"))     # (the pickaxe the ramp's rock took goes again, for the report below)
 	check(dv.structures("pit_ramp") == 1 and dv.need_holds({"kind": "structure", "what": "pit_ramp", "count": 1}),
 			"the finished ramp is counted as a pit_ramp structure for the capability report")
 	check(dv.evaluate().level == 0, "and the level is only reported: still 0")
@@ -461,7 +487,7 @@ func _run(sd: int) -> String:
 		var c := pp.next_dig(p, n.cell())
 		if c.x < 0:
 			break
-		pp.dig(n, p, c, n.inv, "pickaxe")
+		pp.dig(n, p, c, n.inv, _tool(pp, n, p, c))
 		if k % 7 == 0:
 			pp.tip(p, n.inv)
 	return JSON.stringify(pp.to_dict()) + JSON.stringify(n.inv.to_dict()) + str(w.rng.state) + JSON.stringify(w.stats)
@@ -482,9 +508,11 @@ func _test_saves() -> void:
 	var n := _digger(w)
 	for k in 30:
 		var c := pp.next_dig(p, n.cell())
-		pp.dig(n, p, c, n.inv, "pickaxe")
+		pp.dig(n, p, c, n.inv, _tool(pp, n, p, c))
 		if not n.inv.has("pickaxe"):
 			n.inv.add("pickaxe")
+		if not n.inv.has("shovel"):
+			n.inv.add("shovel")
 	pp.tip(p, n.inv)
 	var sd := w.to_dict()
 	check(int(sd.save_version) == 17 and sd.has("pits"), "no new save version (17); the pits are saved")

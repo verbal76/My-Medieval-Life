@@ -5,7 +5,22 @@ A continuity checkpoint for the lead agent after a context compaction. The regis
 stay authoritative; this file says where things stand between them. **V** = verified by the lead from git, CI or a test
 run; **W** = reported by a worker, not yet re-checked by the lead.
 
-## Branches (V, remote heads)
+## Follow-up (2026-10-21, after the owner's recovery follow-up directive)
+
+- Worker N committed `b00c7ad` (no uncommitted files); the lead pushed it to `wip/b17-parity`. Still active: no completion
+  report yet, so it is not treated as finished.
+- Worker L had `7ed3e20` and 45 staged files (a merge of `wip/build17` in progress); left untouched. `wip/b17-equip` holds
+  `89f30d3`. Still active.
+- Expansion 18 worker: its 2 uncommitted files (`docs/expansion18/DESIGN.md`, `game/tests/capability_test.gd`) are
+  preserved without touching its worktree as `wip/expansion18-snapshot` (`b649850`, a snapshot only, never merged).
+- STONE-Q part 1 answered (STONE-Q1, Option C); STONE-02, STONE-03 and X18-STONECUT (staging) placed in Expansion 18, not
+  Build 17 blockers; STONE-Q part 2 (dressing waste) awaits the owner. `wip/build17` head after recording: `cca7f2b`.
+
+- Later the same evening: Worker N reported and was merged (`wip/b17-parity` `fbdc8fc`); JOB-01 closed (job_board_test);
+  B7-006 closed by the owner as working as designed (early_game_test); STONE-Q fully answered (STONE-Q1..Q3; STONE-02..06
+  and X18-STONECUT in Expansion 18). Remaining worker: L (equipment/collapse). LOG-01 waits for L's `manor_work.gd`.
+
+## Branches (V, remote heads at the first checkpoint)
 
 | Branch | Head | What |
 |---|---|---|
@@ -32,7 +47,7 @@ Do not restart or duplicate these; wait for each notification, then integrate (m
 
 ## CI and test evidence (V)
 
-- Tests run 39678592892 on `0a086af` (wip/build17): dispatched, in progress at checkpoint time.
+- Tests run 39678592892 on `0a086af` (wip/build17, the STONE-01 + wiki merge): **success** (completed 21:39 UTC).
 - Tests 39663123990 on `19efeb3`: success. Tests 39656594571 on `9f229f7`: success.
 - Determinism gate re-baselined after MIN-F/MIN-H at `3be45b5` (seed 1 d10 alive 102 coins 4580, d30 102/4897; seed 2 d10 109/4431, d30 114/4907); MIN-F2 left it identical. STONE-01 changes it (W: seed 1 d30 109 alive, 4918 coins, 0 leaks) → **re-baseline once after the parity and equipment merges**, not before.
 - On `0a086af` the lead ran: `wiki_test` all passed, `stone_test` 45 checks 0 failures; check_interactions 199/0, check_requirements 0 problems, check_materials 0 broken (21 open threshold findings, reported not failing), check_resources 0, check_assets 0.
