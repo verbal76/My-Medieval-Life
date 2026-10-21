@@ -192,6 +192,7 @@ func till(c: Vector2i, p: PlayerState) -> String:
 	var plough := p.tool_of("plough")
 	p.stamina -= float(till_cost(p).stamina)
 	if plough != "" and p.inv.wear(plough, 1):
+		w.stat("broke_" + plough)                         # a broken tool leaves the goods ledger (broke_), as World._work_wear counts it
 		w.note("Your hand plough broke.")
 		if p.tool == plough:
 			p.tool = ""
@@ -412,7 +413,8 @@ func build_pen(kind: String, rect: Rect2i, p: PlayerState) -> Dictionary:
 	if pen_why != "":
 		return {}
 	p.inv.remove("plank", pen_planks(rect))
-	w.stat("used_pen_plank", float(pen_planks(rect)))
+	w.stat("used_plank", float(pen_planks(rect)))          # the goods ledger's drain (used_<item>); it was used_pen_plank, which no ledger read
+	w.stat("farm_pen_plank", float(pen_planks(rect)))
 	var gate := Vector2i(rect.position.x + rect.size.x / 2, rect.position.y)
 	var pen := {"id": "pen_player%d" % next_pen, "kind": kind, "x": rect.position.x, "y": rect.position.y, "w": rect.size.x, "h": rect.size.y,
 			"gate": [gate.x, gate.y], "feed_at": [gate.x, gate.y - 1], "trough": 0, "owner": World.PLAYER, "tenant": "", "player": true, "products": {}}
