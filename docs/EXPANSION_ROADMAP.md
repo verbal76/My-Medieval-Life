@@ -95,6 +95,13 @@ Phases E and F (open pit, underground) depend on what MIN-A finds about layered 
 
 C replaces today's fixed thresholds, CRT-12's notoriety refusal and the single regard score, with weighed judgment. That conflict is recorded on CRT-12 and EXP-C.
 
+
+- **Professional stonecutting (X18-STONECUT, owner 2026-10-21) → Expansion 18.** Depends on Build 17's STONE-01 (the
+  `dress_stone` recipe and building blocks), the one capability evaluator (PROS-18, Q18-9), ordinary market transactions
+  and general procurement contracts (CON-01/CON-02). It shares its production mechanics with personal stone dressing
+  (STONE-02) and the finer repair-material split (STONE-03), both also Expansion 18. Expansion 19 adds no second
+  stonecutting profession. Not a Build 17 release blocker.
+
 ## Proposed sequence (agent proposal, before ROAD-01; superseded where it differs)
 
 > The owner's roadmap (ROAD-01, above) fixes the order: A in Build 17, B in Build 18, C in Build 19. Where this earlier proposal differs (running C's audit and prototype alongside A, B after C's first gates), the roadmap wins; those ideas would need the owner's approval to change the order. SET-A's design during Build 17 is the one dependency the roadmap records.

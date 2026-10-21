@@ -28327,6 +28327,55 @@
    "target_build": "18"
   },
   {
+   "id": "X18-STONECUT",
+   "title": "Professional stonecutter: an independent trade and business that dresses and sells building blocks",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "The owner also approves stonecutting as a legitimate independent profession and business, comparable to blacksmithing or carpentry. ... Professional stonecutters must participate in the ordinary village economy. They do not receive free materials, guaranteed customers, artificial sales, privileged access to deposits, or automatic profits. A stonecutter's business is allowed to succeed, struggle, or fail according to actual economic conditions. ... The full professional stonecutter career and business implementation is approved for Expansion 18, not Build 17.",
+   "description": "Professional stonecutter: an independent trade and business that dresses and sells building blocks",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21 sections 3-5: approved for Expansion 18, not Build 17",
+   "acceptance": [
+    "Acquires raw stone by mining, quarrying or voluntary purchase; dresses it by the same recipe, tool, station, skill and conservation as everyone (Build 17 STONE-01 dress_stone)",
+    "Keeps a workshop and real stock of stone, tools and blocks; sells to individuals, builders, businesses and the manor; takes negotiated orders for quantities (general procurement contracts, CON-01/CON-02)",
+    "Production and buying decided by real demand, stock, prices, skill and circumstances; may hire help through the existing labour and procurement systems; no free materials, guaranteed customers or profits; may fail",
+    "No invented fixed ratio, wage, price or speed without grounding in existing systems or an owner decision; focused tests for production, conservation, tool wear, NPC capability, transfers and economic behaviour",
+    "Expansion 19 adds no second stonecutting profession; its judgment may influence stonecutters through shared NPC decision logic"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [
+    "PROS-18",
+    "Q18-9"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Dependencies also on Build 17 entries not yet on staging: STONE-01 (dress_stone recipe, building_block), STONE-02 (villagers dressing for their own use, Expansion 18), CON-01/CON-02 (procurement and service contracts), the one capability evaluator (PROS-18 adapter to MIN-D, Q18-9) and ordinary market transactions. Not implemented. Not a Build 17 release blocker. The Expansion 18 worker may assess integration during its current work without interrupting the simulations or courier work.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "X19-ASSAULT",
    "title": "Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)?",
    "kind": "decision",
