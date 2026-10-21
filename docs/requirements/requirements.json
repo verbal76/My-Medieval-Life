@@ -17230,7 +17230,7 @@
    "id": "MIN-F2",
    "title": "Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "These decisions are approved gameplay requirements, not suggestions or provisional design options.",
    "description": "Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling",
    "source": "docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md",
@@ -17241,10 +17241,12 @@
     "Report per section 11"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "underground_struct_test 90; underground_ext 113, underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3544, start 499, play 37, parity 55",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "f7f9f71"
+   ],
    "parent": "MIN-F",
    "depends_on": [],
    "blockers": [],
@@ -17266,9 +17268,98 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit f7f9f71; tests",
+     "why": "Built on wip/b17-minf2 (f7f9f71) and merged: stability, collapse and wear with repair; hidden underground ore and manor tunnelling jobs; minecart preference by haul cost; shafts, ladders, levels -3/-4; player-only backfill orders; underground_struct_test 90 and 12 related suites 0 failures; on the merged code underground_struct_test 90 and run_tests 3544 pass; 30-day run identical to the MIN-F baseline (no villager owns supports, ladders or minecarts: owner question MIN-F2-Q1); screenshots looked at by the worker"
     }
    ],
    "target_build": "17"
+  },
+  {
+   "id": "MIN-F2-Q1",
+   "title": "Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own)",
+   "source": "docs/build17/MIN_F2_STRUCTURE.md",
+   "approval": "open owner question from MIN-F2",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F2",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F2_STRUCTURE.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-F2-Q2",
+   "title": "Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)?",
+   "source": "docs/build17/MIN_F2_STRUCTURE.md",
+   "approval": "open owner question from MIN-F2",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F2",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F2_STRUCTURE.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "MIN-G",

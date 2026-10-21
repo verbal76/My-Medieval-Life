@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 240 (102 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **297** = 197 still open from the baseline + 102 added and open |
+| Entries added since | | 242 (104 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **299** = 197 still open from the baseline + 104 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (34)
@@ -64,7 +64,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (240)
+## Added since the baseline (242)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -196,7 +196,9 @@ None.
 | MIN-F-Q3 | Should miners haul by minecart instead of carrying? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q4 | Should there be shafts between underground levels? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q5 | Should spoil be allowed back into tunnels below ground? | decision | COMPLETE AND VERIFIED | owner decision |
-| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | decision | BLOCKED | owner decision |
+| MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | decision | BLOCKED | owner decision |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | APPROVED — NOT STARTED | 17 |
 | MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | APPROVED — NOT STARTED | 17 |
