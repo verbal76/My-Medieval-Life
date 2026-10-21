@@ -222,3 +222,79 @@ Gaps that need the owner (not invented here):
   be done by a named member (a household's responsible adult) and a named regional merchant?
 - Travel time: a buyer who fetches its own goods is away for the route's days. The shadow records the days on each line
   but does not take the villager out of the village; at integration this is the live trip (villagers walk), not a model.
+
+> Update 2026-10-21: the owner decided Q18-12 and Q18-13 (`docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md`,
+> with `_courier_booths_known_recipients.md` and `_courier_contract_interface_pricing.md`, on staging). Section 11 implements them.
+
+## 11. Couriers, booths and formal contracts (owner Q18-12 and Q18-13 decided, 2026-10-21)
+
+Rules in core: `couriers.gd` (`CourierService`) and `formal_contracts.gd` (`FormalAgreements`). Data in `game/data/couriers.json`
+(`mml-couriers/0`); every number in it is an UNAPPROVED provisional default. The window is `ui/courier_window.gd`. It only shows
+the rules and collects choices (DVW-A12). It has no menu entry in the live game until integration.
+
+Booths (X18-Q12-BOOTH):
+- A booth is an existing market stall with no tenant. If none is free, it is a stall its keeper builds by the STALL rules
+  (`Stalls.build`, three planks from the keeper's own pack).
+- The keeper is hired by the existing job rule (`Construction.can_hire`).
+- Each off-map settlement has a booth of its own, kept by that settlement as a party.
+- Regular-route fees are paid at the booth, and goods for a route are handed over there.
+- Booths hold three things: deposits for senders, goods waiting for a departure, and the fees of special deliveries until
+  they are fulfilled. All three are counted holders.
+
+Regular routes and special deliveries (Q18-12):
+- **Regular route:** a flat fee a load, paid at the booth (`fee_per_load` up to `load_units`). The courier leaves every
+  `every_days`.
+- **Special delivery:** negotiated in the shape of a CON-01 contract, through a provisional adapter until CON-01 is
+  reconciled. The sender offers. The courier accepts if the offer covers its least fee, or counters with that fee.
+- **The least fee** is computed from the work:
+  - the carriers' day wage (`helper_wage`) × journey days × two legs (there and back: home, with payment, or to deposit proceeds) × loads;
+  - plus extra loads and stops;
+  - plus the notarial fee when the courier also notarises.
+- **Self-collection** needs no courier (RegionalMarket's "self").
+
+Recipients (X18-Q12-POST):
+- **People** the sender has come to know (`Relations` ties with `days_known` ≥ 1).
+- **Businesses** the sender has traded with. `Relations.trades` is the minimal commercial-contact record, kept with the
+  acquaintance records. `World.trade` writes it through one marked hook. Nothing in the game reads it yet; the fingerprint
+  is unchanged. The owner of a business represents it.
+- **Off-map parties** found in the regional trade journals.
+- Locations come from world records: a person's home door, a business's stall or workplace, an off-map party's booth.
+  There are no typed addresses.
+- The same rules serve the player and villagers.
+
+Physical execution (`tick`):
+- The goods leave the sender's pack when the order is booked. They ride in the courier's own pack, with the journey's
+  days on the road.
+- On arrival the courier hands the goods over, and collects payment (coins or an item) when instructed. A recipient who
+  cannot or will not pay refuses the delivery, and the goods come back.
+- The courier then travels back. It hands the proceeds to the sender, or deposits them at the sender's booth.
+- The contract is **fulfilled** only when every physical and financial obligation is done.
+- **Interrupted:** a courier who dies or is waylaid interrupts the journey. Its pack passes with its estate (heir or loot,
+  `World.kill`). The held special fee goes back to the payer.
+
+Formal contracts (Q18-13):
+- Small agreements, at or under `small_value` (UNAPPROVED), are binding without signatures.
+- Formal commercial contracts and ownership transfers need every party's signature.
+- Parties standing together (the same place, within `face_to_face_tiles`) sign without a notary.
+- Otherwise a courier with legal standing carries the document:
+  - the sender signs before the notary as it leaves;
+  - the notary travels; the other party signs or refuses before it;
+  - the notary travels back with the document.
+- The document must be where the signer is. There is no remote or instant signing.
+- The notarial fee is held at the sender's booth. It is paid when the document is back, whether signed or refused. It is
+  returned if the notary is waylaid.
+- **The game has no "law" skill.** The notary's standing is a provisional data check (`couriers.json` `notary`:
+  `trading` 5) until the owner decides (**Q18-14**).
+
+Owner questions from this section:
+- **Q18-14:** which skill (an existing one, or a new "law" skill) gives a courier the standing to notarise, and at what level?
+- **Q18-15:** which businesses count as "major" for their own courier booth? Provisional: the market traders.
+- **Q18-16:** where should the village's booth stand when no market stall is free? Provisional: a stall the keeper builds
+  by the STALL rules near the market.
+- The fee coefficients and the small-agreement threshold need numbers (Q18-11A-style review).
+
+Reconciliation with Build 17:
+- Special deliveries and formal goods contracts become CON-01 contracts (service terms per Q18-12).
+- The booths' stores and held coins join the census (`SettlementHoldings`) and `World.total_coins`.
+- The CourierService and FormalAgreements state goes into the versioned save.
+- The courier window gets its menu entry.

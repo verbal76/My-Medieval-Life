@@ -33,6 +33,18 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 | Deficit decomposition (outlets, local distribution, raw-material shortage, unmet demand, partners, prices, transport, money) and the local-market sensitivity | directive s.8 | `DEFICIT_ANALYSIS.md`; harness `--local`, `RegionalMarket.plan(local)` | `caravan_compare.gd` |
 | Caravan subsidy replacement plan and shadow harness (live caravan unchanged) | s.7, CARAVAN-TMP | `game/tests/caravan_compare.gd`, `game/tests/fixtures/x18_regions.json`, `CARAVAN_REPLACEMENT.md` | `caravan_compare.gd` (10 and 30 days, seed 1) |
 
+### Round 4 (2026-10-21): X18-SIM, X18-Q12 (booths, routes, postage window), X18-Q13 (signatures)
+
+| Feature | Owner source | Code | Tests (run on this branch) |
+|---|---|---|---|
+| Capability analysis switch on the real production systems (work time and the manor's productive wages; off in the game, fingerprint-identical) and a comparative simulation grid | X18-SIM | `capability_hook.gd`, X18 HOOKs in `npc_brain.gd`, `construction.gd`, `manor_work.gd`; `tests/capability_metrics.gd`, `economy_sim.gd` flags | `capability_test` 49; 59 economy_sim runs, all LEAKS 0; `CAPABILITY_SIMULATIONS.md` |
+| Courier booths (existing stalls, job rule), regular routes (flat fee a load at the booth), special deliveries (negotiated, fee from the work), known recipients only (acquaintances, businesses traded with: `Relations.trades` via one World.trade hook), locations from records, physical journeys, payment collection, deposits, refusals, interruptions | X18-Q12, X18-Q12-BOOTH, X18-Q12-POST | `couriers.gd`, `couriers.json`, `relations.gd`, `world.gd` (hook) | `courier_test` 44 |
+| The postage-style courier window (UI only collects choices; core decides) | X18-Q12-POST | `ui/courier_window.gd`, `tests/courier_window_shot.gd` | rendered and looked at (xvfb, opengl3): form with service, item, quantity, known recipient (a business by prior trade), delivery place, collect-payment, payment kind and amount, proceeds, courier, offer; the review shows the instruction and fee at the top |
+| Formal agreements: small unsigned; formal and ownership need signatures; face to face or a notary courier carrying the document; no remote signing; completed, rejected, interrupted | X18-Q13 | `formal_contracts.gd` | `contract_sign_test` 20 |
+
+Not done in round 4 (stated plainly): the 90-day runs, the `revised_bounded` model's runs and the regional harness by
+profile, held until after the SYNC-17 Build 17 merge so results stay on one baseline (CAPABILITY_SIMULATIONS.md s.4).
+
 ## Features implemented provisionally
 
 - **Mining capability** comes only through `MiningCapabilityAdapter` (fixture / live / none), mapped to MIN-D's real
@@ -109,8 +121,21 @@ multipliers, diminishing returns, industries may differ, base values from the ex
   candidate, front-loaded, intermediate, industry-differentiated); none adopted.
 - **Q18-11B (composition):** how people's local experience, tools, facilities and infrastructure make up a level. Four
   options with pros and cons in `CAPABILITY_CURVES.md` section 5; the research measures no tools or facilities share.
-- **Q18-12** (carter and paid-service pricing) and **Q18-13** (households and off-map parties in contracts): open at the
-  time of this round; the next round applies the owner's answers.
+- **Q18-12** and **Q18-13** were decided by the owner on 2026-10-21 and are implemented in round 4 (above). New questions
+  from that work: **Q18-14** which skill gives a courier legal standing to notarise (no "law" skill exists; provisional
+  trading 5); **Q18-15** which businesses are "major" for their own booth (provisional: the market traders); **Q18-16**
+  where the village booth stands when no market stall is free (provisional: a stall built by the STALL rules); the fee
+  coefficients and the small-agreement threshold (UNAPPROVED defaults in `couriers.json`).
+- Capability numbers (Q18-11A): the X18-SIM evidence is in `CAPABILITY_SIMULATIONS.md`; recommendation there, nothing
+  adopted.
+- Stoneworking (owner FYI, 2026-10-21): X18-STONECUT (a professional stonecutter trade), STONE-02 (villagers dressing their
+  own stone), STONE-03 (repair materials by kind of work), STONE-04 (dressing efficiency by skill, waste conserved),
+  STONE-05 (a dedicated Stoneworking skill), STONE-06 (an iron chisel by smiths, used with the mallet) are Expansion 18
+  requirements, documented only, not implemented. Integration needs: Build 17's STONE-01 `dress_stone` recipe and
+  mallet stay as they are; the stonecutter's capability goes into the one evaluator as a new industry (masonry) with
+  Stoneworking practitioners and the chisel as a `tool`; its output multiplier must act on dressing time only (waste
+  conserved, STONE-04); masonry settles the masonry part of Q18-1. Open owner values: starting levels and migration
+  credit, efficiency values, chisel wear, chisel recipe.
 - Reconciliation item (not an owner question yet): how MIN-D's mining stages 1-4 map to the 0-10 scale.
 
 Earlier open questions: Q18-1 (skills for farming, carpentry, masonry, tanning), Q18-2 (thresholds, first industries),

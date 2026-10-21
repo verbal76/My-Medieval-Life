@@ -464,6 +464,28 @@
           "trade": 0.35
         },
         "pay_ratio": 0.428571
+      },
+      "revised_bounded": {
+        "label": "UNAPPROVED revised test hypothesis (X18-SIM, agent proposal): small output gains where the work draws on a finite natural source (mining +5%, forestry +5%), none on farming output (the crop is the land's; faster work only frees time), moderate gains in the crafts limited by their inputs (smithing +15%, carpentry +15%, tanning +10%); pay at 0.4 of output (research 0.33-0.45); front-loaded for the simple trades, the owner's shape for the crafts",
+        "shape": {
+          "mining": "front_loaded",
+          "forestry": "front_loaded",
+          "farming": "front_loaded",
+          "trade": "intermediate",
+          "tanning": "intermediate",
+          "carpentry": "owner_candidate",
+          "smithing": "owner_candidate"
+        },
+        "output_max": {
+          "mining": 0.05,
+          "forestry": 0.05,
+          "farming": 0.0,
+          "trade": 0.1,
+          "tanning": 0.1,
+          "carpentry": 0.15,
+          "smithing": 0.15
+        },
+        "pay_ratio": 0.4
       }
     },
     "unmapped_external": "An external industry (mining: MIN-D stages 1-4) has no agreed mapping to the 0-10 scale (a reconciliation item, DESIGN.md section 8): its multipliers stay 1.0 until the mapping is decided.",
