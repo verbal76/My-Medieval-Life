@@ -24,6 +24,9 @@ right and the difference is listed under "Corrections" below.
 | Service contracts (dig your pit, survey a stain) in the CON-01 engine | `CON02_SERVICES.md` | CON-02, CON02-S-1..S-6 | `services_test`, `contracts_test` | `sys:contracts` |
 | Goods that spoil and wear, ways through a cliff | `BUILD_17_PLAN.md` | DVW-B4, B14-07 | `decay_test`, `terrain_test` | `sys:decay`, `sys:cliff_ways` |
 | Saves: Build 16 save into Build 17, version 17, per-system keys (`underground`, `prospecting`, `discovery`, `pits`, `mine_works`) | `SAVE_MIGRATION.md`, and each note's "Saves" row | (CLAUDE.md section 7) | `save_transfer_test`, `world_test` | `sys:saving` |
+| Mining equipment made to order and procured by the manor, shore jobs, miners' minecarts; a collapse's outcome (survive or die, escape or trapped) | `MIN_EQUIP_COLLAPSE.md` | MIN-EQUIP, MIN-COLLAPSE, MIN-F2-Q1, MIN-F2-Q2, HEALTH-01 | `equip_test`, `underground_struct_test` | `sys:mine_equipment`, `sys:mine_collapse`, `sys:mine_stability` |
+| Shovels and pickaxes, trial-pit earth, where you may dig, the resident player in the capability count | `MIN_PARITY_SHOVELS.md` | MIN-D2, MIN-D3, MIN-SHOVEL, MIN-RIGHTS, MIN-SKILLCAP | `parity_mining_test` | `wiki_excavation.gd` pages |
+| Raw stone dressed into building blocks | `STONE_01_BLOCKS.md` | STONE-01, STONE-Q1..Q3 (STONE-02..06 Expansion 18) | `stone_test` | `sys:stoneworking`, `todo:stonecutters` |
 | Determinism and the 30-day run | `DETERMINISM_GATE.md` | MIN-G, B17-DIR | `economy_sim`, `conservation_test` | none (developer only) |
 
 Common to all: `run_tests`, `world_test`, `start_test`, `play_test`, `parity_test` (one rule for the player and a villager),
@@ -48,8 +51,7 @@ rate) are deliberately not in the wiki.
   disputes (CON-05), farm labour contracts (CON-06), villagers hiring on their own (CON-07), a separate signing line for
   services (CON-08), and the health placeholders (HEALTH-01). When one is built, delete its `todo:` entry and document it
   on the system's own page in the same change.
-- A collapse's effect on a person is not on `sys:mine_stability` (MIN-COLLAPSE, MIN-EQUIP are with other workers:
-  building blocks, shovels and rights, equipment makers). Add it when the outcome merges.
+- (Done.) A collapse's effect on a person is on `sys:mine_stability` and `sys:mine_collapse` (MIN-COLLAPSE, merged).
 
 ## Corrections made while verifying
 

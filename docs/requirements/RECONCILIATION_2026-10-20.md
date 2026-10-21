@@ -183,7 +183,7 @@ None.
 | MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | PARTIALLY IMPLEMENTED | 17 |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-C-Q3 | The smith remains the assayer; no separate assayer profession without approval | approved | COMPLETE AND VERIFIED |  |
-| MIN-COLLAPSE | Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-COLLAPSE | Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | decision | COMPLETE AND VERIFIED | owner decision |
@@ -194,7 +194,7 @@ None.
 | MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q4 | Should 'excavator' become a job, or should capability level 3 count whoever digs? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q5 | Should bigger or overworld pits be built to allow spiral ramps and more layers? | decision | COMPLETE AND VERIFIED | owner decision |
-| MIN-EQUIP | Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-EQUIP | Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | MIN-F-Q1 | Should unsupported spans collapse, supports decay and need repair, and ventilation and lighting be real needs? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q2 | Should tunnelling find hidden underground deposits, the manor post tunnelling and track jobs, and the carpenter make supports and track to sell (no villager tunnels on its own now)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q3 | Should miners haul by minecart instead of carrying? | decision | COMPLETE AND VERIFIED | owner decision |

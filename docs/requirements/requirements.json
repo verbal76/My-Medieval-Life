@@ -16404,7 +16404,7 @@
    "id": "MIN-COLLAPSE",
    "title": "Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "For Build 17, a character caught in a mine collapse can either: 1. Survive. 2. Die.",
    "description": "Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically",
    "source": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md",
@@ -16414,20 +16414,22 @@
     "Deaths through the existing death path (inheritance, household, witnesses as applicable); no deletion",
     "Survivors not teleported without explanation: an existing valid mechanism, limitations reported (future rescue)"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_EQUIP_COLLAPSE.md; game/scripts/core/mine_supply.gd; INT-205..208",
+   "tests": "equip_test 51, underground_struct 90, underground_ext 113, underground 95, crafts 20, world 339, run_tests 3544, start 499, parity 55, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9a7b513"
+   ],
    "parent": "MIN-F2",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Lead integrates wip/b17-equip (89f30d3, pushed) after the worker reports",
+   "next_action": "Determinism re-baseline, CI, MIN-G 365-day runs",
    "priority": "",
-   "workstream": "wip/b17-equip",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16445,6 +16447,11 @@
      "date": "2026-10-21",
      "change": "workstream; next_action",
      "why": "Worker branch pushed"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9a7b513; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-equip (9a7b513) into wip/build17 without conflicts; equip_test 51/0, underground_struct 90/0, parity_mining, job_board, early_game, stone and wiki re-run on the merge and pass; worker's run_tests 3544/0, world 339, start 499, underground and underground_ext pass on its merge with f082790 (fixed a household-split regression: a carpenter now holds back only the mallet the manor ordered). Awaiting the determinism re-baseline, CI and MIN-G"
     }
    ],
    "target_build": "17"
@@ -17067,7 +17074,7 @@
    "id": "MIN-EQUIP",
    "title": "Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Both carpenters and smiths must participate in the legitimate production of mining equipment.",
    "description": "Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement",
    "source": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md",
@@ -17077,20 +17084,22 @@
     "Equipment reaches miners and the manor through market trade and procurement (existing made-to-order, merchant, CON-01 paths); the manor buys and arranges repairs from the treasury",
     "The underground system functions in an unattended village; no mining-specific economy or wage"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_EQUIP_COLLAPSE.md; game/scripts/core/mine_supply.gd; INT-205..208",
+   "tests": "equip_test 51, underground_struct 90, underground_ext 113, underground 95, crafts 20, world 339, run_tests 3544, start 499, parity 55, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9a7b513"
+   ],
    "parent": "MIN-F2",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Lead integrates wip/b17-equip (89f30d3, pushed) after the worker reports",
+   "next_action": "Determinism re-baseline, CI, MIN-G 365-day runs",
    "priority": "",
-   "workstream": "wip/b17-equip",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17108,6 +17117,11 @@
      "date": "2026-10-21",
      "change": "workstream; next_action",
      "why": "Worker branch pushed"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9a7b513; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-equip (9a7b513) into wip/build17 without conflicts; equip_test 51/0, underground_struct 90/0, parity_mining, job_board, early_game, stone and wiki re-run on the merge and pass; worker's run_tests 3544/0, world 339, start 499, underground and underground_ext pass on its merge with f082790 (fixed a household-split regression: a carpenter now holds back only the mallet the manor ordered). Awaiting the determinism re-baseline, CI and MIN-G"
     }
    ],
    "target_build": "17"
@@ -31403,6 +31417,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Parity merge: wiki_excavation.gd (shovels and pickaxes, trial-pit earth, where you may dig, mining capability) and contracts hiring text; lead corrected wiki_mining.gd (open pits and trial pits dug with a shovel for earth, fallen rock dug out with a shovel). wiki_test passes. Remaining: collapse outcome (equipment worker), code names on non-mining node pages, prospector JOB_TEXT orphan, MIN_F_UNDERGROUND.md section 4"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Equipment merge: sys:mine_equipment and sys:mine_collapse (wiki_mine_equipment.gd), the collapse outcome on sys:mine_stability, carpenter job text, shore job text; docs/build17/README.md rows for equipment, parity and stone added and the collapse gap closed. Remaining: code names on non-mining node pages, prospector JOB_TEXT orphan, MIN_F_UNDERGROUND.md section 4"
     }
    ],
    "target_build": "17"
