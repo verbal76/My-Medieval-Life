@@ -4,14 +4,14 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-21 (round 2: performance and measurement).
+Updated 2026-10-21 (round 3: word of mouth spread over frames).
 
 ## Branch and latest pushed commit
 
 `wip/expansion19-preparation`, branched from staging `b721616` (Build 16 released, plus records). Round 1: `3005d6f`
-(isolated prototype), `221ac6f` (live adapter, off), `efbd31c` (performance suite, documents), `e05d367`. Round 2: the
-commit that adds this update (compact records, sliced daily update, trade-hook shortcut, measurements); the pushed head is
-the branch head on GitHub.
+(isolated prototype), `221ac6f` (live adapter, off), `efbd31c` (performance suite, documents), `e05d367`. Round 2: `ff19cb2`, `693e0c3`
+(compact records, sliced daily update, trade-hook shortcut, measurements). Round 3: the commits that add this update
+(gossip queue, cheaper telling, the scheduled option, measurements). The pushed head is the branch head on GitHub.
 
 ## Implemented and tested
 
@@ -27,7 +27,17 @@ the branch head on GitHub.
 | Large-population performance | `judgment_perf.gd` | 19 checks at 100 / 500 / 2000 people, live and stress event rates, hour by hour (memory bound, facts within horizon, save round trip, determinism); figures and budgets in DESIGN.md section 7 |
 | Round 2: compact records (packed arrays) | `JudgmentStore` | memory at 500 people 10.7 -> 4.0 MB (live rate), 57.9 -> 16.1 MB (stress); every perf scenario's final state hash identical before and after |
 | Round 2: daily update sliced over the day's hours, catch-up on touch | `JudgmentStore.begin_day/dawn_hour/dawn_slice`, World hooks | `judgment_test.gd` (105 in all): sliced and whole updates agree on every telling, choice, opinion and the end state hash over twelve days with newcomers, also with retraction, a fading view and rumours on; largest update hour at 500 people live: 11.38 ms (one call) -> 0.55 ms median day |
+| Round 3: word of mouth queued and told a few a tick; reads first tell the meetings they depend on | `JudgmentStore.meet_hourly/meet_later/gossip_tick/_flush_for` | `judgment_test.gd` (129 in all): same tellings, every read along the way, beliefs and end state as telling at once (also with retraction, a fading view and rumours), and the test fails if the flush is removed; perf: spread = told at once = round 2's end state at every size and rate; at 500 people live, frame p99 1.03 -> 0.87 ms and p99.9 5.66 -> 2.15 ms |
+| Round 3: cheaper telling (cached settings, no formatting, packed sort, "nothing new" shortcut) | `JudgmentStore.tell/interpret/evaluate/_post` | results unchanged (same state hashes as round 2 at every size and rate) |
+| Round 3 option: scheduled timing (off) | `gossip.timing` "scheduled" | `test_scheduled_gossip`: told at its own minute, never before, kept in a save, deterministic; frames p99 0.62 / p99.9 1.25 ms at 500 people live; results differ by design |
 | Round 2: trade-hook shortcut | `JudgmentLive._first_stands` | `judgment_live_test.gd` (27): picks exactly as the full scan over twelve opinion mixes; economy_sim 10 days seed 1: about +20% wall time before, about +5% after, no leaks, same fingerprint |
+
+Round 3 regression evidence (judgment off), on this branch before the round-3 push: `judgment_test` 129,
+`judgment_live_test` 27, `judgment_perf` 23, `run_tests` 3535, `world_test` 200, `relations_test` 79, `parity_test` 55,
+`conservation_test` 8, `save_transfer_test` 21 checks, 0 failures; python unittest 105 OK; `tools/sim_gate.py` **PASS,
+identical to the baseline**. With judgment on, the 10-day `economy_sim` (seed 1, run twice) gives 75.9 s and 75.2 s
+against 78.1 s and 77.5 s with it off. There are no leaks, the fingerprint is the baseline's, and the judgment counts
+and tellings equal round 2's.
 
 Round 2 regression evidence (judgment off), on this branch before the round-2 push: `judgment_test` 105,
 `judgment_live_test` 27, `judgment_perf` 19, `run_tests` 3535, `world_test` 200, `relations_test` 79, `parity_test` 55,
@@ -65,8 +75,11 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 
 - Hooks touch `world.gd`, `relations.gd`, `npc_brain.gd` (one guarded line each, plus the save section): small but
   real merge points with Build 17 and 18 changes to the same functions.
-- Gossip is now the frame-cost risk (DESIGN.md section 7): an hour's meetings are told in one frame, 19 ms here at 500
-  people at the live rate (about 76 ms on the assumed phone). Proposed next: budgeted gossip slices and a cheaper `tell`.
+- Gossip's frame cost (DESIGN.md section 7, round 3): at 500 people at the live rate, 99 frames in 100 now fit the
+  phone budget on the 4x assumption (0.87 ms here). The rarest frames do not: 1 in 1000 reaches 2.15 ms here (about
+  8.6 ms on the phone), when a read must first tell a long chain of queued meetings. Keeping the result identical
+  requires that. The scheduled option halves those frames (1.25 ms) but changes when word passes, so it is a choice for
+  the lead or the owner. A device check should decide.
 - The daily update's worst single hour at 500 people varies with machine load (1.09 to 4.54 ms across runs; median day
   0.55 ms); a device check decides whether `dawn_slice` must run every frame. 2000 people is over the budget.
 - Missing event feeds (DESIGN.md section 7): help, gifts, rescue, fair and cheating trade, villagers' thefts and

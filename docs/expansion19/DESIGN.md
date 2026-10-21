@@ -81,6 +81,11 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
   by part and is never saved or read by the simulation.
 - **A19-8** (round 2) The trade hook skips its full scan when the live pick provably wins (`JudgmentLive._first_stands`);
   `JudgmentLive.shortcut` turns it off for comparison.
+- **A19-9** (round 3) Word of mouth is queued and told a few meetings a tick, and reads tell first the meetings they
+  depend on (`_flush_for`). It is proven result-neutral against telling at once. Settings `gossip.pump_per_tick` (8) and
+  `gossip.timing` ("hour"). The `_dry` shortcut cache is never saved and is capped at 20,000 pairs.
+- **A19-10** (round 3, an option, not chosen) `gossip.timing` "scheduled" tells each meeting at its own minute. It gives
+  smaller frames but different results, so it is left for the lead or the owner to choose.
 - **A19-6** Live hooks are guarded by `World.judgment != null`; it is null unless `judgment.json` `enabled` is true
   (false) or a test attaches a store. With it null, no hook runs any code beyond the null check.
 
@@ -182,6 +187,70 @@ best the seller holds of anyone. All 32,864 weighed sales in the 10 days took th
 checks the shortcut picks exactly as the full scan over twelve opinion mixes. Of the 29 to 31 s measured inside the
 hook, nearly all is the live buyer search itself (`World.purchase_qty`), which the game pays with judgment off too.
 Gossip in the live village cost 0.12 s over the 10 days, the daily update 3 ms.
+
+### Round 3: word of mouth spread over frames
+
+**What changed.** `Relations.share` now queues each meeting (`meet_hourly` -> `meet_later`) and `World.update` tells
+`gossip.pump_per_tick` (8) of them each tick (`gossip_tick`). A meeting reads and changes only its two people's records,
+so whenever anything reads or changes a person's records, the queued meetings that person depends on are told first:
+their last queued meeting and, walking back, every earlier one sharing someone with a meeting already taken (the
+dependency closure, `_flush_for`). The meetings left behind share nobody with those taken, so they commute. The result is
+the same as telling every meeting at once, as rounds 1 and 2 did, however the pump is paced. Each telling is also
+cheaper: settings are cached as integers, there is no string formatting in `interpret`, and `_post` and the candidate
+sort work on packed arrays. A "nothing new to tell" shortcut (`_dry`) is never saved and changes no result.
+
+**Proof of identical results.**
+- `judgment_test.gd` `test_spread_gossip`: ten days of hourly events, an hour's meetings at once, and six ticks of
+  pumping, choices, events and reads between them. Queued and told-at-once give the same tellings (1,933), the same
+  opinion, memory count and choice at every read, the same 252 beliefs with provenance and confidence, and the same end
+  state hash. This also holds with forgetting that takes points back, a fading opinion view and false rumours on.
+  - Turning off the flush on touch makes 8 of these checks fail, so the test does detect a wrong ordering.
+- `judgment_perf.gd`: spread and told-at-once give the same end state at 100 and 500 people at both rates.
+- Every spread and told-at-once run, at 100, 500 and 2000 people at both rates, ends in exactly round 2's state hash.
+- In the live village (`economy_sim --judgment`, 10 days, seed 1), the judgment counts and tellings are the same as in
+  round 2 (515 memories, 367 ledgers, 499 tellings).
+
+**Frames.** A frame is one tick, 60 to a game hour. The budget is 1 ms here (4 ms on the assumed 4x phone). These are
+percentiles over 28,800 ticks. The machine is shared with other agents, and a tick doing no judgment work at all reached
+0.1 to 1.4 ms (the noise floor), so the single worst frame is unreliable; p99 and p99.9 are the figures to read.
+
+| Rate, people | Told at once (rounds 1-2): p99 / p99.9 / worst ms | Spread (round 3, default): p99 / p99.9 / worst ms | Scheduled option: p99 / p99.9 / worst ms |
+|---|---|---|---|
+| live, 100 | 0.36 / 1.07 / 5.83 | **0.28 / 0.49** / 2.96 | 0.31 / 0.42 / 4.26 |
+| live, 500 | 1.03 / 5.66 / 9.30 | **0.87 / 2.15** / 4.16 | 0.62 / 1.25 / 4.40 |
+| live, 2000 | - | 2.12 / 11.38 / 21.37 | - |
+| stress, 100 | 1.12 / 5.61 / 10.19 | 1.54 / 3.07 / 7.68 | 0.80 / 1.50 / 2.27 |
+| stress, 500 | 6.01 / 25.24 / 37.20 | 5.56 / 10.43 / 20.50 | 4.38 / 7.66 / 11.63 |
+
+At 500 people at the live rate, with the default (spread, identical results):
+- **99 frames in 100:** within budget, 0.87 ms here, about 3.5 ms on the phone.
+- **1 frame in 1000:** not within it, 2.15 ms here, about 8.6 ms on the phone.
+
+Those rare frames are a dependency flush: a villager's decision reads someone whose queued meetings chain through most
+of the hour's meetings in a well-connected crowd. The largest flush measured was 83 meetings, 4 to 7 ms here. That flush
+is what keeps the result identical, so it cannot be split up. Per day, gossip costs about the same as before (42 ms
+spread, 46 ms told at once at 500 people live).
+
+**The scheduled option** (`gossip.timing` "scheduled", off). Each meeting is told at its own minute of the hour (a seeded
+hash of the pair and the hour), and nothing has to be told early, so a frame holds only that minute's meetings.
+- **Frames:** smallest of the three, 0.62 / 1.25 ms at 500 people live (about 2.5 / 5 ms on the phone).
+- **Results:** it changes when word passes within an hour, so they differ from rounds 1 and 2 (for example, 3,073
+  memories instead of 3,102 at 500 people live).
+- **Save:** meetings still to come are saved (`"scheduled"` in the section).
+- **Tests:** it is deterministic and tested (`test_scheduled_gossip`).
+- **Decision:** whether to use it is a design decision, so the default stays "hour".
+
+**The live village with the queue on** (`economy_sim`, 10 days, seed 1, run one after the other):
+
+| Judgment | Wall times |
+|---|---|
+| off | 78.1 s, 77.5 s |
+| on | 75.9 s, 75.2 s |
+
+- **Overhead:** within noise, with no leaks and the baseline fingerprint.
+- **Gossip:** 0.11 s over the 10 days; the largest flush was 25 meetings in 0.65 ms.
+- **Memory:** the store measured 6.1 MB at 500 people live, against 4.0 in round 2. The extra is the shortcut cache
+  (capped at 20,000 pairs) and the queue.
 
 ### Event feeds not yet wired (listed, not added: they would change live behaviour once judgment is on)
 
