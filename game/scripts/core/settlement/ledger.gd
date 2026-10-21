@@ -27,6 +27,8 @@ var production := {}              # item -> units a day its labour makes
 var income_per_day := 0           # explicit outside income (Q18-3); 0 = closed purse
 var transport := {"handcart": 0}  # vehicles it can send (TradeRoutes.capacity)
 var capabilities := {}            # {industry: level} (fixtures; SettlementIndustries for real facts)
+var sale_limit = null             # null: anything beyond its reserve is for sale; else {item: most units for sale}
+                                  # (the village snapshot: only its traders' and producers' goods, not pantries)
 var journal: Array = []           # [{day, kind, item, n, coins, with}]
 var start := {}                   # the opening books (balanced() checks against them)
 var keep_journal := true

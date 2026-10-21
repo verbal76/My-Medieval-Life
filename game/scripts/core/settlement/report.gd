@@ -66,17 +66,23 @@ static func measured_use(stats0: Dictionary, stats1: Dictionary, days: float) ->
 	return out
 
 
-## The village as a read-only SettlementLedger snapshot for regional calculations (shadow planning): its market
-## goods (what its traders can sell) and its traders' coins, with the given daily needs. A COPY: executing a plan on
-## it changes nothing in the World (live trade is the caravan's until SET-C is integrated).
+## The village as a read-only SettlementLedger snapshot for regional calculations (shadow planning): every good its
+## people and institutions hold counts against its need (pantries and the granary too), but only its traders' and
+## producers' goods (markets, stalls, carts, villagers' packs) are for sale, and only its traders' coins buy. A COPY:
+## executing a plan on it changes nothing in the World (live trade is the caravan's until SET-C is integrated).
 static func as_ledger(w: World, needs: Dictionary, id := SettlementFacts.VILLAGE) -> SettlementLedger:
 	var h := SettlementHoldings.holders(w)
 	var stock := {}
+	var sale := {}
 	for k in ["markets", "stalls", "carts", "npcs", "households", "granary"]:
 		for item in h.get(k, {}):
 			stock[item] = int(stock.get(item, 0)) + int(h[k][item])
+			if k in ["markets", "stalls", "carts", "npcs"]:
+				sale[item] = int(sale.get(item, 0)) + int(h[k][item])
 	var coins := SettlementHoldings.coins(w)
 	var facts := SettlementFacts.from_world(w)
-	return SettlementLedger.make({"id": id, "name": "the village", "population": facts.population,
+	var l := SettlementLedger.make({"id": id, "name": "the village", "population": facts.population,
 		"coins": int(coins.markets), "stock": stock, "needs": needs, "transport": facts.transport,
 		"capabilities": SettlementIndustries.levels(facts)})
+	l.sale_limit = sale
+	return l

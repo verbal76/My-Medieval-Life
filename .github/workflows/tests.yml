@@ -100,6 +100,9 @@ jobs:
           $godot --headless --path game --script res://tests/farm_plots_test.gd
           $godot --headless --path game --script res://tests/farm_place_test.gd
           $godot --headless --path game --script res://tests/herd_test.gd
+          # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
+          $godot --headless --path game --script res://tests/settlement_test.gd
+          $godot --headless --path game --script res://tests/regional_test.gd
 
       - name: Short economy simulation (FR-07)
         run: |

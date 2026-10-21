@@ -1,0 +1,25 @@
+{
+  "format": "mml-regions/0",
+  "_note": "PROSPECTIVE test fixture (Expansion 18, PROS-18; caravan_compare.gd): three abstract off-map settlements standing in for the region the caravan represents (owner question Q18-4: how many, of what character; spec s.6 examples). Finite stocks, needs, production and purses; income_per_day 0 = a closed purse (Q18-3). Distances in overworld tiles to the village (the village is at [0, 0]); mix: the share of road, open and rough ground. Every number is an agent proposal, for measurement only.",
+  "village_pos": [0, 0],
+  "regions": [
+    {"id": "eastmarch", "name": "Eastmarch (mining town)", "pos": [900, 0], "population": 70, "coins": 900,
+     "stock": {"iron_ore": 120, "coal": 90, "copper_ore": 40, "wheat": 20, "meat": 10},
+     "needs": {"wheat": 6.0, "meat": 2.0, "bread": 1.0, "leather": 0.3, "plank": 1.0},
+     "production": {"iron_ore": 4.0, "coal": 3.0, "copper_ore": 1.0},
+     "transport": {"handcart": 2}, "income_per_day": 0,
+     "link": {"tiles": 900, "mix": {"road": 0.7, "open": 0.3}}},
+    {"id": "riverford", "name": "Riverford (market town)", "pos": [0, 1400], "population": 140, "coins": 1500,
+     "stock": {"wheat": 200, "wheat_seed": 30, "carrot_seed": 30, "linen_bandage": 12, "herbal_poultice": 8},
+     "needs": {"leather": 0.6, "hide": 0.6, "pickaxe": 0.05, "axe": 0.05, "meat": 1.5, "ale": 1.0, "rabbit_pelt": 0.3},
+     "production": {"wheat": 9.0, "wheat_seed": 0.5, "carrot_seed": 0.5, "linen_bandage": 0.2, "herbal_poultice": 0.1},
+     "transport": {"handcart": 3}, "income_per_day": 0,
+     "link": {"tiles": 1400, "mix": {"road": 1.0}}},
+    {"id": "highfold", "name": "Highfold (quarry hamlet)", "pos": [-600, -500], "population": 25, "coins": 250,
+     "stock": {"stone": 150},
+     "needs": {"wheat": 2.0, "plank": 1.0, "pottage": 0.5},
+     "production": {"stone": 5.0},
+     "transport": {"handcart": 1}, "income_per_day": 0,
+     "link": {"tiles": 800, "mix": {"road": 0.3, "open": 0.4, "rough": 0.3}}}
+  ]
+}

@@ -34,7 +34,10 @@ static func demand(l: SettlementLedger, item: String) -> int:
 
 
 static func supply(l: SettlementLedger, item: String) -> int:
-	return maxi(0, l.stock.count(item) - horizon(l, item))
+	var n := maxi(0, l.stock.count(item) - horizon(l, item))
+	if l.sale_limit is Dictionary:
+		n = mini(n, int(l.sale_limit.get(item, 0)))
+	return n
 
 
 static func ask(item: String) -> int:
@@ -202,11 +205,14 @@ static func execute(plan_d: Dictionary, ledgers: Array, day := 0) -> Dictionary:
 
 
 ## Whether a set of journals pairs up: every sale has the buyer's matching purchase (same day, item, units, coins and
-## counterparties) and every purchase a sale. "" when they do.
-static func matched(ledgers: Array) -> String:
+## counterparties) and every purchase a sale. "" when they do. `day` >= 0 looks at that day's lines only (when some
+## of the ledgers are snapshots made for that day).
+static func matched(ledgers: Array, day := -1) -> String:
 	var sales := {}
 	for l: SettlementLedger in ledgers:
 		for e in l.journal:
+			if day >= 0 and int(e.day) != day:
+				continue
 			if e.kind == "sell" or e.kind == "buy":
 				var seller: String = l.id if e.kind == "sell" else str(e.with)
 				var buyer: String = str(e.with) if e.kind == "sell" else l.id
