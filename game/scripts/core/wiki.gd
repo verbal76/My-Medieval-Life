@@ -28,7 +28,7 @@ const JOB_TEXT := {
 	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor.",
 	"laborer": "Day labour: mines, hauls and does odd work where it is needed.",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
-	"carpenter": "Buys logs and saws them into planks.",
+	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
 	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them.",
@@ -115,6 +115,7 @@ static func build() -> Wiki:
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
+	add_provider(WikiMineEquipment.add_pages)     # MIN-EQUIP, MIN-COLLAPSE (wiki_mine_equipment.gd)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)

@@ -159,7 +159,23 @@ func _test_collapse() -> void:
 			break
 	check(chance_seen > 0 and fell_day > 0, "as the support wears the cell weakens (a chance from about day %d) and caves in on day %d" % [chance_seen, fell_day])
 	check(mw.rubble_at(-1, c) == MineWorks.cell_units() and lm.is_solid(c) and _st(w, "tunnel_collapses") == 1, "the collapse fills the cell with rubble (%d units) and blocks it" % mw.rubble_at(-1, c))
-	check(not lm.is_solid(n.cell()) and n.cell() != c, "whoever stood there steps out to the nearest floor (%s)" % str(n.cell()))
+	var stepped: bool = n.alive and not lm.is_solid(n.cell()) and maxi(absi(n.cell().x - c.x), absi(n.cell().y - c.y)) == 1
+	check((not n.alive) or stepped or mw.is_trapped(n), "whoever stood there died, scrambled into the passage beside it (%s) or is trapped: never moved anywhere else (MIN-COLLAPSE)" % str(n.cell()))
+	if not n.alive or mw.is_trapped(n):
+		mw.trapped.clear()
+		var fresh: NPC = null
+		for o: NPC in w.npcs:
+			if o.alive and o != n and o.role == "adult":
+				fresh = o
+				break
+		n = _hand(w, -1, s, fresh.job)
+		if n.cell() != s:
+			n = fresh
+			n.depth = -1
+			n.pos = Vector2(s) + Vector2(0.5, 0.5)
+			n.inv.add("pickaxe")
+			n.inv.add("mallet")
+		n.inv.add("timber_support", 2)
 	var p := lm.find_path(w.underground.portals[0].ends[1].stand, c)
 	check(p.is_empty() or Vector2i(p[p.size() - 1]) != c, "the level's paths no longer go through the fallen cell")
 	check(lm.floor_cells().size() == natural_before - 1, "only that cell changed: the natural gallery is never weighed (no global event)")

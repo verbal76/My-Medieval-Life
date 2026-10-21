@@ -424,6 +424,10 @@ func _update_npc(n: NPC, dt: float) -> void:
 			kill(n, "starvation")
 			return
 	n.attack_cd = maxf(0.0, n.attack_cd - dt)
+	if mine_works != null and not mine_works.trapped.is_empty() and mine_works.is_trapped(n):
+		n.anim = "idle"                # MIN-COLLAPSE: trapped in a cave-in until it is dug out (hunger goes on)
+		n.plan.clear()
+		return
 	if n.depth != 0 and (underground == null or underground.is_solid(n.depth, n.cell())):
 		n.depth = 0                    # MIN-A: set down off its level's floor by a rule that knows no levels (a door): the surface
 	if n.target != -1:
