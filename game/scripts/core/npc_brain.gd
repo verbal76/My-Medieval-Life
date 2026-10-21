@@ -30,7 +30,7 @@ const BUYS := {
 		"herbal_poultice": 8},                     # households' home-brewed poultices, brought to market (B14)
 }
 # SHOP-01 (owner, 2026-10-20 section 6): the stations each producing trade works at. Their recipes (recipes.json) are
-# what its purchases of their inputs are for: it buys an input only in whole batches of a recipe it has the skill for
+# what its purchases of their inputs are for: it buys an input only for a recipe it has the skill for, up to its want
 # (batch_unit, wants). Goods in BUYS that no recipe of the trade consumes are stock it holds for sale or use.
 const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
@@ -1577,10 +1577,10 @@ func keeps(o: NPC, id: String) -> bool:
 			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
 
 
-## How many of `id` this NPC will still buy (SHOP-01): up to its trade's stock (BUYS), and of an input its trade works
-## (TRADE_STATIONS) only what it can use: none when it lacks the skill for every recipe that takes it, otherwise as many
-## as leave what it holds at whole batches (ore below a smelt is bought only to complete one). What it can pay for is
-## World.purchase_qty's part.
+## How many of `id` this NPC will still buy (SHOP-01): of an input its trade works (TRADE_STATIONS), none when it lacks
+## the skill for every recipe that takes it; otherwise what keeps its holding at or below its want: its trade's stock
+## (BUYS) rounded up to whole batches (batch_unit), capped by that same stock. A part lot towards a batch is bought.
+## What it can pay for is World.purchase_qty's part.
 func wants(o: NPC, id: String) -> int:
 	var caps: Dictionary = BUYS.get(buy_role(o), {})
 	if not caps.has(id):
@@ -1588,9 +1588,8 @@ func wants(o: NPC, id: String) -> int:
 	var unit := batch_unit(o, id)
 	if unit <= 0:
 		return 0
-	var held := o.inv.count(id)
-	var room := maxi(0, int(caps[id]) - held)
-	return maxi(0, room - (held + room) % unit)
+	var want := mini(ceili(float(caps[id]) / unit) * unit, int(caps[id]))
+	return maxi(0, want - o.inv.count(id))
 
 
 ## SHOP-01: the smallest batch in which `o` works `id`: of the recipes at its trade's stations (TRADE_STATIONS) that

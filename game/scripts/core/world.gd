@@ -789,16 +789,12 @@ func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
 
 
 ## SHOP-01, TRADE-01: how many of the `offered` units of `id` business `buyer` buys from `seller` (the player or a
-## villager) in one sale; 0 when it buys none. Its need (NPCBrain.wants: what its trade can use, in whole batches, within
-## its stock), cut a batch at a time until its own coins pay the whole bill at the sale's prices (sale_prices) and leave
-## its reserve (OD-19); the reserve's one exception (can_afford: one unit when holding none) covers a single-unit sale
-## only. The one rule for every sale to a business, whoever sells (PAR-02).
+## villager) in one sale; 0 when it buys none. Its need (NPCBrain.wants: an input its trade has the skill to use, up to
+## its want), cut a unit at a time until its own coins pay the whole bill at the sale's prices (sale_prices) and leave
+## its reserve (OD-19); the reserve's one-unit exception (can_afford) covers a single-unit sale only. The one rule for
+## every sale to a business, whoever sells (PAR-02).
 func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
-	var unit: int = brain.batch_unit(buyer, id)
 	var q: int = mini(offered, brain.wants(buyer, id))
-	if unit <= 0 or q <= 0:
-		return 0
-	q -= (buyer.inv.count(id) + q) % unit           # whole batches with what it holds
 	if q <= 0:
 		return 0
 	var prices := sale_prices(buyer, seller, id, q)
@@ -809,9 +805,8 @@ func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
 	while q > 0:
 		if buyer.coins >= bill and (buyer.coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
 			return q
-		for k in mini(unit, q):                     # a batch less
-			q -= 1
-			bill -= int(prices[q])
+		q -= 1
+		bill -= int(prices[q])
 	return 0
 
 
@@ -842,12 +837,7 @@ func sale_refusal(buyer: NPC, seller: Object, id: String, qty: int) -> String:
 	var need: int = brain.wants(buyer, id)
 	if need <= 0:
 		return "%s has all the %s they can use." % [who, item]
-	var q := mini(qty, need)
-	q -= (buyer.inv.count(id) + q) % unit
-	if q < mini(qty, need):
-		return "%s works %s %d at a time and takes only what makes whole batches with the %d they hold (%s)." % [who, item, unit, buyer.inv.count(id),
-				("%d now" % q) if q > 0 else "none of these"]
-	if got < q:
+	if got < mini(qty, need):
 		return "%s cannot afford %s right now: they keep a reserve." % [who, ("more than %d" % got) if got > 0 else "any"]
 	return "%s can use only %d more %s." % [who, need, item]
 

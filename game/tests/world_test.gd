@@ -832,8 +832,7 @@ func _ctr04_counter_terms(s: NPC) -> void:
 	var w: World = main.world
 	var p := w.player
 	var keep := [p.coins, s.coins, s.inv.count("iron_ore"), p.inv.count("iron_ore"), s.inv.count("pickaxe"), p.inv.count("pickaxe")]
-	if s.inv.count("iron_ore") % 2 == 0:
-		s.inv.add("iron_ore", 1)                 # one ore completes its smelt (SHOP-01)
+	s.inv.remove("iron_ore", s.inv.count("iron_ore"))     # below its want (SHOP-01)
 	s.coins = w.reserve_of(s) + 200
 	p.inv.add("iron_ore", 1)
 	s.inv.add("pickaxe", 2)
@@ -865,49 +864,53 @@ func _ctr04_counter_terms(s: NPC) -> void:
 	s.coins = keep[1]
 
 
-## SHOP-01, TRADE-01 (owner 2026-10-20 section 6): a business buys an input only as its trade can use it, in whole batches
-## of its recipes, with its own coins above its reserve; the player's and a villager's sales to it go by the one rule
-## (World.purchase_qty) and are refused with a clear reason; coins and goods are conserved.
+## SHOP-01, TRADE-01 (owner 2026-10-20 section 6): a business buys an input only for a recipe its trade has the skill
+## for, up to its want (its stock rounded up to whole batches, within it), part lots towards a batch included, with its
+## own coins above its reserve; the player's and a villager's sales to it go by the one rule (World.purchase_qty) and are
+## refused with a clear reason; coins and goods are conserved.
 func _shop01_need() -> void:
 	var w: World = main.world
 	var p := w.player
 	var smith: NPC = _by_job(w, "smith")[0]
 	var miner: NPC = _by_job(w, "miner")[0]
+	var cook: NPC = _by_job(w, "cook")[0]
 	var keep := [smith.coins, smith.inv.count("iron_ore"), smith.inv.count("gold_ore"), smith.inv.count("leather"), smith.skills.duplicate(),
 			miner.coins, miner.inv.count("iron_ore"), p.coins, p.inv.count("iron_ore"), p.inv.count("stone"), p.inv.count("gold_ore"), p.inv.count("leather"),
-			miner.plan.duplicate(true)]
+			miner.plan.duplicate(true), cook.coins, cook.inv.count("milk"), p.inv.count("milk")]
 	var setinv := func(who, item: String, q: int) -> void:
 		who.inv.remove(item, who.inv.count(item))
 		who.inv.add(item, q)
-	setinv.call(smith, "iron_ore", 1)               # half a smelt (smelt_iron takes 2)
+	var cap := int(NPCBrain.BUYS.smith.iron_ore)
 	smith.coins = w.reserve_of(smith) + 300
-	check(w.brain.batch_unit(smith, "iron_ore") == 2 and w.brain.wants(smith, "iron_ore") % 2 == 1,
-			"SHOP-01: the smith works iron ore two at a time and wants what leaves whole smelts (wants %d)" % w.brain.wants(smith, "iron_ore"))
-	check(w.purchase_qty(smith, p, "iron_ore", 1) == 1 and w.purchase_qty(smith, p, "iron_ore", 2) == 1 and w.purchase_qty(smith, miner, "iron_ore", 4) == 3,
-			"SHOP-01: holding one ore, the smith takes what completes a batch: 1 of 1, 1 of 2, 3 of 4")
-	setinv.call(smith, "iron_ore", 2)               # one whole smelt
-	check(w.purchase_qty(smith, p, "iron_ore", 1) == 0 and w.purchase_qty(smith, p, "iron_ore", 2) == 2, "SHOP-01: holding a whole batch, one more ore is not bought, two are")
-	# the player: a lone ore refused with the reason; two sold; coins and goods conserved
-	setinv.call(p, "iron_ore", 2)
+	# accumulation towards a batch: a cook with no milk takes one towards a 3-milk cheese
+	setinv.call(cook, "milk", 0)
+	cook.coins = w.reserve_of(cook) + 100
+	setinv.call(p, "milk", 1)
+	var r: Dictionary = w.player_sell_many(cook, "milk", 1)
+	check(w.brain.batch_unit(cook, "milk") == 3 and r.result == "sold" and cook.inv.count("milk") == 1, "SHOP-01: a part lot towards a batch is bought: one milk of a 3-milk cheese (%s)" % r.text)
+	# the want: the smith takes ore up to its stock and no further
+	setinv.call(smith, "iron_ore", cap - 2)
+	check(w.brain.wants(smith, "iron_ore") == 2 and w.purchase_qty(smith, p, "iron_ore", 5) == 2, "SHOP-01: two below its want, the smith takes 2 of 5 ore")
+	setinv.call(p, "iron_ore", 3)
+	setinv.call(miner, "iron_ore", 3)
 	var coins0 := w.total_coins()
 	var ore0 := p.inv.count("iron_ore") + smith.inv.count("iron_ore") + miner.inv.count("iron_ore")
-	var r: Dictionary = w.player_sell_many(smith, "iron_ore", 1)
-	check(r.result == "failed" and str(r.text).contains("whole batches") and p.inv.count("iron_ore") == 2, "TRADE-01: the player's lone ore is refused: %s" % r.text)
+	r = w.player_sell_many(smith, "iron_ore", 3)
+	check(r.result == "failed" and str(r.text).contains("can use only 2") and p.inv.count("iron_ore") == 3, "TRADE-01: the player's 3 ore are refused whole: %s" % r.text)
 	var pc := p.coins
-	r = w.player_sell_many(smith, "iron_ore", 2)
-	check(r.result == "sold" and int(r.sold) == 2 and p.coins == pc + int(r.paid) and smith.inv.count("iron_ore") == 4, "TRADE-01: two ore make a batch and sell (%d coins)" % int(r.paid))
-	# a villager by the same rule: the miner's three ore, of which the smith takes two (4 + 2 = three smelts)
-	setinv.call(miner, "iron_ore", 3)
-	ore0 += 3
-	coins0 = w.total_coins()
-	check(w.brain._buyer_for(miner, "iron_ore") != null, "TRADE-01: the miner finds a buyer for the ore")
+	r = w.player_sell_many(smith, "iron_ore", 1)
+	check(r.result == "sold" and p.coins == pc + int(r.paid) and smith.inv.count("iron_ore") == cap - 1, "TRADE-01: one ore sells (%d coins)" % int(r.paid))
+	# a villager by the same rule: the miner's three ore, of which the smith takes the one it still wants
 	var mc := miner.coins
 	var sc := smith.coins
 	var ok: bool = w.brain.act(miner, "sell_to", {"buyer": smith.id, "item": "iron_ore"})
-	check(ok and miner.inv.count("iron_ore") == 1 and smith.inv.count("iron_ore") == 6 and miner.coins - mc == sc - smith.coins and miner.coins > mc,
-			"TRADE-01: the miner sells the smith two of three ore, whole batches by the player's rule (%d coins)" % (miner.coins - mc))
+	check(ok and miner.inv.count("iron_ore") == 2 and smith.inv.count("iron_ore") == cap and miner.coins - mc == sc - smith.coins and miner.coins > mc,
+			"TRADE-01: the miner sells the smith the one ore it still wants, by the player's rule (%d coins)" % (miner.coins - mc))
 	check(w.total_coins() == coins0 and p.inv.count("iron_ore") + smith.inv.count("iron_ore") + miner.inv.count("iron_ore") == ore0,
 			"SHOP-01: coins and ore are conserved through both sales")
+	r = w.player_sell_many(smith, "iron_ore", 1)
+	check(w.brain.wants(smith, "iron_ore") == 0 and r.result == "failed" and str(r.text).contains("all the iron ore") and w.brain._buyer_for(miner, "iron_ore") != smith,
+			"SHOP-01: at its want the smith refuses more ore, from the player or a villager: %s" % r.text)
 	# no coins above its reserve: nothing bought, from the player or a villager
 	setinv.call(smith, "iron_ore", 1)
 	setinv.call(miner, "iron_ore", 1)
@@ -917,8 +920,6 @@ func _shop01_need() -> void:
 	check(w.purchase_qty(smith, p, "iron_ore", 1) == 0 and r.result == "failed" and str(r.text).contains("reserve"), "SHOP-01: at its reserve the smith buys nothing from the player: %s" % r.text)
 	check(w.brain._buyer_for(miner, "iron_ore") != smith and not w.brain.act(miner, "sell_to", {"buyer": smith.id, "item": "iron_ore"}) and miner.inv.count("iron_ore") == 1,
 			"SHOP-01: nor from a villager")
-	setinv.call(smith, "iron_ore", 0)
-	check(w.purchase_qty(smith, p, "iron_ore", 2) == 0, "SHOP-01: the reserve's one-unit exception buys no half smelt")
 	smith.coins = w.reserve_of(smith) + 300
 	# inputs the business does not need, refused with the reason
 	setinv.call(p, "stone", 1)
@@ -929,6 +930,7 @@ func _shop01_need() -> void:
 	r = w.player_sell_many(smith, "leather", 1)
 	check(r.result == "failed" and str(r.text).contains("all the leather"), "SHOP-01: with its leather in stock the smith takes no more: %s" % r.text)
 	smith.skills["smithing"] = 0                    # below Smithing 3, smelt_gold's level
+	setinv.call(smith, "gold_ore", 0)
 	setinv.call(p, "gold_ore", 2)
 	r = w.player_sell_many(smith, "gold_ore", 2)
 	check(w.brain.wants(smith, "gold_ore") == 0 and r.result == "failed" and str(r.text).contains("no use"), "SHOP-01: a smith who cannot smelt gold buys no gold ore: %s" % r.text)
@@ -941,10 +943,13 @@ func _shop01_need() -> void:
 	setinv.call(p, "stone", keep[9])
 	setinv.call(p, "gold_ore", keep[10])
 	setinv.call(p, "leather", keep[11])
+	setinv.call(cook, "milk", keep[14])
+	setinv.call(p, "milk", keep[15])
 	smith.coins = keep[0]
 	miner.coins = keep[5]
 	p.coins = keep[7]
 	miner.plan = keep[12]
+	cook.coins = keep[13]
 
 
 ## FSE-12, FARM-06: behind the switch, a manor field is sown with real seed a cell, yields the player's crop a sown cell
@@ -1112,9 +1117,6 @@ func _par02_reserve() -> void:
 	if smith == null:
 		return
 	var coins0 := smith.coins
-	var odd := smith.inv.count("iron_ore") % 2 == 0      # SHOP-01: one ore sells only where it completes a smelt
-	if odd:
-		smith.inv.add("iron_ore", 1)
 	var price := w.buy_price(smith, "iron_ore")
 	smith.coins = w.reserve_of(smith) + price - 1
 	p.inv.add("iron_ore", 1)
@@ -1132,7 +1134,7 @@ func _par02_reserve() -> void:
 	r = w.player_sell_many(smith, "iron_ore", 1)
 	check(r.result == "sold" and smith.coins >= w.reserve_of(smith), "PAR-02: and so can the player, down to the reserve and no further")
 	miner.inv.remove("iron_ore", 1)
-	smith.inv.remove("iron_ore", 2 if odd else 1)
+	smith.inv.remove("iron_ore", 1)
 	smith.coins = coins0
 
 
