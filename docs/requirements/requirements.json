@@ -28088,6 +28088,52 @@
    "target_build": "18"
   },
   {
+   "id": "X18-Q12-POST",
+   "title": "Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The courier contract interface should function similarly to modern online postage, with a structured delivery request and calculated service fee.",
+   "description": "Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done",
+   "source": "docs/directives/2026-10-21_courier_contract_interface_pricing.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Popup with the listed dropdowns and a readable instruction before confirmation",
+    "Recipients only from existing acquaintance, transaction and business records (prior trade counts); same rules for NPCs; no typed addresses, no unknown recipients",
+    "Fee from the listed factors; routes keep flat-rate structure; special services negotiated; no permanent constants without simulation and owner review",
+    "Courier physically collects, travels, delivers, collects payment or items, returns or deposits; all goods and coins accounted; nothing instant or invented",
+    "Tests: known and business contacts, location resolution, item availability, capacity, fee, payment collection, deposits, rejected, unavailable recipient, interrupted journey; fulfilled only when done"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-Q12-BOOTH",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_courier_contract_interface_pricing.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "X18-Q13",
    "title": "Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements",
    "kind": "approved",
