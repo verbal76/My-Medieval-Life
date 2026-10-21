@@ -24724,7 +24724,7 @@
    "id": "SJD-Q01",
    "title": "Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -24732,7 +24732,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -24763,17 +24763,23 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "An event is a fact; each observer interprets it as positive, negative or zero (no moral effect); no third ledger; facts may be remembered and discussed with zero contribution; keep fact, belief and interpretation distinct."
   },
   {
    "id": "SJD-Q02",
    "title": "Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -24781,7 +24787,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -24812,11 +24818,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Ordinary GOOD and BAD judgments fade very slowly (an old opinion weakening, not a reset when details are forgotten); murder contributions never decay, for player and NPC alike; contributions keep provenance so permanent and fading coexist; the rate is a conservative configurable proposal to be demonstrated, not yet approved."
   },
   {
    "id": "SJD-Q03",
@@ -24969,7 +24981,7 @@
    "id": "SJD-Q06",
    "title": "Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -24977,7 +24989,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -25008,17 +25020,23 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Secondhand confidence depends on the listener's trust in the immediate teller from the existing relationship number; witnesses need no teller credibility; provenance kept; multi-hop confidence reflects the chain; rumours are not facts; hearing a story again never re-scores it; new information updates the existing belief."
   },
   {
    "id": "SJD-Q07",
    "title": "Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -25026,7 +25044,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -25057,17 +25075,23 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "No fixed maximum number of retellings; stories spread only through real conversations and encounters, never instant broadcasts; per-conversation exchange limits may remain; event identity, provenance and deduplication prevent loops and re-scoring; deterministic and saved."
   },
   {
    "id": "SJD-Q08",
    "title": "Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -25075,7 +25099,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -25106,11 +25130,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Interpretation depends on personal morality, relationships, loyalties and who was affected; friendship and kin soften condemnation; ties to victims or beneficiaries strengthen or reverse it; law is separate (sympathy for a criminal, a guard enforcing on a friend, legal acts not always good); existing crime reporting and enforcement unchanged; no second legal system."
   },
   {
    "id": "SJD-Q09",
@@ -25165,7 +25195,7 @@
    "id": "SJD-Q10",
    "title": "Judgment open decision: What judgment information, if any, can the player see?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: What judgment information, if any, can the player see?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -25173,7 +25203,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -25204,17 +25234,23 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "No judgment numbers shown in normal play (no GOOD/BAD/net, confidence or weights); attitudes shown through dialogue, trade willingness, prices, help, friendship and courtship, employment and reactions; developer diagnostics keep the numbers and provenance."
   },
   {
    "id": "SJD-Q11",
    "title": "Judgment open decision: How should memory persistence and forgiveness vary by severity?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: How should memory persistence and forgiveness vary by severity?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -25222,7 +25258,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -25253,11 +25289,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Murder memories are permanent; other exceptionally significant events may be permanent by configurable severity and personal significance; ordinary memories fade and may be forgotten; memory permanence and judgment permanence are distinct except murder (both); save, compaction and long runs never erase permanent records; ordinary memory stays bounded."
   },
   {
    "id": "SJD-Q12",
@@ -25361,7 +25403,7 @@
    "id": "SJD-Q14",
    "title": "Judgment open decision: Which domain gets the first live integration after the prototype?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: Which domain gets the first live integration after the prototype?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
@@ -25369,7 +25411,7 @@
    "acceptance": [
     "As stated in the source document"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PROS-19",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -25400,11 +25442,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; target_build",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Judgment is a weighted influence on every applicable NPC decision where opinion of another character matters (trade, contracts, hiring, help, friendship, courtship, business, favours, trust), integrated in reviewable stages through shared interfaces; the existing decision authority still chooses; need, scarcity, money, stock, skills, time, obligations, safety and opportunity stay relevant; never overrides feasibility or conservation; unsupported domains documented."
   },
   {
    "id": "STALL-01",

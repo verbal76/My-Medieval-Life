@@ -7,14 +7,14 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
+| Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
 | Entries added since | | 192 (84 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **286** = 203 still open from the baseline + 84 added and open |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **278** = 195 still open from the baseline + 84 added and open |
 | Open entries moved to another build | | 2 |
 
-## Closed since the baseline (28)
+## Closed since the baseline (36)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
@@ -44,6 +44,14 @@ entry leaves the register or changes without a history entry.
 | REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | approved | UNKNOWN — INVESTIGATION REQUIRED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: the three files stored byte for byte in docs/game-designer/ (sha256 checked; Bob's CLAUDE.md as THE_WELL_SPEC_v1.md so it is not loaded as agent instructions), SPEC_RECONCILIATION.md classifies 98 points (54 agree, 19 differ, 14 not in project, 11 obsolete) and lists the open owner calls, and a DECISIONS entry records the merge; no existing document or feature was changed |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: brought up to date: HANDOFF.md and DEVELOPMENT_PLAN.md were already marked historical (MEM-01); GAME_DESIGN.md U1 moved to Confirmed item 13 with the owner's 2026-10-18 platform decision; BUILD_DECISIONS.md Known gaps rewritten from the code (births, ages, apprentices, player livestock, eggs/milk/wool exist; adoption is FAM-03/07, Build 16); CLAUDE.md release history lists draft Builds 9-11 (GitHub releases checked) and OVN-01's authority; resources.json's handcart exception is implemented (B14-06) |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | approved | ACTIVE DEVELOPMENT | 15 | SUPERSEDED | 15 | 2026-10-20: Builds 14 and 15 released; Builds 15-18 are under REL-15-18 and OVN-02 |
+| SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q06 | Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q07 | Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q08 | Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q10 | Judgment open decision: What judgment information, if any, can the player see? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q11 | Judgment open decision: How should memory persistence and forgiveness vary by severity? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
+| SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | decision | BLOCKED | 19 | COMPLETE AND VERIFIED | 19 | 2026-10-21: Owner answered 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md); implementation is PROS-19 / SJD gates, not implied by this answer |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only |
 | WDR-007-C | Comply with World Design Rule 7: Automated Compliance | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: tools/check_materials.py generates docs/systems/MATERIAL_INTERDEPENDENCY.md from the recipe data (uses, consuming professions, who each trade supplies, orphaned recipes, broken references, exceptions) and runs in CI; tests/test_check_materials.py has positive and negative fixtures (13 tests) |
 
