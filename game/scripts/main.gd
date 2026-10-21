@@ -101,6 +101,11 @@ var diamonds := {}             # npc id -> the quest marker sprite over a quest 
 var placing := {}              # choosing where to build: {kind, at: the footprint's top-left cell}
 var ghost: PlacementGhost      # the footprint shown while placing
 var place_step := 0.0          # seconds until a held stick or key moves the footprint again
+var level_views := {}          # MIN-A: LevelMap id -> LevelView (the levels below the surface)
+var level_alpha := 0.0         # MIN-A: how far the level below is faded in (the surface is faded out by as much)
+var level_shown := 0           # MIN-A: the level whose view is showing or fading (0: none)
+var portal_goal := {}          # MIN-A: a tapped portal: the end whose stand the player walks to, to go through
+var portal_said := -1          # MIN-A: the frame a refused crossing last said why (once a push, not every frame)
 const FLICKER := 1.2           # seconds a body flickers before it disappears
 const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
@@ -174,6 +179,14 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"underground":
+				# MIN-A: the player walks into the adit; the gallery shows and the surface is faded out
+				world.player.pos = Vector2(world.underground.portals[0].ends[0].stand) + Vector2(0.5, 0.5)
+				world.player_through(Vector2.UP)
+				if shot_warp != Vector2.INF:
+					world.player.pos = shot_warp
+				_sync_levels(0.0)
+				follow_at = _in_view(world.player.pos * T)
 			"gain":
 				ui.gain("+2 red berries", "red_berries")
 				ui.gain("+1 Iron ore", "iron_ore")
@@ -963,6 +976,7 @@ func _build_scene() -> void:
 	world.event.connect(func(t): ui.log_line(t))
 	world.building_added.connect(_on_building_added)
 	world.show_tables()                  # the tavern's tables show only the food that is on them
+	_build_levels()
 
 
 ## The village map draws its trees as tiles; the game draws them as sprites (TreeView). Take the tree
@@ -1060,7 +1074,7 @@ func _show_plants() -> void:
 
 func _apply_world_changes() -> void:
 	for d in world.deposits:
-		if int(d.amount) <= 0:
+		if int(d.amount) <= 0 and World.level_of(d) == 0:       # a level's seams are drawn by its LevelView (MIN-A)
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
 	world.sync_boulders()                    # boulders already broken up (B8-026)
 	for b in world.boulders:                 # the small ones are drawn small (PL1-06)
@@ -1173,6 +1187,7 @@ func _process(delta: float) -> void:
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
 	_sync_sprites()
+	_sync_levels(delta)
 	_sync_gather_mark()
 	ui.update_hud()
 
@@ -1604,6 +1619,7 @@ func _player_step(delta: float) -> void:
 		elif not moved_x and absf(v.x) > absf(v.y):
 			_slide_to_gap(Vector2(step.x, 0))
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
+		_through_portal(v)
 		player_sprite.face(v)
 		player_sprite.play("walk")
 		player_sprite.speed_scale = _sprint_scale()
@@ -1611,6 +1627,7 @@ func _player_step(delta: float) -> void:
 		sprinting = false
 		if player_sprite.anim in ["walk", "swing", "gather", "work"]:
 			_rest_anim()
+		_through_portal(Vector2.ZERO)        # MIN-A: a tapped adit, reached
 	_find_target()
 	if Input.is_action_just_pressed("interact"):
 		interact()
@@ -1724,8 +1741,8 @@ func _route_step(_delta: float) -> Vector2:
 		walk_goal = goal
 		walk_stuck = 0.0
 		var here := Vector2i(floori(p.pos.x), floori(p.pos.y))
-		walk_path = map.find_path_world(here, goal)
-		if walk_path.is_empty() and not (map.in_village(here) and map.in_village(goal)):
+		walk_path = world.path_for_player(here, goal)            # the level the player is on (MIN-A)
+		if walk_path.is_empty() and world.player_level == 0 and not (map.in_village(here) and map.in_village(goal)):
 			walk_path = PackedVector2Array([Vector2(here), Vector2(goal)])      # too far or no way found: straight there, sliding along what is in the way
 		walk_i = 1                       # the first point is the cell the player stands in
 		if walk_path.is_empty():
@@ -1734,7 +1751,7 @@ func _route_step(_delta: float) -> Vector2:
 			return Vector2.ZERO
 	# the last stretch goes to the exact point; before it, to the centre of each cell on the way
 	var target := move_to if walk_i >= walk_path.size() - 1 else walk_path[walk_i] + Vector2(0.5, 0.5)
-	if map.is_solid_world(goal) and walk_i >= walk_path.size() - 1:
+	if world.solid_for_player(goal) and walk_i >= walk_path.size() - 1:
 		target = walk_path[walk_path.size() - 1] + Vector2(0.5, 0.5)
 	var d := target - p.pos
 	# a waypoint is reached within 0.15 tiles, or within most of a frame's step: a long frame (a slow
@@ -1793,7 +1810,7 @@ func _blocked_corners(at: Vector2) -> int:
 	var n := 0
 	for c in BODY:
 		var q: Vector2 = at + c
-		if map.is_solid_world(Vector2i(floori(q.x), floori(q.y))):
+		if world.solid_for_player(Vector2i(floori(q.x), floori(q.y))):     # the level the player is on (MIN-A)
 			n += 1
 	return n
 
@@ -1841,6 +1858,9 @@ func facing_vec() -> Vector2:
 ## the station, plot, pen, door, bed or manor step at their feet. `target` is the one the player chose
 ## with cycle_target (else the first), and the prompt names it, and the next, when there are several.
 func _find_target() -> void:
+	if world.player_level != 0:
+		_find_target_below()               # MIN-A: below the surface only what is on the player's level
+		return
 	var p := world.player
 	var probe := p.pos + facing_vec() * 0.9
 	var near: Array = []        # [distance to the probe, order, target]
@@ -1868,6 +1888,8 @@ func _find_target() -> void:
 			if d < 1.5 and world.reaches(p.pos, at):
 				near.append([d, near.size(), _shop_target(post)])
 	for i in world.loot.size():
+		if World.level_of(world.loot[i]) != 0:
+			continue                       # left below the surface (MIN-A)
 		var d: float = world.loot[i].pos.distance_to(probe)
 		if (d < 1.5 or world.loot[i].pos.distance_to(p.pos) < 1.2) and world.reaches(p.pos, world.loot[i].pos):       # underfoot counts too (PL2-004)
 			var from: String = world.loot[i].from
@@ -2263,7 +2285,7 @@ func pick_lock(uid: String) -> void:
 ## The pile of loot drawn at a map position (within 0.8 tile), or INF.
 func _loot_at(wpos: Vector2) -> Vector2:
 	for l in world.loot:
-		if l.pos.distance_to(wpos) < 0.8:
+		if l.pos.distance_to(wpos) < 0.8 and World.level_of(l) == world.player_level:
 			return l.pos
 	return Vector2.INF
 
@@ -2716,6 +2738,9 @@ func craft(recipe: String, station := "") -> void:
 func attack(only: Object = null) -> String:
 	if not action.is_empty():
 		return "ignored"
+	if world.player_level != 0:
+		ui.message("Nothing to fight here.")      # MIN-A: nobody but the player goes below yet
+		return "ignored"
 	var r := swing.press(swing_time(), only)
 	if r == "start":
 		_swing_begins()
@@ -2962,6 +2987,9 @@ func _crime(victim: NPC) -> void:
 
 func fireball() -> void:
 	var p := world.player
+	if world.player_level != 0:
+		ui.message("Nothing to fight here.")      # MIN-A: nobody but the player goes below yet
+		return
 	if not p.spells.get("fireball", false):
 		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
 		return
@@ -3668,6 +3696,8 @@ func _tap(screen_pos: Vector2) -> void:
 		cancel_action("You stop.")     # a tap while working stops it (B8-011)
 		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	if _tap_portal(wpos) or _tap_below(wpos):
+		return                            # MIN-A: the adit tapped, or a tap below the surface
 	var pile := _loot_at(wpos)
 	if pile != Vector2.INF and _creature_at(wpos) == null:
 		# a tapped pile (a carcass, a dropped bag): walk up to it and take it, in any mode (PL2-004)
@@ -4256,3 +4286,166 @@ func _sync_gather_mark() -> void:
 			r = Rect2(Vector2(ResourceNodes.cell_of(world, d, gather.ref)), Vector2(1, 1))
 	gather_mark.points = PackedVector2Array([r.position * T, Vector2(r.end.x, r.position.y) * T, r.end * T,
 			Vector2(r.position.x, r.end.y) * T, r.position * T])
+
+
+# ---------------------------------------------------------------- underground (MIN-A) --------
+## One LevelView per level map (docs/build17/MIN_A_ARCHITECTURE.md), between the surface's tiles and the characters,
+## hidden until the player goes below. A seam below that is worked out is redrawn on its level.
+func _build_levels() -> void:
+	level_views.clear()
+	level_alpha = 1.0 if world.player_level != 0 else 0.0
+	level_shown = world.player_level
+	if world.underground == null:
+		return
+	for lm: LevelMap in world.underground.maps:
+		var lv := LevelView.new()
+		lv.name = "level_" + lm.id
+		add_child(lv)
+		move_child(lv, ow_view.get_index() + 1)
+		lv.setup_level(view, world, lm, world.underground.specs[lm.id])
+		lv.visible = false
+		level_views[lm.id] = lv
+	world.level_tile_changed.connect(_on_level_tile_changed)
+	_sync_levels(0.0)
+
+
+func _on_level_tile_changed(level: int, cell: Vector2i, value: int) -> void:
+	var lm := world.underground.map_at(level, cell)
+	if lm != null and level_views.has(lm.id):
+		level_views[lm.id].set_seam(cell, value)
+
+
+## The player crosses a portal when walking into its door from its stand (`v` the way they move), or when a tapped
+## portal's stand is reached (`v` zero). The route, the target and gathering stop: the other side is another map.
+func _through_portal(v: Vector2) -> void:
+	if v.length() < 0.1:
+		if portal_goal.is_empty() or move_to != Vector2.INF:
+			return
+		var e := portal_goal
+		portal_goal = {}
+		if int(e.level) != world.player_level or Vector2i(floori(world.player.pos.x), floori(world.player.pos.y)) != e.stand:
+			return
+		v = Vector2(e.door - e.stand)
+	var r := world.player_through(v)
+	if r.is_empty():
+		return
+	if r.has("refused"):
+		if Engine.get_process_frames() - portal_said > 90:
+			ui.message(str(r.refused))
+		portal_said = Engine.get_process_frames()
+		return
+	move_to = Vector2.INF
+	walk_goal = Vector2i(-1, -1)
+	walk_path = PackedVector2Array()
+	portal_goal = {}
+	chase = null
+	talk_to = null
+	reach_to = Vector2.INF
+	target = {}
+	if not gather.is_empty():
+		stop_gather("")
+	if cam_free:
+		recenter()
+
+
+## A tap on a portal's door (the adit's mouth from either side): walk to its stand and go through. True if it was.
+func _tap_portal(wpos: Vector2) -> bool:
+	if world.underground == null:
+		return false
+	var e := world.underground.portal_door(world.player_level, Vector2i(floori(wpos.x), floori(wpos.y)))
+	if e.is_empty():
+		return false
+	chase = null
+	talk_to = null
+	reach_to = Vector2.INF
+	portal_goal = e
+	move_to = Vector2(e.stand) + Vector2(0.5, 0.5)
+	return true
+
+
+## A tap below the surface: a pile on the player's level is walked to and taken, a seam beside the player is worked,
+## anywhere else is walked to. Nobody else is below yet, so there is no one to talk to or strike. True below.
+func _tap_below(wpos: Vector2) -> bool:
+	if world.player_level == 0:
+		return false
+	chase = null
+	talk_to = null
+	reach_to = Vector2.INF
+	portal_goal = {}
+	var pile := _loot_at(wpos)
+	if pile != Vector2.INF:
+		reach_to = pile
+		move_to = pile if pile.distance_to(world.player.pos) > 1.2 else Vector2.INF
+		if move_to == Vector2.INF:
+			_reach_step()
+		return true
+	if wpos.distance_to(world.player.pos) < 1.8:
+		player_sprite.face(wpos - world.player.pos)
+		_find_target()
+		if not target.is_empty():
+			interact()
+			return true
+	move_to = wpos
+	return true
+
+
+## The target list below the surface: piles and seams on the player's level only (the same seam target as above
+## ground, so Use mines it by World.work_mine, PAR-01).
+func _find_target_below() -> void:
+	var p := world.player
+	var probe := p.pos + facing_vec() * 0.9
+	var cands: Array = []
+	for i in world.loot.size():
+		var l: Dictionary = world.loot[i]
+		if World.level_of(l) != world.player_level:
+			continue
+		if l.pos.distance_to(probe) < 1.5 or l.pos.distance_to(p.pos) < 1.2:
+			var from: String = l.from
+			var what := _loot_text(l)
+			cands.append({"kind": "loot", "i": i, "label": ("Take %s from %s" % [what, from]) if from.begins_with("the ") and what != "" else ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)})
+	var c := Vector2i(floori(probe.x), floori(probe.y))
+	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+		var dep := world.deposit_at(c + dc, world.player_level)
+		if not dep.is_empty() and int(dep.amount) > 0:
+			cands.push_front({"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
+					else "%s seam" % GameData.item_name(dep.ore) + ": requires a pickaxe (the smith sells them)"})
+			break
+	talk_alt = {}
+	target_options = cands
+	target = cands[0] if not cands.is_empty() else {}
+	var passing: bool = walking and target.get("kind", "") == "deposit"
+	ui.prompt("" if passing or not gather.is_empty() else str(target.get("label", "")))
+
+
+## Fade between the surface and the level below over RoofFade.FADE_TIME, as a roof lifts: the level's view in, and
+## the surface's tiles, trees, roofs, markers and everyone on it out (the player never fades). Piles show on their
+## own level only.
+func _sync_levels(delta: float) -> void:
+	if level_views.is_empty():
+		return
+	if world.player_level != 0:
+		level_shown = world.player_level
+	var goal := 1.0 if world.player_level != 0 else 0.0
+	var was := level_alpha
+	level_alpha = move_toward(level_alpha, goal, delta / RoofFade.FADE_TIME) if delta > 0.0 else goal
+	for lv: LevelView in level_views.values():
+		lv.visible = level_alpha > 0.0 and lv.level_map.level == level_shown
+		lv.modulate.a = level_alpha
+		if lv.visible:
+			lv.follow(world.player.pos)
+	for i in loot_nodes.size():
+		if i < world.loot.size():
+			loot_nodes[i].visible = World.level_of(world.loot[i]) == world.player_level
+	if level_alpha == 0.0 and was == 0.0:
+		return
+	var surf := 1.0 - level_alpha
+	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
+	fade.append_array(view.sorted_of.values())
+	fade.append_array(sprites.values())
+	fade.append_array(animal_sprites.values())
+	fade.append_array(cart_sprites.values())
+	fade.append_array(house_signs.values())
+	for node in fade:
+		if is_instance_valid(node):
+			(node as CanvasItem).modulate.a = surf
+	bubble_layer.visible = surf > 0.5

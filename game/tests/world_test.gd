@@ -64,16 +64,17 @@ func _deposits() -> void:
 	var w: World = main.world
 	var m: VillageMap = main.map
 	var dt: Dictionary = GameData.resources.deposit_tiles
+	var surface := w.deposits.filter(func(x): return World.level_of(x) == 0)   # the gallery's seams are drawn by its LevelView (underground_test)
 	var tiles: Dictionary = dt.ore
 	var bad := 0
-	for d in w.deposits:
+	for d in surface:
 		var drawn: int = main.view.tile_value(main.view.layer("below0"), Vector2i(d.x, d.y))
 		if drawn != int(tiles[d.ore]):
 			bad += 1
 			print("  seam ", d.ore, " at ", d.x, ",", d.y, " is drawn with tile ", drawn, ", not ", tiles[d.ore])
-	check(bad == 0 and w.deposits.size() > 0, "every seam is drawn with its own ore's tile (%d seams)" % w.deposits.size())
+	check(bad == 0 and surface.size() > 0, "every seam is drawn with its own ore's tile (%d seams)" % surface.size())
 	var seams := {}
-	for d in w.deposits:
+	for d in surface:
 		seams[Vector2i(d.x, d.y)] = true
 	var flecked := {}
 	for t in dt.flecked:
@@ -85,15 +86,15 @@ func _deposits() -> void:
 		if o != "stone":
 			ores[int(tiles[o])] = o
 	var wrong := 0
-	for d in w.deposits:
+	for d in surface:
 		var node := ResourceNodes.node_at(w, Vector2i(d.x, d.y), true)
 		var got: String = ResourceNodes.products(node.def).keys()[0] if not node.is_empty() else ""
 		if got != d.ore or str(node.def.name).to_lower().find(str(GameData.item_name(d.ore)).split(" ")[0].to_lower()) < 0:
 			wrong += 1
-	check(wrong == 0, "each seam's node, product and name agree (prompt, yield) for all %d seams" % w.deposits.size())
+	check(wrong == 0, "each seam's node, product and name agree (prompt, yield) for all %d seams" % surface.size())
 	check(int(m.data.tiles.depleted_rock) == int(dt.worked_out) and not flecked.has(int(dt.worked_out)), "a worked-out seam has its own hollow tile")
 	var stone_seam := {}
-	for d in w.deposits:
+	for d in surface:
 		if d.ore == "stone":
 			stone_seam = d
 	var left := int(stone_seam.amount)

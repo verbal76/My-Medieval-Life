@@ -1422,7 +1422,7 @@ func _loot_to_recover(n: NPC) -> Dictionary:
 	var best: Dictionary = {}
 	var bd := float(GameData.b("guard_loot_range"))
 	for l in w.loot:
-		if int(l.coins) <= 0:
+		if int(l.coins) <= 0 or World.level_of(l) != 0:      # MIN-A: guards do not go below the surface
 			continue
 		if not l.has("t"):
 			l.t = w.minutes
@@ -2333,7 +2333,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"recover_loot":
 			for l in w.loot:
-				if int(l.coins) > 0 and n.pos.distance_to(l.pos) < 1.6:
+				if int(l.coins) > 0 and n.pos.distance_to(l.pos) < 1.6 and World.level_of(l) == 0:
 					var c := int(l.coins)
 					l.coins = 0
 					w.treasury += c                  # the manor's, for the village (EQ-20)
@@ -3241,7 +3241,8 @@ func job_market() -> Dictionary:
 		"tool": "", "at": Vector2i(15, 15)}
 	var ore := 0
 	for dp in w.deposits:
-		ore += int(dp.amount)
+		if w.villagers_reach(dp):          # MIN-A: ore on a level no villager can reach yet opens no places
+			ore += int(dp.amount)
 	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
 		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
 	return market
@@ -3798,7 +3799,8 @@ func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
 func _caravan_imports() -> int:
 	var left := {}
 	for d in w.deposits:
-		left[d.ore] = int(left.get(d.ore, 0)) + int(d.amount)
+		if w.villagers_reach(d):           # MIN-A: the village's own ore is what its workers can reach
+			left[d.ore] = int(left.get(d.ore, 0)) + int(d.amount)
 	var stock: Dictionary = GameData.b("caravan_import_stock")
 	var spent := 0
 	for o: NPC in w.npcs:
