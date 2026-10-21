@@ -12,7 +12,13 @@ extends RefCounted
 ##  - materials in the works yard are used up mending the village's roads, bridges and well: "mend"
 ##    jobs, a load of `mend_load` materials and `mend_minutes` of work at a works site;
 ##  - stone for the works can be quarried from the village's own seams instead of bought: one "quarry"
-##    job at a time, posted by the reeve while the manor can spend on repairs and its works lack stone.
+##    job at a time, posted by the reeve while the manor can spend on repairs and its works lack stone;
+##  - MIN-D (Discovery): the manor commissions prospecting as ordinary work: one "survey" at a time (take
+##    `survey_samples` rock samples of a clue it has heard nothing of with one's own kit, have them assayed at a
+##    smith's forge, paying the fees from the wage, and report the readings at the manor), and once its mining
+##    capability allows, one "trial" pit at a time for the best find it knows (Discovery.trial_dig, a pickaxe).
+##    Both are paid for the labour, whatever is found. Manor hands take no surveys (their wage is their pay, and
+##    the assay fees are the worker's).
 ## A household under a day of food is not left waiting: its relief is delivered at once, as before.
 ##
 ## Jobs are paid from the treasury, set aside when a job is taken (the treasury keeps
@@ -22,7 +28,7 @@ extends RefCounted
 ## Carried goods ride in the job's own load (never the worker's pack), so they cannot be sold, eaten or
 ## lost; a dead worker's load goes back. Every number is provisional — balance review pending.
 
-const KINDS := ["haul", "quarry", "mend"]
+const KINDS := ["haul", "quarry", "mend", "survey", "trial"]
 const ORDER := ["pantry", "granary", "yard"]        # hauling priority by destination: relief first
 const MATERIALS := ["plank", "stone", "log", "iron_bar"]
 
@@ -241,6 +247,67 @@ func post_quarry() -> void:
 	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})
 
 
+## MIN-D, the reeve's evening: one survey of a clue the manor has heard nothing of (from mining level
+## `survey_level`), and one trial pit for the best find it knows (from `trial_level`), each one at a time
+## (Discovery.survey_target, trial_target). Nothing is posted that the village's capability does not allow.
+func post_discovery() -> void:
+	var dc: Dictionary = Discovery.cfg().manor
+	var lv: int = w.discovery.level()
+	for j in jobs.duplicate():           # work the village can no longer do, or no longer needs, is taken down untaken
+		if j.taker != "" or not j.kind in ["survey", "trial"]:
+			continue
+		var c := w.prospecting.clue(str(j.clue))
+		if j.kind == "survey" and (lv < int(dc.survey_level) or w.prospecting.samples_left(c) < int(j.qty)):
+			jobs.erase(j)
+		elif j.kind == "trial" and (lv < int(dc.trial_level) or not w.discovery.opened(str(j.clue)).is_empty() or w.discovery.trials_left(c) <= 0):
+			jobs.erase(j)
+	if not jobs.any(func(j): return j.kind == "survey"):
+		var c := w.discovery.survey_target()
+		if not c.is_empty():
+			_post({"kind": "survey", "clue": str(c.id), "qty": int(dc.survey_samples), "wage": int(dc.survey_wage), "taken": 0, "sids": []})
+	if not jobs.any(func(j): return j.kind == "trial"):
+		var t := w.discovery.trial_target()
+		if not t.is_empty():
+			_post({"kind": "trial", "clue": str(t.clue.id), "qty": 1, "site": [t.cell.x, t.cell.y], "wage": int(dc.trial_wage)})
+
+
+## The samples a survey has taken that are not yet assayed (still carried by its taker).
+func _survey_pending(j: Dictionary) -> Array:
+	return (j.get("sids", []) as Array).filter(func(s): return w.prospecting.samples.has(str(int(s))))
+
+
+## The next spot a survey would sample: the first of the clue's spots (hashed order) unsampled and open now.
+func survey_spot(j: Dictionary) -> Vector2i:
+	var pr: Prospecting = w.prospecting
+	var c := pr.clue(str(j.clue))
+	if c.is_empty() or pr.samples_left(c) <= 0:
+		return Vector2i(-1, -1)
+	for cell: Vector2i in c.spots:
+		if not pr.sampled(c, cell) and not w.map.is_solid(cell):
+			return cell
+	return Vector2i(-1, -1)
+
+
+## The party a job's taker is: the player or a villager (null if gone).
+func _who(who: String):
+	if who == "player":
+		return w.player
+	return w.npc(int(who.substr(4)))
+
+
+## The smith nearest `at` who could assay a sample of `who`'s now (Prospecting.assayer_refusal), or null.
+func _assayer_near(who, at: Vector2, reach: float) -> NPC:
+	var best: NPC = null
+	var bd := reach
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "smith" and w.prospecting.assayer_refusal(who, o) == "":
+			var d := o.pos.distance_to(at)
+			if d <= bd:
+				bd = d
+				best = o
+	return best
+
+
 ## Materials for the works the manor already holds or has bought: the yard and lots bound for it.
 func _works_stock(id := "") -> int:
 	var n := yard.count(id) if id != "" else yard.total()
@@ -293,8 +360,10 @@ func open_for(who: String) -> Array:
 	for j in jobs:
 		if j.taker != "" or not can_fund(j, who):
 			continue
-		if j.kind == "quarry" and not _has_pick(who):
+		if j.kind in ["quarry", "trial"] and not _has_pick(who):
 			continue
+		if j.kind == "survey" and (is_staff(who) or not _has_kit(who) or _who(who).coins < int(j.qty) * int(Prospecting.cfg().assay.fee)):
+			continue                 # the assay fees are paid on the way, the wage at the end: a worker needs them in hand
 		out.append(j)
 	out.sort_custom(func(a, b): return _rank(a) < _rank(b) or (_rank(a) == _rank(b) and int(a.id) < int(b.id)))
 	return out
@@ -303,7 +372,12 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return 3 if j.kind == "mend" else 4
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6}.get(str(j.kind), 7)
+
+
+func _has_kit(who: String) -> bool:
+	var o = _who(who)
+	return o != null and o.inv.has(Prospecting.KIT)
 
 
 func _has_pick(who: String) -> bool:
@@ -352,8 +426,8 @@ func release(j: Dictionary) -> void:
 					w.transfer(j.load, yard, id, j.load.count(id))
 	j.taker = ""
 	j.day = -1
-	if j.kind == "quarry":
-		jobs.erase(j)              # the reeve posts it again when the works still lack stone
+	if j.kind in ["quarry", "survey", "trial"]:
+		jobs.erase(j)              # the reeve posts it again when the works still lack stone (or the find is still wanted)
 
 
 ## The next thing a job needs: "take" (at the lot or the yard), "mine" (a quarry short of stone),
@@ -366,6 +440,12 @@ func step(j: Dictionary) -> String:
 			return "mine" if j.load.count("stone") < int(j.qty) and j.taker != "player" else "put"
 		"mend":
 			return "take" if j.load.total() == 0 else "mend"
+		"survey":
+			if int(j.taken) < int(j.qty) and survey_spot(j).x >= 0:
+				return "sample"
+			return "assay" if not _survey_pending(j).is_empty() else "report"
+		"trial":
+			return "dig"
 	return ""
 
 
@@ -380,8 +460,20 @@ func step_cell(j: Dictionary) -> Vector2i:
 			if j.kind == "haul":
 				return dest_cell(j.to)
 			return yard_cell()
-		"mend":
+		"mend", "dig":
 			return Vector2i(int(j.site[0]), int(j.site[1]))
+		"sample":
+			return survey_spot(j)
+		"assay":
+			var best := yard_cell()
+			var bd := 1e9
+			for o: NPC in w.npcs:
+				if o.alive and o.role == "adult" and o.job == "smith":
+					var c: Vector2i = w.brain._workplace_cell(o)
+					if Vector2(c).distance_to(Vector2(yard_cell())) < bd:
+						bd = Vector2(c).distance_to(Vector2(yard_cell()))
+						best = c
+			return best
 	return yard_cell()
 
 
@@ -396,6 +488,12 @@ func describe(j: Dictionary) -> String:
 			return "Quarry %d stone for the manor's works and bring it to the works yard" % int(j.qty)
 		"mend":
 			return "Mend %s with %d loads of materials from the works yard (%d hours)" % [str(j.get("place", "the road")), int(j.qty), roundi(float(cfg("mend_minutes")) / 60.0)]
+		"survey":
+			var c := w.prospecting.clue(str(j.clue))
+			return "Survey %s %s: take %d rock samples with your prospector's kit, have a smith assay them (the fees are yours) and tell the manor what they show" % [w.prospecting.stain(c), w.prospecting.place(c), int(j.qty)]
+		"trial":
+			var c := w.prospecting.clue(str(j.clue))
+			return "Dig a trial pit by %s %s with a pickaxe, looking for ore (%d hours)" % [w.prospecting.stain(c), w.prospecting.place(c), roundi(float(Discovery.cfg().trial.minutes) / 60.0)]
 	return ""
 
 
@@ -462,6 +560,68 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				w.player.trim_stolen()
 			else:
 				w.transfer(j.load, yard, "stone", j.load.count("stone"))
+			_finish(j, who)
+			return true
+		"sample":
+			var o = _who(who)
+			var pr: Prospecting = w.prospecting
+			var cell := survey_spot(j)
+			if o == null or cell.x < 0:
+				return false
+			var r := pr.take_sample(o, pr.clue(str(j.clue)), cell)
+			if r.result != "ok":
+				last_refusal = str(r.why)
+				return false
+			j.taken = int(j.taken) + 1
+			(j.sids as Array).append(int(r.sample))
+			if r.broke and o is NPC:
+				w.note("%s %s's prospector's kit is worn out." % [o.name, o.family])
+			return true
+		"assay":
+			var o = _who(who)
+			if o == null:
+				return false
+			var a := _assayer_near(o, o.pos, 3.5)
+			if a == null:
+				last_refusal = "There is no smith at the forge here who can assay a sample now."
+				return false
+			var r := w.prospecting.assay(o, a, int(_survey_pending(j)[0]) if not _survey_pending(j).is_empty() else -1)
+			if r.result != "ok":
+				last_refusal = str(r.why)
+				return false
+			return true
+		"report":
+			# the readings of the survey's samples are told to the manor (Prospecting.share), barren ones too
+			for rec in w.prospecting.records:
+				if (j.sids as Array).has(int(rec.sample)) and str(rec.by) == who:
+					w.prospecting.share(rec, World.MANOR)
+			w.stat("surveys_reported")
+			_finish(j, who)
+			return true
+		"dig":
+			var o = _who(who)
+			var dv: Discovery = w.discovery
+			var c := w.prospecting.clue(str(j.clue))
+			if o == null:
+				return false
+			var tool: String = o.tool_of("pickaxe") if o is PlayerState else "pickaxe"
+			var cell := Vector2i(int(j.site[0]), int(j.site[1]))
+			if dv.ground_refusal(c, cell) != "":
+				var other := dv.next_cell(c)          # the ground changed: the next best clear cell, or the job ends
+				if other.x < 0:
+					last_refusal = "There is no clear ground left to dig there."
+					release(j)
+					return false
+				j.site = [other.x, other.y]
+				last_refusal = "The ground there is taken: the reeve marks another spot."
+				return false
+			var r := dv.trial_dig(o, c, cell, tool)
+			if r.result != "ok":
+				last_refusal = str(r.why)
+				return false
+			j.found = not (r.found as Dictionary).is_empty()
+			if r.broke and o is NPC:
+				w.note("%s %s's pickaxe broke." % [o.name, o.family])
 			_finish(j, who)
 			return true
 		"mend":
@@ -548,9 +708,45 @@ func plan(n: NPC) -> bool:
 		"mend":
 			var at := step_cell(j)
 			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(cfg("mend_minutes")), "mj_step", {"job": int(j.id)}, "work", at)]
+		"sample":
+			if not n.inv.has(Prospecting.KIT):
+				release(j)
+				return false
+			var at := survey_spot(j)
+			n.doing = "surveying a stain for the manor"
+			n.plan = [b.go(at), b.work(float(Prospecting.cfg().sample_minutes) * Skills.value(n, "mining", "mine_time", 1.0), "mj_step", {"job": int(j.id)}, "work", at)]
+		"assay":
+			var a := w.prospecting.assayer_for(n)
+			if a == null:
+				if n.coins < int(Prospecting.cfg().assay.fee):
+					release(j)                       # the fees are the worker's: without them the survey is given up
+					return false
+				n.doing = "waiting for an assayer"
+				n.plan = [b.work(45, "", {}, "idle")]
+				return true
+			n.doing = "taking the survey's samples to the assayer"
+			n.plan = [b.go(b._workplace_cell(a)), b.doit("mj_step", {"job": int(j.id)}), b.work(float(Prospecting.cfg().assay.minutes) + 10.0, "", {}, "idle")]
+		"dig":
+			if not n.inv.has("pickaxe"):
+				release(j)
+				return false
+			var at := step_cell(j)
+			n.doing = "digging a trial pit for the manor"
+			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(Discovery.cfg().trial.minutes) * Skills.value(n, "mining", "mine_time", 1.0), "mj_step", {"job": int(j.id)}, "swing", at)]
 		_:
 			n.plan = [b.go(b.beside(step_cell(j), n.cell())), b.doit("mj_step", {"job": int(j.id)})]
 	return true
+
+
+## A villager takes an open job of one of `kinds` they can do (a prospector takes the manor's surveys first).
+func seek_kind(n: NPC, kinds: Array) -> bool:
+	var who := World.npc_ref(n.id)
+	if not job_of(who).is_empty() or n.role != "adult":
+		return false
+	for j in open_for(who):
+		if kinds.has(str(j.kind)) and take(j, who):
+			return plan(n)
+	return false
 
 
 ## A villager looking for the manor's work takes the most needed open job they can do.
@@ -629,12 +825,14 @@ func load_dict(d: Dictionary) -> void:
 	yard = Inventory.from_dict(d.get("yard", {}))
 	for jd in d.get("jobs", []):
 		var j: Dictionary = jd.duplicate()
-		for k in ["id", "lot", "qty", "wage", "day", "reserved"]:
+		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken"]:
 			if j.has(k):
 				j[k] = int(j[k])
 		for k in ["site", "at"]:
 			if j.has(k):
 				j[k] = [int(j[k][0]), int(j[k][1])]
+		if j.has("sids"):
+			j.sids = (j.sids as Array).map(func(v): return int(v))
 		if j.has("to") and j.to.has("hh"):
 			j.to.hh = int(j.to.hh)
 		j.load = Inventory.from_dict(jd.get("load", {}))
