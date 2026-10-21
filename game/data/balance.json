@@ -152,6 +152,8 @@
   "carry_ore": 6,
   "carry_logs": 6,
   "mine_minutes": 25,
+  "_quarry_note": "MIN-B (Mining spec stage 1 and section 11; agent decision under the standing release directive, docs/build17/MIN_B_QUARRY.md): every ore seam (iron, coal, copper, gold; not a stone seam, which is stone itself) keeps quarry_host_stone stone in its grey host rock, a second finite pool of the same deposit record, worked only after its ore is out and never refilled; then the cell opens, as a broken boulder's does. 20 is a third of an iron seam and a quarter of a stone seam (80): the village's 12 surface ore seams hold 240 more stone and the gallery's 5 hold 100, about 17 houses' worth (20 stone each). Quarrying takes mine_minutes a unit, as any seam: the same swing rule for the player and every villager.",
+  "quarry_host_stone": 20,
   "chop_minutes": 40,
   "hunt_minutes": 40,
   "_property_note": "Property and land (owner rules 2026-10-18: the manor sells and lets land and houses, rent weekly; the numbers are agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Property and land'). plot_price is a 9x10 plot's price, other ground by area; house_price a house with its ground; a week's rent is weekly_rent_share of the price; the manor buys back at sell_back_share; rent_evict_missed unpaid weeks end a lease; a vacant stall is let rent-free to a villager out of work with stall_min_coins to stock it.",

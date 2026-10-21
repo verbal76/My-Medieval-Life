@@ -137,6 +137,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
 	underground = Underground.create(world_seed, m)     # MIN-A: hashed from the seed, no rng draw
 	deposits.append_array(underground.seam_records())   # the gallery's seams: the same records, with their level
+	_add_host_rock()                                     # MIN-B: the grey rock round each ore seam, quarried for stone after the ore
 	_make_boulders(m)
 	for f in m.data.fields:
 		var fd: Dictionary = f.duplicate(true)
@@ -979,6 +980,8 @@ func total_coins() -> int:
 func deposit_at(c: Vector2i, level := 0) -> Dictionary:
 	for d in deposits:
 		if d.x == c.x and d.y == c.y and level_of(d) == level:
+			if int(d.amount) <= 0 and d.has("host") and int(d.host.amount) > 0:
+				return d.host                            # MIN-B: the ore is out: the grey rock left is quarried for stone
 			return d
 	if level != 0:
 		return {}                                        # MIN-A: below the surface only seams (no boulders, no overworld)
@@ -1003,6 +1006,9 @@ func sync_boulders() -> void:
 	for b in boulders:
 		if int(b.amount) <= 0:
 			_remove_boulder(b)
+	for d in deposits:                   # MIN-B: host rock quarried away (its cell is open since the load)
+		if d.has("host") and int(d.amount) <= 0 and int(d.host.amount) <= 0 and level_of(d) == 0:
+			tile_changed.emit(Vector2i(int(d.x), int(d.y)), "below", -1)
 
 
 func tree_at(c: Vector2i) -> Dictionary:
@@ -1451,6 +1457,11 @@ func mine_unit(d: Dictionary) -> String:
 			map.overworld.note_rock(Vector2i(int(d.x), int(d.y)), int(d.amount))
 		if d.amount == 0:
 			_remove_boulder(d)
+		return "stone"
+	if d.has("of"):                      # MIN-B: a worked-out seam's host rock: stone, then the rock is gone
+		if d.amount == 0:
+			_open_quarried(d, true)
+			note("The rock of a worked-out %s seam is quarried away." % GameData.item_name(str(d.of)).to_lower())
 		return "stone"
 	if d.amount == 0:
 		if level_of(d) != 0:
@@ -3547,6 +3558,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	for us in underground.seam_records():
 		if not have_seam.has(Vector3i(int(us.level), int(us.x), int(us.y))):
 			deposits.append(us)
+	_add_host_rock()                    # MIN-B: a save from before it gets each ore seam's host rock, whole
+	for sd in deposits:
+		if sd.has("host") and int(sd.host.amount) <= 0:
+			_open_quarried(sd.host, false)   # quarried away: the cell is open ground (its tiles are the views')
 	_make_boulders(m)                  # a save from before boulders has none broken
 	for sb in d.get("boulders", []):
 		for b in boulders:
@@ -3766,7 +3781,7 @@ func nearest_seam(n: NPC, ores: Array) -> Dictionary:
 	var best := {}
 	var bd := 1e9
 	var from := n.cell()
-	for dp in deposits:
+	for dp in _quarry_sources(ores):
 		if int(dp.amount) <= 0 or not ores.has(dp.ore) or not villager_levels.has(level_of(dp)):
 			continue
 		var at := Vector2i(dp.x, dp.y)
@@ -3780,6 +3795,67 @@ func nearest_seam(n: NPC, ores: Array) -> Dictionary:
 			bd = d
 			best = dp
 	return best
+
+
+# ---------------------------------------------------------------- quarrying (MIN-B) ----------
+## MIN-B (Mining spec stage 1 and section 11: "a depleted coloured ore deposit remains mineable for ordinary stone
+## without regenerating ore"): every ore seam (not a stone seam, which is stone itself) holds a second finite pool, the
+## grey host rock round the ore, `quarry_host_stone` stone (balance.json). It is part of the same deposit record
+## (`host`: {x, y, ore: "stone", amount, of: the seam's ore, level}) and is reached only when the ore is out: deposit_at
+## then returns it, so the player, a miner, a labourer and a manor quarry hand all take it by the same swing
+## (work_mine, mine_unit, mined_stone). The ore's amount never rises. When the host rock is all quarried the cell opens,
+## as a broken boulder's does. Added whole to a seam that has none (a new world, an older save).
+func _add_host_rock() -> void:
+	var n := int(GameData.b("quarry_host_stone"))
+	for d in deposits:
+		if str(d.ore) == "stone" or d.has("host") or d.get("boulder", false):
+			continue
+		var h := {"x": int(d.x), "y": int(d.y), "ore": "stone", "amount": n, "of": str(d.ore)}
+		if level_of(d) != 0:
+			h.level = level_of(d)
+		d.host = h
+
+
+## A host rock quarried away: its cell becomes open ground on its level (the surface's map, or the level's), and with
+## `draw` the views take its rock away (a loaded world: the views draw from the records).
+func _open_quarried(h: Dictionary, draw: bool) -> void:
+	var cell := Vector2i(int(h.x), int(h.y))
+	if level_of(h) == 0:
+		map.set_solid(cell, false)
+		if draw:
+			tile_changed.emit(cell, "below", -1)
+	elif underground != null:
+		var lm := underground.map_at(level_of(h), cell)
+		if lm != null:
+			lm.set_solid(cell, false)
+		if draw:
+			level_tile_changed.emit(level_of(h), cell, -1)
+
+
+## Every stone source a quarry worker can take (`ores` names stone): the seams, the host rock of worked-out ore seams
+## and the village's boulders (B8-026, now villagers' work as the player's, MIN-B); other ores: the seams alone.
+func _quarry_sources(ores: Array) -> Array:
+	if not ores.has("stone"):
+		return deposits
+	var out := deposits.duplicate()
+	for d in deposits:
+		if d.has("host") and int(d.amount) <= 0:
+			out.append(d.host)
+	out.append_array(boulders)
+	return out
+
+
+## The stone the village's own workers can still quarry beyond the stone seams: worked-out seams' host rock (on the
+## levels they reach) and the village's boulders. Quests.deposit_left adds it to "stone" (the caravan's stone rule,
+## the manor's quarry job, contracts) and the labour market counts it.
+func quarry_stone_left() -> int:
+	var left := 0
+	for d in deposits:
+		if d.has("host") and int(d.amount) <= 0 and villagers_reach(d.host):
+			left += int(d.host.amount)
+	for b in boulders:
+		left += maxi(0, int(b.amount))
+	return left
 
 
 ## A villager goes through a portal (the level router): they stand on its other end, on its level; a cart they pull

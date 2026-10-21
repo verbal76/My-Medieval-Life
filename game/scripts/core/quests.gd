@@ -196,6 +196,8 @@ func deposit_left(id: String) -> int:
 	for d in w.deposits:
 		if d.ore == id and w.villagers_reach(d):       # MIN-A: seams below count once villagers can reach them
 			left += int(d.amount)
+	if id == "stone":
+		left += w.quarry_stone_left()                # MIN-B: worked-out seams' host rock and the boulders
 	return left
 
 

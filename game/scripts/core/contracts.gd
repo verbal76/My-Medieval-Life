@@ -611,12 +611,10 @@ func plan(n: NPC) -> bool:
 			continue                                  # all in hand: the player collects it (no home to bring it to)
 		match str(c.route):
 			"mine":
-				var d: Dictionary = w.nearest_deposit(n.cell(), [c.item]) if n.inv.has("pickaxe") else {}
+				var d: Dictionary = w.nearest_seam(n, [c.item]) if n.inv.has("pickaxe") else {}     # MIN-A/B: any level, quarry rock too
 				if not d.is_empty():
-					var at := Vector2i(int(d.x), int(d.y))
 					n.doing = "mining %s for %s" % [GameData.item_name(c.item).to_lower(), w.ref_name(c.buyer)]
-					n.plan = [w.brain.go(w.brain.beside(at, n.cell())), w.brain.work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0),
-							"mine", {"x": d.x, "y": d.y}, "work", at)]
+					n.plan = w.brain.seam_steps(n, d, "mine", {})
 					return true
 			"chop":
 				var t: Dictionary = w.nearest_tree(n.cell(), 70.0) if n.inv.has("axe") else {}
