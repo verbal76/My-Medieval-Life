@@ -24,6 +24,7 @@ func _init() -> void:
 	test_data()
 	test_levels_from_facts()
 	test_mining_adapter()
+	test_min_d_schema()
 	test_specialization()
 	test_history()
 	test_live_village()
@@ -37,7 +38,7 @@ func smithy_facts() -> Dictionary:
 	return {"id": "forge_town", "population": 30,
 		"practitioners": [{"job": "smith", "skills": {"smithing": 4}}, {"job": "carpenter", "skills": {"crafting": 2}},
 			{"job": "woodcutter", "skills": {"woodcutting": 2}}],
-		"stock": {"hammer": 1, "axe": 1}, "structures": {"anvil": 1, "forge": 1, "sawhorse": 1},
+		"stock": {"hammer": 1, "axe": 1}, "stations": {"anvil": 1, "forge": 1, "sawhorse": 1},
 		"transport": {"handcart": 0}, "records": {}, "portals": [],
 		"external": {"mining": {"level": 0, "source": "fixture"}}}
 
@@ -91,41 +92,112 @@ func test_levels_from_facts() -> void:
 	check(SettlementIndustries.levels(smithy_facts()) == SettlementIndustries.levels(smithy_facts()), "the same facts give the same levels")
 
 
-## The mining dimension comes only through the adapter (MIN-D is not final and not on this branch).
+## The mining dimension comes only through the adapter, mapped to MIN-D's interface (wip/b17-mind b0506db; not on this
+## branch, so a fake World stands in for it).
 func test_mining_adapter() -> void:
-	var fx := MiningCapabilityAdapter.fixture({"pit_town": {"level": 3, "portals": [-1], "records": {"discovery": 2}}})
-	check(fx.capability("pit_town").level == 3 and fx.capability("pit_town").provisional, "a fixture gives its mining level, marked provisional")
+	var fx := MiningCapabilityAdapter.fixture({"pit_town": {"level": 3, "portals": [-1], "records": {"discovery": 2},
+		"deposit_access": [0], "local_supply": {"iron_ore": 40}, "unmet": {4: ["timber support"]}}})
+	var c0 := fx.capability("pit_town")
+	check(c0.level == 3 and c0.provisional and c0.unmet.has(4), "a fixture gives its mining level and what stops the next, marked provisional")
 	check(fx.capability("elsewhere").level == 0, "a settlement the fixture does not know has mining 0")
-	check(fx.portals("pit_town") == [-1] and int(fx.records("pit_town").discovery) == 2, "and its portals and discovery records")
+	check(fx.portals("pit_town") == [-1] and int(fx.records("pit_town").discovery) == 2 and fx.deposit_access("pit_town") == [0]
+		and int(fx.local_supply("pit_town").iron_ore) == 40, "and its portals, discovery records, deposit access and own ore")
 	check(MiningCapabilityAdapter.fixture({"x": {"level": 9}}).capability("x").level == 4, "a level is clamped to 0..4")
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	var live := MiningCapabilityAdapter.live(w)
 	var c := live.capability(SettlementFacts.VILLAGE)
-	check(c.level == 0 and c.source == "unavailable", "on this branch (no MIN-D) the live adapter reports mining unavailable, level 0, invents nothing")
+	check(not live.has_min_d() and c.level == 0 and c.source == "unavailable", "on this branch (no MIN-D) the live adapter reports mining unavailable, level 0, invents nothing")
+	check(int(live.local_supply("village").get("iron_ore", 0)) > 0, "the village's own unworked seams count as its ore supply (Build 16 stand-in)")
 	var f := SettlementFacts.from_world(w, live)
 	var before: int = SettlementIndustries.levels(f).mining
 	for d in w.deposits:
 		d.amount = 0                          # every seam worked out: the settlement model must not notice by itself
 	check(SettlementIndustries.levels(SettlementFacts.from_world(w, live)).mining == before,
 		"the settlement model never reads deposits: emptying the seams changes no mining level by itself")
-	var fake := FakeMinD.new()
-	var through := MiningCapabilityAdapter.live(fake)
-	check(through.capability("village").level == 2 and through.capability("village").source == "min-d",
-		"when a World offers mining_capability (MIN-D's provisional hook) the adapter reads it")
+	check(live.local_supply("village").is_empty(), "worked-out seams leave the village no ore of its own")
+	# MIN-D's real interface, faked: World.discovery.evaluate/level/history/manor_finds, the reachable seams
+	var fake := FakeMinDWorld.new()
+	var a := MiningCapabilityAdapter.live(fake)
+	var m := a.capability("village")
+	check(a.has_min_d() and m.level == 2 and m.last_dawn == 1 and m.source == "min-d",
+		"with MIN-D the level is Discovery.evaluate's (2), the last dawn's (1) reported beside it")
+	check(m.since_day == 7 and m.history.size() == 1 and m.unmet.has(3), "and its history (changed day 7) and unmet needs come from MIN-D")
+	check(a.capability("hollow").source == "unavailable", "MIN-D models the village only: another settlement is unavailable")
+	check(int(a.records("village").discovery) == 1 and a.portals("village") == [-1], "records are the manor's finds; portals the underground's")
+	check(a.deposit_access("village") == [0] and int(a.local_supply("village").get("iron_ore", 0)) == 30 and not a.local_supply("village").has("coal"),
+		"deposit access and the village's own ore count only seams villagers reach (an unreachable coal seam is not counted)")
+	var w2 := World.new()
+	w2.setup(VillageMap.load_default(), 1)
+	var lv := SettlementIndustries.levels(SettlementFacts.from_world(w2, a))
+	check(lv.mining == 2, "the industry model takes mining from MIN-D through the adapter (2), never re-derives it")
+	fake.discovery.lv = 0
+	check(a.local_supply("village").is_empty(), "at mining 0 (nobody can dig) the village's seams are not its supply")
 
 
-class FakeMinD:
+## Schema compatibility (evidence for the one-evaluator plan, DESIGN.md section 8): MIN-D's mining block, copied as a
+## TEST FIXTURE (tests/fixtures/x18_min_d_mining.json; the live mining level is never computed this way), evaluated by
+## SettlementIndustries from facts, gives the levels MIN-D documents (MIN_D_DISCOVERY.md section 2).
+func test_min_d_schema() -> void:
+	var fx: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/x18_min_d_mining.json"))
+	var d := SettlementIndustries.data().duplicate(true)
+	d.industries.mining = fx.industries.mining           # not external: the evaluator reads MIN-D's needs directly
+	check(SettlementIndustries.validate(d).is_empty(), "MIN-D's mining needs validate in the settlement schema (%s)" % str(SettlementIndustries.validate(d)))
+	var f := {"practitioners": [{"job": "miner", "skills": {"mining": 2}}], "tools": {"pickaxe": 1},
+		"transport": {"carry": 1}, "deposit_access": [0], "stations": {}, "records": {}}
+	check(SettlementIndustries.levels(f, d).mining == 1, "a miner, a pickaxe, carrying and reachable ore: surface extraction (1)")
+	f.practitioners.append({"job": "prospector", "skills": {}})
+	f.practitioners.append({"job": "smith", "skills": {"smithing": 1}})
+	f.stations.forge = 1
+	f.tools.prospecting_kit = 1
+	f.records.discovery = 1
+	check(SettlementIndustries.levels(f, d).mining == 2, "with a prospector, a smith as assayer, a forge, a kit and a find: prospecting and assay (2)")
+	f.practitioners.append({"job": "excavator", "skills": {}})
+	f.practitioners.append({"job": "excavator", "skills": {}})
+	f.transport.handcart = 1
+	f.portals = [-1]
+	check(SettlementIndustries.levels(f, d).mining == 2, "no pit ramp or timber support exists: 3 and 4 cannot hold (as MIN-D)")
+	f.tools.erase("pickaxe")
+	var ev := SettlementIndustries.evaluate(f, d)
+	check(ev.levels.mining == 0 and ev.blocked.mining.has("1 pickaxe"), "the last pickaxe gone: 0, with the reason (as MIN-D's regression)")
+
+
+class FakeDiscovery:
 	extends RefCounted
-	func mining_capability(_id: String) -> Dictionary:
-		return {"level": 2, "since_day": 5}
+	var lv := 2
+	var history := [{"day": 7, "industry": "mining", "from": 0, "to": 1, "why": ""}, {"day": 9, "industry": "smithing", "from": 0, "to": 1, "why": ""}]
+	func evaluate(_industry := "mining") -> Dictionary:
+		return {"level": lv, "holds": [true, true, false, false], "unmet": {3: ["2 excavators"], 4: ["a way below ground"]}}
+	func level(_industry := "mining") -> int:
+		return 1
+	func manor_finds() -> Array:
+		return [{"ore": "iron_ore"}]
+
+
+class FakeUnderground:
+	extends RefCounted
+	var portals := [{"ends": [{"level": 0}, {"level": -1}]}]
+
+
+class FakeMinDWorld:
+	extends RefCounted
+	var discovery := FakeDiscovery.new()
+	var underground := FakeUnderground.new()
+	var deposits := [{"x": 1, "y": 1, "ore": "iron_ore", "amount": 30}, {"x": 2, "y": 2, "ore": "coal", "amount": 12, "far": true},
+		{"x": 3, "y": 3, "ore": "iron_ore", "amount": 0}]
+	func _quarry_sources(ores: Array) -> Array:
+		return deposits.filter(func(d): return ores.has(d.ore))
+	func villagers_reach(d: Dictionary) -> bool:
+		return not d.get("far", false)
+	func level_of(_d: Dictionary) -> int:
+		return 0
 
 
 ## Spec s.3 and s.11: a small mining village can outclass a larger farming town in mining; profiles differ.
 func test_specialization() -> void:
 	var small := {"id": "hollow", "population": 12,
 		"practitioners": [{"job": "miner", "skills": {"mining": 5}}, {"job": "smith", "skills": {"smithing": 3}}],
-		"stock": {"hammer": 1, "pickaxe": 3}, "structures": {"anvil": 1, "forge": 1},
+		"stock": {"hammer": 1, "pickaxe": 3}, "stations": {"anvil": 1, "forge": 1},
 		"external": {"mining": {"level": 3}}}
 	var big_prac := []
 	for i in 10:

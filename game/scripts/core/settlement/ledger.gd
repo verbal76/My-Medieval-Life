@@ -29,6 +29,8 @@ var transport := {"handcart": 0}  # vehicles it can send (TradeRoutes.capacity)
 var capabilities := {}            # {industry: level} (fixtures; SettlementIndustries for real facts)
 var sale_limit = null             # null: anything beyond its reserve is for sale; else {item: most units for sale}
                                   # (the village snapshot: only its traders' and producers' goods, not pantries)
+var local_supply := {}            # {item: units} it can still extract itself (its own reachable seams, through the
+                                  # mining adapter): counted against its demand, never as stock or for sale
 var journal: Array = []           # [{day, kind, item, n, coins, with}]
 var start := {}                   # the opening books (balanced() checks against them)
 var keep_journal := true

@@ -70,7 +70,10 @@ static func measured_use(stats0: Dictionary, stats1: Dictionary, days: float) ->
 ## people and institutions hold counts against its need (pantries and the granary too), but only its traders' and
 ## producers' goods (markets, stalls, carts, villagers' packs) are for sale, and only its traders' coins buy. A COPY:
 ## executing a plan on it changes nothing in the World (live trade is the caravan's until SET-C is integrated).
-static func as_ledger(w: World, needs: Dictionary, id := SettlementFacts.VILLAGE) -> SettlementLedger:
+## Its own reachable seams (through the mining adapter: MIN-D's deposits and level) count against its ore demand.
+static func as_ledger(w: World, needs: Dictionary, id := SettlementFacts.VILLAGE, mining: MiningCapabilityAdapter = null) -> SettlementLedger:
+	if mining == null:
+		mining = MiningCapabilityAdapter.live(w)
 	var h := SettlementHoldings.holders(w)
 	var stock := {}
 	var sale := {}
@@ -80,9 +83,10 @@ static func as_ledger(w: World, needs: Dictionary, id := SettlementFacts.VILLAGE
 			if k in ["markets", "stalls", "carts", "npcs"]:
 				sale[item] = int(sale.get(item, 0)) + int(h[k][item])
 	var coins := SettlementHoldings.coins(w)
-	var facts := SettlementFacts.from_world(w)
+	var facts := SettlementFacts.from_world(w, mining, id)
 	var l := SettlementLedger.make({"id": id, "name": "the village", "population": facts.population,
 		"coins": int(coins.markets), "stock": stock, "needs": needs, "transport": facts.transport,
 		"capabilities": SettlementIndustries.levels(facts)})
 	l.sale_limit = sale
+	l.local_supply = mining.local_supply(id)
 	return l

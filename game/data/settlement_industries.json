@@ -1,7 +1,7 @@
 {
   "format": "mml-capabilities/1",
-  "_note": "PROSPECTIVE (Expansion 18, PROS-18, wip/expansion18-preparation; not live gameplay). A settlement's capability per industry, SET-B (spec s.4), in the schema MIN_A_ARCHITECTURE.md s.9 sketched for SET-A: industries -> levels -> needs. A level holds when every need of it and of every level below it holds; levels are derived from the world (people, skills, tools, stock, structures, transport, records), never stored as truth. Mining is external: its level comes from MIN-D (Build 17) through MiningCapabilityAdapter and is never computed here. Every threshold below is an agent proposal, provisional (owner question Q18-2: thresholds and the first industries).",
-  "need_kinds": ["practitioners", "tool_stock", "stock", "structure", "transport", "records", "portal", "industry", "any"],
+  "_note": "PROSPECTIVE (Expansion 18, PROS-18, wip/expansion18-preparation; not live gameplay). A settlement's capability per industry, SET-B (spec s.4), in the schema MIN_A_ARCHITECTURE.md s.9 sketched for SET-A: industries -> levels -> needs. A level holds when every need of it and of every level below it holds; levels are derived from the world (people, skills, tools, stock, structures, transport, records), never stored as truth. Mining is external: its level comes from MIN-D (Build 17) through MiningCapabilityAdapter and is never computed here. Need vocabulary is MIN-D's (game/data/capabilities.json on wip/b17-mind b0506db: practitioners {jobs, skill, min_level, count, as}, station {type}, structure {what}, transport {any: handcart | carry}, deposit_access, records, portal) plus stock, industry and any, so at the Build 18 reconciliation these industries move into capabilities.json unchanged (docs/expansion18/DESIGN.md section 8). Every threshold below is an agent proposal, provisional (owner question Q18-2: thresholds and the first industries).",
+  "need_kinds": ["deposit_access", "practitioners", "tool_stock", "stock", "station", "structure", "transport", "records", "portal", "industry", "any"],
   "industries": {
     "mining": {
       "name": "Mining",
@@ -13,7 +13,7 @@
       "name": "Forestry",
       "levels": [
         {"level": 1, "name": "Felling",
-         "needs": [{"kind": "practitioners", "job": "woodcutter", "count": 1},
+         "needs": [{"kind": "practitioners", "jobs": ["woodcutter"], "count": 1},
                    {"kind": "tool_stock", "tool": "axe", "count": 1}]},
         {"level": 2, "name": "Managed woodland",
          "needs": [{"kind": "practitioners", "skill": "woodcutting", "min_level": 3, "count": 2},
@@ -25,12 +25,12 @@
       "name": "Carpentry",
       "levels": [
         {"level": 1, "name": "Sawing",
-         "needs": [{"kind": "practitioners", "job": "carpenter", "count": 1},
-                   {"kind": "structure", "what": "sawhorse", "count": 1},
+         "needs": [{"kind": "practitioners", "jobs": ["carpenter"], "count": 1},
+                   {"kind": "station", "type": "sawhorse", "count": 1},
                    {"kind": "industry", "id": "forestry", "min": 1}]},
         {"level": 2, "name": "Joinery and cartwrighting",
          "needs": [{"kind": "practitioners", "skill": "crafting", "min_level": 3, "count": 1},
-                   {"kind": "structure", "what": "workbench", "count": 1},
+                   {"kind": "station", "type": "workbench", "count": 1},
                    {"kind": "tool_stock", "tool": "hammer", "count": 1}]}
       ]
     },
@@ -38,9 +38,9 @@
       "name": "Smithing",
       "levels": [
         {"level": 1, "name": "Smithy",
-         "needs": [{"kind": "practitioners", "job": "smith", "count": 1},
-                   {"kind": "structure", "what": "anvil", "count": 1},
-                   {"kind": "structure", "what": "forge", "count": 1}]},
+         "needs": [{"kind": "practitioners", "jobs": ["smith"], "count": 1},
+                   {"kind": "station", "type": "anvil", "count": 1},
+                   {"kind": "station", "type": "forge", "count": 1}]},
         {"level": 2, "name": "Toolmaking",
          "needs": [{"kind": "practitioners", "skill": "smithing", "min_level": 3, "count": 1},
                    {"kind": "tool_stock", "tool": "hammer", "count": 1},
@@ -55,10 +55,10 @@
       "name": "Farming",
       "levels": [
         {"level": 1, "name": "Field husbandry",
-         "needs": [{"kind": "practitioners", "job": "farmer", "count": 1},
+         "needs": [{"kind": "practitioners", "jobs": ["farmer"], "count": 1},
                    {"kind": "structure", "what": "field", "count": 1}]},
         {"level": 2, "name": "Ploughland",
-         "needs": [{"kind": "practitioners", "job": "farmer", "count": 4},
+         "needs": [{"kind": "practitioners", "jobs": ["farmer"], "count": 4},
                    {"kind": "tool_stock", "tool": "plough", "count": 1},
                    {"kind": "structure", "what": "field", "count": 4}]}
       ]
@@ -67,15 +67,15 @@
       "name": "Tanning",
       "levels": [
         {"level": 1, "name": "Tannery",
-         "needs": [{"kind": "practitioners", "job": "tanner", "count": 1},
-                   {"kind": "structure", "what": "workbench", "count": 1}]}
+         "needs": [{"kind": "practitioners", "jobs": ["tanner"], "count": 1},
+                   {"kind": "station", "type": "workbench", "count": 1}]}
       ]
     },
     "trade": {
       "name": "Trade",
       "levels": [
         {"level": 1, "name": "Market",
-         "needs": [{"kind": "practitioners", "job": "merchant", "count": 1},
+         "needs": [{"kind": "practitioners", "jobs": ["merchant"], "count": 1},
                    {"kind": "structure", "what": "stall", "count": 1}]},
         {"level": 2, "name": "Carrying trade",
          "needs": [{"kind": "practitioners", "skill": "trading", "min_level": 3, "count": 1},

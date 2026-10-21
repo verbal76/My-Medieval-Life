@@ -138,22 +138,28 @@ static func evaluate(facts: Dictionary, d: Dictionary = {}) -> Dictionary:
 	return {"levels": lv, "blocked": blocked}
 
 
-## Whether one need holds for the facts and the levels found so far.
+## Whether one need holds for the facts and the levels found so far. The vocabulary is MIN-D's capabilities.json
+## (practitioners {jobs | job, skill, min_level, count, as}, station {type}, structure {what}, transport {any: handcart |
+## carry}, deposit_access {level}, records, portal) plus stock, industry and any.
 static func holds(need: Dictionary, facts: Dictionary, lv: Dictionary) -> bool:
 	match str(need.kind):
 		"practitioners":
+			var jobs: Array = need.get("jobs", [need.job] if need.has("job") else [])
 			var c := 0
 			for p in facts.get("practitioners", []):
-				if need.has("job") and str(p.job) != str(need.job):
+				if not jobs.is_empty() and not jobs.has(str(p.job)):
 					continue
 				if need.has("skill") and int((p.get("skills", {}) as Dictionary).get(str(need.skill), 0)) < int(need.get("min_level", 1)):
 					continue
 				c += 1
 			return c >= int(need.get("count", 1))
 		"tool_stock":
-			return int((facts.get("stock", {}) as Dictionary).get(str(need.tool), 0)) >= int(need.get("count", 1))
+			var tools: Dictionary = facts.get("tools", facts.get("stock", {}))
+			return int(tools.get(str(need.tool), 0)) >= int(need.get("count", 1))
 		"stock":
 			return int((facts.get("stock", {}) as Dictionary).get(str(need.item), 0)) >= int(need.get("count", 1))
+		"station":
+			return int((facts.get("stations", {}) as Dictionary).get(str(need.type), 0)) >= int(need.get("count", 1))
 		"structure":
 			return int((facts.get("structures", {}) as Dictionary).get(str(need.what), 0)) >= int(need.get("count", 1))
 		"transport":
@@ -161,11 +167,13 @@ static func holds(need: Dictionary, facts: Dictionary, lv: Dictionary) -> bool:
 				if int((facts.get("transport", {}) as Dictionary).get(str(m), 0)) > 0:
 					return true
 			return false
+		"deposit_access":
+			return (facts.get("deposit_access", []) as Array).has(int(need.get("level", 0)))
 		"records":
 			return int((facts.get("records", {}) as Dictionary).get(str(need.what), 0)) >= int(need.get("count", 1))
 		"portal":
 			for depth in facts.get("portals", []):
-				if int(depth) <= int(need.min_depth):
+				if int(depth) <= int(need.get("min_depth", -1)):
 					return true
 			return false
 		"industry":
@@ -181,22 +189,27 @@ static func holds(need: Dictionary, facts: Dictionary, lv: Dictionary) -> bool:
 static func describe(need: Dictionary) -> String:
 	match str(need.kind):
 		"practitioners":
-			var who := str(need.get("job", "")) if need.has("job") else "%s %d+" % [str(need.skill), int(need.get("min_level", 1))]
-			if need.has("job") and need.has("skill"):
+			var jobs: Array = need.get("jobs", [need.job] if need.has("job") else [])
+			var who := str(need.as) if need.has("as") else ("/".join(jobs) if not jobs.is_empty() else "worker")
+			if need.has("skill"):
 				who += " with %s %d+" % [str(need.skill), int(need.get("min_level", 1))]
 			return "%d %s" % [int(need.get("count", 1)), who]
 		"tool_stock":
 			return "%d %s" % [int(need.get("count", 1)), str(need.tool)]
 		"stock":
 			return "%d %s in store" % [int(need.get("count", 1)), str(need.item)]
+		"station":
+			return "%d %s" % [int(need.get("count", 1)), str(need.type)]
 		"structure":
 			return "%d %s" % [int(need.get("count", 1)), str(need.what)]
 		"transport":
 			return "transport: " + " or ".join(need.any)
+		"deposit_access":
+			return "ore to reach at level %d" % int(need.get("level", 0))
 		"records":
 			return "%d %s record" % [int(need.get("count", 1)), str(need.what)]
 		"portal":
-			return "a way down to depth %d" % int(need.min_depth)
+			return "a way down to depth %d" % int(need.get("min_depth", -1))
 		"industry":
 			return "%s level %d" % [str(need.id), int(need.min)]
 		"any":

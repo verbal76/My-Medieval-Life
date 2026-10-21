@@ -28,9 +28,12 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 
 ## Features implemented provisionally
 
-- **Mining capability** comes only through `MiningCapabilityAdapter` (fixture / live duck-typed / none). Live on this
-  branch: level 0, source `unavailable`. The live hook names (`World.mining_capability(id)`, `World.mining_levels`,
-  `World.mining_portals(id)`, `World.discovery_records(id)`) are guesses until MIN-D lands.
+- **Mining capability** comes only through `MiningCapabilityAdapter` (fixture / live / none), mapped to MIN-D's real
+  interface as read on `origin/wip/b17-mind` b0506db (`World.discovery.evaluate/level/history/manor_finds`,
+  `World.underground.portals`, `World._quarry_sources`, `villagers_reach`, `level_of`) and tested against a fake World with
+  those members. Live on this branch (no Build 17 code): level 0, source `unavailable`.
+- **The village's own ore** (`local_supply`) counts against its regional ore demand (MIN-D's reachable seams; on this
+  branch the Build 16 seams).
 - **Thresholds and first industries** in `settlement_industries.json` (agent proposals; Q18-2).
 - **Market parameters** (`reserve_days` 6, `scarcity_premium` 1.0, `cash_floor` 20, `preferred_margin_pct` 10) and
   **transport** (carrier 12 units, handcart 60, terrain factors).
@@ -44,7 +47,7 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 
 | Dependency | Build 17 item | Effect here |
 |---|---|---|
-| Mining capability levels 1-4, hidden deposits | MIN-D (`wip/b17-mind`, not final) | adapter reads it; mining level is 0 live until then; smithing 2's "mining 1 or iron bars" alternative uses it |
+| Mining capability levels 1-4, hidden deposits | MIN-D (`wip/b17-mind` b0506db, to be merged into `wip/build17`) | adapter mapped to its interface (fake-World tests); mining level is 0 live on this branch until the reconciliation; smithing 2's "mining 1 or iron bars" alternative uses it |
 | Discovery records with provenance | MIN-C | `records` needs (none used by non-mining industries yet) |
 | Underground portals | MIN-F / OD-29 | `portal` needs (mining 4 is MIN-D's) |
 | Procurement contracts | CON-01 (`contracts.gd`) | SET-C orders should become CON-01 contracts between a regional buyer and village sellers; `RegionalMarket.execute` is the stand-in |
@@ -57,16 +60,20 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 
 1. **Census move.** Build 17 may add holders to `tests/census.gd` (it has not as of `origin/wip/build17` read on
    2026-10-21); a merge would then put them in the wrong file. Reconcile by moving them into `SettlementHoldings`.
-2. **Data file collision.** MIN-D may create `game/data/capabilities.json` with mining levels (the SET-A sketch). This
-   branch uses `settlement_industries.json` with mining external; at integration the two must become one file and one
-   evaluator (mining's needs evaluated by MIN-D or moved into the generic evaluator; never both).
+2. **Two capability files and loops until the reconciliation.** MIN-D created `game/data/capabilities.json` and
+   `Discovery.evaluate`. Resolved by plan (DESIGN.md section 8): the vocabulary is already aligned and tested
+   (`test_min_d_schema`); at the reconciliation the non-mining industries move into `capabilities.json` and
+   `Discovery.evaluate` calls the one evaluator. Until then mining is only consumed, never derived here. Remaining
+   incompatibilities: MIN-D's `need_holds` reads the World per need while this branch reads a facts snapshot (folded in
+   step 4); MIN-D keeps its own history (this branch's `record` and save key are to be dropped, step 6).
 3. **The only coin faucet.** Replacing the 30-coin allowance changes the village's money supply; the shadow harness
    shows genuine demand from the fixture regions takes a fraction of what the caravan buys (CARAVAN_REPLACEMENT.md).
    Under WDR-022 that is a legitimate outcome, but it is the largest behaviour change of Build 18.
 4. **Newcomer succession rides the caravan** (`succession_caravan`); it must be decoupled before the caravan can fail
    to come.
-5. **Ore, coal, stone imports** become demand- and supply-dependent; the village snapshot does not yet count the mine's
-   own capacity (deposits are MIN-D's), so the shadow overstates import demand for ore.
+5. **Ore, coal, stone imports** become demand- and supply-dependent. Fixed in part: the village snapshot counts its own
+   reachable seams (`local_supply`) against ore demand. Still open: daily extraction
+   rate (how fast miners can dig it) is not modelled, only what is left; seams opened from finds count once MIN-D is in.
 6. **EQ-21/EQ-22 producer purchases** (`caravan_line_need`) must move into the regional model, not be duplicated.
 7. **Living Economy overlap** (EXP-D merchants and regional links): keep one merchant model.
 8. **Performance.** Facts and report walk every holder; fine daily on desktop (not measured on Android).

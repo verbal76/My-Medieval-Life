@@ -14,7 +14,7 @@ existing code is `game/tests/census.gd`, which now delegates to the moved census
 | File | Class | Phase | What it does |
 |---|---|---|---|
 | `holdings.gd` | `SettlementHoldings` | B/C | The census of goods by holder (moved unchanged from `tests/census.gd`) and coins by holder (sums to `World.total_coins`). Read-only. |
-| `facts.gd` | `SettlementFacts` | B | A settlement's facts read from the World: living adult practitioners (job, skill levels; the player counts as a practitioner, PAR-01), goods held (not the player's, not loot), structures (station types, fields, stalls), handcarts, and mining capability, records and portals from the adapter. |
+| `facts.gd` | `SettlementFacts` | B | A settlement's facts read from the World: living adult practitioners (job, skill levels; role "adult" as MIN-D counts them; the player's skills and goods are not the settlement's, as MIN-D decided), tools as MIN-D counts them (villagers' packs, households, the manor's yard), goods held (not the player's, not loot), stations, structures (fields, stalls), transport (handcarts, carrying), and deposit access, records, portals and the mining level from the adapter. |
 | `industries.gd` | `SettlementIndustries` | A/B | Validates `game/data/settlement_industries.json`; derives each industry's level from facts; names unmet needs; specialization and leaders across settlements; level history. |
 | `mining_adapter.gd` | `MiningCapabilityAdapter` | B (provisional) | The only way the model learns mining capability (MIN-D): fixture, live (duck-typed), none. |
 | `report.gd` | `SettlementReport` | B/C | The village's goods by group (market, private, public, player, loot), coins by holder, outside money, food days, capabilities, transport; measured daily use from the World's stats; a read-only ledger snapshot of the village. |
@@ -39,7 +39,13 @@ Data: `game/data/settlement_industries.json` (`mml-capabilities/1`), test fixtur
 - **Population plays no part** (spec s.3): tested; a 12-person mining hamlet leads a 90-person farming town in mining.
 - **Mining is external.** The data file marks mining `external`; its level is read from `MiningCapabilityAdapter`,
   which on this branch reports `unavailable` (level 0) in the live game. The model never reads `World.deposits` (a test
-  empties every seam and checks no level moves).
+  empties every seam and checks no level moves). The adapter is mapped to MIN-D's real interface (`World.discovery`:
+  `evaluate("mining")` for the level now, `level("mining")` for the last dawn's, `history`, `manor_finds()`; portals from
+  `World.underground`; reachable seams from `World._quarry_sources` and `villagers_reach`), read on
+  `origin/wip/b17-mind` b0506db and tested against a fake World with those members.
+- **Vocabulary aligned with MIN-D.** `settlement_industries.json` uses MIN-D's need kinds (`practitioners` with `jobs`,
+  `station {type}`, `structure {what}`, `transport` with `carry`, `deposit_access`), and the facts count practitioners
+  (adults only, not the player) and tools (villagers, households, the manor's yard) as MIN-D does.
 - First industries (provisional, Q18-2): forestry, carpentry, smithing, farming, tanning, trade, plus external mining.
   Farming, carpentry and tanning have no skill yet (Q18-1, DVW-B8), so they are measured by job, tools and structures.
 
@@ -60,6 +66,15 @@ Data: `game/data/settlement_industries.json` (`mml-capabilities/1`), test fixtur
   line that no longer holds is refused whole.
 - **Off-map settlements** change only by journaled lines: production, use (with recorded shortages), explicit income
   (default 0, a closed purse; Q18-3) and matched trade.
+
+### Ore demand (the overstatement fixed)
+
+The first shadow runs counted the village's daily use of ore and coal as import demand, though its own seams supply them.
+Now `MiningCapabilityAdapter.local_supply("village")` gives what the village's own reachable seams still hold (MIN-D:
+`_quarry_sources` filtered by `villagers_reach`, only while the mining level is 1 or more, since at 0 nobody can dig; on
+this branch the Build 16 seams in `World.deposits` stand in), `SettlementReport.as_ledger` puts it in the snapshot's
+`local_supply`, and `RegionalMarket.demand` subtracts it. It is never stock and never for sale: ore still in the ground is
+not goods. The settlement model itself still reads no deposit.
 
 ### Transport cost (agent decision)
 
@@ -99,3 +114,24 @@ recompute of levels in `World._new_day`; a wiki page from the report; `NPCBrain.
 
 No randomness is used. Every iteration over settlements, goods and industries is sorted; route search breaks ties by
 cell order. Tests run the same scenarios twice and compare JSON fingerprints.
+
+## 8. One capability file and one evaluator at the Build 18 reconciliation (plan)
+
+Today there are two files and two evaluation loops: MIN-D's `game/data/capabilities.json` with `Discovery.evaluate`
+(Build 17, mining only, reads the World directly in `need_holds`) and this branch's `settlement_industries.json` with
+`SettlementIndustries.evaluate` (every other industry, reads a facts snapshot). Until the reconciliation the settlement
+model only **consumes** MIN-D's mining level (adapter; mining is `external`), so mining is never derived twice. At the
+reconciliation they become one file and one evaluator:
+
+| Step | What moves | Where |
+|---|---|---|
+| 1. File | The non-mining industries (forestry, carpentry, smithing, farming, tanning, trade), `need_kinds`, `transport` and `market` blocks move from `settlement_industries.json` into MIN-D's `game/data/capabilities.json` (it keeps its name, format `mml-capabilities/1` and MIN-D's mining block unchanged). `settlement_industries.json` is deleted. | `capabilities.json` |
+| 2. Schema | Already aligned on this branch: `practitioners {jobs, skill, min_level, count, as}`, `station {type}`, `structure {what}`, `transport {any: handcart, carry}`, `deposit_access`, `records`, `portal` are MIN-D's; this branch adds `stock {item}`, `industry {id, min}` and `any {of}` (additive: MIN-D's block needs none of them). MIN-D's `note` key and this branch's `_note` both stay comments. | — |
+| 3. Algorithm | One level-climbing loop: `SettlementIndustries.evaluate(facts, data)` (sequential levels, unmet needs per level, cross-industry order). MIN-D's `Discovery.evaluate(industry)` becomes a thin call: `SettlementIndustries.evaluate(SettlementFacts.from_world(w)).levels[industry]`, keeping its return shape `{level, holds, unmet}` for its callers (dawn, prospector place, manor postings). | `industries.gd` |
+| 4. Need readers | MIN-D's World readers move into the one facts builder, `SettlementFacts.from_world`: `deposit_access` (`_quarry_sources`, `villagers_reach`, `level_of`), `records` (`manor_finds`), `portal` (`underground.portals`), `structure` (`Discovery.structures`: pit ramps, timber supports), `transport.carry` (`carry_ore`). They are already the adapter's methods; at integration the adapter's live mode is folded into `from_world` and only the fixture mode remains (for abstract settlements and tests). Practitioners and tools are already counted MIN-D's way. | `facts.gd` |
+| 5. Mining no longer external | Remove `"external": "mining"`; mining is evaluated by the one evaluator from MIN-D's block. `test_min_d_schema` (settlement_test) already proves the evaluator gives MIN-D's documented levels from MIN-D's block. MIN-D's `discovery_test` must still pass unchanged (its gate). | `capabilities.json`, tests |
+| 6. History | One history: MIN-D's `Discovery.history` `{day, industry, from, to, why}` and its dawn notes, extended to every industry by iterating `caps().industries` (it already does). `SettlementIndustries.record` and the provisional `x18_settlements.capabilities` save key are dropped in its favour (no second history in the save). | `discovery.gd` (dawn), `settlement_save.gd` |
+| 7. Effects | Levels gate nothing (owner Q18-9, 2026-10-21): their only effects are data-driven pay and output factors (section 9). | — |
+
+Order: after Build 17 is complete and its baseline is merged into this branch (directive's reconciliation gate). Owner of
+the change: the Build 18 integration; MIN-D's files are not edited before then.

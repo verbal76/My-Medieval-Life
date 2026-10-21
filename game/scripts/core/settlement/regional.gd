@@ -29,8 +29,10 @@ static func horizon(l: SettlementLedger, item: String) -> int:
 	return int(ceil(float(l.needs.get(item, 0.0)) * float(cfg().reserve_days) - 1e-9))
 
 
+## What `l` lacks of its horizon need: less what it holds and what its own workings can still yield (local_supply:
+## a village with ore in its own reachable seams does not need to import ore; DESIGN.md "Ore demand").
 static func demand(l: SettlementLedger, item: String) -> int:
-	return maxi(0, horizon(l, item) - l.stock.count(item))
+	return maxi(0, horizon(l, item) - l.stock.count(item) - int(l.local_supply.get(item, 0)))
 
 
 static func supply(l: SettlementLedger, item: String) -> int:
