@@ -15109,6 +15109,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 7b83fe8; tests",
      "why": "Seeded clues, the prospector, the forge-made kit, samples with origin and the smith's uncertain assay; knowledge kept per holder; awaits the Build 17 gate and a visual check of the stains"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Visual check (lead, 2026-10-21): rendered at seed 1, clue c104_5 copper beside the player at 3x: faint blue-green flecks on grass, drawn under actors, nothing over UI; subtle by design, contrast may be raised later if players miss them; clues beside roads and buildings not yet looked at"
     }
    ],
    "target_build": "17",
