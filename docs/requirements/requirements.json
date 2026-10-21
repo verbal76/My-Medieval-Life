@@ -1734,11 +1734,12 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "terrain_test",
+   "tests": "terrain_test, crafts_test",
    "playtest": [],
    "branch": "",
    "commits": [
-    "3edd5af"
+    "3edd5af",
+    "89e7577"
    ],
    "parent": null,
    "depends_on": [],
@@ -1766,6 +1767,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 3edd5af; tests",
      "why": "Cliff steps, wooden stairs and walkways built with real materials and skills; device check outstanding"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 89e7577; tests",
+     "why": "Villagers now supply nails (smith) and mallets (carpenter) to the goods merchant; wiki page for steps, stairs and walkways; device check outstanding"
     }
    ],
    "acceptance_derived": true,
@@ -20229,7 +20235,7 @@
    "id": "PL1-12",
    "title": "Red flowering plant not pickable",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Red flowering plant not pickable",
    "source": "docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 149)",
@@ -20238,10 +20244,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": ":27 | VERIFIED (:29, with PL2-006) | DONE-V | `5669028` |  | B12 audit:1602 \"Partial: not drawn in the overworld\"; ledger says VERIFIED — **contradiction**",
-   "tests": "",
+   "tests": "crafts_test, overworld_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "0ab1fa5"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -20268,6 +20276,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit 0ab1fa5; tests",
+     "why": "The red flower (tile 2656) now also grows outside the village; overworld generator version 2, version 1 saves keep their changes"
     }
    ],
    "acceptance_derived": true,

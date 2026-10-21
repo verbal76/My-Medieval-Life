@@ -13,8 +13,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 |---|---|
 | APPROVED — NOT STARTED | 58 |
 | ACTIVE DEVELOPMENT | 12 |
-| PARTIALLY IMPLEMENTED | 38 |
-| IMPLEMENTED — TESTING REQUIRED | 42 |
+| PARTIALLY IMPLEMENTED | 37 |
+| IMPLEMENTED — TESTING REQUIRED | 43 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 10 |
@@ -193,7 +193,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | Build 17 | Owner Build 17 decisions 2026-10-21 |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | decision | BLOCKED | owner decision first | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
-| PL1-12 | Red flowering plant not pickable | approved | PARTIALLY IMPLEMENTED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
+| PL1-12 | Red flowering plant not pickable | approved | IMPLEMENTED — TESTING REQUIRED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
 | REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | approved | BLOCKED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
 | WDR-001-C | Comply with World Design Rule 1: Material Interdependency | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
@@ -526,7 +526,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (38)
+## PARTIALLY IMPLEMENTED (37)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -552,7 +552,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PL1-07 | NPCs sunk into beds/chairs | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 144) |  |  |  |
 | PL1-10 | Player businesses, staged (1-4) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 147) |  |  |  |
-| PL1-12 | Red flowering plant not pickable | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 149) |  |  | Add tile 2656 to overworld flowers with the next overworld generator version (with B14-09) |
 | PL1-13 | Recognisable stove | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 150) |  |  |  |
 | PL2-008 | Expandable property | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 163) |  |  |  |
 | PL2-010 | Recognisable sawhorse | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 165) |  |  |  |
@@ -569,11 +568,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (42)
+## IMPLEMENTED — TESTING REQUIRED (43)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) | `3edd5af`; terrain_test |  | Start next (owner order) |
+| B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) | `3edd5af`, `89e7577`; terrain_test, crafts_test |  | Start next (owner order) |
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) | `3edd5af`; terrain_test |  |  |
@@ -601,6 +600,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf | `a659f42`; underground_test |  |  |
 | MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf | `79afe00`; quarry_test, underground_test, economy_sim 30 days no leaks | after MIN-A |  |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
+| PL1-12 | Red flowering plant not pickable | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 149) | `0ab1fa5`; crafts_test, overworld_test |  | Add tile 2656 to overworld flowers with the next overworld generator version (with B14-09) |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs') | `04a8eb9`; family_test (51 checks); 30 suites |  |  |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 | Measure in the four-seed runs; owner to confirm the readings |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 | Measure in the four-seed runs; owner to confirm the readings |
