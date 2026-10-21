@@ -21037,10 +21037,12 @@
     "Code and tests on wip/expansion18-preparation; provisional interfaces and fixtures for Build 17 mining and industry; no duplicate mining system"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "settlement_test 63, regional_test 67, caravan_compare 20/50; run_tests, world_test, start_test, parity_test, conservation_test, business_test",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion18-preparation",
+   "commits": [
+    "8eec56e"
+   ],
    "parent": "PROS-01",
    "depends_on": [],
    "blockers": [],
@@ -21062,6 +21064,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 8eec56e; tests; branch",
+     "why": "Rounds 1-3 on wip/expansion18-preparation (8eec56e): capability and specialization (mining read-only from MIN-D through an adapter; one-evaluator merge plan in docs/expansion18/DESIGN.md section 8), settlement holdings and reports, regional supply and demand, routes and haulage, competition and cooperation, caravan comparison harness; Q18-9 (levels scale pay and output, factors 1.0) and Q18-10 (any party buys, fetches or pays a carter) applied; settlement_test 63, regional_test 67, caravan_compare 50 checks; regression suites pass. SET-D not started (Q18-6, Q18-7, Q18-12, Q18-13, live CON-01)"
     }
    ],
    "target_build": "18"
@@ -21765,6 +21772,132 @@
    ],
    "target_build": "18",
    "owner_answer": "Anyone (villagers, households, merchants, businesses, settlement treasuries) may buy from another settlement, and either fetches the goods personally or negotiates and pays a willing carter or delivery service. No free delivery, no merchant-only buying, no coins or goods created; existing negotiation, contract, inventory, transport and conservation systems, no duplicates."
+  },
+  {
+   "id": "Q18-11",
+   "title": "What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect)",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "open owner question raised by PROS-18 implementing Q18-9",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "Q18-12",
+   "title": "May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "open owner question raised by PROS-18 implementing Q18-10",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "Q18-13",
+   "title": "Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant?",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "open owner question raised by PROS-18 implementing Q18-10",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "Q18-9",

@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 181 (75 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **277** = 203 still open from the baseline + 75 added and open |
+| Entries added since | | 184 (78 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **280** = 203 still open from the baseline + 78 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (28)
@@ -58,7 +58,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (181)
+## Added since the baseline (184)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -218,6 +218,9 @@ None.
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | approved | APPROVED — NOT STARTED | 20+ |
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | decision | COMPLETE AND VERIFIED | 18 |
+| Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | decision | BLOCKED | owner decision |
+| Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | decision | BLOCKED | owner decision |
+| Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | decision | BLOCKED | owner decision |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | COMPLETE AND VERIFIED | 18 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | COMPLETE AND VERIFIED |  |
