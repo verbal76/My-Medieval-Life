@@ -141,3 +141,13 @@ turns 200 stone into exactly 200 blocks; every block in the world was made); vil
 to the raw-goods merchant, a mallet bought when needed; construction consumes blocks and refuses stone for them; an
 older site keeps its stone cost over a save, takes stone, cancels to stone; a cost-less site counts nothing; save
 round trip of blocks and stone; determinism of one seed.
+
+## 9. Wiki and documentation (WIKI-01)
+
+- **New in-game page** `sys:stoneworking` "Stoneworking: building blocks" (`game/scripts/core/wiki_stone.gd`, registered
+  in `Wiki.build`): raw stone versus blocks, dressing (workbench, mallet, time, skill, from `recipes.json`), what needs
+  blocks and what keeps raw stone, who makes them (labourers to demand), the caravan. Numbers come from the data.
+- **Updated:** the labourer's job line (`Wiki` job texts: dresses stone into blocks when builders want them); the
+  stall page's list of what builders buy (`wiki_business.gd`: building blocks). The item and recipe pages for
+  `building_block` and `dress_stone`, and every room's materials (`wiki_property.gd`), are generated from the data.
+- `wiki_test` passes.

@@ -26,7 +26,7 @@ const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "i
 const JOB_TEXT := {
 	"miner": "Works the ore seams in the mine and sells ore to the smith and the raw-goods merchant.",
 	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor.",
-	"laborer": "Day labour: mines, hauls and does odd work where it is needed.",
+	"laborer": "Day labour: mines, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them.",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks.",
 	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
@@ -115,6 +115,7 @@ static func build() -> Wiki:
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
+	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
