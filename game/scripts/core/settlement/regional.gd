@@ -138,8 +138,9 @@ static func _carriage(s: SettlementLedger, b: SettlementLedger, r: Dictionary, r
 ## The trades the region would make in one round. `routes`: TradeRoutes.table keyed by place ("a>b"); `agreements`:
 ## [[place_a, place_b, "preferred"]]. Returns {lines: [{seller, buyer, item, units, unit_price, total, carriage,
 ## carrier, fee_each, fee_total, days}], unmet: [{buyer, item, units, reason}], lost: [{seller, buyer, item, units, to}]}.
-## Reads only.
-static func plan(ledgers: Array, routes: Dictionary, agreements: Array = []) -> Dictionary:
+## `local` (analysis): also let parties of the same place buy from each other first, as the local market does (carriage
+## "local", no trip, no fee), so demand the place can meet itself is not sent abroad. Reads only.
+static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], local := false) -> Dictionary:
 	var ls := _sorted(ledgers)
 	var partners := {}
 	for a in agreements:
@@ -177,7 +178,10 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = []) -> 
 				var offers := []      # [delivered each, seller id, carriage, route]
 				var no_carriage := false
 				for s: SettlementLedger in ls:
-					if s.settlement == b.settlement or int(left[s.id][item]) <= 0:
+					if s.id == b.id or int(left[s.id][item]) <= 0 or (s.settlement == b.settlement and not local):
+						continue
+					if s.settlement == b.settlement:
+						offers.append([ask(item), s.id, [0, "local", "", 1 << 30], {"days": 0.0}])
 						continue
 					var r: Dictionary = routes.get(s.settlement + ">" + b.settlement, {})
 					if r.is_empty():
@@ -222,8 +226,9 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = []) -> 
 					if str(o[1]) != sid:
 						lost.append({"seller": str(o[1]), "buyer": b.id, "item": item, "units": mini(n, int(left[str(o[1])][item])), "to": sid})
 				left[sid][item] = int(left[sid][item]) - n
-				var carrier_id: String = b.id if str(car[1]) == "self" else str(car[2])
-				room[carrier_id] = int(room[carrier_id]) - n
+				if str(car[1]) != "local":
+					var carrier_id: String = b.id if str(car[1]) == "self" else str(car[2])
+					room[carrier_id] = int(room[carrier_id]) - n
 				cash[b.id] = int(cash[b.id]) - n * each
 				want -= n
 			if want > 0:

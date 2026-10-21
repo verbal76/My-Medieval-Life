@@ -148,31 +148,48 @@ reconciliation they become one file and one evaluator:
 | 4. Need readers | MIN-D's World readers move into the one facts builder, `SettlementFacts.from_world`: `deposit_access` (`_quarry_sources`, `villagers_reach`, `level_of`), `records` (`manor_finds`), `portal` (`underground.portals`), `structure` (`Discovery.structures`: pit ramps, timber supports), `transport.carry` (`carry_ore`). They are already the adapter's methods; at integration the adapter's live mode is folded into `from_world` and only the fixture mode remains (for abstract settlements and tests). Practitioners and tools are already counted MIN-D's way. | `facts.gd` |
 | 5. Mining no longer external | Remove `"external": "mining"`; mining is evaluated by the one evaluator from MIN-D's block. `test_min_d_schema` (settlement_test) already proves the evaluator gives MIN-D's documented levels from MIN-D's block. MIN-D's `discovery_test` must still pass unchanged (its gate). | `capabilities.json`, tests |
 | 6. History | One history: MIN-D's `Discovery.history` `{day, industry, from, to, why}` and its dawn notes, extended to every industry by iterating `caps().industries` (it already does). `SettlementIndustries.record` and the provisional `x18_settlements.capabilities` save key are dropped in its favour (no second history in the save). | `discovery.gd` (dawn), `settlement_save.gd` |
-| 7. Effects | Levels gate nothing (owner Q18-9, 2026-10-21): their only effects are data-driven pay and output factors (section 9). | — |
+| 7. Effects | Levels gate nothing (owner Q18-9, 2026-10-21): their only effects are data-driven pay and output multipliers on the 0-10 scale (section 9); the `effects` block moves into `capabilities.json` with the industries. | — |
+| 8. Mining's scale | MIN-D's mining capability is a 1-4 stage scale (`capabilities.json` mining levels); Q18-11 puts every productive industry on 0-10. **Reconciliation item, not decided here:** how MIN-D's stages map to 0-10 (for example stages as fixed points on 0-10 with sub-levels from people and practice between them, or a separate 0-10 rating for mining with the stages kept as MIN-D's descriptive milestones). Until decided, the adapter keeps reading the stage read-only and mining's multipliers stay 1.0. Depends on Q18-11B (what a level is made of). | `capabilities.json`, `mining_adapter.gd` |
 
 Order: after Build 17 is complete and its baseline is merged into this branch (directive's reconciliation gate). Owner of
 the change: the Build 18 integration; MIN-D's files are not edited before then.
 
-## 9. Capability effects: pay and output only (owner Q18-9, 2026-10-21)
+## 9. Capability effects: levels 0-10, pay and output only (owner Q18-9 and Q18-11, 2026-10-21)
 
-Decision (verbatim in `docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md`): "Capability levels affect pay
-scales and production output only. They must never function as permission gates or prevent an NPC, player, or
-settlement from performing an activity."
+Decisions (verbatim in `docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md` and
+`docs/directives/2026-10-21_expansion18_master_directive.md`, both on staging): capability levels affect pay scales and
+production output only, never permission (Q18-9); every productive industry uses levels 0-10, 0 = baseline, never
+inability; AdjustedPay = BasePay x PayMultiplier(industry, level) and AdjustedOutput = BaseOutput x
+OutputMultiplier(industry, level), with the bases from the existing systems; diminishing returns; different industries
+may differ (Q18-11, structure APPROVED). The numbers (Q18-11A) and the composition of a level (Q18-11B) are OPEN.
 
-- Data: `settlement_industries.json` `effects`: `pay_factor` and `output_factor`, per industry a list indexed by level
-  (0..max), `default_factor` 1.0, and `outputs` (which goods each industry's output factor scales).
-- Code: `SettlementIndustries.pay_factor(industry, level)`, `output_factor(industry, level)`, `industry_of(item)`.
-  Applied on this branch to abstract settlements' production (`SettlementLedger.tick`) and to a carter's fee (trade
-  industry). At integration the same factors apply to the live wages of an industry's workers (MIN-D's prospector pay,
-  the labour market's job pay) and to the output of extraction and recipes; never as a condition.
-- Every factor is **1.0 (no effect)**: the magnitudes are the owner's (**Q18-11**). Tested: with neutral factors a level-0
-  and a level-2 settlement produce the same; with a test curve in the data the level scales output (never to zero by
-  rule), and the books still balance.
-- Audit of this branch: nothing in the settlement model refuses an activity because of a level. Smithing 2's "mining 1
-  or iron bars" need decides only the level, not whether anyone may smith.
-
-**Q18-11 (owner):** What pay factor and output factor should each capability level give, and for which industries
-(mining only first, or every industry in the schema)? Until answered, every factor is 1.0.
+- **Data** (`settlement_industries.json` `effects`): `max_level` 10; `shapes` (share of the full bonus at each level:
+  `owner_candidate`, the owner's example table; `front_loaded`, 80% of the gain by level 4; `intermediate`, their mean);
+  `profiles` (`neutral`, ACTIVE, every multiplier 1.0; `owner_candidate`, `front_loaded`, `intermediate`,
+  `differentiated`, all labelled UNAPPROVED); each profile has `output_max` per industry, a `shape` (one, or one per
+  industry) and a `pay_ratio`. Output multiplier = 1 + output_max x shape[L]; pay multiplier = 1 + output_max x
+  pay_ratio x shape[L]. `outputs` names the goods each industry's output multiplier speeds.
+- **Code**: `SettlementIndustries.pay_multiplier` / `output_multiplier(industry, level, profile = active)`; levels clamp to
+  0-10; the validator refuses a defined level above 10 (the industries' defined levels so far stop at 3: what raises a
+  level beyond is Q18-11B). Candidate profiles are selectable only by naming them (tests, `caravan_compare --profiles`);
+  the game reads the active one.
+- **Output safeguard** (`SettlementProductivity`): the output multiplier is less time per unit on the existing work
+  times (mine_minutes, chop_minutes, recipe minutes, the farmers' field work). Every unit still takes its full recipe
+  inputs, one unit of its seam, or one unit of the grown crop; at the end of the inputs, the seam or the crop a faster
+  worker makes nothing more. The settlement has no waste term of its own: the only existing one is the worker's Skill
+  `save_chance`. Abstract settlements follow the same rule (`SettlementLedger.tick`): the multiplier speeds production
+  only where it has a finite source (`reserves` depleted, `recipes` inputs used); a farm's crop is not raised.
+- **No double counting** (RESEARCH_DIGEST.md (e)): settlement capability = the place-specific component; a worker's own
+  Skills = the portable component. The settlement acts only on unit time and pay, never on the Skills' quantity effects
+  (`ore_extra_chance`, `save_chance`, `bonus_chance`, `log_bonus`, `sapling_bonus`); where a Skill shortens the same work
+  (`mine_time`, `chop_time`, `craft_time`), the gains add over the base time once each: time = base / (1 + g_skill +
+  g_place). The settlement curves are to be calibrated as the place-specific share only (CAPABILITY_CURVES.md). The
+  pay multiplier never touches prices (`price_bonus` is the trading skill's).
+- **Mining**: its level is MIN-D's stage (1-4) read through the adapter; its multipliers stay 1.0 until the stage-to-0-10
+  mapping is decided at the reconciliation (section 8, step 8).
+- Tests: `capability_test.gd` (levels 0-10, neutral active profile, the owner's table reproduced, pay and output separate,
+  industries differ, mining/smithing/carpentry/farming safeguards on real recipes and work times, carter pay conserved,
+  no double counting, never blocks, determinism); `regional_test.gd` `test_levels_scale_never_gate`.
 
 ## 10. Regional purchasing and carriage (owner Q18-10, 2026-10-21)
 

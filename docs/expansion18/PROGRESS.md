@@ -26,6 +26,11 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 | Conservation, genuine trade (every transfer matched), settlement independence, determinism | s.5 accounting, s.9, s.11 b.5 | all | `regional_test.gd`, `settlement_test.gd`, `caravan_compare.gd` integrity checks |
 | Owner Q18-9 applied: levels never gate; their only effects are data-driven pay and output factors (all 1.0 until Q18-11) | Q18-9 | `industries.gd` (`pay_factor`, `output_factor`, `industry_of`), `ledger.gd` (`tick`), data `effects` | `regional_test.gd` `test_levels_scale_never_gate` |
 | Owner Q18-10 applied: any party buys (traders, households, villagers, the manor) from its own purse; the buyer fetches the goods itself or pays a willing carter, as a separate matched transfer; nothing delivered free; CON-01 offer shape | Q18-10 | `report.gd` (`parties`), `ledger.gd`, `regional.gd`, `routes.gd` | `regional_test.gd` `test_buyers_and_carriage`, `test_competition`; `settlement_test.gd` (parties partition the village's purses and goods once) |
+| Q18-11 framework (structure approved): levels 0-10, separate PayMultiplier and OutputMultiplier per industry from data profiles; ACTIVE profile neutral (1.0); four UNAPPROVED candidates selectable only by tests and analysis | Q18-11 | `industries.gd`, `settlement_industries.json` `effects` | `capability_test.gd` |
+| Output safeguard: output multiplier = less time per unit; every unit takes its full recipe inputs, its seam or its crop (mining, smithing, carpentry, farming fixtures on real recipes and work times; abstract settlements only where a finite source exists) | Q18-11 safeguards | `productivity.gd`, `ledger.gd` | `capability_test.gd`, `regional_test.gd` |
+| No double counting: settlement = place-specific, Skills = portable; gains add once over the base; the settlement never touches the Skills' quantity effects | Q18-11, research (e) | `productivity.gd` | `capability_test.gd` |
+| Curve analysis (three shapes, uniform and industry-differentiated magnitudes) and Q18-11B options | Q18-11A/B | `CAPABILITY_CURVES.md`; harness `--profiles` | `caravan_compare.gd` 30 days, 290 integrity checks |
+| Deficit decomposition (outlets, local distribution, raw-material shortage, unmet demand, partners, prices, transport, money) and the local-market sensitivity | directive s.8 | `DEFICIT_ANALYSIS.md`; harness `--local`, `RegionalMarket.plan(local)` | `caravan_compare.gd` |
 | Caravan subsidy replacement plan and shadow harness (live caravan unchanged) | s.7, CARAVAN-TMP | `game/tests/caravan_compare.gd`, `game/tests/fixtures/x18_regions.json`, `CARAVAN_REPLACEMENT.md` | `caravan_compare.gd` (10 and 30 days, seed 1) |
 
 ## Features implemented provisionally
@@ -44,7 +49,10 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
   the village's measured food use; the manor and villagers of no household have no demand rule yet; nobody is offered as
   a carter in the live shadow (Q18-12).
 - **Carters** exist only as test fixtures (`carts_for_hire`); their fee is `helper_wage` for the round trip over a load.
-- **Pay and output factors** all 1.0 (Q18-11).
+- **Pay and output multipliers**: the active profile is neutral (all 1.0); the candidate profiles' numbers are analysis
+  only (Q18-11A); mining's multipliers stay 1.0 until MIN-D's 1-4 stages are mapped to 0-10 (reconciliation item, DESIGN.md
+  section 8 step 8).
+- **Region fixtures** now carry capabilities, finite reserves and Eastmarch's smelting by the real recipe (analysis).
 - **CON-01 mapping** (`RegionalMarket.to_contract_offer`) is a shape only; `execute` stands in for CON-01 delivery.
 - **Save section** `x18_settlements` (`mml-settlements/0`), attached/extracted from the save dictionary; not yet wired
   into `World.to_dict/load_dict`; no `SAVE_VERSION` bump.
@@ -94,25 +102,31 @@ Decided 2026-10-21 (`docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_
 (levels affect pay and output only, never a gate) and **Q18-10** (anyone may buy; the buyer fetches or pays a willing
 carter; nothing free, nothing created).
 
-Q18-11, Q18-12 and Q18-13 are in the register on staging as open owner questions.
+Q18-11 (master directive 2026-10-21): the STRUCTURE is approved and implemented (levels 0-10, separate pay and output
+multipliers, diminishing returns, industries may differ, base values from the existing systems). Open:
 
-Open: Q18-1 (skills for farming, carpentry, masonry, tanning), Q18-2 (thresholds, first industries), Q18-3 (closed purse
-or explicit regional income), Q18-4 (number and character of off-map regions), Q18-5 (barter and credit), Q18-6 (may
-abstract regions meet "two settlements develop different profiles"), Q18-7 (migration out), Q18-8 (SET-E stays 20+), as
-worded in the engineering plan, section 5. New:
+- **Q18-11A (numbers):** which magnitudes and which curve per industry. Analysis in `CAPABILITY_CURVES.md` (owner's
+  candidate, front-loaded, intermediate, industry-differentiated); none adopted.
+- **Q18-11B (composition):** how people's local experience, tools, facilities and infrastructure make up a level. Four
+  options with pros and cons in `CAPABILITY_CURVES.md` section 5; the research measures no tools or facilities share.
+- **Q18-12** (carter and paid-service pricing) and **Q18-13** (households and off-map parties in contracts): open at the
+  time of this round; the next round applies the owner's answers.
+- Reconciliation item (not an owner question yet): how MIN-D's mining stages 1-4 map to the 0-10 scale.
 
-- **Q18-11:** What pay factor and output factor should each capability level give, and for which industries (mining
-  only first, or every industry in the schema)? Until answered every factor is 1.0 (no effect).
-- **Q18-12:** May a party hire a willing villager or carter to haul goods between settlements, and on what terms (a day
-  wage as `helper_wage`, a fee per load, or negotiated like a CON-01 contract with service terms)? CON-01 is goods only
-  and `Construction.hire` carries only to one's own building site. Overlaps OD-LE-03 and MIN-D's open question 1.
-- **Q18-13:** CON-01 knows "player", "npc:<id>" and "manor"; should it gain household and off-map party references, or
-  should a household buy through a named member and a region through a named merchant?
+Earlier open questions: Q18-1 (skills for farming, carpentry, masonry, tanning), Q18-2 (thresholds, first industries),
+Q18-3 (closed purse or explicit regional income), Q18-4 (number and character of off-map regions), Q18-5 (barter and
+credit), Q18-6 (may abstract regions meet "two settlements develop different profiles"), Q18-7 (migration out), Q18-8
+(SET-E stays 20+), as worded in the engineering plan, section 5.
 
 ## Integration-readiness estimate (from tests actually run)
 
-- Run on this branch (latest round, private `XDG_DATA_HOME`): `settlement_test` (66 checks), `regional_test` (67 checks),
-  `caravan_compare` 10 days (20 checks), all passing; in the round before, `caravan_compare` 30 days seed 1 (50 checks); the regression set `run_tests` (3535),
+- Run on this branch (latest round, private `XDG_DATA_HOME`): `capability_test` (42 checks), `settlement_test` (66),
+  `regional_test` (71), `caravan_compare` 10 days (110 checks, six shadow sets) and 30 days seed 1 (290 checks), all
+  passing. Directive section 10 coverage: items 1 (levels 0-10), 2 (never blocking), 4 (pay vs output), 5 (per
+  industry), 6 (conservation incl. raw materials), 7 (inputs match production), 8 (no double counting), 11
+  (determinism) in `capability_test`; 3 (level-0 ore) in `settlement_test`; 9 (all participant types) and 10
+  (self-collection, paid carter behind fixtures, Q18-12) in `regional_test` and `settlement_test`; 12 (save/load) and 13
+  (one evaluator) wait for the reconciliation. Earlier rounds: the regression set `run_tests` (3535),
   `world_test` (200), `start_test` (499 steps), `parity_test` (55), `conservation_test` (8), `business_test` (160) passing;
   `python3 -m unittest discover -s tests` passing (this round); `economy_sim --days 30 --seed 1` (`LEAKS: currency 0; items {}`) run in the
   first round, when the one live-code touch (the census move) was made; nothing in live code changed since.
