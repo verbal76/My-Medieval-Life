@@ -7,6 +7,51 @@ nothing here is merged into Build 16 staging.** Scope is the register's Build 17
 (deferred to the start of Build 17), DVW-B4, ECON-P1.1/1.2/1.4/1.5 (proposals), OD-01 (decision), PL1-12, REC-013,
 WDR-001-C, WDR-003-C, WDR-013-C. Code references are as of staging `6607000`.
 
+## 0. Owner decisions of 2026-10-21 (OD-28)
+
+Source: `docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md` (verbatim). A documentation-only
+update of this branch is authorized; **no Build 17 gameplay implementation is authorized by it** (section 9).
+
+- **Caves and underground (section 3).**
+  - **Approved direction:** genuine, enterable natural caves, tunnels, chambers and open pits, and later
+    industrial mining. They must be usable by the player and NPCs (movement, pathfinding, mining, real depletion,
+    transport, access, save and load). Overhead rock gets out of the way as a house roof does, with darkness for
+    atmosphere that never makes the game unplayable. Not a decorative pit.
+  - **Architecture: not selected.** The owner prefers to investigate a layered world, without an unnecessary
+    rewrite.
+  - Comparison and recommendation: [`UNDERGROUND_ARCHITECTURE.md`](UNDERGROUND_ARCHITECTURE.md). It recommends
+    separate underground levels laid in the surface's coordinates and joined by real entrances, with open pits on
+    the surface. Section 7 there lists the owner's remaining choices, including scheduling MIN-E/MIN-F.
+- **Deposit consistency (section 4).**
+  - Every mineral deposit (surface, pit, cave, tunnel) uses the same resource objects and rules: identity, the ore-dot
+    sprite, extraction gate, quantities, depletion, inventory transfer, save and accounting.
+  - No second economy, and no regeneration unless the common system has it (it has none).
+  - Today's system and what to reuse or adapt: [`DEPOSIT_SUSTAINABILITY.md`](DEPOSIT_SUSTAINABILITY.md). The open
+    sustainability questions (OD-01, B7-007, MIN-B detail, ownership of found seams) are listed separately there.
+- **Universal negotiated procurement contracts (section 5).**
+  - Register **CON-01**: any character offers any other a contract for item, quantity and price per unit. It can be
+    accepted, rejected or countered; it works player-NPC, NPC-player and NPC-NPC; it conserves goods and money.
+    There is no mining-specific wage.
+  - Register **MIN-H**: mining labour uses CON-01.
+  - Mapping to the job board, manor jobs, tool orders, carriers and the Living Economy's Contract record, the
+    eight undecided policy details, and the build question: [`PROCUREMENT_CONTRACTS.md`](PROCUREMENT_CONTRACTS.md).
+    It is not Build 16; the owner places it.
+- **DVW-A12 rules-to-core refactor (section 6). Approved direction.**
+  - The interface handles presentation, input and feedback. Core systems own eligibility, resource requirements
+    and consumption, outcomes, inventory and coin transfers, and state changes.
+  - Order: **mining, then felling, then crafting**, subject to code dependencies (section 4 below).
+  - Safeguards: small, reviewable changes with focused tests; no broad rewrite; existing behaviour preserved
+    unless an approved requirement changes it.
+  - Before Build 16's automated completion gate, planning and preparation only. Once Build 17 implementation is
+    permitted, the work goes on isolated branches. Never destabilize the frozen Build 16 candidate.
+  - Regression list for every step: player interactions; NPC interactions; tool requirements; resource
+    consumption; inventory changes; action completion and failure; save and load; deterministic behaviour;
+    controller and touch input.
+- **ECON-P1.1, P1.2, P1.4, P1.5 (section 7).**
+  - Still unapproved. Retrieved verbatim and explained in [`ECON_PROPOSALS_BRIEFS.md`](ECON_PROPOSALS_BRIEFS.md),
+    one question each.
+  - Not to be implemented while awaiting the owner.
+
 ## 1. What exists for mining today
 
 - Seams: `World.deposits` `{x, y, ore, amount}`, loaded from `village.json` (15 seams; stone: 3 x 80 = 240). One unit at a
@@ -34,6 +79,8 @@ WDR-001-C, WDR-003-C, WDR-013-C. Code references are as of staging `6607000`.
 | MIN-G validation | `economy_sim` deposit ledger, `conservation_test`, `sim_gate` | census of the new pools and state; save fixtures |
 
 ## 3. The depth question (MIN-E, MIN-F): the map has no depth
+
+(Superseded in detail by `UNDERGROUND_ARCHITECTURE.md`, which compares three options on the owner's 12 criteria.)
 
 One flat plane: `VillageMap.solid` is one byte array and one `AStarGrid2D` (`is_solid`, `set_solid`, `find_path` take no
 level); map layers are draw order only (`MapView`); cliffs are solid cells; the overworld `Chunk` has no height; saves
