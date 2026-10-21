@@ -225,7 +225,7 @@ def uses_of(ctx, item):
     return sorted(out)
 
 
-CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant", "assay"}
+CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant", "assay", "backfill"}
 
 
 def reachable(ctx, node_ok):
@@ -434,6 +434,14 @@ def problems(ctx):
         elif m.get("kind") == "clue":
             if not (ctx["root"] / "game" / "data" / "prospecting.json").exists():
                 out.append("%s: a clue node needs game/data/prospecting.json" % nid)
+        elif m.get("kind") == "pit":
+            pf = ctx["root"] / "game" / "data" / "open_pit.json"
+            if not pf.exists():
+                out.append("%s: a pit node needs game/data/open_pit.json" % nid)
+            else:
+                layer_items = {str(l["item"]) for l in json.loads(pf.read_text())["layers"]}
+                if layer_items != set(products(ctx, n)):
+                    out.append("%s: yields %s differ from open_pit.json's layers %s" % (nid, sorted(products(ctx, n)), sorted(layer_items)))
         elif m.get("kind") not in ("tree", "field", "player_field", "player_pen"):
             out.append("%s: unknown match kind %r" % (nid, m.get("kind")))
     # every harvestable kind in the map and balance has a node, and no kind has two
@@ -633,6 +641,10 @@ def _instances(ctx, n):
         pc = json.loads((ctx["root"] / "game" / "data" / "prospecting.json").read_text())
         return 0, "generated from the world seed (MIN-C): a clue in about %d%% of the village's %d-cell blocks, %d samples each; %d%% lie over a mineral body" % (
             pc["clue_percent"], pc["block"], pc["samples_per_clue"], pc["true_percent"])
+    if m["kind"] == "pit":
+        pc = json.loads((ctx["root"] / "game" / "data" / "open_pit.json").read_text())
+        return 0, "staked in play (MIN-E): each %d x %d cells over the layers %s" % (
+            pc["size"], pc["size"], ", ".join("%d %s" % (l["amount"], l["item"]) for l in pc["layers"]))
     if m["kind"] == "plant":
         n_pl = sum(1 for pl in v.get("plants", []) if pl["kind"] == m["plant"])
         return n_pl, "%d plants on the map, each ripe again plant_regrow_seasons after it is picked" % n_pl

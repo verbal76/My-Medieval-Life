@@ -135,6 +135,8 @@ static func instances(world: World, d: Dictionary) -> Array:
 			return world.fauna.animals.filter(func(a: Animal): return a.alive and a.species == m.species)
 		"clue":                                  # MIN-C: the prospecting clues (Prospecting.generate)
 			return world.prospecting.clues.duplicate() if world.prospecting != null else []
+		"pit":                                   # MIN-E: the open pits staked (OpenPits)
+			return world.pits.pits.duplicate() if world.pits != null else []
 	return []
 
 
@@ -178,6 +180,8 @@ static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 			return Vector2i(int(ref.x), int(ref.y))
 		"field":
 			return Vector2i(int(ref.x) + int(ref.w) / 2, int(ref.y) + int(ref.h) / 2)
+		"pit":
+			return Vector2i(int(ref.x) + OpenPits.size() / 2, int(ref.y) + OpenPits.size() / 2)
 		"animal":
 			return (ref as Animal).cell()
 	return Vector2i.ZERO
@@ -192,6 +196,12 @@ static func remaining(world: World, d: Dictionary, ref) -> int:
 			return maxi(0, int(ref.amount))
 		"clue":
 			return maxi(0, world.prospecting.samples_left(ref))
+		"pit":
+			var gl := OpenPits.left(ref)
+			var n := 0
+			for id in gl:
+				n += int(gl[id])
+			return n
 		"tree":
 			return int(products(d).get("log", 0)) if ref.state == "grown" else 0
 		"field":

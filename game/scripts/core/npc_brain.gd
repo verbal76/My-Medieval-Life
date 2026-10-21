@@ -119,6 +119,8 @@ func work_look(n: NPC) -> Array:
 		"chop":
 			return ["swing", "axe"]
 		"mj_step":
+			if str(w.manor_work.job(int(s.get("args", {}).get("job", -1))).get("kind", "")) == "excavate":
+				return ["swing", "pickaxe"]            # MIN-E: the manor's open pit is dug with a pickaxe
 			return ["swing", "hammer"]
 		"hunt", "slaughter":
 			return ["swing", "rusty_sword"]
@@ -1029,8 +1031,8 @@ func _miner(n: NPC) -> bool:
 	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null and _can_mine(n, o))
 	var d: Dictionary = w.nearest_seam(n, ores) if not ores.is_empty() else {}        # MIN-A: the gallery's seams too
 	if d.is_empty():
-		# MIN-D: a miner whose ore is worked out digs the manor's trial pit for new ore, if one is posted (paid work)
-		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["trial"]):
+		# MIN-D, MIN-E: a miner whose ore is worked out digs the manor's trial pit or open pit for new ore, if posted (paid work)
+		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["trial", "excavate"]):
 			return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
@@ -2541,6 +2543,7 @@ func reeve_day() -> void:
 	if budget > 0:
 		w.manor_work.post_quarry()
 	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
+	w.manor_work.post_pits()                         # MIN-E: a load of the manor's open pit, or a pit staked for a find out of a trial's reach
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
 		if id == "stone" and quarrying:

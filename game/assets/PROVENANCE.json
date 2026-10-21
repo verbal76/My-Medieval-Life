@@ -653,6 +653,13 @@
    "sha256": "6eaba3365636d93adf0aa8882c48a57533f705e27037869c7b26549a340d0102"
   },
   {
+   "file": "assets/icons/dirt.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Dirt-Block-13.png",
+   "transform": "copied unchanged",
+   "sha256": "1b1f7d096dc77ac43327472f037166f56f3e59eba2d8974e26f7ef43e16a2b27"
+  },
+  {
    "file": "assets/icons/feather.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Plants & Alchemy/Leaf-05.png",
@@ -884,6 +891,13 @@
    "sha256": "de18287ebf5a766d0a64872b6fe931340e979bcd42ec2bac4be383adb9abf98f"
   },
   {
+   "file": "assets/icons/spoil.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-02.png",
+   "transform": "copied unchanged",
+   "sha256": "3954edfda45e62cbd828127434a3be1a3dc07365139921274ed4b4cc24292e75"
+  },
+  {
    "file": "assets/icons/stone.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Rock-Chunk-01.png",
@@ -896,6 +910,13 @@
    "member": "16x16 Survival RPG Icons/Liquid/Large-Potion-05.png",
    "transform": "copied unchanged",
    "sha256": "fb811d75ea147c20c54f1b73f6876e7f4ea521d22f69fe237aaf5dda62d5ad88"
+  },
+  {
+   "file": "assets/icons/topsoil.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Dirt-Block-01.png",
+   "transform": "copied unchanged",
+   "sha256": "4a813af2eb1520d0660580cd6be5740cadf3d20e5e33423594e1d95dc757da97"
   },
   {
    "file": "assets/icons/wheat.png",

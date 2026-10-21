@@ -171,6 +171,9 @@ ICONS = {
     # MIN-C prospecting: the brown leather pack as the prospector's kit (hammer, chisel and sample bags in a satchel),
     # the reddish rock fragments as a rock sample
     "prospecting_kit": "Tools/Backpack-05", "ore_sample": "Stone/Rocks-10",
+    # MIN-E open-pit earth: the grass-topped dirt block as topsoil, the plain brown dirt block as dirt (subsoil), the
+    # grey pebbles as spoil (broken rock and gravel)
+    "topsoil": "Blocks/Dirt-Block-01", "dirt": "Blocks/Dirt-Block-13", "spoil": "Stone/Rocks-02",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).
