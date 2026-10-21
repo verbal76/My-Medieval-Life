@@ -788,6 +788,60 @@ func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
 	return id != "" and buyer.inv.count(id) == 0 and NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id) and buyer.coins >= price
 
 
+## SHOP-01, TRADE-01: how many of the `offered` units of `id` business `buyer` buys from `seller` (the player or a
+## villager) in one sale; 0 when it buys none. Its need (NPCBrain.wants: an input its trade has the skill to use, up to
+## its want), cut a unit at a time until its own coins pay the whole bill at the sale's prices (sale_prices) and leave
+## its reserve (OD-19); the reserve's one-unit exception (can_afford) covers a single-unit sale only. The one rule for
+## every sale to a business, whoever sells (PAR-02).
+func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
+	var q: int = mini(offered, brain.wants(buyer, id))
+	if q <= 0:
+		return 0
+	var prices := sale_prices(buyer, seller, id, q)
+	var bill := 0
+	for c in prices:
+		bill += int(c)
+	var keep := reserve_of(buyer)
+	while q > 0:
+		if buyer.coins >= bill and (buyer.coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
+			return q
+		q -= 1
+		bill -= int(prices[q])
+	return 0
+
+
+## The unit prices `buyer` pays `seller` for `qty` of `id`, unit by unit as its stock fills (player_quote for the
+## player, with the friend's price; the same buy price and both sides' Trading, deal_price, for a villager).
+func sale_prices(buyer: NPC, seller: Object, id: String, qty: int) -> Array:
+	if seller == player:
+		return player_quote(buyer, id, qty, false)
+	var out := []
+	var stock := buyer.inv.count(id)
+	for k in maxi(0, qty):
+		out.append(deal_price(buy_price_at(id, stock + k), buyer, seller))
+	return out
+
+
+## Why business `buyer` will not take all `qty` of `id` from `seller` ("" when it will): the clear reason a sale is refused.
+func sale_refusal(buyer: NPC, seller: Object, id: String, qty: int) -> String:
+	var who := buyer.name
+	var item := GameData.item_name(id).to_lower()
+	var got := purchase_qty(buyer, seller, id, qty)
+	if got >= qty:
+		return ""
+	if not NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id):
+		return "%s does not buy %s." % [who, item]
+	var unit: int = brain.batch_unit(buyer, id)
+	if unit <= 0:
+		return "%s has no use for %s: their trade's recipes for it need more skill than they have." % [who, item]
+	var need: int = brain.wants(buyer, id)
+	if need <= 0:
+		return "%s has all the %s they can use." % [who, item]
+	if got < mini(qty, need):
+		return "%s cannot afford %s right now: they keep a reserve." % [who, ("more than %d" % got) if got > 0 else "any"]
+	return "%s can use only %d more %s." % [who, need, item]
+
+
 func buy_price(vendor: NPC, id: String) -> int:
 	return buy_price_at(id, vendor.inv.count(id))
 
@@ -2688,17 +2742,16 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 ## Sell `qty` of `id` (the quantity control, PL1-03), each unit at its player_quote price, so the buyer's
 ## offer falls as they fill up (Build 13 economy rule 2). Checked first: you carry them, the buyer still
 ## wants that many and their own coins cover the whole bill and their reserve (rule 1: no buying without the
-## money; OD-18.2, OD-19: the same reserve as for a villager's sale, can_afford), so
+## money; OD-18.2, OD-19, TRADE-01: the villagers' rule, purchase_qty; refused with sale_refusal's reason), so
 ## nothing is half-sold for those reasons. Each unit goes through player_sell (marked goods first,
 ## recognition, guard questions), so a stolen piece being recognised stops the sale at that unit; `sold`
 ## says how many went and `paid` what they fetched. Returns {result, text, sold, paid}.
 func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
-	var prices := player_quote(buyer, id, qty, false)
-	var bill := 0
-	for c in prices:
-		bill += int(c)
-	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or buyer.coins < bill or not can_afford(buyer, int(prices[0]), false, id):
-		return {"result": "failed", "text": "They cannot take that many, or cannot afford it right now.", "sold": 0, "paid": 0}
+	if qty < 1 or not player.inv.has(id, qty):
+		return {"result": "failed", "text": "You do not carry that many.", "sold": 0, "paid": 0}
+	var no := sale_refusal(buyer, player, id, qty)       # TRADE-01: the villagers' rule (purchase_qty)
+	if no != "":
+		return {"result": "failed", "text": no, "sold": 0, "paid": 0}
 	var sold := 0
 	var paid := 0
 	for i in qty:

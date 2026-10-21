@@ -29,6 +29,11 @@ const BUYS := {
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
 		"herbal_poultice": 8},                     # households' home-brewed poultices, brought to market (B14)
 }
+# SHOP-01 (owner, 2026-10-20 section 6): the stations each producing trade works at. Their recipes (recipes.json) are
+# what its purchases of their inputs are for: it buys an input only for a recipe it has the skill for, up to its want
+# (batch_unit, wants). Goods in BUYS that no recipe of the trade consumes are stock it holds for sale or use.
+const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
+	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
 # items an NPC keeps for its own work and will not sell
 const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
@@ -71,6 +76,7 @@ var track_misses := false
 var miss_log: Array = []
 var _roles := {}         # trading role -> its villagers (_with_buy_role)
 var _roles_key := []
+var _consumers := {}     # "job/item" -> the recipes of the job's stations that consume the item (batch_unit)
 
 
 func _init(world: World) -> void:
@@ -1532,7 +1538,7 @@ func _plan_sell(n: NPC, id: String) -> bool:
 func _buyer_for(n: NPC, id: String) -> NPC:
 	for outlet in OUTLETS.get(id, []):
 		for b in _with_buy_role(outlet):
-			if b != n and b.alive and wants(b, id) > 0 and w.can_afford(b, w.buy_price(b, id), false, id):
+			if b != n and b.alive and w.purchase_qty(b, n, id, maxi(1, n.inv.count(id))) > 0:     # TRADE-01: the one rule
 				return b
 	return null
 
@@ -1571,12 +1577,42 @@ func keeps(o: NPC, id: String) -> bool:
 			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
 
 
-## How many of `id` this NPC will still buy.
+## How many of `id` this NPC will still buy (SHOP-01): of an input its trade works (TRADE_STATIONS), none when it lacks
+## the skill for every recipe that takes it; otherwise what keeps its holding at or below its want: its trade's stock
+## (BUYS) rounded up to whole batches (batch_unit), capped by that same stock. A part lot towards a batch is bought.
+## What it can pay for is World.purchase_qty's part.
 func wants(o: NPC, id: String) -> int:
 	var caps: Dictionary = BUYS.get(buy_role(o), {})
 	if not caps.has(id):
 		return 0
-	return maxi(0, int(caps[id]) - o.inv.count(id))
+	var unit := batch_unit(o, id)
+	if unit <= 0:
+		return 0
+	var want := mini(ceili(float(caps[id]) / unit) * unit, int(caps[id]))
+	return maxi(0, want - o.inv.count(id))
+
+
+## SHOP-01: the smallest batch in which `o` works `id`: of the recipes at its trade's stations (TRADE_STATIONS) that
+## consume it, the least any it has the skill for (_can_make) takes; 0 when it can make none of them (it has no use for
+## the input); 1 for goods no recipe of its trade consumes (stock for sale or use).
+func batch_unit(o: NPC, id: String) -> int:
+	var key: String = o.job + "/" + id
+	if not _consumers.has(key):
+		var rs := []
+		for r in GameData.recipes:
+			var rec: Dictionary = GameData.recipes[r]
+			if (rec["in"] as Dictionary).has(id) and TRADE_STATIONS.get(o.job, []).has(str(rec.station)):
+				rs.append(r)
+		_consumers[key] = rs
+	var rs: Array = _consumers[key]
+	if rs.is_empty():
+		return 1
+	var unit := 0
+	for r in rs:
+		var q := int(GameData.recipes[r]["in"][id])
+		if _can_make(o, r) and (unit == 0 or q < unit):
+			unit = q
+	return unit
 
 
 ## What this NPC will sell to a customer.
@@ -2137,20 +2173,17 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var b := w.npc(int(a.buyer))
 			if b == null or not b.alive:
 				return false
-			var qty := mini(n.inv.count(a.item) - reserve(n, a.item), wants(b, a.item))
-			var sold := 0
+			# TRADE-01: the business takes what World.purchase_qty allows, the player's rule, in one atomic sale
+			var qty := w.purchase_qty(b, n, a.item, n.inv.count(a.item) - reserve(n, a.item))
+			if qty <= 0:
+				return false
 			var paid := 0
-			while qty > 0 and w.can_afford(b, w.deal_price(w.buy_price(b, a.item), b, n), false, a.item):
-				var price := w.deal_price(w.buy_price(b, a.item), b, n)
-				if w.trade(b, n, a.item, 1, price):
-					sold += 1
-					paid += price
-					qty -= 1
-				else:
-					break
-			if sold > 0:
-				w.deal_xp(b, n, paid)
-			return sold > 0
+			for c in w.sale_prices(b, n, a.item, qty):
+				paid += int(c)
+			if not w.trade(b, n, a.item, qty, 0, paid):
+				return false
+			w.deal_xp(b, n, paid)
+			return true
 		"mine":
 			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)))
 			var r := w.work_mine(n, d, n.inv)                   # the player's swing (PAR-01)
