@@ -15168,7 +15168,7 @@
    "id": "JOB-01",
    "title": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Salaried manor hands remain eligible to take appropriate work from the same job board used by independent workers and the player.",
    "description": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
    "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
@@ -15176,8 +15176,8 @@
    "acceptance": [
     "Hands take board jobs unpaid; pickaxe and survey exclusions kept; first come, no priority; one job at a time"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/manor_work.gd (open_for, take, can_fund, is_staff); game/tests/job_board_test.gd",
+   "tests": "job_board_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15202,6 +15202,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "As built (ManorWork.open_for/can_fund/is_staff: staff unpaid, one job per worker, quarry/trial/excavate need a pickaxe, surveys exclude staff, no staff priority); a focused test of 'no priority, no double booking' is still to be written"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "Focused test game/tests/job_board_test.gd (16 checks, 0 failures): the same open jobs in the same order for a hand and a labourer (no priority), first come, a taken job is nobody else's, one job at a time, hands unpaid, wages set aside and returned with the treasury conserved, pickaxe and survey exclusions held for hands. Added to tests.yml"
     }
    ],
    "target_build": "17"
