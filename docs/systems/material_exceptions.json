@@ -99,6 +99,34 @@
       "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
       "rule": "WDR-001",
       "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "shovel_blade",
+      "finding": "few_uses",
+      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21: a shovel from a carpenter-made wooden part and a smith-made metal part): forged by the smith only to be fitted to a haft (assemble_shovel) by the carpenter; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+      "rule": "WDR-001",
+      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+    },
+    {
+      "material": "shovel_blade",
+      "finding": "few_professions",
+      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21: a shovel from a carpenter-made wooden part and a smith-made metal part): forged by the smith only to be fitted to a haft (assemble_shovel) by the carpenter; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+      "rule": "WDR-001",
+      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+    },
+    {
+      "material": "shovel_haft",
+      "finding": "few_uses",
+      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
+      "rule": "WDR-001",
+      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+    },
+    {
+      "material": "shovel_haft",
+      "finding": "few_professions",
+      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
+      "rule": "WDR-001",
+      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
     }
   ]
 }

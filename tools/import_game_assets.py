@@ -180,6 +180,9 @@ ICONS = {
     "minecart": "Metal/Metal-Bucket-02",
     # MIN-F2: a bundle of sticks stands in for the ladder (the pack has none)
     "ladder": "Wood/Sticks-01",
+    # MIN-SHOVEL: the grey iron-headed shovel as the shovel; the plain wooden shovel as the carpenter's haft (a
+    # medieval shovel was a wooden blade and handle shod with iron); a grey iron slab as the smith's blade (its iron shoe)
+    "shovel": "Tools/Shovel-05", "shovel_haft": "Tools/Shovel-15", "shovel_blade": "Blocks/Metal-Slab-05",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

@@ -115,6 +115,7 @@ static func build() -> Wiki:
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
+	add_provider(WikiExcavation.add_pages)     # Build 17: shovels and pickaxes, trial-pit earth, where to dig, capability
 	for c in providers:
 		if c.is_valid():
 			c.call(w)

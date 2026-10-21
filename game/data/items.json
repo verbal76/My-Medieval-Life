@@ -344,6 +344,9 @@
     "timber_support": {"name": "Timber support", "type": "resource", "value": 8},
     "track_section": {"name": "Track section", "type": "resource", "value": 10},
     "minecart": {"name": "Minecart", "type": "resource", "value": 170, "cart": true},
-    "ladder": {"name": "Ladder", "type": "resource", "value": 14}
+    "ladder": {"name": "Ladder", "type": "resource", "value": 14},
+    "shovel": {"name": "Shovel", "type": "tool", "tool": "shovel", "value": 20, "durability": 120, "speed": 1.0},
+    "shovel_blade": {"name": "Shovel blade", "type": "resource", "value": 15},
+    "shovel_haft": {"name": "Shovel haft", "type": "resource", "value": 3}
   }
 }

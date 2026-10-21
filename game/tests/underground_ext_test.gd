@@ -616,11 +616,15 @@ func _test_determinism() -> void:
 ## Q18-9: nothing is gated by a capability level: a level-0 village mines the gallery and the cave, and cuts tunnels.
 func _test_level_zero_mines() -> void:
 	var w := _world(1)
-	for n: NPC in w.npcs:
-		if n.job in ["miner", "laborer"]:
-			n.job = "manor_hand"
-	check(w.discovery.evaluate().level == 0, "a village with no miner or labourer is at mining level 0")
-	var n: NPC = w.brain._first_with_job("manor_hand")
+	w.player.home = ""                            # MIN-D2: no resident player
+	for o: NPC in w.npcs:                         # MIN-SKILLCAP: level 1 needs someone able to mine (a pickaxe), not a job title
+		o.inv.remove("pickaxe", o.inv.count("pickaxe"))
+	for hh in w.households:
+		hh.pantry.remove("pickaxe", hh.pantry.count("pickaxe"))
+	w.manor_work.yard.remove("pickaxe", w.manor_work.yard.count("pickaxe"))
+	w.discovery.dawn()
+	check(w.discovery.level() == 0, "a village where nobody holds a pickaxe is at mining level 0")
+	var n: NPC = w.brain._first_with_job("laborer")
 	n.plan.clear()
 	n.inv.add("pickaxe")
 	n.inv.add("mallet")
@@ -635,7 +639,7 @@ func _test_level_zero_mines() -> void:
 	n.depth = -1
 	n.pos = Vector2(face[0]) + Vector2(0.5, 0.5)
 	n.inv.add("timber_support")
-	check(w.mine_works.place_support(n, face[0]).result == "ok" and w.mine_works.dig(n, face[1], n.inv).result == "ok" and w.discovery.evaluate().level == 0,
+	check(w.mine_works.place_support(n, face[0]).result == "ok" and w.mine_works.dig(n, face[1], n.inv).result == "ok" and w.discovery.level() == 0,
 			"and sets up a support and cuts the rock, the level still 0 (reported, never a gate)")
 
 

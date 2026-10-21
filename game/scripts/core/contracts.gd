@@ -474,7 +474,7 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	r.terms.merge({"route": m.route, "why": m.why, "stock": m.stock, "capacity": m.cap})
 	if can <= 0 and not (float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft", "service"]):
 		match str(m.why):
-			"tool:pickaxe", "tool:axe":
+			"tool:pickaxe", "tool:axe", "tool:shovel":
 				r.say = ("I've no %s to get %s with." % [str(m.why).get_slice(":", 1), item]) if svc.is_empty() else ("I've no %s for that work." % str(m.why).get_slice(":", 1))
 			"tool:kit":
 				r.say = "I've no prospector's kit to take samples with."

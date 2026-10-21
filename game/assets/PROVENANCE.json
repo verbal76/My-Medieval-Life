@@ -905,6 +905,27 @@
    "sha256": "de18287ebf5a766d0a64872b6fe931340e979bcd42ec2bac4be383adb9abf98f"
   },
   {
+   "file": "assets/icons/shovel.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Shovel-05.png",
+   "transform": "copied unchanged",
+   "sha256": "f0a26aff20bbcf51fd34a9ea4ce217257129bcb2b671cf89d328bf1dced51a5b"
+  },
+  {
+   "file": "assets/icons/shovel_blade.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Metal-Slab-05.png",
+   "transform": "copied unchanged",
+   "sha256": "aa8dbe8cdf1dbd64f25a1eb60349d271fa2ed2cb6b3adfc21ff02d09741ea7a7"
+  },
+  {
+   "file": "assets/icons/shovel_haft.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Shovel-15.png",
+   "transform": "copied unchanged",
+   "sha256": "16b91b174215899643714488cd2b8951dae8be62d1200889871cd0767f4e4e86"
+  },
+  {
    "file": "assets/icons/spoil.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Rocks-02.png",
