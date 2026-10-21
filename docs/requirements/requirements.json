@@ -21086,12 +21086,13 @@
     "Code and tests on wip/expansion19-preparation in isolated scenarios with provisional adapters; the live NPC decision system is not replaced; SJD-Q01..Q14 stay open for the owner"
    ],
    "implementation": "",
-   "tests": "judgment_test 105, judgment_live_test 27, judgment_perf 19; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off",
+   "tests": "judgment_test 129, judgment_live_test 27, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off",
    "playtest": [],
    "branch": "wip/expansion19-preparation",
    "commits": [
     "e05d367",
-    "693e0c3"
+    "693e0c3",
+    "6615da4"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21124,6 +21125,11 @@
      "date": "2026-10-21",
      "change": "commit 693e0c3; tests",
      "why": "Round 2 (693e0c3): daily update spread over 24 hourly slices with identical results; packed records cut memory at 500 people to 4.0 MB live / 16.1 MB stress; trade hook cost +5% (from +20%) with identical choices; suites pass, gate identical with judgment off. Open: gossip frame cost at 500 people (~76 ms on the assumed phone), round 3 in progress; SJD-Q01,02,06,07,08,10,11,14 still block live use"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 6615da4; tests",
+     "why": "Round 3 (6615da4): gossip spread over ticks with catch-up on read, identical results proven (1,933 tellings, 252 beliefs, same end hash); 500 people live rate p99 0.87 ms (about 3.5 ms phone), p99.9 2.15 ms (about 8.6 ms phone): budget met 99 frames in 100, not 999 in 1000; memory 6.1 MB at 500 live; live village cost within noise; suites pass, gate identical when off. Paused pending a real phone measurement and the owner's choice X19-Q-TIMING; SJD-Q01,02,06,07,08,10,11,14 still block live use"
     }
    ],
    "target_build": "19"
@@ -28222,6 +28228,48 @@
     }
    ],
    "target_build": "18"
+  },
+  {
+   "id": "X19-Q-TIMING",
+   "title": "Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)?",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "open owner question from PROS-19 round 3",
+   "acceptance": [
+    "Owner chooses"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Raised by PROS-19 round 3 in the Expansion 19 progress record on wip/expansion19-preparation (6615da4).",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/expansion19/PROGRESS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   }
  ]
 }
