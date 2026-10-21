@@ -2430,24 +2430,18 @@ func _use() -> void:
 						"Nobody saw." if seen == 0 else ("%d %s saw you!" % [seen, "person" if seen == 1 else "people"])]
 				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
 		"loot":
-			var l: Dictionary = world.loot[target.i]
-			var taken := 0
-			for id in l.inv.ids():
-				var n: int = l.inv.count(id)
-				if p.inv.add(id, n):
-					l.inv.remove(id, n)
-					taken += n
-					_gain("+%d %s" % [n, GameData.item_name(id)], id)
-			if int(l.coins) > 0:
-				_gain("+%d coins" % int(l.coins), "coins")
-			elif taken == 0:
-				ui.message("Your pack is full." if l.inv.total() > 0 else "There is nothing left.")
-			elif l.inv.total() > 0:
+			var got := world.player_loot(int(target.i))             # the taking is core's (DVW-A12 R5)
+			if str(got.far) != "":
+				ui.message(str(got.far))
+				return
+			for pair in got.items:
+				_gain("+%d %s" % [int(pair[1]), GameData.item_name(str(pair[0]))], str(pair[0]))
+			if int(got.coins) > 0:
+				_gain("+%d coins" % int(got.coins), "coins")
+			elif got.items.is_empty():
+				ui.message("Your pack is full." if int(got.left) > 0 else "There is nothing left.")
+			elif int(got.left) > 0:
 				ui.message("Your pack is full: some is left behind.")
-			p.coins += int(l.coins)
-			l.coins = 0
-			if l.inv.total() == 0:
-				world.loot.remove_at(target.i)
 		"deposit":
 			var dep: Dictionary = target.dep
 			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)

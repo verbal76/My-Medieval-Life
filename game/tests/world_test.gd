@@ -1460,6 +1460,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_pickpocket_reach()
 	_dvw_a12_reach()
 	_dvw_a12_planting()
+	_dvw_a12_loot()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1885,6 +1886,43 @@ func _dvw_a12_planting() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
 	check(w2.trees.any(func(x): return int(x.x) == c2.x and int(x.y) == c2.y and x.state == "sapling"), "DVW-A12 R4: the planted tree is saved")
+	_restore_pack(keep)
+
+
+## R5: taking a loot pile: goods as far as the pack takes them, all the coins, the pile gone when empty, nothing made
+## or lost; out of reach nothing is taken; through the interface.
+func _dvw_a12_loot() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var c0 := p.coins
+	p.pos = Vector2(60.5, 60.5)
+	var bag := Inventory.new()
+	bag.add("log", 3)
+	bag.add("stone", 2)
+	w.loot.append({"pos": p.pos + Vector2(0, 0.5), "inv": bag, "coins": 4, "from": "test pile"})
+	var i := w.loot.size() - 1
+	p.inv.max_stacks = 1
+	var r := w.player_loot(i)
+	check(r.far == "" and r.items == [["log", 3]] and int(r.coins) == 4 and int(r.left) == 2 and p.coins == c0 + 4 and p.inv.count("log") == 3, "DVW-A12 R5: what the pack can take and every coin are taken (%s)" % str(r))
+	check(w.loot.size() == i + 1 and int(w.loot[i].coins) == 0 and (w.loot[i].inv as Inventory).count("stone") == 2, "DVW-A12 R5: the rest stays in the pile; no coin twice")
+	p.inv.max_stacks = 0
+	r = w.player_loot(i)
+	check(r.items == [["stone", 2]] and int(r.left) == 0 and w.loot.size() == i, "DVW-A12 R5: the last of it taken, the pile is gone")
+	w.loot.append({"pos": p.pos + Vector2(0, World.TARGET_PROBE + World.TARGET_REACH + 1.0), "inv": Inventory.new(), "coins": 9, "from": "far pile"})
+	r = w.player_loot(w.loot.size() - 1)
+	check(r.far != "" and int(r.coins) == 0 and int(w.loot[-1].coins) == 9, "DVW-A12 R5: a pile out of reach gives nothing (R15)")
+	w.loot.remove_at(w.loot.size() - 1)
+	# through the interface
+	var bag2 := Inventory.new()
+	bag2.add("plank", 2)
+	w.loot.append({"pos": p.pos + Vector2(0, 0.5), "inv": bag2, "coins": 1, "from": "the test"})
+	main._sync_loot()
+	main.target = {"kind": "loot", "i": w.loot.size() - 1, "label": "Take"}
+	var n0 := w.loot.size()
+	main._use()
+	check(p.inv.count("plank") == 2 and w.loot.size() == n0 - 1 and p.coins == c0 + 5, "DVW-A12 R5: the interface's taking is core's")
+	main._sync_loot()
 	_restore_pack(keep)
 
 

@@ -1693,6 +1693,29 @@ func plant_tree(cell: Vector2i, item: String) -> Dictionary:
 	return t
 
 
+## DVW-A12 R5: the player takes what lies in loot pile `i`: each kind of goods whole, as far as the pack takes it, and
+## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
+## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
+func player_loot(i: int) -> Dictionary:
+	var l: Dictionary = loot[i]
+	var far := player_reach_point(l.pos, TARGET_PROBE + TARGET_REACH)
+	if far != "":
+		return {"items": [], "coins": 0, "left": l.inv.total(), "far": far}
+	var items := []
+	for id in l.inv.ids():
+		var n: int = l.inv.count(id)
+		if player.inv.add(id, n):
+			l.inv.remove(id, n)
+			items.append([id, n])
+	var coins := int(l.coins)
+	player.coins += coins
+	l.coins = 0
+	var left: int = l.inv.total()
+	if left == 0:
+		loot.remove_at(i)
+	return {"items": items, "coins": coins, "left": left, "far": ""}
+
+
 ## DVW-A12 R4: the player plants the sapling `item` from the pack at `cell`: refused ({}) without one in the pack or
 ## where plant_refusal says no; else the tree is planted (plant_tree) and the sapling is used up, counted for the
 ## ledger (used_, SEED-02). Returns the tree record, {} if refused.
