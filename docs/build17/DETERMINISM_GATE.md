@@ -23,3 +23,10 @@ unchanged as `docs/release/sim_baseline_build16.json`; `docs/release/sim_baselin
 Suites run on the final code (after the Q18-9 change): discovery 65, prospecting 54, quarry 39, underground 95,
 contracts 75, world 339, run_tests 3536, start 499 steps, play 37 steps, parity 55, treasury 23, skills (pass); all 0
 failures. Before that change all 42 suites passed on the DVW-A12 merge.
+
+## Pending re-baseline
+
+CON-01's completion (merged at `9a56fcc`) changes behaviour (fewer contracts, signing in person), so the baseline above
+describes the code of `b4d1223` and no longer matches the head. It is recorded once more after MIN-E is merged rather
+than twice (owner: no repeated expensive runs); until then the leak check in CI (`tests.yml`, 10 days, seed 1) and
+CON-01's own 30-day run (no leaks) are the conservation evidence for the newer code.
