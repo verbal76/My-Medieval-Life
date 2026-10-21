@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 202 (93 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **286** = 195 still open from the baseline + 93 added and open |
+| Entries added since | | 203 (94 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **286** = 195 still open from the baseline + 94 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (202)
+## Added since the baseline (203)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -241,6 +241,7 @@ None.
 | SEED-04 | Households save planting material from their own harvests | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | APPROVED — NOT STARTED |  |
+| SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | APPROVED — NOT STARTED |  |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-03 | OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification | approved | COMPLETE AND VERIFIED | 16 |

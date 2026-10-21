@@ -24339,6 +24339,42 @@
    ]
   },
   {
+   "id": "SIM-02",
+   "title": "Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting",
+   "kind": "rule",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Observe the work. Preserve the progress. Report the results. Do not repeat completed work.",
+   "description": "Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting",
+   "source": "docs/directives/2026-10-21_simulation_monitoring.md",
+   "approval": "Owner permanent directive 2026-10-21",
+   "acceptance": [
+    "Applied to every build and expansion (CLAUDE.md section 5)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_simulation_monitoring.md"
+    }
+   ]
+  },
+  {
    "id": "SJD-A",
    "title": "Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation",
    "kind": "approved",

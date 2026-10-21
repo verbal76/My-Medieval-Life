@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **458** |
 | Outstanding (not complete, superseded or canceled) | 212 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 76 owner decision (open or answered), 28 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 76 owner decision (open or answered), 29 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -1024,7 +1024,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | BLOCKED | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
 | X19-REGARD | Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 
-## World design rule (28)
+## World design rule (29)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1033,6 +1033,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-01 | Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates | ACTIVE DEVELOPMENT | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | COMPLETE AND VERIFIED | docs/directives/2026-10-21_standing_continuous_release_directive.md |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | APPROVED — NOT STARTED | docs/directives/2026-10-21_continuous_long_run_simulation.md |
+| SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | APPROVED — NOT STARTED | docs/directives/2026-10-21_simulation_monitoring.md |
 | WDR-001 | World Design Rule 1: Material Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-002 | World Design Rule 2: Professional Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-003 | World Design Rule 3: Meaningful Recipes | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
