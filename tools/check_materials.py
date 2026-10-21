@@ -14,8 +14,8 @@ What is counted, and why (the same text heads the generated document):
 - A material's *meaningful uses* are the distinct products of the recipes consuming it plus the
   distinct kinds of construction consuming it (Rule 003: two recipes making the same item, such as
   tan_pelts and tan_leather, count once). Construction counts because Rule 001's own example counts a
-  house: house_cost, workshop_cost (all kinds as one), the loft, the storefront and the shop fittings
-  (shop_equipment) are five construction uses.
+  house: house_cost, workshop_cost (all kinds as one), the loft, the storefront, the shop fittings
+  (shop_equipment) and the market stall (stall_cost, STALL-01) are six construction uses.
 - A recipe's *profession* is the NPC job whose work code runs it (JOB_WORK below: the functions are
   cited and checked). The game has no recipe-to-trade field: the station does not decide it (the
   workbench serves both the tanner and the carpenter), the job's code does. Recipes no job runs are
@@ -159,6 +159,7 @@ def load(root=ROOT):
         "loft": {"loft": bal.get("loft", {}).get("cost", {})},
         "storefront": {"storefront": bal.get("storefront_cost", {})},
         "shop fittings": bal.get("shop_equipment", {}),
+        "market stall": {"market stall": bal.get("stall_cost", {})},
     }
     end_uses = {}
     for i, it in items.items():
@@ -399,7 +400,8 @@ def render(report):
          "- **Meaningful uses:** the distinct products of the recipes consuming it (Rule 003: two recipes making the "
          "same item count once) plus the distinct kinds of construction consuming it. Construction counts because "
          "Rule 001's own example counts a house: `house_cost`, `workshop_cost` (all kinds as one), the loft, the "
-         "storefront and the shop fittings (`shop_equipment`) are five construction uses (balance.json).",
+         "storefront, the shop fittings (`shop_equipment`) and the market stall (`stall_cost`, STALL-01) are six "
+         "construction uses (balance.json).",
          "- **Profession of a recipe:** the NPC job whose work code runs it (tools/check_materials.py `JOB_WORK`, "
          "cited functions checked). The game has no recipe-to-trade field and the station does not decide it (the "
          "workbench serves the tanner and the carpenter). Recipes no job runs are the player's alone and add no "

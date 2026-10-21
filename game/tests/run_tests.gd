@@ -2529,6 +2529,8 @@ func test_property_migration() -> void:
 		coins_then += int(d.player.coins) + int(d.get("treasury", 0))
 		for l in d.loot:
 			coins_then += int(l.coins)
+		for sid in d.stalls:                 # STALL-05: a merchant's open session waits in its stall's till (World.total_coins counts it)
+			coins_then += int(d.stalls[sid].get("till", 0))
 		var w2 := World.new()
 		w2.load_dict(VillageMap.load_default(), d)
 		var p0 := w2.plot("plot0")

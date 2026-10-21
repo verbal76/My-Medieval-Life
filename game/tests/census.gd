@@ -38,6 +38,10 @@ static func holders(w: World) -> Dictionary:
 		for src in [s.get("stock", {}), s.get("store", {})]:
 			for id in src:
 				g.player[id] = int(g.player.get(id, 0)) + int(src[id])
+	g["stalls"] = {}
+	for s in w.business.stalls.npc_built():        # villagers' built market stalls: their sale stock (STALL-02)
+		for id in s.get("stock", {}):
+			g.stalls[id] = int(g.stalls.get(id, 0)) + int(s.stock[id])
 	for id in w.fauna.pens:
 		var tr := int(w.fauna.pens[id].trough)
 		if tr > 0:

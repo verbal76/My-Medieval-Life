@@ -101,6 +101,10 @@ func _data_tests() -> void:
 	check(w.pages["item:iron_bar"].text.contains("pickaxe"), "an item page links to what it makes (iron bar -> pickaxe)")
 	check(w.chain_lines("pickaxe").size() >= 3, "the pickaxe has a production chain down to ore")
 	check(w.pages.has("sys:calendar") and w.pages.has("sys:family") and w.pages.has("sys:inheritance") and w.pages.has("sys:animal_life"), "calendar, ageing, family, inheritance and animal life pages exist")
+	var ms: String = w.pages.get("guide:market_stall", {}).get("text", "")
+	check(ms.contains("3 plank") and ms.contains("open stall") and ms.contains("close stall") and ms.contains("everything has sold") and ms.contains("5%") and ms.contains("daily rent"),
+		"the market stall guide: 3 planks, OPEN / CLOSE, settlement on closing or selling out, the manor's 5% on every stall, the pitches' rent")
+	check("guide:market_stall" in w.search("market stall commission"), "search finds the market stall guide")
 	# other systems add pages
 	Wiki.add_provider(func(wk: Wiki): wk.add_page("sys:test_extra", "Extra system", "systems", [Wiki.p("A test page about glowworms.")]))
 	var w2 := Wiki.build()

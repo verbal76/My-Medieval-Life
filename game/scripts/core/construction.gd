@@ -1353,3 +1353,11 @@ func load_dict(d: Dictionary) -> void:
 		e.spent = int(e.spent)
 		e.load = Inventory.from_dict(c.get("load", {}))
 		contracts.append(e)
+
+
+# ---------------------------------------------------------------- market stalls (STALL-01) ---
+## Build a market stall (owner Q10, 2026-10-21: three planks, stall_cost) with its awning at `cell` for `ref` (the
+## player or a household), from `inv`, the builder's own pack: the planks are consumed and counted as used in building.
+## The same call for the player and villagers; the rules are in Stalls (site, record, settlement). "" when built.
+func build_stall(ref: String, cell: Vector2i, inv: Inventory) -> String:
+	return w.business.stalls.build(ref, cell, inv)

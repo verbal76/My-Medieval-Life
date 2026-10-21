@@ -8,21 +8,37 @@ static func add_pages(w: Wiki) -> void:
 	var rent := int(GameData.b("stall_rent_day"))
 	var range_t := int(GameData.b("stall_range"))
 	var evict := int(GameData.b("stall_evict_days"))
+	var pct := Stalls.pct()
 	w.add_page("guide:stall", "How do I sell from my own stall?", "guides", [
 		Wiki.p("Find an open pitch in the market (beside the merchants' stalls) and press Use: \"Rent this market pitch\" costs %d coins a day, the first day at once." % rent),
 		Wiki.bullets([
 			"Open the stall again later with Use: \"Manage your market stall\".",
 			"Put up: choose an item from your pack and how many. It moves into the stall's stock, priced at its market value.",
 			"Price: type a number or use - and +. You may ask from 1 coin up to %d times the market value." % Business.PRICE_CAP,
-			"Take back moves goods to your pack again; Close the stall returns everything, and the till too.",
-			"Sales are paid into the till; press Collect to take the coins.",
+			"Take back moves goods to your pack again; Give up the pitch returns everything, and the till too, after the manor's share.",
+			"Sales are paid into the till and wait there while the stall is open. Close the stall to settle them: the manor takes %d%% of the sales, the rest is yours. Open it again whenever you like; it closes by itself when it sells out (see the market stall guide)." % pct,
 			"Stand at the stall (within %d tiles) for villagers to buy, or hire an attendant to stand there for you (see the attendant guide). With neither, nobody buys: nothing sells unattended." % range_t,
 			"Larger stall: pay %d coins to the manor once for %d kinds of goods instead of %d, a display for one item that draws buyers from further off, and %d coins a day rent instead of %d." % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_listings")), int(GameData.b("stall_max_listings")), int(GameData.b("stall_large_rent_day")), rent],
 			"The window keeps your revenue, expenses (rent, upgrade, wages) and profit.",
-			"Rent is taken each morning from your coins, then the till. If you cannot pay, sales stop; after %d unpaid days the manor takes the pitch back and your goods and coins return to you." % evict,
+			"Rent is taken each morning from your coins, then settled coins in the till (never the open sales). If you cannot pay, sales stop; after %d unpaid days the manor takes the pitch back and your goods and coins return to you." % evict,
 		]),
 		Wiki.p("Villagers buy only what they really need and can pay for: the smith ore and coal, the carpenter and builders planks, stone and logs, miners and woodcutters a missing tool, guards their gear, households firewood and food. They will not pay more than they would at the merchants, and they stop buying once the need is met."),
-		Wiki.links(["guide:shop", "guide:attendant", "sys:trading", "guide:money", "job:merchant"])], "", "market stall rent sell shop business larger display")
+		Wiki.links(["guide:market_stall", "guide:shop", "guide:attendant", "sys:trading", "guide:money", "job:merchant"])], "", "market stall rent sell shop business larger display")
+	var cost: Dictionary = Stalls.cost()
+	var cost_text := ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))
+	w.add_page("guide:market_stall", "How do I build and run a market stall?", "guides", [
+		Wiki.p("Anyone can build a market stall of their own: you, and the village's households too. It costs %s from your pack and no rent; instead the manor takes %d%% of what it sells." % [cost_text, pct]),
+		Wiki.bullets([
+			"Build: carry %s, stand outdoors on clear ground facing up and press Use: \"Build a market stall here\". The ground must be open (no road, tree, plant, field, pen or someone else's land) and at least 3 tiles from another stall; the cell you stand on is where buyers come." % cost_text,
+			"Stock: press Use at the stall (\"Manage your market stall\") and Put up goods from your pack. They are in the stall now, not in your pack; Take back returns them.",
+			"OPEN STALL: it sells while you are anywhere else. Villagers who really need its goods and can pay come and buy, at your prices.",
+			"While it is open the sales wait in its till: they are not yours to take or spend until you close it.",
+			"CLOSE STALL: sales stop and the session is settled. The manor takes %d%% of that session's sales (only what was really sold); the rest goes to your purse. Unsold goods stay in the stall. You may open it again at once." % pct,
+			"When everything has sold, the stall closes by itself and settles, with a notice.",
+			"The %d%% is exact over time: a share smaller than a coin is carried in hundredths to the stall's next settlement, so only whole coins ever change hands (100 coins of sales: 5 to the manor, 95 to you)." % pct,
+		]),
+		Wiki.p("Every market stall pays the same %d%%: the stalls people build, the manor's pitches and the merchants' stalls (a merchant's sales at the stall settle when they leave it). A pitch still has its daily rent of %d coins as well; a built stall has no rent. Shops and storefronts are counters, not stalls, and keep their own terms." % [pct, rent]),
+		Wiki.links(["guide:stall", "guide:money", "job:merchant"])], "", "market stall build planks open close settle commission manor sold out")
 	w.add_page("sys:stall", "Your market stall", "systems", [
 		Wiki.p("An optional business: rent a pitch, stock it from your pack, set prices, and sell to villagers who need your goods. See the guide for the steps."),
 		Wiki.stats([["Rent", "%d coins a day" % rent], ["Listings", "up to %d kinds of goods" % int(GameData.b("stall_max_listings"))],
