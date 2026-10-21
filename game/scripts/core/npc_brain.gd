@@ -2411,6 +2411,7 @@ func fight(n: NPC, dt: float) -> void:
 ##     to one day of wages. A household that keeps needing relief is named in the log.
 func reeve_day() -> void:
 	update_market()
+	_reeve_succession()
 	var obligations := daily_obligations()
 	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
 	var taxed := 0
@@ -2489,6 +2490,32 @@ func reeve_day() -> void:
 	if works > 0:
 		w.note("The manor bought %d loads of planks, iron and stone for its public works." % works)
 	w.manor_work.refresh()
+
+
+## EQ-04 (owner, 2026-10-19: "When leadership changes, government should continue"). The manor's business (tax, relief,
+## wages) never needed the reeve, but public works wait for one, and before this a dead reeve was never replaced. The
+## office is handed on by the succession of posts the trades use (B8-016: succession_dawn, succession_caravan): when the
+## reeve is dead or gone, the evening's business opens the post (World.vacancies, saved); after `succession_days` an
+## adult without a trade takes it (the late reeve's household first), else a newcomer comes with the caravan, at the latest
+## `newcomer_max_days` on. The evening after, the new reeve takes up the office (World.reeve_id, the manor). The choice of
+## successor is the trades' rule, used until the owner sets one for the office (an open policy question).
+func _reeve_succession() -> void:
+	var rv := w.npc(w.reeve_id)
+	if rv != null and rv.alive and rv.job == "reeve":
+		return
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == "reeve" and (rv == null or o.id != rv.id):
+			w.reeve_id = o.id
+			o.workplace = "manor"
+			w.stat("reeve_successions")
+			w.note("%s %s is the new reeve: the manor's business goes on." % [o.name, o.family])
+			return
+	if open_posts("reeve") > 0:
+		return
+	var who := "%s %s" % [rv.name, rv.family] if rv != null else "the reeve"
+	w.vacancies.append({"job": "reeve", "workplace": "manor", "home": rv.home if rv != null else "", "household": rv.household if rv != null else -1,
+			"day": w.day(), "who": who, "heir": -1})
+	w.note("The office of reeve, left by %s, is open: someone of the village or a newcomer will take it." % who)
 
 
 ## OD-16 (b), EQ-19 (owner 2026-10-20: "the manor uses its treasury to keep the smithy and woodlands working: it buys
