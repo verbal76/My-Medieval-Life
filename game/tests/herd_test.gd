@@ -1,6 +1,7 @@
 extends SceneTree
-## FARM-08B: the cattle investigation's defects, fixed and kept fixed. A keeper short of feed culls the elderly (who no
-## longer breed) before the young that would replace them. Nothing is spawned, fed or paid for by the rules under test.
+## FARM-08B: the cattle investigation's defects, fixed and kept fixed. A pen keeper buys as much feed as a seller can
+## spare and the keeper can pay for (a part lot, as the player may buy), and a keeper short of feed culls the elderly
+## (who no longer breed) before the young that would replace them. Nothing is spawned, fed or paid for by the rules under test.
 ## Run: godot --headless --path game --script res://tests/herd_test.gd
 
 var failures := 0
@@ -25,6 +26,7 @@ func new_world() -> World:
 
 func _init() -> void:
 	test_cull_order()
+	test_part_lot()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -78,4 +80,51 @@ func test_cull_order() -> void:
 	check(bull.alive and calf.alive, "nothing else was touched")
 	# not short of feed: a pen below its cap keeps everyone, elders included
 	check(w.fauna.surplus(pen) == null, "a pen below its cap culls nobody when there is feed")
+	w.dispose()
+
+
+func test_part_lot() -> void:
+	var w := new_world()
+	var pen: Dictionary = w.fauna.pen_of("cow")
+	var keeper: NPC = w.pen_keeper(pen)
+	check(keeper != null, "the cow pen has a keeper")
+	_no_grain(w, pen)
+	var need := w.fauna.daily_need(pen)
+	var seller: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "farmer" and o != keeper and w.brain._keeper_pen(o).is_empty() and not w.asleep(o):
+			seller = o
+			break
+	check(seller != null and need > 1, "a farmer keeping no pen is awake to sell (the pen eats %d a day)" % need)
+	seller.inv.add("wheat", need)                      # one day's feed: less than the three-day lot
+	keeper.coins = 1000
+	keeper.plan.clear()
+	keeper.hunger = 100.0
+	var coins := w.total_coins()
+	w.brain._keeper(keeper)
+	var buy: Dictionary = {}
+	for st in keeper.plan:
+		if str(st.get("act", "")) == "buy_from":
+			buy = st.get("args", {})
+	check(not buy.is_empty() and int(buy.vendor) == seller.id and int(buy.qty) == need,
+			"a seller with only part of a lot sells that part: buy %s (plan %s)" % [buy, _plan_acts(keeper)])
+	check(not _plan_acts(keeper).has("slaughter"), "the keeper buys rather than culls")
+	# the keeper who can pay for only some buys only that
+	var price := w.sell_price(seller, "wheat")
+	keeper.coins = price
+	keeper.plan.clear()
+	w.brain._keeper(keeper)
+	buy = {}
+	for st in keeper.plan:
+		if str(st.get("act", "")) == "buy_from":
+			buy = st.get("args", {})
+	check(not buy.is_empty() and int(buy.qty) == 1, "a keeper with the price of one buys one (%s)" % [buy])
+	check(w.brain.act(keeper, "buy_from", buy) and keeper.inv.count("wheat") == 1 and keeper.coins == 0 and w.total_coins() == coins - (1000 - price),
+			"the part lot is a real sale: one wheat for the keeper's last coins")
+	# with nothing to pay with the keeper finds no feed, and the stat says why
+	keeper.coins = 0
+	keeper.inv.remove("wheat", 1)
+	keeper.plan.clear()
+	w.brain._keeper(keeper)
+	check(int(w.stats.get("keeper_no_coins_cow", 0)) >= 1, "no coins: counted as grain for sale the keeper could not pay for")
 	w.dispose()
