@@ -349,6 +349,26 @@ easy to change):
    knows; if the thief is in the guard's sight when the report arrives, the guard stops and fines them (the existing
    caught-thief fine); never a chase (that is assault's response). The alternative is knowledge only.
 
+**Questions from the farm and stall audits (2026-10-21, `docs/design/FARM_STALL_AUDIT.md`), open for the owner;
+FARM-02's fence and gate and STALL-01..06 wait on them; FARM-06, the plot lease itself and seeds do not:**
+
+8. **Rounding of the 5% commission** (no convention exists: rent rounds up, prices to nearest, the household tax down):
+   (a) down (sessions under 20 coins pay nothing); (b) nearest; (c) up (any sale pays at least 1 coin); (d) the exact
+   fraction kept as a saved remainder per stall, whole coins settled as they accrue.
+9. **"Logs and stone" for the fence and gate:** the only fence rule (the pens) uses planks, 1 per 3 fence cells, with a
+   free gate and no stone. (a) the pen rule unchanged; (b) the pen rule plus stone for the gate posts; (c) raw logs at the
+   sawing ratio (6 fence cells a log) plus stone for the gate; (d) quantities the owner sets.
+10. **A stall's materials:** no free-standing stall recipe exists. (a) the storefront's 6 planks + 1 iron bar; (b) the shop
+   counter's 3 planks; (c) a new recipe for approval.
+11. **Plot size at a flat 2 coins** (no maximum in the land system): (a) no limit; (b) a maximum (e.g. the 9x10 house
+   plot); (c) one farmland lease per household. And may farmland also be bought outright (priced by area), or only leased?
+12. **Which existing stalls OD-24 covers:** (a) only newly built stalls; the merchants' six rent-free stalls and the two
+   5-coin pitches stay as they are; (b) the 5% also on the merchants' stalls and/or replacing the pitches' rent; (c) the
+   pitches withdrawn once built stalls exist.
+13. **Proceeds before a session closes** (the till can be emptied at any time today): (a) they stay in the stall until
+   settled; (b) all but the commission's share may be taken; (c) free withdrawal, an unpaid commission under the
+   existing arrears rules.
+
 **OD-17, still blocked: the entry as recorded** (source `docs/game-designer/SPEC_RECONCILIATION.md` section 4):
 
 - **C1, the hero.** Spec, the owner's interview: "One hero (owner said: "Your main character is the hero")"; Bob's
