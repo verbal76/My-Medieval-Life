@@ -583,5 +583,22 @@
       "sheep": {"item": "wool", "sex": "any", "days": 4.0, "qty": 1}
     },
     "product_cap": 8
+  },
+  "contracts": {
+    "_note": "CON-01 (owner 2026-10-21, OD-29 defaults approved provisionally): goods-procurement contracts (Contracts, scripts/core/contracts.gd). Policy: paid on delivery, unit by unit, from coins the buyer sets aside at acceptance; partial delivery allowed; the buyer sets the deadline (days), negotiable; cancelling pays only for units delivered; a contract past its deadline lapses, the set-aside coins go back to the buyer and the tie between the two loses default_regard; no money penalty; no renegotiation after acceptance. The numbers are agent proposals, provisional: work_share is the part of a working day an NPC spends on contract work (walking and other work take the rest); max_open_per_seller and max_open_player cap obligations; needy_factor is what an NPC short of its OD-19 reserve accepts against the going price, comfortable_factor what one with its reserve covered asks; max_days the longest deadline; delivery_lot the units an NPC gathers before walking them over; npc_orders_per_day the new NPC-to-NPC orders a dawn (a business short of an input nobody sells), npc_order_days their deadline, npc_counter_tolerance how far above its own price a buyer goes to meet a counteroffer; offer_days how long an NPC's offer to the player stands; keep_days how long ended contracts stay on record; notoriety_refuse the notoriety at which nobody contracts with the player.",
+    "work_share": 0.5,
+    "max_open_per_seller": 2,
+    "max_open_player": 3,
+    "needy_factor": 0.85,
+    "comfortable_factor": 1.0,
+    "max_days": 10,
+    "delivery_lot": 6,
+    "default_regard": 8,
+    "npc_orders_per_day": 2,
+    "npc_order_days": 3,
+    "npc_counter_tolerance": 1.25,
+    "offer_days": 2,
+    "keep_days": 14,
+    "notoriety_refuse": 3
   }
 }
