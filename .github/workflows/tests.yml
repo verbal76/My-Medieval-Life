@@ -100,6 +100,10 @@ jobs:
           $godot --headless --path game --script res://tests/farm_plots_test.gd
           $godot --headless --path game --script res://tests/farm_place_test.gd
           $godot --headless --path game --script res://tests/herd_test.gd
+          # PROSPECTIVE Expansion 19 (PROS-19, wip/expansion19-preparation): the isolated judgment prototype
+          $godot --headless --path game --script res://tests/judgment_test.gd
+          $godot --headless --path game --script res://tests/judgment_live_test.gd
+          $godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10
 
       - name: Short economy simulation (FR-07)
         run: |
