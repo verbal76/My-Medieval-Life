@@ -1101,9 +1101,10 @@ func _home_plan(spare: int, near: Vector2i, ref: String) -> Dictionary:
 			+ ceili(estimate(cost_of("house")) * float(GameData.b("found_start_share")))
 	if spare < cost:
 		return {}
-	# ground the manor has surveyed already (the clearings), nearest first, then new ground
+	# ground the manor has surveyed already (the clearings), nearest first, then new ground; never farmland (a farm
+	# plot, fenced or not, let or given up: FarmPlots), whatever its size
 	var fp := footprint("house")
-	var plots: Array = w.property.market().filter(func(r): return w.property.is_parcel(r) and w.property.building_on(r).is_empty() and Vector2i(int(r.w), int(r.h)) == fp)
+	var plots: Array = w.property.market().filter(func(r): return w.property.is_parcel(r) and not FarmPlots.is_farm(r) and w.property.building_on(r).is_empty() and Vector2i(int(r.w), int(r.h)) == fp)
 	plots.sort_custom(func(a, b): return (Vector2(int(a.x), int(a.y)) - Vector2(near)).length() < (Vector2(int(b.x), int(b.y)) - Vector2(near)).length())
 	if not plots.is_empty():
 		return {"plot": plots[0], "cost": cost - w.property.land_price(footprint("house").x, footprint("house").y) + w.property.price_of(plots[0])}
