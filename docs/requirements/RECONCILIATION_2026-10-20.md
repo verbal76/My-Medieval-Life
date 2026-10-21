@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 213 (96 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **297** = 203 still open from the baseline + 96 added and open |
+| Entries added since | | 219 (97 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **298** = 203 still open from the baseline + 97 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (28)
@@ -58,7 +58,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (213)
+## Added since the baseline (219)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -170,7 +170,13 @@ None.
 | MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | decision | BLOCKED | owner decision |
 | MIN-E-Q4 | Should 'excavator' become a job, or should capability level 3 count whoever digs? | decision | BLOCKED | owner decision |
 | MIN-E-Q5 | Should bigger or overworld pits be built to allow spiral ramps and more layers? | decision | BLOCKED | owner decision |
-| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | PARTIALLY IMPLEMENTED | 17 |
+| MIN-F-Q1 | Should unsupported spans collapse, supports decay and need repair, and ventilation and lighting be real needs? | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-F-Q2 | Should tunnelling find hidden underground deposits, the manor post tunnelling and track jobs, and the carpenter make supports and track to sell (no villager tunnels on its own now)? | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-F-Q3 | Should miners haul by minecart instead of carrying? | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-F-Q4 | Should there be shafts between underground levels? | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-F-Q5 | Should spoil be allowed back into tunnels below ground? | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | BLOCKED | owner decision |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |

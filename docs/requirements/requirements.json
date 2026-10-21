@@ -2764,6 +2764,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "MIN-F/MIN-H merged; remaining: MIN-G"
     }
    ],
    "target_build": "17"
@@ -16164,7 +16169,7 @@
    "id": "MIN-F",
    "title": "Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -16173,10 +16178,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "underground_ext_test 113; underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3538, start 499, play 37, parity 55",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "e929446"
+   ],
    "parent": "EXP-A",
    "depends_on": [
     "MIN-E"
@@ -16208,11 +16215,300 @@
      "date": "2026-10-20",
      "change": "roadmap: 17 (depends on MIN-A)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit e929446; tests",
+     "why": "Built on wip/b17-minf (e929446) and merged: tunnel cutting, timber supports, track, minecarts, cutaway level views; underground_ext_test 113 and 12 related suites 0 failures on the merged code; screenshots looked at by the lead (gallery with track, support and minecart readable; cut cells look like the old floor); villagers can do it all but none decides to (owner question MIN-F-Q2)"
     }
    ],
    "target_build": "17",
    "roadmap_gate": "depends on MIN-A",
    "roadmap_reason": "open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7)"
+  },
+  {
+   "id": "MIN-F-Q1",
+   "title": "Should unsupported spans collapse, supports decay and need repair, and ventilation and lighting be real needs?",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Should unsupported spans collapse, supports decay and need repair, and ventilation and lighting be real needs?",
+   "source": "docs/build17/MIN_F_UNDERGROUND.md",
+   "approval": "open owner question from MIN-F",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "Owner decision recorded; implementation under MIN-F2",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F_UNDERGROUND.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md); implementation is MIN-F2"
+    }
+   ],
+   "target_build": "owner decision",
+   "owner_answer": "Unsupported tunnels can collapse; timber supports deteriorate and need maintenance, repair or replacement with real labour and materials; collapses obstruct passages and are cleared by real excavation; local stability evaluation; numbers are balance parameters, not owner policy."
+  },
+  {
+   "id": "MIN-F-Q2",
+   "title": "Should tunnelling find hidden underground deposits, the manor post tunnelling and track jobs, and the carpenter make supports and track to sell (no villager tunnels on its own now)?",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Should tunnelling find hidden underground deposits, the manor post tunnelling and track jobs, and the carpenter make supports and track to sell (no villager tunnels on its own now)?",
+   "source": "docs/build17/MIN_F_UNDERGROUND.md",
+   "approval": "open owner question from MIN-F",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "Owner decision recorded; implementation under MIN-F2",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F_UNDERGROUND.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md); implementation is MIN-F2"
+    }
+   ],
+   "target_build": "owner decision",
+   "owner_answer": "Tunnelling may expose hidden ore that exists in the deterministic world state beforehand, as ordinary seams with existing depletion; the manor may post paid tunnelling work through the existing job system from real funds; no mining wage economy."
+  },
+  {
+   "id": "MIN-F-Q3",
+   "title": "Should miners haul by minecart instead of carrying?",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Should miners haul by minecart instead of carrying?",
+   "source": "docs/build17/MIN_F_UNDERGROUND.md",
+   "approval": "open owner question from MIN-F",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "Owner decision recorded; implementation under MIN-F2",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F_UNDERGROUND.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md); implementation is MIN-F2"
+    }
+   ],
+   "target_build": "owner decision",
+   "owner_answer": "Miners prefer a minecart when a usable cart with capacity and a connected track route gives a practical hauling advantage, otherwise carry; capacity reserved so two workers don't claim the same cart; no forced detours."
+  },
+  {
+   "id": "MIN-F-Q4",
+   "title": "Should there be shafts between underground levels?",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Should there be shafts between underground levels?",
+   "source": "docs/build17/MIN_F_UNDERGROUND.md",
+   "approval": "open owner question from MIN-F",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "Owner decision recorded; implementation under MIN-F2",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F_UNDERGROUND.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md); implementation is MIN-F2"
+    }
+   ],
+   "target_build": "owner decision",
+   "owner_answer": "Multiple underground levels connected by physically excavated vertical shafts with access equipment (e.g. ladders); villagers travel through them; carts and cargo change level only by a physical mechanism; shafts in stability and saves; bounded levels."
+  },
+  {
+   "id": "MIN-F-Q5",
+   "title": "Should spoil be allowed back into tunnels below ground?",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Should spoil be allowed back into tunnels below ground?",
+   "source": "docs/build17/MIN_F_UNDERGROUND.md",
+   "approval": "open owner question from MIN-F",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "Owner decision recorded; implementation under MIN-F2",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F_UNDERGROUND.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md); implementation is MIN-F2"
+    }
+   ],
+   "target_build": "owner decision",
+   "owner_answer": "Tunnels may be backfilled with spoil only when the player selects the target (a Backfill Tunnel action); workers may take the player's order through the job system; no autonomous or manor backfill; real spoil hauled; filled passages block travel; limited stability benefit; placed fill tracked as fill, never ore; interruptions keep placed fill."
+  },
+  {
+   "id": "MIN-F2",
+   "title": "Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "These decisions are approved gameplay requirements, not suggestions or provisional design options.",
+   "description": "Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling",
+   "source": "docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Each of the five decisions implemented with existing systems and the focused tests of section 10 (1-11)",
+    "Conservation, determinism and save integrity; no autonomous backfill",
+    "Report per section 11"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "MIN-G",
@@ -16272,7 +16568,7 @@
    "id": "MIN-H",
    "title": "Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence)",
    "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
@@ -16281,11 +16577,12 @@
     "Architecture selected by the owner from the A/B/C comparison; player and NPC movement, mining, transport, transitions, saves and rendering underground; the same deposit system as the surface"
    ],
    "implementation": "",
-   "tests": "underground_test 95",
+   "tests": "underground_ext_test, underground_test",
    "playtest": [],
    "branch": "",
    "commits": [
-    "a659f42"
+    "a659f42",
+    "e929446"
    ],
    "parent": null,
    "depends_on": [],
@@ -16318,6 +16615,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit a659f42; tests",
      "why": "Audit 2026-10-21: the MIN-A adit gallery is an enterable underground level tied to a surface portal, with NPC pathing through the level router, the surface fading when the player is below, and persistence (save v17); natural caves and further underground spaces are not built (MIN-F)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit e929446; tests",
+     "why": "The natural cave (level -2, its own mouth, three ordinary seams, NPC pathing, persistence) completes MIN-H with the MIN-A gallery; screenshot looked at by the lead: readable, flat placeholder floor art"
     }
    ],
    "target_build": "17",
