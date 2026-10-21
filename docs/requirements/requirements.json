@@ -19172,7 +19172,7 @@
     },
     {
      "date": "2026-10-21",
-     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit PENDING; tests; target_build",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit a79b5b4; tests; target_build",
      "why": "quests.json marks work_the_mine retired; quests.gd never offers, hires or accepts a retired template; run_tests 3544, start_test 499, play_test 37, 0 failures"
     }
    ],
