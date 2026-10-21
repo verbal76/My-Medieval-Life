@@ -540,12 +540,11 @@ func plan(n: NPC) -> bool:
 			if not n.inv.has("pickaxe"):
 				release(j)
 				return false
-			var d: Dictionary = w.nearest_deposit(n.cell(), ["stone"])
+			var d: Dictionary = w.nearest_seam(n, ["stone"])          # MIN-A: the gallery's stone too
 			if d.is_empty():
 				release(j)
 				return false
-			var at := Vector2i(d.x, d.y)
-			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), "mj_mine", {"job": int(j.id), "x": d.x, "y": d.y}, "work", at)]
+			n.plan = b.seam_steps(n, d, "mj_mine", {"job": int(j.id)})
 		"mend":
 			var at := step_cell(j)
 			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(cfg("mend_minutes")), "mj_step", {"job": int(j.id)}, "work", at)]
@@ -568,7 +567,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 	if j.is_empty() or j.taker != World.npc_ref(n.id):
 		return true
 	if what == "mj_mine":
-		var d: Dictionary = w.deposit_at(Vector2i(int(a.x), int(a.y)))
+		var d: Dictionary = w.deposit_at(Vector2i(int(a.x), int(a.y)), int(a.get("level", 0)))
 		if d.is_empty() or not mine_into(j, n, d):
 			return true             # the seam is gone: the next plan finds another
 		return true

@@ -1770,7 +1770,7 @@ func _route_step(_delta: float) -> Vector2:
 func _talk_step() -> void:
 	if talk_to == null:
 		return
-	if not talk_to.alive or _covered(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0:
+	if not talk_to.alive or _covered(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0 or talk_to.depth != world.player_level:     # MIN-A: not through rock
 		talk_to = null
 		move_to = Vector2.INF
 		return
@@ -2793,6 +2793,8 @@ func _foe_in_reach() -> Object:
 ## Mark a person or animal with the sword and strike it: the player walks over if needed. Each
 ## further tap (or right-click) on it is another strike; picking someone else moves the sword.
 func strike(who: Object) -> void:
+	if who is NPC and (who as NPC).depth != world.player_level:
+		return                             # MIN-A: rock lies between them
 	chase = who
 	strike_pending = true
 
@@ -4186,7 +4188,7 @@ func _gather_stand(d: Dictionary, ref) -> Vector2:
 	var cell := ResourceNodes.cell_of(world, d, ref)
 	if str(d.match.kind) == "plant":
 		return Vector2(cell) + Vector2(0.5, 0.5)          # plants are walked on: pick them standing there
-	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)))) + Vector2(0.5, 0.5)
+	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)), world.player_level)) + Vector2(0.5, 0.5)
 
 
 func _gather_target(d: Dictionary, ref) -> Dictionary:
@@ -4312,12 +4314,23 @@ func _tap_below(wpos: Vector2) -> bool:
 	talk_to = null
 	reach_to = Vector2.INF
 	portal_goal = {}
+	if gather_mode:
+		var hit := ResourceNodes.node_at(world, Vector2i(floori(wpos.x), floori(wpos.y)), true)     # the level's seams
+		if hit.is_empty():
+			_gain("Nothing to gather there")
+		else:
+			select_resource(hit, true)
+		return true
 	var pile := _loot_at(wpos)
 	if pile != Vector2.INF:
 		reach_to = pile
 		move_to = pile if pile.distance_to(world.player.pos) > 1.2 else Vector2.INF
 		if move_to == Vector2.INF:
 			_reach_step()
+		return true
+	var who := world.present(wpos, 0.8)          # a villager working below (World.present sees the tapped point's level)
+	if not who.is_empty() and (who[0] as NPC).depth == world.player_level:
+		talk_to = who[0]                         # walk up to them and talk
 		return true
 	if wpos.distance_to(world.player.pos) < 1.8:
 		player_sprite.face(wpos - world.player.pos)
@@ -4335,6 +4348,9 @@ func _find_target_below() -> void:
 	var p := world.player
 	var probe := p.pos + facing_vec() * 0.9
 	var cands: Array = []
+	for n: NPC in world.present(p.pos, 2.5):        # villagers working on this level (World.present: one level)
+		if n.pos.distance_to(probe) < 1.5:
+			cands.append({"kind": "npc", "npc": n, "label": ("%s is asleep" % _who(n)) if world.asleep(n) else "Talk to %s" % _who(n)})
 	for i in world.loot.size():
 		var l: Dictionary = world.loot[i]
 		if World.level_of(l) != world.player_level:
@@ -4376,16 +4392,22 @@ func _sync_levels(delta: float) -> void:
 	for i in loot_nodes.size():
 		if i < world.loot.size():
 			loot_nodes[i].visible = World.level_of(world.loot[i]) == world.player_level
+	# villagers show on their own level: those on the surface fade with it, those below with the level shown
+	var surf := 1.0 - level_alpha
+	for n: NPC in world.npcs:
+		var s: ActorSprite = sprites.get(n.id)
+		if s != null:
+			s.modulate.a = surf if n.depth == 0 else (level_alpha if n.depth == level_shown else 0.0)
+		var b = bubbles.get(n.id)
+		if b != null and is_instance_valid(b):
+			b.visible = n.depth == world.player_level
 	if level_alpha == 0.0 and was == 0.0:
 		return
-	var surf := 1.0 - level_alpha
 	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
 	fade.append_array(view.sorted_of.values())
-	fade.append_array(sprites.values())
 	fade.append_array(animal_sprites.values())
 	fade.append_array(cart_sprites.values())
 	fade.append_array(house_signs.values())
 	for node in fade:
 		if is_instance_valid(node):
 			(node as CanvasItem).modulate.a = surf
-	bubble_layer.visible = surf > 0.5

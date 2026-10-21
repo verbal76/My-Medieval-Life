@@ -29,6 +29,8 @@ func _init() -> void:
 	_test_mining_below()
 	_test_save_load()
 	_test_surface_unchanged()
+	_test_villagers_below()
+	_test_across_levels()
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	main.save_path = TEST_SAVE
@@ -158,7 +160,7 @@ func _test_mining_below() -> void:
 	check(w.deposit_at(c, -1) == seam and w.deposit_at(c).is_empty(), "a seam below is found on its level only, not on the surface above it")
 	check(w.nearest_deposit(c, ["iron_ore"]).get("level", 0) == 0 and w.nearest_deposit(c, ["iron_ore"], -1) == seam,
 			"the nearest seam is looked for on one level (the surface unless named)")
-	check(not w.villagers_reach(seam) and w.villagers_reach(w.deposits[0]), "villagers cannot reach the gallery yet; the surface's seams they can")
+	check(w.villagers_reach(seam) and w.villagers_reach(w.deposits[0]) and w.villager_levels == [0, -1], "villagers reach the gallery's seams and the surface's")
 	var node := ResourceNodes.def_for_deposit(seam)
 	check(not node.is_empty() and str(node.id) == "iron_seam", "a seam below is the same resource node as on the surface (iron_seam)")
 	p.inv.add("pickaxe")
@@ -252,20 +254,184 @@ func _test_surface_unchanged() -> void:
 		if int(surface[i].x) != int(orig[i].x) or int(surface[i].y) != int(orig[i].y) or str(surface[i].ore) != str(orig[i].ore) or surface[i].has("level"):
 			same = false
 	check(same, "the village's own seams are unchanged and come first, with no level field")
-	# the same world without the gallery's seams: villagers' sums and a short run are identical
+	# villagers reach the gallery now: its ore counts in the labour market and the village's ore left
 	var v := _world(5)
 	v.deposits = v.deposits.filter(func(d): return World.level_of(d) == 0)
-	check(w.brain.job_market().miner.open == v.brain.job_market().miner.open and w.quests.deposit_left("stone") == v.quests.deposit_left("stone")
-			and w.quests.deposit_left("iron_ore") == v.quests.deposit_left("iron_ore"), "the labour market and the village's ore left ignore seams no villager can reach")
+	var below_stone := 0
+	for d in w.deposits:
+		if World.level_of(d) == -1 and d.ore == "stone":
+			below_stone += int(d.amount)
+	check(w.quests.deposit_left("stone") == v.quests.deposit_left("stone") + below_stone and w.brain.job_market().miner.open >= v.brain.job_market().miner.open,
+			"the gallery's ore counts as the village's own (deposit_left, the labour market's miner places)")
+	var w2 := _world(5)
 	for k in 480:
 		w.update(0.5)
-		v.update(0.5)
-	var fw := _surface_print(w)
-	var fv := _surface_print(v)
-	check(fw == fv, "a short run (%d game minutes) is identical with and without the gallery's seams" % int(w.minutes - 420.0))
+		w2.update(0.5)
+	check(_surface_print(w) == _surface_print(w2) and JSON.stringify(w.deposits) == JSON.stringify(w2.deposits),
+			"two worlds of one seed run identically with villagers free to go below (%d game minutes)" % int(w.minutes - 420.0))
 	var st := w.rng.state
 	Underground.create(w.seed, w.map)
 	check(w.rng.state == st, "making the gallery draws nothing from the world's random stream")
+
+
+# ---------------------------------------------------------------- villagers below -------------
+## Every seam on the surface worked out but the gallery's: a miner walks in through the adit, mines a gallery seam by
+## the same swing, carries the ore out and sells it; saved and loaded while below, the trip goes on; every unit taken
+## is counted; and every villager's level agrees with where they stand all the while.
+func _test_villagers_below() -> void:
+	var w := _world(1)
+	for d in w.deposits:
+		if World.level_of(d) == 0:
+			d.amount = 0
+	var start := {}
+	for d in w.deposits:
+		start["%d,%d,%d" % [World.level_of(d), int(d.x), int(d.y)]] = int(d.amount)
+	var miner: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "miner":
+			miner = n
+			break
+	check(miner != null, "the village has a miner")
+	if miner == null:
+		return
+	var mined0 := {}
+	for o in ["iron_ore", "coal", "copper_ore", "stone"]:
+		mined0[o] = int(w.stats.get("mined_" + o, 0))
+	var went_below := false
+	var mined_below := false
+	var came_up_with_ore := false
+	var sold := false
+	var saved := {}
+	var bad_level := 0
+	var ore_of := func(n: NPC) -> int: return n.inv.count("iron_ore") + n.inv.count("coal") + n.inv.count("copper_ore") + n.inv.count("stone")
+	var last_ore: int = ore_of.call(miner)
+	var last_coins := miner.coins
+	for k in 6000:
+		w.update(0.5)
+		for n: NPC in w.npcs:
+			if n.alive and n.depth != w.level_at(n.pos):
+				bad_level += 1
+			if n.alive and n.depth != 0 and w.underground.is_solid(n.depth, n.cell()):
+				bad_level += 1
+		var ore: int = ore_of.call(miner)
+		if miner.depth == -1:
+			went_below = true
+			if saved.is_empty():
+				saved = JSON.parse_string(JSON.stringify(w.to_dict()))
+			if ore > last_ore:
+				mined_below = true
+		elif mined_below and ore > 0:
+			came_up_with_ore = true
+		if came_up_with_ore and miner.depth == 0 and ore < last_ore and miner.coins > last_coins:
+			sold = true
+		last_ore = ore
+		last_coins = miner.coins
+		if sold:
+			break
+	check(went_below, "a miner walks through the adit into the gallery when the surface's seams are worked out")
+	check(mined_below, "they mine a gallery seam there")
+	check(came_up_with_ore, "they carry the ore back out through the adit")
+	check(sold, "and sell it (%s)" % miner.doing)
+	check(bad_level == 0, "every villager's level agrees with the ground they stand on, all the way (%d disagreements)" % bad_level)
+	check(int(w.stats.get("portal_crossings", 0)) >= 2, "the crossings are counted (%d)" % int(w.stats.get("portal_crossings", 0)))
+	# conservation: every unit that left a seam is counted mined, seam by seam on both levels
+	var fell := {}
+	var fell_below := 0
+	for d in w.deposits:
+		var k := "%d,%d,%d" % [World.level_of(d), int(d.x), int(d.y)]
+		var f: int = int(start.get(k, int(d.amount))) - int(d.amount)
+		if f < 0:
+			check(false, "seam %s never refills" % k)
+		fell[d.ore] = int(fell.get(d.ore, 0)) + f
+		if World.level_of(d) == -1:
+			fell_below += f
+	var ledger_ok := true
+	for o in mined0:
+		if int(fell.get(o, 0)) != int(w.stats.get("mined_" + o, 0)) - int(mined0[o]):
+			ledger_ok = false
+			print("  ", o, ": seams fell ", fell.get(o, 0), ", mined ", int(w.stats.get("mined_" + o, 0)) - int(mined0[o]))
+	check(ledger_ok and fell_below > 0, "every unit taken below is counted mined_<ore>, unit for unit (%d from the gallery)" % fell_below)
+	# saved while the miner was below: the load keeps them below, and the trip goes on from there
+	check(not saved.is_empty(), "a save was made with the miner below")
+	if saved.is_empty():
+		return
+	var mid: Dictionary = (saved.npcs as Array).filter(func(x): return int(x.id) == miner.id)[0]
+	check(int(mid.get("level", 0)) == -1, "the save holds the miner's level")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), saved)
+	var m3: NPC = w3.npc(miner.id)
+	check(m3.depth == -1 and m3.pos.is_equal_approx(Vector2(float(mid.pos[0]), float(mid.pos[1]))), "loaded, the miner is below, where they were")
+	var up := false
+	for k in 4000:
+		w3.update(0.5)
+		if m3.depth == 0:
+			up = true
+			break
+	check(up and m3.alive, "after the load the miner finds the way out again (%s)" % m3.doing)
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w3.to_dict())))
+	check(JSON.stringify(w4.to_dict().npcs) == JSON.stringify(w3.to_dict().npcs), "saved again, the villagers and their levels are unchanged")
+
+
+## Nothing acts across levels: awareness, reach, fights, animals' aggression, bandits' prey, chat and loot.
+func _test_across_levels() -> void:
+	var w := _world(2)
+	var lm: LevelMap = w.underground.maps[0]
+	var below_cell: Vector2i = lm.floor_cells()[0]
+	var a: NPC = null
+	var b: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.job != "guard":
+			if a == null:
+				a = n
+			elif b == null:
+				b = n
+	a.depth = -1
+	a.pos = Vector2(below_cell) + Vector2(0.5, 0.5)
+	a.plan.clear()
+	# b stands on the surface at the hill's foot, the nearest a surface walker can come
+	var foot := Vector2i(48, 10)
+	b.pos = Vector2(foot) + Vector2(0.5, 0.5)
+	var at_mouth := Vector2(48.5, 9.5)            # the gallery's inner stand, one cell from b
+	a.pos = at_mouth
+	check(w.level_at(a.pos) == -1 and w.level_at(b.pos) == 0, "the gallery's mouth is below, the stand before it above")
+	check(not w.near(b.pos, 10.0).has(a) and not w.present(b.pos, 10.0).has(a) and not w.near(a.pos, 10.0).has(b) and not w.present(a.pos, 10.0).has(b),
+			"neither sees nor reaches the other through the rock (near, present)")
+	check(not w.reaches(b.pos, a.pos) and not w.reaches(a.pos, b.pos), "no reach across levels")
+	a.target = b.id
+	w.brain.fight(a, 0.1)
+	check(a.target == -1, "a fight across levels ends at once")
+	b.target = -2
+	w.player.pos = Vector2(below_cell) + Vector2(0.5, 0.5)
+	w.player_level = -1
+	w.brain.fight(b, 0.1)
+	check(b.target == -1, "nobody on the surface fights the player below")
+	check(w.fauna._foe_pos("player") == Vector2.INF and w.fauna._foe_pos("npc:%d" % a.id) == Vector2.INF and w.fauna._foe_pos("npc:%d" % b.id) != Vector2.INF,
+			"animals (on the surface) cannot go for anyone below")
+	var bandit: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "bandit":
+			bandit = n
+			break
+	if bandit != null:
+		bandit.pos = b.pos + Vector2(1, 0)
+		check(w.brain._prey_for(bandit) != w.player, "a bandit does not prey on the player below")
+	# loot left below is not the guards'
+	var bag := Inventory.new()
+	bag.add("coal", 1)
+	w.loot.append({"pos": at_mouth, "inv": bag, "coins": 9, "from": "dropped by test", "level": -1, "t": -1.0e6})
+	var guard: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "guard":
+			guard = n
+			break
+	if guard != null:
+		guard.pos = b.pos
+		check(w.brain._loot_to_recover(guard).is_empty(), "a guard does not recover coins lying below")
+	# a villager below is drawn in the gallery only: World tells their level, the surface's rules leave them alone
+	w.player_level = 0
+	w.player.pos = b.pos
+	check(not w.near(w.player.pos, float(GameData.b("witness_radius"))).has(a), "no witness below sees what the player does above")
 
 
 func _surface_print(w: World) -> String:
@@ -316,6 +482,9 @@ func _run_scene() -> void:
 	p.inv.add("pickaxe")
 	main._find_target()
 	check(str(main.target.get("kind", "")) == "deposit" and main.target.dep == seam, "below, the seam in front is the target (%s)" % str(main.target.get("label", "")))
+	var hit := ResourceNodes.node_at(w, Vector2i(seam.x, seam.y), true)
+	var gs: Vector2 = main._gather_stand(hit.get("def", {}), seam) if not hit.is_empty() else Vector2.INF
+	check(not hit.is_empty() and hit.ref == seam and not lm.is_solid(Vector2i(gs.floor())), "Gather mode below finds the level's seam and a stand on the level's floor beside it")
 	var before := int(seam.amount)
 	main.interact()
 	var guard := 0

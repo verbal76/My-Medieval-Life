@@ -77,6 +77,44 @@ func portal_from(level: int, cell: Vector2i, dir: Vector2) -> Dictionary:
 	return {}
 
 
+## The first crossing on the way from level `from` to level `to` (the level router: a breadth-first search over the
+## portals, which are few): {portal, from: the end to walk to on `from`, to: the end arrived at}, or {} if no way.
+## Portals are taken in their sorted order, so the route is the same on every machine.
+func next_leg(from: int, to: int) -> Dictionary:
+	if from == to:
+		return {}
+	var first := {from: {}}
+	var queue := [from]
+	var qi := 0
+	while qi < queue.size():
+		var lv: int = queue[qi]
+		qi += 1
+		for p in portals:
+			for i in 2:
+				var e: Dictionary = p.ends[i]
+				var o: Dictionary = p.ends[1 - i]
+				if int(e.level) != lv or first.has(int(o.level)):
+					continue
+				var leg: Dictionary = first[lv] if lv != from else {"portal": p, "from": e, "to": o}
+				first[int(o.level)] = leg
+				if int(o.level) == to:
+					return leg
+				queue.append(int(o.level))
+	return {}
+
+
+## The level a point lies on as far as the ground can tell: the floor of a level map, and the rock walls beside it
+## (where its seams are), under the surface's static rock are that level's (the galleries lie only there, with a cell
+## of rock all round their floor, MIN-A); anything else is the surface's. Not for stacked levels (one level so far).
+func level_at(village: VillageMap, c: Vector2i) -> int:
+	for m: LevelMap in maps:
+		if not m.in_level(c) or not _static_solid(village, c):
+			continue
+		if not m.is_solid(c) or m._touches_floor(c):
+			return m.level
+	return SURFACE
+
+
 ## The end of a portal on `level` whose door is `cell` ({} none): a tap on the adit means "go in".
 func portal_door(level: int, cell: Vector2i) -> Dictionary:
 	for p in portals:

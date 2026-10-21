@@ -84,7 +84,11 @@ func _init(world: World) -> void:
 
 
 # ---------------------------------------------------------------- plan helpers ---------------
-func go(c: Vector2i, speed := 1.0) -> Dictionary:
+## A walk to cell `c` on `level` (MIN-A: World._walk routes it through a portal when the walker is on another level;
+## the key is left out on the surface, so surface plans are as they were).
+func go(c: Vector2i, speed := 1.0, level := 0) -> Dictionary:
+	if level != 0:
+		return {"k": "go", "to": c, "speed": speed, "level": level}
 	return {"k": "go", "to": c, "speed": speed}
 
 
@@ -128,12 +132,12 @@ func doit(act: String, args := {}) -> Dictionary:
 	return {"k": "do", "act": act, "args": args}
 
 
-func beside(c: Vector2i, from: Vector2i) -> Vector2i:
+func beside(c: Vector2i, from: Vector2i, level := 0) -> Vector2i:
 	var best := c
 	var bd := 1e9
 	for d in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1)]:
 		var n: Vector2i = c + d
-		if not w.map.is_solid(n):
+		if not (w.map.is_solid(n) if level == 0 else w.underground.is_solid(level, n)):      # MIN-A: on the seam's own level
 			var dd := from.distance_to(n)
 			if dd < bd:
 				bd = dd
@@ -999,7 +1003,7 @@ func _miner(n: NPC) -> bool:
 	if carried >= int(GameData.b("carry_ore")):
 		return _plan_sell_all(n)       # sells whatever has a buyer first
 	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null and _can_mine(n, o))
-	var d: Dictionary = w.nearest_deposit(n.cell(), ores) if not ores.is_empty() else {}
+	var d: Dictionary = w.nearest_seam(n, ores) if not ores.is_empty() else {}        # MIN-A: the gallery's seams too
 	if d.is_empty():
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
@@ -1007,19 +1011,32 @@ func _miner(n: NPC) -> bool:
 			if _buyer_for(n, o) != null and _can_mine(n, o):
 				sellable.append(o)
 		if not sellable.is_empty():
-			d = w.nearest_deposit(n.cell(), sellable)
+			d = w.nearest_seam(n, sellable)
 	if d.is_empty():
 		if carried > 0:
 			return _plan_sell_all(n)
-		if w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
+		if w.nearest_seam(n, ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
 			# the mine is worked out: the manor takes on those who lose their living
 			_change_job(n, "manor_hand", "the mine is worked out")
 			return false
 		return _idle_at_work(n, "waiting for ore buyers")
-	var at := Vector2i(d.x, d.y)
 	n.doing = "mining %s" % GameData.item_name(d.ore).to_lower()
-	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), "mine", {"x": d.x, "y": d.y}, "work", at)]
+	n.plan = seam_steps(n, d, "mine", {})
 	return true
+
+
+## MIN-A: the steps to work seam `d` on whatever level it lies: walk beside it on its level (the router takes the
+## walker through the portal) and swing; the act's args name the seam by level and cell.
+func seam_steps(n: NPC, d: Dictionary, act: String, args: Dictionary) -> Array:
+	var at := Vector2i(d.x, d.y)
+	var lv := World.level_of(d)
+	var a := args.duplicate()
+	a.x = d.x
+	a.y = d.y
+	if lv != 0:
+		a.level = lv
+	var from := n.cell() if n.depth == lv else at
+	return [go(beside(at, from, lv), 1.0, lv), work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), act, a, "work", at)]
 
 
 ## PAR-01: whether `n` may work a seam of `ore` (gold ore needs Mining level 3, as for the player).
@@ -1523,12 +1540,12 @@ func _clan_child(n: NPC, h: float) -> void:
 
 
 func _prey_for(n: NPC):
-	if w.player.alive and w.player.pos.distance_to(n.pos) < 18.0:
+	if w.player.alive and w.player.pos.distance_to(n.pos) < 18.0 and w.player_level == n.depth:
 		return w.player
 	var best = null
 	var bd := 40.0
 	for o: NPC in w.npcs:
-		if not o.alive or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
+		if not o.alive or o.depth != n.depth or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
 			continue
 		if _guard_near(o.pos, 14.0):
 			continue
@@ -1955,7 +1972,7 @@ func _most(n: NPC, ids: Array) -> String:
 
 func _guard_near(p: Vector2, r: float) -> bool:
 	for o: NPC in w.npcs:
-		if o.alive and o.job == "guard" and not w.asleep(o) and o.pos.distance_to(p) <= r:
+		if o.alive and o.job == "guard" and not w.asleep(o) and o.pos.distance_to(p) <= r and o.depth == w.level_at(p):     # MIN-A: one level
 			return true
 	return false
 
@@ -1964,7 +1981,7 @@ func _guard_near(p: Vector2, r: float) -> bool:
 func _bandit_seen(n: NPC) -> NPC:
 	var here := w.place_of(n.pos)
 	for o: NPC in w.npcs:
-		if o.alive and o.role == "bandit" and o.pos.distance_to(n.pos) <= float(GameData.b("witness_radius")) and w.place_of(o.pos) == here:
+		if o.alive and o.role == "bandit" and o.pos.distance_to(n.pos) <= float(GameData.b("witness_radius")) and w.place_of(o.pos) == here and o.depth == n.depth:
 			return o
 	return null
 
@@ -2222,7 +2239,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			w.deal_xp(b, n, paid)
 			return true
 		"mine":
-			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)))
+			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)), int(a.get("level", 0)))
 			var r := w.work_mine(n, d, n.inv)                   # the player's swing (PAR-01)
 			if r.result != "ok":
 				return false
@@ -2362,12 +2379,12 @@ func fight(n: NPC, dt: float) -> void:
 	var tnpc: NPC = null
 	if n.target == -2:
 		tpos = w.player.pos
-		tdead = not w.player.alive
+		tdead = not w.player.alive or w.player_level != n.depth        # MIN-A: rock between them
 	else:
 		tnpc = w.npc(n.target)
 		# gone, or into a building the fighter is not in (a door between them); a sleeper is still
-		# a target (owner rule: sleeping is not immunity) and wakes when struck
-		if tnpc == null or not tnpc.alive or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)):
+		# a target (owner rule: sleeping is not immunity) and wakes when struck; or on another level (MIN-A)
+		if tnpc == null or not tnpc.alive or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)) or tnpc.depth != n.depth:
 			tdead = true
 		else:
 			tpos = tnpc.pos

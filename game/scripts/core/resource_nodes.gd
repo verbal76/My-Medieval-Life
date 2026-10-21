@@ -136,12 +136,15 @@ static func instances(world: World, d: Dictionary) -> Array:
 ## seam, a stump, a field not ripe, the keeper's animals) are found too: can_harvest says why.
 ## `exact`: only the cell itself (a tap or click names one thing; a tree counts on its trunk and
 ## the canopy cell above it, World.tree_at).
+## It looks on the level the player is on (MIN-A): below the surface only the level's seams are there.
 static func node_at(world: World, cell: Vector2i, exact := false) -> Dictionary:
 	for dc: Vector2i in ([Vector2i.ZERO] if exact else NEIGHBOURS):
 		var c: Vector2i = cell + dc
-		var dep := world.deposit_at(c)
+		var dep := world.deposit_at(c, world.player_level)
 		if not dep.is_empty():
 			return _found(def_for_deposit(dep), dep)
+		if world.player_level != 0:
+			continue
 		var t := world.tree_at(c)
 		if not t.is_empty():
 			return _found(def_for("tree"), t)
