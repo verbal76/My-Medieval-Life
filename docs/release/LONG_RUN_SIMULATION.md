@@ -1,5 +1,10 @@
 # Long-run economy simulation (Build 7 rules)
 
+> **Current policy (owner, 2026-10-21, SIM-01, permanent):** run the longest required duration once per seed and read the
+> 10/30/90/100-day results from that run's checkpoints (`--every`), not from separate runs; a broken ledger stops the run at
+> the checkpoint where it is seen (`FATAL day N seed S` line, `reached` in the JSON). The separate 10/30/100/365-day runs
+> below are historical. See CLAUDE.md section 5.
+
 This report describes what the village does on its own over 10, 30, 100 and 365 game days, with
 no player activity. It is diagnostics only: no game parameter was changed, and nothing was tuned.
 Every number below is current behaviour on `staging/my-medieval-life` at `79ffeb7`, plus the

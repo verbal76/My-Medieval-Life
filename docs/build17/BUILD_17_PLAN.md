@@ -146,3 +146,6 @@ that rise and fall with prerequisites; E/F excavation conserves dirt and stone, 
 6. In parallel: DVW-B4 then REC-013 (`inventory.gd`, `items.json`, `carts.gd`; after MIN-B's quarry changes).
 7. MIN-E/F only if MIN-A settles an architecture; otherwise Build 20 or later.
 8. MIN-G last, with WDR-001-C, WDR-003-C, WDR-013-C through `tools/check_materials.py`.
+   MIN-G's long runs follow SIM-01 (owner, 2026-10-21): one monitored 365-day `economy_sim` run per seed (1-4, the
+   normal game) on the integrated commit, checkpoints every 10 days (days 30, 90, 100 read from it), stopped at the first
+   broken ledger; the determinism gate (`sim_gate`, seeds 1 and 2, days 10 and 30 from one run each) stays as it is.

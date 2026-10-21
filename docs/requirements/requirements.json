@@ -17593,7 +17593,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "After the MIN-EQUIP/MIN-COLLAPSE merge and the determinism re-baseline: one monitored 365-day economy_sim run per seed 1-4 on GitHub (long-sims.yml, every 10), checkpoints for days 30/90/100 (SIM-01); material checks",
    "priority": "future",
    "workstream": "expansion A",
    "superseded_by": null,
@@ -17608,6 +17608,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Plan consolidated under SIM-01: no separate 30/90/100-day runs"
     }
    ],
    "target_build": "17",
@@ -27196,6 +27201,50 @@
    "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
    "b16_class": "required",
    "complexity": "M"
+  },
+  {
+   "id": "SIM-B17",
+   "title": "SIM-01 in Build 17: one monitored longest run per seed, checkpoints for shorter milestones, stop at the first broken ledger",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Stop running redundant 30-, 90-, 100-, and 365-day simulations separately when they validate the same scenario. Instead, execute the longest required simulation once per required seed and monitor it continuously, with intermediate checkpoints.",
+   "description": "SIM-01 in Build 17: one monitored longest run per seed, checkpoints for shorter milestones, stop at the first broken ledger",
+   "source": "docs/directives/2026-10-21_continuous_long_run_simulation.md",
+   "approval": "Owner permanent directive 2026-10-21 (SIM-01 on staging)",
+   "acceptance": [
+    "economy_sim stops at the checkpoint where the currency or item ledger breaks, printing seed, day and the ledger state, and records the day reached",
+    "MIN-G runs one 365-day run per seed with checkpoints instead of separate durations; determinism comparisons keep their two runs",
+    "CLAUDE.md, the decision log, LONG_RUN_SIMULATION.md and the Build 17 plan state the policy"
+   ],
+   "implementation": "game/tests/economy_sim.gd (checkpoint stop, reached); CLAUDE.md section 5",
+   "tests": "economy_sim 3-day smoke",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_continuous_long_run_simulation.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests; target_build; implementation",
+     "why": "economy_sim: FATAL stop at a broken checkpoint and 'reached' in the JSON (3-day smoke run seed 1, leak 0, unchanged output); CLAUDE.md section 5, DECISIONS, LONG_RUN_SIMULATION.md and BUILD_17_PLAN updated; MIN-G planned as one 365-day run per seed"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "SJD-A",

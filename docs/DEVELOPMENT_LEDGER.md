@@ -18,11 +18,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 12 |
 | DEFERRED | 10 |
-| COMPLETE AND VERIFIED | 230 |
+| COMPLETE AND VERIFIED | 231 |
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **484** |
+| **Total approved** | **485** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 104 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 41 are open (status BLOCKED).
@@ -494,7 +494,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LOG-01 | Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe | docs/directives/2026-10-21_build17_rec013_final_decisions.md |  |  | Evaluate a narrow Build 17 change (assign an unclaimed delivery to an idle hand through the existing seek/plan path); otherwise schedule with JOB-02 |
 | MAINT-01 | Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work | docs/directives/2026-10-21_build17_rec013_final_decisions.md |  |  | Owner places it in a build; dependencies: construction, structural decay (DVW-B4, MIN-F2 supports), roads and regional routes (Expansion 18), village expansion (SET-D), the reeve and job board (JOB-02) |
-| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
+| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F | After the MIN-EQUIP/MIN-COLLAPSE merge and the determinism re-baseline: one monitored 365-day economy_sim run per seed 1-4 on GitHub (long-sims.yml, every 10), checkpoints for days 30/90/100 (SIM-01); material checks |
 | PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -714,7 +714,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (230)
+## COMPLETE AND VERIFIED (231)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -936,6 +936,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) | tools/check_resources.py 0 problems; GitHub release list |  |  |
 | SAVE-01 | Inspect and document the current save architecture before modifying it (requirement 1) | docs/directives/2026-10-20_two_decisions_three_expansions.md | n/a (document) |  |  |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `38b987e` |  |  |
+| SIM-B17 | SIM-01 in Build 17: one monitored longest run per seed, checkpoints for shorter milestones, stop at the first broken ledger | docs/directives/2026-10-21_continuous_long_run_simulation.md | economy_sim 3-day smoke |  |  |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves) |  | Implement with the owner's answers OD-27 (Q8-Q13, 2026-10-21); worker branch per the master directive |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves) |  |  |
 | STALL-03 | OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves) |  | Implement with the owner's answers OD-27 (Q8-Q13, 2026-10-21); worker branch per the master directive |

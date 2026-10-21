@@ -12,7 +12,8 @@ extends SceneTree
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
-## Exit code 1 if the currency or any item does not balance.
+## Exit code 1 if the currency or any item does not balance. SIM-01 (owner, 2026-10-21): run the longest duration once and
+## read days 30, 90, 100 from its checkpoints (--every); a ledger broken at a checkpoint stops the run there (FATAL line).
 
 const STEP := 0.5
 const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block", "log", "plank", "iron_bar", "copper_bar",
@@ -89,6 +90,7 @@ func _init() -> void:
 	w.map.profiling = profile
 	var update_us := 0
 	var harness_us := 0
+	var reached := days               # the day the run got to: `days`, or the checkpoint where a ledger broke
 	for d in days:
 		if scenario != "" and d == scenario_day:
 			_intervene(scenario)
@@ -114,6 +116,14 @@ func _init() -> void:
 			_print_sample(samples[-1])
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
+			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
+			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
+			var bad: Dictionary = samples[-1]
+			if int(bad.currency.leak) != 0 or not (bad.ledger.items as Dictionary).is_empty():
+				reached = d + 1
+				print("FATAL day %d seed %d: currency leak %d; items %s; deposits %s; animals %s" % [reached, seed, int(bad.currency.leak),
+					JSON.stringify(bad.ledger.items), JSON.stringify(bad.ledger.deposits), JSON.stringify(bad.ledger.animals)])
+				break
 	var secs := (Time.get_ticks_msec() - t0) / 1000.0
 	if profile:
 		_print_profile(update_us, harness_us, secs, days)
@@ -122,10 +132,10 @@ func _init() -> void:
 			if watch_lost.has(int(e[5])) and int(e[0]) >= watch_from - 2:
 				print("WATCH MISS ", str(e))
 	var final: Dictionary = samples[-1]
-	_print_final(final, start, seed, days, secs)
+	_print_final(final, start, seed, reached, secs)
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
-		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,
+		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
