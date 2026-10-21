@@ -29,7 +29,7 @@ const EFFECTS := {
 	"fireball_stamina": {"fmt": "Fireball costs %s less stamina", "mode": "less", "code": "scripts/main.gd"},
 	"price_bonus": {"fmt": "%s better prices (buying and selling)", "mode": "pct", "code": "scripts/core/world.gd"},
 	"pickpocket_steps": {"fmt": "pickpocket chance %s", "mode": "pickpocket", "code": "scripts/core/world.gd"},
-	"guard_radius": {"fmt": "a guard hears a caught try only within %s of the usual distance", "mode": "pct", "code": "scripts/core/world.gd"},
+	"guard_radius": {"fmt": "a caught try is seen only within %s of the usual distance", "mode": "pct", "code": "scripts/core/world.gd"},
 }
 
 

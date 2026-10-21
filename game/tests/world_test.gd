@@ -493,6 +493,7 @@ func _pl_gameplay() -> void:
 	_player_gain()
 	_par02_reserve()
 	_par05_awareness()
+	_pick01_reports()
 	_par03_rest()
 	_pl2_006()
 	_pl2_007()
@@ -751,6 +752,82 @@ func _par05_awareness() -> void:
 		n.hp = k[2]
 		n.anim = k[3]
 	p.pos = p0
+
+
+## PICK-01 (owner OD-20, 2026-10-21): a caught pickpocket is reported by the victim and those who saw it, through
+## PAR-05's report rules; there is no cry a guard hears, and a pocket picked unseen is known to no guard.
+func _pick01_reports() -> void:
+	var w: World = main.world
+	var p := w.player
+	var keep := {}
+	for n: NPC in w.npcs:
+		keep[n.id] = [n.pos, n.target, n.hp, n.anim, n.report.duplicate()]
+	var p0 := [p.pos, p.coins]
+	var bal := [GameData.b("pickpocket_chance"), GameData.b("pickpocket_chance_per_level"), GameData.b("pickpocket_chance_max")]
+	var at := Vector2(w.bandit_camp) + Vector2(0.5, 8.5)
+	var guard: NPC = null
+	var victim: NPC = null
+	var wit: NPC = null
+	for n: NPC in w.npcs:
+		n.plan.clear()
+		n.target = -1
+		n.report = {}
+		n.pos = Vector2(116.5, 86.5)                 # everyone far away
+		if n.alive and n.job == "guard" and guard == null:
+			guard = n
+		elif n.alive and n.role == "adult" and n.job != "guard" and victim == null:
+			victim = n
+		elif n.alive and n.role == "adult" and n.job != "guard" and wit == null:
+			wit = n
+	for n: NPC in [guard, victim, wit]:
+		n.anim = "idle"
+	p.pos = at
+	victim.pos = at + Vector2(0.8, 0)
+	# beyond sight, but within the old cry's guard_call_radius: the guard would have heard it before
+	var r := float(GameData.b("witness_radius"))
+	guard.pos = at + Vector2(minf(r + 3.0, float(GameData.b("guard_call_radius")) - 0.5), 0)
+	check(w.place_of(at) == "" and w.place_of(guard.pos) == "" and not w.near(p.pos, r).has(guard), "PICK-01: the test ground is outdoors, the guard out of sight")
+	# a pocket picked unseen: nobody reports it, no guard knows
+	GameData.balance.pickpocket_chance = 1.0
+	GameData.balance.pickpocket_chance_max = 1.0
+	victim.coins = 10
+	var res := w.pickpocket(victim)
+	check(res.ok and w.npcs.all(func(o): return o.report.is_empty()) and guard.target == -1, "PICK-01: a pocket picked unseen is reported by nobody and known to no guard")
+	# caught, with a witness and no guard in sight: no cry, the victim and the witness will report it
+	GameData.balance.pickpocket_chance = 0.0
+	GameData.balance.pickpocket_chance_per_level = 0.0
+	wit.pos = at + Vector2(0, 2.0)
+	p.coins = 40
+	var delivered0 := int(w.stats.get("theft_reports_delivered", 0))
+	res = w.pickpocket(victim)
+	check(not res.ok and w.last_guard == "" and p.coins == 40 and guard.target == -1, "PICK-01: a caught try raises no cry a guard out of sight hears (%s)" % res.text)
+	check(int(victim.report.get("offender", 0)) == -2 and str(victim.report.get("crime", "")) == "theft", "PICK-01: the victim will report the theft")
+	check(int(wit.report.get("offender", 0)) == -2 and str(wit.report.get("crime", "")) == "theft", "PICK-01: so will the villager who saw it")
+	check(not guard.memory.any(func(m): return str(m).contains("of a theft")), "PICK-01: the guard knows nothing until told")
+	# the witness tells the guard, away from the thief: the guard knows, and does not give chase
+	p.pos = at + Vector2(-20, 0)
+	wit.pos = guard.pos + Vector2(0, 1.5)
+	w.brain._report(wit)
+	check(wit.report.is_empty() and guard.memory.any(func(m): return str(m).contains("of a theft")) and int(w.stats.get("theft_reports_delivered", 0)) == delivered0 + 1, "PICK-01: told by the witness, the guard knows of the theft")
+	check(guard.target == -1 and p.coins == 40, "PICK-01: a theft report starts no chase, and with the thief out of sight no fine")
+	# the victim tells the guard with the thief in the guard's sight: stopped and fined, as for a theft seen
+	p.pos = guard.pos + Vector2(3.0, 0)
+	victim.pos = guard.pos + Vector2(1.5, 0)
+	w.brain.act(victim, "report", {"guard": guard.id})
+	var fine := 0 if w.relations.player_friend(guard) else int(GameData.b("theft_fine"))
+	check(victim.report.is_empty() and p.coins == 40 - fine and guard.target == -1, "PICK-01: told by the victim with the thief in sight, the guard stops them (fine %d, coins %d)" % [fine, p.coins])
+	GameData.balance.pickpocket_chance = bal[0]
+	GameData.balance.pickpocket_chance_per_level = bal[1]
+	GameData.balance.pickpocket_chance_max = bal[2]
+	for n: NPC in w.npcs:
+		var k: Array = keep[n.id]
+		n.pos = k[0]
+		n.target = k[1]
+		n.hp = k[2]
+		n.anim = k[3]
+		n.report = k[4]
+	p.pos = p0[0]
+	p.coins = p0[1]
 
 
 ## PAR-02 (OD-18.2): one reserve rule. A trader near its reserve refuses the player's sale exactly as it refuses a

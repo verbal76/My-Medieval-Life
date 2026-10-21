@@ -190,14 +190,14 @@ Rules:
 
 ### INT-020 · The caravan
 - **Trigger:** Noon on caravan days.
-- **Source:** `game/scripts/core/npc_brain.gd::caravan`
+- **Source:** `game/scripts/core/npc_brain.gd::caravan`, `game/scripts/core/npc_brain.gd::caravan_line_need`, `game/scripts/core/npc_brain.gd::restock_cost`
 - **Affects:** Market, Coins, Ledger
 - **Expected:**
   - The only source of new coins (counted in `coin_sources`). It does not buy food while the village holds under 3 days of it, days of its age-weighted need (INT-047).
   - A finite regional market (B7-014, agent decision under the owner's authorization of 2026-10-18; every number provisional). It holds a purse, `World.caravan_purse` (starting at `caravan_float`). The purse gains the region's demand for the village's surplus, up to `caravan_allowance` coins a day (a visit adds the days between visits' worth), never above the float, and less and less as the village's coins approach `caravan_ceiling_per_head` a head (nothing at the ceiling); and it gains every coin the village pays it for ore, coal and stone (INT-035, INT-065).
-  - It sells first, then buys the surplus at 0.8 x value (never the mine's raw iron ore, copper ore, gold ore, coal or stone, `NPCBrain.NOT_EXPORTED`: they are the forge's and the builders' finite input, B7-007; 79% of the stone mined in the first ten days used to be carried off), at most `caravan_coins` a visit and never more than the purse holds. The smiths' metal goods are bought first (they pay for the caravan's ore with them), then the others; one unit at a time from each seller in turn, the first turning each visit, so a short purse is shared. The village's currency can therefore grow only by the allowance and never past the ceiling (a year-long run with no player: 12-fold before, about 3.4-fold after). A closed currency with no allowance was tried and stalled the village (traders out of cash, 14,000 missed meals for lack of money, three deaths in a year): see `docs/release/LONG_RUN_SIMULATION.md`.
+  - It sells first, then buys the surplus at 0.8 x value (never the mine's raw iron ore, copper ore, gold ore, coal or stone, `NPCBrain.NOT_EXPORTED`: they are the forge's and the builders' finite input, B7-007; 79% of the stone mined in the first ten days used to be carried off), at most `caravan_coins` a visit and never more than the purse holds. No seller is served first for its trade (EQ-22, owner 2026-10-21: "allocate purchasing according to actual demand and need"; the smiths-first order is gone): it buys one unit at a time, each from the seller that needs the sale most (`NPCBrain.caravan_line_need`: the share of its holding of the good that is surplus over what it keeps, plus the share of the cost of its trade's missing inputs, `NPCBrain.restock_cost`, its coins cannot pay), ties to the lower seller id then item id; a unit sold lowers that need. A short purse goes where the need is: no seller is guaranteed a sale and the purse is not split equally. The village's currency can therefore grow only by the allowance and never past the ceiling (a year-long run with no player: 12-fold before, about 3.4-fold after). A closed currency with no allowance was tried and stalled the village (traders out of cash, 14,000 missed meals for lack of money, three deaths in a year): see `docs/release/LONG_RUN_SIMULATION.md`.
   - `caravan_purse` is saved from save_version 9; an older save's caravan arrives with its float (no village coin changes hands).
-- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`, `game/tests/run_tests.gd::test_caravan_purse`
+- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`, `game/tests/run_tests.gd::test_caravan_purse`, `game/tests/od16_test.gd::test_caravan_buys_by_need`
 
 ### INT-021 · Crafting and stations
 - **Trigger:** The player makes a recipe at a station; a villager plans a recipe.
@@ -408,10 +408,10 @@ Rules:
 
 ### INT-044 · Picking a pocket
 - **Trigger:** "Pick pocket — theft" in the conversation with a villager within 1.8 tiles.
-- **Source:** `game/scripts/ui/game_ui.gd::_talk_view`, `game/scripts/main.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::guard_near`, `game/scripts/ui/dialogue.gd::caught`
+- **Source:** `game/scripts/ui/game_ui.gd::_talk_view`, `game/scripts/main.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::report_crime`, `game/scripts/core/world.gd::deliver_report`, `game/scripts/core/npc_brain.gd::_report`, `game/scripts/ui/dialogue.gd::caught`
 - **Affects:** Crime, Coins, Inventory, Player state, Interface
-- **Expected:** Success with chance `pickpocket_chance` + `pickpocket_chance_per_level` per Stealth level above 1 (at most `pickpocket_chance_max`), from the world's random numbers: 1 to `pickpocket_coins_max` coins (never more than they carry), or, with no coins, one thing they carry that is not a work tool, marked as stolen from them; they later find it missing. Caught: they remember "caught <player> picking my pocket" and shout; everyone in sight sees the try; a guard who saw it or is within `guard_call_radius` of them stops the player (fine, INT-008). Those who caught the player answer coldly. Stealth experience either way.
-- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
+- **Expected:** Success with chance `pickpocket_chance` + `pickpocket_chance_per_level` per Stealth level above 1 (at most `pickpocket_chance_max`), from the world's random numbers: 1 to `pickpocket_coins_max` coins (never more than they carry), or, with no coins, one thing they carry that is not a work tool, marked as stolen from them; they later find it missing. Caught: they remember "caught <player> picking my pocket"; everyone in sight sees the try (INT-008); a guard who saw it stops the player (fine, INT-008). PICK-01 (owner OD-20, 2026-10-21: the witnessed-crime reporting system, no omniscient guards, not every incident an audible alarm): there is no cry a guard hears. When no guard saw it, the victim and every other villager who saw the try (not bandits, not guards) carry a theft report (`report_crime`, crime "theft") to a guard by PAR-05's rules (INT-013: at once to one in sight, else walking to the nearest awake guard within `report.range`; lapsing after `report.hours`). The guard it reaches remembers it (`theft_reports_delivered`) and, if the player is in that guard's sight then, stops them as for a theft seen (`guard_confront`: the base fine); a theft report never starts a chase. A pocket picked unseen (success) is reported by nobody: no guard knows of it. Those who caught the player answer coldly. Stealth experience either way.
+- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`, `game/tests/world_test.gd::_pick01_reports`
 
 ### INT-045 · Stolen goods are marked; selling them
 - **Trigger:** The player steals (INT-007, INT-043, INT-044), sells in a trade window, eats, drops or otherwise loses goods; saving and loading.
@@ -937,11 +937,11 @@ Rules:
 - **Expected:** (PL2-005) Combat tiers raise blow damage, shorten the swing delay, give a chance of a double blow and cut damage taken (not hunger); Magic tiers shorten the Fireball cooldown, cut its stamina cost and raise its damage; Trading tiers move the player's buy and sell prices up to 20% (coins still move between real holders, so the supply is unchanged). Trade xp grows with the coins in the deal.
 - **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/skills_test.gd::test_early_play`
 
-### INT-109 · Stealth makes a pickpocket likelier and a caught one quieter
+### INT-109 · Stealth makes a pickpocket likelier and a caught one less seen
 - **Trigger:** The player tries a pocket.
 - **Source:** `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket_chance`
 - **Affects:** Crime, Player state
-- **Expected:** (PL2-005) The chance is `pickpocket_chance` plus `pickpocket_chance_per_level` times the tier's `pickpocket_steps`, never above `pickpocket_chance_max` (a sleeper's bonus is unchanged); higher tiers shrink the distance within which a guard hears a caught try (`guard_radius`). A guard who sees the theft still acts.
+- **Expected:** (PL2-005) The chance is `pickpocket_chance` plus `pickpocket_chance_per_level` times the tier's `pickpocket_steps`, never above `pickpocket_chance_max` (a sleeper's bonus is unchanged); a guard who sees the theft acts (INT-044). Since PICK-01 removed the cry a guard heard (owner OD-20, 2026-10-21; there is no hearing, PAR-05), the tiers' `guard_radius` shortens how far a caught try is seen (`witness_radius` x `guard_radius`, by guards and villagers alike, and so who reports it; the victim always knows), as `lockpick_quiet` does for a quiet lock (agent proposal).
 - **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/run_tests.gd::test_theft_and_shops`
 
 ### INT-110 · Every interior floor shows a floor, not grass

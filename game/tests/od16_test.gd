@@ -3,7 +3,8 @@ extends SceneTree
 ##  (b) the manor buys tools for workers short of one, or pays a smith in advance for one that is then forged and handed
 ##      over (EQ-19);
 ##  (a) bandits spend their coins at the market, and guards bring coins left lying to the treasury (EQ-20);
-##  (c) the caravan buys producers' surplus (hunters' meat and hides, tanners' leather) (EQ-21).
+##  (c) the caravan buys producers' surplus (hunters' meat and hides, tanners' leather) (EQ-21), each unit from the
+##      seller that needs the sale most, not the smiths first (EQ-22, owner 2026-10-21).
 ## Every coin and good only moves: the village's total coins are checked before and after. Run:
 ##   godot --headless --path game --script res://tests/od16_test.gd
 
@@ -27,6 +28,7 @@ func _init() -> void:
 	test_bandit_spends_at_the_market()
 	test_guard_recovers_loot()
 	test_caravan_buys_producers_surplus()
+	test_caravan_buys_by_need()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -173,3 +175,46 @@ func test_caravan_buys_producers_surplus() -> void:
 	check(hunter.coins > c0, "the hunter is paid (%d to %d)" % [c0, hunter.coins])
 	check(hunter.inv.count("meat") >= int(GameData.b("caravan_producer_keep").meat) or int(w.stats.get("exported_meat", 0)) == 0, "keeping what a hunter keeps")
 	check(int(w.stats.get("caravan_in_hunter", 0)) == hunter.coins - c0, "the caravan's coins, from outside, paid the hunter (caravan_in_hunter %d)" % int(w.stats.get("caravan_in_hunter", 0)))
+
+
+## EQ-22 (owner 2026-10-21): the caravan buys by need, not the smiths first. A smith well stocked with its inputs and
+## coins and a tanner with no hides and no coins both have surplus; the tanner is served first, and the caravan never
+## spends more than its purse.
+func test_caravan_buys_by_need() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	for o: NPC in w.npcs:                        # no other seller's surplus in the way
+		if o.alive and o.job in ["merchant", "smith", "hunter", "tanner"]:
+			for id in o.inv.ids():
+				o.inv.remove(id, o.inv.count(id))
+		if o.alive and (o.job == "merchant" or o.id == w.sage_id):
+			o.coins = 0                              # and nobody buys seed or medicine from it, so its purse is what we set
+	var smith: NPC = b._first_with_job("smith")
+	var tanner: NPC = b._first_with_job("tanner")
+	for id in NPCBrain.BUYS.smith:
+		smith.inv.add(id, int(NPCBrain.BUYS.smith[id]))
+	smith.coins = 500
+	smith.inv.add("iron_bar", 12)                # 8 over its keep of 4
+	tanner.coins = 0
+	tanner.inv.add("leather", 12)                # 6 over its keep of 6
+	check(b.restock_cost(smith) == 0 and b.restock_cost(tanner) > 0, "the smith lacks none of its inputs; the tanner lacks its hides (restock %d)" % b.restock_cost(tanner))
+	check(b.caravan_line_need(tanner, "leather", 6, b.restock_cost(tanner)) > b.caravan_line_need(smith, "iron_bar", 8, 0), "the tanner needs the sale more than the smith")
+	w.treasury += int(GameData.b("caravan_ceiling_per_head")) * 100     # the region adds nothing: the purse is what we set
+	var leather := maxi(1, roundi(GameData.value("leather") * 0.8))
+	var bar := maxi(1, roundi(GameData.value("iron_bar") * 0.8))
+	var total0 := w.total_coins() - w.coin_sources
+	# a purse that would pay for one bar: it goes to the tanner's leather (as many pieces as it covers), not the bar
+	w.caravan_purse = maxi(leather, bar)
+	var purse0 := w.caravan_purse
+	b.caravan()
+	var pieces := 12 - tanner.inv.count("leather")
+	check(pieces == purse0 / leather and smith.inv.count("iron_bar") == 12, "a purse of %d buys %d of the tanner's leather and none of the smith's bars (bars %d)" % [purse0, pieces, smith.inv.count("iron_bar")])
+	check(w.caravan_purse >= 0 and purse0 - w.caravan_purse == tanner.coins and tanner.coins == pieces * leather, "paid %d from its purse of %d, no more" % [tanner.coins, purse0])
+	# a larger purse still never pays out more than it holds or caravan_coins a visit
+	w.caravan_purse = 3 * leather + bar
+	purse0 = w.caravan_purse
+	var paid0 := tanner.coins + smith.coins
+	b.caravan()
+	var paid := tanner.coins + smith.coins - paid0
+	check(paid > 0 and paid <= purse0 and paid <= int(GameData.b("caravan_coins")) and w.caravan_purse == purse0 - paid, "it spends %d of a purse of %d, never more" % [paid, purse0])
+	check(w.total_coins() - w.coin_sources == total0, "coins only moved: the village's coins less coin_sources are unchanged")
