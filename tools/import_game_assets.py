@@ -173,6 +173,10 @@ COZY_ITEMS = {
     "wool_cloth": ("full version/ui/items.png", 4, 5),
     "wheat_seed": ("full version/farming/seeds.png", 2, 1), "carrot_seed": ("full version/farming/seeds.png", 0, 0),
     "potato_seed": ("full version/farming/seeds.png", 5, 0), "herb_seed": ("full version/farming/seeds.png", 2, 2),
+    # SEED-02 propagation material: the yellow-flower packet for wild flower seed; the red and the blue berry-cluster
+    # packets stand in for the two bushes' cuttings (the packs have no cutting or sprig; the packet says which bush)
+    "flower_seed": ("full version/farming/seeds.png", 1, 5),
+    "red_berry_cutting": ("full version/farming/seeds.png", 0, 3), "blue_berry_cutting": ("full version/farming/seeds.png", 5, 3),
 }
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)

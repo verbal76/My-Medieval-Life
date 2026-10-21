@@ -891,6 +891,13 @@
    "sha256": "b6bda1af97a1a5921f6d6cbef8c8b10c577e487a65e867ac7cbf9b311f1f78ab"
   },
   {
+   "file": "assets/icons/blue_berry_cutting.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 5, row 3, cut out",
+   "sha256": "32fbdb13c99c7aca7935b84dcbd0e8381f76410c3ef841e494f31d6766bed6db"
+  },
+  {
    "file": "assets/icons/carrot.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/ui/items.png",
@@ -919,6 +926,13 @@
    "sha256": "d27f8d0ec1fe878aa4a7f340adfe0c7aa9da16bfc1d66220404d2f5e56629d25"
   },
   {
+   "file": "assets/icons/flower_seed.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 1, row 5, cut out",
+   "sha256": "1380637e18fa00ba9171a85e05fa9f13994290fd115675396b9616ed416d6134"
+  },
+  {
    "file": "assets/icons/herb_seed.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/farming/seeds.png",
@@ -945,6 +959,13 @@
    "member": "full version/farming/seeds.png",
    "transform": "the 16 x 16 cell at column 5, row 0, cut out",
    "sha256": "d61eaa13982f2bfb2cfcb8220d8509d6b85c9e4217aa1ffaa39b6158eba21052"
+  },
+  {
+   "file": "assets/icons/red_berry_cutting.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 0, row 3, cut out",
+   "sha256": "22a7d3605ee91501b7899786c6725e057c12c05573fc39c2a277ecd54707c558"
   },
   {
    "file": "assets/icons/wheat_seed.png",
