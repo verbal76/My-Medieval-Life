@@ -1030,12 +1030,16 @@ func _miner(n: NPC) -> bool:
 	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
 		carried += n.inv.count(o)
 	if carried >= int(GameData.b("carry_ore")):
+		var haul := w.mine_works.cart_haul_plan(n, not w.nearest_seam(n, ores).is_empty()) if n.depth != 0 else []
+		if not haul.is_empty():
+			n.plan = haul              # MIN-F2 (Q3): into a minecart when its way is cheaper than carrying out
+			return true
 		return _plan_sell_all(n)       # sells whatever has a buyer first
 	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null and _can_mine(n, o))
 	var d: Dictionary = w.nearest_seam(n, ores) if not ores.is_empty() else {}        # MIN-A: the gallery's seams too
 	if d.is_empty():
 		# MIN-D, MIN-E: a miner whose ore is worked out digs the manor's trial pit or open pit for new ore, if posted (paid work)
-		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["trial", "excavate"]):
+		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["trial", "excavate", "tunnel"]):
 			return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
@@ -1053,7 +1057,7 @@ func _miner(n: NPC) -> bool:
 			return false
 		return _idle_at_work(n, "waiting for ore buyers")
 	n.doing = "mining %s" % GameData.item_name(d.ore).to_lower()
-	n.plan = seam_steps(n, d, "mine", {})
+	n.plan = w.mine_works.cart_fetch_plan(n, d) + seam_steps(n, d, "mine", {})     # MIN-F2 (Q3): a minecart brought along, on the way
 	return true
 
 
@@ -2350,6 +2354,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"mj_step", "mj_mine":
 			return w.manor_work.act(n, what, a)
+		"mc_load", "mc_hitch", "mc_park", "mc_unload":
+			return w.mine_works.cart_act(n, what, a)       # MIN-F2 (Q3): a miner's minecart haul
 		"day_labour":
 			var wage := int(GameData.b("day_labour_wage"))
 			if w.treasury >= wage:
@@ -2549,6 +2555,7 @@ func reeve_day() -> void:
 		w.manor_work.post_quarry()
 	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
 	w.manor_work.post_pits()                         # MIN-E: a load of the manor's open pit, or a pit staked for a find out of a trial's reach
+	w.manor_work.post_tunnels()                      # MIN-F2: a load cut at a supported face below ground, while the works lack stone
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
 		if id == "stone" and quarrying:

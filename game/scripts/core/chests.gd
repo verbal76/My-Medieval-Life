@@ -196,6 +196,8 @@ func store(u: Dictionary, id: String, qty: int) -> String:
 		return "That is not yours to fill."
 	if qty < 1 or not w.player.inv.has(id, qty):
 		return "You do not have that."
+	if u.has("cart") and w.carts.room(u.cart) < qty:
+		return "The minecart is full."                 # MIN-F2: a minecart's capacity
 	if not w.transfer(w.player.inv, i.store, id, qty):
 		return "The chest is full."
 	w.player.store_marks(id, qty)

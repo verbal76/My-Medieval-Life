@@ -40,7 +40,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
 | `tree` Tree | wood | natural | axe | woodcutting | 1 apple_sapling, 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
-| `tunnel_rock` Tunnel rock | mineral | natural | pickaxe | mining | 1 spoil, 1 stone | finite | yes | no | yes | implemented |
+| `tunnel_rock` Tunnel rock | mineral | natural | pickaxe | mining | 1 spoil, 1 stone | finite | yes | yes | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
 | `wild_bear` Bear | game | natural | weapon | combat | 2 hide, 6 meat | breeds | yes | no | yes | implemented |
 | `wild_bird` Bird | game | natural | weapon | combat | 1 feather | breeds | yes | yes | yes | implemented |
@@ -407,9 +407,9 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Total:** Bounded by the hill: only rock under the hill's static rock with rock all round may be cut (Underground.under_rock), 5 units a cell; the books (MineWorks.ground_cut) count every unit cut.
 - **Depletion:** finite. None: a cell cut through stays floor (saved in mine_works.opened); no rock grows back.
 - **Owner:** Common rock, like the seams below: nobody owns a tunnel; whoever cuts a unit holds it (MIN-C-Q2: no mining rights are made). **Theft:** Never theft: the rock is no one's.
-- **Harvested by:** the player yes; villagers no. MIN-F: a villager cuts by the same function as the player (MineWorks.dig with the villager as `who`, tested), but no villager decides to tunnel on its own yet: tunnels expose no new ore (the cave's and the gallery's seams are generated), so no job or manor posting calls for one (MIN_F_UNDERGROUND.md, owner question).
+- **Harvested by:** the player yes; villagers yes. MIN-F: a villager cuts by the same function as the player (MineWorks.dig with the villager as `who`). MIN-F2 (Q2): the manor posts one tunnel job at a time while its works lack stone and a sound support holds a face (ManorWork.post_tunnels, MineWorks.manor_face): a load of carry_ore units cut into the job's load and brought to the works yard, paid at the quarry job's rate a unit; a miner whose ore is worked out takes it as a trial or excavate job. The face is chosen by the works alone: hidden ore is unknown to everyone until a cut exposes it.
 - **Gather mode:** yes. **Icon:** `stone`.
-- **Risk:** Collapse, ventilation and lighting as a need are not simulated (MIN_F_UNDERGROUND.md): a support is what lets a tunnel be extended, nothing more. The hill holds little rock beyond the galleries, so tunnelling is short.
+- **Risk:** MIN-F2: an excavated cell too weakly held (supports worn, few, far) may cave in at dawn (MineWorks.stability, collapse_chance): rubble refills it (spoil, dug out again); supports wear and fail unrepaired. Ventilation and lighting as needs are not simulated. The hill holds little rock beyond the galleries, so tunnelling is short; hidden ore lies in its deep rock (Underground.hidden).
 - **Code:** `game/scripts/core/mine_works.gd::dig`, `game/scripts/core/mine_works.gd::rock_refusal`, `game/scripts/core/mine_works.gd::place_support`, `game/scripts/main.gd::_works_targets`
 
 ### `wheat_field` · Wheat field
@@ -615,7 +615,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B). |
 | `tree` | Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9). |
-| `tunnel_rock` | Collapse, ventilation and lighting as a need are not simulated (MIN_F_UNDERGROUND.md): a support is what lets a tunnel be extended, nothing more. The hill holds little rock beyond the galleries, so tunnelling is short. |
+| `tunnel_rock` | MIN-F2: an excavated cell too weakly held (supports worn, few, far) may cave in at dawn (MineWorks.stability, collapse_chance): rubble refills it (spoil, dug out again); supports wear and fail unrepaired. Ventilation and lighting as needs are not simulated. The hill holds little rock beyond the galleries, so tunnelling is short; hidden ore lies in its deep rock (Underground.hidden). |
 | `wheat_field` | Not at risk: farmers hold surplus grain (14495 wheat by day 365, seed 1; LONG_RUN_SIMULATION.md finding 6). |
 | `wild_bear` | A single pair; numbers provisional (B14). |
 | `wild_bird` | Numbers provisional (B14). |

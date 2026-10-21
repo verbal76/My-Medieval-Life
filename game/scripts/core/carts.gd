@@ -60,6 +60,14 @@ static func kind_of(c: Dictionary) -> String:
 	return str(c.get("kind", "handcart"))
 
 
+## Units a cart can still take (MIN-F2, Q3: a minecart holds at most minecart.capacity units; a handcart is limited by
+## its stacks only).
+func room(c: Dictionary) -> int:
+	if kind_of(c) != "minecart":
+		return 1 << 30
+	return maxi(0, int(MineWorks.cfg().minecart.capacity) - (c.store as Inventory).total())
+
+
 static func stacks_of(kind: String) -> int:
 	return int(MineWorks.cfg().minecart.stacks) if kind == "minecart" else int(cfg().stacks)
 

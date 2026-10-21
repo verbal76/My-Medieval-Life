@@ -180,15 +180,33 @@ func _open_seam(c: Dictionary, cell: Vector2i, ref: String) -> Dictionary:
 	var body: Dictionary = c.body
 	var ore := str(body.ore)
 	var d := {"x": cell.x, "y": cell.y, "ore": ore, "amount": body_amount(ore, int(body.grade)), "found": str(c.id), "found_by": ref, "found_day": w.day()}
-	w.deposits.append(d)
-	w._add_host_rock()                        # MIN-B: the grey rock round the ore, as every ore seam has
-	w.stat("found_" + ore, float(d.amount))
-	if d.has("host"):
-		w.stat("found_stone", float(d.host.amount))
-	w.stat("seams_found")
+	_enter_seam(d)
 	w.map.set_solid(cell, true)
 	w.tile_changed.emit(cell, "below", int(w.map.data.tiles.ore.get(ore, w.map.data.tiles.ore.stone)))
 	w.note("A trial pit by %s %s strikes %s: a new seam is opened." % [w.prospecting.stain(c), w.prospecting.place(c), GameData.item_name(ore).to_lower()])
+	return d
+
+
+## A seam found (a trial pit's, a pit's or, MIN-F2, a tunnel's): an ordinary World.deposits record with its MIN-B host
+## rock, entering the books as found_<ore> (and found_stone), never refilled (OD-28).
+func _enter_seam(d: Dictionary) -> void:
+	w.deposits.append(d)
+	w._add_host_rock()                        # MIN-B: the grey rock round the ore, as every ore seam has
+	w.stat("found_" + str(d.ore), float(d.amount))
+	if d.has("host"):
+		w.stat("found_stone", float(d.host.amount))
+	w.stat("seams_found")
+
+
+## MIN-F2 (Q2): hidden ore below ground (Underground.hidden, generated from the seed before anyone digs) beside a cell a
+## tunnel or shaft has just opened is exposed as an ordinary seam on its level: its amount as generated, its host
+## rock, found_<ore>, drawn by its level's view. Nobody knew of it before; it is mined by work_mine like any seam.
+func open_hidden(h: Dictionary, ref: String) -> Dictionary:
+	var d := {"x": int(h.x), "y": int(h.y), "ore": str(h.ore), "amount": int(h.amount), "level": int(h.level), "found": "tunnel", "found_by": ref, "found_day": w.day()}
+	_enter_seam(d)
+	w.stat("seams_found_below")
+	w.level_tile_changed.emit(int(h.level), Vector2i(int(h.x), int(h.y)), int(w.map.data.tiles.ore.get(str(h.ore), w.map.data.tiles.ore.stone)))
+	w.note("A tunnel below ground strikes %s: a new seam is opened." % GameData.item_name(str(h.ore)).to_lower())
 	return d
 
 

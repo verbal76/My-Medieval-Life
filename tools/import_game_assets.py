@@ -178,6 +178,8 @@ ICONS = {
     # the timber support (a prop and cap), a plank as the track section, the dark iron tub as the minecart's body
     "timber_support": "Blocks/Wood-Log-Block-06", "track_section": "Wood/Wood-Plank-Type-B-04",
     "minecart": "Metal/Metal-Bucket-02",
+    # MIN-F2: a bundle of sticks stands in for the ladder (the pack has none)
+    "ladder": "Wood/Sticks-01",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

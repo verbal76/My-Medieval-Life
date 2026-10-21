@@ -1,6 +1,23 @@
 {
   "format": "mml-underground/1",
-  "note": "Underground galleries (MIN-A, OD-29; docs/build17/MIN_A_ARCHITECTURE.md), read by Underground (game/scripts/core/underground.gd). Each lies under the surface rock that holds its portal's door; the shape comes from the world seed. Seam amounts are the village map's own per-seam amount for the ore unless 'amount' is given. Tiles are values of the village's atlases (atlas * 100000 + tile id, as in village.json): floor the paid atlas's grey cobbled stone (ROCK_SLAB), wall the hill top's own rock (ROCK_FILL, tools/build_village.py::rock_top). MIN-F/MIN-H: an entry with \"kind\": \"cave\" is a natural cave made by the same generator with its own \"salt\" (its passages are its own), on a deeper level under the same rock, with its own mouth on the surface (its own portal; \"mouth\" names the village layer and tile its surface door is drawn with: the adit's own opening). Levels stack: the cave (-2) lies under the gallery (-1) and is joined to it by nothing but the hill above. Its floor is the free atlas's plain dirt, shaded (floor_shade). The cave's numbers are agent decisions (docs/build17/MIN_F_UNDERGROUND.md).",
+  "note": "Underground galleries (MIN-A, OD-29; docs/build17/MIN_A_ARCHITECTURE.md), read by Underground (game/scripts/core/underground.gd). Each lies under the surface rock that holds its portal's door; the shape comes from the world seed. Seam amounts are the village map's own per-seam amount for the ore unless 'amount' is given. Tiles are values of the village's atlases (atlas * 100000 + tile id, as in village.json): floor the paid atlas's grey cobbled stone (ROCK_SLAB), wall the hill top's own rock (ROCK_FILL, tools/build_village.py::rock_top). MIN-F/MIN-H: an entry with \"kind\": \"cave\" is a natural cave made by the same generator with its own \"salt\" (its passages are its own), on a deeper level under the same rock, with its own mouth on the surface (its own portal; \"mouth\" names the village layer and tile its surface door is drawn with: the adit's own opening). Levels stack: the cave (-2) lies under the gallery (-1) and is joined to it by nothing but the hill above. Its floor is the free atlas's plain dirt, shaded (floor_shade). The cave's numbers are agent decisions (docs/build17/MIN_F_UNDERGROUND.md). MIN-F2 (Q2): \"hidden\" names ore placed by the same generator in each map's deep rock (never beside a floor): not in World.deposits, so nobody knows of it, until a tunnel or a shaft opens a cell beside it (MineWorks: an ordinary seam with host rock, found_<ore>, never refilled). \"deep\" is the template of a level made below the cave by a shaft (Q4): all rock, its own salt and hidden ore; levels end at mine_works.json shaft.deepest.",
+  "deep": {
+    "name": "a deep level",
+    "kind": "deep",
+    "salt": 3000,
+    "hidden": [
+      {"ore": "iron_ore", "count": 1},
+      {"ore": "coal", "count": 1},
+      {"ore": "copper_ore", "count": 1}
+    ],
+    "tiles": {
+      "floor": [100038],
+      "floor_shade": 0.6,
+      "wall": [16750, 16751, 16752, 16753, 16970, 16971, 16972, 16973, 17190, 17191, 17192, 17193, 17410, 17411, 17412, 17413],
+      "deep_shade": 0.3,
+      "ground": [0.04, 0.035, 0.035]
+    }
+  },
   "galleries": [
     {
       "id": "adit_gallery",
@@ -22,6 +39,10 @@
         {"ore": "coal", "count": 2},
         {"ore": "copper_ore", "count": 1},
         {"ore": "stone", "count": 1}
+      ],
+      "hidden": [
+        {"ore": "iron_ore", "count": 1},
+        {"ore": "coal", "count": 1}
       ],
       "tiles": {
         "floor": [9286, 9287, 9288, 9289, 9726, 9727, 9728, 9729],
@@ -52,6 +73,9 @@
         {"ore": "coal", "count": 1},
         {"ore": "iron_ore", "count": 1},
         {"ore": "copper_ore", "count": 1}
+      ],
+      "hidden": [
+        {"ore": "iron_ore", "count": 1}
       ],
       "tiles": {
         "floor": [100038],
