@@ -69,3 +69,35 @@ starve.
 
 **Recommendation:** do not activate it alone. Pair it with the land and storage work that answers a winter, such as the
 family farm plots (FARM-01..05) and the shared field model (FSE-12), and compare again. **This is the owner's decision.**
+
+## Why seasonal farming cuts milk (owner's question, 2026-10-21; FARM-08)
+
+Investigated with two local runs of seed 1, 120 days, sampled every 4 days. Both runs are on the same commit with the
+same seed; one has `seasonal_village_farming` 0, the other 1. The harness's `farm` section records fields, pens, troughs,
+famine, grain held and milk.
+
+| Day | Seasonal off: famine / food days / farmers' grain / cows (well fed) / milk so far | Seasonal on: the same |
+|---|---|---|
+| 16 | no / 7.5 / 0 / 6 (6) / 56 | no / 5.3 / 0 / 5 (5) / 56 |
+| 32 | no / 7.9 / 78 / 5 (5) / 120 | **yes** / 1.6 / 28 / 3 (3) / 120 |
+| 48 | no / 10.7 / 266 / 5 (5) / 184 | yes / 0.3 / 0 / 3 (3) / 184 |
+| 64 | no / 13.8 / 149 / 5 (5) / 248 | yes / 0.3 / 0 / 3 (3) / 248 |
+| 88 | no / 21.5 / 391 / 5 (5) / 344 | yes / 0.7 / 0 / 3 (**0**) / 340 |
+| 96 | no / 20.7 / 343 / 5 (5) / 376 | yes / 0.0 / 0 / **0** / 340 (2 cows starved) |
+| 120 | no / 24.0 / 449 / 5 (5) / 472 | no / 6.3 / 71 / 0 / 340 |
+
+**Cause: feed availability, through the existing famine rule.** Not seasonal animal behaviour, not labour, and not a
+defect. Step by step:
+
+1. With seasonal fields the grain year is smaller. From about day 32 the village's food days fall under
+   `famine_food_days`, and it stays in famine to day ~110.
+2. In famine the keepers cull the herds to their breeding stock ("people come first", `NPCBrain._keeper`): more cows
+   are slaughtered.
+3. Grain is gone from the farmers and the granary from day ~40, so a keeper with no grain of their own finds none to buy.
+   The troughs empty.
+4. Only well-fed adults give milk (`Farming.daily_products`). By day 88 no cow is well fed and milk stops. By day 96 the
+   breeding stock has starved.
+
+**A design gap, put to the owner, not changed:** pen animals eat only from the trough, which is grain. There is no
+pasture or hay. A village short of grain therefore loses its milk and wool with its bread. Grazing in the pens, or hay
+from the fields, would be a new mechanic for the owner to approve.

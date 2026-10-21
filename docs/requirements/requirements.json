@@ -10652,7 +10652,7 @@
    "id": "FARM-08",
    "title": "Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval",
    "source": "docs/directives/2026-10-21_fse12_fse13_farming_decision.md",
@@ -10677,9 +10677,9 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Dispatch long-sims with variants shared_wheat_yield 1.0/1.5/2.0/2.5/3.0, both switches on, four seeds, 365 days; report",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -10687,6 +10687,11 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_fse12_fse13_farming_decision.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream; next_action",
+     "why": "Milk drop investigated (seed 1, 120 days, seasonal off vs on): feed availability through the famine rule (grain gone, herds culled, troughs empty, breeding stock starved), not a defect; recorded in docs/design/FSE13_COMPARISON.md. The yield matrix comes next"
     }
    ],
    "target_build": "16",
