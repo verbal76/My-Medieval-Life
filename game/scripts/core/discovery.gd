@@ -4,19 +4,22 @@ extends RefCounted
 ## phase D; docs/build17/MIN_D_DISCOVERY.md).
 ##
 ## Opening a find: a clue's body (Prospecting: an ore, a grade and the cell it lies under) is geology, never a deposit
-## record, until someone digs a trial pit with a pickaxe on clear ground of the clue's search area within
+## record, until someone digs a trial pit with a shovel (owner MIN-E-Q4) on clear ground of the clue's search area within
 ## `trial.reach` cells of it. Then, and only then, it becomes an ordinary seam in World.deposits (owner OD-28: one
 ## deposit system everywhere) on the pit's cell, on the surface (OD-29: open workings stay on the surface): the same
 ## record, ore sprite, swing (World.work_mine), host rock (MIN-B), counting and save as the village's own seams. Its
 ## amount is the body's finite amount (the village map's per-seam amount for the ore x grade / 5, rounded up), counted
 ## `found_<ore>` (and `found_stone` for its host rock) so the ledger sees where it came from; it is never refilled. A
-## trial pit costs `trial.minutes`, pickaxe wear and earns Mining xp, the same for the player and a villager (PAR-01);
+## trial pit costs `trial.minutes`, shovel wear and earns Mining xp, the same for the player and a villager (PAR-01);
+## its earth (one cell's topsoil, dirt and spoil down to the rock) is left in a spoil pile beside it (MIN-D-Q3);
 ## most may miss, a misleading stain never yields, and a clue takes at most `trial.per_clue` pits (WDR-022: a failed
 ## venture costs time and resources).
 ##
 ## Capability (SET-A schema, capabilities.json): the settlement's mining level 1-4 is recomputed every dawn from what
-## the village really has (living practitioners and skills, tools held, deposits, stations, portals, structures, the
-## manor's discovery records), never granted; it rises when the next level's needs hold and falls when one stops.
+## the village really has (its residents' skills and the tools they can use, tools held, deposits, stations, portals,
+## structures, the manor's discovery records), never granted; it rises when the next level's needs hold and falls when
+## one stops. Residents are the living adult villagers and the player while the family has a home here, by one rule
+## (owner MIN-D-Q2); practitioners are counted by skill and equipment, not job titles (owner MIN-E-Q6).
 ##
 ## Adoption (no player orders): at level 1 the labour market opens one prospector's place while unsampled ground is
 ## left and the manor could fund a survey (a villager takes it by the ordinary job rules, NPCBrain.seek_work). The
@@ -140,18 +143,37 @@ func ground_refusal(c: Dictionary, cell: Vector2i) -> String:
 	return ""
 
 
-## Why `who` cannot dig a trial pit on `cell` of clue `c` with `tool` now ("" if they can).
-func trial_refusal(who, c: Dictionary, cell: Vector2i, tool := "pickaxe") -> String:
-	if tool == "" or not who.inv.has(tool):
-		return "You need a pickaxe to dig a trial pit."
+## Why `who` cannot dig a trial pit on `cell` of clue `c` with `tool` now ("" if they can): a tool of the trial's kind
+## (`trial.tool`: a shovel, owner MIN-E-Q4: a trial pit moves earth down to the rock face, and earth is dug with a shovel).
+func trial_refusal(who, c: Dictionary, cell: Vector2i, tool := "shovel") -> String:
+	var kind := str(cfg().trial.get("tool", "shovel"))
+	if tool == "" or not who.inv.has(tool) or str(GameData.item(tool).get("tool", "")) != kind:
+		return "You need a %s to dig a trial pit." % OpenPits.tool_word(kind)
 	return ground_refusal(c, cell)
 
 
+## The earth a trial pit moves (MIN-D-Q3): one cell of the open pit's layers down to the rock (OpenPits.earth_column:
+## 2 topsoil, 3 dirt, 3 spoil), {item: units}.
+static func trial_earth() -> Dictionary:
+	var out := {}
+	for e in OpenPits.earth_column():
+		out[str(e[0])] = int(out.get(str(e[0]), 0)) + int(e[1])
+	return out
+
+
+## Where a trial pit's earth is left: the cell south of the pit (its four sides are open ground, ground_refusal).
+static func pile_cell(cell: Vector2i) -> Vector2i:
+	return cell + Vector2i.DOWN
+
+
 ## `who` (the player or a villager) digs a trial pit on `cell` of clue `c`, by one rule (PAR-01): the pit is recorded,
-## the pickaxe wears (`trial.wear`, Mining's tool_wear_save may spare it) and the work earns `trial.xp` Mining xp. If
-## the clue's body lies within `trial.reach` cells (Chebyshev) of the pit, the body is opened there as a seam.
-## Returns {result: "ok" | "refused", why, found (the seam opened, or {}), broke, up}.
-func trial_dig(who, c: Dictionary, cell: Vector2i, tool := "pickaxe") -> Dictionary:
+## the shovel wears (`trial.wear`, Mining's tool_wear_save may spare it) and the work earns `trial.xp` Mining xp. The
+## earth it moves (trial_earth) leaves the ground (counted trial_ground_<item>, the pool entering the books, and
+## dug_<item>, the goods made) and lies in a spoil pile beside the pit (a loot pile on pile_cell, from `trial.pile_from`):
+## physical, counted by the goods census, taken up by anyone and carried, tipped or put back into a pit like any earth
+## (owner MIN-D-Q3). If the clue's body lies within `trial.reach` cells (Chebyshev) of the pit, the body is opened there
+## as a seam. Returns {result: "ok" | "refused", why, found (the seam opened, or {}), broke, up, earth: {item: units}}.
+func trial_dig(who, c: Dictionary, cell: Vector2i, tool := "shovel") -> Dictionary:
 	var why := trial_refusal(who, c, cell, tool)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -161,6 +183,12 @@ func trial_dig(who, c: Dictionary, cell: Vector2i, tool := "pickaxe") -> Diction
 	t.append([cell.x, cell.y, ref, w.day()])
 	dug[str(c.id)] = t
 	w.stat("trial_pits")
+	var earth := trial_earth()
+	var pile := Inventory.new()
+	for id in earth:
+		w.stat("trial_ground_" + str(id), float(earth[id]))
+		w._work_goods(who, pile, str(id), int(earth[id]), "dug_")
+	w.loot.append({"pos": Vector2(pile_cell(cell)) + Vector2(0.5, 0.5), "inv": pile, "coins": 0, "from": str(tc.get("pile_from", "a trial pit"))})
 	var broke := w._work_wear(who, tool, int(tc.wear), "mining", "tool_wear_save")
 	if broke and who is PlayerState and who.tool == tool:
 		who.tool = ""
@@ -171,7 +199,7 @@ func trial_dig(who, c: Dictionary, cell: Vector2i, tool := "pickaxe") -> Diction
 		found = _open_seam(c, cell, ref)
 	else:
 		w.stat("trial_misses")
-	return {"result": "ok", "why": "", "found": found, "broke": broke, "up": up}
+	return {"result": "ok", "why": "", "found": found, "broke": broke, "up": up, "earth": earth}
 
 
 ## The body of clue `c` is opened on `cell`: an ordinary seam record (with its MIN-B host rock), solid like every seam,
@@ -390,24 +418,87 @@ func need_holds(need: Dictionary) -> bool:
 	return false
 
 
-## The living adult villagers who meet a practitioners need (its jobs, if named; its skill level, if named).
-func practitioners(need: Dictionary) -> Array:
+## Owner MIN-D-Q2 (2026-10-21): whether the player is a resident of the village for its capability, by the villagers'
+## rule: a villager is one by living here (a household and a home); the player is one while the family has a home in the
+## village (PlayerState.home, a building that stands). Losing or giving up the home ends it; the next evaluation (each
+## dawn) counts them no more.
+func player_resident() -> bool:
+	var p: PlayerState = w.player
+	return p != null and p.home != "" and w.buildings.has(p.home)
+
+
+## The village's residents for its capability, in a fixed order: every living adult villager (villager order), then the
+## player while resident (player_resident). One list, one rule for all (owner MIN-D-Q2: no bonus, no exclusion).
+func residents() -> Array:
+	var out: Array = w.npcs.filter(func(o: NPC) -> bool: return o.alive and o.role == "adult")
+	if player_resident():
+		out.append(w.player)
+	return out
+
+
+## How many tools of `kind` an inventory holds: items of that id or of that tool kind (a rusty pickaxe is a pickaxe).
+static func count_kind(inv: Inventory, kind: String) -> int:
+	var n := 0
+	for id in inv.ids():
+		if id == kind or str(GameData.item(id).get("tool", "")) == kind:
+			n += inv.count(id)
+	return n
+
+
+## The store a resident shares with their household: a villager's household pantry, the resident player's home chest;
+## null with none. Key: who shares it ("hh<i>", "player").
+func _shared_store(o) -> Array:
+	if o is PlayerState:
+		return ["player", (o as PlayerState).chest] if player_resident() else ["", null]
+	var n: NPC = o
+	if n.household >= 0 and n.household < w.households.size():
+		return ["hh%d" % n.household, w.households[n.household].pantry]
+	return ["", null]
+
+
+## Whether resident `o` meets a practitioners need by themselves (owner MIN-E-Q6, MIN-SKILLCAP: real skill and equipment,
+## never a job title): their Skills level in `skill` at least `min_level`; a tool of kind `tool` they can use (their own
+## pack, or one of their household's store, or for the player their home chest, that `used` has not already given to
+## another member: a shared tool serves one practitioner); `jobs` only where the game's own rule makes a trade the sole
+## performer (the assayer is a smith, MIN-C-Q3). The same rule for the player and a villager (PAR-01, MIN-D-Q2).
+func practitioner(o, need: Dictionary, used := {}) -> bool:
 	var jobs: Array = need.get("jobs", [])
-	return w.npcs.filter(func(o: NPC) -> bool:
-		return o.alive and o.role == "adult" and (jobs.is_empty() or jobs.has(o.job)) \
-				and (not need.has("skill") or Skills.level(o, str(need.skill)) >= int(need.get("min_level", 1))))
+	if not jobs.is_empty() and not (o is NPC and jobs.has((o as NPC).job)):
+		return false
+	if need.has("skill") and Skills.level(o, str(need.skill)) < int(need.get("min_level", 1)):
+		return false
+	var kind := str(need.get("tool", ""))
+	if kind == "" or count_kind(o.inv, kind) > 0:
+		return true
+	var st := _shared_store(o)
+	if st[1] == null:
+		return false
+	var k := "%s/%s" % [st[0], kind]
+	if count_kind(st[1], kind) - int(used.get(k, 0)) > 0:
+		used[k] = int(used.get(k, 0)) + 1
+		return true
+	return false
 
 
-## How many of `tool` the settlement holds: living villagers' packs, the households' stores and the manor's works yard
-## (the player's own goods are theirs, not the settlement's).
+## The residents who meet a practitioners need (practitioner), in residents() order.
+func practitioners(need: Dictionary) -> Array:
+	var used := {}
+	return residents().filter(func(o) -> bool: return practitioner(o, need, used))
+
+
+## How many of `tool` (by id or tool kind) the settlement holds: living villagers' packs, the households' stores, the
+## manor's works yard, and the resident player's pack and home chest (owner MIN-D-Q2: counted while resident, by the
+## villagers' rule; counting moves nothing: the player's goods stay the player's).
 func tool_stock(tool: String) -> int:
 	var n := 0
 	for o: NPC in w.npcs:
 		if o.alive:
-			n += o.inv.count(tool)
+			n += count_kind(o.inv, tool)
 	for hh in w.households:
-		n += (hh.pantry as Inventory).count(tool)
-	n += w.manor_work.yard.count(tool)
+		n += count_kind(hh.pantry as Inventory, tool)
+	n += count_kind(w.manor_work.yard, tool)
+	if player_resident():
+		n += count_kind(w.player.inv, tool) + count_kind(w.player.chest, tool)
 	return n
 
 

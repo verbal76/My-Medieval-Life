@@ -75,6 +75,8 @@ func miner(w: World) -> NPC:
 	var m: NPC = w.brain._first_with_job("miner")
 	if not m.inv.has("pickaxe"):
 		m.inv.add("pickaxe")
+	if not m.inv.has("shovel"):
+		m.inv.add("shovel")                   # MIN-E-Q4: a pit's earth is dug with a shovel
 	w.player.pos = m.pos               # face to face (Q-C6/Q-C7)
 	return m
 
@@ -140,7 +142,7 @@ func test_dig_player_hires_villager() -> void:
 	var dug0 := _dug(p)
 	var g0 := goods(w)
 	var r := w.contracts.propose(World.PLAYER, m, "", 6, price, 3, [], svc)
-	check(r.has("contract"), "a miner with a pickaxe agrees to dig 6 units of the player's pit (\"%s\")" % str(r.get("say", "")))
+	check(r.has("contract"), "a miner with a pickaxe and a shovel agrees to dig 6 units of the player's pit (\"%s\")" % str(r.get("say", "")))
 	if not r.has("contract"):
 		return
 	var c: Dictionary = r.contract
@@ -280,9 +282,10 @@ func test_feasibility_and_counters() -> void:
 	var svc := {"service": "dig", "site": {"pit": int(p.id)}}
 	var wc: NPC = w.brain._first_with_job("woodcutter")
 	wc.inv.remove("pickaxe", wc.inv.count("pickaxe"))
+	wc.inv.remove("shovel", wc.inv.count("shovel"))
 	w.player.pos = wc.pos
 	var r := w.contracts.propose(World.PLAYER, wc, "", 4, 10, 3, [], svc)
-	check(str(r.answer) == "reject" and str(r.say).contains("pickaxe"), "no pickaxe, no digging: \"%s\"" % str(r.say))
+	check(str(r.answer) == "reject" and str(r.say).contains("shovel"), "no shovel for the earth, no digging: \"%s\"" % str(r.say))
 	r = w.contracts.propose(World.PLAYER, m, "", 4, 10, 3, [], {"service": "dig", "site": {"pit": 999}})
 	check(str(r.answer) == "reject" and str(r.say).contains("no such pit"), "no such pit: \"%s\"" % str(r.say))
 	var sm: NPC = w.brain._first_with_job("smith")

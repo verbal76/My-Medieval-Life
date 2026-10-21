@@ -17,7 +17,7 @@ extends RefCounted
 ##
 ## Kinds built (existing work systems only, PAR-01: the player and villagers by one rule):
 ##  - "dig" (MIN-E): dig `qty` units from an open pit the buyer owns (the player's, or the manor's by its reeve), with
-##    a pickaxe, by OpenPits.dig; the earth is tipped on the pit's spoil heaps and any stone brought to the buyer (the
+##    the layer's tool (a shovel for earth, a pickaxe for rock: MIN-E-Q4), by OpenPits.dig; the earth is tipped on the pit's spoil heaps and any stone brought to the buyer (the
 ##    player's chest at home, the manor's works yard), as the manor's own excavate job does.
 ##  - "survey" (MIN-C/MIN-D; answers MIN-D-Q1, "the manor is not the only employer"): take `qty` rock samples of a
 ##    clue's area with one's own kit, have each assayed by a smith (the fee is the seller's, as on the manor's survey),
@@ -88,8 +88,8 @@ static func means(k, n: NPC, svc: Dictionary, days: int) -> Dictionary:
 	match str(svc.get("service", "")):
 		"dig":
 			var p := w.pits.pit(int(svc.get("site", {}).get("pit", -1)))
-			if not n.inv.has("pickaxe"):
-				out.why = "tool:pickaxe"
+			if OpenPits.kinds_held(n).is_empty() or (not p.is_empty() and w.pits.next_dig(p, n.cell(), n.cell(), OpenPits.kinds_held(n)).x < 0 and remaining(p) > 0):
+				out.why = "tool:shovel" if OpenPits.held_tool(n, "shovel") == "" else "tool:pickaxe"     # MIN-E-Q4: earth a shovel, rock a pickaxe
 			elif p.is_empty() or remaining(p) <= 0:
 				out.why = "source"
 			else:
@@ -190,8 +190,9 @@ static func _plan_dig(k, n: NPC, c: Dictionary) -> bool:
 	var b: NPCBrain = w.brain
 	var p := w.pits.pit(int(c.site.pit))
 	var load := _load(c)
-	var work_left: bool = Contracts.left(c) > 0 and not p.is_empty() and n.inv.has("pickaxe")
-	var cell: Vector2i = w.pits.next_dig(p, n.cell(), n.cell()) if work_left else Vector2i(-1, -1)
+	var kinds := OpenPits.kinds_held(n)                     # MIN-E-Q4: the cells its digger's tools can dig
+	var work_left: bool = Contracts.left(c) > 0 and not p.is_empty() and not kinds.is_empty()
+	var cell: Vector2i = w.pits.next_dig(p, n.cell(), n.cell(), kinds) if work_left else Vector2i(-1, -1)
 	var full := load.total() >= ManorWork.excavate_load()
 	if _earth(load) > 0 and not p.is_empty() and (full or cell.x < 0):
 		var hc: Vector2i = Vector2i(int(p.heaps[0].x), int(p.heaps[0].y)) if not (p.heaps as Array).is_empty() else n.cell()
@@ -243,13 +244,14 @@ static func _step_dig(k, n: NPC, c: Dictionary) -> bool:
 	if Contracts.left(c) <= 0 or not c.has("cell"):
 		return false
 	var cell := Vector2i(int(c.cell[0]), int(c.cell[1]))
-	var r: Dictionary = w.pits.dig(n, p, cell, load, "pickaxe")
+	var tool := OpenPits.held_tool(n, w.pits.tool_needed(p, cell))
+	var r: Dictionary = w.pits.dig(n, p, cell, load, tool)
 	c.erase("cell")
 	if r.result != "ok":
 		return false
 	_store(c, load)
 	if r.broke:
-		w.note("%s %s's pickaxe broke." % [n.name, n.family])
+		w.note("%s %s's %s broke." % [n.name, n.family, GameData.item_name(tool).to_lower()])
 	k._pay_units(c, 1)
 	return true
 

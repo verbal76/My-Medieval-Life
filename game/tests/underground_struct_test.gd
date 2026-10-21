@@ -78,7 +78,7 @@ func _hand(w: World, level: int, cell: Vector2i, job := "laborer") -> NPC:
 	n.plan.clear()
 	n.depth = level
 	n.pos = Vector2(cell) + Vector2(0.5, 0.5)
-	for t in ["pickaxe", "mallet"]:
+	for t in ["pickaxe", "mallet", "shovel"]:            # (MIN-E-Q4: rubble and fill are dug out with a shovel)
 		if not n.inv.has(t):
 			n.inv.add(t)
 	return n
@@ -181,7 +181,7 @@ func _test_collapse() -> void:
 	var g0 := Census.goods(w)
 	var sp0 := n.inv.count("spoil")
 	mw.supports.clear()
-	check(mw.dig_refusal(n, c).contains("timber support"), "fallen rock is not dug out unsupported")
+	check(mw.dig_refusal(n, c, "shovel").contains("timber support"), "fallen rock is not dug out unsupported")
 	n.pos = Vector2(s) + Vector2(0.5, 0.5)
 	if mw.support_at(-1, s):
 		mw.supports.clear()
@@ -189,7 +189,7 @@ func _test_collapse() -> void:
 	var items := []
 	_stand_beside(n, lm, c)
 	for k in MineWorks.cell_units():
-		items.append(str(mw.dig(n, c, n.inv).get("item", "")))
+		items.append(str(mw.dig(n, c, n.inv, "shovel").get("item", "")))
 	check(items.all(func(i): return i == "spoil") and not lm.is_solid(c) and mw.rubble_at(-1, c) == 0, "the rubble comes out as spoil only (%s) and the passage reopens" % str(items))
 	check(n.inv.count("spoil") - sp0 == MineWorks.cell_units() and int(Census.goods(w).get("spoil", 0)) - int(g0.get("spoil", 0)) == MineWorks.cell_units(),
 			"each unit cleared is in the digger's pack: the goods census rises by exactly the rubble")
@@ -829,7 +829,7 @@ func _test_backfill_dug_again() -> void:
 	var items := []
 	_stand_beside(n, lm, c)
 	for k in MineWorks.cell_units():
-		var r := mw.dig(n, c, n.inv)
+		var r := mw.dig(n, c, n.inv, "shovel")
 		items.append(str(r.get("item", "")))
 		if k == 0:
 			check(not lm.is_solid(c), "once a unit is dug out the passage is open again")

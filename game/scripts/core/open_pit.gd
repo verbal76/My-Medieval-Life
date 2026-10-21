@@ -12,8 +12,9 @@ extends RefCounted
 ## are walkable at every depth; every other cell dug below the surface is solid (a terrace wall, a cut). A dig that
 ## would leave a walkable cell of the pit cut off from its border is refused (DVW-A10: no unreachable pit cell).
 ##
-## Digging (PAR-01: one rule for the player and a villager): a pickaxe, one unit at a time, the unit's layer item into
-## the digger's inventory (or a manor job's load), counted dug_<item>; the pickaxe wears, Mining xp is earned. When a
+## Digging (PAR-01: one rule for the player and a villager): the layer's tool (owner MIN-E-Q4, 2026-10-21: a shovel
+## for the earth, topsoil, dirt and spoil; a pickaxe for the rock; open_pit.json layers' `tool`), one unit at a time, the unit's layer item into
+## the digger's inventory (or a manor job's load), counted dug_<item>; the tool wears, Mining xp is earned. When a
 ## cell other than the ramp is dug down to the rock layer, a prospecting body within `expose_reach` cells is opened
 ## there as an ordinary seam (Discovery.expose: the trial pit's own rule; OD-28: one deposit system everywhere); its ore
 ## and host rock are mined by World.work_mine like any seam and never refilled. Nothing is made: the ground of a pit is a
@@ -83,6 +84,42 @@ static func item_of(u: int) -> String:
 		if u < cum(k + 1):
 			return str(layers()[k].item)
 	return ""
+
+
+## The kind of tool the `u`-th unit of a cell is dug with (open_pit.json layers' `tool`: "shovel" for the earth,
+## "pickaxe" for the rock); "" past the last layer.
+static func tool_of(u: int) -> String:
+	for k in layers().size():
+		if u < cum(k + 1):
+			return str(layers()[k].get("tool", "pickaxe"))
+	return ""
+
+
+## The earth above the rock under one cell, by item, top first (a trial pit's column, MIN-D-Q3): [[item, units], ...].
+static func earth_column() -> Array:
+	var out := []
+	for k in rock_depth():
+		out.append([str(layers()[k].item), int(layers()[k].amount)])
+	return out
+
+
+## The item `who` (the player or a villager) would dig with for a tool of `kind` ("" if they hold none): the player's
+## chosen tool of that kind or their best (PlayerState.tool_of); a villager's of that id, else any of that kind.
+static func held_tool(who, kind: String) -> String:
+	if kind == "" or who == null:
+		return ""
+	if who is PlayerState:
+		return who.tool_of(kind)
+	if who.inv.has(kind):
+		return kind
+	for id in who.inv.ids():
+		if str(GameData.item(id).get("tool", "")) == kind:
+			return id
+	return ""
+
+
+static func tool_word(kind: String) -> String:
+	return GameData.item_name(kind).to_lower() if GameData.items.has(kind) else kind
 
 
 static func minutes_of(u: int) -> float:
@@ -394,6 +431,16 @@ func done(p: Dictionary) -> bool:
 	return true
 
 
+## The kinds of digging tool `who` holds, of those the pit's layers need (["shovel", "pickaxe"], or fewer).
+static func kinds_held(who) -> Array:
+	var out := []
+	for l in layers():
+		var k := str(l.get("tool", "pickaxe"))
+		if not out.has(k) and held_tool(who, k) != "":
+			out.append(k)
+	return out
+
+
 ## The ramp is dug to its depth on every ring: the pit's floor can be walked to (a "pit_ramp" structure, MIN-D).
 func ramp_done(p: Dictionary) -> bool:
 	for i in size() * size():
@@ -449,10 +496,18 @@ func dig_ground_refusal(p: Dictionary, c: Vector2i, mover := Vector2i(-1, -1)) -
 	return ""
 
 
-## Why `who` cannot dig cell `c` of pit `p` with `tool` ("" if they can).
+## The kind of tool cell `c` of pit `p` is dug with next ("shovel" or "pickaxe"; "" outside the pit or dug out).
+func tool_needed(p: Dictionary, c: Vector2i) -> String:
+	var i := index(p, c)
+	return tool_of(int(p.dug[i])) if i >= 0 else ""
+
+
+## Why `who` cannot dig cell `c` of pit `p` with `tool` ("" if they can): the tool must be of the kind the cell's next
+## layer is dug with (a shovel for the earth, a pickaxe for the rock).
 func dig_refusal(who, p: Dictionary, c: Vector2i, tool := "pickaxe") -> String:
-	if tool == "" or not who.inv.has(tool):
-		return "You need a pickaxe to dig."
+	var need := tool_needed(p, c)
+	if need != "" and (tool == "" or not who.inv.has(tool) or str(GameData.item(tool).get("tool", "")) != need):
+		return "You need a %s to dig %s." % [tool_word(need), GameData.item_name(item_of(int(p.dug[index(p, c)]))).to_lower()]
 	return dig_ground_refusal(p, c)
 
 
@@ -484,7 +539,7 @@ func _connected_without(p: Dictionary, skip: int) -> bool:
 
 
 ## `who` (the player or a villager) digs one unit from cell `c` of pit `p` with `tool`, by one rule (PAR-01): the unit
-## of the cell's next layer goes to `into` (counted dug_<item>), the pickaxe wears (`wear`; Mining's tool_wear_save may
+## of the cell's next layer goes to `into` (counted dug_<item>), the layer's tool (a shovel or a pickaxe) wears (`wear`; Mining's tool_wear_save may
 ## spare it) and the work earns `xp` Mining xp. A cell dug through a whole layer goes down a step; one dug down to the
 ## rock (not the ramp) opens a prospecting body within reach as a seam. Returns {result: "ok" | "refused", why, item,
 ## n, broke, up, exposed (the seam opened, or {})}.
@@ -533,12 +588,15 @@ func _expose(p: Dictionary, c: Vector2i, ref: String) -> Dictionary:
 
 ## The cell of pit `p` to dig next from `from`: the shallowest diggable cell first (the pit goes down a bench at a
 ## time: all the topsoil, then the dirt...), then the outer rings, then the nearest. (-1, -1) if none can be dug now.
-## `mover`: the planner's own cell (it steps off it to dig, so it may be the one chosen).
-func next_dig(p: Dictionary, from: Vector2i, mover := Vector2i(-1, -1)) -> Vector2i:
+## `mover`: the planner's own cell (it steps off it to dig, so it may be the one chosen). `kinds`: when given, only
+## cells whose next unit is dug with a tool of one of those kinds (what the digger holds).
+func next_dig(p: Dictionary, from: Vector2i, mover := Vector2i(-1, -1), kinds := []) -> Vector2i:
 	var best := Vector2i(-1, -1)
 	var bk := []
 	for i in size() * size():
 		var c := cell_of(p, i)
+		if not kinds.is_empty() and not kinds.has(tool_of(int(p.dug[i]))):
+			continue
 		if dig_ground_refusal(p, c, mover) != "":
 			continue
 		var k := [depth_at(p, i), ring_of(i), Vector2(c).distance_squared_to(Vector2(from)), i]

@@ -12,7 +12,7 @@ const WAKE := 6.0
 # what each job buys, with the stock it stops buying at
 const BUYS := {
 	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
-	"carpenter": {"log": 30},
+	"carpenter": {"log": 30, "shovel_blade": 1},      # MIN-SHOVEL: one smith's blade on hand for a shovel to order
 	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12},          # wool: woven into cloth (Build 13)
 	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
@@ -29,7 +29,8 @@ const BUYS := {
 		# like the other made goods, and the caravan carries the surplus away
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
 		"herbal_poultice": 8,                      # households' home-brewed poultices, brought to market (B14)
-		"nails": 24, "mallet": 2},                 # B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
+		"nails": 24, "mallet": 2,                  # B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
+		"shovel": 2},                              # MIN-SHOVEL (owner MIN-E-Q4): diggers' shovels, assembled to order
 }
 # SHOP-01 (owner, 2026-10-20 section 6): the stations each producing trade works at. Their recipes (recipes.json) are
 # what its purchases of their inputs are for: it buys an input only for a recipe it has the skill for, up to its want
@@ -37,7 +38,7 @@ const BUYS := {
 const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
 # items an NPC keeps for its own work and will not sell
-const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "mallet"], "woodcutter": ["axe"], "smith": ["hammer"],
+const KEEPS := {"sage": ["flower"], "miner": ["pickaxe", "shovel"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "shovel", "mallet"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed", "flower_seed", "red_berry_cutting", "blue_berry_cutting"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
@@ -61,6 +62,7 @@ const OUTLETS := {
 	"copper_ring": ["merchant_goods"], "gold_ring": ["merchant_goods"], "amulet": ["merchant_goods"], "iron_helmet": ["merchant_goods"],
 	"leather_cap": ["merchant_goods"], "gold_bar": ["merchant_goods"], "plough": ["merchant_goods"],
 	"nails": ["merchant_goods"], "mallet": ["merchant_goods"],     # B14-07: the smith's nails, the carpenter's mallets
+	"shovel": ["merchant_goods"], "shovel_blade": ["carpenter"],   # MIN-SHOVEL: the carpenter's shovels, the smith's blades for them
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple"]
 const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
@@ -615,6 +617,26 @@ func _carpenter_mallet(n: NPC) -> bool:
 	return false
 
 
+## MIN-SHOVEL (owner MIN-E-Q4, 2026-10-21): the carpenter makes a shovel only for a buyer who wants one (the goods
+## merchant's stock, as mallets): a haft from a plank at the workbench (make_shovel_haft), fitted with the iron blade the
+## smith forges and sells it (forge_shovel_blade; the carpenter keeps one on hand, BUYS), assembled at the workbench
+## (assemble_shovel), and sold to that buyer. Without a buyer, the skill, the plank or the blade it goes on with its other
+## work (false). Nothing is made from nothing: every part is a recipe's, every sale a purchase.
+func _carpenter_shovel(n: NPC) -> bool:
+	if n.inv.count("shovel") > 0:
+		return _plan_sell(n, "shovel") if _buyer_for(n, "shovel") != null else false
+	if _buyer_for(n, "shovel") == null or not _can_make(n, "assemble_shovel"):
+		return false
+	if n.inv.has_all(GameData.recipes["assemble_shovel"]["in"]) and _do_recipe(n, "assemble_shovel"):
+		n.doing = "making a shovel"
+		return true
+	if n.inv.count("shovel_haft") < 1 and _can_make(n, "make_shovel_haft") and n.inv.has_all(GameData.recipes["make_shovel_haft"]["in"]) \
+			and _do_recipe(n, "make_shovel_haft"):
+		n.doing = "making a shovel haft"
+		return true
+	return false
+
+
 ## STONE-01 (owner decision 2026-10-21: "Quarry extraction → Raw stone → Stoneworking → Finished building blocks →
 ## Construction"): the labourer is the village's stoneworker. While building blocks are wanted (the raw-goods merchant
 ## buys them for builders, or open sites need more than anyone has on sale) a labourer with a mallet dresses the raw
@@ -927,6 +949,8 @@ func _plan_job(n: NPC) -> bool:
 				return true
 			if _carpenter_mallet(n):                 # B14-07
 				return true
+			if _carpenter_shovel(n):                 # MIN-SHOVEL
+				return true
 			if n.inv.count("plank") >= 30:
 				return _plan_sell(n, "plank") if _buyer_for(n, "plank") else _idle_at_work(n, "waiting for orders")
 			return _crafter(n, ["saw_planks"])
@@ -1095,8 +1119,12 @@ func _miner(n: NPC) -> bool:
 	var d: Dictionary = w.nearest_seam(n, ores) if not ores.is_empty() else {}        # MIN-A: the gallery's seams too
 	if d.is_empty():
 		# MIN-D, MIN-E: a miner whose ore is worked out digs the manor's trial pit or open pit for new ore, if posted (paid work)
-		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["trial", "excavate", "tunnel"]):
-			return true
+		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)):
+			if w.manor_work.seek_kind(n, ["trial", "excavate", "tunnel"]):
+				return true
+			# MIN-SHOVEL: posted earthwork it could do only with a shovel: it buys one, if one is for sale and it can pay
+			if OpenPits.held_tool(n, "shovel") == "" and w.manor_work.shovel_would_open(World.npc_ref(n.id)) and _buy_tool(n, "shovel"):
+				return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
 		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
@@ -1177,7 +1205,7 @@ func _can_make(n: NPC, r: String) -> bool:
 
 
 ## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
-const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet"]
+const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet", "shovel_blade"]
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
@@ -1257,7 +1285,7 @@ func _smith(n: NPC) -> bool:
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in) and _can_make(n, r):
 			wants.append([inv.count(out), r])
 	# PAR-04: the jewellery, the helmet and nails (B14-07) only for a buyer who wants them
-	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring", "forge_nails"]:
+	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring", "forge_nails", "forge_shovel_blade"]:
 		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
 			continue
 		var out: String = GameData.recipes[r].out.keys()[0]
@@ -1970,18 +1998,27 @@ func local_tool_need() -> Dictionary:
 
 
 func _get_tool(n: NPC, tool: String) -> bool:
-	# the goods merchant retails tools (the smith's wholesale buyer, B7-016); the smith sells what the merchant lacks
-	for role in ["merchant_goods", "smith"]:
-		for o: NPC in w.npcs:
-			if o.alive and ((o.job == "smith") if role == "smith" else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
-				if n.coins >= w.sell_price(o, tool):
-					n.doing = "buying a new %s" % tool
-					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
-					return true
+	if _buy_tool(n, tool):
+		return true
 	once("no_tool_%d_%d" % [n.id, w.day()], "%s %s has no %s and cannot get one." % [n.name, n.family, tool])
 	n.doing = "out of work: needs a %s" % tool
 	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
 	return true
+
+
+## A trip to buy `tool` from whoever sells it (the goods merchant first, the smith's wholesale buyer, B7-016; then the
+## smith; MIN-SHOVEL: then the carpenter, who makes shovels): false when nobody has one for sale it can pay for.
+func _buy_tool(n: NPC, tool: String) -> bool:
+	for role in ["merchant_goods", "smith", "carpenter"]:
+		if role == "carpenter" and tool != "shovel":
+			continue
+		for o: NPC in w.npcs:
+			if o.alive and ((o.job == role) if role in ["smith", "carpenter"] else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
+				if n.coins >= w.sell_price(o, tool):
+					n.doing = "buying a new %s" % tool
+					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
+					return true
+	return false
 
 
 func _do_recipe(n: NPC, r: String) -> bool:
