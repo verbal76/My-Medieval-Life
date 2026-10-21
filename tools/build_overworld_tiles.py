@@ -25,7 +25,7 @@ GRASS, CLIFF = 1, 4          # wangset colours in the free tileset's "overworld"
 # tree kinds by look (paid tileset, keyed by the canopy's bottom tile): a region can favour one group
 TREE_GROUPS = {456: "leafy", 458: "autumn", 460: "conifer", 1120: "leafy", 1780: "mixed", 1782: "mixed"}
 ROCK = 1964                  # a grey boulder (also the village's worked-out ore rock)
-FLOWERS = [2657, 2658, 2659]
+FLOWERS = [2657, 2658, 2659, 2656]   # PL1-12: the low red flower (2656) grows outside the village too (overworld GEN_VERSION 2)
 BUSHES = [2661, 2663]
 FORMAT = "mml-overworld-tiles/1"
 

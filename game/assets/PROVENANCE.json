@@ -597,6 +597,13 @@
    "sha256": "bbc53cd2ee33cf68f5c99c25b79e88b380c00eef801006a2d3e3df6ec5fd9ebd"
   },
   {
+   "file": "assets/icons/building_block.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Stone-Block-02.png",
+   "transform": "copied unchanged",
+   "sha256": "786639f9d5b9a148b618619ef4df622e947b72d2d388876615c4c97c44206920"
+  },
+  {
    "file": "assets/icons/cart_axle.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Wood/Stick-01.png",
@@ -651,6 +658,13 @@
    "member": "16x16 Survival RPG Icons/Tools/Sword-01.png",
    "transform": "copied unchanged",
    "sha256": "6eaba3365636d93adf0aa8882c48a57533f705e27037869c7b26549a340d0102"
+  },
+  {
+   "file": "assets/icons/dirt.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Dirt-Block-13.png",
+   "transform": "copied unchanged",
+   "sha256": "1b1f7d096dc77ac43327472f037166f56f3e59eba2d8974e26f7ef43e16a2b27"
   },
   {
    "file": "assets/icons/feather.png",
@@ -765,6 +779,13 @@
    "sha256": "5dd354e98b38d296fb76292a9e8e448561b17b610deb92e1f21f5f91db5d0997"
   },
   {
+   "file": "assets/icons/ladder.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Sticks-01.png",
+   "transform": "copied unchanged",
+   "sha256": "133d38413fa27302f8a93638f8e749b9f5defd4f65e6f37a79c4a1e0ea6fe33c"
+  },
+  {
    "file": "assets/icons/leather.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Textile/Leather-Fabric-07.png",
@@ -814,6 +835,20 @@
    "sha256": "754f265a96b315852e964ed7569c0a868f6e58f5acdf29bbafa73a6b4d654508"
   },
   {
+   "file": "assets/icons/minecart.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Metal/Metal-Bucket-02.png",
+   "transform": "copied unchanged",
+   "sha256": "cd73ee48200fbd481c2629a37e0ebf26bb541ea747825dbc0ce29e5b12827498"
+  },
+  {
+   "file": "assets/icons/ore_sample.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-10.png",
+   "transform": "copied unchanged",
+   "sha256": "531a245423037ab805bbbaa58649988fdd4243c1561cc4438dd8b212a61faab0"
+  },
+  {
    "file": "assets/icons/padlock.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Metal/Metal-Nugget-02.png",
@@ -849,6 +884,13 @@
    "sha256": "4540e32914ab13fbbd20aba1bc15dc7fda97c9f2a107e43e9e6e8a1123014ead"
   },
   {
+   "file": "assets/icons/prospecting_kit.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Backpack-05.png",
+   "transform": "copied unchanged",
+   "sha256": "25e49a00e9a95a24e11f940200a936ecaa5de6d6ff642681c80a9f1f98805f8c"
+  },
+  {
    "file": "assets/icons/rabbit_pelt.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Textile/Rodent-Pelt-01.png",
@@ -870,6 +912,34 @@
    "sha256": "de18287ebf5a766d0a64872b6fe931340e979bcd42ec2bac4be383adb9abf98f"
   },
   {
+   "file": "assets/icons/shovel.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Shovel-05.png",
+   "transform": "copied unchanged",
+   "sha256": "f0a26aff20bbcf51fd34a9ea4ce217257129bcb2b671cf89d328bf1dced51a5b"
+  },
+  {
+   "file": "assets/icons/shovel_blade.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Metal-Slab-05.png",
+   "transform": "copied unchanged",
+   "sha256": "aa8dbe8cdf1dbd64f25a1eb60349d271fa2ed2cb6b3adfc21ff02d09741ea7a7"
+  },
+  {
+   "file": "assets/icons/shovel_haft.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Shovel-15.png",
+   "transform": "copied unchanged",
+   "sha256": "16b91b174215899643714488cd2b8951dae8be62d1200889871cd0767f4e4e86"
+  },
+  {
+   "file": "assets/icons/spoil.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-02.png",
+   "transform": "copied unchanged",
+   "sha256": "3954edfda45e62cbd828127434a3be1a3dc07365139921274ed4b4cc24292e75"
+  },
+  {
    "file": "assets/icons/stone.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Rock-Chunk-01.png",
@@ -882,6 +952,27 @@
    "member": "16x16 Survival RPG Icons/Liquid/Large-Potion-05.png",
    "transform": "copied unchanged",
    "sha256": "fb811d75ea147c20c54f1b73f6876e7f4ea521d22f69fe237aaf5dda62d5ad88"
+  },
+  {
+   "file": "assets/icons/timber_support.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Wood-Log-Block-06.png",
+   "transform": "copied unchanged",
+   "sha256": "19f72aee59308e079e1171be025d7906d713d8cd8a34fe230aa381f8a095b79b"
+  },
+  {
+   "file": "assets/icons/topsoil.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Dirt-Block-01.png",
+   "transform": "copied unchanged",
+   "sha256": "4a813af2eb1520d0660580cd6be5740cadf3d20e5e33423594e1d95dc757da97"
+  },
+  {
+   "file": "assets/icons/track_section.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Wood-Plank-Type-B-04.png",
+   "transform": "copied unchanged",
+   "sha256": "653c619529f1647f4986d4cafcb38c45534e89c5e9165d9809b47e3714a7649e"
   },
   {
    "file": "assets/icons/wheat.png",
@@ -2842,6 +2933,55 @@
    "member": "Png/Horse.png",
    "transform": "every 96 px cell reduced by 1/3 (box, alpha cut at 128) to 32 px frames",
    "sha256": "eae23438c4138dd96f49de7717014a90c985975d47f1cdfb91d5ecf540fc72f2"
+  },
+  {
+   "file": "assets/terrain/walkway_ns.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "the 16 x 16 middle of frame 0's planks at (8, 12), 1:1",
+   "sha256": "c5d4211ed3f1026f2c77cbf8ae5312f7f7f65dcfca21fa10090c2bc36e8d59c8"
+  },
+  {
+   "file": "assets/terrain/stairs_ns.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "frame 0's planks at (8, 12), 1:1, a riser line darkened to 0.62 every 4 rows",
+   "sha256": "dfcad12ad55176ffbec992664834cbc46534dff72d70574adef1fc06dad28958"
+  },
+  {
+   "file": "assets/terrain/walkway_ew.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "the 16 x 16 middle of frame 1's planks at (48, 20), 1:1",
+   "sha256": "111f3406a56314f70457ea8fa8499d66bcd9783814db8789b399e9db3a0a575c"
+  },
+  {
+   "file": "assets/terrain/stairs_ew.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "frame 1's planks at (48, 20), 1:1, a riser line darkened to 0.62 every 4 columns",
+   "sha256": "891d24941af8f5a1c59b631b68cc2178748fe3c674eba53af2d4543e7d5f7cd4"
+  },
+  {
+   "file": "assets/icons/nails.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Metal/Metal-Nugget-03.png",
+   "transform": "copied unchanged",
+   "sha256": "71b9830288e958e82b26a0a340746718db287641b0303759c3af62e6b3c6bc6e"
+  },
+  {
+   "file": "assets/icons/mallet.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Hammer-15.png",
+   "transform": "copied unchanged",
+   "sha256": "362ad7188cddd06fe1b6574efe47f59fb01c569a4b96689bae6d2592c397cc63"
+  },
+  {
+   "file": "assets/terrain/steps.png",
+   "source": "ForgottenMemories.zip",
+   "member": "TileSet.png",
+   "transform": "the 32 x 32 piece of the laid-stone paving at (1472, 608), reduced 1/2 (box), a step line darkened to 0.62 every 4 rows",
+   "sha256": "f6915916f816a78d7b3ea05b5beb14c28caa1854f1a25a66b7a29d0fe28460d2"
   }
  ]
 }

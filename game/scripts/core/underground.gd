@@ -1,0 +1,456 @@
+class_name Underground
+extends RefCounted
+## The underground levels and the entrances that join them to the surface (MIN-A, owner OD-29: separate underground
+## maps tied to their surface places; docs/build17/MIN_A_ARCHITECTURE.md). Each level map (LevelMap) lies in the
+## surface's own coordinates, directly under the ground it belongs to; a level is a depth (0 the surface, -1 the first
+## level below), and two maps of one level never overlap, so (level, x, y) names one cell of the world.
+##
+## Generated from the world's seed by integer hashing (Overworld.hash32, salts of its own) and the village's static
+## layout (village.json "solid"), never from world.rng or runtime state, and never in the overworld's chunks: the same
+## seed gives the same galleries on every machine. Not saved: World.load_dict makes it again from the seed. The
+## galleries and their seams are described by data/underground.json (mml-underground/1).
+##
+## MIN-F/MIN-H: a gallery entry may be a natural cave ("kind": "cave") on a deeper level under the same rock, with its
+## own mouth on the surface (its own portal) and its own salt, so its passages are not the gallery's. Maps of different
+## levels may lie under the same ground (levels stack); `levels_at` lists every level a point may lie on.
+
+const GEN_VERSION := 3                 # 2 (MIN-F): the natural cave under the hill added (the adit gallery is unchanged);
+                                       # 3 (MIN-F2): hidden ore in the deep rock of every level (nothing visible moved)
+const SURFACE := 0
+
+var seed := 1
+var maps: Array = []                   # LevelMap, sorted by id
+var portals: Array = []                # {id, ends: [{level, stand: Vector2i, door: Vector2i}, {...}]}; MIN-F2 shafts: kind "shaft"
+var seams: Array = []                  # the generated seams, as deposit records {x, y, ore, amount, level}
+var hidden: Array = []                 # MIN-F2 (Q2): ore in the deep rock, generated from the seed, not in World.deposits
+                                       # (nobody knows of it) until a tunnel opens a cell beside it; records as seams'
+var specs := {}                        # map id -> its gallery entry in underground.json (tiles, for the view)
+var _village: VillageMap
+var _deep: Dictionary = {}             # underground.json "deep": the template of a level made below the cave by a shaft
+
+
+static func create(world_seed: int, village: VillageMap) -> Underground:
+	var u := Underground.new()
+	u.seed = world_seed
+	u._village = village
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/underground.json"))
+	u._deep = data.get("deep", {})
+	var galleries: Array = data.galleries.duplicate()
+	galleries.sort_custom(func(a, b): return str(a.id) < str(b.id))
+	for g in galleries:
+		u._make_gallery(g, village)
+	return u
+
+
+# ---------------------------------------------------------------- MIN-F2: deep levels, shafts, hidden ore ----
+## A level below the cave, made when the first shaft reaches it (MIN-F2, Q4): all rock under the same ground as the
+## map above it (`like`), its hidden ore placed by the same generator (its own salt), the deep template's tiles.
+## Bounded by mine_works.json shaft.deepest. Returns the new map (or the one there already).
+func add_level(level: int, like: LevelMap) -> LevelMap:
+	for m: LevelMap in maps:
+		if m.level == level:
+			return m
+	var g: Dictionary = _deep.duplicate(true)
+	g.id = "deep_%d" % -level
+	g.level = level
+	var m := LevelMap.new(str(g.id), level, like.region)
+	m.setup_astar()
+	maps.append(m)
+	maps.sort_custom(func(a: LevelMap, b: LevelMap): return a.id < b.id)
+	specs[m.id] = g
+	_salt = int(g.get("salt", 3000)) - level * 100
+	_place_hidden(g, m)
+	_salt = 0
+	return m
+
+
+func add_portal(p: Dictionary) -> void:
+	portals.append(p)
+
+
+func remove_portal(id: String) -> void:
+	for p in portals.duplicate():
+		if str(p.id) == id:
+			portals.erase(p)
+
+
+## The hidden seam at a cell of a level, or {}.
+func hidden_at(level: int, c: Vector2i) -> Dictionary:
+	for h in hidden:
+		if int(h.level) == level and int(h.x) == c.x and int(h.y) == c.y:
+			return h
+	return {}
+
+
+## Hidden ore a save already holds as an exposed seam (by level and cell) is not hidden any more.
+func drop_found(deposits: Array) -> void:
+	var have := {}
+	for d in deposits:
+		have[Vector3i(int(d.get("level", 0)), int(d.x), int(d.y))] = true
+	hidden = hidden.filter(func(h): return not have.has(Vector3i(int(h.level), int(h.x), int(h.y))))
+
+
+## Hidden ore of a level map: in rock with rock all round it (never beside any floor, so nothing shows), under the
+## hill's static rock, inside the map's edge, no two within two cells, in a hashed order (the world seed and the map's
+## salt); the village's own amount for its ore, as the visible seams.
+func _place_hidden(g: Dictionary, m: LevelMap) -> void:
+	var specs_h: Array = g.get("hidden", [])
+	if specs_h.is_empty() or _village == null:
+		return
+	var amount_of := {}
+	for d in _village.data.deposits:
+		if not amount_of.has(str(d.ore)):
+			amount_of[str(d.ore)] = int(d.amount)
+	var cands := []
+	for c in m.cells():
+		if not m.region.grow(-1).has_point(c) or not under_rock(_village, c):
+			continue
+		var deep := true
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if not m.is_solid(c + Vector2i(dx, dy)):
+					deep = false
+		for s in seams:
+			if int(s.level) == m.level and maxi(absi(int(s.x) - c.x), absi(int(s.y) - c.y)) <= 1:
+				deep = false
+		if deep:
+			cands.append([Overworld.hash32(seed, 61 + _salt, c.x, c.y), c.y, c.x])
+	cands.sort()
+	var taken: Array[Vector2i] = []
+	var ci := 0
+	for spec in specs_h:
+		for k in int(spec.count):
+			while ci < cands.size():
+				var c := Vector2i(int(cands[ci][2]), int(cands[ci][1]))
+				ci += 1
+				if taken.any(func(t: Vector2i): return maxi(absi(t.x - c.x), absi(t.y - c.y)) <= 2):
+					continue
+				taken.append(c)
+				var ore := str(spec.ore)
+				hidden.append({"x": c.x, "y": c.y, "ore": ore, "amount": int(spec.get("amount", amount_of.get(ore, 0))), "level": m.level})
+				break
+
+
+# ---------------------------------------------------------------- lookups --------------------
+## The level map holding a cell of a level, or null (rock everywhere off the maps).
+func map_at(level: int, c: Vector2i) -> LevelMap:
+	for m: LevelMap in maps:
+		if m.level == level and m.in_level(c):
+			return m
+	return null
+
+
+func level_map(id: String) -> LevelMap:
+	for m: LevelMap in maps:
+		if m.id == id:
+			return m
+	return null
+
+
+## Collision below the surface (level < 0). Everything off a map is rock.
+func is_solid(level: int, c: Vector2i) -> bool:
+	var m := map_at(level, c)
+	return m == null or m.is_solid(c)
+
+
+## A route on one level below the surface, on the map that holds `from`; empty if none.
+func find_path(level: int, from: Vector2i, to: Vector2i) -> PackedVector2Array:
+	var m := map_at(level, from)
+	if m == null:
+		return PackedVector2Array()
+	return m.find_path(from, to)
+
+
+## The crossing an actor on `cell` of `level` makes by stepping in direction `dir`: the portal whose end there has
+## `cell` as its stand and whose door `dir` points at. {portal, from: the end left, to: the end reached}, or {}.
+func portal_from(level: int, cell: Vector2i, dir: Vector2) -> Dictionary:
+	if dir.length() < 0.1:
+		return {}
+	for p in portals:
+		for i in 2:
+			var e: Dictionary = p.ends[i]
+			if int(e.level) != level or e.stand != cell:
+				continue
+			var toward := Vector2(e.door - e.stand)
+			if dir.normalized().dot(toward.normalized()) > 0.6:
+				return {"portal": p, "from": e, "to": p.ends[1 - i]}
+	return {}
+
+
+## The first crossing on the way from level `from` to level `to` (the level router: a breadth-first search over the
+## portals, which are few): {portal, from: the end to walk to on `from`, to: the end arrived at}, or {} if no way.
+## Portals are taken in their sorted order, so the route is the same on every machine.
+func next_leg(from: int, to: int) -> Dictionary:
+	if from == to:
+		return {}
+	var first := {from: {}}
+	var queue := [from]
+	var qi := 0
+	while qi < queue.size():
+		var lv: int = queue[qi]
+		qi += 1
+		for p in portals:
+			for i in 2:
+				var e: Dictionary = p.ends[i]
+				var o: Dictionary = p.ends[1 - i]
+				if int(e.level) != lv or first.has(int(o.level)):
+					continue
+				var leg: Dictionary = first[lv] if lv != from else {"portal": p, "from": e, "to": o}
+				first[int(o.level)] = leg
+				if int(o.level) == to:
+					return leg
+				queue.append(int(o.level))
+	return {}
+
+
+## The level a point lies on as far as the ground can tell: the floor of a level map, and the rock walls beside it
+## (where its seams are), under the surface's static rock are that level's (the galleries lie only there, with a cell
+## of rock all round their floor, MIN-A); anything else is the surface's. Where levels stack (MIN-F: the cave under the
+## gallery) the ground alone cannot tell: this is the shallowest, and World.level_at settles it by who stands there.
+func level_at(village: VillageMap, c: Vector2i) -> int:
+	var lv := levels_at(village, c)
+	return SURFACE if lv.is_empty() else int(lv[0])
+
+
+## Every level whose floor or walls lie at `c` under the surface's static rock, shallowest first ([] the surface's).
+func levels_at(village: VillageMap, c: Vector2i) -> Array:
+	var out := []
+	if not _static_solid(village, c):
+		return out
+	for m: LevelMap in maps:
+		if m.in_level(c) and (not m.is_solid(c) or m._touches_floor(c)) and not out.has(m.level):
+			out.append(m.level)
+	out.sort()
+	out.reverse()
+	return out
+
+
+## The levels below the surface that a walker can reach from it through the portals (World.villager_levels), deepest
+## last: [0, -1, -2] with the cave.
+func reachable_levels() -> Array:
+	var out := [SURFACE]
+	var lv := []
+	for m: LevelMap in maps:
+		if not lv.has(m.level) and not next_leg(SURFACE, m.level).is_empty():
+			lv.append(m.level)
+	lv.sort()
+	lv.reverse()
+	out.append_array(lv)
+	return out
+
+
+## The cell rule every level's floor keeps (MIN-A; MIN-F's tunnels too): under the surface's static rock with a cell of
+## rock all round it, so no surface walker ever stands beside a floor below.
+func under_rock(village: VillageMap, c: Vector2i) -> bool:
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if not _static_solid(village, c + Vector2i(dx, dy)):
+				return false
+	return true
+
+
+## The end of a portal on `level` whose door is `cell` ({} none): a tap on the adit means "go in".
+func portal_door(level: int, cell: Vector2i) -> Dictionary:
+	for p in portals:
+		for e in p.ends:
+			if int(e.level) == level and e.door == cell:
+				return e
+	return {}
+
+
+## Fresh copies of the generated seams (World.setup puts them in World.deposits).
+func seam_records() -> Array:
+	return seams.map(func(s): return s.duplicate())
+
+
+## The gallery's map and seams as text (tests: identical for a seed).
+func fingerprint() -> String:
+	var parts := PackedStringArray()
+	for m: LevelMap in maps:
+		parts.append("%s %d %s\n%s" % [m.id, m.level, str(m.region), m.to_text()])
+	for s in seams:
+		parts.append("%d,%d,%d,%s,%d" % [int(s.level), int(s.x), int(s.y), str(s.ore), int(s.amount)])
+	for h in hidden:
+		parts.append("hidden %d,%d,%d,%s,%d" % [int(h.level), int(h.x), int(h.y), str(h.ore), int(h.amount)])
+	return "\n".join(parts)
+
+
+# ---------------------------------------------------------------- generation -----------------
+var _salt := 0                         # the gallery being made: its data's "salt" (0 the adit gallery; the cave its own)
+
+
+## 0..n-1 from the hash of the seed, a salt and a cell.
+func _roll(salt: int, a: int, b: int, n: int) -> int:
+	return Overworld.hash32(seed, salt + _salt, a, b) % n
+
+
+static func _static_solid(village: VillageMap, c: Vector2i) -> bool:
+	if not village.in_village(c):
+		return false
+	return str(village.data.solid[c.y])[c.x] == "1"
+
+
+## One gallery under a surface place: the 4-connected rock of the village's static layout that holds the portal's
+## door is the ground it may lie under (the mine hill for the adit). Floor only under that rock; winding passages
+## from the entrance, chambers where they end, one smoothing pass, then only what the entrance reaches is kept.
+func _make_gallery(g: Dictionary, village: VillageMap) -> void:
+	var level := int(g.level)
+	_salt = int(g.get("salt", 0))
+	var surface_stand := Vector2i(int(g.portal.stand[0]), int(g.portal.stand[1]))
+	var door := Vector2i(int(g.portal.door[0]), int(g.portal.door[1]))
+	var inside := door - surface_stand + door             # one step further in, beyond the adit's mouth
+	# the rock it lies under: flood the static solid cells from the door, within the cap (max_depth cells inward from
+	# the door, max_half_w either side; for a mouth facing south, as the adit's, the old rectangle exactly)
+	var inward := inside - door
+	var hw := int(g.max_half_w)
+	var dp := int(g.max_depth)
+	var cap := Rect2i(door - Vector2i(hw, dp), Vector2i(2 * hw + 1, dp + 1))
+	if inward == Vector2i(0, 1):
+		cap = Rect2i(door - Vector2i(hw, 0), Vector2i(2 * hw + 1, dp + 1))
+	elif inward == Vector2i(1, 0):
+		cap = Rect2i(door - Vector2i(0, hw), Vector2i(dp + 1, 2 * hw + 1))
+	elif inward == Vector2i(-1, 0):
+		cap = Rect2i(door - Vector2i(dp, hw), Vector2i(dp + 1, 2 * hw + 1))
+	var rock := {door: true}
+	var queue: Array[Vector2i] = [door]
+	var qi := 0
+	while qi < queue.size():
+		var c: Vector2i = queue[qi]
+		qi += 1
+		for d: Vector2i in VillageMap.SIDES:
+			var n := c + d
+			if not rock.has(n) and cap.has_point(n) and _static_solid(village, n):
+				rock[n] = true
+				queue.append(n)
+	var lo := door
+	var hi := door
+	for c: Vector2i in rock:
+		lo = Vector2i(mini(lo.x, c.x), mini(lo.y, c.y))
+		hi = Vector2i(maxi(hi.x, c.x), maxi(hi.y, c.y))
+	var region := Rect2i(lo, hi - lo + Vector2i.ONE).grow(1)
+	region = region.merge(Rect2i(surface_stand, Vector2i.ONE))     # the daylight mouth (rock below) is on the map
+	# floor only where the rock above is at least a cell deep all round: no surface walker stands beside the floor
+	var allowed := func(c: Vector2i) -> bool:
+		if not region.grow(-1).has_point(c):
+			return false
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if not rock.has(c + Vector2i(dx, dy)):
+					return false
+		return true
+	var open := {}
+	var carve := func(c: Vector2i) -> void:
+		if allowed.call(c):
+			open[c] = true
+	# the way in: the inner mouth under the adit and a short straight passage into the hill
+	var keep := [door]
+	open[door] = true
+	for k in int(g.entry_len):
+		var c := door + (inside - door) * (k + 1)
+		carve.call(c)
+		keep.append(c)
+	var start: Vector2i = keep[keep.size() - 1]
+	var dirs := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1)]
+	var ends: Array[Vector2i] = []
+	var turn0 := posmod(dirs.find(inward) - 6, 8) if dirs.has(inward) else 0      # 0 for a mouth facing south
+	for wk in int(g.worms):
+		var at := start
+		var dir: int = posmod([4, 0, 6, 5, 7][wk % 5] + turn0, 8)  # across, across, inward, then the diagonals
+		for s in int(g.worm_steps):
+			var turn: int = [-1, 0, 0, 1][_roll(11 + wk, s, 0, 4)]
+			dir = posmod(dir + turn, 8)
+			var nxt: Vector2i = at + (dirs[dir] as Vector2i)
+			var tries := 0
+			while not allowed.call(nxt) and tries < 8:
+				dir = posmod(dir + (1 if _roll(12 + wk, s, tries, 2) == 0 else -1) * (1 + tries / 2), 8)
+				nxt = at + (dirs[dir] as Vector2i)
+				tries += 1
+			if not allowed.call(nxt):
+				break
+			if dir % 2 == 1:
+				carve.call(Vector2i(nxt.x, at.y))                # a diagonal step keeps the passage four-connected
+			at = nxt
+			carve.call(at)
+			if _roll(13 + wk, s, 1, 100) < int(g.wide_percent):
+				for d: Vector2i in VillageMap.SIDES:
+					carve.call(at + d)                           # the passage widens here
+		ends.append(at)
+	# chambers: irregular blobs where the first passages end
+	for ci in mini(int(g.chambers), ends.size()):
+		var cc: Vector2i = ends[ci]
+		var rx := int(g.chamber_rx[0]) + _roll(21, ci, 0, int(g.chamber_rx[1]) - int(g.chamber_rx[0]) + 1)
+		var ry := int(g.chamber_ry[0]) + _roll(22, ci, 0, int(g.chamber_ry[1]) - int(g.chamber_ry[0]) + 1)
+		for dy in range(-ry, ry + 1):
+			for dx in range(-rx, rx + 1):
+				var inside2 := dx * dx * ry * ry + dy * dy * rx * rx
+				var lim := rx * rx * ry * ry
+				var wob := (_roll(23, cc.x + dx, cc.y + dy, 100) - 50) * lim / 160     # an uneven edge
+				if inside2 <= lim + wob:
+					carve.call(cc + Vector2i(dx, dy))
+	# one smoothing pass: rock nearly surrounded by floor opens, a floor cell alone closes
+	var after := open.duplicate()
+	for y in range(region.position.y, region.end.y):
+		for x in range(region.position.x, region.end.x):
+			var c := Vector2i(x, y)
+			if not allowed.call(c) or keep.has(c):
+				continue
+			var n8 := 0
+			for d in dirs:
+				if open.has(c + (d as Vector2i)):
+					n8 += 1
+			if not open.has(c) and n8 >= 5:
+				after[c] = true
+			elif open.has(c) and n8 <= 1:
+				after.erase(c)
+	open = after
+	var m := LevelMap.new(str(g.id), level, region)
+	for c: Vector2i in open:
+		m.solid[m._i(c)] = 0
+	# no black holes (DVW-A10): only the floor the entrance reaches stays floor
+	var reach := m.reachable_from(door)
+	for c in m.floor_cells():
+		if not reach.has(c):
+			m.solid[m._i(c)] = 1
+	m.setup_astar()
+	maps.append(m)
+	maps.sort_custom(func(a: LevelMap, b: LevelMap): return a.id < b.id)
+	specs[m.id] = g
+	portals.append({"id": str(g.portal.id), "ends": [
+		{"level": SURFACE, "stand": surface_stand, "door": door},
+		{"level": level, "stand": door, "door": surface_stand}]})
+	_place_seams(g, m, village, rock, door)
+	_place_hidden(g, m)                  # MIN-F2: after the visible seams, so they are unchanged
+	_salt = 0
+
+
+## The gallery's seams: on wall cells (rock beside the floor) under the surface rock, away from the entrance, no two
+## side by side, in a hashed order; each the village's own amount for its ore (village.json "deposits"), unless the
+## gallery's data names one. Ordinary deposit records with the level.
+func _place_seams(g: Dictionary, m: LevelMap, village: VillageMap, rock: Dictionary, door: Vector2i) -> void:
+	var amount_of := {}
+	for d in village.data.deposits:
+		if not amount_of.has(str(d.ore)):
+			amount_of[str(d.ore)] = int(d.amount)
+	var cands := []
+	for c in m.wall_cells():
+		if not rock.has(c) or maxi(absi(c.x - door.x), absi(c.y - door.y)) <= 2:
+			continue
+		cands.append([Overworld.hash32(seed, 41 + _salt, c.x, c.y), c.y, c.x])
+	cands.sort()
+	var taken := {}
+	var ci := 0
+	for spec in g.seams:
+		for k in int(spec.count):
+			while ci < cands.size():
+				var c := Vector2i(int(cands[ci][2]), int(cands[ci][1]))
+				ci += 1
+				var crowded := false
+				for d: Vector2i in VillageMap.SIDES:
+					if taken.has(c + d):
+						crowded = true
+				if crowded:
+					continue
+				taken[c] = true
+				var ore := str(spec.ore)
+				seams.append({"x": c.x, "y": c.y, "ore": ore, "amount": int(spec.get("amount", amount_of.get(ore, 0))), "level": m.level})
+				break

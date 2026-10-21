@@ -105,6 +105,50 @@ func _data_tests() -> void:
 	check(ms.contains("3 plank") and ms.contains("open stall") and ms.contains("close stall") and ms.contains("everything has sold") and ms.contains("5%") and ms.contains("daily rent"),
 		"the market stall guide: 3 planks, OPEN / CLOSE, settlement on closing or selling out, the manor's 5% on every stall, the pitches' rent")
 	check("guide:market_stall" in w.search("market stall commission"), "search finds the market stall guide")
+	# CON-01 contracts and DVW-B4 spoiling and wear
+	var con: String = w.pages.get("sys:contracts", {}).get("text", "")
+	check(con.contains("propose a contract") and con.contains("set aside") and con.contains("lapses") and con.contains("there is no fine")
+			and con.contains("%d contracts at once" % int(Contracts.cfg().max_open_per_seller)) and con.contains("villagers use the same contracts"),
+		"the contracts page: proposing, coins set aside, lapsing without a fine, the seller's limit, villagers' own orders")
+	check("sys:contracts" in w.search("contract") and "sys:contracts" in w.search("counteroffer"), "search finds the contracts page")
+	var dec: String = w.pages.get("sys:decay", {}).get("text", "")
+	check(dec.contains("wheat") and dec.contains("handcart") and dec.contains("falling apart") and "sys:decay" in w.search("spoil"), "the spoiling and wear page, found by searching spoil")
+	check(w.pages["item:wheat"].text.contains("spoil a day") and w.pages["item:leather_armor"].text.contains("days worn") and not w.pages["item:iron_ore"].text.contains("spoil"),
+		"item pages say how food keeps and how long armour lasts; ore keeps")
+	# Build 17 mining and geology, the manor's job board, and what is not built yet (WIKI-B17)
+	var mine_ids := ["sys:mining", "sys:prospecting", "sys:open_pits", "sys:mining_underground", "sys:minecarts", "sys:mine_shafts", "sys:mine_stability", "sys:mine_backfill", "sys:manor_jobs"]
+	check(mine_ids.all(func(pid): return w.pages.has(pid)), "the Build 17 mining, prospecting, pit, underground, stability, backfill and job board pages exist")
+	for q in [["minecart", "sys:minecarts"], ["prospect", "sys:prospecting"], ["backfill", "sys:mine_backfill"], ["trial pit", "sys:prospecting"], ["open pit", "sys:open_pits"], ["adit", "sys:mining_underground"],
+			["timber support", "sys:mining_underground"], ["shaft", "sys:mine_shafts"], ["ladder", "sys:mine_shafts"], ["collapse", "sys:mine_stability"], ["quarry", "sys:mining"], ["assay", "sys:prospecting"],
+			["job board", "sys:manor_jobs"], ["any work for me", "sys:manor_jobs"], ["worked out", "sys:mining"]]:
+		check(q[1] in w.search(q[0]), "search '%s' finds %s" % [q[0], q[1]])
+	var mt: String = w.pages["sys:mining"].text
+	check(mt.contains("(14 left)") and mt.contains("grey rock") and mt.contains("no mining wage") and mt.contains("never stops you"), "the mining page: the N left prompt, the grey rock after a seam, independent miners, the level that gates nothing")
+	var pt: String = w.pages["sys:prospecting"].text
+	check(pt.contains("never certain") and pt.contains("trial pit") and pt.contains("prospector's kit") and pt.contains("the smith"), "the prospecting page: samples, the smith's assay that is never certain, trial pits")
+	check(w.pages["sys:open_pits"].text.contains("topsoil") and w.pages["sys:open_pits"].text.contains("ramp") and w.pages["sys:mine_backfill"].text.contains("only you can start"), "the open pit and backfill pages: layers, the ramp, backfill only by the player")
+	var cm: String = w.pages["sys:contracts"].text
+	check(cm.contains("nothing is signed from a distance") and cm.contains("hire") and not cm.contains("offer you such work"), "the contracts page: signing in person for goods and work; no live villager offers of work")
+	var todo_ids := ["earth_reuse", "bigger_pits", "selling_finds", "contract_advances", "contract_results_pay", "contract_disputes", "farm_labour_contracts", "villagers_hire", "service_signing",
+			"injuries", "illness", "treatment", "practitioners", "medical_costs", "lasting_harm"]
+	check(todo_ids.all(func(t): return w.pages.has("todo:" + t) and w.pages["todo:" + t].category == "notyet" and w.pages["todo:" + t].blocks[0].t == "note" and str(w.pages["todo:" + t].blocks[0].text).begins_with("Not in the game yet.")),
+		"every approved-but-unbuilt Build 17 idea and health placeholder is marked Not in the game yet")
+	check("todo:injuries" in w.search("injury") or "todo:injuries" in w.search("injuries"), "search finds the health placeholders")
+	var plain := true
+	var odd := []
+	for pid in mine_ids + ["node:open_pit", "node:prospect_clue", "node:tunnel_rock", "node:iron_seam", "node:stone_seam", "item:topsoil", "item:spoil", "item:timber_support", "item:ore_sample", "item:ladder", "item:track_section"]:
+		var tx: String = w.pages[pid].text
+		for bad in [".gd", ".json", "World.deposit", "World.mine", "OpenPits", "MineWorks", "mine_unit", "quarry_host_stone", "expose_reach", "mined_", "dug_", "Q18-", "OD-2", "MIN-"]:
+			if tx.contains(bad.to_lower()):
+				plain = false
+				odd.append("%s: %s" % [pid, bad])
+	check(plain, "the mining pages are written for the player, without code names or register ids %s" % [odd])
+	var no_shift := true
+	for pid in w.pages:
+		if str(w.pages[pid].text).contains("shift in the mine"):
+			no_shift = false
+	check(no_shift, "the retired mine-shift quest is mentioned nowhere in the wiki")
+	check(not w.pages["sys:mine_stability"].text.contains("survive") and not w.pages["sys:mine_stability"].text.contains("killed"), "the stability page leaves a collapse's outcome for a person to its own page")
 	# other systems add pages
 	Wiki.add_provider(func(wk: Wiki): wk.add_page("sys:test_extra", "Extra system", "systems", [Wiki.p("A test page about glowworms.")]))
 	var w2 := Wiki.build()

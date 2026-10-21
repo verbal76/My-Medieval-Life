@@ -74,6 +74,11 @@ jobs:
           $godot --headless --path game --script res://tests/world_test.gd
           $godot --headless --path game --script res://tests/aging_test.gd
           $godot --headless --path game --script res://tests/wiki_test.gd
+          $godot --headless --path game --script res://tests/stone_test.gd
+          $godot --headless --path game --script res://tests/job_board_test.gd
+          $godot --headless --path game --script res://tests/early_game_test.gd
+          $godot --headless --path game --script res://tests/parity_mining_test.gd
+          $godot --headless --path game --script res://tests/equip_test.gd
           $godot --headless --path game --script res://tests/skills_test.gd
           $godot --headless --path game --script res://tests/chests_test.gd
           $godot --headless --path game --script res://tests/property_test.gd
@@ -100,6 +105,18 @@ jobs:
           $godot --headless --path game --script res://tests/farm_plots_test.gd
           $godot --headless --path game --script res://tests/farm_place_test.gd
           $godot --headless --path game --script res://tests/herd_test.gd
+          $godot --headless --path game --script res://tests/contracts_test.gd
+          $godot --headless --path game --script res://tests/decay_test.gd
+          $godot --headless --path game --script res://tests/terrain_test.gd
+          $godot --headless --path game --script res://tests/underground_test.gd
+          $godot --headless --path game --script res://tests/quarry_test.gd
+          $godot --headless --path game --script res://tests/crafts_test.gd
+          $godot --headless --path game --script res://tests/prospecting_test.gd
+          $godot --headless --path game --script res://tests/discovery_test.gd
+          $godot --headless --path game --script res://tests/openpit_test.gd
+          $godot --headless --path game --script res://tests/services_test.gd
+          $godot --headless --path game --script res://tests/underground_ext_test.gd
+          $godot --headless --path game --script res://tests/underground_struct_test.gd
           # PROSPECTIVE Expansion 19 (PROS-19, wip/expansion19-preparation): the isolated judgment prototype
           $godot --headless --path game --script res://tests/judgment_test.gd
           $godot --headless --path game --script res://tests/judgment_live_test.gd

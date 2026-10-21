@@ -815,7 +815,7 @@ func needs(n: NPC) -> Array:
 		if gap > 0 and n.inv.count(id) * 2 < int(caps[id]):
 			out.append({"item": id, "qty": gap, "urgency": 1 if n.inv.count(id) == 0 else 0, "pantry": false})
 	if n.job in ["carpenter", "smith", "laborer"]:      # what open building sites ask for (construction.gd)
-		for id in ["plank", "stone", "log", "iron_bar"]:
+		for id in ["plank", "building_block", "stone", "log", "iron_bar"]:      # STONE-01: blocks; stone for older sites
 			var short: int = w.construction.open_need(id) - n.inv.count(id)
 			if short > 0 and (Construction.SELLERS.get(id, []) as Array).has(b.buy_role(n)):
 				out.append({"item": id, "qty": short, "urgency": 1, "pantry": false})

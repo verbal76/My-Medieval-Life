@@ -44,6 +44,7 @@ func _run() -> void:
 	_pl_gameplay()
 	_station_conflict()
 	_fse_defects()
+	_dvw_a12()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -64,16 +65,17 @@ func _deposits() -> void:
 	var w: World = main.world
 	var m: VillageMap = main.map
 	var dt: Dictionary = GameData.resources.deposit_tiles
+	var surface := w.deposits.filter(func(x): return World.level_of(x) == 0)   # the gallery's seams are drawn by its LevelView (underground_test)
 	var tiles: Dictionary = dt.ore
 	var bad := 0
-	for d in w.deposits:
+	for d in surface:
 		var drawn: int = main.view.tile_value(main.view.layer("below0"), Vector2i(d.x, d.y))
 		if drawn != int(tiles[d.ore]):
 			bad += 1
 			print("  seam ", d.ore, " at ", d.x, ",", d.y, " is drawn with tile ", drawn, ", not ", tiles[d.ore])
-	check(bad == 0 and w.deposits.size() > 0, "every seam is drawn with its own ore's tile (%d seams)" % w.deposits.size())
+	check(bad == 0 and surface.size() > 0, "every seam is drawn with its own ore's tile (%d seams)" % surface.size())
 	var seams := {}
-	for d in w.deposits:
+	for d in surface:
 		seams[Vector2i(d.x, d.y)] = true
 	var flecked := {}
 	for t in dt.flecked:
@@ -85,15 +87,15 @@ func _deposits() -> void:
 		if o != "stone":
 			ores[int(tiles[o])] = o
 	var wrong := 0
-	for d in w.deposits:
+	for d in surface:
 		var node := ResourceNodes.node_at(w, Vector2i(d.x, d.y), true)
 		var got: String = ResourceNodes.products(node.def).keys()[0] if not node.is_empty() else ""
 		if got != d.ore or str(node.def.name).to_lower().find(str(GameData.item_name(d.ore)).split(" ")[0].to_lower()) < 0:
 			wrong += 1
-	check(wrong == 0, "each seam's node, product and name agree (prompt, yield) for all %d seams" % w.deposits.size())
+	check(wrong == 0, "each seam's node, product and name agree (prompt, yield) for all %d seams" % surface.size())
 	check(int(m.data.tiles.depleted_rock) == int(dt.worked_out) and not flecked.has(int(dt.worked_out)), "a worked-out seam has its own hollow tile")
 	var stone_seam := {}
-	for d in w.deposits:
+	for d in surface:
 		if d.ore == "stone":
 			stone_seam = d
 	var left := int(stone_seam.amount)
@@ -587,9 +589,10 @@ func _pl2_004() -> void:
 	w.loot.append({"pos": Vector2(6.5, 5.5), "inv": Inventory.from_dict({"meat": 1}), "coins": 0, "from": "Somebody", "t": w.minutes - 4.0 * 1440.0})
 	var n0 := w.loot.size()
 	var spoiled0 := float(w.stats.get("spoiled_meat", 0.0))
+	var decay0 := float(w.stats.get("decay_meat", 0.0))        # DVW-B4: meat in store spoils at dawn too, counted apart
 	w._new_day()
 	check(w.loot.size() == n0 - 1, "PL2-004: a carcass spoils after %d days, a dead person's belongings stay" % int(World.ANIMAL_LOOT_DAYS))
-	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
+	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 - (float(w.stats.get("decay_meat", 0.0)) - decay0) == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
 	w.loot.clear()
 	main._sync_loot()
 
@@ -675,17 +678,17 @@ func _par05_awareness() -> void:
 	p.pos = at
 	victim.pos = at + Vector2(0.8, 0)
 	guard.pos = at + Vector2(25, 0)
-	main._crime(victim)
+	w.player_assault(victim)
 	check(guard.target == -1, "PAR-05: a guard who does not see the attack knows nothing of it")
 	victim.target = -1
 	guard.pos = at + Vector2(6, 0)
-	main._crime(victim)
+	w.player_assault(victim)
 	check(guard.target == -2, "PAR-05: a guard who sees the attack answers it")
 	guard.target = -1
 	victim.target = -1
 	guard.pos = victim.pos + Vector2(float(GameData.b("witness_radius")) + 4.0, 0)
 	victim.report = {}
-	main._crime(victim)
+	w.player_assault(victim)
 	check(guard.target == -1, "PAR-05: a guard out of sight does not hear an attack (there is no hearing)")
 	check(int(victim.report.get("offender", 0)) == -2, "PAR-05: the victim will report it")
 	victim.target = -1
@@ -704,7 +707,7 @@ func _par05_awareness() -> void:
 	wit.pos = at + Vector2(0, 2.0)
 	wit.report = {}
 	victim.pos = at + Vector2(0.8, 0)
-	main._crime(victim)
+	w.player_assault(victim)
 	check(int(wit.report.get("offender", 0)) == -2, "PAR-05: a witness will report it too")
 	wit.pos = guard.pos + Vector2(0, 1.5)
 	w.brain._report(wit)
@@ -727,7 +730,7 @@ func _par05_awareness() -> void:
 	p.pos = cell + Vector2(0, 3.0) if w.place_of(cell + Vector2(0, 3.0)) == "" else cell + Vector2(0, 5.0)
 	victim.pos = p.pos + Vector2(0.5, 0)
 	if w.place_of(p.pos) == "" and inside != "":
-		main._crime(victim)
+		w.player_assault(victim)
 		check(guard.target == -1, "PAR-05: a guard indoors neither sees nor hears an attack outside")
 	guard.target = -1
 	var bandit: NPC = null
@@ -1443,4 +1446,941 @@ func _fse_defects() -> void:
 			check(w.brain.band_eat(b0) and not b1.inv.has("bread"), "FSE-B06: the band's stores are shared: a bandit eats a comrade's bread")
 	# FSE-B07: the Apothecary is an outlet for flowers
 	check(NPCBrain.OUTLETS.get("flower", []).has("sage"), "FSE-B07: villagers can sell flowers to the Apothecary")
+
+
+# ---------------------------------------------------------------- DVW-A12 ---------------------
+## DVW-A12 (owner, 2026-10-21 directive section 6): the player's mining, felling and crafting rules live in core
+## (World.player_*); the interface only shows them. Each rule is checked in core, then through the interface.
+func _dvw_a12() -> void:
+	main.new_game()
+	_dvw_a12_mining()
+	_dvw_a12_felling()
+	_dvw_a12_crafting()
+	_dvw_a12_combat()
+	_dvw_a12_fireball()
+	_dvw_a12_pickpocket_reach()
+	_dvw_a12_reach()
+	_dvw_a12_planting()
+	_dvw_a12_loot()
+	_dvw_a12_xp()
+	_dvw_a12_livestock()
+	_dvw_a12_cast()
+	_dvw_a12_trading_xp()
+	_dvw_a12_field_owner()
+	_dvw_a12_theft_last()
+	_dvw_a12_rest()
+	_dvw_a12_sprint()
+	_dvw_a12_home_marks()
+	_dvw_a12_helper_budget()
+
+
+## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
+## sapling, the wear, a broken axe leaving the hand, 12 xp, the ledger count, the stump kept over a save.
+func _dvw_a12_felling() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var grown := w.trees.filter(func(t): return t.state == "grown" and not t.get("ow", false))
+	check(grown.size() >= 3, "DVW-A12 R2: the village has mature trees (%d)" % grown.size())
+	var tr: Dictionary = grown[0]
+	p.pos = _beside(Vector2i(int(tr.x), int(tr.y)))               # within reach (R15)
+	var fp := w.player_fell_plan(tr)
+	check(not fp.ok and str(fp.why) == "Requires an axe. The smith sells them.", "DVW-A12 R2: no axe, no felling (%s)" % str(fp.get("why", "")))
+	p.inv.add("axe")
+	fp = w.player_fell_plan(tr)
+	var want := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item("axe").get("speed", 1.0))
+	check(fp.ok and str(fp.tool) == "axe" and is_equal_approx(float(fp.secs), want), "DVW-A12 R2: the axe, and the felling time by its speed (%s)" % str(fp))
+	var chops := int(Trees.cfg().chops)
+	var logs0 := float(w.stats.get("felled_log", 0.0))
+	var felled0 := float(w.stats.get("trees_felled", 0.0))
+	var blows := 0
+	var r := {}
+	while blows < chops + 2:
+		blows += 1
+		r = w.player_chop(tr, 1, "axe")
+		if r.result != "blow":
+			break
+	check(r.result == "felled" and blows == chops and tr.state == "stump", "DVW-A12 R2: %d blows fell a mature tree to a stump (%d)" % [chops, blows])
+	check(int(r.logs) == 4 and p.inv.count("log") == 4 and not r.full and float(w.stats.get("felled_log", 0.0)) - logs0 == 4.0 and float(w.stats.get("trees_felled", 0.0)) - felled0 == 1.0, "DVW-A12 R2: four logs to the pack, counted (felled_log, trees_felled) (%s)" % str(r))
+	var sap := Trees.sapling_item(str(tr.get("species", "oak_summer")))
+	check(r.saplings == {sap: 1} and p.inv.count(sap) == 1, "DVW-A12 R2: the felled tree's sapling goes into the pack (%s)" % str(r.saplings))
+	check(int(p.skills.get("woodcutting", 0)) == 12 and int(p.inv.durability.get("axe", 0)) == int(GameData.item("axe").durability) - 3, "DVW-A12 R2: 12 xp and three wear on the axe a tree")
+	check(w.player_chop(tr, 1, "axe").result == "gone" and p.inv.count("log") == 4, "DVW-A12 R2: a stump takes no blow and gives nothing")
+	fp = w.player_fell_plan(tr)
+	check(not fp.ok and str(fp.why) == Trees.refusal("stump"), "DVW-A12 R2: a stump is refused before the felling starts (%s)" % str(fp.get("why", "")))
+	# a broken axe leaves the hand; a full pack sets the logs down
+	var tr2: Dictionary = grown[1]
+	p.tool = "axe"
+	p.inv.durability["axe"] = 3
+	p.inv.max_stacks = p.inv.ids().size()
+	p.inv.remove("log", p.inv.count("log"))
+	p.inv.add("stone", 1)
+	var loot0 := w.loot.size()
+	r = {}
+	for i in chops:
+		r = w.player_chop(tr2, -1, "axe")
+	check(r.result == "felled" and r.full and w.loot.size() > loot0 and (w.loot[loot0].inv as Inventory).count("log") == 4, "DVW-A12 R2: with a full pack the logs are set down at the player's feet (%s)" % str(r))
+	check(r.broke and not p.inv.has("axe") and p.tool == "", "DVW-A12 R2: an axe that breaks is gone from the pack and the hand")
+	while w.loot.size() > loot0:
+		w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	# through the interface: core's refusal is shown, and a tree is felled by the actions
+	p.inv = Inventory.new()
+	var tr3: Dictionary = grown[2]
+	p.pos = _beside(Vector2i(int(tr3.x), int(tr3.y)))
+	main.target = {"kind": "tree", "tree": tr3, "label": "Fell"}
+	main._use()
+	check(main.action.is_empty() and main.ui.toast.text.contains("Requires an axe"), "DVW-A12 R2: the interface shows core's refusal and starts nothing (%s)" % main.ui.toast.text)
+	p.inv.add("axe")
+	main.target = {"kind": "tree", "tree": tr3, "label": "Fell"}
+	main._use()
+	check(not main.action.is_empty() and is_equal_approx(float(main.action.total), want / float(chops)), "DVW-A12 R2: the interface starts a blow of core's time")
+	_finish_action()
+	check(tr3.state == "stump" and p.inv.count("log") == 4, "DVW-A12 R2: the blows fell the tree and the logs are in the pack")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var same := w2.trees.filter(func(t): return int(t.x) == int(tr3.x) and int(t.y) == int(tr3.y))
+	check(same.size() == 1 and same[0].state == "stump", "DVW-A12 R2: the stump is saved")
+	_restore_pack(keep)
+
+
+## Every button under `node` whose text is `text`.
+func _buttons_named(node: Node, text: String) -> Array:
+	var out := []
+	for c in node.get_children():
+		if c is Button and (c as Button).text == text:
+			out.append(c)
+		out.append_array(_buttons_named(c, text))
+	return out
+
+
+## R3: the level and the materials, the station (found within reach, held for the player, refused when not theirs), the
+## time, the inputs used and the outputs made, the counts and xp, the craft window's Make button, the pack over a save.
+func _dvw_a12_crafting() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var sid := ""
+	for id in w.stations_of("sawhorse"):
+		if sid == "" and w.station_refusal(id) == "":
+			sid = id
+	check(sid != "", "DVW-A12 R3: a sawhorse the player may use")
+	var rec: Dictionary = GameData.recipes["saw_planks"]
+	p.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5)
+	check(w.player_craft_refusal("saw_planks") == "You do not have the materials.", "DVW-A12 R3: no log, no planks")
+	var cp := w.player_craft_begin("saw_planks")
+	check(not cp.ok and str(cp.why) == "You do not have the materials." and not w.player_at_station(sid), "DVW-A12 R3: a refused craft does not hold the station")
+	p.inv.add("leather", 4)
+	check(w.player_craft_refusal("leather_armor") == "Needs Crafting level 2.", "DVW-A12 R3: a recipe above the player's level is refused (%s)" % w.player_craft_refusal("leather_armor"))
+	p.inv.add("log", 2)
+	cp = w.player_craft_begin("saw_planks")
+	var want := float(rec.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
+	check(cp.ok and str(cp.station) == sid and is_equal_approx(float(cp.secs), want) and w.player_at_station(sid), "DVW-A12 R3: at a sawhorse the work takes the recipe's time and holds the station (%s)" % str(cp))
+	w.release_player_station(sid)
+	# a station a villager is working at is refused (it is not the player's)
+	var o: NPC = w.npcs.filter(func(x): return x.alive and x.job == "woodcutter")[0]
+	var o_keep := {"plan": o.plan, "pos": o.pos, "target": o.target, "anim": o.anim}
+	w.stations[sid].users[o.id] = w.minutes + 300.0
+	o.plan = [{"k": "work", "args": {"station": sid}}]
+	o.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5)
+	o.target = -1
+	o.anim = "work"
+	var b := w.player_craft_begin("saw_planks", sid)
+	check(not b.ok and str(b.why).contains("is using the sawhorse") and str(b.why) == w.station_refusal(sid) and not w.player_at_station(sid), "DVW-A12 R3: a station a villager is working at is refused with core's reason (%s)" % str(b.get("why", "")))
+	w.stations[sid].users.erase(o.id)
+	o.plan = o_keep.plan
+	o.pos = o_keep.pos
+	o.target = o_keep.target
+	o.anim = o_keep.anim
+	var made0 := float(w.stats.get("made_plank", 0.0))
+	var used0 := float(w.stats.get("used_log", 0.0))
+	var res := w.player_craft("saw_planks")
+	check(res.result == "ok" and p.inv.count("log") == 1 and p.inv.count("plank") == 2, "DVW-A12 R3: a log in, two planks out")
+	check(float(w.stats.get("made_plank", 0.0)) - made0 == 2.0 and float(w.stats.get("used_log", 0.0)) - used0 == 1.0 and int(p.skills.get("crafting", 0)) == int(rec.xp), "DVW-A12 R3: counted (made_plank, used_log) and the recipe's xp")
+	# the craft window's Make button follows core's refusal
+	main.ui.show_craft(sid)
+	var make_on := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
+	var need_log := 0                  # the sawhorse's recipes the pack can make now that need a log (MIN-F: timber supports too)
+	for rid in GameData.recipes:
+		var rr: Dictionary = GameData.recipes[rid]
+		if str(rr.station) == str(w.stations[sid].type) and rr["in"].has("log") and p.inv.has_all(rr["in"]):
+			need_log += 1
+	p.inv.remove("log", p.inv.count("log"))
+	main.ui.show_craft(sid)
+	var make_on_none := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
+	check(make_on >= 1 and need_log >= 1 and make_on_none == make_on - need_log, "DVW-A12 R3: Make is on for a recipe core allows, off without its materials (%d -> %d)" % [make_on, make_on_none])
+	main.ui.hide_all()
+	# through the interface
+	main.craft("saw_planks", sid)
+	check(main.action.is_empty() and main.ui.toast.text.contains("do not have the materials"), "DVW-A12 R3: the interface shows core's refusal and starts nothing")
+	p.inv.add("log", 1)
+	main.craft("saw_planks", sid)
+	check(not main.action.is_empty() and is_equal_approx(float(main.action.total), want) and str(main.action.get("station", "")) == sid and w.player_at_station(sid), "DVW-A12 R3: the interface starts the work of core's time at the station")
+	_finish_action()
+	check(p.inv.count("plank") == 4 and not p.inv.has("log") and not w.player_at_station(sid), "DVW-A12 R3: the work makes the planks and frees the station")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("crafting", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
+	_restore_pack(keep)
+
+
+## R7-R9: the player's blow (the weapon's damage, a crit), its harm, 4 Combat xp, assault as a crime seen within the
+## witness radius, a bandit fighting back and no crime, death, and the outcome kept over a save.
+func _dvw_a12_combat() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var at := Vector2(60.5, 60.5)
+	for dd in range(0, 40):
+		if w.place_of(at) == "" and not main.map.is_solid(Vector2i(at)):
+			break
+		at += Vector2(1, 0)
+	var victim: NPC = null
+	var wit: NPC = null
+	var far: NPC = null
+	var bandit: NPC = null
+	for n: NPC in w.npcs:
+		if not n.alive:
+			continue
+		if n.role == "bandit" and bandit == null:
+			bandit = n
+		elif n.role == "adult" and n.job != "guard":
+			if victim == null:
+				victim = n
+			elif wit == null:
+				wit = n
+			elif far == null:
+				far = n
+	for n: NPC in [victim, wit, far]:
+		n.plan.clear()
+		n.target = -1
+		n.anim = "idle"
+	for n: NPC in w.npcs:
+		if n.alive and not [victim, wit, far, bandit].has(n):
+			n.pos = Vector2(116.5, 86.5)
+	p.pos = at
+	victim.pos = at + Vector2(0.8, 0)
+	wit.pos = at + Vector2(0, 2.0)
+	far.pos = at + Vector2(float(GameData.b("witness_radius")) + 4.0, 0)
+	var s := w.player_strike()
+	check(not s.crit and float(s.dmg) == p.damage(), "DVW-A12 R7: with no Combat tier a blow is the weapon's damage, never doubled (%s)" % str(s))
+	var hp0 := victim.hp
+	var assault0 := float(w.stats.get("player_assault", 0.0))
+	var want := maxf(0.5, p.damage() * Skills.value(victim, "combat", "damage_taken", 1.0) - victim.armor * 0.5)
+	var h := w.player_melee_npc(victim)
+	check(is_equal_approx(float(h.dealt), want) and is_equal_approx(victim.hp, hp0 - want) and not h.killed, "DVW-A12 R8: the blow takes the villager's armour into account (%s)" % str(h))
+	check(int(p.skills.get("combat", 0)) == 4, "DVW-A12 R7: 4 Combat xp a blow on a villager")
+	check(float(w.stats.get("player_assault", 0.0)) - assault0 == 1.0 and victim.target == -2 and victim.memory.has("attacked by %s" % p.name), "DVW-A12 R9: assault: counted, remembered, and an adult fights back")
+	check(wit.memory.any(func(m): return str(m).begins_with("saw %s" % p.name)) and not far.memory.any(func(m): return str(m).begins_with("saw %s" % p.name)), "DVW-A12 R9: a witness within the witness radius saw it; one beyond did not")
+	if bandit != null:
+		bandit.target = -1
+		bandit.pos = at + Vector2(-0.8, 0)
+		var a1 := float(w.stats.get("player_assault", 0.0))
+		w.player_hit_npc(bandit, 0.1)
+		check(bandit.target == -2 and float(w.stats.get("player_assault", 0.0)) == a1, "DVW-A12 R8: a bandit struck fights back, and it is no crime")
+	victim.hp = 0.5
+	var h2 := w.player_hit_npc(victim, 50.0)
+	check(h2.killed and not victim.alive, "DVW-A12 R8: a villager at no health dies, slain by the player")
+	# the interface's spell hit uses the same rules
+	far.target = -1
+	var a2 := float(w.stats.get("player_assault", 0.0))
+	var fhp := far.hp
+	main._hit(far, 3.0)
+	check(far.hp < fhp and far.target == -2 and float(w.stats.get("player_assault", 0.0)) == a2 + 1.0, "DVW-A12 R8: the interface's hit is core's (harm, crime)")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var v2 := w2.npc(victim.id)
+	check(v2 != null and not v2.alive and w2.npc(far.id).memory.has("attacked by %s" % p.name), "DVW-A12 R8, R9: the death and the victim's memory of the attack are saved (the stats are session counters, not saved)")
+	_restore_pack(keep)
+
+
+## R12: learning Fireball: refused without the price, then the price moves from the player to the sage (no coin made
+## or lost), the spell is known, 100 Magic xp, refused once known; the interface's choice uses core; kept over a save.
+func _dvw_a12_fireball() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var sage := w.npc(w.sage_id)
+	var price := int(GameData.b("fireball_price"))
+	p.spells.erase("fireball")
+	p.skills.erase("magic")
+	p.coins = price - 1
+	var c0 := sage.coins
+	var r := w.player_learn_fireball(sage)
+	check(not r.ok and str(r.why) == "You need %d coins." % price and p.coins == price - 1 and sage.coins == c0 and not p.spells.get("fireball", false), "DVW-A12 R12: without the price nothing is paid or learned")
+	p.coins = price + 5
+	var sum0 := p.coins + sage.coins
+	r = w.player_learn_fireball(sage)
+	check(r.ok and p.coins == 5 and sage.coins == c0 + price and p.coins + sage.coins == sum0, "DVW-A12 R12: the price goes from the player to the sage, no coin made or lost")
+	check(p.spells.get("fireball", false) and int(p.skills.get("magic", 0)) == 100, "DVW-A12 R12: the spell is known and 100 Magic xp earned")
+	r = w.player_learn_fireball(sage)
+	check(not r.ok and p.coins == 5 and sage.coins == c0 + price, "DVW-A12 R12: once known it is not sold again")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.player.spells.get("fireball", false) and w2.player.coins == 5 and w2.npc(sage.id).coins == sage.coins, "DVW-A12 R12: the spell and both purses are saved")
+
+
+## R14: the pocket of a villager awake is in reach within 1.8 tiles and never a child's; the talk window offers the
+## try only then.
+func _dvw_a12_pickpocket_reach() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var adult: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and not w.asleep(x))[0]
+	var kids := w.npcs.filter(func(x): return x.alive and x.role == "child")
+	var p0 := p.pos
+	p.pos = adult.pos + Vector2(1.0, 0)
+	check(w.pickpocket_in_reach(adult), "DVW-A12 R14: a villager a tile away is within reach")
+	main.ui.show_talk(adult)
+	var near_offer := _buttons_named(main.ui.panel, "Pick pocket — theft").size()
+	main.ui.hide_all()
+	p.pos = adult.pos + Vector2(World.PICKPOCKET_REACH + 0.2, 0)
+	check(not w.pickpocket_in_reach(adult), "DVW-A12 R14: beyond %.1f tiles a pocket is out of reach" % World.PICKPOCKET_REACH)
+	main.ui.show_talk(adult)
+	var far_offer := _buttons_named(main.ui.panel, "Pick pocket — theft").size()
+	main.ui.hide_all()
+	check(near_offer == 1 and far_offer == 0, "DVW-A12 R14: the talk window offers the try only within core's reach (%d, %d)" % [near_offer, far_offer])
+	if not kids.is_empty():
+		p.pos = kids[0].pos + Vector2(1.0, 0)
+		check(not w.pickpocket_in_reach(kids[0]), "DVW-A12 R14: never a child's pocket")
+	p.pos = p0
+
+
+## R14, R15: core refuses what is out of the player's reach, by the distances the interface's target choice uses: a
+## pocket beyond 1.8 tiles (the sleeper's too: the intended change), a seam or tree more than two cells off, a
+## container beyond 2.2 tiles, a pile beyond the probe's reach, a field, a crafting station beyond 1.2 tiles, a wall.
+func _dvw_a12_reach() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	# a sleeper's pocket: within reach a try is made; beyond 1.8 tiles none is (no xp, no shout, nothing taken)
+	var sleeper: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and x.job != "guard")[0]
+	sleeper.anim = "sleep"
+	sleeper.coins = 7
+	p.pos = sleeper.pos + Vector2(World.PICKPOCKET_REACH + 0.4, 0)
+	var crimes0 := p.crimes.size()
+	var r := w.pickpocket(sleeper)
+	check(not r.ok and r.get("refused", false) and sleeper.coins == 7 and p.crimes.size() == crimes0, "DVW-A12 R14: a sleeper's pocket beyond %.1f tiles is out of reach: no try (%s)" % [World.PICKPOCKET_REACH, r.text])
+	var xp0 := int(p.skills.get("stealth", 0))
+	main.pickpocket(sleeper)
+	check(int(p.skills.get("stealth", 0)) == xp0 and main.ui.toast.text.contains("out of reach") and sleeper.coins == 7, "DVW-A12 R14: the interface shows it and gives no Stealth xp for a try never made")
+	p.pos = sleeper.pos + Vector2(1.0, 0)
+	r = w.pickpocket(sleeper)
+	check(not r.get("refused", false), "DVW-A12 R14: beside the sleeper the try is made (%s)" % r.text)
+	sleeper.anim = "idle"
+	# a seam: within two cells, then out of reach, through core and through the interface
+	var d: Dictionary = w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	var cell := Vector2i(int(d.x), int(d.y))
+	p.pos = _beside(cell)
+	check(w.player_reach_cell(cell) == "", "DVW-A12 R15: a seam beside the player is in reach")
+	p.inv.add("pickaxe")
+	var away := Vector2.ZERO
+	for k in range(3, 12):
+		for dd in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+			var c2: Vector2i = cell + dd * k
+			if away == Vector2.ZERO and not main.map.is_solid(c2) and w.reaches(Vector2(c2) + Vector2(0.5, 0.5), Vector2(cell) + Vector2(0.5, 0.5)):
+				away = Vector2(c2) + Vector2(0.5, 0.5)
+	p.pos = away
+	check(away != Vector2.ZERO and w.player_reach_cell(cell) == "That is out of reach." and str(w.player_mine_plan(d).why) == "That is out of reach.", "DVW-A12 R15: three or more cells off, the seam is out of reach and mining is refused")
+	var left := int(d.amount)
+	main.target = {"kind": "deposit", "dep": d, "label": "Mine"}
+	main._use()
+	check(main.action.is_empty() and int(d.amount) == left and main.ui.toast.text.contains("out of reach"), "DVW-A12 R15: the interface shows core's refusal and mines nothing")
+	# a container: within 2.2 tiles, not beyond
+	var box: Dictionary = {}
+	for c in w.containers:
+		if box.is_empty() and w.place_of(Vector2(int(c.x), int(c.y)) + Vector2(0.5, 1.5)) == "" and w.container_pick(c) != "" and not main.map.is_solid(Vector2i(int(c.x), int(c.y) + 1)):
+			box = c
+	if not box.is_empty():
+		var at := Vector2(int(box.x), int(box.y)) + Vector2(0.5, 0.5)
+		p.pos = at + Vector2(0, World.CONTAINER_REACH + 0.5)
+		var inv0 := p.inv.total()
+		check(w.player_take(box) == "far" and p.inv.total() == inv0 and w.player_container_reach(box) != "", "DVW-A12 R15: a container beyond %.1f tiles is out of reach; nothing taken" % World.CONTAINER_REACH)
+		p.pos = at + Vector2(0, 1.0)
+		check(w.player_container_reach(box) == "", "DVW-A12 R15: beside it, it is in reach")
+	# a pile: within the probe's reach, not beyond
+	w.loot.append({"pos": p.pos + Vector2(0, 0.5), "inv": Inventory.new(), "coins": 0, "from": "test"})
+	check(w.player_reach_point(w.loot[-1].pos, World.TARGET_PROBE + World.TARGET_REACH) == "", "DVW-A12 R15: a pile underfoot is in reach")
+	w.loot[-1].pos = p.pos + Vector2(0, World.TARGET_PROBE + World.TARGET_REACH + 0.5)
+	check(w.player_reach_point(w.loot[-1].pos, World.TARGET_PROBE + World.TARGET_REACH) != "", "DVW-A12 R15: a pile beyond it is not")
+	w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	# a field: any of its cells within two of the player's
+	var f: Dictionary = w.fields[0]
+	p.pos = Vector2(int(f.x) - 1, int(f.y)) + Vector2(0.5, 0.5)
+	check(w.player_reach_field(f) == "", "DVW-A12 R15: beside a field it is in reach")
+	p.pos = Vector2(int(f.x) - 4, int(f.y)) + Vector2(0.5, 0.5)
+	check(w.player_reach_field(f) != "", "DVW-A12 R15: three cells off it is not")
+	# a crafting station named by the craft window: closer than 1.2 tiles to where it is used
+	var sid := ""
+	for id in w.stations_of("sawhorse"):
+		if sid == "" and w.station_refusal(id) == "":
+			sid = id
+	p.inv.add("log", 1)
+	p.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5) + Vector2(World.STATION_REACH + 0.3, 0)
+	var cp := w.player_craft_begin("saw_planks", sid)
+	check(not cp.ok and str(cp.why) == "That is out of reach." and not w.player_at_station(sid), "DVW-A12 R15: a station beyond %.1f tiles is out of reach" % World.STATION_REACH)
+	p.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5)
+	cp = w.player_craft_begin("saw_planks", sid)
+	check(cp.ok, "DVW-A12 R15: at the station it can be worked")
+	w.release_player_station(sid)
+	# everything the interface offers is in core's reach: many places, every facing
+	p.inv.add("pickaxe")
+	p.inv.add("axe")
+	var offered := 0
+	var refused := []
+	var spots := []
+	for dep in w.deposits:
+		spots.append(Vector2i(int(dep.x), int(dep.y)))
+	for t in w.trees.slice(0, 40):
+		spots.append(Vector2i(int(t.x), int(t.y)))
+	for c in w.containers:
+		spots.append(Vector2i(int(c.x), int(c.y)))
+	for st in w.stations.values():
+		spots.append(Vector2i(int(st.use[0]), int(st.use[1])))
+	for fl in w.fields:
+		spots.append(Vector2i(int(fl.x), int(fl.y)))
+	for s0: Vector2i in spots:
+		for dx in range(-2, 3):
+			for dy in range(-2, 3):
+				var cc: Vector2i = s0 + Vector2i(dx, dy)
+				if main.map.is_solid(cc):
+					continue
+				p.pos = Vector2(cc) + Vector2(0.5, 0.5)
+				for dir in 8:
+					main.player_sprite.dir = dir
+					main._find_target()
+					for t in main.target_options:
+						var why := ""
+						match str(t.kind):
+							"deposit", "tree", "plant", "fruit":
+								why = w.player_reach_cell(main._target_cell(t), str(t.kind) in ["tree", "fruit"])
+							"field":
+								why = w.player_reach_field(t.field)
+							"loot":
+								why = w.player_reach_point(w.loot[t.i].pos, World.TARGET_PROBE + World.TARGET_REACH)
+							"container":
+								why = w.player_container_reach(t.c)
+							"station":
+								why = "" if (Vector2(w.station_use(str(t.id))) + Vector2(0.5, 0.5)).distance_to(p.pos) < World.STATION_REACH else "far"
+							_:
+								continue
+						offered += 1
+						if why != "":
+							refused.append("%s at %s: %s" % [t.kind, str(cc), why])
+	check(offered > 100 and refused.is_empty(), "DVW-A12 R15: all %d targets the interface offered are in core's reach (%s)" % [offered, str(refused.slice(0, 3))])
+	_restore_pack(keep)
+
+
+## R4: planting a sapling: refused without one or where the ground says no; else the tree is planted, the sapling used
+## up and counted; through the interface; kept over a save.
+func _dvw_a12_planting() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var cell := Vector2i(-1, -1)
+	for y in range(10, main.map.h - 10):
+		for x in range(10, main.map.w - 10):
+			if cell.x < 0 and w.plant_refusal(Vector2i(x, y)) == "" and w.plant_refusal(Vector2i(x, y + 3)) == "" and not main.map.is_solid(Vector2i(x, y + 1)) and w.place_of(Vector2(x, y + 1) + Vector2(0.5, 0.5)) == "":
+				cell = Vector2i(x, y)
+	check(cell.x >= 0, "DVW-A12 R4: free grass to plant on")
+	var sap := "oak_sapling"
+	check(w.player_plant_sapling(cell, sap).is_empty() and w.plant_refusal(cell) == "", "DVW-A12 R4: without a sapling nothing is planted")
+	p.inv.add(sap, 2)
+	var used0 := float(w.stats.get("used_" + sap, 0.0))
+	var trees0 := w.trees.size()
+	var t := w.player_plant_sapling(cell, sap)
+	check(not t.is_empty() and t.state == "sapling" and w.trees.size() == trees0 + 1 and p.inv.count(sap) == 1 and float(w.stats.get("used_" + sap, 0.0)) - used0 == 1.0, "DVW-A12 R4: the sapling is planted, used up and counted (used_)")
+	check(w.player_plant_sapling(cell + Vector2i(1, 0), sap).is_empty() and p.inv.count(sap) == 1, "DVW-A12 R4: not beside another tree; the sapling is kept")
+	# through the interface: the action plants in front of the player
+	var c2 := cell + Vector2i(0, 3)
+	p.pos = Vector2(c2) + Vector2(0.5, -0.5)
+	main.player_sprite.dir = 0                     # facing down (+y)
+	main.plant_sapling(sap)
+	_finish_action()
+	check(w.tree_at(c2).get("state", "") == "sapling" and not p.inv.has(sap), "DVW-A12 R4: the interface's planting is core's")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.trees.any(func(x): return int(x.x) == c2.x and int(x.y) == c2.y and x.state == "sapling"), "DVW-A12 R4: the planted tree is saved")
+	_restore_pack(keep)
+
+
+## R5: taking a loot pile: goods as far as the pack takes them, all the coins, the pile gone when empty, nothing made
+## or lost; out of reach nothing is taken; through the interface.
+func _dvw_a12_loot() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var c0 := p.coins
+	p.pos = Vector2(60.5, 60.5)
+	var bag := Inventory.new()
+	bag.add("log", 3)
+	bag.add("stone", 2)
+	w.loot.append({"pos": p.pos + Vector2(0, 0.5), "inv": bag, "coins": 4, "from": "test pile"})
+	var i := w.loot.size() - 1
+	p.inv.max_stacks = 1
+	var r := w.player_loot(i)
+	check(r.far == "" and r.items == [["log", 3]] and int(r.coins) == 4 and int(r.left) == 2 and p.coins == c0 + 4 and p.inv.count("log") == 3, "DVW-A12 R5: what the pack can take and every coin are taken (%s)" % str(r))
+	check(w.loot.size() == i + 1 and int(w.loot[i].coins) == 0 and (w.loot[i].inv as Inventory).count("stone") == 2, "DVW-A12 R5: the rest stays in the pile; no coin twice")
+	p.inv.max_stacks = 0
+	r = w.player_loot(i)
+	check(r.items == [["stone", 2]] and int(r.left) == 0 and w.loot.size() == i, "DVW-A12 R5: the last of it taken, the pile is gone")
+	w.loot.append({"pos": p.pos + Vector2(0, World.TARGET_PROBE + World.TARGET_REACH + 1.0), "inv": Inventory.new(), "coins": 9, "from": "far pile"})
+	r = w.player_loot(w.loot.size() - 1)
+	check(r.far != "" and int(r.coins) == 0 and int(w.loot[-1].coins) == 9, "DVW-A12 R5: a pile out of reach gives nothing (R15)")
+	w.loot.remove_at(w.loot.size() - 1)
+	# through the interface
+	var bag2 := Inventory.new()
+	bag2.add("plank", 2)
+	w.loot.append({"pos": p.pos + Vector2(0, 0.5), "inv": bag2, "coins": 1, "from": "the test"})
+	main._sync_loot()
+	main.target = {"kind": "loot", "i": w.loot.size() - 1, "label": "Take"}
+	var n0 := w.loot.size()
+	main._use()
+	check(p.inv.count("plank") == 2 and w.loot.size() == n0 - 1 and p.coins == c0 + 5, "DVW-A12 R5: the interface's taking is core's")
+	main._sync_loot()
+	_restore_pack(keep)
+
+
+## R6: xp is awarded by core with the action that earns it (a pocket tried: 8 or 2, none out of reach; a theft from a
+## container nobody saw: 3; a lock tried: 4 or 1), and a new level reaches the interface's banner by player_leveled.
+func _dvw_a12_xp() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var saved: Array = [GameData.b("pickpocket_chance"), GameData.b("pickpocket_chance_max"), GameData.b("pickpocket_chance_per_level")]
+	var v: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and x.job != "guard")[1]
+	v.anim = "idle"
+	v.coins = 10
+	p.pos = v.pos + Vector2(1.0, 0)
+	GameData.balance.pickpocket_chance = 1.0
+	GameData.balance.pickpocket_chance_max = 1.0
+	var r := w.pickpocket(v)
+	check(r.ok and int(p.skills.get("stealth", 0)) == 8, "DVW-A12 R6: a pocket picked earns 8 Stealth xp")
+	GameData.balance.pickpocket_chance = 0.0
+	GameData.balance.pickpocket_chance_max = 0.0
+	GameData.balance.pickpocket_chance_per_level = 0.0
+	r = w.pickpocket(v)
+	check(not r.ok and int(p.skills.get("stealth", 0)) == 10, "DVW-A12 R6: a caught try earns 2")
+	p.pos = v.pos + Vector2(3.0, 0)
+	r = w.pickpocket(v)
+	check(r.get("refused", false) and int(p.skills.get("stealth", 0)) == 10, "DVW-A12 R6: no try out of reach, no xp")
+	GameData.balance.pickpocket_chance = saved[0]
+	GameData.balance.pickpocket_chance_max = saved[1]
+	GameData.balance.pickpocket_chance_per_level = saved[2]
+	v.target = -1
+	p.crimes.clear()
+	# the level-up banner: core announces it, the interface shows it
+	var heard := []
+	var cb := func(sk: String, lv: int): heard.append([sk, lv])
+	w.player_leveled.connect(cb)
+	p.skills["magic"] = Skills.xp_for_level(2) - 1
+	var up := w.player_xp("magic", 1)
+	w.player_leveled.disconnect(cb)
+	check(up == 2 and heard == [["magic", 2]] and main.ui.toast.text.contains("level 2"), "DVW-A12 R6: a new level is announced by core and shown by the interface (%s)" % main.ui.toast.text)
+	check(w.player_xp("magic", 1) == 0, "DVW-A12 R6: no banner without a new level")
+	_restore_pack(keep)
+
+
+## R10: a blow on an animal: alive, nothing else; killed, the kill xp, the ledger and the carcass; livestock is theft
+## from its keeper (a crime on the record, the keeper's memory); through the interface; kept over a save.
+func _dvw_a12_livestock() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var stock: Array = w.fauna.animals.filter(func(a): return a.alive and not a.wild() and a.adult(w.minutes) and w.pen_keeper(w.fauna.pens[a.area]) != null)
+	check(stock.size() >= 2, "DVW-A12 R10: livestock in a keeper's pen (%d)" % stock.size())
+	var a: Animal = stock[0]
+	var keeper: NPC = w.pen_keeper(w.fauna.pens[a.area])
+	p.pos = a.pos + Vector2(1.0, 0)
+	var hp0 := a.hp
+	var h := w.player_hit_animal(a, 0.5)
+	check(not h.killed and a.alive and is_equal_approx(a.hp, hp0 - 0.5), "DVW-A12 R10: a blow that does not kill only hurts")
+	var crimes0 := p.crimes.size()
+	var sl0 := float(w.stats.get("slaughtered_" + a.species, 0.0))
+	var loot0 := w.loot.size()
+	var want_xp := Skills.kill_xp(a.species, p.damage())
+	h = w.player_hit_animal(a, 100000.0)
+	check(h.killed and not a.alive and float(w.stats.get("slaughtered_" + a.species, 0.0)) - sl0 == 1.0 and int(p.skills.get("combat", 0)) == want_xp, "DVW-A12 R10: killed: the ledger (slaughtered_) and the kill xp (%d)" % want_xp)
+	check(w.loot.size() == loot0 + 1 and str(w.loot[-1].from).begins_with("the "), "DVW-A12 R10: its carcass lies where it fell")
+	check(p.crimes.size() == crimes0 + 1 and str(p.crimes[-1].kind) == "livestock" and keeper.memory.any(func(m): return str(m).contains("my ")), "DVW-A12 R10: killing livestock is theft from the keeper, who knows of it")
+	# through the interface
+	var b: Animal = stock[1]
+	p.pos = b.pos + Vector2(1.0, 0)
+	var crimes1 := p.crimes.size()
+	main._hit_animal(b, 100000.0)
+	check(not b.alive and p.crimes.size() == crimes1 + 1, "DVW-A12 R10: the interface's kill is core's")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.player.crimes.size() == p.crimes.size() and not w2.fauna.animals.any(func(x): return x.id == b.id and x.alive), "DVW-A12 R10: the crime and the death are saved")
+	while w.loot.size() > loot0:
+		w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	_restore_pack(keep)
+
+
+## R11: casting Fireball: refused unknown, silent while cooling down or tired; a cast costs stamina, starts the
+## cooldown and earns 6 xp; a fireball that strikes harms by the base damage and earns 6 more; through the interface.
+func _dvw_a12_cast() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var spells0: Dictionary = p.spells.duplicate()
+	p.spells.erase("fireball")
+	var c := w.player_cast_fireball()
+	check(not c.ok and str(c.why).contains("do not know"), "DVW-A12 R11: an unknown spell is refused with the reason")
+	p.spells["fireball"] = true
+	p.fireball_cd = 0.0
+	p.stamina = 100.0
+	var cost := float(GameData.b("fireball_stamina"))
+	c = w.player_cast_fireball()
+	check(c.ok and is_equal_approx(p.stamina, 100.0 - cost) and is_equal_approx(p.fireball_cd, float(GameData.b("fireball_cooldown"))) and int(p.skills.get("magic", 0)) == 6, "DVW-A12 R11: a cast spends the stamina, starts the cooldown and earns 6 xp")
+	c = w.player_cast_fireball()
+	check(not c.ok and str(c.why) == "" and int(p.skills.get("magic", 0)) == 6, "DVW-A12 R11: cooling down, nothing (and no message)")
+	p.fireball_cd = 0.0
+	p.stamina = cost - 1.0
+	check(not w.player_cast_fireball().ok and is_equal_approx(p.stamina, cost - 1.0), "DVW-A12 R11: without the stamina, nothing")
+	# a strike
+	var v: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and x.job != "guard")[2]
+	v.target = -1
+	var at := v.pos + Vector2(0.3, 0)
+	var struck: NPC = w.present(at, World.FIREBALL_HIT_RADIUS)[0]       # the first one there (it may not be v)
+	var hp0 := struck.hp
+	var want := maxf(0.5, World.FIREBALL_DAMAGE * Skills.value(struck, "combat", "damage_taken", 1.0) - struck.armor * 0.5)
+	var h := w.player_fireball_hit(at)
+	check(h.who == struck and is_equal_approx(struck.hp, hp0 - want) and is_equal_approx(float(h.dealt), want) and int(p.skills.get("magic", 0)) == 12, "DVW-A12 R11: a fireball that strikes harms by %.0f and earns 6 more xp" % World.FIREBALL_DAMAGE)
+	check(w.player_fireball_hit(Vector2(-50, -50)).who == null, "DVW-A12 R11: nobody there, no strike")
+	# through the interface: a cast and its flight
+	p.fireball_cd = 0.0
+	p.stamina = 100.0
+	main.player_sprite.dir = 0
+	var n0: int = main.projectiles.size()
+	main.fireball()
+	check(main.projectiles.size() == n0 + 1 and int(p.skills.get("magic", 0)) == 18, "DVW-A12 R11: the interface's cast is core's")
+	for i in 40:
+		main._projectiles_step(0.05)
+	check(main.projectiles.size() == n0, "DVW-A12 R11: the fireball ends within its range")
+	p.spells = spells0
+	_restore_pack(keep)
+
+
+## R13: a purchase or a sale earns the player Skills.trade_xp of what it was worth, in core; a refused deal earns none.
+func _dvw_a12_trading_xp() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var c0 := p.coins
+	p.coins = 500
+	var deal: Array = []
+	for n: NPC in w.npcs:
+		if not n.alive or not deal.is_empty():
+			continue
+		for id in w.brain.for_sale(n):
+			if deal.is_empty() and n.inv.count(id) >= 1:
+				deal = [n, id]
+	check(not deal.is_empty(), "DVW-A12 R13: a villager with goods for sale")
+	var b := w.player_buy_many(deal[0], deal[1], 1)
+	check(b.result == "bought" and int(p.skills.get("trading", 0)) == Skills.trade_xp(int(b.paid)), "DVW-A12 R13: a purchase earns Trading xp by its price (%s)" % str(b))
+	var x1 := int(p.skills.get("trading", 0))
+	var f := w.player_buy_many(deal[0], deal[1], 100000)
+	check(f.result == "failed" and int(p.skills.get("trading", 0)) == x1, "DVW-A12 R13: a refused purchase earns none")
+	var s := w.player_sell_many(deal[0], deal[1], 1)
+	if int(s.sold) > 0:
+		check(int(p.skills.get("trading", 0)) == x1 + Skills.trade_xp(int(s.paid)), "DVW-A12 R13: a sale earns Trading xp by what it fetched")
+	else:
+		check(int(p.skills.get("trading", 0)) == x1, "DVW-A12 R13: a sale refused (%s) earns none" % str(s.text))
+	p.coins = c0
+	_restore_pack(keep)
+
+
+## R17: whose a field is comes from core (field_owner): the prompt names them and the harvest is theft from them; a
+## field nobody works is nobody's.
+func _dvw_a12_field_owner() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var worked: Array = w.fields.filter(func(f): return not w.field_workers(f).is_empty())
+	var idle: Array = w.fields.filter(func(f): return w.field_workers(f).is_empty())
+	check(not worked.is_empty(), "DVW-A12 R17: a field a farmer works")
+	var f: Dictionary = worked[0]
+	var owner := w.field_owner(f)
+	check(owner == w.field_workers(f)[0], "DVW-A12 R17: its owner is the first farmer working it (%s)" % owner.name)
+	if not idle.is_empty():
+		check(w.field_owner(idle[0]) == null, "DVW-A12 R17: a field nobody works is nobody's")
+	var d := ResourceNodes.def_for("field", "")
+	check(ResourceNodes.theft_note(w, d if not d.is_empty() else {"match": {"kind": "field"}}, f).contains(owner.name), "DVW-A12 R17: the gathering note names them")
+	# the harvest prompt, then the harvest: theft from them
+	var st0: String = f.state
+	var crop0 := int(f.get("crop", 0))
+	f.state = "ripe"
+	f.crop = 10
+	var cell := Vector2i(int(f.x), int(f.y))
+	p.pos = Vector2(cell) + Vector2(0.5, -0.5)
+	main.player_sprite.dir = 0
+	main._find_target()
+	var fieldt: Array = main.target_options.filter(func(t): return str(t.kind) == "field")
+	check(not fieldt.is_empty() and str(fieldt[0].label).contains("%s %s's field: taking it is theft" % [owner.name, owner.family]), "DVW-A12 R17: the prompt names whose field it is")
+	var marked0: int = p.stolen_count("wheat")
+	w.player_harvest(f)
+	check(p.stolen_count("wheat") > marked0 and p.stolen["wheat"].has(str(owner.id)), "DVW-A12 R17: the wheat is marked as theirs")
+	f.state = st0
+	f.crop = crop0
+	_restore_pack(keep)
+
+
+## R16: core says which choices are theft (a chest not the player's, a container, a worked field); the interface
+## offers them last. Checked at every container and field, 5x5 places round each, every facing: the flag is set exactly
+## where the prompt says "theft", and no theft choice comes before a lawful one.
+func _dvw_a12_theft_last() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	for f in w.fields:
+		if not w.field_workers(f).is_empty():
+			f["_st"] = f.state
+			f.state = "ripe"
+			f["_crop"] = f.get("crop", 0)
+			f.crop = 10
+	var spots := []
+	for c in w.containers:
+		spots.append(Vector2i(int(c.x), int(c.y)))
+	for f in w.fields:
+		spots.append(Vector2i(int(f.x), int(f.y)))
+	var seen := 0
+	var thefts := 0
+	var bad := []
+	for s0: Vector2i in spots:
+		for dx in range(-2, 3):
+			for dy in range(-2, 3):
+				var cc: Vector2i = s0 + Vector2i(dx, dy)
+				if main.map.is_solid(cc):
+					continue
+				p.pos = Vector2(cc) + Vector2(0.5, 0.5)
+				for dir in 8:
+					main.player_sprite.dir = dir
+					main._find_target()
+					var was_theft := false
+					for t in main.target_options:
+						seen += 1
+						var flag: bool = t.get("theft", false)
+						if flag != str(t.get("label", "")).contains("theft"):
+							bad.append("%s '%s' flag %s" % [t.kind, t.label, flag])
+						if flag:
+							thefts += 1
+							was_theft = true
+						elif was_theft:
+							bad.append("lawful %s after a theft at %s" % [t.kind, str(cc)])
+	for f in w.fields:
+		if f.has("_st"):
+			f.state = f._st
+			f.crop = f._crop
+			f.erase("_st")
+			f.erase("_crop")
+	check(seen > 100 and thefts > 0 and bad.is_empty(), "DVW-A12 R16: core's theft flag matches every prompt that says theft (%d choices, %d thefts), offered last (%s)" % [seen, thefts, str(bad.slice(0, 3))])
+	_restore_pack(keep)
+
+
+## R18: resting by day runs the world on for rest.day_minutes and restores health and stamina; through the interface.
+func _dvw_a12_rest() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var day0 := floorf(w.minutes / World.DAY) * World.DAY
+	w.minutes = day0 + 10.0 * 60.0                          # ten in the morning
+	p.hp = 3.0
+	p.stamina = 1.0
+	var t0 := w.minutes
+	var r := w.player_rest()
+	var dm := float(GameData.b("rest").day_minutes)
+	check(not r.night and is_equal_approx(float(r.minutes), dm) and w.minutes - t0 >= dm - 1.0 and w.minutes - t0 <= dm + 1.0, "DVW-A12 R18: a rest by day lasts rest.day_minutes of the world going on (%.0f)" % (w.minutes - t0))
+	check(is_equal_approx(p.hp, p.hp_cap()) and is_equal_approx(p.stamina, p.stamina_cap()), "DVW-A12 R18: it restores health and stamina (the one recovery model)")
+	p.hp = 3.0
+	w.minutes = day0 + 11.0 * 60.0
+	main._rest_now()
+	check(is_equal_approx(p.hp, p.hp_cap()) and main.ui.toast.text.begins_with("You rest."), "DVW-A12 R18: the interface's rest is core's")
+
+
+## R19: a sprint needs sprint_min_stamina to start, costs its stamina net of regeneration, ends out of breath; the
+## interface's toggle follows PlayerState.
+func _dvw_a12_sprint() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var need := float(GameData.b("sprint_min_stamina"))
+	p.stamina = need - 0.5
+	check(not p.can_sprint(), "DVW-A12 R19: below sprint_min_stamina no sprint starts")
+	main.sprinting = false
+	main.cancel_action("")
+	main.toggle_sprint()
+	check(not main.sprinting, "DVW-A12 R19: nor through the interface's toggle")
+	p.stamina = need
+	check(p.can_sprint(), "DVW-A12 R19: at it, one can")
+	main.toggle_sprint()
+	check(main.sprinting, "DVW-A12 R19: the toggle turns it on")
+	main.sprinting = false
+	var cost := float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))
+	p.stamina = 50.0
+	check(p.sprint_drain(0.5) and is_equal_approx(p.stamina, 50.0 - cost * 0.5), "DVW-A12 R19: half a second costs half the net rate")
+	p.stamina = cost * 0.25
+	check(not p.sprint_drain(0.5) and p.stamina == 0.0, "DVW-A12 R19: out of breath at nothing, never below")
+	check(PlayerState.sprint_speed() == float(GameData.b("sprint_speed")), "DVW-A12 R19: the sprint's speed is the balance's")
+	p.stamina = p.stamina_cap()
+
+
+## R20: goods moved between the pack and the home chest take their stolen marks with them, all or nothing; the
+## interface's move is core's; kept over a save.
+func _dvw_a12_home_marks() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var chest0: Inventory = p.chest
+	var marks0: Dictionary = p.chest_stolen.duplicate(true)
+	p.chest = Inventory.new()
+	p.chest_stolen = {}
+	var victim: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult")[0]
+	p.inv.add("leather", 3)
+	p.mark_stolen("leather", victim.id, 2)
+	check(w.player_home_move("leather", false, 3) and p.chest.count("leather") == 3 and not p.inv.has("leather"), "DVW-A12 R20: three pieces go into the chest")
+	check(int(p.chest_stolen.get("leather", {}).get(str(victim.id), 0)) == 2 and p.stolen_count("leather") == 0, "DVW-A12 R20: their two stolen marks go with them")
+	check(not w.player_home_move("leather", true, 5) and p.chest.count("leather") == 3, "DVW-A12 R20: more than the chest holds: nothing moves")
+	check(main.ui.home_move("leather", true, 1) and p.inv.count("leather") == 1 and p.stolen_count("leather") == 1, "DVW-A12 R20: one taken out through the interface takes a stolen mark (stolen pieces first)")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(int(w2.player.chest_stolen.get("leather", {}).get(str(victim.id), 0)) == 1 and w2.player.stolen_count("leather") == 1, "DVW-A12 R20: the marks are saved where they are")
+	p.chest = chest0
+	p.chest_stolen = marks0
+	_restore_pack(keep)
+
+
+## R21: a hired helper's buying budget: the site's need beyond the family chest at today's estimate, never more than
+## the coins left after the wage; the talk window offers exactly that.
+func _dvw_a12_helper_budget() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var pl: Dictionary = {}
+	for x in w.plots:
+		if pl.is_empty() and w.property.for_sale(x):
+			pl = x
+	p.coins += int(w.property.price_of(pl)) + 10
+	check(w.buy_plot(pl), "DVW-A12 R21: the family buys a plot")
+	w.start_site(pl)
+	var wage := int(GameData.b("helper_wage"))
+	var need: Dictionary = pl.site.need.duplicate()
+	var full := w.construction.estimate(need)
+	p.coins = wage + 100000
+	check(w.player_helper_budget(pl) == full, "DVW-A12 R21: with coins enough, the whole estimate (%d)" % full)
+	var first: String = need.keys()[0]
+	p.chest.add(first, int(need[first]))
+	var less := need.duplicate()
+	less[first] = 0
+	check(w.player_helper_budget(pl) == w.construction.estimate(less), "DVW-A12 R21: what the family chest holds is not bought")
+	p.coins = wage + 5
+	check(w.player_helper_budget(pl) == mini(5, w.construction.estimate(less)), "DVW-A12 R21: never more than the coins after the wage")
+	p.coins = wage - 1
+	check(w.player_helper_budget(pl) == 0, "DVW-A12 R21: none when the wage takes it all")
+	p.chest.remove(first, int(need[first]))
+	# the talk window offers it
+	p.coins = wage + 40
+	var helper: NPC = null
+	for n: NPC in w.npcs:
+		if helper == null and n.alive and w.construction.can_hire(n) == "":
+			helper = n
+	if helper != null:
+		main.ui.show_talk(helper)
+		for b in _buttons_named(main.ui.panel, "Hire to carry building materials"):
+			b.pressed.emit()
+		var want := "Buy the rest too (%d + %d)" % [wage, w.player_helper_budget(pl)]
+		check(_buttons_named(main.ui.panel, want).size() == 1, "DVW-A12 R21: the talk window offers the helper core's budget (%s)" % want)
+		main.ui.hide_all()
+
+
+## A clean pack for one rule's checks; returns what to restore.
+func _fresh_pack() -> Dictionary:
+	var p: PlayerState = main.world.player
+	var keep := {"inv": p.inv, "tool": p.tool, "skills": p.skills.duplicate(), "pos": p.pos}
+	p.inv = Inventory.new()
+	p.tool = ""
+	p.skills = {}
+	return keep
+
+
+## The middle of an open cell next to `cell` from which it is in reach.
+func _beside(cell: Vector2i) -> Vector2:
+	for dd in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+		var at := Vector2(cell + dd) + Vector2(0.5, 0.5)
+		if not main.map.is_solid(cell + dd) and main.world.reaches(at, Vector2(cell) + Vector2(0.5, 0.5)):
+			return at
+	return Vector2(cell) + Vector2(0.5, 1.5)
+
+
+func _restore_pack(keep: Dictionary) -> void:
+	var p: PlayerState = main.world.player
+	p.inv = keep.inv
+	p.tool = keep.tool
+	p.skills = keep.skills
+	p.pos = keep.pos
+
+
+## R1: a pickaxe is needed, gold needs Mining 3, the swing time, the ore to the pack (or set down), the wear, a broken
+## pickaxe leaving the hand, 8 xp an ore, the ledger count, the seam's fall kept over a save.
+func _dvw_a12_mining() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var seam0: Dictionary = w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	p.pos = _beside(Vector2i(int(seam0.x), int(seam0.y)))           # within reach of the seam's cell (R15)
+	var seam := {"x": int(seam0.x), "y": int(seam0.y), "ore": "iron_ore", "amount": 5}
+	var gold := {"x": int(seam0.x), "y": int(seam0.y), "ore": "gold_ore", "amount": 5}
+	var mp := w.player_mine_plan(seam)
+	check(not mp.ok and str(mp.why) == "Requires a pickaxe. The smith sells them.", "DVW-A12 R1: no pickaxe, no mining (%s)" % str(mp.get("why", "")))
+	p.inv.add("rusty_pickaxe")
+	p.inv.add("pickaxe")
+	mp = w.player_mine_plan(gold)
+	check(not mp.ok and str(mp.why) == "Gold needs Mining level 3.", "DVW-A12 R1: gold needs Mining 3 before the swing starts")
+	mp = w.player_mine_plan(seam)
+	var want := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item("pickaxe").get("speed", 1.0))
+	check(mp.ok and str(mp.tool) == "pickaxe" and is_equal_approx(float(mp.secs), want), "DVW-A12 R1: the best pickaxe in the pack, and the swing time by its speed (%s)" % str(mp))
+	p.skills = {"mining": Skills.xp_for_level(3)}
+	check(w.player_mine_plan(gold).ok and is_equal_approx(float(w.player_mine_plan(seam).secs), want * Skills.value(p, "mining", "mine_time", 1.0)), "DVW-A12 R1: at Mining 3 gold can be mined, and the swing takes the Mining time")
+	p.skills = {}
+	var mined0 := float(w.stats.get("mined_iron_ore", 0.0))
+	var r := w.player_mine(seam, "pickaxe")
+	check(r.result == "ok" and not r.full and p.inv.count("iron_ore") == int(r.n) and int(seam.amount) == 5 - int(r.n), "DVW-A12 R1: the ore goes into the pack and comes out of the seam (%s)" % str(r))
+	check(float(w.stats.get("mined_iron_ore", 0.0)) - mined0 == float(r.n) and int(p.skills.get("mining", 0)) == 8 * int(r.n), "DVW-A12 R1: counted (mined_) and 8 xp an ore")
+	check(int(p.inv.durability.get("pickaxe", 0)) == int(GameData.item("pickaxe").durability) - 1, "DVW-A12 R1: the swing wears the pickaxe by one")
+	check(w.player_mine(gold, "pickaxe").result == "gold" and int(gold.amount) == 5, "DVW-A12 R1: the swing itself refuses gold below Mining 3, and takes nothing")
+	# a broken pickaxe leaves the hand
+	p.tool = "pickaxe"
+	p.inv.durability["pickaxe"] = 1
+	r = w.player_mine(seam, "pickaxe")
+	check(r.result == "ok" and r.broke and not p.inv.has("pickaxe") and p.tool == "", "DVW-A12 R1: a pickaxe that breaks is gone from the pack and the hand")
+	check(w.player_mine_plan(seam).tool == "rusty_pickaxe", "DVW-A12 R1: the next swing takes the other pickaxe")
+	# a full pack: the ore is set down, not lost
+	p.inv.remove("iron_ore", p.inv.count("iron_ore"))
+	p.inv.add("log", 1)
+	p.inv.max_stacks = p.inv.ids().size()
+	var loot0 := w.loot.size()
+	r = w.player_mine(seam, "rusty_pickaxe")
+	check(r.result == "ok" and r.full and w.loot.size() == loot0 + 1 and (w.loot[-1].inv as Inventory).count("iron_ore") == int(r.n), "DVW-A12 R1: with a full pack the ore is set down at the player's feet (%s)" % str(r))
+	w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	seam.amount = 0
+	check(w.player_mine(seam, "rusty_pickaxe").result == "out", "DVW-A12 R1: a worked-out seam gives nothing")
+	# through the interface: core's refusal is shown, and a real seam is mined by the action
+	p.inv = Inventory.new()
+	var d: Dictionary = w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	p.pos = _beside(Vector2i(int(d.x), int(d.y)))
+	main.target = {"kind": "deposit", "dep": d, "label": "Mine"}
+	main._use()
+	check(main.action.is_empty() and main.ui.toast.text.contains("Requires a pickaxe"), "DVW-A12 R1: the interface shows core's refusal and starts nothing (%s)" % main.ui.toast.text)
+	p.inv.add("pickaxe")
+	var left := int(d.amount)
+	main.target = {"kind": "deposit", "dep": d, "label": "Mine"}
+	main._use()
+	check(not main.action.is_empty() and is_equal_approx(float(main.action.total), want), "DVW-A12 R1: the interface starts a swing of core's time")
+	_finish_action()
+	check(int(d.amount) < left and p.inv.count(str(d.ore)) >= 1, "DVW-A12 R1: the finished swing mines the seam (%d -> %d)" % [left, int(d.amount)])
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(int(w2.deposit_at(Vector2i(int(d.x), int(d.y))).amount) == int(d.amount), "DVW-A12 R1: the mined seam is saved as it was left")
+	_restore_pack(keep)
 

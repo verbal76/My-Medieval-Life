@@ -34,7 +34,9 @@ const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench an
 const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
-const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"],
+## STONE-01: building blocks from the raw-goods merchant and the labourers who dress them; raw stone stays on sale for
+## sites marked out before blocks (they keep the cost they were marked out with).
+const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"], "building_block": ["merchant_raw", "laborer"],
 	"log": ["woodcutter", "merchant_raw"], "iron_bar": ["smith", "merchant_goods"]}
 
 var w: World
@@ -1197,6 +1199,11 @@ func _free_sums() -> PackedInt32Array:
 		mark.call(Rect2i(int(w.stations[id].use[0]), int(w.stations[id].use[1]), 1, 1))
 	for e in w.containers + w.deposits:
 		mark.call(Rect2i(int(e.x), int(e.y), 1, 1))
+	if w.pits != null:                    # MIN-E: an open pit with its border, and its spoil heaps
+		for p in w.pits.pits:
+			mark.call(OpenPits.rect(p).grow(1))
+			for h in p.heaps:
+				mark.call(Rect2i(int(h.x), int(h.y), 1, 1))
 	for t in w.trees:
 		if t.state == "grown":
 			mark.call(Rect2i(int(t.x), int(t.y), 1, 1))

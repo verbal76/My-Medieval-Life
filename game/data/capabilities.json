@@ -1,0 +1,29 @@
+{
+  "format": "mml-capabilities/1",
+  "note": "SET-A settlement capability schema (MIN_A_ARCHITECTURE.md section 9), first used by MIN-D for mining (Mining spec section 3: levels 1-4 are the owner's progression; level 5 is a proposal and is not here). A settlement's level in an industry is derived, never stored as truth: Discovery.evaluate recomputes it each dawn from the village's real assets (its residents' skills and the tools they can use, tools held by residents, households and the manor's yard, deposits, stations, portals, structures, the manor's discovery records). It is the highest level whose needs, and every lower level's, all hold; it falls when one stops holding (the spec's 'can regress'). Residents (owner MIN-D-Q2, 2026-10-21): every living adult villager, and the player while the player has a home in the village (World.player.home), by exactly the same rules; the player's equipment stays the player's. Practitioners (owner MIN-E-Q6 / MIN-SKILLCAP, 2026-10-21: real skills, equipment and facilities, never job titles): a resident counts when their Skills level in `skill` is at least `min_level` (when named) and, when `tool` is named, they can use a tool of that kind: one in their own pack, or one of their household's store (for the player, their home chest) not already counted for another member. `jobs` is still read when present, but only for a trade the game's own rule makes the sole performer (the assayer: Prospecting's assay is a smith's at the forge, owner MIN-C-Q3); no mining need here names a job otherwise. Need kinds: deposit_access {level}; practitioners {skill?, min_level?, tool?, jobs?, count, as}; tool_stock {tool, count} (residents' packs, households' stores, the resident player's pack and home chest, the manor's yard); transport {any: handcart | carry}; station {type, count}; records {what: discovery, count}; portal {min_depth}; structure {what, count} (pit ramps are dug by MIN-E, OpenPits; timber supports are set up below ground by MIN-F, MineWorks). A level is reported, never a gate (owner Q18-9). The needs are agent decisions after the spec's 'evidence required in world' column (docs/build17/MIN_PARITY_SHOVELS.md records the change from job titles).",
+  "industries": {
+    "mining": {
+      "levels": [
+        {"level": 1, "name": "Surface extraction",
+         "needs": [{"kind": "deposit_access", "level": 0},
+                   {"kind": "practitioners", "skill": "mining", "min_level": 1, "tool": "pickaxe", "count": 1, "as": "miner"},
+                   {"kind": "tool_stock", "tool": "pickaxe", "count": 1},
+                   {"kind": "transport", "any": ["handcart", "carry"]}]},
+        {"level": 2, "name": "Prospecting and assay",
+         "needs": [{"kind": "practitioners", "skill": "mining", "min_level": 1, "tool": "prospecting_kit", "count": 1, "as": "prospector"},
+                   {"kind": "practitioners", "jobs": ["smith"], "skill": "smithing", "min_level": 1, "count": 1, "as": "assayer"},
+                   {"kind": "station", "type": "forge", "count": 1},
+                   {"kind": "tool_stock", "tool": "prospecting_kit", "count": 1},
+                   {"kind": "records", "what": "discovery", "count": 1}]},
+        {"level": 3, "name": "Open-pit excavation",
+         "needs": [{"kind": "practitioners", "skill": "mining", "min_level": 1, "tool": "shovel", "count": 2, "as": "excavator"},
+                   {"kind": "structure", "what": "pit_ramp", "count": 1},
+                   {"kind": "transport", "any": ["handcart"]}]},
+        {"level": 4, "name": "Underground mining",
+         "needs": [{"kind": "portal", "min_depth": -1},
+                   {"kind": "structure", "what": "timber_support", "count": 1},
+                   {"kind": "practitioners", "skill": "mining", "min_level": 3, "tool": "pickaxe", "count": 2, "as": "skilled miner"}]}
+      ]
+    }
+  }
+}

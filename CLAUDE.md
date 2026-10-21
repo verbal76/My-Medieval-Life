@@ -179,6 +179,31 @@ generated data. One implementation per concern.
   opportunities and status, regenerated into the registry by `scan_packs.py`. Future packs enter the
   pipeline automatically.
 
+### Wiki and documentation maintenance (owner, 2026-10-21; standing, do not remove or weaken without the owner's approval)
+
+`docs/directives/2026-10-21_permanent_wiki_maintenance.md`, register WIKI-01. **A feature is not complete without accurate
+corresponding documentation.** Every agent and worker, on every task:
+- **Two layers, kept apart.** The player-facing manual is the in-game wiki (`game/scripts/core/wiki*.gd`, built from the
+  game's data plus provider pages; checked by `game/tests/wiki_test.gd`): what a feature does, how to reach it, tools,
+  materials, costs, what can go wrong, interactions, in plain words, without internals or values the owner wants found by
+  play. The developer reference is `docs/` (design notes such as `docs/build17/*.md`, `docs/SYSTEM_INTERACTION_MANIFEST.md`,
+  `docs/DECISIONS.md`, the register): architecture, data ownership, timing, conservation, determinism, NPC decisions,
+  dependencies, saves, parameters, limitations, tests, linked to requirement ids and owner decisions.
+- **Workflow:** decisions → implement → validate → update the affected wiki pages and technical references in the same
+  workstream → check links, navigation and terminology (`wiki_test`, `tools/check_interactions.py`, `tools/check_requirements.py`)
+  → report. Update an existing page before creating one; no duplicate or conflicting explanations; one terminology across
+  wiki, interface, register and decisions.
+- **Implemented only.** Describe as playable only what has landed and passed verification. Approved future systems go in
+  the "Not in the game yet" section or developer roadmap documents, never as player instructions. Correct or remove
+  obsolete instructions when a feature changes or goes.
+- **Report.** Every substantial completion report has a "Wiki and Documentation" section: pages created, pages updated,
+  technical references changed, whether wiki validation passed, what remains (or why none was needed). Never claim an
+  update that was not made.
+- **Release gate.** Before recommending a release: new and changed player-facing mechanics documented, obsolete
+  instructions corrected, technical docs match, wiki checks pass, known limitations stated. A missing or outdated entry
+  is a documentation defect; material player-facing errors block, trivial wording does not.
+- Narrow documentation changes need only the targeted checks, not the full suites.
+
 ## 4. Coding conventions
 
 - Match the surrounding code: naming, comment density, idioms. Python tools: standard library plus
@@ -237,6 +262,15 @@ generated data. One implementation per concern.
 - **Testing philosophy (owner, 2026-10-20, WDR-022):** mechanical correctness and simulation integrity are mandatory;
   economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
   rerun year-long simulations in pursuit of favourable statistics.
+- **Continuous long-run simulation (owner, 2026-10-21, SIM-01, `docs/directives/2026-10-21_continuous_long_run_simulation.md`;
+  permanent).** Run the longest required duration once per required seed and configuration, monitored throughout, and read
+  shorter milestones (days 30, 90, 100, ...) from its checkpoints (`economy_sim.gd --every`); never restart the same world
+  only to report a shorter duration. A broken invariant (currency or item ledger) stops the run at the checkpoint where it
+  is seen (`FATAL day N` line), reported with seed, day and state; a village failing (starvation, decline, shortage) is an
+  outcome, recorded, and the run goes on. Separate runs only for genuinely different conditions (seeds, scenarios,
+  configurations, regression reproductions, focused tests) and the two independent runs a determinism comparison needs.
+  Reports name the commit, seed and configuration, intended and reached days, checkpoint results, failures, village
+  outcomes, conservation and determinism evidence, and why any separate run was needed.
 - Visual output must actually be looked at before it is reported as verified.
 - **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
   supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a

@@ -1,7 +1,7 @@
 class_name WikiManor
 extends RefCounted
-## Wiki pages for the manor's reserve and relief (TREAS-01), orphans and adoption (FAM-02..07, REC-001) and posts
-## passing on (B8-016, EQ-04). Every statement is taken from the code named beside it; numbers come from balance.json
+## Wiki pages for the manor's reserve and relief (TREAS-01), its job board (EQ-19, MIN-D, MIN-E, MIN-F2), orphans and adoption
+## (FAM-02..07, REC-001) and posts passing on (B8-016, EQ-04). Every statement is taken from the code named beside it; numbers come from balance.json
 ## (GameData.b). Registered by one line in Wiki.build.
 
 
@@ -9,6 +9,7 @@ static func add_pages(w: Wiki) -> void:
 	var sys := func(id: String, title: String, blocks: Array, keywords := "") -> void:
 		w.add_page("sys:" + id, title, "systems", blocks, "", keywords)
 	_treasury(sys)
+	_jobs(sys)
 	_orphans(sys)
 	_posts(sys)
 
@@ -25,6 +26,27 @@ static func _treasury(sys: Callable) -> void:
 		Wiki.p("A household that can cover less than %d days of food (its pantry and what its coins would buy) gets food up to %d days, the hungriest first. The manor gives from its own stores first: the granary's grain, in whole pots, then any other food it holds. Only what its stores cannot cover does it buy, from food sellers and farmers with grain to spare, or from another household's food beyond what that household needs; the food becomes the manor's and is given from there. Relief is carried to the household, or brought at once when it has less than a day of food." % [b.call("relief_trigger_days"), b.call("relief_fill_days")]),
 		Wiki.p("The treasury keeps a reserve: relief buys with money above %d days of the manor's wages, and in an emergency (under a day of food) down to one day's wages. With no money above that, or no food for sale anywhere, no relief is bought: a village can go hungry. A household that keeps needing relief is named in the village record." % b.call("treasury_reserve_days")),
 		Wiki.links(["job:reeve", "sys:property", "sys:caravan", "sys:theft", "sys:inheritance"])], "treasury manor granary relief tax reserve hunger famine")
+
+
+# ManorWork (KINDS, take, open_for, describe, post_quarry, post_discovery, post_pits, post_tunnels, order_backfill, release, excavate_wage);
+# game_ui.gd show_manor_jobs; Discovery.cfg().manor; balance.json manor_jobs. The tunnel and backfill kinds are never offered to the player.
+static func _jobs(sys: Callable) -> void:
+	var dm: Dictionary = Discovery.cfg().manor
+	sys.call("manor_jobs", "The manor's job board", [
+		Wiki.p("The manor keeps a list of real work that needs doing, and the reeve reads it out. Talk to the reeve and choose Any work for me?: each job is shown with its wage. Choose Take it to take a job; you can do one at a time. The wage is set aside from the manor's treasury when you take the job and paid when it is done. A job not finished by the next morning lapses and the wage goes back to the treasury. On a lean day the treasury cannot spare the wages, and there is no work to give. The work is written in your journal. Villagers take the same jobs by the same rules, and the manor's own hands do them for their daily wage. Whoever takes a job first has it: nobody, the manor's hands included, has first claim, and nobody holds two jobs at once. When goods the manor bought are left waiting to be carried and none of its hands is free, the reeve carries them, for no extra pay."),
+		Wiki.h("The kinds of work"),
+		Wiki.bullets([
+			"Carry: goods the manor has bought, from where they were left to the works yard, the granary or a household's pantry (%d coins)." % int(ManorWork.cfg("haul_wage")),
+			"Mend: spend materials from the works yard mending the well and the roads, a few hours' work (%d coins)." % int(ManorWork.cfg("mend_wage")),
+			"Quarry: stone for the works yard, taken from stone seams, the grey rock of worked-out seams and boulders, and brought to the yard (%d coins for %d). A pickaxe is needed." % [int(ManorWork.cfg("quarry_wage")), int(ManorWork.cfg("quarry_qty"))],
+			"Survey: take %d rock samples of a stain the manor has heard nothing of, with your own prospector's kit, have a smith assay them and tell the manor what they show (%d coins). You pay the assay fees yourself on the way, so you need them in hand; the manor's hands are not asked to survey." % [int(dm.survey_samples), int(dm.survey_wage)],
+			"Trial pit: dig a trial pit by a stain, at the spot the manor's readings point to (%d coins). A pickaxe is needed." % int(dm.trial_wage),
+			"Excavate: dig a load from the manor's own open pit with a pickaxe, tip the earth on its spoil heap and bring any stone to the works yard (%d coins a load). The manor marks out a pit only for a find it knows that no trial pit can reach any more." % ManorWork.excavate_wage(),
+			"Cut a tunnel: villagers only. While the works lack stone and a sound timber support holds a face below ground, a villager cuts a load from it and brings it to the works yard, at the quarry's rate."]),
+		Wiki.p("Taking a job pays for the labour, whatever is found: a survey that finds nothing and a pit that strikes no ore are paid like the rest. Jobs are the manor's own, not contracts, so there are no counter-offers on the board. You can still make a contract with any villager."),
+		Wiki.p("A tunnel backfill is a job too, but it is yours: you order it and pay the wage, and villagers do it. It is not on the board for you to take; see Backfilling pits and tunnels."),
+		Wiki.links(["job:reeve", "sys:manor_treasury", "sys:prospecting", "sys:open_pits", "sys:mine_backfill", "sys:mining", "sys:contracts", "item:pickaxe", "item:prospecting_kit"])],
+			"manor job board work reeve wage survey quarry mend carry haul excavate trial any work for me")
 
 
 # Guardianship (dawn, place, candidates, move, _take_share, player_adopt); game_ui.gd _relation_choices ("Offer a home").

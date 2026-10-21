@@ -14,13 +14,16 @@ extends RefCounted
 ## exactly as its map says. The world is cut into CHUNK x CHUNK tile chunks, generated on demand and
 ## cached (bounded; least recently used evicted).
 ##
-## Layout (GEN_VERSION 1):
+## Layout (GEN_VERSION 1, and 2: see GEN_COMPATIBLE):
 ##  - Value-noise fields (several octaves each) give forest density, a clearing mask, rockiness,
 ##    tree species and flower meadows. A ridge field masked by a regional field gives mountain
 ##    ranges: coherent ridge lines that come and go. Mountains are drawn with the free tileset's
 ##    grass/cliff wangset (a raised plateau with a rocky rim) and every cell touching a cliff corner
 ##    is solid. Mountain cells are cut by wobbling "pass" corridors on a coarse lattice, so open
 ##    ground is always connected: no range or ring of cliffs closes the world into pockets.
+##    B14-07: a mountain's top (inside its rim) is ground but for its trees and boulders, out of reach until the
+##    player cuts steps or builds stairs or a walkway through the rim (Terrain; `works`, saved, never undone). The
+##    generated chunk data is unchanged (the top flag is extra), so older saves keep their changes.
 ##  - Roads are a global network: a node on a jittered grid (NODE tiles apart), each joined to some
 ##    neighbours by a bent 4-connected polyline that depends only on the two nodes. Every chunk
 ##    rasterises the segments that touch it, so roads cross chunk seams unbroken. The village's four
@@ -29,7 +32,11 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 1
+const GEN_VERSION := 2
+## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
+## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
+## may be another colour than in version 1, and nothing else moved.
+const GEN_COMPATIBLE := [1, 2]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -54,6 +61,8 @@ class Chunk extends RefCounted:
 	var snow := PackedByteArray()        # 1 where the tree stands high (highland), 2 on a mountain top (inside the cliffs): snow-covered variants
 	var trees := PackedInt32Array()      # x, y, kind of each tree (world cells); includes unreachable mountain trees
 	var road := PackedByteArray()        # AREA x AREA road mask round the chunk (cell (x, y) at (y + PAD) * AREA + x + PAD)
+	var top := PackedByteArray()         # 1 on a mountain top (all four corners cliff: inside the rim). B14-07: ground but for its
+	                                     # trees and boulders, reached only by the steps, stairs or walkways the player makes
 	var last_use := 0
 
 var seed := 1
@@ -63,6 +72,9 @@ var tiles := {}                          # overworld_tiles.json
 var changes := {}                        # Vector2i -> a tree the player changed (felled, growing, planted): {x, y, species, state, regrow, born, ow, planted?}
 var plant_changes := {}                  # Vector2i -> the game day a picked wild flower outside the village is ripe again (saved; PL2-006)
 var rock_changes := {}                   # Vector2i -> uses left of a boulder the player has worked on (0: broken up and gone); saved like `changes`
+var works := {}                          # B14-07: Vector2i -> a cliff rim cell made passable (Terrain): "steps" (cut), "stairs" or
+                                         # "walkway" (built), with "_ns" / "_ew" for the way it runs; saved like `changes`
+var works_version := 0                   # bumped on each change of `works` (the view redraws them)
 var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
@@ -468,6 +480,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 	ch.kind.resize(cells)
 	ch.kind.fill(NO_TREE)
 	ch.snow.resize(cells)
+	ch.top.resize(cells)
 	ch.path.fill(-1)
 	ch.deco.fill(-1)
 	var grass: Array = tiles.grass
@@ -485,6 +498,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 				ch.ground[c] = -1
 				continue
 			var gk := j * GRID + i
+			ch.top[c] = inner[q]
 			var corners: int = cliff[gk] | (cliff[gk + 1] << 1) | (cliff[gk + GRID + 1] << 2) | (cliff[gk + GRID] << 3)
 			var opts: Array = cliff_tiles[corners]
 			ch.ground[c] = opts[hash32(seed, wx, wy, 70) % opts.size()]
@@ -568,6 +582,8 @@ func _cell_of(chunk: Chunk, c: Vector2i) -> int:
 func is_solid(c: Vector2i) -> bool:
 	if village.has_point(c):
 		return false
+	if works.has(c):
+		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
 	var ch := get_chunk(chunk_of(c))
 	var i := _cell_of(ch, c)
 	if changes.has(c):
@@ -582,7 +598,33 @@ func is_solid(c: Vector2i) -> bool:
 		if Trees.starts_mature(c.x, c.y):              # a generated tree: solid once its trunk has grown
 			return true
 		return Trees.solid(Trees.stage_at(clock - Trees.initial_born(c.x, c.y)))
+	if ch.top[i] == 1 and ch.kind[i] == NO_TREE and ch.deco[i] < 0:
+		return false                                   # B14-07: a mountain top is ground once reached (its trees and boulders stand)
 	return ch.solid[i] != 0
+
+
+## B14-07: whether a cell is on a mountain top (inside the cliff's rim).
+func is_top(c: Vector2i) -> bool:
+	if village.has_point(c):
+		return false
+	var ch := get_chunk(chunk_of(c))
+	return ch.top[_cell_of(ch, c)] == 1
+
+
+## B14-07: whether a cell is the cliff's rim itself (the rock face round a mountain top: never a tree, a rock or a road),
+## not yet cut or built through.
+func is_rim(c: Vector2i) -> bool:
+	if village.has_point(c) or works.has(c):
+		return false
+	var ch := get_chunk(chunk_of(c))
+	var i := _cell_of(ch, c)
+	return ch.solid[i] == 1 and ch.top[i] == 0 and ch.kind[i] == NO_TREE and ch.deco[i] < 0 and not is_road(c)
+
+
+## B14-07: a rim cell made passable (Terrain.build). Saved; never undone, so a way up is a way down (DVW-A10).
+func note_work(c: Vector2i, kind: String) -> void:
+	works[c] = kind
+	works_version += 1
 
 
 ## The small grey boulder standing on a cell outside the village (a solid rock of the generator, not a
@@ -691,6 +733,8 @@ func tree_at(c: Vector2i) -> Dictionary:
 ## Remember a tree the player changed (it is saved); a generated tree grown back is the base world again.
 func note_tree(t: Dictionary) -> void:
 	var cell := Vector2i(int(t.x), int(t.y))
+	if is_top(cell) and str(t.state) != "grown":
+		t.regrow = 1.0e15                              # DVW-A10: a mountain top's felled tree never grows back: no way across it closes
 	if t.state == "grown" and not t.get("planted", false):
 		changes.erase(cell)
 	else:
@@ -778,7 +822,12 @@ func to_dict() -> Dictionary:
 	rcells.sort()
 	for c: Vector2i in rcells:
 		rocks.append([c.x, c.y, int(rock_changes[c])])
-	return {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks, "flowers": flowers}
+	var wk := []
+	var wcells: Array = works.keys()
+	wcells.sort()
+	for c: Vector2i in wcells:
+		wk.append([c.x, c.y, str(works[c])])
+	return {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks, "flowers": flowers, "works": wk}
 
 
 ## Apply saved changes: the seed is set by the caller (create); a save from another generator
@@ -787,12 +836,16 @@ func load_dict(d: Dictionary) -> void:
 	changes.clear()
 	rock_changes.clear()
 	plant_changes.clear()
+	works.clear()
+	works_version += 1
 	for f in d.get("flowers", []):
 		plant_changes[Vector2i(int(f[0]), int(f[1]))] = int(f[2])
-	if int(d.get("gen", GEN_VERSION)) != GEN_VERSION:
+	if not int(d.get("gen", GEN_VERSION)) in GEN_COMPATIBLE:
 		return
 	for r in d.get("rocks", []):
 		rock_changes[Vector2i(int(r[0]), int(r[1]))] = int(r[2])
+	for r in d.get("works", []):                       # B14-07 (older saves have none)
+		works[Vector2i(int(r[0]), int(r[1]))] = str(r[2])
 	for e in d.get("changes", []):
 		var cell := Vector2i(int(e.x), int(e.y))
 		var t := {}

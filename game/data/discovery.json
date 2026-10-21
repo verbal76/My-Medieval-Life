@@ -1,0 +1,21 @@
+{
+  "format": "mml-discovery/1",
+  "note": "MIN-D finite deposit discovery (Mining spec stage 2, sections 3, 8, 9 and 11, phase D; docs/build17/MIN_D_DISCOVERY.md), read by Discovery (game/scripts/core/discovery.gd). A clue's body (Prospecting) is opened into an ordinary World.deposits record only by a trial pit dug with a shovel (owner MIN-E-Q4: earth is dug with a shovel; a trial pit is one cell of open_pit.json's earth layers, down to the rock face, and that earth (MIN-D-Q3) is left as a spoil pile beside it: docs/build17/MIN_PARITY_SHOVELS.md) on clear ground of the clue's search area within `trial.reach` cells (Chebyshev) of the body: the same rule for the player and a villager. A trial pit costs time, pickaxe wear and earns Mining xp; most may miss, and a clue takes at most `trial.per_clue` pits. The seam opened holds the body's finite amount: the village map's own per-seam amount for its ore (village.json deposits) x grade / 5, rounded up; never refilled. The manor commissions work on its ordinary job board (ManorWork, paid from the treasury for the labour, whatever is found): one survey at a time (take `manor.survey_samples` samples of a clue it has heard nothing of, have them assayed, report at the manor; the wage covers the assay fees), and one trial pit at a time for the best find it knows (at least `manor.min_confidence`). Every number here is an agent decision (a minor detail under the standing release directive), not owner-approved balance. The settlement's mining capability level gates nothing (owner decision Q18-9, 2026-10-21: capability levels affect pay scales and production output only).",
+  "gen_version": 1,
+  "trial": {
+    "minutes": 120,
+    "wear": 2,
+    "xp": 6,
+    "reach": 2,
+    "per_clue": 4,
+    "tool": "shovel",
+    "pile_from": "a trial pit"
+  },
+  "manor": {
+    "survey_samples": 2,
+    "survey_wage": 22,
+    "pay_estimate_days": 2,
+    "trial_wage": 8,
+    "min_confidence": 0.3
+  }
+}

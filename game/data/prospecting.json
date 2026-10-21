@@ -1,0 +1,39 @@
+{
+  "format": "mml-prospecting/1",
+  "note": "MIN-C prospecting (Mining spec stage 2 and section 4; docs/build17/MIN_C_PROSPECTING.md), read by Prospecting (game/scripts/core/prospecting.gd). Clues are stains on the ground, placed from the world seed by integer hashing over blocks of the village (never world.rng, never the overworld's chunks): a clue marks a search area of `radius` cells round its stain, not a deposit. Some clues lie over a mineral body (`true_percent`), the rest mislead. A body is geology only (ore and grade, and the cell it lies under): it is never a deposit record; opening it is MIN-D's. Samples are rock chips taken with a prospector's kit inside a clue's area, a finite number per clue (`samples_per_clue`), one per cell; an assay (a smith at a forge, with fuel) reads one sample with uncertainty and never with certainty. Every number here is an agent decision (minor detail under the standing release directive), not owner-approved balance.",
+  "gen_version": 1,
+  "block": 15,
+  "clue_percent": 35,
+  "true_percent": 55,
+  "radius": 4,
+  "samples_per_clue": 4,
+  "samples_per_visit": 2,
+  "carry_samples": 3,
+  "sample_minutes": 30,
+  "sample_xp": 4,
+  "kit_wear": 1,
+  "assay": {
+    "fee": 6,
+    "minutes": 40,
+    "fuel": {"coal": 1},
+    "station": "forge",
+    "skill": "smithing",
+    "level": 1,
+    "xp": 6,
+    "base": 0.35,
+    "per_assayer_level": 0.04,
+    "per_sampler_level": 0.02,
+    "most": 0.9,
+    "least": 0.2,
+    "near_body": 0.35,
+    "false_trace": 0.5,
+    "fine_grade_from": 0.6
+  },
+  "grades": ["poor", "lean", "middling", "good", "rich"],
+  "ores": {
+    "iron_ore": {"weight": 40, "stain": "a rust-red stain in the soil", "color": [0.62, 0.27, 0.16]},
+    "coal": {"weight": 30, "stain": "black streaks in the earth", "color": [0.12, 0.11, 0.12]},
+    "copper_ore": {"weight": 22, "stain": "green-stained pebbles", "color": [0.27, 0.55, 0.42]},
+    "gold_ore": {"weight": 8, "stain": "a glitter of flecks in the gravel", "color": [0.86, 0.72, 0.25]}
+  }
+}
