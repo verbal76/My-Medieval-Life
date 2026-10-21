@@ -1462,6 +1462,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_planting()
 	_dvw_a12_loot()
 	_dvw_a12_xp()
+	_dvw_a12_livestock()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1964,6 +1965,43 @@ func _dvw_a12_xp() -> void:
 	w.player_leveled.disconnect(cb)
 	check(up == 2 and heard == [["magic", 2]] and main.ui.toast.text.contains("level 2"), "DVW-A12 R6: a new level is announced by core and shown by the interface (%s)" % main.ui.toast.text)
 	check(w.player_xp("magic", 1) == 0, "DVW-A12 R6: no banner without a new level")
+	_restore_pack(keep)
+
+
+## R10: a blow on an animal: alive, nothing else; killed, the kill xp, the ledger and the carcass; livestock is theft
+## from its keeper (a crime on the record, the keeper's memory); through the interface; kept over a save.
+func _dvw_a12_livestock() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var stock: Array = w.fauna.animals.filter(func(a): return a.alive and not a.wild() and a.adult(w.minutes) and w.pen_keeper(w.fauna.pens[a.area]) != null)
+	check(stock.size() >= 2, "DVW-A12 R10: livestock in a keeper's pen (%d)" % stock.size())
+	var a: Animal = stock[0]
+	var keeper: NPC = w.pen_keeper(w.fauna.pens[a.area])
+	p.pos = a.pos + Vector2(1.0, 0)
+	var hp0 := a.hp
+	var h := w.player_hit_animal(a, 0.5)
+	check(not h.killed and a.alive and is_equal_approx(a.hp, hp0 - 0.5), "DVW-A12 R10: a blow that does not kill only hurts")
+	var crimes0 := p.crimes.size()
+	var sl0 := float(w.stats.get("slaughtered_" + a.species, 0.0))
+	var loot0 := w.loot.size()
+	var want_xp := Skills.kill_xp(a.species, p.damage())
+	h = w.player_hit_animal(a, 100000.0)
+	check(h.killed and not a.alive and float(w.stats.get("slaughtered_" + a.species, 0.0)) - sl0 == 1.0 and int(p.skills.get("combat", 0)) == want_xp, "DVW-A12 R10: killed: the ledger (slaughtered_) and the kill xp (%d)" % want_xp)
+	check(w.loot.size() == loot0 + 1 and str(w.loot[-1].from).begins_with("the "), "DVW-A12 R10: its carcass lies where it fell")
+	check(p.crimes.size() == crimes0 + 1 and str(p.crimes[-1].kind) == "livestock" and keeper.memory.any(func(m): return str(m).contains("my ")), "DVW-A12 R10: killing livestock is theft from the keeper, who knows of it")
+	# through the interface
+	var b: Animal = stock[1]
+	p.pos = b.pos + Vector2(1.0, 0)
+	var crimes1 := p.crimes.size()
+	main._hit_animal(b, 100000.0)
+	check(not b.alive and p.crimes.size() == crimes1 + 1, "DVW-A12 R10: the interface's kill is core's")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.player.crimes.size() == p.crimes.size() and not w2.fauna.animals.any(func(x): return x.id == b.id and x.alive), "DVW-A12 R10: the crime and the death are saved")
+	while w.loot.size() > loot0:
+		w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
 	_restore_pack(keep)
 
 

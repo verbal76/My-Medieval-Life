@@ -2840,34 +2840,13 @@ func _chase_step() -> void:
 
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
 ## livestock is theft from its keeper, a crime like attacking a villager.
+## The rules are core's (World.player_hit_animal, DVW-A12 R10); the blow and a guard's words are shown here.
 func _hit_animal(a: Animal, dmg: float) -> void:
 	var before := a.hp
-	a.hp -= dmg
-	_hit_fx(animal_sprites.get(a.id), before, a.hp, dmg)
-	if a.hp > 0.0:
-		world.fauna.provoke(a, "player")            # a wolf or a bear fights back (B14)
-		return
-	_xp("combat", Skills.kill_xp(a.species, world.player.damage()))     # per kill, as a villager's (FSE-B12)
-	var keeper: NPC = null
-	if not a.wild():
-		keeper = world.pen_keeper(world.fauna.pens[a.area])
-	var what := a.label().to_lower()
-	var beast := a.wild() and bool(a.spec().get("people", false))
-	world.stat(("hunted_" if a.wild() else "slaughtered_") + a.species)     # FSE-B10: the wildlife ledger, as for villagers
-	var bag: Inventory = world.fauna.kill(a)
-	if beast:
-		world.relations.defended(a.pos)        # a wolf or a bear put down near people (CRT-10)
-	if bag.total() > 0:
-		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
-	if keeper != null:                         # theft from the keeper, known the way a theft is (World.witness, PAR-05)
-		var saw := world.near(world.player.pos, float(GameData.b("witness_radius"))).has(keeper)
-		world.witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
-		keeper.remember(("%s killed my %s" % [world.player.name, what]) if saw else ("found my %s dead" % what))
-		if saw and keeper.role == "adult" and keeper.target == -1:
-			keeper.target = -2                # a keeper who sees it comes after the player
-		if world.last_guard != "":
-			ui.message(world.last_guard)
-		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
+	var h := world.player_hit_animal(a, dmg)
+	_hit_fx(animal_sprites.get(a.id), before, before - dmg, dmg)
+	if str(h.guard) != "":
+		ui.message(str(h.guard))
 
 
 ## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,

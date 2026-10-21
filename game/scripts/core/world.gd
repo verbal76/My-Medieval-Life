@@ -1455,6 +1455,40 @@ func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 	return {"dealt": dealt, "killed": killed}
 
 
+## DVW-A12 R10: a blow of the player's of `dmg` lands on animal `a`. Still alive, it is provoked (a wolf or a bear
+## fights back, B14). Killed: Combat xp by Skills.kill_xp (per kill, as a villager's, FSE-B12), the wildlife ledger
+## (hunted_ or slaughtered_, FSE-B10), its meat and hide left where it fell, a wolf or bear put down near people a
+## defence (CRT-10); livestock is theft from its keeper, known the way a theft is (witness, PAR-05): the keeper
+## remembers it, and one who saw it comes after the player. Returns {killed, guard: a guard's words, "" for none}.
+func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
+	a.hp -= dmg
+	if a.hp > 0.0:
+		fauna.provoke(a, "player")
+		return {"killed": false, "guard": ""}
+	player_xp("combat", Skills.kill_xp(a.species, player.damage()))
+	var keeper: NPC = null
+	if not a.wild():
+		keeper = pen_keeper(fauna.pens[a.area])
+	var what := a.label().to_lower()
+	var beast := a.wild() and bool(a.spec().get("people", false))
+	stat(("hunted_" if a.wild() else "slaughtered_") + a.species)
+	var bag: Inventory = fauna.kill(a)
+	if beast:
+		relations.defended(a.pos)
+	if bag.total() > 0:
+		loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": minutes})
+	var guard := ""
+	if keeper != null:
+		var saw := near(player.pos, float(GameData.b("witness_radius"))).has(keeper)
+		witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
+		keeper.remember(("%s killed my %s" % [player.name, what]) if saw else ("found my %s dead" % what))
+		if saw and keeper.role == "adult" and keeper.target == -1:
+			keeper.target = -2
+		guard = last_guard
+		note("%s %s killed one of %s %s's animals." % [player.name, player.family, keeper.name, keeper.family])
+	return {"killed": true, "guard": guard}
+
+
 ## DVW-A12 R9: attacking a villager is a crime: the victim remembers it and thinks worse of the player, an adult fights
 ## back, and those who see it (aware_of_attack, witness_radius, PAR-05) remember it; the guards among them answer, and
 ## the victim and the other witnesses carry word to a guard (raise_alarm, report_crime). Nobody else knows.
