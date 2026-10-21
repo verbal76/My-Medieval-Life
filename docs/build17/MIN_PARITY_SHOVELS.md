@@ -1,7 +1,7 @@
 # Build 17: mining parity, recoverable trial-pit earth, shovels and digging rights
 
 Register: MIN-D2, MIN-D3 (parent MIN-D), MIN-SHOVEL, MIN-RIGHTS, MIN-SKILLCAP (parent MIN-E); all target Build 17. Branch
-`wip/b17-parity` (base `wip/build17` `45554d8`, merged up to the head named in the commit). Source: the owner's
+`wip/b17-parity` (base `wip/build17` `45554d8`, merged up to `4c68391`). Source: the owner's
 consolidated directive of 2026-10-21 (`docs/directives/2026-10-21_build17_consolidated_14_decisions.md`), whose
 numbering maps to the register as its header says: the directive's MIN-D-Q2 = MIN-D2, MIN-D-Q3 = MIN-D3, MIN-E-Q4
 (shovels) = MIN-SHOVEL, MIN-E-Q5 (rights) = MIN-RIGHTS, MIN-E-Q6 (specialists) = MIN-SKILLCAP. Earlier documents:
@@ -116,7 +116,7 @@ implementation. Recorded here for the lead; Expansion 18's code is not touched.
 
 ## 7. Tests
 
-`game/tests/parity_mining_test.gd` (63 checks): residency (a homeless player's pickaxe does not count; resident it makes
+`game/tests/parity_mining_test.gd` (62 checks): residency (a homeless player's pickaxe does not count; resident it makes
 level 1; nothing moved; leaving recalculates to 0); equal contributions need by need for the player and a villager with the
 same skill and tool in the pack, at home or none; no bonus without the skill; one shared tool, one practitioner;
 deterministic evaluation that draws no rng; a level-0 village's player still digs (Q18-9). Skills not titles (a woodcutter
@@ -139,7 +139,29 @@ both tools and dig with the layer's; the level-0 village is one where nobody hol
 (level 0 by no pickaxe; the stored level is still 0 when the work is done), `underground_struct_test` (rubble and fill
 dug out with a shovel), `services_test` (the dig contract's seller has a shovel; without one the refusal names it).
 
-Results: see the commit message and the lead's report (suites, check tools, the 30-day run).
+Results (2026-10-21, on `wip/build17` `4c68391` merged in): 0 failures in parity_mining 62, discovery 65, prospecting
+54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts
+20, parity 55, conservation 8, world 339, run_tests 3544, start 499 steps, play 39 steps, wiki_test all passed;
+`check_resources` 28 nodes 0 problems, `check_materials` 0 broken references and 0 stale exceptions (the four shovel-part
+findings excepted like the cart parts), `check_assets` 0 problems, `check_interactions` 0 problems, unittest 105 OK.
+
+`economy_sim.gd --days 30 --seed 1`: `LEAKS: currency 0; items {}; deposits []; animals {}`; day 30 alive 107, coins 4914
+(fingerprint `c86937d59dfe7ec0fe3d12163a064b60`), against the same base without this work (`4c68391`, run here) alive
+109, coins 4918 (`1b9459281e412bb36d11a44d46000c76`). The behaviour changed as expected: the carpenter made 3 shovels for
+the goods merchant (7 blades forged, 5 hafts, 3 of each assembled; a blade or haft is left on hand per smith and
+carpenter), 7 trial pits were dug with shovels and left 14 topsoil, 21 dirt and 21 spoil in piles, and a trial job was
+still open at day 30. On the base, the trial pits had been used up and the manor had staked an open pit, with 42 topsoil
+dug by pickaxe; here no pit was staked within 30 days (the trial pits took longer while shovels were made: a legitimate
+pace, shovels being obtainable). Iron bars made 261 against 235. Births 12 against 16 and deaths 5 against 7 (old age
+only; nobody starved in either run) account for the population difference: the random stream diverges once the
+smithing and carpentry differ.
+
+Not looked at on a screen: the shovel icons in the inventory and the trial pile on the map (headless only).
+
+**For the documentation worker:** `game/scripts/core/wiki_mining.gd` (not edited here, as directed) still says the open
+pit and the trial pit are dug with a pickaxe (its open-pit page "where" and "hint", the trial-pit paragraph, the
+open-pit digging and hiring paragraphs), and below ground does not say rubble and fill take a shovel. Those sentences are
+now wrong and should point to "Shovels and pickaxes" (`sys:digging_tools`).
 
 ## 8. Deferred and owner questions
 
