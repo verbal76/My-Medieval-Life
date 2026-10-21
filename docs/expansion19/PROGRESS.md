@@ -4,7 +4,7 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-21 (round 4: the owner's SJD decisions implemented on the branch).
+Updated 2026-10-21 (synchronized with Build 17 at `cd7439c`, after round 4).
 
 ## Branch and latest pushed commit
 
@@ -13,6 +13,33 @@ Updated 2026-10-21 (round 4: the owner's SJD decisions implemented on the branch
 (compact records, sliced daily update, trade-hook shortcut, measurements). Round 3: `940a989`, `6615da4` (gossip queue, cheaper telling, the scheduled option, measurements). Round 4: the
 commits that add this update (the owner's SJD decisions, Q14 integrations, the decay demonstration). The pushed head is
 the branch head on GitHub.
+
+## Synchronized with Build 17 (SYNC-17)
+
+**Build 17 baseline: `wip/build17` at `cd7439c`**, merged one way into this branch by merge commit `93c107f`. The branch
+was at `1b05da0` before. Conflicts, the compatibility review and measurements are in DESIGN.md section 13.
+
+Focused tests on the merged code (SIM-01), with private user data:
+
+| Suite | Checks |
+|---|---|
+| `judgment_test` | 164 |
+| `judgment_live_test` | 53 |
+| `judgment_decay_demo` | 24 |
+| `world_test` | 339 |
+| `run_tests` | 3544 |
+| `equip_test` | 51 |
+| `contracts_test` | 138 |
+| `conservation_test` | 8 |
+| `wiki_test` | all passed |
+
+All had 0 failures. Python unittest OK; `check_interactions`, `check_resources` and `check_materials` report 0 problems.
+One 30-day `economy_sim --judgment` on seed 1 had no leaks at days 10, 20 and 30. `judgment_perf` at 500 people, live
+rate: frame p99 1.41 ms and p99.9 3.67 ms, unchanged from round 4.
+
+Outstanding from the sync: Build 17's contract breaches and acceptance (CON-01/02), and collapse deaths as remembered
+facts, are new event feeds and decision points. They are not wired (no new judgment behaviour); they go in at the Build
+18/19 reconciliation.
 
 ## Owner decisions of 2026-10-21: implemented and pending
 

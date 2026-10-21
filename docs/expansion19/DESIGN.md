@@ -449,3 +449,47 @@ The rise has three causes:
 The owner accepted the round-3 p99 and asked for no more speculative optimisation rounds, so this is reported, not
 chased. A ready fix if wanted: apply the decay lazily, when a ledger is read or changed (same daily steps in the same
 order, so the same results), instead of every ledger at dawn.
+
+## 13. Synchronization with Build 17 (SYNC-17, owner directive 2026-10-21)
+
+The owner directed a one-way refresh: `docs/directives/2026-10-21_sync_expansions_with_build17.md` on staging `d91ea7f`
+amends PROS-01. Build 17 is merged into this branch; nothing of Expansion 19 goes into Build 17.
+
+- **Build 17 baseline: `cd7439c`.** This was the head of `wip/build17` when checked ("Let the reeve carry an unclaimed
+  delivery when no manor hand is free (LOG-01)"). Build 17 is not released; a later Build 17 fix comes in by a targeted
+  follow-up sync.
+- **Before:** `1b05da0`. **Merge commit:** `93c107f`.
+
+**Conflicts.** All three were adjacent additions; both sides were kept:
+- `world.gd`: Build 17's new members (contracts, discovery, prospecting, pits, underground, levels, mine works), their
+  setup and their load, followed by the judgment store's lines;
+- `economy_sim.gd`: Build 17's `reached` days, plus the judgment summary lines;
+- `tests.yml`: Build 17's suites, then the judgment suites.
+
+Every other judgment hook auto-merged into Build 17's versions of the same functions. No generated file conflicted;
+`check_interactions`, `check_resources` and `check_materials` report 0 problems.
+
+**Compatibility review against Build 17's additions**
+
+| Build 17 path | Effect on judgment | State |
+|---|---|---|
+| Underground levels (MIN-A) | `World.near` and `Relations.hour` now ignore people on another level ("not through rock"). Witnesses of thefts, attacks and a killing, and who meets whom for gossip, come from them | Resolved by construction: no knowledge passes between levels, and no change was needed |
+| Mine collapse (MIN-COLLAPSE: `World.kill(n, "crushed in a mine collapse")`, trapped survivors in `MineWorks.trapped`) | An accident with no actor: no judged event is published. The killing hook fires only for a villager slain by the player | Consistent with "do not invent new judgment behaviour". A collapse death as a remembered fact (a NEUTRAL record, seen only by those on the same level) would be a new event feed: listed, not wired |
+| Contracts and services (CON-01, CON-02: `Contracts.evaluate`, breaches "let down by ...") | Not wired: a breach is a natural "trade_cheat" event, and acceptance a natural Q14 decision point | Outstanding: new feeds and a new decision point. Per section 9.2 they go in at the Build 18/19 reconciliation, through the same interface |
+| LOG-01 reeve fallback, `is_staff` includes the reeve, manor hands | `hire_choice` and `work_accept` use `Construction.can_hire` and `Business.hire_refusal` as they stand. Neither function changed in Build 17's diff | Compatible; `judgment_live_test` hiring checks pass on the merged code |
+| Trading (`_buyer_for`, `_seller_of`), ownership, the prospector trade | The live candidate rules are unchanged in Build 17, and the adapters mirror them | Compatible; the trade-hook shortcut is still taken for every sale (56,350 in 30 days) |
+| Dawn work (`mine_works.dawn`, `discovery.dawn`, mine supply, timber wear) | `judgment.begin_day` runs after them in `World._new_day`; the hourly slices are unchanged | Compatible |
+| Saves (`SAVE_VERSION` 17, Build 17's) | The judgment section stays optional and is written only when a store is attached | Compatible; the round-trip and Build 16/17 save tests pass |
+
+**Measurements after the merge**
+- **Village, 30 days** (`economy_sim --judgment`, seed 1, checkpoints at days 10, 20 and 30; one run under SIM-01):
+  - no currency, item, deposit or animal leak at any checkpoint;
+  - 2,186 tellings and 1,893 belief upgrades;
+  - gossip cost (pump plus flushes) 0.71 s over 30 days, about 24 ms a day. Round 4 was about 28 ms a day over 10 days,
+    so the gossip hotspot is not worse after the merge;
+  - largest flush 77 meetings, 2.4 ms;
+  - time inside the trade hook 139 s over 30 days. Nearly all of it is Build 17's own buyer search, which the game pays
+    with judgment off too; the judgment part is one disposition check a sale.
+- **Synthetic frames** (`judgment_perf`, 500 people, live rate, spread): p99 1.41 ms, p99.9 3.67 ms. Round 4 was 1.45
+  and 3.78 ms: unchanged.
+- **Still open:** the gossip frame hotspot remains the open performance concern.
