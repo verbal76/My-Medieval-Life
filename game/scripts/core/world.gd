@@ -2552,9 +2552,8 @@ func player_harvest(f: Dictionary) -> int:
 		return 0
 	player.inv.add("wheat", n)
 	var taken := n - quests.hired_harvest(f, n)
-	var workers := field_workers(f)
-	if not workers.is_empty() and taken > 0:
-		var victim: NPC = workers[0]
+	var victim := field_owner(f)
+	if victim != null and taken > 0:
 		player.mark_stolen("wheat", victim.id, taken)
 		witness("theft", "%d wheat from %s" % [taken, f.id], victim, {"wheat": taken})
 	return n
@@ -3484,6 +3483,13 @@ func field_workers(f: Dictionary) -> Array:
 		if n.alive and n.job == "farmer" and n.workplace == str(f.id):
 			out.append(n)
 	return out
+
+
+## DVW-A12 R17: whose field `f` is for a harvest: the first farmer working it (field_workers), whose wheat the player
+## takes in theft (player_harvest); null when nobody works it.
+func field_owner(f: Dictionary) -> NPC:
+	var workers := field_workers(f)
+	return workers[0] if not workers.is_empty() else null
 
 
 ## The keeper of a pen (its tenant), alive, or null.

@@ -1946,10 +1946,8 @@ func _find_target() -> void:
 			break
 		for f in world.fields:
 			if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
-				var whose := ""
-				for fo: NPC in world.field_workers(f):
-					whose = "%s %s's" % [fo.name, fo.family]
-					break
+				var fo := world.field_owner(f)                  # whose it is: core's (DVW-A12 R17)
+				var whose := "%s %s's" % [fo.name, fo.family] if fo != null else ""
 				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
 				break
 		if not front.is_empty():

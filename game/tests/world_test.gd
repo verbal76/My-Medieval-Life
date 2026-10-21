@@ -1465,6 +1465,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_livestock()
 	_dvw_a12_cast()
 	_dvw_a12_trading_xp()
+	_dvw_a12_field_owner()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2078,6 +2079,41 @@ func _dvw_a12_trading_xp() -> void:
 	else:
 		check(int(p.skills.get("trading", 0)) == x1, "DVW-A12 R13: a sale refused (%s) earns none" % str(s.text))
 	p.coins = c0
+	_restore_pack(keep)
+
+
+## R17: whose a field is comes from core (field_owner): the prompt names them and the harvest is theft from them; a
+## field nobody works is nobody's.
+func _dvw_a12_field_owner() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var worked: Array = w.fields.filter(func(f): return not w.field_workers(f).is_empty())
+	var idle: Array = w.fields.filter(func(f): return w.field_workers(f).is_empty())
+	check(not worked.is_empty(), "DVW-A12 R17: a field a farmer works")
+	var f: Dictionary = worked[0]
+	var owner := w.field_owner(f)
+	check(owner == w.field_workers(f)[0], "DVW-A12 R17: its owner is the first farmer working it (%s)" % owner.name)
+	if not idle.is_empty():
+		check(w.field_owner(idle[0]) == null, "DVW-A12 R17: a field nobody works is nobody's")
+	var d := ResourceNodes.def_for("field", "")
+	check(ResourceNodes.theft_note(w, d if not d.is_empty() else {"match": {"kind": "field"}}, f).contains(owner.name), "DVW-A12 R17: the gathering note names them")
+	# the harvest prompt, then the harvest: theft from them
+	var st0: String = f.state
+	var crop0 := int(f.get("crop", 0))
+	f.state = "ripe"
+	f.crop = 10
+	var cell := Vector2i(int(f.x), int(f.y))
+	p.pos = Vector2(cell) + Vector2(0.5, -0.5)
+	main.player_sprite.dir = 0
+	main._find_target()
+	var fieldt: Array = main.target_options.filter(func(t): return str(t.kind) == "field")
+	check(not fieldt.is_empty() and str(fieldt[0].label).contains("%s %s's field: taking it is theft" % [owner.name, owner.family]), "DVW-A12 R17: the prompt names whose field it is")
+	var marked0: int = p.stolen_count("wheat")
+	w.player_harvest(f)
+	check(p.stolen_count("wheat") > marked0 and p.stolen["wheat"].has(str(owner.id)), "DVW-A12 R17: the wheat is marked as theirs")
+	f.state = st0
+	f.crop = crop0
 	_restore_pack(keep)
 
 
