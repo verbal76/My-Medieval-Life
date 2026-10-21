@@ -22,7 +22,7 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("Sow a tilled cell with seed from your pack (Use). Crops grow by the hour at the season's pace: spring and summer full speed, autumn at %d%%, winter not at all, and nothing can be sown in winter. A ripe cell is harvested with Use: you get its crop and some seed back, so a field can be sown again without buying seed. Seed is sold by the farmers and by the food stall's merchant." % roundi(float(rates.get("Autumn", 0.5)) * 100.0)),
 		Wiki.bullets(crop_lines),
 		Wiki.p("Wheat, carrots, potatoes and herbs sell to the cook and the food merchant (and to the sage, for herbs), at the market or from your own stall. The manor's own fields and their farmers are not affected: their crops are theirs, and taking them is theft."),
-		Wiki.links(["guide:farm_start", "guide:animals", "item:plough", "recipe:craft_plough", "item:wheat_seed", "item:carrot", "item:potato", "animal:chicken", "sys:property"])])
+		Wiki.links(["guide:farm_start", "guide:animals", "sys:farmland", "item:plough", "recipe:craft_plough", "item:wheat_seed", "item:carrot", "item:potato", "animal:chicken", "sys:property"])])
 	w.add_page("sys:farm_goods", "Eggs, milk and wool in the village", "systems", [
 		Wiki.p("The village's pens make eggs, milk and wool just as yours do. Their keepers collect them at the gate and sell them: eggs and milk to the cook, wool to the tanner, who pay from their own coins."),
 		Wiki.p("At the preparation table in the tavern kitchen the cook presses %d milk into a cheese and bakes an egg with %d wheat into %d loaves of egg bread. The tavern and the food stall sell them; villagers buy the meal that gives most food for the coin, those with coins to spare sometimes treat themselves to cheese, and a hungry drinker at the tavern takes bread or cheese with the ale." % [
@@ -47,3 +47,26 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("Eggs (a hen, daily), milk (a cow, %d a day) and wool (a sheep, every %d days) gather in the pen, up to %d of each. Use at the gate to collect them. Sell them to the cook or the food and goods merchants, or from your stall; press cheese from milk and bake egg bread at a food table; weave wool into cloth at the workbench and sew bandages from it. A pen animal you slaughter gives meat and hide, as any." % [
 				int(f.products.cow.qty), roundi(float(f.products.sheep.days)), int(f.product_cap)]),
 		Wiki.links(["animal:cow", "animal:sheep", "guide:farm_start", "item:egg", "item:milk", "item:wool", "recipe:press_cheese", "recipe:weave_cloth", "recipe:sew_bandages", "recipe:bake_egg_bread"])])
+	add_farmland_page(w)
+
+
+## FARM-01..05, FARM-09 (owner Q9, Q11): family farmland of any size. Prices come from the land office's own rules
+## (Property.land_price and the weekly rent share), the fence from the pen rule (Farming.pen_planks) and the gate's
+## stone from balance.json farm_plot, so the page follows the game.
+static func add_farmland_page(w: Wiki) -> void:
+	var prop := Property.new(null)
+	var farm := Farming.new(null)
+	var share := float(GameData.b("weekly_rent_share"))
+	var stone := int(GameData.b("farm_plot").gate_stone)
+	var rows := []
+	for s: Vector2i in [Vector2i(3, 3), Vector2i(4, 4), Vector2i(5, 6), Vector2i(6, 6), Vector2i(9, 10), Vector2i(12, 8)]:
+		var price := prop.land_price(s.x, s.y)
+		rows.append("%d x %d (%d cells, %d inside the fence): lease %d coins a week, or buy for %d coins; the fence takes %d planks and %d stone." % [
+			s.x, s.y, s.x * s.y, (s.x - 2) * (s.y - 2), maxi(1, ceili(price * share)), price, farm.pen_planks(Rect2i(Vector2i.ZERO, s)), stone])
+	w.add_page("sys:farmland", "Farmland: a plot of your own size", "systems", [
+		Wiki.p("Build menu, Farmland, Mark out: a green marker follows the mouse, your finger or the stick. Press (click, finger down, E or A) on the first corner, then drag to the opposite corner: the rectangle grows and shrinks with you, green where the manor will let it, red with the reason where not (someone's land, a building or its door, a field, a pen, the road, rough ground, or nowhere a gate could open onto). The size, the weekly lease and the price to buy stand in the middle of the screen. Click inside, press E or A, or Place here to see the deal; Esc or B goes back to the first corner."),
+		Wiki.p("Lease or buy, from the manor, priced by area like any ground: %d coins buys a 9 x 10 plot's area, and other sizes by their cells; a lease costs %d%% of the price a week, the first week paid at once and then each week. Bought land pays no rent. Without the coins the deal is refused. Villager households take farmland by the same rules and prices." % [int(GameData.b("plot_price")), roundi(share * 100.0)]),
+		Wiki.bullets(rows),
+		Wiki.p("Nothing on new farmland is cleared for you: dig out stumps (an axe), pull up saplings, grub up plants, break boulders. Then put up the fence and gate from the plot's window (Use on your ground): one plank for every 3 fence cells round the edge, the gate free, and %d stone for the gate's posts, all from your pack. The gate opens on the side the village can reach." % stone),
+		Wiki.p("Farmland is ploughed only inside its fence, once the fence stands; then till, sow and harvest as on any field of yours. A family works its plot together: the grown-ups after their work (or all day when out of work), the elders by day at the lighter work of sowing, harvesting and pulling up plants; children and the badly hurt do not. Their harvest goes into the family's chest."),
+		Wiki.links(["sys:farming", "guide:farm_start", "sys:property", "item:plank", "item:stone", "item:wheat_seed", "item:plough"])], "", "farmland plot field lease buy rent fence gate drag rectangle family household")

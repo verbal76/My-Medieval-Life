@@ -37,6 +37,8 @@ func _init() -> void:
 	test_household_work()
 	test_uptake()
 	test_save()
+	test_player_ledger()
+	test_home_plan()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -409,3 +411,74 @@ func test_save() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), old)
 	check(w3.farm_plots != null and w3.farm_plots.cells.is_empty(), "a save without farmland loads with none")
+
+
+## The goods ledger's residual for `id` since `g0`/`s0` (tests/economy_sim.gd _ledger's terms): the census now
+## against the census then plus what was made and less what was used, broken, eaten or exported.
+func residual(w: World, id: String, g0: Dictionary, s0: Dictionary) -> int:
+	var d := func(k: String) -> int: return int(w.stats.get(k, 0)) - int(s0.get(k, 0))
+	var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id)
+	var consumed: int = d.call("eaten_" + id) + d.call("used_" + id) + d.call("used_building_" + id) + d.call("used_works_" + id) \
+		+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id) \
+		+ d.call("spoiled_" + id) + d.call("wild_eaten_" + id)
+	return int(Census.goods(w).get(id, 0)) - (int(g0.get(id, 0)) + produced - consumed + d.call("imported_" + id) - d.call("exported_" + id))
+
+
+## The player's pen planks and a plough worn out in the player's hands are counted where the goods ledger reads them.
+func test_player_ledger() -> void:
+	var w := new_world()
+	w.player.coins = 300
+	var r := ground(w, Vector2i(9, 9))
+	var p := w.farm_plots.claim(r, World.PLAYER, false)
+	clear_rect(w, r)
+	var g0 := Census.goods(w)
+	var s0 := w.stats.duplicate()
+	var pen_r := Rect2i(r.position + Vector2i(1, 1), Vector2i(5, 4))
+	w.player.inv.add("plank", w.farm.pen_planks(pen_r))
+	g0 = Census.goods(w)
+	check(not w.farm.build_pen("chicken", pen_r, w.player).is_empty(), "the player fences a chicken pen (%s)" % w.farm.pen_why)
+	check(residual(w, "plank", g0, s0) == 0, "the pen's planks balance in the goods ledger (used_plank)")
+	# a plough worn out by tilling (on bought ground beside the pen)
+	var q := w.farm_plots.claim(ground(w, Vector2i(9, 9)), World.PLAYER, false)
+	var rq := FarmPlots.rect_of(q)
+	clear_rect(w, rq)
+	w.player.inv.add("plank", int(w.farm_plots.fence_cost(q).plank))
+	w.player.inv.add("stone", int(w.farm_plots.fence_cost(q).stone))
+	check(w.farm_plots.build_fence(q, World.PLAYER, [w.player.inv]) == "", "a second plot is fenced")
+	w.player.inv.add("plough", 1)
+	w.player.inv.durability["plough"] = 3      # an old plough, nearly worn out
+	g0 = Census.goods(w)
+	s0 = w.stats.duplicate()
+	var broke := false
+	for y in range(rq.position.y + 1, rq.end.y - 1):
+		for x in range(rq.position.x + 1, rq.end.x - 1):
+			if not broke:
+				w.player.stamina = 1000.0
+				w.farm.till(Vector2i(x, y), w.player)
+				broke = not w.player.inv.has("plough")
+	check(broke, "the plough wears out")
+	check(int(w.stats.get("broke_plough", 0)) - int(s0.get("broke_plough", 0)) == 1, "its breaking is counted as broke_plough")
+	check(residual(w, "plough", g0, s0) == 0, "the plough balances in the goods ledger")
+
+
+## Construction._home_plan never builds a house on farmland, whatever its size (a released 9x10 farm plot included).
+func test_home_plan() -> void:
+	var w := new_world()
+	var c: Construction = w.construction
+	var h := household(w)
+	var ref := World.hh_ref(h)
+	adult_of(w, h).coins += 500
+	var fp_size := c.footprint("house")
+	var near: Vector2i = w.building_door(str(w.households[h].home))
+	var r: Rect2i = w.farm_plots.find_ground(fp_size, near, h)
+	var farm := w.farm_plots.claim(r, ref, true)
+	check(not farm.is_empty() and FarmPlots.rect_of(farm).size == fp_size, "a house-sized (%dx%d) farm plot is leased" % [fp_size.x, fp_size.y])
+	w.property.end_lease(farm, ref)
+	check(w.property.for_sale(farm), "and given up: the manor offers it")
+	for pl in w.plots:                       # the map's surveyed clearings are taken, so only the farmland is on offer
+		if pl != farm and w.property.for_sale(pl):
+			w.set_owner(pl, World.PLAYER)
+	var plan: Dictionary = c._home_plan(w.property.purse(ref), FarmPlots.rect_of(farm).position, ref)
+	check(not plan.has("plot") or not FarmPlots.is_farm(plan.plot), "a household looking for a home does not take the farmland (%s)" % str(plan.keys()))
+	if plan.has("rect"):
+		check(not (plan.rect as Rect2i).intersects(FarmPlots.rect_of(farm)), "and new ground for a house is not on it")
