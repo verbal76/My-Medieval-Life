@@ -1305,12 +1305,12 @@ func test_building_site() -> void:
 	w.start_site(pl)
 	check(w.site_progress(pl) == 0.0, "a new site is 0% done")
 	p.inv.add("plank", 30)
-	p.inv.add("stone", 5)
+	p.inv.add("building_block", 5)          # STONE-01: a house takes building blocks
 	w.deliver(pl, p.inv)
 	check(absf(w.site_progress(pl) - 35.0 / 60.0) < 0.001, "the progress bar counts delivered loads (%.2f)" % w.site_progress(pl))
 	var coins0 := w.total_coins()
 	var back := w.cancel_site(pl, p.inv)
-	check(back == {"plank": 30, "stone": 5} and p.inv.count("plank") == 30 and p.inv.count("stone") == 5, "giving up a site returns every delivered load")
+	check(back == {"plank": 30, "building_block": 5} and p.inv.count("plank") == 30 and p.inv.count("building_block") == 5, "giving up a site returns every delivered load")
 	check(pl.site.is_empty() and w.owner_of(pl) == World.PLAYER and w.total_coins() == coins0, "the frame comes down; the plot stays the player's; no coin changes")
 	# a full pack: what does not fit is left in a bundle at the site
 	w.start_site(pl)
@@ -1320,7 +1320,7 @@ func test_building_site() -> void:
 	var loot0 := w.loot.size()
 	w.cancel_site(pl, p.inv)
 	var bundle: Dictionary = w.loot.back() if w.loot.size() > loot0 else {}
-	check(not bundle.is_empty() and int(bundle.inv.count("plank")) + p.inv.count("plank") == 30 and int(bundle.inv.count("stone")) + p.inv.count("stone") == 5, "with no room in the pack, the rest waits in a bundle at the site")
+	check(not bundle.is_empty() and int(bundle.inv.count("plank")) + p.inv.count("plank") == 30 and int(bundle.inv.count("building_block")) + p.inv.count("building_block") == 5, "with no room in the pack, the rest waits in a bundle at the site")
 	p.inv.max_stacks = 0
 	# a site from a save made before sites kept their cost still shows its progress and refunds
 	w.start_site(pl)
@@ -1882,7 +1882,7 @@ func test_construction() -> void:
 	check(w.property.describe(site).begins_with("the %s family's building site for a house" % p.family), "a site is named for its family: %s" % w.property.describe(site))
 	check(w.property.describe(w.buildings["b5"]).begins_with("the %s family's house" % w.households[w.household_in("b5")].family), "a house is named for the family living there: %s" % w.property.describe(w.buildings["b5"]))
 	# generic construction: anyone may deliver; the site's owner keeps the building
-	var ids := ["plank", "stone", "log", "iron_bar"]
+	var ids := ["plank", "building_block", "stone", "log", "iron_bar"]
 	var ledger0 := _ledger(w, ids)
 	var carrier: NPC = w.npcs[30]
 	for id in GameData.b("house_cost"):
@@ -1978,7 +1978,7 @@ func test_helpers() -> void:
 	helper.workplace = ""
 	_at_hour(w, 7.5)
 	var c0: int = coins.call()
-	var ids := ["plank", "stone", "log", "iron_bar"]
+	var ids := ["plank", "building_block", "stone", "log", "iron_bar"]
 	# the employer's goods: the chest, what the helper carries, the site, the building
 	var own := func() -> Dictionary:
 		var out := {}
@@ -2021,7 +2021,7 @@ func test_helpers() -> void:
 		if o.alive and o.job == "carpenter":
 			o.inv.add("plank", 20)
 		if o.alive and w.brain.buy_role(o) == "merchant_raw":
-			o.inv.add("stone", 20)
+			o.inv.add("building_block", 20)
 			o.inv.add("log", 20)
 	w.minutes += World.DAY
 	_at_hour(w, 7.2)
@@ -3407,7 +3407,7 @@ func test_resource_registry() -> void:
 	check(ResourceNodes.sources_of("gold_ore").any(func(s): return s.kind == "node" and s.id == "gold_seam"), "gold ore comes from the gold seam (Build 13)")
 	check(ResourceNodes.sources_of("bread").any(func(s): return s.kind == "recipe") and ResourceNodes.sources_of("bread").any(func(s): return s.kind == "start_kit"), "bread: the home food table makes it (PL2-013), and the start kit has it")
 	check(ResourceNodes.uses_of("iron_ore").any(func(u): return u.kind == "buyer" and u.id == "smith" and int(u.qty) == int(NPCBrain.BUYS.smith.iron_ore)), "buyers come from NPCBrain.BUYS")
-	check(ResourceNodes.uses_of("stone").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")
+	check(ResourceNodes.uses_of("building_block").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")
 	check(ResourceNodes.uses_of("pickaxe").any(func(u): return u.kind == "tool" and u.id == "iron_seam"), "a pickaxe is the tool for the seams")
 	check(ResourceNodes.sources_of("stone").any(func(s): return s.kind == "import") and ResourceNodes.sources_of("iron_ore").any(func(s): return s.kind == "import"), "caravan imports are sources")
 	w.dispose()

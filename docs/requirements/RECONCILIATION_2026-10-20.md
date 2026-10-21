@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 242 (104 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **299** = 197 still open from the baseline + 104 added and open |
+| Entries added since | | 247 (107 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **302** = 197 still open from the baseline + 107 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (34)
@@ -64,7 +64,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (242)
+## Added since the baseline (247)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -147,6 +147,7 @@ None.
 | FSE-B10 | The player's kills enter the wildlife ledger | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | approved | COMPLETE AND VERIFIED | 16 |
+| HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | APPROVED — NOT STARTED | owner decision |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | COMPLETE AND VERIFIED | 15 |
@@ -181,28 +182,30 @@ None.
 | MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | PARTIALLY IMPLEMENTED | 17 |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-C-Q3 | The smith remains the assayer; no separate assayer profession without approval | approved | COMPLETE AND VERIFIED |  |
+| MIN-COLLAPSE | Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically | approved | ACTIVE DEVELOPMENT | 17 |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | decision | COMPLETE AND VERIFIED | owner decision |
-| MIN-D2 | The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2) | approved | APPROVED — NOT STARTED | 17 |
-| MIN-D3 | Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3) | approved | APPROVED — NOT STARTED | 17 |
+| MIN-D2 | The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2) | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-D3 | Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3) | approved | ACTIVE DEVELOPMENT | 17 |
 | MIN-E-Q1 | What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q2 | Should there be a spade (and its recipe) for digging earth? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q4 | Should 'excavator' become a job, or should capability level 3 count whoever digs? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-E-Q5 | Should bigger or overworld pits be built to allow spiral ramps and more layers? | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-EQUIP | Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement | approved | ACTIVE DEVELOPMENT | 17 |
 | MIN-F-Q1 | Should unsupported spans collapse, supports decay and need repair, and ventilation and lighting be real needs? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q2 | Should tunnelling find hidden underground deposits, the manor post tunnelling and track jobs, and the carpenter make supports and track to sell (no villager tunnels on its own now)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q3 | Should miners haul by minecart instead of carrying? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q4 | Should there be shafts between underground levels? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F-Q5 | Should spoil be allowed back into tunnels below ground? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
-| MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | decision | BLOCKED | owner decision |
-| MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | decision | BLOCKED | owner decision |
+| MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | decision | COMPLETE AND VERIFIED | owner decision |
+| MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
-| MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | APPROVED — NOT STARTED | 17 |
-| MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | APPROVED — NOT STARTED | 17 |
-| MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | APPROVED — NOT STARTED | 17 |
+| MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | ACTIVE DEVELOPMENT | 17 |
+| MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | ACTIVE DEVELOPMENT | 17 |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |
@@ -299,7 +302,8 @@ None.
 | STALL-04 | CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | APPROVED — NOT STARTED | 17 |
+| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | BLOCKED | owner decision |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |
@@ -310,5 +314,6 @@ None.
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT | 15 |
+| WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | approved | ACTIVE DEVELOPMENT | 17 |
 
 The full, current list of open entries by build is the Roadmap section of `docs/DEVELOPMENT_LEDGER.md`.

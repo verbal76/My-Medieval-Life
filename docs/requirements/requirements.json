@@ -14217,6 +14217,50 @@
    "roadmap_reason": "generational memory is the judgment system's event and belief record; not named in any build, closest fit"
   },
   {
+   "id": "HEALTH-01",
+   "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "The owner wants genuine consequences from accidents, illness, and physical injury, but the system must fit the medieval setting.",
+   "description": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
+   "source": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md",
+   "approval": "owner decision 2026-10-21: approved for future development, not Build 17",
+   "acceptance": [
+    "Audit the existing apothecary and potions first and extend them",
+    "Care operates within the village economy with real supplies, practitioners, costs and time; not every injury treatable or patient saved",
+    "Dependencies recorded: NPC behaviour, mortality, occupations, economics"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "future build, placement the owner's"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "HOUSE-01",
    "title": "Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house",
    "kind": "approved",
@@ -16336,6 +16380,55 @@
    ]
   },
   {
+   "id": "MIN-COLLAPSE",
+   "title": "Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "For Build 17, a character caught in a mine collapse can either: 1. Survive. 2. Die.",
+   "description": "Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically",
+   "source": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md",
+   "approval": "owner decision MIN-F2-Q2, 2026-10-21",
+   "acceptance": [
+    "Deterministic from state and seed and the collapse mechanics; any survival value a documented tunable for review",
+    "Deaths through the existing death path (inheritance, household, witnesses as applicable); no deletion",
+    "Survivors not teleported without explanation: an existing valid mechanism, limitations reported (future rescue)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F2",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Lead integrates wip/b17-equip (89f30d3, pushed) after the worker reports",
+   "priority": "",
+   "workstream": "wip/b17-equip",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build",
+     "why": "started"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "workstream; next_action",
+     "why": "Worker branch pushed"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
    "id": "MIN-D",
    "title": "Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption",
    "kind": "approved",
@@ -16544,7 +16637,7 @@
    "id": "MIN-D2",
    "title": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -16565,7 +16658,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/b17-parity",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16578,6 +16671,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
     }
    ],
    "target_build": "17"
@@ -16586,7 +16684,7 @@
    "id": "MIN-D3",
    "title": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -16607,7 +16705,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/b17-parity",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16620,6 +16718,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
     }
    ],
    "target_build": "17"
@@ -16924,6 +17027,55 @@
    ],
    "target_build": "owner decision",
    "owner_answer": "Larger and deeper pits, strata, spiral and switchback ramps approved for future expansion; the 5x5 pit stays in Build 17; not a release blocker. (Directive item MIN-E-Q7.)"
+  },
+  {
+   "id": "MIN-EQUIP",
+   "title": "Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Both carpenters and smiths must participate in the legitimate production of mining equipment.",
+   "description": "Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement",
+   "source": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md",
+   "approval": "owner decision MIN-F2-Q1, 2026-10-21",
+   "acceptance": [
+    "Wooden parts and assemblies by carpenters, metal parts and fittings by smiths, per real material requirements; real materials, labour, time",
+    "Equipment reaches miners and the manor through market trade and procurement (existing made-to-order, merchant, CON-01 paths); the manor buys and arranges repairs from the treasury",
+    "The underground system functions in an unattended village; no mining-specific economy or wage"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F2",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Lead integrates wip/b17-equip (89f30d3, pushed) after the worker reports",
+   "priority": "",
+   "workstream": "wip/b17-equip",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build",
+     "why": "started"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "workstream; next_action",
+     "why": "Worker branch pushed"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "MIN-F",
@@ -17281,7 +17433,7 @@
    "id": "MIN-F2-Q1",
    "title": "Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own)",
    "source": "docs/build17/MIN_F2_STRUCTURE.md",
@@ -17289,7 +17441,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-EQUIP",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -17315,15 +17467,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; owner_answer",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md): carpenters and smiths produce mining equipment and parts through existing crafting, trade and job-board systems; the manor may buy equipment and arrange repairs from real funds; implementation MIN-EQUIP"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Carpenters and smiths produce supports, ladders, minecarts, metal parts and repair materials by their trades with real materials, labour and time; available by ordinary trade and procurement; the manor may buy equipment and arrange support repairs from real funds; villagers need not depend on the player; no mining-specific economy or wage."
   },
   {
    "id": "MIN-F2-Q2",
    "title": "Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)?",
    "source": "docs/build17/MIN_F2_STRUCTURE.md",
@@ -17331,7 +17489,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-COLLAPSE",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -17357,9 +17515,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; owner_answer",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md): Build 17 collapses are binary survive-or-die, deterministic, deaths through existing death handling, survivors handled physically; health system deferred (HEALTH-01); implementation MIN-COLLAPSE"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Build 17: a person caught in a collapse survives or dies, deterministically from the collapse mechanics; deaths through existing death handling; survivors handled consistently with the physical world (no unexplained teleport); no injury or recovery state; any survival chance a documented tunable for later review. A medieval health and medical system is approved for a later build."
   },
   {
    "id": "MIN-G",
@@ -17525,7 +17689,7 @@
    "id": "MIN-RIGHTS",
    "title": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17546,7 +17710,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/b17-parity",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17559,6 +17723,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
     }
    ],
    "target_build": "17"
@@ -17567,7 +17736,7 @@
    "id": "MIN-SHOVEL",
    "title": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17588,7 +17757,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/b17-parity",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17601,6 +17770,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
     }
    ],
    "target_build": "17"
@@ -17609,7 +17783,7 @@
    "id": "MIN-SKILLCAP",
    "title": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17630,7 +17804,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/b17-parity",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17643,6 +17817,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
     }
    ],
    "target_build": "17"
@@ -28468,7 +28647,7 @@
    "id": "STONE-01",
    "title": "Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Quarry extraction → Raw stone → Stoneworking → Finished building blocks → Construction",
    "description": "Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks",
    "source": "docs/directives/2026-10-21_quarry_stone_blocks_decision.md",
@@ -28478,18 +28657,20 @@
     "Construction recipes that need finished stone use blocks; raw stone stays the quarry and mine output",
     "A villager trade (stoneworker or an existing trade) makes blocks to demand; conservation, saves (existing stone in older saves handled explicitly), deterministic"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/STONE_01_BLOCKS.md; game/tests/stone_test.gd",
+   "tests": "stone_test, quarry_test, openpit_test, crafts_test, housing_test, business_test, contracts_test, services_test, parity_test, conservation_test, world_test, start_test, play_test, run_tests",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "d28503c"
+   ],
    "parent": "MIN-B",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Full CI and the gate re-baseline on wip/build17; owner questions STONE-Q1..Q3 (fittings and mending on blocks, dressing waste, a mason trade)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28504,9 +28685,66 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "Build 17 (mining and industrial production chain); scheduled after MIN-F2 to avoid overlapping edits"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit d28503c; tests; implementation; next_action",
+     "why": "Lead merged wip/b17-stone (d28503c) into wip/build17: building_block item, dress_stone recipe (workbench, mallet, Crafting 1, exact), labourers dress to demand, construction takes blocks, raw stone kept for fittings/mending/gate/contracts/caravan; older sites keep stone cost. stone_test 45 checks and the affected suites pass on the worker's merge; determinism re-baseline and full CI still to run on the integrated branch"
     }
    ],
    "target_build": "17"
+  },
+  {
+   "id": "STONE-Q",
+   "title": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "1. Should fittings and the manor's mending use blocks? (recommend raw stone). 2. Should dressing waste stone, e.g. 3 to 2? (recommend 1:1 until balance review). 3. A dedicated mason trade, Stoneworking skill or chisel? (recommend revisiting with the labour-market work)",
+   "description": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
+   "source": "docs/build17/STONE_01_BLOCKS.md",
+   "approval": "Agent question, awaiting owner",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/STONE_01_BLOCKS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "Build 17 follow-up"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> BLOCKED",
+     "why": "Open owner question (decision kind): blocked on the owner's answer, like other open decisions"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "Open owner decisions carry target 'owner decision' like CON-08-Q"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "TIME-01",
@@ -30611,6 +30849,58 @@
     }
    ],
    "target_build": "15"
+  },
+  {
+   "id": "WIKI-B17",
+   "title": "Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation",
+   "source": "docs/directives/2026-10-21_permanent_wiki_maintenance.md",
+   "approval": "owner directive 2026-10-21 (permanent wiki maintenance, section 4)",
+   "acceptance": [
+    "Every merged Build 17 player-facing mechanic documented in the in-game wiki from its real behaviour; obsolete text corrected",
+    "Developer references current (docs/build17, manifest) and linked to requirement ids",
+    "Approved future items listed only as not yet in the game; health topics as placeholders; Build 17 collapse outcome documented as built",
+    "wiki_test passes; documentation gaps reported before the release review"
+   ],
+   "implementation": "",
+   "tests": "wiki_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "0147066"
+   ],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Add pages from parity/shovels and equipment/collapse when merged; close the listed gaps before the release review",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_permanent_wiki_maintenance.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "started"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 0147066; tests; next_action",
+     "why": "Merged wip/b17-wiki (0147066): wiki_mining.gd (mining, prospecting, open pits, underground, minecarts, shafts, stability, backfill), sys:manor_jobs, 15 not-yet-in-game entries incl. 6 health placeholders, docs/build17/README.md; and STONE-01's sys:stoneworking. wiki_test passes on the merge. Gaps open: capability levels cap at 2 (no excavator job; with MIN-SKILLCAP), stability page lacks the collapse outcome (MIN-COLLAPSE), code names on non-mining node pages, prospector JOB_TEXT without a Population job, stale owner questions in MIN_F_UNDERGROUND.md section 4"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "WR-01",

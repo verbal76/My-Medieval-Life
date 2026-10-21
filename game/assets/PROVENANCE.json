@@ -597,6 +597,13 @@
    "sha256": "bbc53cd2ee33cf68f5c99c25b79e88b380c00eef801006a2d3e3df6ec5fd9ebd"
   },
   {
+   "file": "assets/icons/building_block.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Stone-Block-02.png",
+   "transform": "copied unchanged",
+   "sha256": "786639f9d5b9a148b618619ef4df622e947b72d2d388876615c4c97c44206920"
+  },
+  {
    "file": "assets/icons/cart_axle.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Wood/Stick-01.png",

@@ -27,6 +27,11 @@
       "type": "resource",
       "value": 1
     },
+    "building_block": {
+      "name": "Building block",
+      "type": "resource",
+      "value": 3
+    },
     "log": {
       "name": "Log",
       "type": "resource",

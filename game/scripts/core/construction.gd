@@ -34,7 +34,9 @@ const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench an
 const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
-const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"],
+## STONE-01: building blocks from the raw-goods merchant and the labourers who dress them; raw stone stays on sale for
+## sites marked out before blocks (they keep the cost they were marked out with).
+const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"], "building_block": ["merchant_raw", "laborer"],
 	"log": ["woodcutter", "merchant_raw"], "iron_bar": ["smith", "merchant_goods"]}
 
 var w: World
