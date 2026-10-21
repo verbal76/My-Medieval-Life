@@ -5289,6 +5289,50 @@
    "roadmap_reason": "economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in)"
   },
   {
+   "id": "CON-01",
+   "title": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
+   "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
+   "approval": "owner directive 2026-10-21 section 5",
+   "acceptance": [
+    "One contract system reused for player-NPC, NPC-player and NPC-NPC; offered through the existing conversation framework; NPCs evaluate feasibility, skills, tools, quantity, price, obligations, household needs, time, alternatives, relationship and risk; real goods and funds only; no duplicate delivery or payment; policy details decided by the owner before they are fixed"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "17",
+   "roadmap_gate": "Build 17",
+   "roadmap_reason": "Owner Build 17 decisions 2026-10-21"
+  },
+  {
    "id": "CQ-01",
    "title": "Sword responsiveness and hit detection (buffer, reach, phases, walls)",
    "kind": "approved",
@@ -6971,7 +7015,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Owner 2026-10-21: deferred to the start of Build 17; acceptance kept; not complete; existing functionality kept; no new UI-dependent gameplay rules meanwhile; a Build 16 defect gets a narrow fix only.",
+   "notes": "Owner 2026-10-21 (OD-28): direction approved; order mining, felling, crafting; small reviewable changes with focused tests; implementation only after Build 16's automated gate, on isolated branches",
    "history": [
     {
      "date": "2026-10-19",
@@ -6992,6 +7036,11 @@
      "date": "2026-10-21",
      "change": "deferral approved by the owner; status PARTIALLY IMPLEMENTED -> DEFERRED; target_build 16 -> 17",
      "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner approved the refactor direction"
     }
    ],
    "acceptance_derived": true,
@@ -15076,6 +15125,50 @@
    "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
+   "id": "MIN-H",
+   "title": "Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence)",
+   "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
+   "approval": "owner directive 2026-10-21 section 3 (gameplay and visual direction approved; architecture to be chosen after the comparison)",
+   "acceptance": [
+    "Architecture selected by the owner from the A/B/C comparison; player and NPC movement, mining, transport, transitions, saves and rendering underground; the same deposit system as the surface"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "17",
+   "roadmap_gate": "Build 17",
+   "roadmap_reason": "Owner Build 17 decisions 2026-10-21"
+  },
+  {
    "id": "MIN-L5",
    "title": "Mining capability level 5 (integrated industrial mining)",
    "kind": "proposal",
@@ -16512,6 +16605,51 @@
    "b16_class": "required",
    "complexity": "M",
    "owner_answer": "Q8 retain fractional remainders, conserved; Q9 existing pen recipes plus stone by perimeter; Q10 three planks per stall; Q11 adjustable rectangle with area-based lease and purchase prices; Q12 all stalls pay 5%; Q13 proceeds only on closing or selling out (docs/directives/2026-10-21_build16_master_completion_directive.md section 4)"
+  },
+  {
+   "id": "OD-28",
+   "title": "Owner decisions for Build 17 (2026-10-21): enterable caves and underground mining; one deposit system everywhere; universal negotiated goods contracts; DVW-A12 direction",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Owner decisions for Build 17 (2026-10-21): enterable caves and underground mining; one deposit system everywhere; universal negotiated goods contracts; DVW-A12 direction",
+   "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
+   "approval": "owner directive 2026-10-21 sections 3-6",
+   "acceptance": [
+    "Recorded; architecture for underground still to be selected after the comparison (a remaining owner choice); contract policy details (advance or on delivery, partial delivery, deadlines, cancellation, breach, escrow, renegotiation) not decided"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner_answer; target_build; roadmap_gate; roadmap_reason",
+     "why": "Owner answered"
+    }
+   ],
+   "owner_answer": "Caves, underground passages, tunnels and open pits as genuine enterable environments with the roof-fade principle, layered world preferred for investigation (architecture not selected); mineral deposits use the same resource objects and sustainability rules everywhere; one universal negotiated procurement contract (item, quantity, price per unit; accept, reject, counteroffer; player and NPC parity; conservation); DVW-A12 rules-to-core approved in the order mining, felling, crafting, implementation after Build 16's automated gate",
+   "target_build": "17",
+   "roadmap_gate": "Build 17",
+   "roadmap_reason": "Owner Build 17 decisions"
   },
   {
    "id": "OD-LE-01",

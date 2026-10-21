@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 213 still open, 18 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 169 (89 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **302** = 213 still open from the baseline + 89 added and open |
+| Entries added since | | 172 (91 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 213 still open from the baseline + 91 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (18)
@@ -41,14 +41,14 @@ entry leaves the register or changes without a history entry.
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
-| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 17 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 17 | 2026-10-21: Owner approved the refactor direction |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 18 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
 
 ## Reopened since the baseline (0)
 
 None.
 
-## Added since the baseline (169)
+## Added since the baseline (172)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -56,6 +56,7 @@ None.
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
 | B16-READY | Build 16 development audit and release-readiness report | approved | ACTIVE DEVELOPMENT | 16 |
+| CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
@@ -140,6 +141,7 @@ None.
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | rule | COMPLETE AND VERIFIED | 16 |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | 17 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | COMPLETE AND VERIFIED | 16 |
@@ -158,6 +160,7 @@ None.
 | OD-25 | Owner decision resolution for Build 16 (2026-10-21): FARM-07 2 coins a week; FARM-01/02 variable plots, materials from the perimeter; STALL-01/05 5% of completed sales after audits, rounding not approved; FSE-12 behind a switch with comparison; FSE-13 comparison then review; FSE-B06 deadwood interim; OD-20 witness reports; EQ-22 buying by need; OD-17 still blocked; DVW-A12 to Build 17; DVW-B6 to Build 18 | decision | COMPLETE AND VERIFIED | 16 |
 | OD-26 | Owner decision 2026-10-21: one shared per-cell farming model for player, households and manor approved as the direction; no yield approved; both switches off; compare several shared yields (between about 0.9 and 3 wheat a cell) with seasonal farming on, identical seeds; investigate the seasonal milk collapse; recommend a yield for approval | decision | COMPLETE AND VERIFIED | 16 |
 | OD-27 | Owner answers to the land and stall questions Q8-Q13 (2026-10-21) | decision | COMPLETE AND VERIFIED | 16 |
+| OD-28 | Owner decisions for Build 17 (2026-10-21): enterable caves and underground mining; one deposit system everywhere; universal negotiated goods contracts; DVW-A12 direction | decision | COMPLETE AND VERIFIED | 17 |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |

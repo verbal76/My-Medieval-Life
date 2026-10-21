@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 66 |
+| APPROVED — NOT STARTED | 68 |
 | ACTIVE DEVELOPMENT | 30 |
 | PARTIALLY IMPLEMENTED | 38 |
 | IMPLEMENTED — TESTING REQUIRED | 20 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **447** |
-| Outstanding (not complete, superseded or canceled) | 229 |
+| **Total approved** | **449** |
+| Outstanding (not complete, superseded or canceled) | 231 |
 
-Also in the register: 31 proposal awaiting an owner decision (not approved), 59 owner decision (open or answered), 24 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 31 proposal awaiting an owner decision (not approved), 60 owner decision (open or answered), 24 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -41,14 +41,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 63 | 61 |
-| Build 17: Mining & Industrial Development | 24 | 19 |
+| Build 17: Mining & Industrial Development | 26 | 21 |
 | Build 18: Settlement Advancement & Regional Economy | 23 | 18 |
 | Build 19: NPC Judgment System | 28 | 14 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 59 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **302** | **229** |
+| **Total open** | **304** | **231** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -175,13 +175,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
-### Build 17: Mining & Industrial Development (24)
+### Build 17: Mining & Industrial Development (26)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | approved | APPROVED — NOT STARTED |  | cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A) |
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | approved | BLOCKED | owner decision first | the mine wage belongs with mining labour economics; still the owner's call (OD-01) |
 | B7-007 | Deposits never refill; no stone source | approved | PARTIALLY IMPLEMENTED |  | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
+| CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | Build 17 | Owner Build 17 decisions 2026-10-21 |
 | DVW-A10 | No black-hole spaces (:35) | approved | APPROVED — NOT STARTED |  | cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A) |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | DEFERRED |  | rules in core/, not UI: a code audit before the expansions build on it |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | approved | APPROVED — NOT STARTED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
@@ -197,6 +198,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | approved | APPROVED — NOT STARTED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | approved | APPROVED — NOT STARTED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | Build 17 | Owner Build 17 decisions 2026-10-21 |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | decision | BLOCKED | owner decision first | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
 | PL1-12 | Red flowering plant not pickable | approved | PARTIALLY IMPLEMENTED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
 | REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | approved | BLOCKED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
@@ -450,13 +452,14 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (66)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
+| CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
@@ -496,6 +499,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-D |  |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-E |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -947,7 +951,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (59)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (60)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -979,6 +983,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-25 | Owner decision resolution for Build 16 (2026-10-21): FARM-07 2 coins a week; FARM-01/02 variable plots, materials from the perimeter; STALL-01/05 5% of completed sales after audits, rounding not approved; FSE-12 behind a switch with comparison; FSE-13 comparison then review; FSE-B06 deadwood interim; OD-20 witness reports; EQ-22 buying by need; OD-17 still blocked; DVW-A12 to Build 17; DVW-B6 to Build 18 | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build16_owner_decision_resolution.md |
 | OD-26 | Owner decision 2026-10-21: one shared per-cell farming model for player, households and manor approved as the direction; no yield approved; both switches off; compare several shared yields (between about 0.9 and 3 wheat a cell) with seasonal farming on, identical seeds; investigate the seasonal milk collapse; recommend a yield for approval | COMPLETE AND VERIFIED | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |
 | OD-27 | Owner answers to the land and stall questions Q8-Q13 (2026-10-21) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build16_master_completion_directive.md |
+| OD-28 | Owner decisions for Build 17 (2026-10-21): enterable caves and underground mining; one deposit system everywhere; universal negotiated goods contracts; DVW-A12 direction | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
