@@ -1458,6 +1458,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_combat()
 	_dvw_a12_fireball()
 	_dvw_a12_pickpocket_reach()
+	_dvw_a12_reach()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1469,6 +1470,7 @@ func _dvw_a12_felling() -> void:
 	var grown := w.trees.filter(func(t): return t.state == "grown" and not t.get("ow", false))
 	check(grown.size() >= 3, "DVW-A12 R2: the village has mature trees (%d)" % grown.size())
 	var tr: Dictionary = grown[0]
+	p.pos = _beside(Vector2i(int(tr.x), int(tr.y)))               # within reach (R15)
 	var fp := w.player_fell_plan(tr)
 	check(not fp.ok and str(fp.why) == "Requires an axe. The smith sells them.", "DVW-A12 R2: no axe, no felling (%s)" % str(fp.get("why", "")))
 	p.inv.add("axe")
@@ -1725,6 +1727,133 @@ func _dvw_a12_pickpocket_reach() -> void:
 	p.pos = p0
 
 
+## R14, R15: core refuses what is out of the player's reach, by the distances the interface's target choice uses: a
+## pocket beyond 1.8 tiles (the sleeper's too: the intended change), a seam or tree more than two cells off, a
+## container beyond 2.2 tiles, a pile beyond the probe's reach, a field, a crafting station beyond 1.2 tiles, a wall.
+func _dvw_a12_reach() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	# a sleeper's pocket: within reach a try is made; beyond 1.8 tiles none is (no xp, no shout, nothing taken)
+	var sleeper: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and x.job != "guard")[0]
+	sleeper.anim = "sleep"
+	sleeper.coins = 7
+	p.pos = sleeper.pos + Vector2(World.PICKPOCKET_REACH + 0.4, 0)
+	var crimes0 := p.crimes.size()
+	var r := w.pickpocket(sleeper)
+	check(not r.ok and r.get("refused", false) and sleeper.coins == 7 and p.crimes.size() == crimes0, "DVW-A12 R14: a sleeper's pocket beyond %.1f tiles is out of reach: no try (%s)" % [World.PICKPOCKET_REACH, r.text])
+	var xp0 := int(p.skills.get("stealth", 0))
+	main.pickpocket(sleeper)
+	check(int(p.skills.get("stealth", 0)) == xp0 and main.ui.toast.text.contains("out of reach") and sleeper.coins == 7, "DVW-A12 R14: the interface shows it and gives no Stealth xp for a try never made")
+	p.pos = sleeper.pos + Vector2(1.0, 0)
+	r = w.pickpocket(sleeper)
+	check(not r.get("refused", false), "DVW-A12 R14: beside the sleeper the try is made (%s)" % r.text)
+	sleeper.anim = "idle"
+	# a seam: within two cells, then out of reach, through core and through the interface
+	var d: Dictionary = w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	var cell := Vector2i(int(d.x), int(d.y))
+	p.pos = _beside(cell)
+	check(w.player_reach_cell(cell) == "", "DVW-A12 R15: a seam beside the player is in reach")
+	p.inv.add("pickaxe")
+	var away := Vector2.ZERO
+	for k in range(3, 12):
+		for dd in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+			var c2: Vector2i = cell + dd * k
+			if away == Vector2.ZERO and not main.map.is_solid(c2) and w.reaches(Vector2(c2) + Vector2(0.5, 0.5), Vector2(cell) + Vector2(0.5, 0.5)):
+				away = Vector2(c2) + Vector2(0.5, 0.5)
+	p.pos = away
+	check(away != Vector2.ZERO and w.player_reach_cell(cell) == "That is out of reach." and str(w.player_mine_plan(d).why) == "That is out of reach.", "DVW-A12 R15: three or more cells off, the seam is out of reach and mining is refused")
+	var left := int(d.amount)
+	main.target = {"kind": "deposit", "dep": d, "label": "Mine"}
+	main._use()
+	check(main.action.is_empty() and int(d.amount) == left and main.ui.toast.text.contains("out of reach"), "DVW-A12 R15: the interface shows core's refusal and mines nothing")
+	# a container: within 2.2 tiles, not beyond
+	var box: Dictionary = {}
+	for c in w.containers:
+		if box.is_empty() and w.place_of(Vector2(int(c.x), int(c.y)) + Vector2(0.5, 1.5)) == "" and w.container_pick(c) != "" and not main.map.is_solid(Vector2i(int(c.x), int(c.y) + 1)):
+			box = c
+	if not box.is_empty():
+		var at := Vector2(int(box.x), int(box.y)) + Vector2(0.5, 0.5)
+		p.pos = at + Vector2(0, World.CONTAINER_REACH + 0.5)
+		var inv0 := p.inv.total()
+		check(w.player_take(box) == "far" and p.inv.total() == inv0 and w.player_container_reach(box) != "", "DVW-A12 R15: a container beyond %.1f tiles is out of reach; nothing taken" % World.CONTAINER_REACH)
+		p.pos = at + Vector2(0, 1.0)
+		check(w.player_container_reach(box) == "", "DVW-A12 R15: beside it, it is in reach")
+	# a pile: within the probe's reach, not beyond
+	w.loot.append({"pos": p.pos + Vector2(0, 0.5), "inv": Inventory.new(), "coins": 0, "from": "test"})
+	check(w.player_reach_point(w.loot[-1].pos, World.TARGET_PROBE + World.TARGET_REACH) == "", "DVW-A12 R15: a pile underfoot is in reach")
+	w.loot[-1].pos = p.pos + Vector2(0, World.TARGET_PROBE + World.TARGET_REACH + 0.5)
+	check(w.player_reach_point(w.loot[-1].pos, World.TARGET_PROBE + World.TARGET_REACH) != "", "DVW-A12 R15: a pile beyond it is not")
+	w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	# a field: any of its cells within two of the player's
+	var f: Dictionary = w.fields[0]
+	p.pos = Vector2(int(f.x) - 1, int(f.y)) + Vector2(0.5, 0.5)
+	check(w.player_reach_field(f) == "", "DVW-A12 R15: beside a field it is in reach")
+	p.pos = Vector2(int(f.x) - 4, int(f.y)) + Vector2(0.5, 0.5)
+	check(w.player_reach_field(f) != "", "DVW-A12 R15: three cells off it is not")
+	# a crafting station named by the craft window: closer than 1.2 tiles to where it is used
+	var sid := ""
+	for id in w.stations_of("sawhorse"):
+		if sid == "" and w.station_refusal(id) == "":
+			sid = id
+	p.inv.add("log", 1)
+	p.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5) + Vector2(World.STATION_REACH + 0.3, 0)
+	var cp := w.player_craft_begin("saw_planks", sid)
+	check(not cp.ok and str(cp.why) == "That is out of reach." and not w.player_at_station(sid), "DVW-A12 R15: a station beyond %.1f tiles is out of reach" % World.STATION_REACH)
+	p.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5)
+	cp = w.player_craft_begin("saw_planks", sid)
+	check(cp.ok, "DVW-A12 R15: at the station it can be worked")
+	w.release_player_station(sid)
+	# everything the interface offers is in core's reach: many places, every facing
+	p.inv.add("pickaxe")
+	p.inv.add("axe")
+	var offered := 0
+	var refused := []
+	var spots := []
+	for dep in w.deposits:
+		spots.append(Vector2i(int(dep.x), int(dep.y)))
+	for t in w.trees.slice(0, 40):
+		spots.append(Vector2i(int(t.x), int(t.y)))
+	for c in w.containers:
+		spots.append(Vector2i(int(c.x), int(c.y)))
+	for st in w.stations.values():
+		spots.append(Vector2i(int(st.use[0]), int(st.use[1])))
+	for fl in w.fields:
+		spots.append(Vector2i(int(fl.x), int(fl.y)))
+	for s0: Vector2i in spots:
+		for dx in range(-2, 3):
+			for dy in range(-2, 3):
+				var cc: Vector2i = s0 + Vector2i(dx, dy)
+				if main.map.is_solid(cc):
+					continue
+				p.pos = Vector2(cc) + Vector2(0.5, 0.5)
+				for dir in 8:
+					main.player_sprite.dir = dir
+					main._find_target()
+					for t in main.target_options:
+						var why := ""
+						match str(t.kind):
+							"deposit", "tree", "plant", "fruit":
+								why = w.player_reach_cell(main._target_cell(t), str(t.kind) in ["tree", "fruit"])
+							"field":
+								why = w.player_reach_field(t.field)
+							"loot":
+								why = w.player_reach_point(w.loot[t.i].pos, World.TARGET_PROBE + World.TARGET_REACH)
+							"container":
+								why = w.player_container_reach(t.c)
+							"station":
+								why = "" if (Vector2(w.station_use(str(t.id))) + Vector2(0.5, 0.5)).distance_to(p.pos) < World.STATION_REACH else "far"
+							_:
+								continue
+						offered += 1
+						if why != "":
+							refused.append("%s at %s: %s" % [t.kind, str(cc), why])
+	check(offered > 100 and refused.is_empty(), "DVW-A12 R15: all %d targets the interface offered are in core's reach (%s)" % [offered, str(refused.slice(0, 3))])
+	_restore_pack(keep)
+
+
 ## A clean pack for one rule's checks; returns what to restore.
 func _fresh_pack() -> Dictionary:
 	var p: PlayerState = main.world.player
@@ -1758,8 +1887,10 @@ func _dvw_a12_mining() -> void:
 	var w: World = main.world
 	var p: PlayerState = w.player
 	var keep := _fresh_pack()
-	var seam := {"x": 0, "y": 0, "ore": "iron_ore", "amount": 5}
-	var gold := {"x": 0, "y": 0, "ore": "gold_ore", "amount": 5}
+	var seam0: Dictionary = w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	p.pos = _beside(Vector2i(int(seam0.x), int(seam0.y)))           # within reach of the seam's cell (R15)
+	var seam := {"x": int(seam0.x), "y": int(seam0.y), "ore": "iron_ore", "amount": 5}
+	var gold := {"x": int(seam0.x), "y": int(seam0.y), "ore": "gold_ore", "amount": 5}
 	var mp := w.player_mine_plan(seam)
 	check(not mp.ok and str(mp.why) == "Requires a pickaxe. The smith sells them.", "DVW-A12 R1: no pickaxe, no mining (%s)" % str(mp.get("why", "")))
 	p.inv.add("rusty_pickaxe")

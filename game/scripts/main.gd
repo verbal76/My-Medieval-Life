@@ -1862,7 +1862,7 @@ func _find_target() -> void:
 		_find_target_below()               # MIN-A: below the surface only what is on the player's level
 		return
 	var p := world.player
-	var probe := p.pos + facing_vec() * 0.9
+	var probe := p.pos + facing_vec() * World.TARGET_PROBE      # the reach is core's (DVW-A12 R15)
 	var near: Array = []        # [distance to the probe, order, target]
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
@@ -1875,7 +1875,7 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
-		if at.distance_to(p.pos) > 2.2:
+		if at.distance_to(p.pos) > World.CONTAINER_REACH:
 			continue
 		var d := at.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, at):
@@ -1974,7 +1974,7 @@ func _find_target() -> void:
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
-		if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+		if u.distance_to(p.pos) < World.STATION_REACH and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
 			var no := world.station_refusal(id)
 			here.append({"kind": "station", "id": id, "label": ("Use Stove" if st.type == "stove" else "Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
 	for pl in world.plots:
@@ -2310,6 +2310,9 @@ func _usable_at(wpos: Vector2) -> Vector2:
 func pickpocket(n: NPC) -> void:
 	ui.hide_all()
 	var r: Dictionary = world.pickpocket(n)
+	if r.get("refused", false):                 # out of reach (DVW-A12 R14): no try was made
+		ui.message(r.text)
+		return
 	_xp("stealth", 8 if r.ok else 2)
 	if not r.ok:
 		say(n, "Thief! Get your hand out of my purse!")
@@ -2368,12 +2371,19 @@ func _gain(text: String, item := "") -> void:
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
-	if str(target.get("kind", "")) in ["deposit", "tree", "plant", "loot", "fruit"]:
-		var tp: Vector2 = world.loot[target.i].pos if target.kind == "loot" and target.i < world.loot.size() else Vector2(_target_cell(target)) + Vector2(0.5, 0.5)
-		if not world.reaches(p.pos, tp):
-			stop_gather("")
-			ui.message("A wall is in the way.")
-			return
+	var far := ""                                  # the reach is core's (DVW-A12 R15)
+	match str(target.get("kind", "")):
+		"deposit", "tree", "plant", "fruit":
+			far = world.player_reach_cell(_target_cell(target), str(target.kind) in ["tree", "fruit"])
+		"loot":
+			if target.i < world.loot.size():
+				far = world.player_reach_point(world.loot[target.i].pos, World.TARGET_PROBE + World.TARGET_REACH)
+		"field":
+			far = world.player_reach_field(target.field)
+	if far != "":
+		stop_gather("")
+		ui.message(far)
+		return
 	match target.kind:
 		"npc":
 			approach(target.npc)
@@ -2406,7 +2416,9 @@ func _use() -> void:
 			var c: Dictionary = target.c
 			var place := world.container_place(c)
 			var got := world.player_take(c)
-			if got == "full":
+			if got == "far":
+				ui.message(world.player_container_reach(c))         # out of reach (DVW-A12 R15)
+			elif got == "full":
 				ui.message("Your pack is full.")
 			elif got == "":
 				ui.message("There is nothing to take.")

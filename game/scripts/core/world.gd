@@ -1237,12 +1237,67 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
 
 
+## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
+## used, kept here so a host can refuse an action out of reach. A target is chosen near a probe TARGET_PROBE tiles in
+## front of the player: people, loot and containers within TARGET_REACH of it (containers also within
+## CONTAINER_REACH of the player); a seam, tree, plant or field in the probe's cell or one of its four neighbours, so
+## (the probe being less than a tile ahead) never more than CELL_REACH cells off the player's own cell on either axis.
+const TARGET_PROBE := 0.9
+const TARGET_REACH := 1.5
+const CONTAINER_REACH := 2.2
+const CELL_REACH := 2
+const STATION_REACH := 1.2       # a crafting station is offered (its window opened) closer than this to where it is used
+
+
+## DVW-A12 R15: why the player cannot reach the point `at` (a pile, a container), "" if they can: a wall between
+## (reaches), else farther than `reach` tiles.
+func player_reach_point(at: Vector2, reach: float) -> String:
+	if not reaches(player.pos, at):
+		return "A wall is in the way."
+	if player.pos.distance_to(at) > reach:
+		return "That is out of reach."
+	return ""
+
+
+## DVW-A12 R15: why the player cannot reach container `c` (its cell's middle, within CONTAINER_REACH), "" if they can.
+func player_container_reach(c: Dictionary) -> String:
+	return player_reach_point(Vector2(int(c.x) + 0.5, int(c.y) + 0.5), CONTAINER_REACH)
+
+
+## DVW-A12 R15: why the player cannot reach the cell `cell` (a seam, a tree, a plant), "" if they can: a wall between
+## (reaches, to the cell's middle), else more than CELL_REACH cells off the player's cell on either axis. `tall`: a
+## tree, which is also found by the cell above its trunk (tree_at), so that cell counts too.
+func player_reach_cell(cell: Vector2i, tall := false) -> String:
+	if not reaches(player.pos, Vector2(cell) + Vector2(0.5, 0.5)):
+		return "A wall is in the way."
+	var pc := Vector2i(floori(player.pos.x), floori(player.pos.y))
+	for c: Vector2i in ([cell, cell + Vector2i(0, -1)] if tall else [cell]):
+		if absi(c.x - pc.x) <= CELL_REACH and absi(c.y - pc.y) <= CELL_REACH:
+			return ""
+	return "That is out of reach."
+
+
+## DVW-A12 R15: why the player cannot reach field `f`, "" if they can: its nearest cell more than CELL_REACH cells off
+## the player's cell on either axis. (No wall test: the interface never made one for a field.)
+func player_reach_field(f: Dictionary) -> String:
+	var px := floori(player.pos.x)
+	var py := floori(player.pos.y)
+	var nx := clampi(px, int(f.x), int(f.x) + int(f.w) - 1)
+	var ny := clampi(py, int(f.y), int(f.y) + int(f.h) - 1)
+	if absi(nx - px) > CELL_REACH or absi(ny - py) > CELL_REACH:
+		return "That is out of reach."
+	return ""
+
+
 ## DVW-A12 R1: whether the player may start mining seam or boulder `d`, and how long the swing takes. A pickaxe is
 ## needed (the best one in the pack), and gold ore needs Mining level 3 (work_mine checks it again at the swing).
 ## The time: balance.json mine_minutes at the game's speed, by the pickaxe's speed and the Mining mine_time effect.
 ## Returns {ok: true, tool, secs} or {ok: false, why}.
 func player_mine_plan(d: Dictionary) -> Dictionary:
 	var p := player
+	var far := player_reach_cell(Vector2i(int(d.x), int(d.y)))       # R15
+	if far != "":
+		return {"ok": false, "why": far}
 	var pick := p.tool_of("pickaxe")
 	if pick == "":
 		return {"ok": false, "why": "Requires a pickaxe. The smith sells them."}
@@ -1271,6 +1326,9 @@ func player_mine(d: Dictionary, tool: String) -> Dictionary:
 ## Trees.cfg().chops blows of an equal share of it. Returns {ok: true, tool, secs} or {ok: false, why}.
 func player_fell_plan(t: Dictionary) -> Dictionary:
 	var p := player
+	var far := player_reach_cell(Vector2i(int(t.x), int(t.y)), true)       # R15
+	if far != "":
+		return {"ok": false, "why": far}
 	var axe := p.tool_of("axe")
 	if axe == "":
 		return {"ok": false, "why": "Requires an axe. The smith sells them."}
@@ -1324,6 +1382,8 @@ func player_craft_refusal(recipe: String) -> String:
 func player_craft_begin(recipe: String, station := "") -> Dictionary:
 	var r: Dictionary = GameData.recipes[recipe]
 	var p := player
+	if station != "" and stations.has(station) and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH:
+		return {"ok": false, "why": "That is out of reach."}         # R15: the craft window opens only this close
 	if station == "":
 		for id in stations_of(str(r.station)):
 			if (Vector2(station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
@@ -2708,8 +2768,11 @@ func container_pick(c: Dictionary) -> String:
 
 ## The player takes one item from a container that is not theirs: theft (owner rule), witnessed like
 ## a field's wheat, and the item is marked as stolen from its owner. Returns the item taken, "" if
-## there was nothing, or "full" if the pack has no room.
+## there was nothing, "full" if the pack has no room, or "far" if it is out of the player's reach (DVW-A12 R15:
+## player_container_reach says why).
 func player_take(c: Dictionary) -> String:
+	if player_container_reach(c) != "":
+		return "far"
 	var id := container_pick(c)
 	if id == "":
 		return ""
@@ -2829,18 +2892,19 @@ func shop_name(n: NPC) -> String:
 	return {"raw": "ore and timber stall", "food": "food stall", "goods": "tools and arms stall"}.get(stalls[n.workplace].kind, "stall")
 
 
-## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
-## DVW-A12 R14: how near (tiles) the player must stand to a villager awake for their pocket to be within reach.
+## DVW-A12 R14: how near (tiles) the player must stand to a villager for their pocket to be within reach, awake or
+## asleep (lead decision under the owner's standing directive, 2026-10-21: the sleeper's window used to offer it at
+## any distance a target is chosen from).
 const PICKPOCKET_REACH := 1.8
 
 
-## DVW-A12 R14: whether villager `n` (awake, in the talk window) is someone whose pocket the player can reach: within
-## PICKPOCKET_REACH, and never a child (owner, B8-010). pickpocket() itself refuses a child but does not measure
-## the distance: the sleeper's window offers the try at the reach a target is chosen from (see the DVW-A12 report).
+## DVW-A12 R14: whether villager `n` is someone whose pocket the player can reach: within PICKPOCKET_REACH, and never
+## a child (owner, B8-010). The talk window offers the try only then; pickpocket() refuses it otherwise.
 func pickpocket_in_reach(n: NPC) -> bool:
 	return player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child"
 
 
+## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
 func pickpocket_chance() -> float:
 	return minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * Skills.value(player, "stealth", "pickpocket_steps"), float(GameData.b("pickpocket_chance_max")))
 
@@ -2858,6 +2922,8 @@ func pickpocket(n: NPC) -> Dictionary:
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
 	if n.role == "child":                       # owner, 2026-10-18 (B8-010): never a child's pocket
 		return {"ok": false, "what": "", "text": "You will not rob a child."}
+	if player.pos.distance_to(n.pos) > PICKPOCKET_REACH:          # DVW-A12 R14: beside them, awake or asleep
+		return {"ok": false, "what": "", "text": "%s is out of reach." % n.name, "refused": true}
 	var chance := pickpocket_chance()
 	var sleeping := asleep(n)
 	if sleeping:                        # a sleeper is unaware: easier, but a fumble wakes them
