@@ -3297,7 +3297,7 @@ func test_resource_registry() -> void:
 		check(d.has("range") and d.has("tool") and d.has("tool_hint") and d.has("verb") and d.has("action_label"), "%s has range, tool, tool_hint, verb and action_label" % id)
 	# every deposit is a seam node; what is left is its amount
 	var ok := true
-	for dep in w.deposits:
+	for dep in w.deposits.filter(func(x): return World.level_of(x) == 0):     # the surface's (the gallery's below: underground_test)
 		var at := ResourceNodes.node_at(w, Vector2i(dep.x, dep.y))
 		ok = ok and not at.is_empty() and at.ref == dep and at.def.match.ore == dep.ore and ResourceNodes.remaining(w, at.def, dep) == int(dep.amount) \
 				and ResourceNodes.instances(w, at.def).has(dep) and ResourceNodes.cell_of(w, at.def, dep) == Vector2i(dep.x, dep.y)
@@ -3490,7 +3490,7 @@ func test_village_layout() -> void:
 	var trees := {}
 	for t in w.trees:
 		trees[Vector2i(int(t.x), int(t.y))] = true
-	for d in w.deposits:
+	for d in w.deposits.filter(func(x): return World.level_of(x) == 0):      # the gallery's seams are reached below (underground_test)
 		var c := Vector2i(int(d.x), int(d.y))
 		check(next_to.call(c) and not trees.has(c), "B8-004: the %s seam at %s is on open ground and can be reached on foot" % [d.ore, c])
 	# B8-002: every interior floor cell (and the tavern's open-air kitchen) shows a floor tile, never plain grass
