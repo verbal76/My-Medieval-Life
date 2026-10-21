@@ -15,13 +15,23 @@ and the clarification authorizing publication to the GitHub Releases tab
 | Save compatibility | Save version 16. A real save written by the Build 15 code loads, migrates and plays on like a new world of its seed (checked 2026-10-21) |
 | Since Build 15 (`a8760be`) | `BUILD_16_TESTER_NOTES.md` |
 
-**Artifacts:** see the release "My Medieval Life Build 16" in the Releases tab (filled in below once the run finishes).
+**Artifacts:** the published release "My Medieval Life Build 16" (tag `build-16`, published 2026-10-21 16:06 UTC, marked
+pre-release by the workflow as every test build is): https://github.com/verbal76/My-Medieval-Life/releases/tag/build-16
+
+| File | Size | sha256 |
+|---|---|---|
+| `MyMedievalLife-build16-android.apk` | 64.9 MB | `2cd5c747c77450cdabdc21ffcbae66a2bfb0a79905300c28f8eb7da196119a50` |
+| `MyMedievalLife-build16-windows-x86_64.zip` | 43.5 MB | `dbb8d75a3777ac9104c98e524f3203e3be649fec1a336bfd0a407c0f18fd019a` |
+| `MyMedievalLife-build16-linux-x86_64.zip` | 33.7 MB | `a78b2bd745596bdb6c78fbe7b3b093b6f4fd43f0ad301b03b1ae679b29b5f47c` |
 
 ## Checked here
 
-- Linux and Windows exported locally from the tested code; the Linux build started headless, ran 600 frames, exited 0
-  with no script errors.
-- Android is exported and signed by the release run (the SDK is on the runner).
+- **Downloads:** all three files were downloaded back from the published release and match `SHA256SUMS.txt`; the
+  release targets `b3bbb1c` and its page includes the Build 16 tester notes.
+- **Linux:** the published build, unzipped, started headless, ran 600 frames and exited 0 with no script errors (also
+  checked on a local export of the tested code beforehand).
+- **Windows:** the zip holds `MyMedievalLife.exe` (the release run's icon check passed). Not run.
+- **Android:** the APK carries its signature files (`META-INF`). Not installed.
 - No platform was tested on physical hardware (phone, tablet, controller, Windows PC).
 
 ## Android signing

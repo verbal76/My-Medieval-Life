@@ -10,6 +10,11 @@ register only: nothing is called complete because code was written or a design a
 
 ## F. Executive summary
 
+**Released 2026-10-21:** Build 16 was published to the GitHub Releases tab at 16:06 UTC from `b3bbb1c` (game code identical
+to the tested `dbbb66a`; acceptance run Actions 39618523947, release run 39631523924):
+https://github.com/verbal76/My-Medieval-Life/releases/tag/build-16. Evidence and artifacts: `docs/release/BUILD_16_PACKET.md`.
+The items still open below carry over with their evidence (the FARM-08 yield and farming switches await the owner).
+
 *Reconciled 2026-10-21 on `02ae508` for the owner's audit request (`docs/directives/2026-10-21_build16_audit_release_readiness.md`);
 the readiness answer is section R below.*
 
