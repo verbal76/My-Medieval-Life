@@ -116,7 +116,7 @@ func test_outcomes() -> void:
 	w.player = _player_at("stealth", 10)
 	var c10 := w.pickpocket_chance()
 	check(c1 < c5 and c5 < c10 and c10 <= float(GameData.b("pickpocket_chance_max")) + 0.0001, "stealth: pickpocket chance %.2f < %.2f < %.2f" % [c1, c5, c10])
-	check(Skills.value(_player_at("stealth", 10), "stealth", "guard_radius", 1.0) < Skills.value(_player_at("stealth", 5), "stealth", "guard_radius", 1.0), "stealth: guards hear a caught try over a shorter distance")
+	check(Skills.value(_player_at("stealth", 10), "stealth", "guard_radius", 1.0) < Skills.value(_player_at("stealth", 5), "stealth", "guard_radius", 1.0), "stealth: a caught try is seen over a shorter distance")
 	# woodcutting: sapling chance and log yield
 	w.player = _player_at("woodcutting", 10)
 	var t := {"species": "oak_summer"}

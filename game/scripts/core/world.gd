@@ -2165,9 +2165,12 @@ func raise_alarm(aware: Dictionary, attacker: int) -> int:
 
 ## PAR-05: `n` knows of an attack by `offender` (an NPC id, -2 the player) and will tell a guard: when one is in sight
 ## they report it (NPCBrain._report), and seek one out within report.range tiles. The report lapses after
-## report.hours. `how`: "saw" or "victim". Saved with the villager.
-func report_crime(n: NPC, offender: int, how: String) -> void:
+## report.hours. `how`: "saw" or "victim". `crime`: "attack", or "theft" for a caught pickpocket (PICK-01). Saved with
+## the villager (older saves: an attack).
+func report_crime(n: NPC, offender: int, how: String, crime := "attack") -> void:
 	n.report = {"offender": offender, "t": minutes, "how": how}
+	if crime != "attack":
+		n.report.crime = crime
 	stat("crime_reports_made")
 
 
@@ -2180,13 +2183,22 @@ func offender_alive(offender: int) -> bool:
 
 
 ## The guard a report reaches: `g` takes on the offender when free (PAR-05's response). True when delivered.
+## A theft (PICK-01, owner OD-20): the guard now knows of it, and answers it as a guard who sees a theft does
+## (guard_confront: the fine) if the thief is in the guard's sight then; it is not an attack, so no chase.
 func deliver_report(n: NPC, g: NPC) -> bool:
 	var off := int(n.report.offender)
+	var crime := str(n.report.get("crime", "attack"))
 	n.report = {}
 	if not offender_alive(off):
 		return true
-	g.remember("told by %s %s of an attack" % [n.name, n.family])
 	stat("crime_reports_delivered")
+	if crime == "theft":
+		g.remember("told by %s %s of a theft" % [n.name, n.family])
+		stat("theft_reports_delivered")
+		if off == -2 and g.target == -1 and near(player.pos, float(GameData.b("witness_radius"))).has(g):
+			last_guard = guard_confront(g, {}, null, null)
+		return true
+	g.remember("told by %s %s of an attack" % [n.name, n.family])
 	if g.target == -1 and g.id != off:
 		g.target = off
 	return true
@@ -2473,8 +2485,10 @@ func pickpocket_chance() -> float:
 ## with Stealth (pickpocket_chance + pickpocket_chance_per_level x the tier's pickpocket_steps, at most
 ## pickpocket_chance_max). Success: a few coins, or one thing they carry (marked as stolen from them),
 ## and they find it missing later. Caught: they remember it, anyone in sight sees the try, and a guard
-## who sees it or is within `guard_call_radius` of their shout stops the player (guard_confront).
-## Returns {ok, what, text}.
+## who sees it stops the player (guard_confront); Stealth's guard_radius shortens how far a caught try is seen.
+## PICK-01 (owner OD-20, 2026-10-21): there is no cry a guard hears;
+## otherwise the victim and those who saw it carry a theft report to a guard (report_crime, as PAR-05's attack), and
+## a theft nobody sees is known to no guard. Returns {ok, what, text}.
 func pickpocket(n: NPC) -> Dictionary:
 	if not n.alive or n.role == "bandit":
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
@@ -2517,12 +2531,17 @@ func pickpocket(n: NPC) -> Dictionary:
 		return {"ok": true, "what": what, "text": "You lift %s from %s unseen." % [what, who]}
 	wake(n)                             # a fumble wakes a sleeper: now they know
 	n.remember("caught %s %s picking my pocket" % [player.name, player.family])
-	var seen := witness("pickpocket", "a try at %s's purse" % who, n, {}, null, "try to pick %s's pocket" % who)
+	# Stealth's guard_radius: a practised hand's fumble is noticed over a shorter distance (as a quiet lock, lockpick_quiet)
+	var sight := float(GameData.b("witness_radius")) * Skills.value(player, "stealth", "guard_radius", 1.0)
+	var seen := witness("pickpocket", "a try at %s's purse" % who, n, {}, null, "try to pick %s's pocket" % who, sight)
 	var text := "%s catches your hand in their pocket!" % n.name
 	if last_guard == "":
-		var g := guard_near(n.pos, float(GameData.b("guard_call_radius")) * Skills.value(player, "stealth", "guard_radius", 1.0))
-		if g:
-			last_guard = guard_confront(g, {}, null, n)
+		# no guard saw it: the victim and the others who saw it will tell one (PICK-01)
+		for o: NPC in near(player.pos, sight):
+			if o != n and o.role != "bandit" and o.job != "guard":
+				report_crime(o, -2, "saw", "theft")
+		if n.alive and n.job != "guard":
+			report_crime(n, -2, "victim", "theft")
 	if last_guard != "":
 		text += " " + last_guard
 	elif seen > 1:

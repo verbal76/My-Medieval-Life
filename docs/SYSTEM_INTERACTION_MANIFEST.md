@@ -408,10 +408,10 @@ Rules:
 
 ### INT-044 · Picking a pocket
 - **Trigger:** "Pick pocket — theft" in the conversation with a villager within 1.8 tiles.
-- **Source:** `game/scripts/ui/game_ui.gd::_talk_view`, `game/scripts/main.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::guard_near`, `game/scripts/ui/dialogue.gd::caught`
+- **Source:** `game/scripts/ui/game_ui.gd::_talk_view`, `game/scripts/main.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::report_crime`, `game/scripts/core/world.gd::deliver_report`, `game/scripts/core/npc_brain.gd::_report`, `game/scripts/ui/dialogue.gd::caught`
 - **Affects:** Crime, Coins, Inventory, Player state, Interface
-- **Expected:** Success with chance `pickpocket_chance` + `pickpocket_chance_per_level` per Stealth level above 1 (at most `pickpocket_chance_max`), from the world's random numbers: 1 to `pickpocket_coins_max` coins (never more than they carry), or, with no coins, one thing they carry that is not a work tool, marked as stolen from them; they later find it missing. Caught: they remember "caught <player> picking my pocket" and shout; everyone in sight sees the try; a guard who saw it or is within `guard_call_radius` of them stops the player (fine, INT-008). Those who caught the player answer coldly. Stealth experience either way.
-- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
+- **Expected:** Success with chance `pickpocket_chance` + `pickpocket_chance_per_level` per Stealth level above 1 (at most `pickpocket_chance_max`), from the world's random numbers: 1 to `pickpocket_coins_max` coins (never more than they carry), or, with no coins, one thing they carry that is not a work tool, marked as stolen from them; they later find it missing. Caught: they remember "caught <player> picking my pocket"; everyone in sight sees the try (INT-008); a guard who saw it stops the player (fine, INT-008). PICK-01 (owner OD-20, 2026-10-21: the witnessed-crime reporting system, no omniscient guards, not every incident an audible alarm): there is no cry a guard hears. When no guard saw it, the victim and every other villager who saw the try (not bandits, not guards) carry a theft report (`report_crime`, crime "theft") to a guard by PAR-05's rules (INT-013: at once to one in sight, else walking to the nearest awake guard within `report.range`; lapsing after `report.hours`). The guard it reaches remembers it (`theft_reports_delivered`) and, if the player is in that guard's sight then, stops them as for a theft seen (`guard_confront`: the base fine); a theft report never starts a chase. A pocket picked unseen (success) is reported by nobody: no guard knows of it. Those who caught the player answer coldly. Stealth experience either way.
+- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`, `game/tests/world_test.gd::_pick01_reports`
 
 ### INT-045 · Stolen goods are marked; selling them
 - **Trigger:** The player steals (INT-007, INT-043, INT-044), sells in a trade window, eats, drops or otherwise loses goods; saving and loading.
@@ -937,11 +937,11 @@ Rules:
 - **Expected:** (PL2-005) Combat tiers raise blow damage, shorten the swing delay, give a chance of a double blow and cut damage taken (not hunger); Magic tiers shorten the Fireball cooldown, cut its stamina cost and raise its damage; Trading tiers move the player's buy and sell prices up to 20% (coins still move between real holders, so the supply is unchanged). Trade xp grows with the coins in the deal.
 - **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/skills_test.gd::test_early_play`
 
-### INT-109 · Stealth makes a pickpocket likelier and a caught one quieter
+### INT-109 · Stealth makes a pickpocket likelier and a caught one less seen
 - **Trigger:** The player tries a pocket.
 - **Source:** `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket_chance`
 - **Affects:** Crime, Player state
-- **Expected:** (PL2-005) The chance is `pickpocket_chance` plus `pickpocket_chance_per_level` times the tier's `pickpocket_steps`, never above `pickpocket_chance_max` (a sleeper's bonus is unchanged); higher tiers shrink the distance within which a guard hears a caught try (`guard_radius`). A guard who sees the theft still acts.
+- **Expected:** (PL2-005) The chance is `pickpocket_chance` plus `pickpocket_chance_per_level` times the tier's `pickpocket_steps`, never above `pickpocket_chance_max` (a sleeper's bonus is unchanged); a guard who sees the theft acts (INT-044). Since PICK-01 removed the cry a guard heard (owner OD-20, 2026-10-21; there is no hearing, PAR-05), the tiers' `guard_radius` shortens how far a caught try is seen (`witness_radius` x `guard_radius`, by guards and villagers alike, and so who reports it; the victim always knows), as `lockpick_quiet` does for a quiet lock (agent proposal).
 - **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/run_tests.gd::test_theft_and_shops`
 
 ### INT-110 · Every interior floor shows a floor, not grass
