@@ -25888,6 +25888,53 @@
    "complexity": "L"
   },
   {
+   "id": "SYNC-17",
+   "title": "Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "I want Expansions 18 and 19 to refresh against the latest stable Build 17 code now ... Synchronization must be one-way: Build 17 → Expansion 18, Build 17 → Expansion 19.",
+   "description": "Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c",
+   "source": "docs/directives/2026-10-21_sync_expansions_with_build17.md",
+   "approval": "Owner directive 2026-10-21; amends PROS-01's rule that Build 17 is not merged into the expansion branches (one-way Build 17 into each expansion is now directed)",
+   "acceptance": [
+    "Each expansion branch merges wip/build17 at the recorded baseline, preserving both sides; nothing merged back into Build 17",
+    "PROS-18's evaluator follows Build 17's tool-based capability rule and counts the resident player",
+    "Focused compatibility tests only (SIM-01); owner questions kept; baseline SHA recorded in each expansion's docs"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-01",
+   "depends_on": [
+    "PROS-18",
+    "PROS-19"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Baseline wip/build17 cd7439c (verified head 2026-10-21 22:56 UTC). Exp18 by its running worker; Exp19 by its resumed worker.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_sync_expansions_with_build17.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; notes",
+     "why": "Started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "TIME-01",
    "title": "Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity",
    "kind": "approved",
