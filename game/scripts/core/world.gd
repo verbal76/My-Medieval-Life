@@ -1249,6 +1249,47 @@ func player_mine(d: Dictionary, tool: String) -> Dictionary:
 	return r
 
 
+## DVW-A12 R2: whether the player may start felling tree `t`, and how long the whole felling takes. An axe is needed
+## (the best one in the pack), and only a mature tree can be felled (Trees.refusal). The time: balance.json
+## chop_minutes at the game's speed, by the axe's speed and the Woodcutting chop_time effect; the felling is
+## Trees.cfg().chops blows of an equal share of it. Returns {ok: true, tool, secs} or {ok: false, why}.
+func player_fell_plan(t: Dictionary) -> Dictionary:
+	var p := player
+	var axe := p.tool_of("axe")
+	if axe == "":
+		return {"ok": false, "why": "Requires an axe. The smith sells them."}
+	var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
+	secs *= Skills.value(p, "woodcutting", "chop_time", 1.0)
+	var why := Trees.refusal(str(t.state))
+	if why != "":
+		return {"ok": false, "why": why}
+	return {"ok": true, "tool": axe, "secs": secs}
+
+
+## DVW-A12 R2: one blow of the player's axe `tool` at tree `t` from `side`. A tree no longer mature (felled by someone
+## else meanwhile) takes no blow: result "gone". Until the last blow: "blow". The last fells it ("felled"): its logs
+## (with the Woodcutting log_bonus) go to the pack through work_felled, as a woodcutter's (PAR-01), or are set down if
+## the pack is full (`full`); the tree may drop saplings (sapling_drop, with the sapling_bonus), and `saplings` holds
+## those the pack took whole; a broken axe leaves the hand. Returns {result, logs, full, saplings, broke, up}.
+func player_chop(t: Dictionary, side: int, tool: String) -> Dictionary:
+	var p := player
+	if t.state != "grown":
+		return {"result": "gone"}
+	var r := chop_tree(t, side, int(Skills.value(p, "woodcutting", "log_bonus")))
+	if int(r.logs) <= 0:
+		return {"result": "blow"}
+	var full := not p.inv.can_add("log")
+	var f := work_felled(p, int(r.logs), p.inv, tool)
+	var drop := sapling_drop(t, Skills.value(p, "woodcutting", "sapling_bonus"))
+	var saplings := {}
+	for id in drop:
+		if player_gain(id, int(drop[id])) == int(drop[id]):
+			saplings[id] = int(drop[id])
+	if f.broke and p.tool == tool:
+		p.tool = ""
+	return {"result": "felled", "logs": int(r.logs), "full": full, "saplings": saplings, "broke": f.broke, "up": f.up}
+
+
 ## PAR-01: a blow of `dmg` (the attacker's, after their own Combat effects) landing on villager `n`: their Combat
 ## damage_taken, then half their armour, as the player's damage_player applies the player's. Returns what it took.
 func harm_npc(n: NPC, dmg: float) -> float:

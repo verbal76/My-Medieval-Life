@@ -2437,18 +2437,12 @@ func _use() -> void:
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
 				_level_up("mining", int(r.up)), "swing", pick)
 		"tree":
-			var axe := p.tool_of("axe")
-			if axe == "":
-				ui.message("Requires an axe. The smith sells them.")
-				return
-			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
-			secs *= Skills.value(p, "woodcutting", "chop_time", 1.0)
 			var tr: Dictionary = target.tree
-			var why := Trees.refusal(str(tr.state))         # only a mature tree can be felled
-			if why != "":
-				ui.message(why)
+			var fp := world.player_fell_plan(tr)                      # the rules are in core (DVW-A12 R2)
+			if not fp.ok:
+				ui.message(str(fp.why))
 				return
-			_chop(tr, axe, secs)
+			_chop(tr, str(fp.tool), float(fp.secs))
 		"station":
 			ui.show_craft(target.id)
 		"field":
@@ -2562,27 +2556,21 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
-		if tr.state != "grown":
+		var r := world.player_chop(tr, side, axe)          # the same felling as a woodcutter's (PAR-01, DVW-A12 R2)
+		if r.result == "gone":
 			return                                       # someone else felled it meanwhile
-		var r := world.chop_tree(tr, side, int(Skills.value(p, "woodcutting", "log_bonus")))
-		if int(r.logs) <= 0:
+		if r.result == "blow":
 			_chop(tr, axe, secs)
 			return
-		var full := not p.inv.can_add("log")
-		var f := world.work_felled(p, int(r.logs), p.inv, axe)     # the same as a woodcutter's (PAR-01)
-		if full:
+		if r.full:
 			ui.message("Your pack is full: the logs are left at your feet.")
 		else:
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
-		var saplings := world.sapling_drop(tr, Skills.value(p, "woodcutting", "sapling_bonus"))
-		for id in saplings:
-			if world.player_gain(id, int(saplings[id])) == int(saplings[id]):
-				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
-		if f.broke:
+		for id in r.saplings:
+			_gain("+%d %s" % [int(r.saplings[id]), GameData.item_name(id)], id)
+		if r.broke:
 			ui.message("Your %s broke." % GameData.item_name(axe).to_lower())
-			if p.tool == axe:
-				p.tool = ""
-		_level_up("woodcutting", int(f.up)), "swing", axe)
+		_level_up("woodcutting", int(r.up)), "swing", axe)
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.

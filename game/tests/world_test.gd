@@ -1452,6 +1452,76 @@ func _fse_defects() -> void:
 func _dvw_a12() -> void:
 	main.new_game()
 	_dvw_a12_mining()
+	_dvw_a12_felling()
+
+
+## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
+## sapling, the wear, a broken axe leaving the hand, 12 xp, the ledger count, the stump kept over a save.
+func _dvw_a12_felling() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var grown := w.trees.filter(func(t): return t.state == "grown" and not t.get("ow", false))
+	check(grown.size() >= 3, "DVW-A12 R2: the village has mature trees (%d)" % grown.size())
+	var tr: Dictionary = grown[0]
+	var fp := w.player_fell_plan(tr)
+	check(not fp.ok and str(fp.why) == "Requires an axe. The smith sells them.", "DVW-A12 R2: no axe, no felling (%s)" % str(fp.get("why", "")))
+	p.inv.add("axe")
+	fp = w.player_fell_plan(tr)
+	var want := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item("axe").get("speed", 1.0))
+	check(fp.ok and str(fp.tool) == "axe" and is_equal_approx(float(fp.secs), want), "DVW-A12 R2: the axe, and the felling time by its speed (%s)" % str(fp))
+	var chops := int(Trees.cfg().chops)
+	var logs0 := float(w.stats.get("felled_log", 0.0))
+	var felled0 := float(w.stats.get("trees_felled", 0.0))
+	var blows := 0
+	var r := {}
+	while blows < chops + 2:
+		blows += 1
+		r = w.player_chop(tr, 1, "axe")
+		if r.result != "blow":
+			break
+	check(r.result == "felled" and blows == chops and tr.state == "stump", "DVW-A12 R2: %d blows fell a mature tree to a stump (%d)" % [chops, blows])
+	check(int(r.logs) == 4 and p.inv.count("log") == 4 and not r.full and float(w.stats.get("felled_log", 0.0)) - logs0 == 4.0 and float(w.stats.get("trees_felled", 0.0)) - felled0 == 1.0, "DVW-A12 R2: four logs to the pack, counted (felled_log, trees_felled) (%s)" % str(r))
+	var sap := Trees.sapling_item(str(tr.get("species", "oak_summer")))
+	check(r.saplings == {sap: 1} and p.inv.count(sap) == 1, "DVW-A12 R2: the felled tree's sapling goes into the pack (%s)" % str(r.saplings))
+	check(int(p.skills.get("woodcutting", 0)) == 12 and int(p.inv.durability.get("axe", 0)) == int(GameData.item("axe").durability) - 3, "DVW-A12 R2: 12 xp and three wear on the axe a tree")
+	check(w.player_chop(tr, 1, "axe").result == "gone" and p.inv.count("log") == 4, "DVW-A12 R2: a stump takes no blow and gives nothing")
+	fp = w.player_fell_plan(tr)
+	check(not fp.ok and str(fp.why) == Trees.refusal("stump"), "DVW-A12 R2: a stump is refused before the felling starts (%s)" % str(fp.get("why", "")))
+	# a broken axe leaves the hand; a full pack sets the logs down
+	var tr2: Dictionary = grown[1]
+	p.tool = "axe"
+	p.inv.durability["axe"] = 3
+	p.inv.max_stacks = p.inv.ids().size()
+	p.inv.remove("log", p.inv.count("log"))
+	p.inv.add("stone", 1)
+	var loot0 := w.loot.size()
+	r = {}
+	for i in chops:
+		r = w.player_chop(tr2, -1, "axe")
+	check(r.result == "felled" and r.full and w.loot.size() > loot0 and (w.loot[loot0].inv as Inventory).count("log") == 4, "DVW-A12 R2: with a full pack the logs are set down at the player's feet (%s)" % str(r))
+	check(r.broke and not p.inv.has("axe") and p.tool == "", "DVW-A12 R2: an axe that breaks is gone from the pack and the hand")
+	while w.loot.size() > loot0:
+		w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	# through the interface: core's refusal is shown, and a tree is felled by the actions
+	p.inv = Inventory.new()
+	var tr3: Dictionary = grown[2]
+	p.pos = _beside(Vector2i(int(tr3.x), int(tr3.y)))
+	main.target = {"kind": "tree", "tree": tr3, "label": "Fell"}
+	main._use()
+	check(main.action.is_empty() and main.ui.toast.text.contains("Requires an axe"), "DVW-A12 R2: the interface shows core's refusal and starts nothing (%s)" % main.ui.toast.text)
+	p.inv.add("axe")
+	main.target = {"kind": "tree", "tree": tr3, "label": "Fell"}
+	main._use()
+	check(not main.action.is_empty() and is_equal_approx(float(main.action.total), want / float(chops)), "DVW-A12 R2: the interface starts a blow of core's time")
+	_finish_action()
+	check(tr3.state == "stump" and p.inv.count("log") == 4, "DVW-A12 R2: the blows fell the tree and the logs are in the pack")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var same := w2.trees.filter(func(t): return int(t.x) == int(tr3.x) and int(t.y) == int(tr3.y))
+	check(same.size() == 1 and same[0].state == "stump", "DVW-A12 R2: the stump is saved")
+	_restore_pack(keep)
 
 
 ## A clean pack for one rule's checks; returns what to restore.
