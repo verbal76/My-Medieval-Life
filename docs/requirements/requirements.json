@@ -28612,7 +28612,7 @@
    "id": "STONE-01",
    "title": "Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Quarry extraction → Raw stone → Stoneworking → Finished building blocks → Construction",
    "description": "Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks",
    "source": "docs/directives/2026-10-21_quarry_stone_blocks_decision.md",
@@ -28622,18 +28622,20 @@
     "Construction recipes that need finished stone use blocks; raw stone stays the quarry and mine output",
     "A villager trade (stoneworker or an existing trade) makes blocks to demand; conservation, saves (existing stone in older saves handled explicitly), deterministic"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/STONE_01_BLOCKS.md; game/tests/stone_test.gd",
+   "tests": "stone_test, quarry_test, openpit_test, crafts_test, housing_test, business_test, contracts_test, services_test, parity_test, conservation_test, world_test, start_test, play_test, run_tests",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "d28503c"
+   ],
    "parent": "MIN-B",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Full CI and the gate re-baseline on wip/build17; owner questions STONE-Q1..Q3 (fittings and mending on blocks, dressing waste, a mason trade)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28648,6 +28650,53 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "Build 17 (mining and industrial production chain); scheduled after MIN-F2 to avoid overlapping edits"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit d28503c; tests; implementation; next_action",
+     "why": "Lead merged wip/b17-stone (d28503c) into wip/build17: building_block item, dress_stone recipe (workbench, mallet, Crafting 1, exact), labourers dress to demand, construction takes blocks, raw stone kept for fittings/mending/gate/contracts/caravan; older sites keep stone cost. stone_test 45 checks and the affected suites pass on the worker's merge; determinism re-baseline and full CI still to run on the integrated branch"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
+   "id": "STONE-Q",
+   "title": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
+   "kind": "decision",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "1. Should fittings and the manor's mending use blocks? (recommend raw stone). 2. Should dressing waste stone, e.g. 3 to 2? (recommend 1:1 until balance review). 3. A dedicated mason trade, Stoneworking skill or chisel? (recommend revisiting with the labour-market work)",
+   "description": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
+   "source": "docs/build17/STONE_01_BLOCKS.md",
+   "approval": "Agent question, awaiting owner",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/STONE_01_BLOCKS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "Build 17 follow-up"
     }
    ],
    "target_build": "17"
@@ -30772,17 +30821,19 @@
     "wiki_test passes; documentation gaps reported before the release review"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "0147066"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Add pages from parity/shovels and equipment/collapse when merged; close the listed gaps before the release review",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -30797,6 +30848,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "started"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 0147066; tests; next_action",
+     "why": "Merged wip/b17-wiki (0147066): wiki_mining.gd (mining, prospecting, open pits, underground, minecarts, shafts, stability, backfill), sys:manor_jobs, 15 not-yet-in-game entries incl. 6 health placeholders, docs/build17/README.md; and STONE-01's sys:stoneworking. wiki_test passes on the merge. Gaps open: capability levels cap at 2 (no excavator job; with MIN-SKILLCAP), stability page lacks the collapse outcome (MIN-COLLAPSE), code names on non-mining node pages, prospector JOB_TEXT without a Population job, stale owner questions in MIN_F_UNDERGROUND.md section 4"
     }
    ],
    "target_build": "17"

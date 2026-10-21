@@ -1256,25 +1256,48 @@ func work_felled(who, logs: int, into: Inventory, tool := "axe") -> Dictionary:
 ## skill level is needed, the inputs come out of `inv` (the crafter's pack, or a household's pantry) unless a practised
 ## hand saves them (save_chance), a bonus unit may come (bonus_chance, never gear), outputs go back to `inv`, anvil work
 ## wears the crafter's hammer if they have one, and the recipe's xp is earned. Every unit is counted for the ledger.
-## Returns {result: "ok" | "level" | "materials", up}.
+## STONE-01: a recipe with a `tool` (a tool kind) needs the crafter to hold one in their own pack and wears it (1 a
+## batch); an `exact` recipe has no practised-hand saving and no bonus unit (dressed stone: never more blocks than the
+## stone allows). Returns {result: "ok" | "level" | "tool" | "materials", up}.
 func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	var r: Dictionary = GameData.recipes[recipe]
 	if Skills.level(who, str(r.skill)) < int(r.level):
 		return {"result": "level"}
+	var tool := craft_tool(who, recipe)
+	if tool == "-":
+		return {"result": "tool"}
 	if not inv.remove_all(r["in"]):
 		return {"result": "materials"}
-	if rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
+	var exact := bool(r.get("exact", false))
+	if not exact and rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
 		for id in r["in"]:
 			inv.add(id, int(r["in"][id]))                  # a practised hand wastes nothing
 	else:
 		for id in r["in"]:
 			stat("used_" + id, float(r["in"][id]))
-	var bonus := rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+	var bonus := not exact and rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
 	for id in r.out:
 		_work_goods(who, inv, id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0), "made_")
 	if str(r.station) == "anvil":
 		_work_wear(who, "hammer", 2, str(r.skill), "")
+	if tool != "" and _work_wear(who, tool, 1, str(r.skill), "") and who is PlayerState and player.tool == tool and not player.inv.has(tool):
+		player.tool = ""                                   # (the player's last one broke)
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
+
+
+## STONE-01: the item `who` works `recipe` with when the recipe names a tool kind ("" when it needs none, "-" when they
+## hold none of that kind): the player's tool in hand or best of that kind, a villager's first in their pack.
+func craft_tool(who, recipe: String) -> String:
+	var kind := str(GameData.recipes[recipe].get("tool", ""))
+	if kind == "":
+		return ""
+	if who is PlayerState:
+		var t: String = who.tool_of(kind)
+		return t if t != "" else "-"
+	for id in who.inv.ids():
+		if str(GameData.item(id).get("tool", "")) == kind:
+			return id
+	return "-"
 
 
 ## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
@@ -1410,6 +1433,8 @@ func player_craft_refusal(recipe: String) -> String:
 	var r: Dictionary = GameData.recipes[recipe]
 	if player.level(r.skill) < int(r.level):
 		return "Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)]
+	if craft_tool(player, recipe) == "-":
+		return "You need a %s." % str(r.tool)          # STONE-01: the recipe's tool (the mallet to dress stone)
 	if not player.inv.has_all(r.in):
 		return "You do not have the materials."
 	return ""
@@ -2558,10 +2583,19 @@ func _workshop_stations(b: Dictionary) -> void:
 				"at": [int(b.x) + int(s.at[0]), int(b.y) + int(s.at[1])], "use": [int(b.x) + int(s.use[0]), int(b.y) + int(s.use[1])]}
 
 
-## What a site has had delivered so far, item -> count (sites from older saves have no "cost":
-## the house cost is assumed).
+## What a site has had delivered so far, item -> count. A site keeps the cost it was marked out with (STONE-01: a site
+## from before building blocks still takes the raw stone it was costed in). Sites from older saves have no "cost": they
+## were houses marked out at the house cost of their day (LEGACY_HOUSE_COST, raw stone), never today's, so nothing is
+## counted or given back that was never brought.
+const LEGACY_HOUSE_COST := {"plank": 30, "stone": 20, "log": 10}
+
+
+func site_cost(p: Dictionary) -> Dictionary:
+	return p.site.get("cost", LEGACY_HOUSE_COST)
+
+
 func site_delivered(p: Dictionary) -> Dictionary:
-	var cost: Dictionary = p.site.get("cost", GameData.b("house_cost"))
+	var cost: Dictionary = site_cost(p)
 	var out := {}
 	for id in cost:
 		var n := int(cost[id]) - int(p.site.need.get(id, 0))
@@ -2576,7 +2610,7 @@ func site_progress(p: Dictionary) -> float:
 		return 0.0
 	if p.site.done:
 		return 1.0
-	var cost: Dictionary = p.site.get("cost", GameData.b("house_cost"))
+	var cost: Dictionary = site_cost(p)
 	var total := 0
 	for id in cost:
 		total += int(cost[id])

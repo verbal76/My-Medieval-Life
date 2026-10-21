@@ -11,10 +11,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 69 |
+| APPROVED — NOT STARTED | 68 |
 | ACTIVE DEVELOPMENT | 16 |
 | PARTIALLY IMPLEMENTED | 34 |
-| IMPLEMENTED — TESTING REQUIRED | 38 |
+| IMPLEMENTED — TESTING REQUIRED | 39 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 12 |
 | DEFERRED | 10 |
@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **479** |
 | Outstanding (not complete, superseded or canceled) | 230 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 100 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 41 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 101 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 41 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -41,14 +41,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
-| Build 17: Mining & Industrial Development | 33 | 33 |
+| Build 17: Mining & Industrial Development | 34 | 33 |
 | Build 18: Settlement Advancement & Regional Economy | 24 | 19 |
 | Build 19: NPC Judgment System | 29 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 76 | 30 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **301** | **230** |
+| **Total open** | **302** | **230** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -146,7 +146,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
-### Build 17: Mining & Industrial Development (33)
+### Build 17: Mining & Industrial Development (34)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -178,7 +178,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | APPROVED — NOT STARTED |  |  |
 | MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | APPROVED — NOT STARTED |  |  |
 | PL1-12 | Red flowering plant not pickable | approved | IMPLEMENTED — TESTING REQUIRED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
-| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | APPROVED — NOT STARTED |  |  |
+| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | APPROVED — NOT STARTED |  |  |
 | WDR-001-C | Comply with World Design Rule 1: Material Interdependency | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
@@ -450,7 +451,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (69)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -518,7 +519,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-E |  |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
-| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | docs/directives/2026-10-21_quarry_stone_blocks_decision.md |  |  |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
@@ -543,7 +543,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`; judgment_test 99, judgment_live_test 26, judgment_perf 10; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
-| WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | docs/directives/2026-10-21_permanent_wiki_maintenance.md |  |  |  |
+| WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | docs/directives/2026-10-21_permanent_wiki_maintenance.md | `0147066`; wiki_test |  | Add pages from parity/shovels and equipment/collapse when merged; close the listed gaps before the release review |
 
 ## PARTIALLY IMPLEMENTED (34)
 
@@ -584,7 +584,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (38)
+## IMPLEMENTED — TESTING REQUIRED (39)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -624,6 +624,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SEED-04 | Households save planting material from their own harvests | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 | Measure in the four-seed runs; owner to confirm the readings |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need |  | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; stalls_test |  |  |
+| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | docs/directives/2026-10-21_quarry_stone_blocks_decision.md | `d28503c`; stone_test, quarry_test, openpit_test, crafts_test, housing_test, business_test, contracts_test, services_test, parity_test, conservation_test, world_test, start_test, play_test, run_tests |  | Full CI and the gate re-baseline on wip/build17; owner questions STONE-Q1..Q3 (fittings and mending on blocks, dressing waste, a mason trade) |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need | after SHOP-01 | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
@@ -979,7 +980,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 41, status BLOCKED) (100)
+## Owner decisions, open and answered (open: 41, status BLOCKED) (101)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1083,6 +1084,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-Q12 | Judgment open decision: What makes an event important enough to score? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | APPROVED — NOT STARTED | docs/build17/STONE_01_BLOCKS.md |
 
 ## World design rule (27)
 

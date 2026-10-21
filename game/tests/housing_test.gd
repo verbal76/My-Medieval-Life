@@ -178,7 +178,7 @@ func test_mother_builds_with_own_and_bought_materials() -> void:
 	check(c.responsible_adult(h) == mom, "the widowed mother is responsible for the household")
 	# the household lodges without a home of its own (its house let go back to the manor's ground)
 	var pantry: Inventory = hh.pantry
-	pantry.add("stone", 20)
+	pantry.add("building_block", 20)            # STONE-01: a house is built of blocks
 	var home := str(hh.home)
 	var plan := c._home_plan(1 << 20, w.building_door(home), ref)
 	if plan.has("house"):
@@ -214,7 +214,7 @@ func test_mother_builds_with_own_and_bought_materials() -> void:
 			break
 	check(p.site.get("done", false), "the house is finished (%s still needed)" % [p.site.get("need", {})])
 	check(carriers.has(mom.id), "the mother carried for it herself (carriers %s)" % [carriers.keys()])
-	check(pantry.count("stone") == 0, "the stone the household held went into it")
+	check(pantry.count("building_block") == 0, "the building blocks the household held went into it")
 	var free := []
 	for id in need0:
 		var bought := int(w.stats.get("helper_bought_" + str(id), 0)) - int(bought0[id])

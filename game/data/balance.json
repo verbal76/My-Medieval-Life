@@ -202,20 +202,21 @@
   },
   "house_cost": {
     "plank": 30,
-    "stone": 20,
+    "building_block": 20,
     "log": 10
   },
   "_construction_note": "Property phase 2 (owner rules 2026-10-18: free placement anywhere legal, ground bought or leased on the spot; materials only; helpers hired for coin carry the owner's goods; crowded households split; workshops are buildings with stations, built after a house). Every number here is an agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md 'Property and construction, phase 2'). workshop_cost: materials per workshop kind; workshop_price: a workshop with its ground, as house_price is a house's; helper_wage: a day's carrying, paid by the employer when hired (the manor's day wage); split_*: a household whose living members outnumber its house's beds founds a new household when, after paying for the new home, it keeps split_keep_base + split_keep_per_member coins a member staying behind; founder_build_days: the helper days a founder budgets for.",
   "workshop_cost": {
-    "smithy": {"plank": 20, "stone": 30, "log": 10, "iron_bar": 4},
-    "carpentry": {"plank": 30, "stone": 15, "log": 15},
-    "bakehouse": {"plank": 20, "stone": 30, "log": 10},
-    "kitchen": {"plank": 15, "stone": 20, "log": 8},
-    "apothecary": {"plank": 20, "stone": 15, "log": 8},
-    "storage": {"plank": 20, "stone": 10, "log": 10},
-    "quarters": {"plank": 25, "stone": 15, "log": 10},
-    "room": {"plank": 14, "stone": 6, "log": 6}
+    "smithy": {"plank": 20, "building_block": 30, "log": 10, "iron_bar": 4},
+    "carpentry": {"plank": 30, "building_block": 15, "log": 15},
+    "bakehouse": {"plank": 20, "building_block": 30, "log": 10},
+    "kitchen": {"plank": 15, "building_block": 20, "log": 8},
+    "apothecary": {"plank": 20, "building_block": 15, "log": 8},
+    "storage": {"plank": 20, "building_block": 10, "log": 10},
+    "quarters": {"plank": 25, "building_block": 15, "log": 10},
+    "room": {"plank": 14, "building_block": 6, "log": 6}
   },
+  "_stone_blocks_note": "STONE-01 (owner decision 2026-10-21, docs/directives/2026-10-21_quarry_stone_blocks_decision.md; docs/build17/STONE_01_BLOCKS.md): houses and every workshop or module take finished building blocks, dressed from raw stone (recipe dress_stone: 2 stone to 2 blocks, 30 minutes at a workbench with a mallet, Crafting 1, exact) in the same numbers their stone used to be (agent decision: one block a stone, so the quarry is not drawn harder). Shop fittings (oven, stove, forge), the farmland gate, the manor's mending and public works keep raw stone (rubble hearths and posts, road and bridge mending). A site marked out before keeps the cost it was marked out with.",
   "workshop_price": 140,
   "module_price": {"kitchen": 100, "apothecary": 110, "storage": 80, "quarters": 110, "room": 60},
   "_module_note": "PL2-008/014 (agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Modular property'). module_price: what a room added to a property is worth with its ground, as workshop_price is a workshop's (kinds not listed use workshop_price); a week's rent and the manor's buy-back follow from it as for any building. workshop_cost holds every module kind's materials. The small room (HOUSE-10, owner OD-14, 2026-10-20: a 5x6 bedroom-sized addition with two beds) costs about half the quarters for a third of the ground; its materials and price are agent proposals, provisional like the rest.",

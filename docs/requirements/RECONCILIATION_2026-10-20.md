@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 246 (106 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **301** = 197 still open from the baseline + 106 added and open |
+| Entries added since | | 247 (107 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **302** = 197 still open from the baseline + 107 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (34)
@@ -64,7 +64,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (246)
+## Added since the baseline (247)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -302,7 +302,8 @@ None.
 | STALL-04 | CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | APPROVED — NOT STARTED | 17 |
+| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | APPROVED — NOT STARTED | 17 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |
