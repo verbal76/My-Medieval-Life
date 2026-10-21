@@ -77,7 +77,7 @@ func _init() -> void:
 	w.npc_died.connect(_on_died)
 	player_min_hp = w.player.hp
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
-		"deposits": w.deposits.map(func(d): return int(d.amount)), "animals": _animal_counts(), "alive": _villagers().size(),
+		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
 	var samples: Array = [_sample(start)]
 	_herd_day(0)
@@ -788,6 +788,12 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for i in w.deposits.size():
 		var ore: String = w.deposits[i].ore
 		mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + int(start.deposits[i]) - int(w.deposits[i].amount)
+	# MIN-B: the other stone pools: worked-out seams' host rock, the village's boulders (villagers quarry both now)
+	var hosts_now := _hosts()
+	var host_fall := 0
+	for i in hosts_now.size():
+		host_fall += int(start.hosts[i]) - int(hosts_now[i]) if i < (start.hosts as Array).size() else 0
+	mined_by_ore["stone"] = int(mined_by_ore.get("stone", 0)) + host_fall + int(start.boulders) - _boulder_stone()
 	for ore in mined_by_ore:
 		var counted: int = d.call("mined_" + ore)
 		if counted != int(mined_by_ore[ore]):
@@ -820,6 +826,19 @@ func _fingerprint() -> String:
 	for hh in w.households:
 		parts.append(str(hh.pantry.items))
 	return "|".join(parts).md5_text()
+
+
+## MIN-B: each deposit's host rock left (0 for a seam with none), in deposit order.
+func _hosts() -> Array:
+	return w.deposits.map(func(d): return int(d.host.amount) if d.has("host") else 0)
+
+
+## The stone the village's boulders still hold.
+func _boulder_stone() -> int:
+	var n := 0
+	for b in w.boulders:
+		n += maxi(0, int(b.amount))
+	return n
 
 
 func _jsonable(d: Dictionary) -> Dictionary:

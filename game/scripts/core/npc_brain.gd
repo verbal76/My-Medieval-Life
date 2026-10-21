@@ -3260,6 +3260,7 @@ func job_market() -> Dictionary:
 	for dp in w.deposits:
 		if w.villagers_reach(dp):          # MIN-A: ore on a level no villager can reach yet opens no places
 			ore += int(dp.amount)
+	ore += w.quarry_stone_left()            # MIN-B: the stone left to quarry is work too
 	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
 		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
 	return market

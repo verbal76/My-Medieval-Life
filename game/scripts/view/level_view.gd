@@ -53,7 +53,9 @@ func setup_level(src: MapView, w: World, lm: LevelMap, spec: Dictionary) -> void
 			set_tile(floor_layer, c, int(floors[pick % floors.size()]))
 		if seam_cells.has(c):
 			var d: Dictionary = seam_cells[c]
-			set_seam(c, int(w.map.data.tiles.ore[str(d.ore)]) if int(d.amount) > 0 else int(w.map.data.tiles.depleted_rock))
+			var quarried: bool = int(d.amount) <= 0 and d.has("host") and int(d.host.amount) <= 0      # MIN-B: the rock is gone
+			if not quarried:
+				set_seam(c, int(w.map.data.tiles.ore[str(d.ore)]) if int(d.amount) > 0 else int(w.map.data.tiles.depleted_rock))
 		elif walls_set.has(c):
 			set_tile(wall_layer, c, int(walls[pick % walls.size()]))
 		elif lm.is_solid(c):

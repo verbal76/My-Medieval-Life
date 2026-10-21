@@ -23,7 +23,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 |---|---|---|---|---|---|---|---|---|---|---|
 | `apple_tree` Apple tree (fruit) | forage | cultivated | none | none | 4 apple | regrows | yes | yes | yes | implemented |
 | `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | yes | yes | implemented |
-| `boulder` Boulder | mineral | natural | pickaxe | mining | 1 stone | finite | yes | no | yes | implemented |
+| `boulder` Boulder | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
 | `chicken_pen` Chickens | livestock | bred | none | none | 2 feather, 1 meat | breeds | no | yes | no | implemented |
 | `coal_seam` Coal seam | mineral | natural | pickaxe | mining | 1 coal | finite | yes | yes | yes | implemented |
 | `copper_seam` Copper seam | mineral | natural | pickaxe | mining | 1 copper_ore | finite | yes | yes | yes | implemented |
@@ -95,13 +95,13 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Time:** `mine_minutes` (25 game minutes). As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing.
 - **Yields a cycle:** 1 stone. Player only: from Mining 2, a 25% chance of a second unit from the same boulder.
-- **Total:** uses_small (2) stone from a small boulder, uses (6) from a large one (ResourceNodes.boulder_small: a hash of its cell, about 55% are small); the village's boulders are not counted among the seams (the caravan's stone rule and the miners look at the seams only).
+- **Total:** uses_small (2) stone from a small boulder, uses (6) from a large one (ResourceNodes.boulder_small: a hash of its cell, about 55% are small); the village's boulders count in the village's stone left (World.quarry_stone_left, Quests.deposit_left) since MIN-B.
 - **Depletion:** finite. None: a boulder broken up is gone for good and its cell is open ground. The change is saved (the village's with the world, the overworld's with Overworld.rock_changes).
 - **Owner:** Nobody. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers no. Villagers mine the seams, not the boulders.
+- **Harvested by:** the player yes; villagers yes. MIN-B: villagers quarry the village's boulders for stone by the player's rule (World.nearest_seam offers them beside the seams and host rock to labourers, miners, manor quarry hands and stone contracts); the overworld's are the player's alone (villagers stay in the village).
 - **Gather mode:** yes. **Icon:** `stone`.
-- **Risk:** Stone is cheap: a boulder breaks into only 3 stone. The caravan's quarry import rule counts the seams alone.
-- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/core/world.gd::deposit_at`, `game/scripts/core/overworld.gd::boulder_at`, `game/scripts/main.gd::interact`
+- **Risk:** Stone is cheap: a boulder breaks into only 2 to 6 stone.
+- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/core/world.gd::deposit_at`, `game/scripts/core/world.gd::nearest_seam`, `game/scripts/core/overworld.gd::boulder_at`, `game/scripts/main.gd::interact`
 
 ### `chicken_pen` · Chickens
 
@@ -132,7 +132,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
 - **Yields a cycle:** 1 coal. Player only: from Mining 2, a 25% chance of a second unit from the same seam.
 - **Total:** The sum of the coal seams' amounts in village.json deposits.
-- **Depletion:** finite. None: World.mine_unit never refills a seam.
+- **Depletion:** finite. None: World.mine_unit never refills a seam. Once its ore is out, its grey host rock gives quarry_host_stone stone (balance.json, 20; the stone seam node) and then the cell opens (MIN-B); the ore never comes back.
 - **Owner:** Nobody: the seams belong to no one (P1.2 proposes the manor's mining rights). **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Miners (NPCBrain._miner); labourers dig coal when no one buys stone.
 - **Gather mode:** yes. **Icon:** `coal`.
@@ -150,7 +150,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
 - **Yields a cycle:** 1 copper_ore. Player only: from Mining 2, a 25% chance of a second unit from the same seam.
 - **Total:** The sum of the copper seams' amounts in village.json deposits.
-- **Depletion:** finite. None: World.mine_unit never refills a seam.
+- **Depletion:** finite. None: World.mine_unit never refills a seam. Once its ore is out, its grey host rock gives quarry_host_stone stone (balance.json, 20; the stone seam node) and then the cell opens (MIN-B); the ore never comes back.
 - **Owner:** Nobody: the seams belong to no one (P1.2 proposes the manor's mining rights). **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Miners (NPCBrain._wanted_ores: copper on a 15% chance).
 - **Gather mode:** yes. **Icon:** `copper_ore`.
@@ -204,7 +204,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
 - **Yields a cycle:** 1 gold_ore. Player only: needs Mining 3 ("Gold needs Mining level 3."); from Mining 2 a 25% chance of a second unit, as for every seam.
 - **Total:** The gold seam's amount in village.json deposits (8).
-- **Depletion:** finite. None: World.mine_unit never refills a seam.
+- **Depletion:** finite. None: World.mine_unit never refills a seam. Once its ore is out, its grey host rock gives quarry_host_stone stone (balance.json, 20; the stone seam node) and then the cell opens (MIN-B); the ore never comes back.
 - **Owner:** Nobody: the seams belong to no one (P1.2 proposes the manor's mining rights). **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Miners take gold only when the seams their buyers want are worked out (NPCBrain._miner falls back to any seam with a buyer); the smith and the goods merchant buy it, so mined gold reaches their stock for the player to buy.
 - **Gather mode:** yes. **Icon:** `gold_ore`.
@@ -222,7 +222,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
 - **Yields a cycle:** 1 iron_ore. Player only: from Mining 2, a 25% chance of a second unit from the same seam.
 - **Total:** The sum of the iron seams' amounts in village.json deposits.
-- **Depletion:** finite. None: World.mine_unit never refills a seam; a worked-out seam shows depleted rock.
+- **Depletion:** finite. None: World.mine_unit never refills a seam. Once its ore is out, its grey host rock gives quarry_host_stone stone (balance.json, 20; the stone seam node) and then the cell opens (MIN-B); the ore never comes back.
 - **Owner:** Nobody: the seams belong to no one (the manor's mining rights are only proposed, ECONOMY_SUSTAINABILITY_PROPOSALS.md P1.2). **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Miners and labourers (NPCBrain._miner, act "mine") while a buyer has room.
 - **Gather mode:** yes. **Icon:** `iron_ore`.
@@ -322,20 +322,20 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `stone_seam` · Stone seam
 
 - **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "deposit", "ore": "stone"}`.
-- **Where:** In the mine north of the village. **In the world:** 240 stone in 3 seams.
+- **Where:** In the mine north of the village, in the mine gallery under the hill, and (MIN-B) the grey host rock left round every worked-out ore seam. **In the world:** 240 stone in 3 seams.
 - **Action:** Mining (interact): "Mine stone". **Range (tiles):** 1. The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).
 - **Tool:** pickaxe (required). You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
 - **Skill:** mining, level 1.
 - **Time:** `mine_minutes` (25 game minutes). As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
 - **Yields a cycle:** 1 stone. Player only: from Mining 2, a 25% chance of a second unit from the same seam.
-- **Total:** The sum of the stone seams' amounts in village.json deposits.
-- **Depletion:** finite. None: World.mine_unit never refills a seam. Once stone is down to caravan_import_when_left, the caravan brings caravan_stone.load a visit.
+- **Total:** The sum of the stone seams' amounts in village.json deposits and the gallery's (game/data/underground.json), plus quarry_host_stone (balance.json, 20) in the host rock of each iron, coal, copper and gold seam once its ore is out (MIN-B).
+- **Depletion:** finite. None: World.mine_unit never refills a seam or its host rock; host rock quarried away leaves its cell open ground, as a broken boulder does. Once the village's stone (seams, host rock and boulders: Quests.deposit_left) is down to caravan_import_when_left, the caravan brings caravan_stone.load a visit.
 - **Owner:** Nobody: the seams belong to no one (P1.2 proposes the manor's mining rights). **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers yes. Labourers (NPCBrain._miner) while the raw-goods merchant buys stone; the manor's quarry job (ManorWork.post_quarry, mine_into) for the works yard.
+- **Harvested by:** the player yes; villagers yes. Labourers and miners (NPCBrain._miner, World.nearest_seam: seams, host rock and boulders, on the surface and in the gallery) while the raw-goods merchant buys stone; the manor's quarry job (ManorWork.post_quarry, mine_into) for the works yard; CON-01 contracts for stone (Contracts.plan, route mine).
 - **Gather mode:** yes. **Icon:** `stone`.
-- **Risk:** Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
-- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_miner`, `game/scripts/core/manor_work.gd::mine_into`, `game/scripts/core/manor_work.gd::post_quarry`
+- **Risk:** Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B).
+- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/core/world.gd::deposit_at`, `game/scripts/core/world.gd::nearest_seam`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_miner`, `game/scripts/core/manor_work.gd::mine_into`, `game/scripts/core/manor_work.gd::post_quarry`
 
 ### `tree` · Tree
 
@@ -538,7 +538,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 |---|---|
 | `apple_tree` | Few trees, a short fruiting window (seasons are 2 days); yields provisional. |
 | `blue_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
-| `boulder` | Stone is cheap: a boulder breaks into only 3 stone. The caravan's quarry import rule counts the seams alone. |
+| `boulder` | Stone is cheap: a boulder breaks into only 2 to 6 stone. |
 | `chicken_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `coal_seam` | Overharvested: worked out by day 8 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `copper_seam` | Overharvested: worked out on day 4 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
@@ -551,7 +551,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `player_pen` | Not at risk: bounded by product_cap and the animals' own pen caps. |
 | `red_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
-| `stone_seam` | Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
+| `stone_seam` | Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B). |
 | `tree` | Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9). |
 | `wheat_field` | Not at risk: farmers hold surplus grain (14495 wheat by day 365, seed 1; LONG_RUN_SIMULATION.md finding 6). |
 | `wild_bear` | A single pair; numbers provisional (B14). |

@@ -117,7 +117,12 @@ static func instances(world: World, d: Dictionary) -> Array:
 	var m: Dictionary = d.get("match", {})
 	match str(m.get("kind", "")):
 		"deposit":
-			return world.deposits.filter(func(dp): return dp.ore == m.ore)
+			var out := world.deposits.filter(func(dp): return dp.ore == m.ore)
+			if m.ore == "stone":                 # MIN-B: the host rock of worked-out ore seams is quarried as stone
+				for dp in world.deposits:
+					if dp.has("host") and int(dp.amount) <= 0:
+						out.append(dp.host)
+			return out
 		"boulder":
 			return world.boulders.filter(func(b): return int(b.amount) > 0)
 		"tree":

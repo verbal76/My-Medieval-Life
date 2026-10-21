@@ -216,7 +216,9 @@ func _test_save_load() -> void:
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	check(w2.player_level == -1 and w2.player.pos.is_equal_approx(p.pos), "a save made below loads below, at the same place")
 	var b2 := w2.deposits.filter(func(x): return World.level_of(x) == -1)
-	check(b2.size() == 6 and int(w2.deposit_at(Vector2i(below[0].x, below[0].y), -1).amount) == 17 and int(w2.deposit_at(Vector2i(below[1].x, below[1].y), -1).amount) == 0
+	var seam_of := func(ww: World, d0: Dictionary) -> Dictionary:
+		return ww.deposits.filter(func(x): return World.level_of(x) == -1 and int(x.x) == int(d0.x) and int(x.y) == int(d0.y))[0]
+	check(b2.size() == 6 and int(seam_of.call(w2, below[0]).amount) == 17 and int(seam_of.call(w2, below[1]).amount) == 0
 			and w2.deposits.size() == w.deposits.size(), "the seams below keep their amounts, matched by level and cell")
 	check(w2.loot.any(func(l): return World.level_of(l) == -1 and l.inv.count("coal") == 2), "a pile left below stays below")
 	var key := func(x) -> String: return "%d,%d,%d,%s,%d" % [int(x.get("level", 0)), int(x.x), int(x.y), str(x.ore), int(x.amount)]
@@ -283,9 +285,15 @@ func _test_villagers_below() -> void:
 	for d in w.deposits:
 		if World.level_of(d) == 0:
 			d.amount = 0
+			if d.has("host"):
+				d.host.amount = 0              # MIN-B: the surface's host rock quarried too
+	for b in w.boulders:
+		b.amount = 0
 	var start := {}
 	for d in w.deposits:
 		start["%d,%d,%d" % [World.level_of(d), int(d.x), int(d.y)]] = int(d.amount)
+		if d.has("host"):
+			start["host %d,%d,%d" % [World.level_of(d), int(d.x), int(d.y)]] = int(d.host.amount)
 	var miner: NPC = null
 	for n: NPC in w.npcs:
 		if n.alive and n.job == "miner":
@@ -345,6 +353,9 @@ func _test_villagers_below() -> void:
 		fell[d.ore] = int(fell.get(d.ore, 0)) + f
 		if World.level_of(d) == -1:
 			fell_below += f
+		if d.has("host"):
+			var hf: int = int(start["host " + k]) - int(d.host.amount)
+			fell["stone"] = int(fell.get("stone", 0)) + hf
 	var ledger_ok := true
 	for o in mined0:
 		if int(fell.get(o, 0)) != int(w.stats.get("mined_" + o, 0)) - int(mined0[o]):

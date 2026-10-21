@@ -2770,6 +2770,10 @@ func test_build7_economy() -> void:
 	for d in w.deposits:
 		if d.ore == "stone":
 			d.amount = 0
+		if d.has("host"):
+			d.host.amount = 0              # MIN-B: the village's own stone is also the host rock and the boulders
+	for bd in w.boulders:
+		bd.amount = 0
 	var exp0 := int(w.stats.get("exported_stone", 0))
 	b.caravan()
 	var got := 0

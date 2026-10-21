@@ -581,7 +581,7 @@ on caravan stone after the stone seams are gone.
 - `coal_seam`: Overharvested: worked out by day 8 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
 - `copper_seam`: Overharvested: worked out on day 4 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
 - `iron_seam`: Overharvested: the iron seams were worked out on day 10 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
-- `stone_seam`: Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
+- `stone_seam`: Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B).
 
 ### Exceptions recorded
 
