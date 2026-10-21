@@ -1459,6 +1459,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_fireball()
 	_dvw_a12_pickpocket_reach()
 	_dvw_a12_reach()
+	_dvw_a12_planting()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1851,6 +1852,39 @@ func _dvw_a12_reach() -> void:
 						if why != "":
 							refused.append("%s at %s: %s" % [t.kind, str(cc), why])
 	check(offered > 100 and refused.is_empty(), "DVW-A12 R15: all %d targets the interface offered are in core's reach (%s)" % [offered, str(refused.slice(0, 3))])
+	_restore_pack(keep)
+
+
+## R4: planting a sapling: refused without one or where the ground says no; else the tree is planted, the sapling used
+## up and counted; through the interface; kept over a save.
+func _dvw_a12_planting() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var cell := Vector2i(-1, -1)
+	for y in range(10, main.map.h - 10):
+		for x in range(10, main.map.w - 10):
+			if cell.x < 0 and w.plant_refusal(Vector2i(x, y)) == "" and w.plant_refusal(Vector2i(x, y + 3)) == "" and not main.map.is_solid(Vector2i(x, y + 1)) and w.place_of(Vector2(x, y + 1) + Vector2(0.5, 0.5)) == "":
+				cell = Vector2i(x, y)
+	check(cell.x >= 0, "DVW-A12 R4: free grass to plant on")
+	var sap := "oak_sapling"
+	check(w.player_plant_sapling(cell, sap).is_empty() and w.plant_refusal(cell) == "", "DVW-A12 R4: without a sapling nothing is planted")
+	p.inv.add(sap, 2)
+	var used0 := float(w.stats.get("used_" + sap, 0.0))
+	var trees0 := w.trees.size()
+	var t := w.player_plant_sapling(cell, sap)
+	check(not t.is_empty() and t.state == "sapling" and w.trees.size() == trees0 + 1 and p.inv.count(sap) == 1 and float(w.stats.get("used_" + sap, 0.0)) - used0 == 1.0, "DVW-A12 R4: the sapling is planted, used up and counted (used_)")
+	check(w.player_plant_sapling(cell + Vector2i(1, 0), sap).is_empty() and p.inv.count(sap) == 1, "DVW-A12 R4: not beside another tree; the sapling is kept")
+	# through the interface: the action plants in front of the player
+	var c2 := cell + Vector2i(0, 3)
+	p.pos = Vector2(c2) + Vector2(0.5, -0.5)
+	main.player_sprite.dir = 0                     # facing down (+y)
+	main.plant_sapling(sap)
+	_finish_action()
+	check(w.tree_at(c2).get("state", "") == "sapling" and not p.inv.has(sap), "DVW-A12 R4: the interface's planting is core's")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.trees.any(func(x): return int(x.x) == c2.x and int(x.y) == c2.y and x.state == "sapling"), "DVW-A12 R4: the planted tree is saved")
 	_restore_pack(keep)
 
 

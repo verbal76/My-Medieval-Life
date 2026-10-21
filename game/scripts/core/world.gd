@@ -1693,6 +1693,19 @@ func plant_tree(cell: Vector2i, item: String) -> Dictionary:
 	return t
 
 
+## DVW-A12 R4: the player plants the sapling `item` from the pack at `cell`: refused ({}) without one in the pack or
+## where plant_refusal says no; else the tree is planted (plant_tree) and the sapling is used up, counted for the
+## ledger (used_, SEED-02). Returns the tree record, {} if refused.
+func player_plant_sapling(cell: Vector2i, item: String) -> Dictionary:
+	if not player.inv.has(item) or plant_refusal(cell) != "":
+		return {}
+	var t := plant_tree(cell, item)
+	if not t.is_empty():
+		player.inv.remove(item, 1)
+		stat("used_" + item)
+	return t
+
+
 func nearest_tree(from: Vector2i, max_d := 60.0) -> Dictionary:
 	var best := {}
 	var bd := max_d

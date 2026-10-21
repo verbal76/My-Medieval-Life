@@ -2634,13 +2634,10 @@ func plant_sapling(item: String) -> void:
 		return
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	start_action("Planting", float(Trees.cfg().plant_seconds), func():
-		if not p.inv.has(item) or world.plant_refusal(cell) != "":
+		var t := world.player_plant_sapling(cell, item)          # the rules are core's (DVW-A12 R4)
+		if t.is_empty():
 			ui.message("It cannot be planted there now.")
-			return
-		var t := world.plant_tree(cell, item)
-		if not t.is_empty():
-			p.inv.remove(item, 1)
-			world.stat("used_" + item)               # the sapling is used up (SEED-02: the ledger counts it)
+		else:
 			ui.message("You plant the %s. It will grow into a tree in a few days." % GameData.item_name(item).to_lower().replace(" sapling", " sapling"))
 	)
 
