@@ -314,7 +314,7 @@ func _test_adoption() -> void:
 	check(int(w.brain.job_market().prospector.open) == 0, "with an empty treasury it does not")
 	w.treasury = 5000
 	dv.levels[Discovery.INDUSTRY] = 0
-	check(int(w.brain.job_market().prospector.open) == 0, "below level 1 it does not")
+	check(int(w.brain.job_market().prospector.open) == 1, "at level 0 it opens all the same: a capability level never gates (owner, Q18-9)")
 	dv.levels[Discovery.INDUSTRY] = 1
 	# an adult out of work weighs it by the ordinary job rules; with its pay made clearly best, they take it
 	var mc: Dictionary = Discovery.cfg().manor
@@ -340,7 +340,12 @@ func _test_commissioned() -> void:
 	w.treasury = 5000
 	mw.post_discovery()
 	var sv: Array = mw.jobs.filter(func(j): return j.kind == "survey")
-	check(sv.size() == 1 and not mw.jobs.any(func(j): return j.kind == "trial"), "at level 1 the reeve posts one survey and no trial pit")
+	check(sv.size() == 1 and not mw.jobs.any(func(j): return j.kind == "trial"), "the reeve posts one survey, and no trial pit while the manor knows no find")
+	var mjobs := mw.jobs.size()
+	dv.levels[Discovery.INDUSTRY] = 0
+	mw.post_discovery()
+	check(mw.jobs.size() == mjobs, "at level 0 the survey stays posted: a capability level never gates (owner, Q18-9)")
+	dv.levels[Discovery.INDUSTRY] = 1
 	mw.post_discovery()
 	check(mw.jobs.filter(func(j): return j.kind == "survey").size() == 1, "one survey at a time")
 	var j: Dictionary = sv[0]

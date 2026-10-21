@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 180 (75 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **277** = 203 still open from the baseline + 75 added and open |
+| Entries added since | | 183 (78 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **280** = 203 still open from the baseline + 78 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (28)
@@ -58,7 +58,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (180)
+## Added since the baseline (183)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -155,6 +155,9 @@ None.
 | MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | APPROVED — NOT STARTED | 17 |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | decision | BLOCKED | owner decision |
 | MIN-C-Q3 | The smith remains the assayer; no separate assayer profession without approval | approved | COMPLETE AND VERIFIED |  |
+| MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | decision | BLOCKED | owner decision |
+| MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | decision | BLOCKED | owner decision |
+| MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | decision | BLOCKED | owner decision |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | 17 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |

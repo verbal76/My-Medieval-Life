@@ -15185,7 +15185,8 @@
    "branch": "",
    "commits": [
     "7b83fe8",
-    "HEAD"
+    "HEAD",
+    "43e0fbd"
    ],
    "parent": "EXP-A",
    "depends_on": [
@@ -15233,6 +15234,11 @@
      "date": "2026-10-21",
      "change": "commit HEAD",
      "why": "Visual check across terrain (lead, 2026-10-21): 12 clues on seeds 1 and 2 on grass, dirt, road, beside a stall, a boulder and plants, under canopies; stains under actors, trees, roofs and UI; deterministic per seed; one fleck over a plant fixed (marks skip plant and solid cells) and re-shot; copper on grass is faint, kept as is"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 43e0fbd",
+     "why": "Evidence commit for the stain fix and visual check: 43e0fbd"
     }
    ],
    "target_build": "17",
@@ -15370,7 +15376,7 @@
    "id": "MIN-D",
    "title": "Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -15379,10 +15385,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "discovery_test 65; sim_gate PASS",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "b0506db"
+   ],
    "parent": "EXP-A",
    "depends_on": [
     "MIN-C"
@@ -15414,11 +15422,142 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit b0506db; tests",
+     "why": "Integrated into wip/build17: hidden bodies opened by trial pits into ordinary finite seams; capability levels from present assets, reported only (no gates, owner Q18-9); adoption through the labour market and the manor's job board; discovery_test 65; determinism gate PASS on seeds 1-2 days 10/30 with no leaks (docs/build17/DETERMINISM_GATE.md); opened-seam sprite not yet looked at on screen"
     }
    ],
    "target_build": "17",
    "roadmap_gate": "",
    "roadmap_reason": "the Mining & Industrial Development expansion"
+  },
+  {
+   "id": "MIN-D-Q1",
+   "title": "Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)?",
+   "source": "docs/build17/MIN_D_DISCOVERY.md",
+   "approval": "open owner question from MIN-D",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_D_DISCOVERY.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-D-Q2",
+   "title": "Should the player's tools and skills count toward the settlement's mining capability (built: they do not)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should the player's tools and skills count toward the settlement's mining capability (built: they do not)?",
+   "source": "docs/build17/MIN_D_DISCOVERY.md",
+   "approval": "open owner question from MIN-D",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_D_DISCOVERY.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-D-Q3",
+   "title": "Should trial pits yield dirt or topsoil items (with MIN-E's item decision)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should trial pits yield dirt or topsoil items (with MIN-E's item decision)?",
+   "source": "docs/build17/MIN_D_DISCOVERY.md",
+   "approval": "open owner question from MIN-D",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_D_DISCOVERY.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "MIN-E",

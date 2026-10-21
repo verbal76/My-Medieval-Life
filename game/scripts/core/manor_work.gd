@@ -247,19 +247,19 @@ func post_quarry() -> void:
 	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})
 
 
-## MIN-D, the reeve's evening: one survey of a clue the manor has heard nothing of (from mining level
-## `survey_level`), and one trial pit for the best find it knows (from `trial_level`), each one at a time
-## (Discovery.survey_target, trial_target). Nothing is posted that the village's capability does not allow.
+## MIN-D, the reeve's evening: one survey of a clue the manor has heard nothing of, and one trial pit for the best
+## find it knows, each one at a time (Discovery.survey_target, trial_target). The village's mining capability level
+## never gates a posting (owner decision Q18-9: levels shape pay and output only); what is posted needs a real clue,
+## a known find and the treasury's means.
 func post_discovery() -> void:
 	var dc: Dictionary = Discovery.cfg().manor
-	var lv: int = w.discovery.level()
-	for j in jobs.duplicate():           # work the village can no longer do, or no longer needs, is taken down untaken
+	for j in jobs.duplicate():           # work no longer possible or needed is taken down untaken
 		if j.taker != "" or not j.kind in ["survey", "trial"]:
 			continue
 		var c := w.prospecting.clue(str(j.clue))
-		if j.kind == "survey" and (lv < int(dc.survey_level) or w.prospecting.samples_left(c) < int(j.qty)):
+		if j.kind == "survey" and w.prospecting.samples_left(c) < int(j.qty):
 			jobs.erase(j)
-		elif j.kind == "trial" and (lv < int(dc.trial_level) or not w.discovery.opened(str(j.clue)).is_empty() or w.discovery.trials_left(c) <= 0):
+		elif j.kind == "trial" and (not w.discovery.opened(str(j.clue)).is_empty() or w.discovery.trials_left(c) <= 0):
 			jobs.erase(j)
 	if not jobs.any(func(j): return j.kind == "survey"):
 		var c := w.discovery.survey_target()

@@ -219,11 +219,9 @@ func next_cell(c: Dictionary, ref := World.MANOR) -> Vector2i:
 
 
 ## The find the manor would dig for now: {clue, cell} for the most certain clue it knows traces at (at least
-## `manor.min_confidence`), not yet opened, with pits left and clear ground; {} below `manor.trial_level` or with none.
+## `manor.min_confidence`), not yet opened, with pits left and clear ground; {} with none. The capability level is never a gate (owner, Q18-9).
 func trial_target() -> Dictionary:
 	var mc: Dictionary = cfg().manor
-	if level() < int(mc.trial_level):
-		return {}
 	var finds := manor_finds()
 	finds.sort_custom(func(a, b): return float(a.confidence) > float(b.confidence) or (float(a.confidence) == float(b.confidence) and str(a.clue) < str(b.clue)))
 	for f in finds:
@@ -250,11 +248,9 @@ func can_fund_survey() -> bool:
 
 
 ## The clue the manor would commission a survey of: the first (generation order) it has heard nothing of, with at
-## least `manor.survey_samples` samples left, not opened; {} below `manor.survey_level` or with none.
+## least `manor.survey_samples` samples left, not opened; {} with none. The capability level is never a gate (owner, Q18-9).
 func survey_target() -> Dictionary:
 	var mc: Dictionary = cfg().manor
-	if level() < int(mc.survey_level):
-		return {}
 	var pr: Prospecting = w.prospecting
 	for c in pr.clues:
 		if pr.samples_left(c) < int(mc.survey_samples) or not opened(str(c.id)).is_empty():
@@ -410,14 +406,14 @@ func dawn() -> void:
 
 
 # ---------------------------------------------------------------- adoption -------------------
-## The prospector's place in the labour market (NPCBrain.job_market): open while the village's mining is at least
-## `manor.prospector_level`, nobody prospects, some clue has ground left to sample and the manor could fund a survey
+## The prospector's place in the labour market (NPCBrain.job_market): open while nobody prospects (whatever the
+## village's mining capability level: never a gate, owner decision Q18-9), some clue has ground left to sample and the manor could fund a survey
 ## (the paid work a prospector can count on; it may also prospect on its own, as MIN-C built). Its pay is what
 ## prospectors have earned, or before any has, a survey's wage over `manor.pay_estimate_days`.
 func prospector_place(avg_pay: float) -> Dictionary:
 	var mc: Dictionary = cfg().manor
 	var open := 0
-	if level() >= int(mc.prospector_level) and not w.npcs.any(func(o): return o.alive and o.job == Prospecting.JOB) \
+	if not w.npcs.any(func(o): return o.alive and o.job == Prospecting.JOB) \
 			and w.prospecting.clues.any(func(c): return w.prospecting.samples_left(c) > 0) and can_fund_survey():
 		open = 1
 	var pay := avg_pay if avg_pay > 0.0 else float(mc.survey_wage) / maxf(1.0, float(mc.pay_estimate_days))
