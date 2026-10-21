@@ -3001,7 +3001,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Check whether a new player can still afford an axe for the woodcutting job (the item's second half)",
+   "next_action": "Lead: report the measurement; close the item only on the owner's word or when the starting kit or price rules change",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -3021,6 +3021,11 @@
      "date": "2026-10-21",
      "change": "BLOCKED -> PARTIALLY IMPLEMENTED; next_action",
      "why": "OD-01 answers the mine part: no mining wage, the shift quest retired, miners earn by sale or CON-01 contracts. The woodcutting-axe part of the original item is not covered by OD-01 and stays to be checked"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Axe half measured on Build 17 (cca7f2b+, probe not committed): seeds 1 and 2, days 0-3, the cheapest axe for sale (smith or merchant) costs 45-46 coins; the player starts with 20 coins, a rusty pickaxe and no axe. Without an axe the player can still earn: manor board quarrying (6 coins a job, the starting pickaxe qualifies), mending (4), carrying (2), mining and selling ore or stone. So an axe takes a few days' work, not never. No mechanism is broken (WDR-022: an economic outcome, measured, no hidden help); no change made"
     }
    ],
    "acceptance_derived": true,
