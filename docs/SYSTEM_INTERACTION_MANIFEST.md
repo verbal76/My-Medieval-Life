@@ -1395,6 +1395,41 @@ Rules:
 - **Expected:** The keeper buys whatever part of its feed want the best seller can spare and the keeper can pay for (the SHOP-01 part-lot rule, as the player may), not only a whole three-day lot. Farmers keep in hand for sale what the keepers lack of their four-day feed reserve, besides what the cook and food merchant want, so grain is not all put away in family chests no one buys from. A keeper short of feed culls beyond the breeding stock elderly animals first (they no longer breed), then the young. No feed or animal from nothing.
 - **Tests:** `game/tests/herd_test.gd`
 
+### INT-173 · The adit gallery: a separate level map tied to its surface portal (MIN-A, OD-29)
+- **Trigger:** The player or a villager steps through the adit portal; a villager's goal lies on another level.
+- **Source:** `game/scripts/core/underground.gd::portal_from`, `game/scripts/core/underground.gd::next_leg`, `game/scripts/core/underground.gd::find_path`, `game/scripts/core/level_map.gd::find_path`, `game/scripts/core/world.gd`
+- **Affects:** Resources, Employment, Inventory, Save, Interface
+- **Expected:** Underground space is its own map, entered only through a portal fixed to a surface cell; open pits stay on the surface. A villager whose goal is on another level walks to the portal, crosses and paths on the far level (one router for every level). Seams below use the surface seam rules; what is carried crosses with its carrier, nothing is made or lost at the portal. The gallery and its seams are saved (save version 17).
+- **Tests:** `game/tests/underground_test.gd`
+
+### INT-174 · Quarry stone from worked-out seams and boulders (MIN-B, B7-007)
+- **Trigger:** A seam's ore is used up; the player swings at its rock; a labourer, miner, manor quarry hand or contract seller looks for stone.
+- **Source:** `game/scripts/core/world.gd::quarry_stone_left`, `game/scripts/core/world.gd::_quarry_sources`, `game/scripts/core/world.gd::_open_quarried`, `game/scripts/core/manor_work.gd::post_quarry`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Resources, Inventory, Employment, Market, Treasury, Building, Ledger
+- **Expected:** Each ore seam keeps a second finite pool of stone (20) that opens only once its ore is out; the ore never refills. Player and villagers quarry it, and the village's boulders, by the seam rule (time, wear, xp, mined_stone). The village's stone left (seams, leftover rock, boulders) sets the caravan's stone threshold, the reeve's quarry posting and contract feasibility. A fully quarried cell opens like a broken boulder, on the surface or widening the gallery.
+- **Tests:** `game/tests/quarry_test.gd`, `game/tests/underground_test.gd`
+
+### INT-175 · Negotiated procurement contracts (CON-01, first slice)
+- **Trigger:** A buyer (the player, a business or the manor) proposes a contract for an item, quantity, unit price and term; the seller accepts, delivers or lets it lapse.
+- **Source:** `game/scripts/core/contracts.gd::evaluate`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/contracts.gd::accept_offer`, `game/scripts/core/contracts.gd::deliver`, `game/scripts/core/contracts.gd::reserved_total`
+- **Affects:** Coins, Market, Inventory, Employment, Treasury, Ledger, Interface
+- **Expected:** A seller accepts only at or above its minimum price from its real means (stock, skill, time, the deposit left); the buyer's coins for the contract are reserved when it is agreed and paid per unit delivered; the reserve is counted in the coin census and returned when a contract ends unfilled. Player and villagers use the same terms (provisional defaults, OD-29).
+- **Tests:** `game/tests/contracts_test.gd`
+
+### INT-176 · Goods decay: stored food spoils, clothes, armour and carts wear (DVW-B4)
+- **Trigger:** Each dawn (spoilage and wear of what is worn); a blow on an armoured fighter.
+- **Source:** `game/scripts/core/decay.gd::dawn`, `game/scripts/core/decay.gd::spoil_inv`, `game/scripts/core/decay.gd::wear_npc`, `game/scripts/core/decay.gd::wear_player`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Food, Inventory, Equipment, Granary, Households, Market, Combat, Ledger
+- **Expected:** Stored food spoils at its item's rate by a seeded draw, so the same world spoils the same way; worn clothes, armour and carts lose condition and break at zero. Spoiled goods leave through the ledger as decay, never silently. A guard whose armour wore out buys again by the ordinary rule.
+- **Tests:** `game/tests/decay_test.gd`
+
+### INT-177 · Cliff steps, stairs and walkways; no unreachable cells (B14-07, DVW-A10)
+- **Trigger:** The player cuts cliff steps or builds wooden stairs or a walkway; the overworld is generated.
+- **Source:** `game/scripts/core/terrain.gd::refusal`, `game/scripts/core/terrain.gd::cost`, `game/scripts/core/terrain.gd::plan`, `game/scripts/core/terrain.gd::targets_at`
+- **Affects:** Overworld, Building, Inventory, Crafting, Player state
+- **Expected:** Steps need a pickaxe and Mining, stairs and walkways planks, nails, a mallet and Carpentry, taken from real inventory; each opens a crossing over a cliff or water. Ground nothing can reach is sealed, so no item or creature is lost in a black-hole space.
+- **Tests:** `game/tests/terrain_test.gd`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -1402,39 +1437,39 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109, INT-121, INT-122, INT-145, INT-146, INT-150, INT-155, INT-156 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128, INT-131, INT-132, INT-134, INT-136, INT-137, INT-146, INT-160, INT-162, INT-164, INT-166, INT-168, INT-170, INT-171 |
-| Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129, INT-138, INT-141, INT-145, INT-147, INT-149, INT-158, INT-159, INT-163 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109, INT-121, INT-122, INT-145, INT-146, INT-150, INT-155, INT-156, INT-177 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128, INT-131, INT-132, INT-134, INT-136, INT-137, INT-146, INT-160, INT-162, INT-164, INT-166, INT-168, INT-170, INT-171, INT-173, INT-174, INT-175, INT-176, INT-177 |
+| Equipment | INT-003, INT-004, INT-015, INT-031, INT-176 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129, INT-138, INT-141, INT-145, INT-147, INT-149, INT-158, INT-159, INT-163, INT-176 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108, INT-139, INT-141, INT-142, INT-145, INT-155 |
-| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108, INT-156 |
+| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108, INT-156, INT-176 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117, INT-146, INT-148 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117, INT-154 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130, INT-160, INT-161, INT-164, INT-170, INT-171 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121, INT-140, INT-141, INT-143, INT-145, INT-147, INT-152, INT-156, INT-162, INT-163 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-156, INT-157 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147, INT-148, INT-149, INT-151, INT-152, INT-154, INT-156, INT-157, INT-158, INT-159, INT-162, INT-164, INT-165, INT-168, INT-169, INT-171, INT-172 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-157, INT-158, INT-159, INT-164, INT-165, INT-168, INT-169, INT-170, INT-172 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129, INT-131, INT-134, INT-154, INT-169, INT-170 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121, INT-140, INT-141, INT-143, INT-145, INT-147, INT-152, INT-156, INT-162, INT-163, INT-173, INT-174 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-156, INT-157, INT-177 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147, INT-148, INT-149, INT-151, INT-152, INT-154, INT-156, INT-157, INT-158, INT-159, INT-162, INT-164, INT-165, INT-168, INT-169, INT-171, INT-172, INT-174, INT-175, INT-176 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-157, INT-158, INT-159, INT-164, INT-165, INT-168, INT-169, INT-170, INT-172, INT-175 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129, INT-131, INT-134, INT-154, INT-169, INT-170, INT-174, INT-175 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066, INT-159 |
-| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159, INT-165, INT-172 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160, INT-162, INT-164, INT-165, INT-166, INT-167, INT-168, INT-170, INT-171, INT-172 |
-| Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156 |
+| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159, INT-165, INT-172, INT-176 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160, INT-162, INT-164, INT-165, INT-166, INT-167, INT-168, INT-170, INT-171, INT-172, INT-176 |
+| Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156, INT-173, INT-174, INT-175 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080, INT-151 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145, INT-172 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127, INT-149, INT-163 |
 | Bandits | INT-012, INT-014, INT-050, INT-149, INT-153, INT-154 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153, INT-158, INT-168, INT-170 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153, INT-158, INT-168, INT-170, INT-174, INT-177 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154, INT-160, INT-162, INT-165, INT-166, INT-167, INT-168, INT-169, INT-171 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156, INT-162 |
-| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148, INT-149, INT-150 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154, INT-160, INT-162, INT-165, INT-166, INT-167, INT-168, INT-169, INT-171, INT-174, INT-175, INT-176 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156, INT-162, INT-173 |
+| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148, INT-149, INT-150, INT-173, INT-175 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111, INT-138 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130, INT-142, INT-151, INT-153, INT-170 |
 | Calendar | INT-077, INT-123, INT-147, INT-149, INT-161, INT-163, INT-167, INT-171 |
 | Family | INT-077, INT-078, INT-079, INT-080, INT-148, INT-151, INT-152, INT-153 |
-| Overworld | INT-071, INT-074, INT-076, INT-087 |
+| Overworld | INT-071, INT-074, INT-076, INT-087, INT-177 |
 
 <!-- index:end -->

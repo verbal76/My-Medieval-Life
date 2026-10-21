@@ -1725,7 +1725,7 @@
    "id": "B14-07",
    "title": "Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet)",
    "source": "owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07)",
@@ -1734,10 +1734,12 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "terrain_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3edd5af"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -1759,6 +1761,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 3edd5af; tests",
+     "why": "Cliff steps, wooden stairs and walkways built with real materials and skills; device check outstanding"
     }
    ],
    "acceptance_derived": true,
@@ -2976,10 +2983,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "(B7_ISSUES:50) | \"Stone imports fixed (staging); depletion itself diagnosed, proposal awaits owner\" | PARTIAL | `ae0e01f` (stone imports, INT-065) | Owner choice P1.1-P1.5 | Code later stopped the caravan exporting raw ore/stone (`NOT_EXPORTED`, INT-020:198, from `9c13794`); not reflected in the register",
-   "tests": "",
+   "tests": "quarry_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "79afe00"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -3006,6 +3015,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 79afe00; tests",
+     "why": "MIN-B gives the village a finite local stone source (leftover rock of worked-out seams, boulders); deposits stay finite by design"
     }
    ],
    "acceptance_derived": true,
@@ -5292,7 +5306,7 @@
    "id": "CON-01",
    "title": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
    "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
@@ -5301,10 +5315,12 @@
     "One contract system reused for player-NPC, NPC-player and NPC-NPC; offered through the existing conversation framework; NPCs evaluate feasibility, skills, tools, quantity, price, obligations, household needs, time, alternatives, relationship and risk; real goods and funds only; no duplicate delivery or payment; policy details decided by the owner before they are fixed"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "contracts_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "daf08f3"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -5331,6 +5347,11 @@
      "date": "2026-10-21",
      "change": "notes",
      "why": "Owner approved the defaults provisionally"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit daf08f3; tests",
+     "why": "First slice: negotiated procurement contracts (item, quantity, unit price, accept, deliver, settle from reserved coins) and the contract window; provisional defaults per OD-29"
     }
    ],
    "target_build": "17",
@@ -6915,7 +6936,7 @@
    "id": "DVW-A10",
    "title": "No black-hole spaces (:35)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "No black-hole spaces (:35)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254)",
@@ -6924,10 +6945,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "Built into B14-07 | — | NOT-STARTED (with B14-07)",
-   "tests": "",
+   "tests": "terrain_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3edd5af"
+   ],
    "parent": "B14-07",
    "depends_on": [],
    "blockers": [],
@@ -6949,6 +6972,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 3edd5af; tests",
+     "why": "Unreachable cells sealed so nothing can be lost in a black-hole space"
     }
    ],
    "acceptance_derived": true,
@@ -6997,7 +7025,7 @@
    "id": "DVW-A12",
    "title": "Keep rules in `core/`, not UI; audit list (:37)",
    "kind": "approved",
-   "status": "DEFERRED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Keep rules in `core/`, not UI; audit list (:37)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256)",
@@ -7006,10 +7034,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "Plan: an audit list | none; `main.gd` still holds crime and storefront-target rules per DVW | NOT-STARTED",
-   "tests": "",
+   "tests": "run_tests, world_test, parity_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "e51c37d"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -7046,6 +7076,11 @@
      "date": "2026-10-21",
      "change": "notes",
      "why": "Owner approved the refactor direction"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "DEFERRED -> PARTIALLY IMPLEMENTED; commit e51c37d; tests",
+     "why": "R1-R3, R7-R9, R12, R14 moved from UI into World with no behaviour change; the remaining rules are in progress on wip/b17-dvwa12b"
     }
    ],
    "acceptance_derived": true,
@@ -7904,7 +7939,7 @@
    "id": "DVW-B4",
    "title": "Goods decay (grain spoils, clothes/armour/carts wear)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Goods decay (grain spoils, clothes/armour/carts wear)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276)",
@@ -7913,10 +7948,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "**Yes** | No row | only existing tool wear, carcass/loot spoilage (3 days) | NOT-STARTED | ",
-   "tests": "",
+   "tests": "decay_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "2387573"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -7938,6 +7975,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17 (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 2387573; tests",
+     "why": "Food spoils, clothes, armour and carts wear; armour wears on blows and guards re-buy worn armour; awaits the Build 17 gate"
     }
    ],
    "acceptance_derived": true,
@@ -14890,7 +14932,7 @@
    "id": "MIN-A",
    "title": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -14899,10 +14941,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "underground_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a659f42"
+   ],
    "parent": "EXP-A",
    "depends_on": [],
    "blockers": [],
@@ -14932,6 +14976,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit a659f42; tests",
+     "why": "Audit and architecture recorded (docs/build17/MIN_A_ARCHITECTURE.md); the adit gallery as a separate level map tied to its surface portal, villagers routed between levels; awaits the Build 17 gate"
     }
    ],
    "target_build": "17",
@@ -14942,7 +14991,7 @@
    "id": "MIN-B",
    "title": "Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -14951,10 +15000,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "quarry_test, underground_test, economy_sim 30 days no leaks",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "79afe00"
+   ],
    "parent": "EXP-A",
    "depends_on": [
     "MIN-A"
@@ -14986,6 +15037,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 79afe00; tests",
+     "why": "Worked-out seams keep 20 stone each; player and villagers quarry leftover rock and boulders by one rule; caravan stone only at the threshold; awaits the Build 17 gate"
     }
    ],
    "target_build": "17",
