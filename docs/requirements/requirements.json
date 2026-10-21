@@ -28670,7 +28670,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Full CI and the gate re-baseline on wip/build17; owner questions STONE-Q1..Q3 (fittings and mending on blocks, dressing waste, a mason trade)",
+   "next_action": "Determinism gate re-baseline once after the parity and equipment merges",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28695,6 +28695,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "STONE-Q1 (Option C) checked against the build: blocks for houses, workshops and rooms; raw stone for fittings, gate and mending already matches where the system distinguishes; the finer split is STONE-03; personal dressing by non-labourer villagers is STONE-02"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "CI Tests run 39678592892 on 0a086af (the STONE-01 + wiki merge) passed"
     }
    ],
    "target_build": "17"
