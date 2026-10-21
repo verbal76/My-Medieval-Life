@@ -20981,6 +20981,134 @@
    "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization"
   },
   {
+   "id": "PROS-01",
+   "title": "Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates",
+   "kind": "rule",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Authorize immediate prospective development for Expansions 18 and 19 while Expansion 17 remains the primary active development milestone.",
+   "description": "Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "wip/expansion18-preparation and wip/expansion19-preparation exist on GitHub, branched from a stable baseline (19 not from 18)",
+    "Neither merges into staging or a release branch, nor publishes a build, before its reconciliation gate (18 after Build 17 complete, 19 after Build 18 complete)",
+    "Per-expansion progress kept: implemented and tested, provisional, dependencies, risks, owner decisions, branch head, readiness from verified tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "PROS-18",
+   "title": "Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Begin implementation of independently developable components",
+   "description": "Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests)",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Code and tests on wip/expansion18-preparation; provisional interfaces and fixtures for Build 17 mining and industry; no duplicate mining system"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "PROS-19",
+   "title": "Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The judgment system must influence choices, not dictate them.",
+   "description": "Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests)",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Code and tests on wip/expansion19-preparation in isolated scenarios with provisional adapters; the live NPC decision system is not replaced; SJD-Q01..Q14 stay open for the owner"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "19"
+  },
+  {
    "id": "PVG-01",
    "title": "Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space)",
    "kind": "approved",
