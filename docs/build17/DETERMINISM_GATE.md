@@ -50,3 +50,16 @@ failures; check_resources, check_materials, check_assets 0 problems; Python unit
 | 1 | 30 | `e0f09912c01ec33944144171ca4d51ca` | 104 | 24 | 4909 | currency 0, items {} |
 | 2 | 10 | `06629e3bf08d77378ce65a4bf604d6bc` | 111 | 24 | 4388 | currency 0, items {} |
 | 2 | 30 | `55e36bea0034d69f6ca425cb9644d5fd` | 118 | 24 | 4918 | currency 0, items {} |
+
+## 2026-10-21, after MIN-F and MIN-H (code of `49b6380`)
+
+The cave's seams count as the village's own, so miners work the cave and the manor stakes an open pit: an intended
+behaviour change. Baseline re-recorded, then a second run: `determinism gate: PASS, identical to the baseline`. Seed 1's
+day-30 fingerprint also equals the MIN-F worker's independent 30-day run (`5063396929116f24aa7e707200ff846c`).
+
+| Seed | Day | Fingerprint | Alive | Households | Currency | Leaks |
+|---|---|---|---|---|---|---|
+| 1 | 10 | `45983ca6722265e4948f673c4090d7f6` | 102 | 24 | 4580 | currency 0, items {} |
+| 1 | 30 | `5063396929116f24aa7e707200ff846c` | 102 | 24 | 4897 | currency 0, items {} |
+| 2 | 10 | `04ef9a89bcd248abfe7e629c37b7c2a7` | 109 | 24 | 4431 | currency 0, items {} |
+| 2 | 30 | `a231b82551ba86a3f430a38105ebf930` | 114 | 24 | 4907 | currency 0, items {} |
