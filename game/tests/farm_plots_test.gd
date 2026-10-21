@@ -275,6 +275,17 @@ func test_household_farming() -> void:
 		if o.alive and o.household >= 0 and o.household != h:
 			check(not fp.act(o, "fp_work", {"plot": str(p.id), "task": "harvest", "cells": cs}), "someone of another household cannot work the plot")
 			break
+	# the lease given up, the fenced and tilled plot goes back to the manor whole, and its next holder works its soil
+	check(w.property.end_lease(p, ref) == "" and w.owner_of(p) == World.MANOR and w.tenant_of(p) == "", "the household gives up the lease")
+	check(bool(p.farm.fence) and w.property.for_sale(p), "the fenced plot is the manor's to let again")
+	w.player.coins = 50
+	check(w.property.lease(p, World.PLAYER) == "", "the player leases it through the land office")
+	fp._follow_holders()
+	var mine := 0
+	for e in cs:
+		if w.farm.cells.has(Vector2i(int(e[0]), int(e[1]))) and not fp.cells.has(Vector2i(int(e[0]), int(e[1]))):
+			mine += 1
+	check(mine == 4, "its tilled cells are now the player's field")
 
 
 func test_household_work() -> void:
