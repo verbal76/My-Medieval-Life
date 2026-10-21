@@ -1,9 +1,8 @@
 {
   "format": "mml-judgment/1",
-  "note": "PROSPECTIVE (Expansion 19, PROS-19, wip/expansion19-preparation): NPC judgment and decision weighting. Every number here is a PROVISIONAL agent default for isolated tests, NOT an owner decision; the open owner questions SJD-Q01..Q14 are named beside the values they would set (docs/expansion19/DESIGN.md). Points are integer milli-points (1000 = 1 point) and fractions integer permille (1000 = 1.0), so replay and saves are exact. enabled is false: nothing in the live game reads or writes judgment unless a test turns it on.",
+  "note": "PROSPECTIVE (Expansion 19, PROS-19, wip/expansion19-preparation): NPC judgment and decision weighting. The owner answered SJD-Q01, Q02, Q06, Q07, Q08, Q10, Q11 and Q14 on 2026-10-21 (docs/directives/2026-10-21_expansion19_sjd_final_decisions.md): their RULES are implemented here; their NUMBERS (rates, weights, thresholds) are still agent proposals unless the owner set them. Q03, Q04, Q05, Q09, Q12 and Q13 stay provisional. docs/expansion19/DESIGN.md reconciles every setting with the decisions. Points are integer milli-points (1000 = 1 point) and fractions integer permille (1000 = 1.0), so replay and saves are exact. enabled is false: nothing in the live game reads or writes judgment unless a test turns it on.",
   "enabled": false,
-  "_events_note": "The event catalog (spec s.3; SJD-Q12 what is worth scoring). polarity GOOD or BAD (the owner's rule); NEUTRAL types exist only for memory and post no points, and are refused unless neutral_events is true (SJD-Q01, open). severity: milli-points (spec seed values: minor help 0.5, theft 1, rescue 2, killing 3). min_value: a theft or trade below this many coins of goods is not scored. ambiguous: prior judgment may bias how it is read (SJD-Q05).",
-  "neutral_events": false,
+  "_events_note": "The event catalog (spec s.3; SJD-Q12, provisional: what is worth scoring). Every event is a fact (Q01). polarity GOOD or BAD gives the baseline the observer's interpretation is relative to; NEUTRAL facts (meetings, marriages) are recorded, remembered and told like any other and score only by an optional per-observer rule \"personal\" {severity, beneficiary, victim, kin, friend: P permille}; none is set, so they mean nothing morally to anyone (Q01: no automatic moral significance). severity: milli-points (spec seed values: minor help 0.5, theft 1, rescue 2, killing 3). permanent: a murder (Q02, Q11): memories of it never fade and judgments from it never decay. min_value: a theft or trade below this many coins of goods is not scored. ambiguous: prior judgment may bias how it is read (SJD-Q05, provisional).",
   "events": {
     "help_minor":       {"polarity": "GOOD", "severity": 500,  "family": "help"},
     "gift":             {"polarity": "GOOD", "severity": 500,  "family": "help"},
@@ -15,41 +14,51 @@
     "pickpocket":       {"polarity": "BAD",  "severity": 1000, "family": "theft"},
     "assault":          {"polarity": "BAD",  "severity": 2000, "family": "violence"},
     "self_defence":     {"polarity": "GOOD", "severity": 500,  "family": "violence", "ambiguous": true},
-    "killing":          {"polarity": "BAD",  "severity": 3000, "family": "violence"},
+    "killing":          {"polarity": "BAD",  "severity": 3000, "family": "violence", "permanent": true},
     "hoard_in_famine":  {"polarity": "BAD",  "severity": 1000, "family": "community", "ambiguous": true},
     "false_accusation": {"polarity": "BAD",  "severity": 1000, "family": "information"},
     "meeting":          {"polarity": "NEUTRAL", "severity": 0, "family": "social"},
     "marriage":         {"polarity": "NEUTRAL", "severity": 0, "family": "social"}
   },
-  "_interpret_note": "Signed interpretation P in permille (spec s.4). Hierarchical priority for direct effect: the victim of a BAD event or the beneficiary of a GOOD one reads it at affected; the actor's partner in a BAD deed at accomplice; others by their tie to the affected party (kin, friend, else bystander), reversed to rival when they judge the affected party at or below rival_net_at milli-points. Loyalty to the actor (kin_of_actor, friend_of_actor permille factors) softens the reading (SJD-Q08). prior_bias: on ambiguous events only, never for the affected party, P moves by net(observer, actor) * bias_permille_per_point / 1000, at most cap (SJD-Q05).",
+  "_interpret_note": "Signed interpretation P in permille (spec s.4; Q08: personal morality, relationships, loyalties and who was affected; law is separate and not modelled here). The victim of a BAD event or the beneficiary of a GOOD one reads it at affected; the actor's partner in a BAD deed at accomplice; others by their tie to the affected party (kin, friend, else bystander), reversed to rival when they judge the affected party at or below rival_net_at. Loyalty to the actor (kin_of_actor, friend_of_actor) softens condemnation. morality_spread_permille: each person's own moral sensitivity per family of deeds, fixed by the seed, 1000 +/- this (proposal; never applied to the one affected). prior_bias (SJD-Q05, provisional): on ambiguous events only, P moves by NET x bias_permille_per_point / 1000, at most cap. Every number here is an agent proposal.",
   "interpret": {
     "affected": 1000, "accomplice": -300, "kin": 550, "friend": 400, "bystander": 300,
     "rival": -650, "rival_net_at": -10000,
     "kin_of_actor": 400, "friend_of_actor": 700,
+    "morality_spread_permille": 150,
     "prior_bias_permille_per_point": 10, "prior_bias_cap": 150
   },
-  "_belief_note": "Provenance and confidence (spec s.6; SJD-Q06 multiplier, threshold or separate layer). confidence_policy: multiplier (impact = S x P x C), threshold (C below confidence_threshold posts nothing, otherwise S x P) or both. Firsthand sources (participant, witnessed) start at their own confidence; told: the teller's confidence x hop_factor x credibility (credibility_base, moved by the listener's judgment of the teller credibility_permille_per_point, within credibility_min..1000). A belief told on from a told belief is a rumour.",
+  "_belief_note": "Provenance and confidence (Q06). Witnesses and participants are firsthand: their confidence is witnessed or participant, no storyteller to weigh. A told story's confidence: the teller's confidence x hop_factor x credibility; credibility is the listener's trust in the immediate teller: credibility_stranger for no tie, rising to 1000 with the existing relationship number (Relations regard 0..100), moved by the listener's judgment of the teller (credibility_permille_per_point a point of NET), within credibility_min..1000. Over several people the product along the chain is the transmission history. confidence_policy (multiplier: impact = S x P x C). Numbers are agent proposals.",
   "belief": {
     "confidence_policy": "multiplier", "confidence_threshold": 300,
     "participant": 1000, "witnessed": 1000,
-    "hop_factor": 700, "credibility_base": 800, "credibility_permille_per_point": 20, "credibility_min": 200
+    "hop_factor": 900, "credibility_stranger": 500, "credibility_permille_per_point": 10, "credibility_min": 100
   },
-  "_memory_note": "Personal memory (bounded, decaying; SJD-Q02, Q11). capacity: memories one person keeps; salience starts at the event's severity x confidence (a NEUTRAL fact at neutral_salience) and fades salience_fade_permille a day; under forget_below it is forgotten. Events of at least permanent_severity never fade (they can still be pushed out when every memory is permanent). Forgetting a memory does NOT take back its judgment points (retract_on_forget false: lifetime GOOD and BAD totals are kept, spec s.5.2) unless the owner decides otherwise. horizon_days: how long an event can still be told or corrected; after it, the dedup key is retired with the fact, so no event can count twice. effective_fade_permille: an optional recent view of GOOD and BAD fading a day (0: off; the spec forbids automatic decay without the owner). dawn_slices: the daily update is spread over this many hours from dawn (an engineering setting: the result is the same however it is sliced).",
+  "_memory_note": "Personal memory (Q11). Ordinary memories: at most capacity a person; salience starts at severity x confidence (a NEUTRAL fact at neutral_salience) and fades salience_fade_permille a day; under forget_below it is forgotten. Permanent memories (never fade, never pushed out, not counted in capacity, their facts never retire): murder always (the type's permanent), anything at least permanent_severity, and, for the one it happened to (victim or beneficiary), anything at least permanent_personal_severity (proposal: being assaulted or rescued yourself). Forgetting keeps the judgment (retract_on_forget false; the judgment fades by decay instead, Q02). horizon_days: how long an ordinary event can still be told or corrected (an engineering bound on facts and dedup keys; permanent records are exempt). dawn_slices: the daily update is spread over this many hours (same result however sliced).",
   "memory": {
-    "capacity": 24, "neutral_salience": 500, "salience_fade_permille": 80, "forget_below": 100, "permanent_severity": 3000,
-    "retract_on_forget": false, "horizon_days": 30, "effective_fade_permille": 0, "dawn_slices": 24
+    "capacity": 24, "neutral_salience": 500, "salience_fade_permille": 80, "forget_below": 100,
+    "permanent_severity": 3000, "permanent_personal_severity": 2000,
+    "retract_on_forget": false, "horizon_days": 30, "dawn_slices": 24
   },
-  "_gossip_note": "Information sharing (SJD-Q07). When two people spend time together each tells the other up to per_meeting of their most salient memories the other does not hold, at most daily_budget tellings a teller a day, never beyond max_hops from a firsthand source, and never a memory under min_confidence. A teller only shares with someone whose judgment of them is above share_net_at. misattribute_permille: the chance (a seeded hash, not World.rng) that a rumour names the wrong actor (0: off). pump_per_tick: queued meetings told each World tick (an engineering setting: the result is the same whatever the pace). timing: \"hour\" (an hour's meetings count as told at its start, as before; told over the next ticks with identical results) or \"scheduled\" (each meeting told at its own seeded minute of the hour: smaller frames, different results; a design option, off).",
+  "_decay_note": "Q02: ordinary GOOD and BAD judgments fade very slowly; murder never. ordinary_permille_per_day is a PROPOSED value, NOT APPROVED (the owner asked for a conservative configurable value demonstrated before approval): 3 permille a day halves an old opinion in about 231 game days (about 29 game years of 8 days). Demonstration: game/tests/judgment_decay_demo.gd and docs/expansion19/DESIGN.md. 0 turns decay off.",
+  "decay": {"ordinary_permille_per_day": 3, "_status": "proposed, unapproved"},
+  "_gossip_note": "Word of mouth (Q07): only when two people actually spend time together (Relations' shared hours); no hop limit, no confidence floor: a story travels as far as real meetings carry it. Exchange limits per conversation: per_meeting memories each way, daily_budget tellings a teller a day. A teller only shares with someone whose judgment of them is above share_net_at (proposal). Each person judges each event once; a belief is replaced only by a more confident one. misattribute_permille: the chance (seeded hash) a rumour names the wrong actor (0: off). pump_per_tick: queued meetings told each World tick (same result whatever the pace). timing: \"hour\" (the owner kept it as the default; X19-Q-TIMING pending) or \"scheduled\" (not to be enabled without an owner decision).",
   "gossip": {
-    "per_meeting": 2, "daily_budget": 6, "max_hops": 3, "min_confidence": 150, "share_net_at": -20000,
+    "per_meeting": 2, "daily_budget": 6, "share_net_at": -20000,
     "misattribute_permille": 0, "pump_per_tick": 8, "timing": "hour"
   },
-  "_decision_note": "Decision weighting (spec s.7; SJD-Q03, Q04, Q09, Q13). The live decision code supplies the feasible candidates and their factor values (0..100000: milli-points on the spec's 0..100 scale); judgment adds one factor, disposition = 50 points + NET, clamped to 0..100 points (the spec's worked example: NET -6.59 -> 43.41), weighted like any other. utility = sum(weight permille x factor) / 1000. ambivalence = min(GOOD, BAD), clamped to 0..100 points (SJD-Q04; weight 0). live_order: the live code's own order of preference (first 100 points, 10 less for each after), so with every judgment neutral the live choice stands and any change is judgment's (price weight 0 until calibrated). forgo: the utility of doing without (a purchase must beat it). selection: argmax (ties to the lowest id) or margin (a seeded pick among options within margin of the best). trait_spread_permille: per-person weight differences from the seed (0: everyone weighs alike).",
+  "_decision_note": "Decision weighting (spec s.7; Q14: judgment is one weighted influence inside the existing decision points; SJD-Q03, Q04, Q09, Q13 provisional). The live decision code supplies the feasible candidates and factor values (0..100000: milli-points on the spec's 0..100 scale); disposition = 50 points + NET, clamped to 0..100. utility = sum(weight permille x factor) / 1000. live_order: the live code's own preference (first 100 points, 10 less for each after), so with every judgment neutral the live choice stands. forgo: the utility of doing without. integration: which existing decision points consult judgment when a store is attached (all of them off with judgment off). Every weight is an agent proposal.",
   "decision": {
     "disposition_mid": 50000, "selection": "argmax", "margin": 2000, "trait_spread_permille": 0,
     "profiles": {
       "trade_buy": {"weights": {"necessity": 300, "sole_source": 250, "affordability": 150, "urgency": 200, "disposition": 100, "ambivalence": 0}, "forgo": 50000},
-      "trade_sell": {"weights": {"live_order": 400, "necessity": 300, "price": 0, "disposition": 150, "ambivalence": 0}, "forgo": 0}
-    }
+      "trade_sell": {"weights": {"live_order": 400, "necessity": 300, "price": 0, "disposition": 150, "ambivalence": 0}, "forgo": 0},
+      "trade_buy_from": {"weights": {"live_order": 400, "disposition": 150}, "forgo": 0},
+      "hire_choice": {"weights": {"live_order": 400, "disposition": 150}, "forgo": 0},
+      "work_accept": {"weights": {"necessity": 300, "wage": 100, "disposition": 300}, "forgo": 15000},
+      "befriend": {"weights": {"closeness": 500, "disposition": 500}, "forgo": 0},
+      "court_choice": {"weights": {"attraction": 600, "disposition": 400}, "forgo": 0}
+    },
+    "integration": {"trade_sell": true, "trade_buy_from": true, "hire_choice": true, "work_accept": true, "befriend": true, "court_choice": true}
   }
 }

@@ -10,6 +10,7 @@ extends RefCounted
 
 var _kin := {}
 var _friends := {}
+var _regard := {}
 
 
 ## A pair's key: both ids offset to stay positive (the player is -2), the lower in the high bits.
@@ -26,6 +27,12 @@ func friends(a: int, b: int) -> bool:
 	return _friends.has(_k(a, b))
 
 
+## The existing relationship number between two people, 0..100 (Q06: trust in a teller reuses it; in the live game
+## Relations' regard, one tie a pair). The fixture's default is 0: strangers.
+func regard(a: int, b: int) -> int:
+	return int(_regard.get(_k(a, b), 0))
+
+
 # ---------------------------------------------------------------- fixture setters (tests) ------
 func set_kin(a: int, b: int) -> JudgmentSocial:
 	_kin[_k(a, b)] = true
@@ -34,4 +41,9 @@ func set_kin(a: int, b: int) -> JudgmentSocial:
 
 func set_friends(a: int, b: int) -> JudgmentSocial:
 	_friends[_k(a, b)] = true
+	return self
+
+
+func set_regard(a: int, b: int, r: int) -> JudgmentSocial:
+	_regard[_k(a, b)] = r
 	return self

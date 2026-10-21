@@ -17,6 +17,25 @@ extends RefCounted
 ## Judgment is a disposition, not a decision: JudgmentWeighting turns it into one factor among need, price and
 ## alternatives, weighed by the live decision code that already owns the choice.
 ##
+## Owner decisions (2026-10-21, docs/directives/2026-10-21_expansion19_sjd_final_decisions.md), round 4:
+##   Q01  every event is a fact; each observer's interpretation may be positive, negative or zero; zero posts nothing
+##        (no third ledger); NEUTRAL facts are always recorded, remembered and told, and score only through an
+##        optional per-observer "personal" rule in the catalog (none configured: no automatic moral significance)
+##   Q02  ordinary GOOD and BAD fade very slowly (decay.ordinary_permille_per_day, PROPOSED, unapproved); a murder
+##        contribution never fades: each ledger keeps a fading part and a permanent part, routed by the event type
+##   Q06  a told story's confidence comes from the listener's trust in the immediate teller, read from the existing
+##        relationship number (Relations regard, through JudgmentSocial.regard); witnesses are firsthand; the chain's
+##        confidence is the product along it; hearing it again never re-scores; a more credible telling updates the
+##        existing belief and its contribution
+##   Q07  no hop limit and no confidence floor: a story goes as far as real meetings carry it; per-meeting and daily
+##        exchange limits remain; each person judges an event once (knowers), a belief is only replaced by a strictly
+##        more confident one, so processing is bounded
+##   Q08  interpretation from personal morality (morality_spread_permille), relationships, loyalties and who was
+##        affected; no legal model here (guards and reports stay in World)
+##   Q11  murder memories are permanent; others by severity (permanent_severity) or personal significance to the one
+##        affected (permanent_personal_severity); permanent memories never fade, are not counted in the ordinary
+##        capacity, and their facts never retire
+##
 ## Compact records (round 2, memory): every record is a PackedInt64Array, not a Dictionary (event types and sources
 ## by index), so a memory or an opinion costs a few dozen bytes. fact(), belief() and ledger() give readable views.
 ##
@@ -52,7 +71,8 @@ const M_BY := 3
 const M_HOPS := 4
 const M_CONF := 5
 const M_SAL := 6
-const M_NA := 7
+const M_FLAGS := 7                       # bit 1: a permanent memory (Q11)
+const M_NA := 8
 # a fact: [type, day, revision, value, actor count, (actor, share)..., victim count, victims..., beneficiary count, ...]
 const F_TYPE := 0
 const F_DAY := 1
@@ -72,7 +92,7 @@ var knowers := {}        # event id -> PackedInt64Array of everyone who has judg
 var by_day := {}         # day -> [event ids] (horizon expiry)
 var memories := {}       # observer -> {event id -> PackedInt64Array (M_*)}
 var contrib := {}        # observer -> {event id -> PackedInt64Array [actor, good, bad, ...] by actor}
-var ledgers := {}        # observer -> {subject -> PackedInt64Array [good, bad, n, eff_good, eff_bad]}
+var ledgers := {}        # observer -> {subject -> PackedInt64Array [life good, life bad, n, fading good, fading bad, permanent good, permanent bad]}
 var told_today := {}     # teller -> tellings today (gossip.daily_budget)
 var stats := {}          # counters for diagnostics and performance reports
 var unread := {}         # a saved section this version cannot read: kept and written back unchanged (CLAUDE.md s.7)
@@ -94,24 +114,28 @@ var _tix := {}
 var _sev := PackedInt64Array()
 var _pol := PackedInt64Array()   # 1 GOOD, -1 BAD, 0 NEUTRAL
 var _amb := PackedInt64Array()   # 1 ambiguous
-var _perm := PackedInt64Array()  # 1 never fades
+var _perm := PackedInt64Array()  # 1 a memory of it never fades (Q11: murder, or permanent_severity)
+var _jperm := PackedInt64Array() # 1 a judgment from it never decays (Q02: murder)
+var _famh := PackedInt64Array()  # the type's family, hashed (Q08 personal morality)
+var _personal := []              # per type: the NEUTRAL "personal" rule (Q01) or {}
+var _perm_personal := 3000       # memory.permanent_personal_severity: permanent for the one affected (Q11)
+var _decay := 0                  # decay.ordinary_permille_per_day (Q02)
+var _morality := 0               # interpret.morality_spread_permille (Q08)
+var _perm_refs := {}             # event id -> permanent memories of it: such facts never retire (Q11)
 var _cap := 24
 var _fade := 0
 var _below := 0
-var _eff_fade := 0
 var _retract := false
 var _slices := 24
 # gossip and belief settings, looked up once (tell runs often)
 var _g_per := 2
 var _g_budget := 6
-var _g_hops := 3
-var _g_minconf := 150
 var _g_share_at := -20000
 var _g_mis := 0
-var _b_hop := 700
-var _b_cred_base := 800
-var _b_cred_pp := 20
-var _b_cred_min := 200
+var _b_hop := 900
+var _b_cred_stranger := 500
+var _b_cred_pp := 10
+var _b_cred_min := 100
 var _g_pump := 8
 var _i := PackedInt64Array()             # interpret: affected, accomplice, kin, friend, bystander, rival, rival_net_at,
                                          # kin_of_actor, friend_of_actor, prior_bias_permille_per_point, prior_bias_cap
@@ -128,13 +152,6 @@ var _gflushing := false
 var _g_sched := false                    # gossip.timing "scheduled"
 var _sched := {}                         # minute -> PackedInt64Array [a, b, ...] in the order queued (scheduled timing)
 var _snext := -1                         # the next minute whose meetings are still to tell (-1: none queued yet)
-# "nothing new to tell": a teller's memories only gain or change through learn and correct (_mver counts those), and
-# what a listener already knows only grows until the event retires, so a telling that found nothing finds nothing again
-# while the teller's count is unchanged (_dry), on any later day too (fading, forgetting and retiring only take away).
-# A pure shortcut: never saved; emptied at a dawn when it holds more than DRY_CAP pairs.
-var _mver := {}                          # person -> how many times their memories gained or changed
-const DRY_CAP := 20000
-var _dry := {}                           # teller and listener -> the teller's _mver when they last had nothing new
 
 
 static var _cfg_cache := {}
@@ -161,31 +178,34 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 		_sev.append(int(d.severity))
 		_pol.append(1 if str(d.polarity) == "GOOD" else (-1 if str(d.polarity) == "BAD" else 0))
 		_amb.append(1 if bool(d.get("ambiguous", false)) else 0)
-		_perm.append(1 if int(d.severity) >= int(m.permanent_severity) else 0)
+		_perm.append(1 if bool(d.get("permanent", false)) or int(d.severity) >= int(m.permanent_severity) else 0)
+		_jperm.append(1 if bool(d.get("permanent", false)) else 0)
+		_famh.append(str(d.get("family", "")).hash())
+		_personal.append((d.get("personal", {}) as Dictionary).duplicate())
 	_cap = int(m.capacity)
 	_fade = int(m.salience_fade_permille)
 	_below = int(m.forget_below)
-	_eff_fade = int(m.effective_fade_permille)
+	_perm_personal = int(m.get("permanent_personal_severity", 3000))
+	_decay = int((cfg.get("decay", {}) as Dictionary).get("ordinary_permille_per_day", 0))
 	_retract = bool(m.retract_on_forget)
 	_slices = maxi(1, int(m.get("dawn_slices", 24)))
 	var g: Dictionary = cfg.gossip
 	var bc: Dictionary = cfg.belief
 	_g_per = int(g.per_meeting)
 	_g_budget = int(g.daily_budget)
-	_g_hops = int(g.max_hops)
-	_g_minconf = int(g.min_confidence)
 	_g_share_at = int(g.share_net_at)
 	_g_mis = int(g.misattribute_permille)
 	_g_pump = maxi(1, int(g.get("pump_per_tick", 8)))
 	_g_sched = str(g.get("timing", "hour")) == "scheduled"
 	_b_hop = int(bc.hop_factor)
-	_b_cred_base = int(bc.credibility_base)
+	_b_cred_stranger = int(bc.credibility_stranger)
 	_b_cred_pp = int(bc.credibility_permille_per_point)
 	_b_cred_min = int(bc.credibility_min)
 	var ic: Dictionary = cfg.interpret
 	for k in ["affected", "accomplice", "kin", "friend", "bystander", "rival", "rival_net_at", "kin_of_actor", "friend_of_actor",
 			"prior_bias_permille_per_point", "prior_bias_cap"]:
 		_i.append(int(ic[k]))
+	_morality = int(ic.get("morality_spread_permille", 0))
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
 	_b_thr = int(bc.confidence_threshold)
 
@@ -200,16 +220,13 @@ func c(section: String) -> Dictionary:
 
 # ---------------------------------------------------------------- facts --------------------------
 ## Record what happened. `actors`: ids (equal shares) or [[id, share permille], ...]. Returns the event id, or -1
-## when the catalog refuses it: an unknown type, a NEUTRAL type while neutral_events is off (SJD-Q01), or a value
-## under the type's min_value (SJD-Q12).
+## when the catalog refuses it: an unknown type, or a value under the type's min_value (SJD-Q12, provisional). A
+## NEUTRAL fact is recorded like any other (Q01): it is remembered and told, and scores only by a "personal" rule.
 func publish(type: String, actors: Array, victims: Array = [], beneficiaries: Array = [], value := 0, tags: Array = []) -> int:
 	if not _tix.has(type):
 		_stat("refused_unknown")
 		return -1
 	var def: Dictionary = cfg.events[type]
-	if str(def.polarity) == "NEUTRAL" and not bool(cfg.get("neutral_events", false)):
-		_stat("refused_neutral")
-		return -1
 	if value < int(def.get("min_value", 0)):
 		_stat("refused_insignificant")
 		return -1
@@ -302,8 +319,8 @@ func revise_fact(ev: int, actors: Array) -> void:
 
 
 # ---------------------------------------------------------------- belief and memory --------------
-static func _pack_mem(type: int, d: int, src: int, by: int, hops: int, conf: int, sal: int, actors: Array) -> PackedInt64Array:
-	var m := PackedInt64Array([type, d, src, by, hops, conf, sal, actors.size()])
+static func _pack_mem(type: int, d: int, src: int, by: int, hops: int, conf: int, sal: int, actors: Array, flags := 0) -> PackedInt64Array:
+	var m := PackedInt64Array([type, d, src, by, hops, conf, sal, flags, actors.size()])
 	for a in actors:
 		m.append(int(a[0]))
 		m.append(int(a[1]))
@@ -332,12 +349,35 @@ func belief(observer: int, ev: int) -> Dictionary:
 		return {}
 	var m: PackedInt64Array = mem[ev]
 	return {"type": _types[m[M_TYPE]], "day": m[M_DAY], "actors": _mem_actors(m), "src": SOURCES[m[M_SRC]], "by": m[M_BY],
-		"hops": m[M_HOPS], "conf": m[M_CONF], "sal": m[M_SAL]}
+		"hops": m[M_HOPS], "conf": m[M_CONF], "sal": m[M_SAL], "permanent": (m[M_FLAGS] & 1) == 1}
 
 
 func memory_count(observer: int) -> int:
 	_cu(observer)
 	return (memories.get(observer, {}) as Dictionary).size()
+
+
+## Ordinary (not permanent) memories `observer` holds: the count memory.capacity bounds.
+func ordinary_count(observer: int) -> int:
+	_cu(observer)
+	var n := 0
+	var mem: Dictionary = memories.get(observer, {})
+	for ev in mem:
+		if (mem[ev][M_FLAGS] & 1) == 0:
+			n += 1
+	return n
+
+
+## Whether `observer`'s memory of fact `f` is permanent (Q11): a murder (the type's "permanent"), anything at least
+## memory.permanent_severity, or, for the one affected by it (a victim, or a beneficiary), anything at least
+## memory.permanent_personal_severity.
+func _mem_permanent(observer: int, f: PackedInt64Array) -> bool:
+	var t := f[F_TYPE]
+	if _perm[t] == 1:
+		return true
+	if _sev[t] >= _perm_personal and (_fact_people(f, 0).has(observer) or _fact_people(f, 1).has(observer)):
+		return true
+	return false
 
 
 ## `observer` saw it (witnessed) or took part in it (participant): firsthand, full confidence by default.
@@ -363,9 +403,10 @@ func observe_all(ev: int, observers: Array) -> void:
 		observe(ev, int(o), "participant" if involved.has(o) else "witnessed")
 
 
-## Take in a belief about `ev` and judge by it. A belief already held at the same or higher confidence about the same
-## actors changes nothing (gossip heard twice adds nothing); a stronger or corrected one replaces it and its
-## contribution (spec s.5.1). Returns true when anything changed.
+## Take in a belief about `ev` and judge by it. A belief already held at the same or higher confidence changes nothing
+## (hearing a story again never re-scores it, Q06); a strictly more confident one replaces it and its contribution
+## (spec s.5.1; Q06: "update the existing belief"). Corrections go through correct(). Returns true when anything
+## changed.
 func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, actors: Array) -> bool:
 	_cu(observer)
 	if not facts.has(ev):
@@ -378,18 +419,21 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 	var old_sal := 0
 	if had:
 		var old: PackedInt64Array = mem[ev]
-		if old[M_CONF] >= conf and _same_actors(_mem_actors(old), actors):
+		if old[M_CONF] >= conf:
 			_stat("dup_ignored")
 			return false
 		old_sal = old[M_SAL]
+		_stat("upgraded")
 	elif SOURCES.find(src) >= TOLD and has_contribution(observer, ev):
 		_stat("dup_ignored")                       # judged before and since forgotten: hearing it again adds nothing
 		return false
 	var f: PackedInt64Array = facts[ev]
 	var t := f[F_TYPE]
 	var sal := JudgmentMath.scale(_sev[t], conf) if _pol[t] != 0 else int(c("memory").get("neutral_salience", 500))
-	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors)
-	_mver[observer] = int(_mver.get(observer, 0)) + 1
+	var perm := _mem_permanent(observer, f)
+	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 1 if perm else 0)
+	if perm and not had:
+		_perm_refs[ev] = int(_perm_refs.get(ev, 0)) + 1
 	_stat("beliefs")
 	_judge(observer, ev)
 	_bound(observer)
@@ -414,28 +458,32 @@ func correct(observer: int, ev: int, new_actors: Array = []) -> void:
 		return
 	var m: PackedInt64Array = mem[ev]
 	var acts: Array = _fact_actors(facts[ev]) if new_actors.is_empty() else _shares(new_actors)
-	mem[ev] = _pack_mem(m[M_TYPE], m[M_DAY], m[M_SRC], m[M_BY], m[M_HOPS], maxi(m[M_CONF], int(c("belief").witnessed)), m[M_SAL], acts)
-	_mver[observer] = int(_mver.get(observer, 0)) + 1
+	mem[ev] = _pack_mem(m[M_TYPE], m[M_DAY], m[M_SRC], m[M_BY], m[M_HOPS], maxi(m[M_CONF], int(c("belief").witnessed)), m[M_SAL], acts, m[M_FLAGS])
 	_stat("corrections")
 	_judge(observer, ev)
 
 
-## Keep `observer`'s memories within memory.capacity: the least salient goes first (fading ones before permanent
-## ones), then the oldest event.
+## Keep `observer`'s ordinary memories within memory.capacity: the least salient goes first, then the oldest event.
+## Permanent memories (Q11) are never pushed out and not counted.
 func _bound(observer: int) -> void:
 	var mem: Dictionary = memories[observer]
-	while mem.size() > _cap:
+	if mem.size() <= _cap:
+		return
+	while true:
+		var ordinary := 0
 		var worst := -1
-		var w_perm := 0
 		var w_sal := 0
 		for ev in mem:
 			var m: PackedInt64Array = mem[ev]
-			var perm := _perm[m[M_TYPE]]
+			if (m[M_FLAGS] & 1) == 1:
+				continue
+			ordinary += 1
 			var sal := m[M_SAL]
-			if worst < 0 or perm < w_perm or (perm == w_perm and (sal < w_sal or (sal == w_sal and int(ev) < worst))):
+			if worst < 0 or sal < w_sal or (sal == w_sal and int(ev) < worst):
 				worst = int(ev)
-				w_perm = perm
 				w_sal = sal
+		if ordinary <= _cap:
+			return
 		_forget(observer, worst)
 
 
@@ -443,10 +491,11 @@ func _bound(observer: int) -> void:
 ## only a held belief can be corrected, and the event's knowers keep the dedup key until the event retires, so hearing
 ## of it again adds nothing (memory use stays within capacity per person, not per event known).
 func _forget(observer: int, ev: int) -> void:
+	var t: int = (memories[observer] as Dictionary)[ev][M_TYPE]
 	(memories[observer] as Dictionary).erase(ev)
 	_stat("forgotten")
 	if _retract:
-		_post(observer, ev, {})
+		_post(observer, ev, {}, _jperm[t] == 1)
 	else:
 		(contrib.get(observer, {}) as Dictionary).erase(ev)
 
@@ -501,9 +550,22 @@ func interpret(observer: int, ev: int, actor: int, believed: Array) -> Dictionar
 		var bias := JudgmentMath.clampi_(JudgmentMath.mul_div(net(observer, actor), _i[9], 1000), -_i[10], _i[10])
 		p += bias if good else -bias
 		parts.prior_bias = bias if good else -bias
+	if _morality > 0 and parts.role != "affected":
+		var mor := morality(observer, f[F_TYPE])
+		p = JudgmentMath.scale(p, mor)
+		parts.morality = mor
 	p = JudgmentMath.clampi_(p, -JudgmentMath.ONE, JudgmentMath.ONE)
 	parts.p = p
 	return parts
+
+
+## Personal morality (Q08): how strongly `observer` feels about this family of deeds, permille, fixed per person and
+## family by the seed: 1000 +/- interpret.morality_spread_permille (provisional). Never applied to the one affected.
+func morality(observer: int, type: int) -> int:
+	if _morality <= 0:
+		return JudgmentMath.ONE
+	var r := JudgmentMath.hash_ints([world_seed, observer, _famh[type]]) % (2 * _morality + 1) - _morality
+	return JudgmentMath.ONE + r
 
 
 ## Whether an actor list ([[id, share], ...]) names `who`.
@@ -518,8 +580,10 @@ static func _names(actors: Array, who: int) -> bool:
 ## in last_trace. Impact I = S x P x C (confidence_policy multiplier), or S x P above confidence_threshold, by share.
 func evaluate(observer: int, ev: int, actor: int, share: int, conf: int, believed: Array) -> Array:
 	var t: int = facts[ev][F_TYPE]
-	if _pol[t] == 0 or actor == observer:
+	if actor == observer:
 		return [0, 0]
+	if _pol[t] == 0:
+		return _personal_points(observer, ev, share, conf)
 	var parts := interpret(observer, ev, actor, believed)
 	var impact := 0
 	if _b_policy != 0 and conf < _b_thr:
@@ -540,6 +604,42 @@ func evaluate(observer: int, ev: int, actor: int, share: int, conf: int, believe
 	return [0, absi(impact)]
 
 
+## Q01: a NEUTRAL fact scores only by its type's "personal" rule ({severity, beneficiary, victim, kin, friend}: P
+## permille for one of the beneficiaries or victims, or kin or friend of a beneficiary); positive posts GOOD, negative
+## BAD, zero nothing. With no rule (the default for every type) it is zero for everyone: no automatic moral meaning.
+func _personal_points(observer: int, ev: int, share: int, conf: int) -> Array:
+	var f: PackedInt64Array = facts[ev]
+	var rule: Dictionary = _personal[f[F_TYPE]]
+	if rule.is_empty():
+		last_trace = {"role": "no personal meaning", "p": 0}
+		return [0, 0]
+	var benef := _fact_people(f, 1)
+	var p := 0
+	var role := "unrelated"
+	if benef.has(observer):
+		p = int(rule.get("beneficiary", 0))
+		role = "beneficiary"
+	elif _fact_people(f, 0).has(observer):
+		p = int(rule.get("victim", 0))
+		role = "victim"
+	else:
+		for b in benef:
+			if social.kin(observer, b):
+				p = int(rule.get("kin", 0))
+				role = "kin"
+				break
+			if social.friends(observer, b):
+				p = int(rule.get("friend", 0))
+				role = "friend"
+	var impact := JudgmentMath.scale(JudgmentMath.mul_div(int(rule.get("severity", 0)) * p, conf, 1000000), share)
+	last_trace = {"role": role, "p": p, "impact": impact}
+	if impact > 0:
+		return [impact, 0]
+	if impact < 0:
+		return [0, -impact]
+	return [0, 0]
+
+
 ## Recompute `observer`'s contributions for `ev` from their belief.
 func _judge(observer: int, ev: int) -> void:
 	var m: PackedInt64Array = memories[observer][ev]
@@ -549,7 +649,7 @@ func _judge(observer: int, ev: int) -> void:
 		var gb := evaluate(observer, ev, int(a[0]), int(a[1]), m[M_CONF], believed)
 		if gb[0] != 0 or gb[1] != 0:
 			want[int(a[0])] = gb
-	_post(observer, ev, want)
+	_post(observer, ev, want, _jperm[m[M_TYPE]] == 1)
 	var k: PackedInt64Array = knowers.get(ev, PackedInt64Array())
 	var i := k.bsearch(observer)
 	if i >= k.size() or k[i] != observer:
@@ -558,8 +658,9 @@ func _judge(observer: int, ev: int) -> void:
 
 
 ## Replace `observer`'s contributions for `ev` with `want` ({actor: [good, bad]}): the difference goes to the
-## ledgers, which never go below 0 (spec s.5.1).
-func _post(observer: int, ev: int, want: Dictionary) -> void:
+## ledgers, which never go below 0 (spec s.5.1): to their permanent part for a murder (`perm`, Q02), else to their
+## fading part.
+func _post(observer: int, ev: int, want: Dictionary, perm := false) -> void:
 	if not contrib.has(observer):
 		contrib[observer] = {}
 		_add_person(observer)
@@ -592,7 +693,7 @@ func _post(observer: int, ev: int, want: Dictionary) -> void:
 			continue
 		var was := og != 0 or ob != 0
 		var now := ng != 0 or nb != 0
-		_ledger_add(observer, a, ng - og, nb - ob, 1 if now and not was else (-1 if was and not now else 0))
+		_ledger_add(observer, a, ng - og, nb - ob, 1 if now and not was else (-1 if was and not now else 0), perm)
 		_stat("contributions")
 	if out.is_empty():
 		mine.erase(ev)
@@ -622,16 +723,17 @@ func contribution(observer: int, ev: int, actor: int) -> Array:
 
 
 # ---------------------------------------------------------------- ledgers ------------------------
-## [good, bad, contributions, effective good, effective bad] (a copy; [0, 0, 0, 0, 0] when none).
+## [lifetime good, lifetime bad, contributions, fading good, fading bad, permanent good, permanent bad] (a copy; all 0
+## when none). The lifetime totals never fade (history, spec s.5.2); NET uses the fading and permanent parts.
 func ledger(observer: int, subject: int) -> Array:
 	_cu(observer)
 	var mine: Dictionary = ledgers.get(observer, {})
 	if not mine.has(subject):
-		return [0, 0, 0, 0, 0]
+		return [0, 0, 0, 0, 0, 0, 0]
 	return Array(mine[subject])
 
 
-func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int) -> void:
+func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int, perm := false) -> void:
 	if not ledgers.has(observer):
 		ledgers[observer] = {}
 		_add_person(observer)
@@ -640,13 +742,14 @@ func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int) -> void
 	if mine.has(subject):
 		l = mine[subject]
 	else:
-		l = PackedInt64Array([0, 0, 0, 0, 0])
+		l = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
 		_stat("ledgers")
 	l[0] = maxi(0, l[0] + dg)
 	l[1] = maxi(0, l[1] + db)
 	l[2] = l[2] + dn
-	l[3] = maxi(0, l[3] + dg)
-	l[4] = maxi(0, l[4] + db)
+	var at := 5 if perm else 3
+	l[at] = maxi(0, l[at] + dg)
+	l[at + 1] = maxi(0, l[at + 1] + db)
 	mine[subject] = l
 
 
@@ -656,22 +759,25 @@ func set_ledger(observer: int, subject: int, good_points: int, bad_points: int) 
 	if not ledgers.has(observer):
 		ledgers[observer] = {}
 		_add_person(observer)
-	var l: PackedInt64Array = (ledgers[observer] as Dictionary).get(subject, PackedInt64Array([0, 0, 0, 0, 0]))
+	var l: PackedInt64Array = (ledgers[observer] as Dictionary).get(subject, PackedInt64Array([0, 0, 0, 0, 0, 0, 0]))
 	l[0] = good_points
 	l[1] = bad_points
 	l[3] = good_points
 	l[4] = bad_points
+	l[5] = 0
+	l[6] = 0
 	ledgers[observer][subject] = l
 
 
-## NET judgment of `subject` by `observer`, milli-points: GOOD - BAD (the effective view when one fades).
+## NET judgment of `subject` by `observer`, milli-points: GOOD - BAD over the fading parts (decayed, Q02) and the
+## permanent parts (murder, never decayed).
 func net(observer: int, subject: int) -> int:
 	_cu(observer)
 	var mine: Dictionary = ledgers.get(observer, {})
 	if not mine.has(subject):
 		return 0
 	var l: PackedInt64Array = mine[subject]
-	return l[3] - l[4] if _eff_fade > 0 else l[0] - l[1]
+	return l[3] + l[5] - l[4] - l[6]
 
 
 func good(observer: int, subject: int) -> int:
@@ -876,12 +982,13 @@ func _gtrim() -> void:
 		_glast.clear()
 
 
-## `teller` tells `listener` up to gossip.per_meeting of their most salient memories the listener does not hold
-## (deterministic: salience, then event id), within the teller's daily_budget, only to someone they judge above
-## share_net_at, never past max_hops from a firsthand source, never under min_confidence, never about the
-## listener's own deed. The listener's confidence: the teller's x hop_factor x credibility (their judgment of the
-## teller). A seeded hash may make a rumour name the wrong actor (misattribute_permille; the teller's most disliked).
-## Returns how many were told.
+## `teller` tells `listener` up to gossip.per_meeting of their most salient memories the listener does not hold, or holds
+## less confidently than this telling would give (deterministic: salience, then event id), within the teller's
+## daily_budget (exchange limits, Q07), only to someone they judge above share_net_at, never about the listener's own
+## deed, never something the listener judged before and has since forgotten. No hop limit and no confidence floor (Q07).
+## The listener's confidence (Q06): the teller's x hop_factor x credibility, credibility from the listener's trust in
+## the teller (credibility(): the existing relationship number, then their judgment of the teller). A seeded hash may
+## make a rumour name the wrong actor (misattribute_permille; the teller's most disliked). Returns how many were told.
 func tell(teller: int, listener: int) -> int:
 	if teller == listener or not memories.has(teller):
 		return 0
@@ -890,32 +997,33 @@ func tell(teller: int, listener: int) -> int:
 	var mem: Dictionary = memories[teller]
 	if mem.is_empty():
 		return 0
-	var pair := JudgmentSocial._k(teller, listener) * 2 + (1 if teller < listener else 0)
-	var ver := int(_mver.get(teller, 0))
-	if int(_dry.get(pair, -1)) == ver:
-		_stat("dry_skips")
-		return 0                                   # nothing new since they last found nothing to tell
 	if int(told_today.get(teller, 0)) >= _g_budget or net(teller, listener) <= _g_share_at:
 		return 0
+	var cred := credibility(listener, teller)
 	var heard: Dictionary = memories.get(listener, {})
 	var mine: Dictionary = contrib.get(listener, {})
 	var keys := PackedInt64Array()
 	for ev in mem:
 		var m: PackedInt64Array = mem[ev]
-		if m[M_HOPS] >= _g_hops or m[M_CONF] < _g_minconf or heard.has(ev) or mine.has(ev) or not facts.has(ev):
+		if not facts.has(ev) or _mem_names(m, listener):
 			continue
-		var kn: PackedInt64Array = knowers.get(ev, PackedInt64Array())
-		var at := kn.bsearch(listener)
-		if at < kn.size() and kn[at] == listener:
+		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
+		if conf <= 0:
+			continue                               # a story nobody could believe at all is not passed on
+		if heard.has(ev):
+			if (heard[ev] as PackedInt64Array)[M_CONF] >= conf:
+				continue                           # held as surely already: hearing it again changes nothing (Q06)
+		elif mine.has(ev):
 			continue
-		if _mem_names(m, listener):
-			continue
+		else:
+			var kn: PackedInt64Array = knowers.get(ev, PackedInt64Array())
+			var at := kn.bsearch(listener)
+			if at < kn.size() and kn[at] == listener:
+				continue                           # judged before and since forgotten
 		keys.append(((SAL_ROOM - m[M_SAL]) << 40) | int(ev))
 	if keys.is_empty():
-		_dry[pair] = ver
 		return 0
 	keys.sort()
-	var cred := JudgmentMath.clampi_(_b_cred_base + JudgmentMath.mul_div(net(listener, teller), _b_cred_pp, 1000), _b_cred_min, JudgmentMath.ONE)
 	var k := 0
 	for key in keys:
 		if k >= _g_per or int(told_today.get(teller, 0)) >= _g_budget:
@@ -923,8 +1031,6 @@ func tell(teller: int, listener: int) -> int:
 		var ev := key & ((1 << 40) - 1)
 		var m: PackedInt64Array = mem[ev]
 		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
-		if conf < _g_minconf:
-			continue
 		var actors := _mem_actors(m)
 		if _g_mis > 0 and JudgmentMath.roll([world_seed, ev, teller, listener]) < _g_mis:
 			var other := most_disliked(teller, int(actors[0][0]))
@@ -937,6 +1043,16 @@ func tell(teller: int, listener: int) -> int:
 		_stat("tellings")
 		k += 1
 	return k
+
+
+## How far `listener` believes what `teller` tells them, permille (Q06): credibility_stranger for someone they have no
+## tie with, rising to 1000 with the existing relationship number (JudgmentSocial.regard, 0..100: Relations regard in
+## the live game), moved by their judgment of the teller (credibility_permille_per_point a point of NET), within
+## credibility_min..1000. Witnesses never need it: firsthand beliefs take belief.witnessed.
+func credibility(listener: int, teller: int) -> int:
+	var reg := clampi(social.regard(listener, teller), 0, 100)
+	var base := _b_cred_stranger + (JudgmentMath.ONE - _b_cred_stranger) * reg / 100
+	return JudgmentMath.clampi_(base + JudgmentMath.mul_div(net(listener, teller), _b_cred_pp, 1000), _b_cred_min, JudgmentMath.ONE)
 
 
 # ---------------------------------------------------------------- the day ------------------------
@@ -955,8 +1071,6 @@ func begin_day(d: int) -> void:
 		return
 	flush_gossip()                               # the day's meetings belong to it
 	finish_dawn()
-	if _dry.size() > DRY_CAP:
-		_dry.clear()                             # only a shortcut: forgetting it changes no result
 	_steps = d - day
 	day = d
 	told_today.clear()
@@ -967,6 +1081,9 @@ func begin_day(d: int) -> void:
 		if int(dd) >= cutoff:
 			break
 		for ev in by_day[dd]:
+			if facts.has(ev) and (_perm[(facts[ev] as PackedInt64Array)[F_TYPE]] == 1 or _perm_refs.has(ev)):
+				_stat("kept_permanent")                # Q11: a permanent record never retires with the ordinary horizon
+				continue
 			if facts.has(ev):
 				facts.erase(ev)
 				fact_tags.erase(ev)
@@ -1042,16 +1159,16 @@ func _cu(o: int) -> void:
 	_dawn_one(o)
 
 
-## One person's daily update: their memories fade (for each day the update covers) and the faint are forgotten, then
-## their records of retired events go, then their effective view fades.
+## One person's daily update: their ordinary memories fade (for each day the update covers) and the faint are
+## forgotten, then their records of retired events go, then the fading parts of their judgments decay (Q02).
 func _dawn_one(o: int) -> void:
 	var mem: Dictionary = memories.get(o, {})
 	if not mem.is_empty():
 		var gone := []
 		for ev in mem:
 			var m: PackedInt64Array = mem[ev]
-			if _perm[m[M_TYPE]] == 1:
-				continue
+			if (m[M_FLAGS] & 1) == 1:
+				continue                           # a permanent memory never fades (Q11)
 			var s := m[M_SAL]
 			for i in _steps:
 				s -= JudgmentMath.scale(s, _fade)
@@ -1067,14 +1184,24 @@ func _dawn_one(o: int) -> void:
 		for ev in mine.keys():
 			if _retiring.has(ev):
 				mine.erase(ev)
-	if _eff_fade > 0 and ledgers.has(o):
+	if _decay > 0 and ledgers.has(o):
 		var mine: Dictionary = ledgers[o]
 		for s in mine:
 			var l: PackedInt64Array = mine[s]
-			for i in _steps:
-				l[3] = l[3] - JudgmentMath.scale(l[3], _eff_fade)
-				l[4] = l[4] - JudgmentMath.scale(l[4], _eff_fade)
+			if l[3] == 0 and l[4] == 0:
+				continue
+			for i in _steps:                       # only the fading parts: a murder's permanent part never decays (Q02)
+				l[3] = l[3] - _decay_step(l[3])
+				l[4] = l[4] - _decay_step(l[4])
 			mine[s] = l
+
+
+## One day's decay of a fading part: its share at the rate, rounded, and at least one milli-point while anything is
+## left (so a small remainder fades out instead of sticking where the rounded share is 0).
+func _decay_step(v: int) -> int:
+	if v <= 0:
+		return 0
+	return maxi(1, JudgmentMath.scale(v, _decay))
 
 
 # ---------------------------------------------------------------- inspection ---------------------
@@ -1089,7 +1216,8 @@ func inspect(observer: int, subject: int) -> Dictionary:
 		if _mem_names(mem[ev], subject):
 			var b := belief(observer, int(ev))
 			why.append({"event": int(ev), "type": b.type, "src": b.src, "by": b.by, "conf": b.conf, "points": contribution(observer, int(ev), subject)})
-	return {"good": l[0], "bad": l[1], "net": int(l[0]) - int(l[1]), "contributions": l[2], "memories": why}
+	return {"good": l[0], "bad": l[1], "net": net(observer, subject), "fading": [l[3], l[4]], "permanent": [l[5], l[6]],
+		"contributions": l[2], "memories": why}
 
 
 func counts() -> Dictionary:
@@ -1132,7 +1260,7 @@ func to_dict() -> Dictionary:
 		var mem: Dictionary = memories[o]
 		for ev in _sorted(mem):
 			var m: PackedInt64Array = mem[ev]
-			ms.append([int(o), int(ev), _types[m[M_TYPE]], m[M_DAY], _mem_actors(m), SOURCES[m[M_SRC]], m[M_BY], m[M_HOPS], m[M_CONF], m[M_SAL]])
+			ms.append([int(o), int(ev), _types[m[M_TYPE]], m[M_DAY], _mem_actors(m), SOURCES[m[M_SRC]], m[M_BY], m[M_HOPS], m[M_CONF], m[M_SAL], m[M_FLAGS]])
 	for o in _sorted(contrib):
 		for ev in _sorted(contrib[o]):
 			var row: PackedInt64Array = contrib[o][ev]
@@ -1141,7 +1269,7 @@ func to_dict() -> Dictionary:
 	for o in _sorted(ledgers):
 		for s in _sorted(ledgers[o]):
 			var l: PackedInt64Array = ledgers[o][s]
-			ls.append([int(o), int(s), l[0], l[1], l[2], l[3], l[4]])
+			ls.append([int(o), int(s), l[0], l[1], l[2], l[3], l[4], l[5], l[6]])
 	var tt := []
 	for t in _sorted(told_today):
 		tt.append([int(t), int(told_today[t])])
@@ -1177,8 +1305,7 @@ func load_dict(d: Dictionary) -> String:
 	_gdone = PackedByteArray()
 	_ghead = 0
 	_glast.clear()
-	_dry.clear()
-	_mver.clear()
+	_perm_refs.clear()
 	_sched.clear()
 	_snext = -1
 	unread = {}
@@ -1220,7 +1347,10 @@ func load_dict(d: Dictionary) -> String:
 	for r in m.memories:
 		if not memories.has(int(r[0])):
 			memories[int(r[0])] = {}
-		memories[int(r[0])][int(r[1])] = _pack_mem(int(_tix[str(r[2])]), int(r[3]), SOURCES.find(str(r[5])), int(r[6]), int(r[7]), int(r[8]), int(r[9]), _ints2(r[4]))
+		var flags := int(r[10]) if (r as Array).size() > 10 else (1 if _perm[int(_tix[str(r[2])])] == 1 else 0)   # round-1..3 rows: by type
+		memories[int(r[0])][int(r[1])] = _pack_mem(int(_tix[str(r[2])]), int(r[3]), SOURCES.find(str(r[5])), int(r[6]), int(r[7]), int(r[8]), int(r[9]), _ints2(r[4]), flags)
+		if (flags & 1) == 1:
+			_perm_refs[int(r[1])] = int(_perm_refs.get(int(r[1]), 0)) + 1
 	for r in m.contrib:
 		var o := int(r[0])
 		var ev := int(r[1])
@@ -1232,7 +1362,9 @@ func load_dict(d: Dictionary) -> String:
 	for r in m.ledgers:
 		if not ledgers.has(int(r[0])):
 			ledgers[int(r[0])] = {}
-		ledgers[int(r[0])][int(r[1])] = PackedInt64Array([int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6])])
+		var pg := int(r[7]) if (r as Array).size() > 8 else 0        # round-1..3 rows have no permanent part
+		var pb := int(r[8]) if (r as Array).size() > 8 else 0
+		ledgers[int(r[0])][int(r[1])] = PackedInt64Array([int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), pg, pb])
 	for r in m.told_today:
 		told_today[int(r[0])] = int(r[1])
 	for r in m.get("scheduled", []):

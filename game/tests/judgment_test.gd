@@ -26,9 +26,13 @@ func check(cond: bool, what: String) -> void:
 		print("ok   ", what)
 
 
-## A fresh config (each test may change it without touching another's).
+## A fresh config (each test may change it without touching another's). The fixtures check the interpretation math
+## exactly, so personal morality (Q08) and the proposed decay (Q02) are off here; each has its own tests below.
 func cfg() -> Dictionary:
-	return JudgmentStore.default_cfg().duplicate(true)
+	var c := JudgmentStore.default_cfg().duplicate(true)
+	c.interpret.morality_spread_permille = 0
+	c.decay.ordinary_permille_per_day = 0
+	return c
 
 
 func store(config := {}) -> JudgmentStore:
@@ -59,6 +63,12 @@ func _init() -> void:
 	test_sliced_day()
 	test_spread_gossip()
 	test_scheduled_gossip()
+	test_q01_facts_and_zero()
+	test_q02_decay_and_murder()
+	test_q06_trust()
+	test_q07_no_hop_limit()
+	test_q08_morality()
+	test_q11_permanent_memories()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -172,12 +182,10 @@ func test_catalog() -> void:
 	var c := cfg()
 	var j := store(c)
 	check(j.publish("no_such_thing", [THIEF]) == -1, "an unknown event type is refused")
-	check(j.publish("meeting", [THIEF], [BOB]) == -1, "NEUTRAL events are refused while neutral_events is off (SJD-Q01 open)")
-	c.neutral_events = true
 	var j2 := store(c)
 	var m := j2.publish("meeting", [THIEF], [BOB])
 	j2.observe(m, STRANGER)
-	check(m > 0 and not j2.belief(STRANGER, m).is_empty() and j2.ledger(STRANGER, THIEF)[2] == 0, "with neutral_events on, a NEUTRAL fact is remembered and posts no points")
+	check(m > 0 and not j2.belief(STRANGER, m).is_empty() and j2.ledger(STRANGER, THIEF)[2] == 0, "a NEUTRAL fact is recorded and remembered and posts no points (Q01)")
 	c.events.theft.min_value = 5
 	var j3 := store(c)
 	check(j3.publish("theft", [THIEF], [BOB], [], 2) == -1 and j3.publish("theft", [THIEF], [BOB], [], 5) > 0, "a theft under min_value is not scored (SJD-Q12 parameter)")
@@ -195,11 +203,12 @@ func test_memory_bounds_and_fading() -> void:
 	check(j.good(STRANGER, 100) == 500, "forgetting a memory keeps its points (retract_on_forget false: lifetime totals)")
 	var k := j.publish("killing", [THIEF], [BOB])
 	j.observe(k, STRANGER)
-	check(not j.belief(STRANGER, k).is_empty() and j.memory_count(STRANGER) == 3, "a grave event displaces a fading one")
+	check(not j.belief(STRANGER, k).is_empty() and j.ordinary_count(STRANGER) == 3 and j.memory_count(STRANGER) == 4,
+			"a murder is remembered permanently, beside the ordinary memories and not counted in their capacity (Q11)")
 	j.advance_day(5)
 	var s5 := int(j.belief(STRANGER, evs[3]).sal)
 	check(s5 < 500 and s5 > 0, "salience fades day by day (500 -> %d after 5 days)" % s5)
-	check(int(j.belief(STRANGER, k).sal) == int(JudgmentMath.scale(3000, 1000)), "a killing (permanent_severity) does not fade")
+	check(int(j.belief(STRANGER, k).sal) == int(JudgmentMath.scale(3000, 1000)) and bool(j.belief(STRANGER, k).permanent), "a murder memory does not fade")
 	j.advance_day(40)
 	check(j.belief(STRANGER, evs[3]).is_empty() and not j.belief(STRANGER, k).is_empty(), "faint memories are forgotten; the killing is remembered")
 	check(j.good(STRANGER, 103) == 500, "...and the ledger keeps every point")
@@ -210,12 +219,12 @@ func test_memory_bounds_and_fading() -> void:
 	j2.advance_day(60)
 	check(j2.good(STRANGER, 100) == 0, "retract_on_forget (an owner option, SJD-Q02/Q11): forgetting takes the points back")
 	c.memory.retract_on_forget = false
-	c.memory.effective_fade_permille = 100
+	c.decay.ordinary_permille_per_day = 100
 	var j3 := store(c)
 	var e3 := j3.publish("theft", [THIEF], [BOB])
 	j3.observe(e3, BOB)
 	j3.advance_day(1)
-	check(j3.bad(BOB, THIEF) == 1000 and j3.net(BOB, THIEF) == -900, "an effective view fades (option, off by default) while the lifetime BAD is kept")
+	check(j3.bad(BOB, THIEF) == 1000 and j3.net(BOB, THIEF) == -900, "the judgment decays (Q02) while the lifetime BAD is kept as history")
 
 
 func test_horizon() -> void:
@@ -236,26 +245,13 @@ func test_gossip() -> void:
 	check(j.meet(BOB, STRANGER) == 1, "Bob tells a stranger he meets")
 	var b := j.belief(STRANGER, ev)
 	check(str(b.src) == "told" and int(b.by) == BOB and int(b.hops) == 1, "provenance: told by Bob, one hop")
-	check(int(b.conf) == 560, "confidence: 1.0 x hop 0.7 x credibility 0.8 -> 0.56")
-	check(j.bad(STRANGER, THIEF) == JudgmentMath.mul_div(1000 * 300, 560, 1000000), "the stranger judges by what he heard (0.3 x 0.56)")
+	check(int(b.conf) == 450, "confidence: 1.0 x hop 0.9 x credibility of a stranger 0.5 -> 0.45 (got %d)" % int(b.conf))
+	check(j.bad(STRANGER, THIEF) == JudgmentMath.mul_div(1000 * 300, 450, 1000000), "the stranger judges by what he heard (0.3 x 0.45)")
 	check(j.meet(BOB, STRANGER) == 0 and j.ledger(STRANGER, THIEF)[2] == 1, "told again: nothing more (no duplicate points)")
 	j.meet(STRANGER, COUSIN)
 	var r := j.belief(COUSIN, ev)
 	check(str(r.src) == "rumour" and int(r.by) == STRANGER and int(r.hops) == 2, "told on second-hand it is a rumour")
-	check(int(r.conf) < int(b.conf), "...believed less at each hop")
-	j.meet(COUSIN, FRIEND + 20)
-	var r3 := j.belief(FRIEND + 20, ev)
-	check(int(r3.hops) == 3, "a third hop is still told (confidence %d)" % int(r3.conf))
-	j.meet(FRIEND + 20, FRIEND + 21)
-	check(j.belief(FRIEND + 21, ev).is_empty(), "a rumour stops at max_hops")
-	var cm := cfg()
-	cm.gossip.min_confidence = 400
-	var jm := store(cm)
-	var em := jm.publish("theft", [THIEF], [BOB])
-	jm.observe(em, BOB)
-	jm.meet(BOB, STRANGER)
-	jm.meet(STRANGER, FRIEND + 22)
-	check(not jm.belief(STRANGER, em).is_empty() and jm.belief(FRIEND + 22, em).is_empty(), "a rumour that would fall under min_confidence is not passed on")
+	check(int(r.conf) < int(b.conf), "...believed less at each hop between strangers")
 	check(j.meet(THIEF, BOB) == 0 or j.belief(THIEF, ev).is_empty(), "nobody is told of their own deed")
 	# the daily budget
 	var c := cfg()
@@ -264,7 +260,7 @@ func test_gossip() -> void:
 	for i in 3:
 		j2.observe(j2.publish("theft", [THIEF + i], [BOB]), BOB)
 	j2.meet(BOB, STRANGER)
-	check(j2.memory_count(STRANGER) == 1, "a teller tells at most daily_budget a day")
+	check(j2.memory_count(STRANGER) == 1, "a teller tells at most daily_budget a day (an exchange limit, Q07)")
 	j2.advance_day(1)
 	j2.meet(BOB, STRANGER)
 	check(j2.memory_count(STRANGER) == 2, "...and more the next day")
@@ -280,7 +276,7 @@ func test_gossip() -> void:
 	j4.observe(e4, BOB)
 	j4.set_ledger(STRANGER, BOB, 0, 10000)
 	j4.tell(BOB, STRANGER)
-	check(int(j4.belief(STRANGER, e4).conf) == JudgmentMath.mul_div(1000 * 700, 600, 1000000), "credibility: a teller the listener dislikes (-10) is believed less (0.8 -> 0.6)")
+	check(int(j4.belief(STRANGER, e4).conf) == JudgmentMath.mul_div(1000 * 900, 400, 1000000), "credibility: a stranger the listener dislikes (-10) is believed less (0.5 -> 0.4)")
 
 
 func test_misattribution() -> void:
@@ -472,7 +468,7 @@ func test_sliced_day() -> void:
 			c.memory.horizon_days = 4
 			if v.has("retract"):
 				c.memory.retract_on_forget = true
-				c.memory.effective_fade_permille = int(v.fade)
+				c.decay.ordinary_permille_per_day = int(v.fade)
 				c.gossip.misattribute_permille = int(v.mis)
 			var j := JudgmentStore.new(c, JudgmentSocial.new().set_kin(1, 2).set_friends(3, 4).set_kin(5, 6), 5)
 			var log := []
@@ -530,7 +526,7 @@ func test_spread_gossip() -> void:
 			c.memory.horizon_days = 4
 			if v.has("retract"):
 				c.memory.retract_on_forget = true
-				c.memory.effective_fade_permille = int(v.fade)
+				c.decay.ordinary_permille_per_day = int(v.fade)
 				c.gossip.misattribute_permille = int(v.mis)
 			var j := JudgmentStore.new(c, JudgmentSocial.new().set_kin(1, 2).set_friends(3, 4).set_kin(5, 6), 5)
 			var log := []
@@ -629,3 +625,178 @@ func test_scheduled_gossip() -> void:
 		check(j.state_hash() == j2.state_hash(), "scheduled: saved and reloaded before the minute, the same result after it")
 		hashes.append(j.state_hash())
 	check(hashes[0] == hashes[1], "scheduled: the same seed gives the same minutes and the same result")
+
+
+# ---------------------------------------------------------------- owner decisions, 2026-10-21 --------
+## Q01: an event is a fact; each observer's interpretation may be positive, negative or zero; zero needs no third
+## ledger; the fact is still remembered and told. A "personal" rule on a NEUTRAL type (none is configured by default)
+## gives the owner's marriage example: positive to a close friend, negative to someone it hurt, nothing to others.
+func test_q01_facts_and_zero() -> void:
+	var c := cfg()
+	var j := store(c)
+	var wed := j.publish("marriage", [BOB, FRIEND + 30], [], [BOB, FRIEND + 30])
+	j.observe_all(wed, [STRANGER, FRIEND, COUSIN])
+	check(j.ledger(STRANGER, BOB)[2] == 0 and j.ledger(FRIEND, BOB)[2] == 0 and j.ledger(COUSIN, BOB)[2] == 0 and not j.belief(STRANGER, wed).is_empty(),
+			"by default a marriage is remembered by everyone who saw it and means nothing morally to anyone (Q01)")
+	check(j.meet(STRANGER, JOHN) == 1 and str(j.belief(JOHN, wed).type) == "marriage", "...and the fact is still told on")
+	check(j.ledger(STRANGER, BOB).size() == 7, "no third ledger: a ledger is GOOD and BAD (lifetime, fading, permanent parts) and its count")
+	c.events.marriage.personal = {"severity": 1000, "beneficiary": 0, "victim": -800, "kin": 500, "friend": 600}
+	var j2 := store(c)
+	var w2 := j2.publish("marriage", [BOB, FRIEND + 30], [JOHN], [BOB, FRIEND + 30])   # John hoped to marry Bob
+	j2.observe_all(w2, [STRANGER, FRIEND, COUSIN])
+	check(j2.good(FRIEND, BOB) == 300 and j2.bad(FRIEND, BOB) == 0, "with a personal rule: Bob's close friend is glad of it (GOOD, 0.6 split between the two)")
+	check(j2.bad(JOHN, BOB) == 400 and j2.good(JOHN, BOB) == 0, "...the one it hurt sees it as BAD")
+	check(j2.ledger(STRANGER, BOB)[2] == 0, "...and to an unrelated villager it is zero: nothing posted")
+
+
+## Q02: ordinary judgments fade very slowly; murder never; both kinds coexist in one ledger; the lifetime totals stay as
+## history; a save keeps the parts apart.
+func test_q02_decay_and_murder() -> void:
+	var c := cfg()
+	c.decay.ordinary_permille_per_day = 3
+	var j := store(c)
+	var th := j.publish("theft", [THIEF], [BOB])
+	j.observe(th, BOB)
+	var k := j.publish("killing", [THIEF], [COUSIN])
+	j.observe(k, BOB)
+	var before := j.ledger(BOB, THIEF)
+	check(int(before[4]) == 1000 and int(before[6]) == 1650 and j.net(BOB, THIEF) == -2650,
+			"one ledger holds both: the theft in the fading part (1 BAD), the murder of his cousin in the permanent part (3 x 0.55 = 1.65 BAD)")
+	for d in range(1, 101):
+		j.advance_day(d)
+	var after := j.ledger(BOB, THIEF)
+	check(int(after[6]) == 1650, "after 100 days the murder's part is untouched (it never decays)")
+	check(int(after[4]) < 1000 and int(after[4]) > 700, "the theft's part has faded slowly (1000 -> %d after 100 days at 3 permille a day)" % int(after[4]))
+	check(int(after[1]) == 2650, "the lifetime BAD total is kept as history")
+	var j2 := store(c)
+	check(j2.load_dict(JSON.parse_string(JSON.stringify(j.to_dict()))) == "" and j2.ledger(BOB, THIEF) == after, "a save keeps the fading and permanent parts apart")
+	for d in range(101, 1101):
+		j.advance_day(d)
+	check(int(j.ledger(BOB, THIEF)[6]) == 1650 and int(j.ledger(BOB, THIEF)[4]) < 100, "after 1100 days the theft has all but faded; the murder has not")
+	var c0 := cfg()
+	var j3 := store(c0)
+	j3.observe(j3.publish("theft", [THIEF], [BOB]), BOB)
+	j3.advance_day(50)
+	check(j3.net(BOB, THIEF) == -1000, "with the rate at 0, nothing fades (the rate is a setting, proposed, not approved)")
+
+
+## Q06: confidence in a told story comes from the listener's trust in the immediate teller, using the existing
+## relationship number; witnesses need no storyteller; the chain's confidence reflects every link; a more trusted
+## retelling updates the existing belief and its contribution, never a second one.
+func test_q06_trust() -> void:
+	var social := JudgmentSocial.new().set_regard(STRANGER, BOB, 90).set_regard(COUSIN, STRANGER, 0)
+	var j := JudgmentStore.new(cfg(), social, 7)
+	var ev := j.publish("theft", [THIEF], [BOB])
+	j.observe(ev, BOB)
+	j.observe(ev, JOHN)
+	check(int(j.belief(JOHN, ev).conf) == 1000 and str(j.belief(JOHN, ev).src) == "witnessed", "a witness is firsthand: no storyteller to weigh")
+	check(j.credibility(STRANGER, BOB) == 950 and j.credibility(COUSIN, STRANGER) == 500, "credibility from the relationship number: regard 90 -> 0.95, a stranger 0.5")
+	j.tell(BOB, STRANGER)
+	check(int(j.belief(STRANGER, ev).conf) == JudgmentMath.mul_div(1000 * 900, 950, 1000000), "told by a trusted friend: 0.9 x 0.95")
+	j.tell(STRANGER, COUSIN)
+	var chain := JudgmentMath.mul_div(JudgmentMath.mul_div(1000 * 900, 950, 1000000) * 900, 500, 1000000)
+	check(int(j.belief(COUSIN, ev).conf) == chain, "over two links the confidence is the product along the chain (%d)" % chain)
+	var once := j.bad(COUSIN, THIEF)
+	j.tell(STRANGER, COUSIN)
+	check(j.bad(COUSIN, THIEF) == once and j.ledger(COUSIN, THIEF)[2] == 1, "hearing the same story again never re-scores it")
+	j.tell(JOHN, COUSIN)
+	var up := j.belief(COUSIN, ev)
+	check(int(up.conf) == 450 and int(up.by) == JOHN and j.ledger(COUSIN, THIEF)[2] == 1 and j.bad(COUSIN, THIEF) > once,
+			"a more credible telling (from a witness) updates the existing belief and its contribution, not a second one")
+	check(int(j.stats.get("upgraded", 0)) == 1, "...counted as an update")
+
+
+## Q07: no fixed limit on retellings: a story travels as far as real meetings carry it, one meeting at a time; each
+## person judges it once; processing ends. A murder (never forgotten, Q11) travels the whole line; an ordinary story
+## goes on until it is too faint to remember (salience = severity x confidence, Q11's ordinary forgetting), not to a
+## fixed count.
+func test_q07_no_hop_limit() -> void:
+	var social := JudgmentSocial.new()
+	for i in 40:
+		social.set_regard(i, (i + 1) % 40, 80)
+	for type in ["killing", "assault"]:
+		var j := JudgmentStore.new(cfg(), social, 7)
+		var ev := j.publish(type, [99], [0])
+		j.observe(ev, 0)
+		var day_reached := {}
+		var far := 0
+		for d in 60:
+			j.advance_day(d)
+			for i in range(38, -1, -1):                  # neighbours meet along a line, the far end first: one step a day
+				j.meet(i, i + 1)
+			for i in 40:
+				var b := j.belief(i, ev)
+				if not b.is_empty():
+					far = maxi(far, int(b.hops))
+					if not day_reached.has(i):
+						day_reached[i] = d
+		if type == "killing":
+			check(far == 39 and int(day_reached.get(39, -1)) >= 30, "no hop limit: a murder went %d retellings down the line, one meeting a day (the far end on day %d)" % [far, int(day_reached.get(39, -1))])
+		else:
+			check(far > 3 and far < 39, "an ordinary assault went %d retellings, past the old limit of 3, until too faint to remember" % far)
+		var once := true
+		for i in 40:
+			if j.ledger(i, 99)[2] > 1:
+				once = false
+		check(once, "%s: each person judged it once, however many times it came round" % type)
+		var told := int(j.stats.get("tellings", 0))
+		for d in range(60, 80):
+			j.advance_day(d)
+			for i in range(38, -1, -1):
+				j.meet(i, i + 1)
+		check(int(j.stats.get("tellings", 0)) == told, "%s: processing ends: once everyone holds it as surely as they can be told it, meetings tell nothing more" % type)
+	var jump := JudgmentStore.new(cfg(), social, 7)
+	var e2 := jump.publish("assault", [99], [0])
+	jump.observe(e2, 0)
+	jump.advance_day(1)
+	check(jump.belief(5, e2).is_empty() and jump.belief(39, e2).is_empty(), "no teleporting: nobody who met no one who knew has heard")
+
+
+## Q08: interpretation from personal morality, relationships, loyalties and who was affected; law is not in here.
+func test_q08_morality() -> void:
+	var c := cfg()
+	c.interpret.morality_spread_permille = 300
+	var j := store(c)
+	var ev := j.publish("theft", [THIEF], [BOB])
+	var bys := []
+	for o in range(200, 220):
+		j.observe(ev, o)
+		bys.append(j.bad(o, THIEF))
+	var kinds := {}
+	for v in bys:
+		kinds[v] = true
+	check(kinds.size() > 5, "people of no tie to anyone condemn the same theft by different amounts: their own morality (%d different readings)" % kinds.size())
+	j.observe(ev, BOB)
+	check(j.bad(BOB, THIEF) == 1000, "the one robbed reads it fully, whatever their morality")
+	check(j.morality(201, 0) == j.morality(201, 0) and j.morality(201, 0) >= 700 and j.morality(201, 0) <= 1300, "a person's morality is fixed and bounded")
+	var src := FileAccess.open("res://scripts/core/judgment/judgment_store.gd", FileAccess.READ).get_as_text()
+	check(not src.contains("guard_confront") and not src.contains("report_crime") and not src.contains("treasury") and not src.contains("fine_for"), "no legal system inside the judgment store: fines, guards and reports stay in World (Q08)")
+
+
+## Q11: murder memories are permanent; others by severity or personal significance; never expired by the ordinary
+## horizon, never pushed out, kept by a save; ordinary memory stays bounded.
+func test_q11_permanent_memories() -> void:
+	var c := cfg()
+	c.memory.capacity = 3
+	var j := store(c)
+	var k := j.publish("killing", [THIEF], [COUSIN])
+	j.observe(k, STRANGER)
+	var a := j.publish("assault", [JOHN], [BOB])
+	j.observe_all(a, [STRANGER])
+	check(bool(j.belief(BOB, a).permanent) and not bool(j.belief(STRANGER, a).permanent),
+			"an assault is unforgettable to the one assaulted (personal significance) and ordinary to a bystander")
+	for i in 10:
+		j.observe(j.publish("help_minor", [300 + i], [], [STRANGER]), STRANGER)
+	check(j.ordinary_count(STRANGER) == 3 and bool(j.belief(STRANGER, k).permanent), "ordinary memory stays bounded; the murder is not pushed out")
+	for d in range(1, 121):
+		j.advance_day(d)
+	check(not j.belief(STRANGER, k).is_empty() and not j.belief(BOB, a).is_empty(), "120 days on, past the 30-day horizon: the murder and the personal assault are remembered")
+	check(j.has_fact(k) and j.has_fact(a), "...their facts never retire, so they can still be told (and judged once: the knowers stay)")
+	check(j.belief(STRANGER, a).is_empty(), "the bystander's ordinary memory of the assault faded away")
+	check(j.meet(STRANGER, 400) == 1 and not j.belief(400, k).is_empty(), "a murder can be told years later")
+	var j2 := store(c)
+	j2.load_dict(JSON.parse_string(JSON.stringify(j.to_dict())))
+	check(bool(j2.belief(STRANGER, k).permanent) and bool(j2.belief(BOB, a).permanent) and j2.has_fact(k), "a save and load keep permanent memories and their facts")
+	for d in range(121, 200):
+		j2.advance_day(d)
+	check(not j2.belief(STRANGER, k).is_empty(), "...and they stay after the load")
