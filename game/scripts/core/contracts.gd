@@ -15,6 +15,11 @@ extends RefCounted
 ## contracts with it early pays more). Counters go both ways: a seller counters a buyer (evaluate), and a villager
 ## buyer answers a seller's counter, or the player's counter to its standing offer, by one rule (buyer_answer).
 ##
+## Services (CON-02, owner 2026-10-21): a contract may be for work instead of goods (kind "service"): the same record,
+## evaluation, counters, signing, reservation, lapse and save, with the work's own part in ContractServices (what a
+## seller can do, the going rate, how a villager does the next unit through the existing work system). A unit of work
+## is paid, like a unit of goods, only when it is really done (_pay_units, the one place a contract pays).
+##
 ## The record is the Living Economy design's Contract (docs/build17/PROCUREMENT_CONTRACTS.md section 3) in its
 ## smallest form: {id, buyer, seller (World refs: "player", "npc:<id>", "manor"), item, qty, price_each, deadline_day,
 ## terms {pay, partial, all_at_once, deposit}, state (offered, signing, accepted, fulfilled, lapsed,
@@ -312,6 +317,27 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 	return out
 
 
+## The goods route (means) or, for a service, ContractServices.means: one shape for evaluate.
+func _means(n: NPC, id: String, days: int, price_each: int, svc: Dictionary) -> Dictionary:
+	return means(n, id, days, price_each) if svc.is_empty() else ContractServices.means(self, n, svc, days)
+
+
+## A stand-in record for the words of a service not yet agreed.
+func _svc_rec(buyer_ref: String, svc: Dictionary, qty: int) -> Dictionary:
+	return {"buyer": buyer_ref, "service": svc.service, "site": svc.get("site", {}), "qty": qty}
+
+
+## A contract in words: "8 iron ore" or "dig 6 from your open pit north of the mine".
+func describe(c: Dictionary) -> String:
+	if is_service(c):
+		return ContractServices.words(self, c)
+	return "%d %s" % [int(c.qty), GameData.item_name(str(c.item)).to_lower()]
+
+
+static func is_service(c: Dictionary) -> bool:
+	return str(c.get("kind", "goods")) == "service"
+
+
 func _recipes_for(id: String) -> Array:
 	var out := []
 	for r in GameData.recipes:
@@ -338,8 +364,8 @@ func _vendor(n: NPC, id: String, price_each := 1 << 30) -> NPC:
 
 
 ## The least `n` takes for a unit of `id` from `buyer_ref` (price_terms' "min").
-func min_price(n: NPC, buyer_ref: String, id: String, m: Dictionary) -> int:
-	return int(price_terms(n, buyer_ref, id, m).min)
+func min_price(n: NPC, buyer_ref: String, id: String, m: Dictionary, svc := {}) -> int:
+	return int(price_terms(n, buyer_ref, id, m, svc).min)
 
 
 ## How `n` prices a unit of `id` for `buyer_ref`, term by term (the directive's list; every input already exists):
@@ -355,15 +381,17 @@ func min_price(n: NPC, buyer_ref: String, id: String, m: Dictionary) -> int:
 ##               with it early within keep_days is asked cancel_premium more for each such contract.
 ## min = the largest of going, cost and alternatives, times (household - relationship + risk), at least a coin.
 ## Deterministic: no random draws. A judgment system (memory, trust, reputation) is Expansion 19's and plugs in here.
-func price_terms(n: NPC, buyer_ref: String, id: String, m: Dictionary) -> Dictionary:
-	var going := float(GameData.value(id))
-	var b: NPC = w.brain._buyer_for(n, id) if NPCBrain.OUTLETS.has(id) and n.inv.has(id) else null
+func price_terms(n: NPC, buyer_ref: String, id: String, m: Dictionary, svc := {}) -> Dictionary:
+	var going := float(GameData.value(id)) if svc.is_empty() else ContractServices.going(svc)   # CON-02: the job board's rate for the work
+	var b: NPC = w.brain._buyer_for(n, id) if svc.is_empty() and NPCBrain.OUTLETS.has(id) and n.inv.has(id) else null
 	if b != null:
 		var p: Array = w.sale_prices(b, n, id, 1)
 		if not p.is_empty():
 			going = maxf(going, float(p[0]))
 	var cost := 0.0
-	if str(m.route) == "buy":
+	if str(m.route) == "service":
+		cost = float(m.cost)                       # CON-02: what the seller pays out for a unit of the work (an assay fee)
+	elif str(m.route) == "buy":
 		cost = float(m.cost) + 1.0
 	elif str(m.route) == "craft" and GameData.recipes.has(str(m.recipe)):
 		var rec: Dictionary = GameData.recipes[str(m.recipe)]
@@ -412,7 +440,9 @@ func ended_early_by(buyer_ref: String, seller_ref: String) -> int:
 ## the later deadline that makes the whole quantity possible.
 ## `terms` records each of the directive's questions as judged (feasible, route, why, capacity, obligations, the price
 ## terms of price_terms), so a test or a later judgment system can read why the answer was given.
-func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, days: int) -> Dictionary:
+## CON-02: `svc` ({service, site}) asks for work instead of goods (`id` ""): the same judgment, with the service's
+## means (ContractServices.means) and its going rate.
+func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, days: int, svc := {}) -> Dictionary:
 	var r := {"answer": "reject", "say": "", "qty": qty, "price_each": price_each, "days": days, "route": "", "recipe": "", "min_price": 0, "terms": {}}
 	if n == null or not n.alive:
 		r.say = "There is nobody to answer."
@@ -420,8 +450,10 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	if n.role != "adult":
 		r.say = "I'm too young to take that on." if n.role == "child" else "I'm past taking on work like that."
 		return r
-	if buyer_ref == World.npc_ref(n.id) or GameData.item(id).is_empty() or qty <= 0 or price_each <= 0 or days <= 0:
-		r.say = "That's no kind of offer."
+	var site_why := "" if svc.is_empty() else ContractServices.site_refusal(self, buyer_ref, svc)
+	if buyer_ref == World.npc_ref(n.id) or (svc.is_empty() and GameData.item(id).is_empty()) or site_why != "" \
+			or qty <= 0 or price_each <= 0 or days <= 0:
+		r.say = site_why if site_why != "" else "That's no kind of offer."
 		return r
 	if buyer_ref == World.PLAYER and w.relations.notoriety() >= int(cfg().notoriety_refuse):
 		r.say = "I'll not deal with you. Folk say what you've done."
@@ -431,19 +463,21 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	if int(ob.contracts) >= int(cfg().max_open_per_seller):
 		r.say = "I've promised all the work I can take on already."
 		return r
-	var item := GameData.item_name(id).to_lower()
-	var m := means(n, id, days, price_each)
+	var item := GameData.item_name(id).to_lower() if svc.is_empty() else "that work"
+	var m := _means(n, id, days, price_each, svc)
 	var can := int(m.stock) + int(m.cap)
 	r.route = m.route
 	r.recipe = m.recipe
-	var pt := price_terms(n, buyer_ref, id, m)
+	var pt := price_terms(n, buyer_ref, id, m, svc)
 	r.min_price = int(pt.min)
 	r.terms.merge(pt)
 	r.terms.merge({"route": m.route, "why": m.why, "stock": m.stock, "capacity": m.cap})
-	if can <= 0 and not (float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft"]):
+	if can <= 0 and not (float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft", "service"]):
 		match str(m.why):
 			"tool:pickaxe", "tool:axe":
-				r.say = "I've no %s to get %s with." % [str(m.why).get_slice(":", 1), item]
+				r.say = ("I've no %s to get %s with." % [str(m.why).get_slice(":", 1), item]) if svc.is_empty() else ("I've no %s for that work." % str(m.why).get_slice(":", 1))
+			"tool:kit":
+				r.say = "I've no prospector's kit to take samples with."
 			"skill":
 				r.say = "I haven't the skill for %s." % item
 			"station":
@@ -463,10 +497,10 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 		# time-bound work (mining, felling, making) may manage it all, or at least something, given more days
 		var more := days
 		var by_more := can
-		if float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft"]:
+		if float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft", "service"]:
 			while more < int(cfg().max_days) and by_more < qty:
 				more += 1
-				by_more = int(means(n, id, more, price_each).cap) + int(m.stock)
+				by_more = int(_means(n, id, more, price_each, svc).cap) + int(m.stock)
 		if by_more >= qty:
 			c_days = more
 		elif can > 0:
@@ -481,7 +515,10 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	var c_price := maxi(price_each, int(r.min_price))
 	if c_qty == qty and c_days == days and c_price == price_each:
 		r.answer = "accept"
-		r.say = "Done. %d %s at %d each, by the end of day %d." % [qty, item, price_each, w.day() + days]
+		if svc.is_empty():
+			r.say = "Done. %d %s at %d each, by the end of day %d." % [qty, item, price_each, w.day() + days]
+		else:
+			r.say = "Done: I'll %s, %d a unit, by the end of day %d." % [ContractServices.words(self, _svc_rec(buyer_ref, svc, qty)), price_each, w.day() + days]
 		return r
 	r.answer = "counter"
 	r.qty = c_qty
@@ -514,12 +551,19 @@ func fund_refusal(buyer_ref: String, total: int) -> String:
 	return "" if b.coins - total >= w.reserve_of(b) else "%s cannot set aside %d coins without touching what the household needs." % [b.name, total]
 
 
-func _new_record(buyer_ref: String, seller_ref: String, id: String, qty: int, price_each: int, days: int, history: Array) -> Dictionary:
+func _new_record(buyer_ref: String, seller_ref: String, id: String, qty: int, price_each: int, days: int, history: Array, svc := {}) -> Dictionary:
 	var c := {"id": next_id, "buyer": buyer_ref, "seller": seller_ref, "item": id, "qty": qty, "price_each": price_each,
 		"days": days, "deadline_day": w.day() + days - 1, "state": "offered", "delivered": 0, "paid": 0, "reserved": 0, "route": "",
 		"recipe": "", "made_day": w.day(),
 		"terms": {"pay": "on_delivery", "partial": true, "all_at_once": false, "deposit": 0},
 		"history": history.duplicate(true)}
+	if not svc.is_empty():                         # CON-02: a service, paid per unit of work done from the same reservation
+		c.kind = "service"
+		c.item = ""
+		c.service = str(svc.service)
+		c.site = (svc.get("site", {}) as Dictionary).duplicate(true)
+		c.load = {}
+		c.sids = []
 	next_id += 1
 	return c
 
@@ -527,7 +571,7 @@ func _new_record(buyer_ref: String, seller_ref: String, id: String, qty: int, pr
 ## An offer from `buyer_ref` to villager `n`: it is judged (evaluate) and, if accepted, the contract opens with the
 ## buyer's coins set aside. Returns the evaluation plus "contract" (the record) when one opened, or a refusal
 ## ("answer": "refused", "say") when the buyer cannot make the offer. `history` carries earlier rounds of the talk.
-func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, days: int, history := []) -> Dictionary:
+func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, days: int, history := [], svc := {}) -> Dictionary:
 	if buyer_ref == World.PLAYER and open_of(World.PLAYER, "buyer").size() >= int(cfg().max_open_player):
 		return {"answer": "refused", "say": "You have as many contracts open as you can keep track of (%d)." % int(cfg().max_open_player)}
 	var why := fund_refusal(buyer_ref, qty * price_each)
@@ -535,7 +579,7 @@ func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, d
 		return {"answer": "refused", "say": why}
 	var hist: Array = history.duplicate(true)
 	hist.append({"day": w.day(), "by": buyer_ref, "what": "offer", "qty": qty, "price_each": price_each, "days": days})
-	var r := evaluate(n, buyer_ref, id, qty, price_each, days)
+	var r := evaluate(n, buyer_ref, id, qty, price_each, days, svc)
 	hist.append({"day": w.day(), "by": World.npc_ref(n.id), "what": str(r.answer), "qty": int(r.qty), "price_each": int(r.price_each), "days": int(r.days)})
 	r.history = hist
 	if r.answer != "accept":
@@ -545,7 +589,7 @@ func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, d
 		# Q18-13: no remote instant signing. Agreed in principle only; nothing is set aside until they meet.
 		if buyer_ref == World.PLAYER:
 			return {"answer": "meet", "say": "A contract worth %d coins is signed face to face. Come and see me." % (qty * price_each), "history": hist}
-		var p := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist)
+		var p := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist, svc)
 		p.state = "signing"
 		p.route = r.route
 		p.recipe = r.recipe
@@ -553,7 +597,7 @@ func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, d
 		w.stat("contracts_to_sign")
 		r.signing = p
 		return r
-	var c := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist)
+	var c := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist, svc)
 	c.route = r.route
 	c.recipe = r.recipe
 	if not _open(c):
@@ -574,6 +618,16 @@ func _open(c: Dictionary) -> bool:
 	if not list.has(c):
 		list.append(c)
 	var s := _npc_of(c.seller)
+	if is_service(c):
+		w.stat("service_contracts_made")
+		if s:
+			s.remember("promised to %s for %s" % [describe(c), w.ref_name(c.buyer)])
+		var bs := _npc_of(c.buyer)
+		if bs:
+			bs.remember("hired %s to %s" % [w.ref_name(c.seller), describe(c)])
+		w.stat("contracts_made")
+		w.note("%s agreed to %s for %s at %d a unit by day %d." % [w.ref_name(c.seller, true), describe(c), w.ref_name(c.buyer), int(c.price_each), int(c.deadline_day) + 1])
+		return true
 	if s:
 		s.remember("promised %d %s to %s" % [int(c.qty), GameData.item_name(c.item).to_lower(), w.ref_name(c.buyer)])
 	var b := _npc_of(c.buyer)
@@ -587,13 +641,16 @@ func _open(c: Dictionary) -> bool:
 
 ## A villager's offer to the player (the player is the seller): kept as an "offered" record until the player accepts
 ## it (accept_offer), declines it, or it lapses after offer_days. Nothing is set aside until it is accepted.
-func offer_to_player(b: NPC, id: String, qty: int, price_each: int, days: int) -> Dictionary:
+func offer_to_player(b: NPC, id: String, qty: int, price_each: int, days: int, svc := {}) -> Dictionary:
 	var c := _new_record(World.npc_ref(b.id), World.PLAYER, id, qty, price_each, days,
-			[{"day": w.day(), "by": World.npc_ref(b.id), "what": "offer", "qty": qty, "price_each": price_each, "days": days}])
+			[{"day": w.day(), "by": World.npc_ref(b.id), "what": "offer", "qty": qty, "price_each": price_each, "days": days}], svc)
 	list.append(c)
 	w.stat("contract_offers_to_player")
-	w.note("%s is looking for %d %s at %d each, which nobody in the village can supply: ask them about a contract." % [w.ref_name(c.buyer, true),
-			qty, GameData.item_name(id).to_lower(), price_each])
+	if svc.is_empty():
+		w.note("%s is looking for %d %s at %d each, which nobody in the village can supply: ask them about a contract." % [w.ref_name(c.buyer, true),
+				qty, GameData.item_name(id).to_lower(), price_each])
+	else:
+		w.note("%s would hire you to %s at %d a unit: ask them about a contract." % [w.ref_name(c.buyer, true), describe(c), price_each])
 	return c
 
 
@@ -622,7 +679,7 @@ func counter_offer(c: Dictionary, qty: int, price_each: int, days: int) -> Dicti
 		return {"answer": "refused", "say": "That offer no longer stands."}
 	var b := _npc_of(c.buyer)
 	var first: Dictionary = c.history[0] if not (c.history as Array).is_empty() else c
-	var unit := mini(maxi(1, w.brain.batch_unit(b, c.item)) if b != null else 1, int(first.qty))
+	var unit := 1 if is_service(c) else mini(maxi(1, w.brain.batch_unit(b, c.item)) if b != null else 1, int(first.qty))
 	c.history.append({"day": w.day(), "by": World.PLAYER, "what": "counter", "qty": qty, "price_each": price_each, "days": days})
 	var r := buyer_answer(b, c.item, int(first.qty), int(first.price_each), unit, qty, price_each, days)
 	c.history.append({"day": w.day(), "by": c.buyer, "what": str(r.answer), "qty": int(r.qty), "price_each": int(r.price_each), "days": int(r.days)})
@@ -656,7 +713,7 @@ func buyer_answer(b: NPC, id: String, own_qty: int, own_price: int, unit: int, q
 	if qty <= 0 or price_each <= 0 or days <= 0:
 		r.say = "That's no kind of offer."
 		return r
-	var item := GameData.item_name(id).to_lower()
+	var item := GameData.item_name(id).to_lower() if id != "" else "units of work"
 	if qty < unit:
 		r.say = "Fewer than %d %s is no use to me." % [unit, item]
 		return r
@@ -701,7 +758,7 @@ func decline_offer(c: Dictionary) -> void:
 ## chest when delivered to their home), each unit paid from the coins set aside. One step: the goods move and the coins
 ## move, or nothing does. Returns the units delivered.
 func deliver(c: Dictionary, units: int, into: Inventory = null) -> int:
-	if not is_open(c) or not _alive(c.buyer) or not _alive(c.seller):
+	if not is_open(c) or not _alive(c.buyer) or not _alive(c.seller) or is_service(c):
 		return 0
 	var from := _pack(c.seller)
 	var to: Inventory = into if into != null else _pack(c.buyer)
@@ -717,6 +774,18 @@ func deliver(c: Dictionary, units: int, into: Inventory = null) -> int:
 	if c.seller == World.PLAYER:
 		w.player.trim_stolen()
 	to.add(c.item, units)
+	_pay_units(c, units)
+	return units
+
+
+## `units` of a contract are done (goods handed over, or units of a service's work performed): each is paid from the
+## coins set aside, never past qty or the reservation, and recorded; the last fulfils the contract (a service once
+## nothing of the buyer's is still carried, ContractServices.finished). The one place a contract pays its seller.
+func _pay_units(c: Dictionary, units: int) -> void:
+	units = mini(units, left(c))
+	var pay := units * int(c.price_each)
+	if units <= 0 or pay > int(c.reserved):
+		return
 	c.reserved = int(c.reserved) - pay
 	c.paid = int(c.paid) + pay
 	c.delivered = int(c.delivered) + units
@@ -729,16 +798,44 @@ func deliver(c: Dictionary, units: int, into: Inventory = null) -> int:
 		b.spent += pay
 	w.stat("contract_units", units)
 	w.stat("contract_paid", pay)
-	c.history.append({"day": w.day(), "by": c.seller, "what": "deliver", "qty": units, "price_each": int(c.price_each), "days": 0})
-	if left(c) <= 0:
-		_end(c, "fulfilled", "")
-		var rid := rel_id(c.seller)
-		var other := _npc_of(c.buyer)
-		if other != null and rid != -1:
-			w.relations.helped(rid, other, float(Relations.cfg().help_regard) * 0.5)    # a promise kept earns regard
-		elif s != null and rel_id(c.buyer) != -1:
-			w.relations.helped(rel_id(c.buyer), s, float(Relations.cfg().help_regard) * 0.5)
-	return units
+	if is_service(c):
+		w.stat("service_units", units)
+		w.stat("service_paid", pay)
+	c.history.append({"day": w.day(), "by": c.seller, "what": "work" if is_service(c) else "deliver", "qty": units, "price_each": int(c.price_each), "days": 0})
+	_maybe_finish(c)
+
+
+## A contract with every unit done (a service also with nothing of the buyer's still carried) is fulfilled: a promise
+## kept earns regard.
+func _maybe_finish(c: Dictionary) -> void:
+	if not is_open(c) or left(c) > 0 or (is_service(c) and not ContractServices.finished(c)):
+		return
+	_end(c, "fulfilled", "")
+	var s := _npc_of(c.seller)
+	var rid := rel_id(c.seller)
+	var other := _npc_of(c.buyer)
+	if other != null and rid != -1:
+		w.relations.helped(rid, other, float(Relations.cfg().help_regard) * 0.5)    # a promise kept earns regard
+	elif s != null and rel_id(c.buyer) != -1:
+		w.relations.helped(rel_id(c.buyer), s, float(Relations.cfg().help_regard) * 0.5)
+
+
+## The {service, site} of a service record ({} for goods).
+static func svc_of(c: Dictionary) -> Dictionary:
+	return {"service": str(c.service), "site": c.get("site", {})} if is_service(c) else {}
+
+
+## A villager's service work step (NPCBrain act "svc_step"): ContractServices does the work through its system.
+func svc_step(n: NPC, id: int) -> bool:
+	var c := get_contract(id)
+	if c.is_empty() or not is_open(c) or c.seller != World.npc_ref(n.id) or not is_service(c) or not _alive(c.buyer):
+		return false
+	return ContractServices.step(self, n, c)
+
+
+## Goods carried for buyers on service contracts (the census counts them).
+func goods() -> Dictionary:
+	return ContractServices.goods(self)
 
 
 ## The villager buyer's signing at the end of its walk to the seller (NPCBrain act "contract_sign"; Q18-13). Face to
@@ -757,10 +854,10 @@ func npc_sign(n: NPC, id: int) -> bool:
 		return false
 	if not face_to_face(me, c.seller):
 		return false
-	var r := evaluate(s, me, c.item, int(c.qty), int(c.price_each), int(c.days))
+	var r := evaluate(s, me, c.item, int(c.qty), int(c.price_each), int(c.days), svc_of(c))
 	c.history.append({"day": w.day(), "by": c.seller, "what": str(r.answer), "qty": int(r.qty), "price_each": int(r.price_each), "days": int(r.days)})
 	if str(r.answer) == "counter":
-		var unit := mini(maxi(1, w.brain.batch_unit(n, c.item)), int(c.qty))
+		var unit := 1 if is_service(c) else mini(maxi(1, w.brain.batch_unit(n, c.item)), int(c.qty))
 		if str(buyer_answer(n, c.item, int(c.qty), int(c.price_each), unit, int(r.qty), int(r.price_each), int(r.days)).answer) == "accept":
 			c.qty = int(r.qty)
 			c.price_each = int(r.price_each)
@@ -794,6 +891,8 @@ func npc_deliver(n: NPC, id: int) -> bool:
 # ---------------------------------------------------------------- ending ---------------------
 ## The coins still set aside go back to the buyer and the contract ends in `state`.
 func _end(c: Dictionary, state: String, why: String) -> void:
+	if is_service(c):
+		ContractServices.release(self, c)          # CON-02: anything of the buyer's still carried goes back
 	var held := int(c.get("reserved", 0))
 	c.reserved = 0
 	if held > 0:
@@ -814,7 +913,10 @@ func cancel(c: Dictionary, by_ref: String) -> String:
 	c.history.append({"day": w.day(), "by": by_ref, "what": "cancel", "qty": int(c.delivered), "price_each": int(c.price_each), "days": 0})
 	_end(c, "cancelled", "ended by %s" % w.ref_name(by_ref))
 	w.stat("contracts_cancelled")
-	w.note("%s ended the contract for %s (%d of %d delivered)." % [w.ref_name(by_ref, true), GameData.item_name(c.item).to_lower(), int(c.delivered), int(c.qty)])
+	if is_service(c):
+		w.note("%s ended the contract to %s (%d of %d done)." % [w.ref_name(by_ref, true), describe(c), int(c.delivered), int(c.qty)])
+	else:
+		w.note("%s ended the contract for %s (%d of %d delivered)." % [w.ref_name(by_ref, true), GameData.item_name(c.item).to_lower(), int(c.delivered), int(c.qty)])
 	return ""
 
 
@@ -831,9 +933,12 @@ func _lapse(c: Dictionary) -> void:
 		w.relations._raise(t, -float(cfg().default_regard), 0.0, false)
 	var buyer := _npc_of(c.buyer)
 	if buyer:
-		buyer.remember("let down by %s over %s" % [w.ref_name(c.seller), GameData.item_name(c.item).to_lower()])
-	w.note("The contract for %d %s from %s to %s lapsed: %d delivered." % [int(c.qty), GameData.item_name(c.item).to_lower(),
-			w.ref_name(c.seller), w.ref_name(c.buyer), int(c.delivered)])
+		buyer.remember("let down by %s over %s" % [w.ref_name(c.seller), describe(c) if is_service(c) else GameData.item_name(c.item).to_lower()])
+	if is_service(c):
+		w.note("The contract for %s to %s for %s lapsed: %d of %d done." % [w.ref_name(c.seller), describe(c), w.ref_name(c.buyer), int(c.delivered), int(c.qty)])
+	else:
+		w.note("The contract for %d %s from %s to %s lapsed: %d delivered." % [int(c.qty), GameData.item_name(c.item).to_lower(),
+				w.ref_name(c.seller), w.ref_name(c.buyer), int(c.delivered)])
 
 
 ## Dawn: contracts past their deadline lapse, offers to the player past offer_days are withdrawn, ended records older
@@ -883,6 +988,10 @@ func plan(n: NPC) -> bool:
 			return true
 	for c in list:
 		if not is_open(c) or c.seller != me or not _alive(c.buyer):
+			continue
+		if is_service(c):
+			if ContractServices.plan(self, n, c):    # CON-02: the work, through its own system
+				return true
 			continue
 		var owed := left(c)
 		var held := n.inv.count(c.item)
@@ -1018,4 +1127,16 @@ func load_dict(d: Dictionary) -> void:
 			r.terms = {"pay": "on_delivery", "partial": true, "all_at_once": false, "deposit": 0}
 		if not r.get("history") is Array:
 			r.history = []
+		if is_service(r):                          # CON-02: the work's progress
+			var ld := {}
+			for k in r.get("load", {}):
+				ld[k] = int(r.load[k])
+			r.load = ld
+			r.sids = (r.get("sids", []) as Array).map(func(x): return int(x))
+			var site: Dictionary = r.get("site", {})
+			if site.has("pit"):
+				site.pit = int(site.pit)
+			r.site = site
+			if r.has("cell"):
+				r.cell = [int(r.cell[0]), int(r.cell[1])]
 		list.append(r)

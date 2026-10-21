@@ -1487,7 +1487,7 @@ func _all_goods(w: World) -> Dictionary:
 		add.call(l.inv)
 	# materials delivered to unfinished building sites and carried by hired helpers are still goods
 	# held (the audit: site materials count in the goods-conservation test)
-	for src in [w.site_goods(), w.construction.carried(), w.manor_work.goods()]:
+	for src in [w.site_goods(), w.construction.carried(), w.manor_work.goods(), w.contracts.goods()]:
 		for id in src:
 			out[id] = int(out.get(id, 0)) + int(src[id])
 	return out

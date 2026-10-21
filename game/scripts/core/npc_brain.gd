@@ -122,6 +122,9 @@ func work_look(n: NPC) -> Array:
 			if str(w.manor_work.job(int(s.get("args", {}).get("job", -1))).get("kind", "")) == "excavate":
 				return ["swing", "pickaxe"]            # MIN-E: the manor's open pit is dug with a pickaxe
 			return ["swing", "hammer"]
+		"svc_step":                                    # CON-02: digging a pit with a pickaxe, sampling with the kit's hammer
+			var sc: Dictionary = w.contracts.get_contract(int(s.get("args", {}).get("id", -1)))
+			return ["swing", "pickaxe" if str(sc.get("service", "")) == "dig" else "hammer"]
 		"hunt", "slaughter":
 			return ["swing", "rusty_sword"]
 		"harvest", "sow", "feed_pen", "fp_work":
@@ -2252,6 +2255,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return w.contracts.npc_deliver(n, int(a.id))
 		"contract_sign":                                   # CON-01, Q18-13: a formal contract signed face to face
 			return w.contracts.npc_sign(n, int(a.id))
+		"svc_step":                                        # CON-02: a unit of a service contract's work, by its own system
+			return w.contracts.svc_step(n, int(a.id))
 		"buy_stall":
 			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
 		"stall_stock":

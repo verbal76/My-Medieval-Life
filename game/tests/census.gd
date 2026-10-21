@@ -42,6 +42,10 @@ static func holders(w: World) -> Dictionary:
 	for s in w.business.stalls.npc_built():        # villagers' built market stalls: their sale stock (STALL-02)
 		for id in s.get("stock", {}):
 			g.stalls[id] = int(g.stalls.get(id, 0)) + int(s.stock[id])
+	g["contracts"] = {}
+	var cg: Dictionary = w.contracts.goods()       # CON-02: goods dug for buyers and still carried on service contracts
+	for id in cg:
+		g.contracts[id] = int(cg[id])
 	g["pits"] = {}
 	if w.pits != null:                             # MIN-E: earth lying on the open pits' spoil heaps
 		var pg: Dictionary = w.pits.goods()
