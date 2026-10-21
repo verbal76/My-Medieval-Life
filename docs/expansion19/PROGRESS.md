@@ -4,13 +4,14 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-21.
+Updated 2026-10-21 (round 2: performance and measurement).
 
 ## Branch and latest pushed commit
 
-`wip/expansion19-preparation`, branched from staging `b721616` (Build 16 released, plus records). Commits:
-`3005d6f` (isolated prototype), `221ac6f` (live adapter, off), `efbd31c` (performance suite, CI listing,
-documents), and this record's update; the pushed head is the branch head on GitHub.
+`wip/expansion19-preparation`, branched from staging `b721616` (Build 16 released, plus records). Round 1: `3005d6f`
+(isolated prototype), `221ac6f` (live adapter, off), `efbd31c` (performance suite, documents), `e05d367`. Round 2: the
+commit that adds this update (compact records, sliced daily update, trade-hook shortcut, measurements); the pushed head is
+the branch head on GitHub.
 
 ## Implemented and tested
 
@@ -23,9 +24,18 @@ documents), and this record's update; the pushed head is the branch head on GitH
 | Persistence and migration prototype: `mml-judgment/1` section, round trip identical through JSON text, draft v0 migration, newer or damaged sections kept unread and written back; World save section only when attached, SAVE_VERSION unchanged, Build 16 saves load with judgment off | `JudgmentStore.to_dict/load_dict/migrate`, World hooks | `judgment_test.gd`, `judgment_live_test.gd` |
 | Deterministic decisions: integer arithmetic, seeded hashes (no `World.rng`) | `JudgmentMath` | `judgment_test.gd` (same state hash twice), `judgment_live_test.gd` (a day of the live village with judgment on, twice: same world and same judgment hash), `judgment_perf.gd` |
 | Live adapter, off by default: observation from `World.witness`, `raise_alarm`, `kill`; word of mouth from `Relations.share`; dawn; save; trade-choice prototype in `NPCBrain._buyer_for` | `JudgmentLive` | `judgment_live_test.gd` (26): off by default; witnesses judge, distant villagers know nothing; player and villager assaults judged identically; the trade pick stays within the live rule's buyers, equals the live choice while judgments are neutral, avoids a strongly disliked buyer when another exists, still sells when every buyer is disliked |
-| Large-population performance | `judgment_perf.gd` | 10 checks at 100 / 500 / 2000 people (memory bound, facts within horizon, save round trip, determinism); figures and proposed budgets in DESIGN.md section 7 |
+| Large-population performance | `judgment_perf.gd` | 19 checks at 100 / 500 / 2000 people, live and stress event rates, hour by hour (memory bound, facts within horizon, save round trip, determinism); figures and budgets in DESIGN.md section 7 |
+| Round 2: compact records (packed arrays) | `JudgmentStore` | memory at 500 people 10.7 -> 4.0 MB (live rate), 57.9 -> 16.1 MB (stress); every perf scenario's final state hash identical before and after |
+| Round 2: daily update sliced over the day's hours, catch-up on touch | `JudgmentStore.begin_day/dawn_hour/dawn_slice`, World hooks | `judgment_test.gd` (105 in all): sliced and whole updates agree on every telling, choice, opinion and the end state hash over twelve days with newcomers, also with retraction, a fading view and rumours on; largest update hour at 500 people live: 11.38 ms (one call) -> 0.55 ms median day |
+| Round 2: trade-hook shortcut | `JudgmentLive._first_stands` | `judgment_live_test.gd` (27): picks exactly as the full scan over twelve opinion mixes; economy_sim 10 days seed 1: about +20% wall time before, about +5% after, no leaks, same fingerprint |
 
-Regression evidence for the hooks (judgment off), run on this branch before pushing `221ac6f`: `run_tests` 3535,
+Round 2 regression evidence (judgment off), on this branch before the round-2 push: `judgment_test` 105,
+`judgment_live_test` 27, `judgment_perf` 19, `run_tests` 3535, `world_test` 200, `relations_test` 79, `parity_test` 55,
+`conservation_test` 8, `save_transfer_test` 21 checks, 0 failures; python unittest 105 OK; `tools/sim_gate.py` **PASS,
+identical to the baseline**. With judgment on, `economy_sim --judgment` 10 days seed 1 (twice): no currency or item leak,
+day-10 fingerprint equal to the baseline's.
+
+Round 1 regression evidence for the hooks (judgment off), run on this branch before pushing `221ac6f`: `run_tests` 3535,
 `world_test` 200, `relations_test` 79, `parity_test` 55, `conservation_test` 8, `save_transfer_test` 21 checks, 0
 failures; `python3 -m unittest discover -s tests` 105 OK; `python3 tools/sim_gate.py` (seeds 1 and 2, 30 days):
 **PASS, identical to the baseline**. With judgment on, `economy_sim.gd --judgment --days 10 --seed 1`: no currency or
@@ -55,8 +65,12 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 
 - Hooks touch `world.gd`, `relations.gd`, `npc_brain.gd` (one guarded line each, plus the save section): small but
   real merge points with Build 17 and 18 changes to the same functions.
-- Memory and dawn cost at the stress rate (DESIGN.md section 7): 2000 people use 232 MB and a 123 ms dawn; the budgets
-  need the dawn spread over hours and leaner memory records before large populations.
+- Gossip is now the frame-cost risk (DESIGN.md section 7): an hour's meetings are told in one frame, 19 ms here at 500
+  people at the live rate (about 76 ms on the assumed phone). Proposed next: budgeted gossip slices and a cheaper `tell`.
+- The daily update's worst single hour at 500 people varies with machine load (1.09 to 4.54 ms across runs; median day
+  0.55 ms); a device check decides whether `dawn_slice` must run every frame. 2000 people is over the budget.
+- Missing event feeds (DESIGN.md section 7): help, gifts, rescue, fair and cheating trade, villagers' thefts and
+  killings, discovered thefts, legal facts, neutral facts. Listed only; wiring them changes live behaviour when on.
 - `Relations.harmed` already spreads harm to the player instantly to kin and friends: with judgment live there would be
   two channels for the same harm until the owner decides (SJD-Q07) whether word of mouth replaces it.
 - CRT-12's notoriety threshold remains the live courtship refusal (recorded conflict, EXP-C).

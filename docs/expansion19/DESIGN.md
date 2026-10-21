@@ -76,6 +76,11 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
   gameplay rule (an event older than the horizon can no longer spread).
 - **A19-5** Save section format `mml-judgment/1` with its own version and a migration function; a section the game
   cannot read is kept and written back unchanged (CLAUDE.md section 7).
+- **A19-7** (round 2) Records are packed integer arrays; the daily update is sliced with catch-up on touch
+  (`memory.dawn_slices`, 24); both proven result-neutral (identical state hashes). `JudgmentStore.timing` measures time
+  by part and is never saved or read by the simulation.
+- **A19-8** (round 2) The trade hook skips its full scan when the live pick provably wins (`JudgmentLive._first_stands`);
+  `JudgmentLive.shortcut` turns it off for comparison.
 - **A19-6** Live hooks are guarded by `World.judgment != null`; it is null unless `judgment.json` `enabled` is true
   (false) or a test attaches a store. With it null, no hook runs any code beyond the null check.
 
@@ -111,32 +116,86 @@ Also open from the reconciliation: **Q19-0**, whether the owner accepts the TUNA
 
 ## 7. Performance and proposed budgets (spec s.13; CLAUDE.md section 8)
 
-Measured by `game/tests/judgment_perf.gd` (40 simulated days, figures averaged over the last 20) on the development
-container (4-core Xeon 2.8 GHz, Godot 4.7.2 headless). Synthetic load: **0.5 significant events a person a day** with 4
-witnesses each, 3 shared hours a person a day (gossip), 2 judgment-weighted trade choices a person a day. That is about
-80 times what the live village produced with judgment on (7 events in 10 days for about 110 people,
-`economy_sim.gd --judgment`), so these are upper-bound stress figures.
+Measured by `game/tests/judgment_perf.gd` on the development container (4-core Xeon 2.8 GHz, Godot 4.7.2 headless,
+shared with other agents' runs, so single-hour maxima are noisy): 40 simulated days hour by hour, figures over the last
+20. Two event rates: **live**, 0.0064 significant events a person a day (what the live village produced with judgment
+on: 7 events in 10 days for about 110 people, `economy_sim.gd --judgment`), and **stress**, 0.5 (about 80 times more).
+Each has 4 witnesses; 3 shared hours a person a day (gossip, 7:00 to 21:00); 2 judgment-weighted choices a person a day.
 
-| People | ms per simulated day (events / gossip / decisions / dawn) | Dawn, one call | Memory | Save | Save / load |
+**Proposed budgets** (agent proposal; a mid-range phone assumed about 4 times slower than this machine, not yet
+measured on a device): judgment's work in any one frame at most 4 ms on the phone (1 ms here); judgment memory at most
+16 MB at 500 people; save section at most 1 MB at 500 people at the live rate; save plus load at most 250 ms added.
+
+Round 2 (`judgment_perf.gd`, the same scenario before and after; **every final state hash is identical before and
+after**, so the compaction and slicing changed no result):
+
+| Rate, people | Memory MB (before -> after) | Daily update, largest hour ms (before: one call at dawn -> after: sliced; median day / worst) | Frame: update + events + gossip, largest hour ms (after) | Gossip ms/day (after) | Save KB, save / load ms (after) |
 |---|---|---|---|---|---|
-| 100 | 143 (30 / 92 / 16 / 5) | 5 ms | 11.6 MB | 0.5 MB | 65 / 78 ms |
-| 500 | 815 (177 / 521 / 88 / 29) | 29 ms | 58 MB | 2.7 MB | 375 / 401 ms |
-| 2000 | 3199 (705 / 2028 / 343 / 123) | 123 ms | 232 MB | 11.7 MB | 1673 / 1638 ms |
+| live, 100 | 2.1 -> **0.8** | 1.77 -> **0.11 / 0.17** | 5.4 | 13 | 89, 13 / 14 |
+| live, 500 | 10.7 -> **4.0** | 11.38 -> **0.55 / 4.54** (earlier runs of the same code: worst 1.09, 2.02) | 19.1 | 68 | 535, 49 / 72 |
+| live, 2000 | 44.1 -> **16.4** | 56.30 -> **2.30 / 5.85** | 45.7 | 251 | 2347, 216 / 278 |
+| stress, 100 | 11.5 -> **3.2** | 8.83 -> **0.29 / 0.33** | 9.1 | 49 | 493, 44 / 59 |
+| stress, 500 | 57.9 -> **16.1** | 55.37 -> **1.39 / 4.51** | 65.7 | 286 | 2718, 253 / 365 |
+| stress, 2000 | 231.9 -> **64.6** | 208.53 -> **6.36 / 15.01** | 227.7 | 1147 | 11713, 1184 / 1980 |
 
-Scaling is linear in people (bounded memories, horizon-bounded facts); ledgers grow with how many people each person
-hears of (72 a person here). A game day is 12 real minutes, so the daily total is small spread over a day; the risks are
-the dawn spike and memory.
+A judgment-weighted choice (`JudgmentWeighting.choose`, three candidates) costs about 85 to 115 microseconds.
 
-**Proposed budgets** (agent proposal, for the owner; a mid-range phone assumed about 4 times slower than this machine,
-not yet measured on a device): at the village's size (about 110 people) and at 500, on the phone, judgment's work
-within one frame at most 4 ms (so: the dawn's fade spread over the day's hours once over it), total judgment memory at
-most 16 MB at 500 people at the live event rate, save section at most 1 MB at 500 people, save and load at most 250 ms
-added. At the stress rate the prototype already meets the frame budget for 100 people (dawn 5 ms here, about 20 ms on
-the phone: over, so the fade must be spread), and not for 500 or 2000; at the live rate (80 times fewer events) all
-three sizes are within the memory and save budgets by extrapolation (not measured). Optimisations ready if needed:
-spread `advance_day` over hours (spec s.13 "budgeted processing"), memories as packed arrays instead of dictionaries,
-a per-person cap on ledgers kept (least significant first; an owner question as it forgets judgments), gossip
-candidates kept sorted.
+Against the budgets:
+- **Daily update per frame:** met at the live rate for 100 people (0.17 ms worst, about 0.7 ms on the phone) and, on the
+  median day, for 500 (0.55 ms, about 2.2 ms on the phone); the worst single hours at 500 (1.09 to 4.54 ms across runs)
+  vary with the shared machine's load, since the deterministic work per hour is a twenty-fourth of 4.7 ms. Not met at
+  2000 (median 2.3 ms). If a device check shows the worst hour over budget, `dawn_slice(k)` can run every frame instead
+  of every hour, with the same result.
+- **Memory:** met at 500 people at both rates (4.0 MB live, 16.1 MB stress).
+- **Save:** met at 500 people live (535 KB, 49 / 72 ms); not at stress (2.7 MB).
+- **Not met, outside this round's scope: gossip.** `Relations.hour` runs an hour's meetings in one frame, so the hour's
+  tellings land together: 19 ms here at 500 people live (about 76 ms on the phone). Next step proposed: queue the hour's
+  meetings and tell them in budgeted slices (it changes when word passes, by minutes, so it needs its own equivalence
+  argument), and make `tell` cheaper (it is about 45 microseconds a meeting).
+
+### How the two round-2 changes work
+
+- **Compact records.** Facts, memories, contributions and ledgers are `PackedInt64Array` rows (event types and sources by
+  index), facts' knowers a sorted packed list, tags and original actors only for events that have them. `fact()`,
+  `belief()` and `ledger()` return readable copies. The saved layout is unchanged (`mml-judgment/1`): a round-1 save loads.
+- **Sliced daily update.** `begin_day` at dawn does only the global part (old events retire); each person's update
+  (fading, forgetting, retiring their records, the optional effective view) runs in `dawn_hour` slices in id order, or the
+  moment anything reads or changes that person's records (catch-up on touch). A person's update depends only on their
+  own records and the day, so the result is the same however it is sliced: `judgment_test.gd` runs twelve days with
+  events, gossip, newcomers and decisions every hour, once with the whole update at dawn and once sliced, and every
+  telling, choice, opinion and the end state hash agree (also with retraction, a fading view and distorted rumours on).
+
+### The trade hook in the live village (round 2)
+
+`economy_sim.gd`, 10 days, seed 1, run one after the other (same machine, shared):
+
+| Judgment | Wall time | Leaks | Day-10 fingerprint |
+|---|---|---|---|
+| off | 72.0 s, 72.8 s | currency 0, items none | `f63a01a0...` (the baseline's) |
+| on, round 1 adapter (full scan of buyers every sale) | 89.3 s, 87.7 s, 89.1 s (about +20%) | 0, none | the same |
+| on, round 2 adapter (shortcut) | 78.4 s, 73.0 s (about +5%, within the noise of two runs) | 0, none | the same |
+
+The round-2 adapter first finds the live rule's own pick (the same early-exit search the game does with judgment off)
+and skips the full scan when that pick must win anyway: under the shipped `trade_sell` profile another buyer can win
+only by a disposition advantage worth more than `live_order`'s step, and no one can have a better disposition than the
+best the seller holds of anyone. All 32,864 weighed sales in the 10 days took the shortcut; `judgment_live_test.gd`
+checks the shortcut picks exactly as the full scan over twelve opinion mixes. Of the 29 to 31 s measured inside the
+hook, nearly all is the live buyer search itself (`World.purchase_qty`), which the game pays with judgment off too.
+Gossip in the live village cost 0.12 s over the 10 days, the daily update 3 ms.
+
+### Event feeds not yet wired (listed, not added: they would change live behaviour once judgment is on)
+
+Live code publishes today: the player's thefts and caught pickpocketing (`World.witness`), anyone's attacks including
+bandit robberies (`World.raise_alarm`), the player killing a villager (`World.kill`). Missing:
+- help: quests done and favours (`Relations.helped`), gifts (`Relations.give`), defending villagers from bandits and
+  beasts (`Relations.defended`, the catalog's `rescue`);
+- trade: fair dealing and cheating (`World.trade`; `trade_fair`, `trade_cheat`), and the player selling stolen goods
+  back to its owner (`World.player_sell`);
+- villagers' crimes other than attacks: there is no record of a villager's theft (DVW-B2);
+- killings by villagers or bandits (`World.kill` with a villager's name in the cause);
+- an unseen theft discovered later ("found missing": no actor is known, so it fits the evidence-discovery path, spec s.6);
+- guards' fines as legal facts (SJD-Q08), hoarding in famine, false accusations, and the NEUTRAL meetings and
+  marriages (SJD-Q01).
 
 ## 8. Integration notes
 
