@@ -9,8 +9,8 @@ Updated 2026-10-21.
 ## Branch and latest pushed commit
 
 `wip/expansion19-preparation`, branched from staging `b721616` (Build 16 released, plus records). Commits:
-`3005d6f` (isolated prototype), `221ac6f` (live adapter, off), and the commit that adds this file (performance suite,
-CI listing, documents); the pushed head is the branch head on GitHub.
+`3005d6f` (isolated prototype), `221ac6f` (live adapter, off), `efbd31c` (performance suite, CI listing,
+documents), and this record's update; the pushed head is the branch head on GitHub.
 
 ## Implemented and tested
 
