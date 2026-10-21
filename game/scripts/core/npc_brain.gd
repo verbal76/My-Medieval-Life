@@ -1602,6 +1602,12 @@ func stock_family_chest(n: NPC) -> void:
 		if put > 0 and w.transfer(n.inv, pantry, f, put):
 			short -= float(put) * food_points(f)
 			w.stat("family_chest_stocked", put)
+	# and the firewood to cook the chest's meat, from trade stock too, as far as the reserve horizon needs (B7-015 after
+	# FSE-18, seed 4: two children starved beside 7 raw meat while a member kept 18 logs for sale)
+	var horizon := ceili(household_day_food(n.household) * float(GameData.b("reserve_days")) / food_points("meat"))
+	var logs := mini(mini(pantry.count("meat"), horizon) - pantry.count("log"), n.inv.count("log"))
+	if logs > 0 and not carrying_for_work and w.transfer(n.inv, pantry, "log", logs):
+		w.stat("family_chest_stocked", logs)
 
 
 ## How many of `f` that `n` carries are trade stock: all of a food vendor's (the tavern, the cook, the food merchant sell

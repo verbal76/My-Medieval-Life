@@ -249,10 +249,17 @@ func relief_sources(w: World, fam: NPC) -> void:
 	w.brain._cook_at_home(mb[mb.size() - 1], pbf)
 	check(pbf.count("roast_meat") >= 2, "FSE-18: so the household can roast its meat at the hearth")
 	var cw: NPC = w.npcs.filter(func(o): return o.alive and o.job == "carpenter")[0]
+	var cwp: Inventory = w.households[cw.household].pantry
+	cwp.remove("meat", cwp.count("meat"))
 	cw.inv.add("log", 5)
 	var cwl: int = cw.inv.count("log")
 	w.brain.stock_family_chest(cw)
 	check(cw.inv.count("log") == cwl, "FSE-18: a carpenter keeps the logs their trade works (inputs are not the family's)")
+	# B7-015 (seed 4): but the chest's meat gets its firewood from trade stock first, as its food does
+	cwp.add("meat", 3)
+	var cl0 := cwp.count("log")
+	w.brain.stock_family_chest(cw)
+	check(cwp.count("log") >= 3 and cw.inv.count("log") == cwl - (cwp.count("log") - cl0), "B7-015: a trader home puts in the logs to roast the family chest's meat (%d logs for 3 meat)" % cwp.count("log"))
 	# FSE-18: the player's family chest counts in the player's reserve, by the households' rule
 	var pl := w.player
 	var home0: String = pl.home
