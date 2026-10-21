@@ -99,6 +99,39 @@ SUPPORTED** (the architecture does not carry it; documented, not invented).
 
 ## 7. Tests and results
 
-`game/tests/underground_ext_test.gd`: see the branch's report for counts. Screenshots (looked at): the gallery with a
-timber set, four cells cut open, a run of track from the adit's inner mouth and a loaded minecart, the player and a
-villager beside it; the cave with its three seams, the player and a villager who walked in through its mouth.
+`game/tests/underground_ext_test.gd` (113 checks): the cave's generation per seed (reachable, under the rock, three
+wall seams, other seeds other caves, no rng draw) and the adit gallery unchanged; entry and exit through the cave's
+mouth, collision and tap-walk in the cave, the router; stacked levels (a cell floor of both levels: the player in the
+cave and a villager in the gallery do not see or reach each other); supports (refusals, consumed, counted by the
+census and the capability evaluator); cutting (refusals: no support, seam, thin rock, no open face, no pickaxe, out of
+reach; 3 stone then 2 spoil, the cell opens on the last, its A*, xp, `cut_` counts, the goods census rises by exactly
+the rock's fall, the support's reach, DVW-A10 reach of every floor cell, every cut cell under the rock); parity of the
+player and a villager; track (refusals, consumed, the yard rule); the minecart (built by its recipe, set down on track
+only, its kind, level and stacks, market runs ignore it, pulled along the track it stays on the rails and carries 4
+real ore units unchanged, wears, stays when pulled off and is let go); through the adit only with track on both stands,
+for the player and a villager, a handcart still refused; saves (cut, half-cut, supports, track, the minecart and the
+player in the cave round-trip; a 17 save from before MIN-F and a 16 save load with defaults); determinism; a level-0
+village mines the cave and cuts (Q18-9); a miner whose only ore is in the cave walks in through its mouth, mines and
+carries it out, every unit counted. The scene: two level views, the mouth drawn, the cave shown alone, a cut cell
+redrawn, the "Cut into the rock" offer.
+
+Results on `wip/b17-minf` merged with `wip/build17` `e9a01e4`, 0 failures each: underground_ext 113, underground 95,
+openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3538, start 499 steps, play 37
+steps, parity 55; `check_resources.py` 28 nodes 0 problems; `check_materials.py` 0 broken references, 0 stale
+exceptions, 18 open findings (16 before: nails is now a recipe material, consumed by no villager profession: open);
+`check_assets.py` 0 problems; `python3 -m unittest discover -s tests` 105 OK. `economy_sim.gd --days 30 --seed 1`:
+`LEAKS: currency 0; items {}; deposits []; animals {}`, fingerprint `5063396929116f24aa7e707200ff846c` (changed from
+the Build 17 baseline: the cave's three seams are the village's own ore now, so the labour market, the caravan's
+import thresholds and the miners' choices move; in this run the miners worked the cave's seams and the manor staked an
+open pit). Tests updated for the cave by design: `underground_test` (two portals, villager levels [0, -1, -2], the
+cave's seams counted, two level views), `world_test` (the sawhorse now has two log recipes), `tests/test_resources.py`
+(tunnel_rock is a finite node with no replacement).
+
+Screenshots (looked at; `main.gd --screenshot ... --panel mine_works | cave`, xvfb, opengl3): **mine_works**: the gallery's
+grey cobbled floor with its mossy rock walls, a timber set (two posts and a cap beam) at the new face, a run of rails
+with sleepers from the adit's mouth bending north and east to it, a mine cart heaped with grey rock on the rails beside
+the set, the player standing by the cart and a villager (the labourer) on the track; the cells cut open read as more
+of the same cobbled floor, so the cut is not visibly different from the old gallery. **cave**: the cave alone, the
+surface faded out; a broad ochre-dirt floor (one shaded tile, flat-looking), pale rock walls round it, three seams on
+its walls (copper's orange flecks, iron's blue, coal's black), the player in the middle and a villager who walked in
+through the mouth beside them. Not looked at on a phone.
