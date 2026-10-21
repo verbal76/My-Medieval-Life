@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 252 (109 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 197 still open from the baseline + 109 added and open |
+| Entries added since | | 255 (110 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **305** = 197 still open from the baseline + 110 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (34)
@@ -64,7 +64,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (252)
+## Added since the baseline (255)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -306,9 +306,12 @@ None.
 | STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | approved | APPROVED — NOT STARTED | 18 |
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | approved | APPROVED — NOT STARTED | 18 |
 | STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | approved | APPROVED — NOT STARTED | 18 |
-| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | BLOCKED | owner decision |
+| STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | approved | APPROVED — NOT STARTED | 18 |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | approved | APPROVED — NOT STARTED | 18 |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | COMPLETE AND VERIFIED | owner decision |
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) | decision | COMPLETE AND VERIFIED |  |
 | STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 | decision | COMPLETE AND VERIFIED |  |
+| STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 | decision | COMPLETE AND VERIFIED |  |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |

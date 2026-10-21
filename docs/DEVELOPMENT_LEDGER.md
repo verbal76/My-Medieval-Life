@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 66 |
+| APPROVED — NOT STARTED | 68 |
 | ACTIVE DEVELOPMENT | 21 |
 | PARTIALLY IMPLEMENTED | 34 |
 | IMPLEMENTED — TESTING REQUIRED | 38 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **482** |
-| Outstanding (not complete, superseded or canceled) | 232 |
+| **Total approved** | **484** |
+| Outstanding (not complete, superseded or canceled) | 234 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 42 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 104 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 41 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 32 | 32 |
-| Build 18: Settlement Advancement & Regional Economy | 27 | 22 |
+| Build 18: Settlement Advancement & Regional Economy | 29 | 24 |
 | Build 19: NPC Judgment System | 29 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 77 | 30 |
+| Waiting on an owner decision | 76 | 30 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **304** | **232** |
+| **Total open** | **305** | **234** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -183,7 +183,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | approved | ACTIVE DEVELOPMENT |  |  |
 
-### Build 18: Settlement Advancement & Regional Economy (27)
+### Build 18: Settlement Advancement & Regional Economy (29)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -210,6 +210,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | approved | APPROVED — NOT STARTED |  |  |
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | approved | APPROVED — NOT STARTED |  |  |
 | STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | approved | APPROVED — NOT STARTED |  |  |
+| STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | approved | APPROVED — NOT STARTED |  |  |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | approved | APPROVED — NOT STARTED |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -306,7 +308,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (77)
+### Waiting on an owner decision (76)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -386,7 +388,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | APPROVED — NOT STARTED | Owner designation | Numbering 20+ needs the owner |
-| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | BLOCKED |  |  |
 
 ### Owner or external action (not development work) (6)
 
@@ -453,7 +454,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (66)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -519,6 +520,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after STONE-01 |  |
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after STONE-01; after STONE-Q1 |  |
 | STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | docs/directives/2026-10-21_stone_q2_skill_based_dressing.md |  | after STONE-01; after STONE-Q2 |  |
+| STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md |  | after STONE-01; after STONE-Q3; after STONE-04 |  |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md |  | after STONE-01; after STONE-Q3 |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
@@ -985,7 +988,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 42, status BLOCKED) (103)
+## Owner decisions, open and answered (open: 41, status BLOCKED) (104)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1089,9 +1092,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-Q12 | Judgment open decision: What makes an event important enough to score? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | BLOCKED | docs/build17/STONE_01_BLOCKS.md |
+| STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | COMPLETE AND VERIFIED | docs/build17/STONE_01_BLOCKS.md |
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |
 | STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 | COMPLETE AND VERIFIED | docs/directives/2026-10-21_stone_q2_skill_based_dressing.md |
+| STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 | COMPLETE AND VERIFIED | docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md |
 
 ## World design rule (27)
 

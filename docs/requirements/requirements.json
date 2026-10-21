@@ -28834,12 +28834,114 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Build 17 keeps 1:1 (dress_stone: 2 stone to 2 blocks, exact). Owner question for Expansion 18 design: the skill-to-efficiency values. Related: X18-STONECUT (staging), STONE-02, STONE-03.",
+   "notes": "Build 17 keeps 1:1 (dress_stone: 2 stone to 2 blocks, exact). Governed by Stoneworking (STONE-05) per STONE-Q3. Owner question for Expansion 18 design: the skill-to-efficiency values, with effects on depletion, construction affordability, stoneworker profitability and settlement viability. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-06.",
    "history": [
     {
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner STONE-Q3: the efficiency is governed by the new Stoneworking skill (STONE-05), not Crafting"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-05",
+   "title": "Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Introduce Stoneworking as a distinct skill using the existing player and NPC skill architecture. It must behave consistently with existing skills such as Mining, Smithing, and Cooking. Stoneworking proficiency is gained through actual stoneworking activity under the game's normal skill-progression rules. A character's general Crafting proficiency must not automatically make them an expert stonecutter.",
+   "description": "Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q3, 1B), Expansion 18",
+   "acceptance": [
+    "A stoneworking skill in the existing skills (player and NPC), raised only by stoneworking under the normal progression; dress_stone uses it instead of Crafting; it governs the STONE-04 efficiency",
+    "One rule for players, villagers for their own needs, general workers, professional stonecutters and hired services; no occupation needed, none grants levels",
+    "Saves migrate by the existing skill conventions without corruption or invented history; the starting level and any migration credit are put to the owner before being chosen; player and NPC skill displays updated; deterministic",
+    "Focused tests: parity, progression, efficiency, save migration"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q3",
+    "STONE-04"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 unaffected (Crafting and the mallet; 2 stone to 2 blocks). Owner questions for the Expansion 18 design phase (not Build 17): starting Stoneworking levels and migration credit; skill-to-efficiency values (STONE-04); chisel durability and wear; chisel recipe quantities where conventions do not settle them. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-04.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-06",
+   "title": "Iron chisel: smith-made, worn by use, needed with the mallet to dress stone",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Stone dressing will require both: 1. A mallet. 2. An iron chisel. The chisel is a real, physically conserved inventory item. Blacksmiths manufacture chisels using the existing smithing and production systems. ... Do not invent a permanent chisel durability value, wear rate, production recipe quantity, or market price without first checking existing conventions and obtaining owner approval where a new balancing decision is needed.",
+   "description": "Iron chisel: smith-made, worn by use, needed with the mallet to dress stone",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q3, 2B), Expansion 18",
+   "acceptance": [
+    "A chisel item made by smiths at the forge or anvil from real inputs with labour and time, through the existing smithing recipes; sold, transferred and procured by the ordinary systems; nobody gets one free",
+    "dress_stone needs a usable mallet and chisel for everyone, professionals included; missing tools refuse the work by the normal rules; chisels wear with use and are replaced",
+    "Durability, wear, recipe quantities and price follow existing conventions where they settle them, otherwise go to the owner before being fixed",
+    "Focused tests: production, wear, missing-tool behaviour, conservation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q3"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 unaffected (Crafting and the mallet; 2 stone to 2 blocks). Owner questions for the Expansion 18 design phase (not Build 17): starting Stoneworking levels and migration credit; skill-to-efficiency values (STONE-04); chisel durability and wear; chisel recipe quantities where conventions do not settle them. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-04.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
     },
     {
      "date": "2026-10-21",
@@ -28853,7 +28955,7 @@
    "id": "STONE-Q",
    "title": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "1. Should fittings and the manor's mending use blocks? (recommend raw stone). 2. Should dressing waste stone, e.g. 3 to 2? (recommend 1:1 until balance review). 3. A dedicated mason trade, Stoneworking skill or chisel? (recommend revisiting with the labour-market work)",
    "description": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "source": "docs/build17/STONE_01_BLOCKS.md",
@@ -28872,7 +28974,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Present part 3 (the remaining sub-question: a separate Stoneworking skill and/or a chisel)",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28912,6 +29014,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Owner answered part 2 (STONE-Q2, Option C: skill-based efficiency in Expansion 18, STONE-04; Build 17 stays 1:1). Part 3 to present"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; next_action",
+     "why": "All three parts answered by the owner on 2026-10-21: STONE-Q1 (Option C, materials match the work), STONE-Q2 (Option C, skill-based efficiency, STONE-04), STONE-Q3 (1B + 2B, Stoneworking skill STONE-05 and iron chisel STONE-06); all implementation in Expansion 18, Build 17 unchanged"
     }
    ],
    "target_build": "owner decision"
@@ -28985,6 +29092,42 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    }
+   ]
+  },
+  {
+   "id": "STONE-Q3",
+   "title": "STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "1B: A dedicated Stoneworking skill within the existing character skill system. 2B: Stone dressing requires both a mallet and an iron chisel. Implementation assignment: Expansion 18. Build 17: No changes required or authorized by this decision.",
+   "description": "STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21: OWNER DECISION: 1B + 2B APPROVED",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
     }
    ]
   },
