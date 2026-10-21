@@ -8611,7 +8611,7 @@
    "id": "EQ-01",
    "title": "Human civilization sustains itself without the player",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Without player intervention, NPCs must be capable of: Producing and distributing food. Forming families and raising new generations. Maintaining a viable population over time. Building, repairing, and replacing housing. ...",
    "description": "Human civilization sustains itself without the player",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8626,7 +8626,7 @@
     "Recovery from disasters and losses"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8658,6 +8658,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only"
     }
    ],
    "target_build": "16",
@@ -8670,7 +8675,7 @@
    "id": "EQ-02",
    "title": "Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Predators must not inevitably eliminate all prey, and hunting must not inevitably eliminate every species across the entire world.",
    "description": "Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8682,7 +8687,7 @@
     "No unlimited instant respawning"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -8723,6 +8728,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Mapped by Worker D"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests",
+     "why": "The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only"
     }
    ],
    "target_build": "16",
@@ -8735,7 +8745,7 @@
    "id": "EQ-03",
    "title": "Humans and nature affect each other through real NPC decisions",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Neither system should exist independently as a disconnected background simulation.",
    "description": "Humans and nature affect each other through real NPC decisions",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8745,7 +8755,7 @@
     "Harvests, predators, depletion and wildlife numbers change NPC decisions"
    ],
    "implementation": "",
-   "tests": "ecology_test (14 checks)",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -8782,6 +8792,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 152ffa2; tests",
      "why": "Hunting, predators and depletion change villagers' work by real counts; a hunter with no game takes other work; reacting to predators directly would be a new mechanic (owner)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -8794,7 +8809,7 @@
    "id": "EQ-04",
    "title": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "When a carpenter dies, another NPC should eventually be capable of entering that profession.",
    "description": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8806,7 +8821,7 @@
     "A failed business's role is filled by another or by trade"
    ],
    "implementation": "",
-   "tests": "succession_test (26 checks)",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -8851,6 +8866,11 @@
      "date": "2026-10-21",
      "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit 89ee852; tests",
      "why": "Reeve and guard posts pass on through the succession of posts; a failed business's post is taken up"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -8919,7 +8939,7 @@
    "id": "EQ-06",
    "title": "Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Use multiple seeds so one unusually successful simulation cannot conceal a systemic problem.",
    "description": "Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8931,7 +8951,7 @@
     "Separate intervention scenarios change the results"
    ],
    "implementation": "",
-   "tests": "economy_sim.gd scenarios; world_test.gd",
+   "tests": "Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves); EQ-06 local scenarios 100 days (LONG_RUN_SIMULATION.md)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8969,6 +8989,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests",
      "why": "Harness built (economy_sim --scenario/--at); four intervention scenarios x seeds 1-2 x 100 days recorded in LONG_RUN_SIMULATION.md, all balanced, 0 script errors; the four-seed 365-day inactive runs on Actions remain"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests",
+     "why": "Multi-seed inactive-player runs reproducible and recorded; no spiral into extinction, starvation, unemployment or paralysis; the intervention scenarios change the results"
     }
    ],
    "target_build": "16",
@@ -9136,7 +9161,7 @@
    "id": "EQ-09",
    "title": "Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Local stone runs out by about game day 60, slowing house building",
    "source": "Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md)",
@@ -9146,7 +9171,7 @@
     "Measured in the 100/365-day runs"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9203,6 +9228,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "365-day seed 1 (old code): merchants held 97 stone at day 365 after the deposits ran out; caravan stone keeps pace; stone did not stop building"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only"
     }
    ],
    "target_build": "16",
@@ -9264,7 +9294,7 @@
    "id": "EQ-16",
    "title": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "By Build 16, the world itself should be the functioning simulation. The player should be the variable that changes its history, not the mechanism keeping it alive.",
    "description": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -9274,7 +9304,7 @@
     "Not closed because a short simulation passes"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9319,6 +9349,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests",
+     "why": "Every child EQ-01..EQ-07 complete and verified"
     }
    ],
    "target_build": "16",
@@ -10494,7 +10529,7 @@
    "id": "FARM-01",
    "title": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10507,7 +10542,7 @@
     "Player and NPCs through the same mechanics; tests"
    ],
    "implementation": "",
-   "tests": "farm_plots_test (104 checks); suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10549,6 +10584,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
      "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -10561,7 +10601,7 @@
    "id": "FARM-02",
    "title": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10574,7 +10614,7 @@
     "The developed land can be ploughed, planted, tended and harvested; tests"
    ],
    "implementation": "",
-   "tests": "farm_plots_test (104 checks); suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10616,6 +10656,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
      "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -10628,7 +10673,7 @@
    "id": "FARM-03",
    "title": "Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10637,7 +10682,7 @@
     "Villagers use Farming's cells, seed, seasons and labour as the player does; tests"
    ],
    "implementation": "",
-   "tests": "farm_plots_test (104 checks); suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10674,6 +10719,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
      "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -10686,7 +10736,7 @@
    "id": "FARM-04",
    "title": "Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10695,7 +10745,7 @@
     "Any household member able to work tends, harvests; the harvest goes to the family chest (FSE-18); tests"
    ],
    "implementation": "",
-   "tests": "farm_plots_test (104 checks); suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10732,6 +10782,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
      "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -10744,7 +10799,7 @@
    "id": "FARM-05",
    "title": "Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10753,7 +10808,7 @@
     "A household's decision weighs food security, coins, labour and land available; some do, some do not; measured on the seed runs"
    ],
    "implementation": "",
-   "tests": "farm_plots_test (104 checks); suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10790,6 +10845,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
      "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -10855,7 +10915,7 @@
    "id": "FARM-07",
    "title": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10864,7 +10924,7 @@
     "The weekly lease is the existing rent rule by area (ceil(Property.land_price x weekly_rent_share)): 2 coins for a 16-30 cell plot, the approved baseline; larger plots pay more (owner Q11, OD-27, superseding the earlier flat 2 coins); purchased land pays no lease; paid to the treasury under the existing lease scheduling and accounting"
    ],
    "implementation": "",
-   "tests": "farm_plots_test (104 checks); suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10911,6 +10971,11 @@
      "date": "2026-10-21",
      "change": "acceptance rewritten to the owner's Q11 answer",
      "why": "OD-27: area-based lease and purchase prices; the 2-coin lease is the reference for the baseline plot, not a flat price"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -16914,10 +16979,55 @@
    "roadmap_reason": "Owner Build 17 start"
   },
   {
+   "id": "OD-30",
+   "title": "Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track",
+   "source": "docs/directives/2026-10-21_expansion_numbering_approval.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Roadmap organization and sequencing only: no design decision approved, no implementation authorized, no release dates"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion_numbering_approval.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner_answer; target_build; roadmap_gate; roadmap_reason",
+     "why": "Owner answered"
+    }
+   ],
+   "owner_answer": "Approved as the official long-term planning sequence (organization and sequencing only; unresolved design decisions, implementation and release dates not approved)",
+   "target_build": "owner decision",
+   "roadmap_gate": "Owner designation",
+   "roadmap_reason": "Roadmap numbering"
+  },
+  {
    "id": "OD-LE-01",
    "title": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
    "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
@@ -16951,11 +17061,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "Answered by the owner's numbering approval (sequencing only)"
     }
    ],
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
+   "owner_answer": "Expansion 20 (owner, 2026-10-21, OD-30: the official numbering); Build 19 Judgment not displaced"
   },
   {
    "id": "OD-LE-02",
@@ -18889,7 +19005,7 @@
    "id": "PAR-00",
    "title": "The player is a villager: one set of world rules for player and villagers",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "THE PLAYER IS A VILLAGER. The player is not a special entity operating under different economic, crafting, skill, health, or world-awareness rules. The only fundamental difference is decision-making control. Implement these decisions through shared underlying systems wherever practical.",
    "description": "The player is a villager: one set of world rules for player and villagers",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -18899,7 +19015,7 @@
     "No player-only rule remains in skills, trade eligibility, recovery, recipes or crime awareness without an owner-approved reason"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -18929,6 +19045,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
      "why": "PAR-01..05 complete; parity gaps since found are open: the hearth's recipes (FSE-B11), hunting experience (FSE-B12), farming (FARM-03), stalls (STALL-06)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -21552,7 +21673,7 @@
    "id": "REC-001",
    "title": "Adoption and orphan guardianship (NPCs and the player)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Adoption is an intended feature of this game. ... If adoption is missing, document the required implementation and propose rules before adding the new mechanic.",
    "description": "When a child's parents die, the child gets a guardian or adoptive household (family first, then willing suitable households), household membership, food needs and inheritance update at once, and the player can adopt under the same rules. #46 asked for the rules to be proposed before implementation.",
    "source": "owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs')",
@@ -21562,7 +21683,7 @@
    ],
    "acceptance_derived": true,
    "implementation": "Not implemented. The only mention in code is a comment in game/scripts/core/npc_brain.gd:2137 ('marriage, births and adoption will call it too'); no adopt/orphan/guardian logic in game/scripts. docs/BUILD_DECISIONS.md 'Known gaps' (line 442) still lists adoption as missing. Partnering, births and heirs exist (life.gd, B8-029). No requirement id in the ledger, queue, audits or docs/requirements/requirements.json covers adoption.",
-   "tests": "family_test (51 checks); 30 suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -21599,6 +21720,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 04a8eb9; tests",
      "why": "Orphans take their household's stores; the player's partner household in the guardianship order; player_adopt with 'Offer a home'. Open for the owner: a player without a partner cannot adopt (no player household); the orphaned household's house still goes to the manor; the player-adoption rule needs confirming (owner #46)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -22648,6 +22774,60 @@
    "target_build": "15",
    "roadmap_gate": "",
    "roadmap_reason": "the roadmap record itself, kept current from Build 15"
+  },
+  {
+   "id": "ROAD-02",
+   "title": "Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering",
+   "kind": "proposal",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering",
+   "source": "docs/directives/2026-10-21_master_expansion_roadmap.md (the pack's other documents on wip/roadmap-docs, docs/roadmap/)",
+   "approval": "Supplied by the owner 2026-10-21 as a planning baseline; numbers 20 onward are recommendations until the owner designates them",
+   "acceptance": [
+    "Starters stored as design documents on a planning branch; each compared with the original directives and register IDs with missing decisions recorded; 18 engineering plan; 19 SJD reconciliation; multiplayer audit; the owner designates 20-23 before they become build targets"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Numbering approved by the owner 2026-10-21 (OD-30): 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration unnumbered, Multiplayer separate; sequencing only, no design or implementation approval",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "wip/roadmap-docs: docs/roadmap/Master_Expansion_Roadmap.md and the pack"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "source",
+     "why": "Source path on staging"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner approved the numbering"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "Owner designation",
+   "roadmap_reason": "Numbering 20+ needs the owner"
   },
   {
    "id": "SAVE-00",
@@ -24838,7 +25018,7 @@
    "id": "STALL-01",
    "title": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24850,7 +25030,7 @@
     "Player and NPCs through the same mechanics; tests"
    ],
    "implementation": "",
-   "tests": "stalls_test (104 checks), business_test; suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -24892,6 +25072,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
      "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -24904,7 +25089,7 @@
    "id": "STALL-02",
    "title": "A stall's own inventory: goods are moved into it for sale and are in one place only",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "A stall's own inventory: goods are moved into it for sale and are in one place only",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24913,7 +25098,7 @@
     "Goods transferred, never duplicated; tests"
    ],
    "implementation": "",
-   "tests": "stalls_test (104 checks), business_test; suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -24950,6 +25135,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
      "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -24962,7 +25152,7 @@
    "id": "STALL-03",
    "title": "OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24971,7 +25161,7 @@
     "No owner presence needed; purchases only by buyers with needs and coins; auto-close and notice; tests"
    ],
    "implementation": "",
-   "tests": "stalls_test (104 checks), business_test; suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -25008,6 +25198,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
      "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -25020,7 +25215,7 @@
    "id": "STALL-04",
    "title": "CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -25029,7 +25224,7 @@
     "Manual close, restock and reopen; tests"
    ],
    "implementation": "",
-   "tests": "stalls_test (104 checks), business_test; suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -25066,6 +25261,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
      "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -25078,7 +25278,7 @@
    "id": "STALL-05",
    "title": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -25092,7 +25292,7 @@
     "Tests"
    ],
    "implementation": "",
-   "tests": "stalls_test (104 checks), business_test; suites",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -25134,6 +25334,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
      "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -25486,7 +25691,7 @@
    "id": "TREAS-01",
    "title": "The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock",
    "source": "docs/directives/2026-10-21_build16_master_completion_directive.md",
@@ -25495,7 +25700,7 @@
     "Lease, purchase and commission income reaches w.treasury; in shortage the manor buys real goods from real sellers with treasury coins and relief uses only owned stock; no money or goods from nothing; no parallel treasury; conservation tests and the gate"
    ],
    "implementation": "",
-   "tests": "treasury_test, stalls_test, farm_plots_test",
+   "tests": "suites (35); Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -25537,6 +25742,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 1de1bcc; tests",
      "why": "Commission, leases and purchases reach the treasury through existing accounting; relief from the manor's own stock; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented and tested; the four-seed year runs of the integrated build pass"
     }
    ],
    "target_build": "16",
@@ -26004,7 +26214,7 @@
    "id": "WDR-005-C",
    "title": "Comply with World Design Rule 5: Living World Independence",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
    "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
@@ -26013,7 +26223,7 @@
     "Rule 005's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Villagers live, work, trade and age without the player; 0 houses built in 365 days (B14R-12)",
-   "tests": "",
+   "tests": "Actions run 39618523947 on dbbb66a, normal game, 365 days, seeds 1-4: all passed (0 script errors, ledgers balanced), starvation 0/0/0/0, no famine, food days 286/282/346/286, houses built 13/9/7/12, cattle herds kept (115-120 calves)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -26040,6 +26250,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests",
+     "why": "The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only"
     }
    ],
    "target_build": "16",
