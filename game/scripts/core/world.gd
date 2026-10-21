@@ -327,7 +327,8 @@ func _on_hour(h: int) -> void:
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"
-			f.crop = int(GameData.b("field_yield"))
+			# the old field model's fixed yield; under the shared model (FSE-12) the crop of the cells sown (Farming.sow_field)
+			f.crop = int(f.get("sown", 0)) * int(Farming.crops().wheat.yield) if Farming.shared_manor() else int(GameData.b("field_yield"))
 			f.ripe_at = f.ready
 			_field_tiles(f)
 	if h == 6:

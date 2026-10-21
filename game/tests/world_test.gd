@@ -495,6 +495,7 @@ func _pl_gameplay() -> void:
 	_par05_awareness()
 	_pick01_reports()
 	_ctr01_counters()
+	_fse12_shared_fields()
 	_par03_rest()
 	_pl2_006()
 	_pl2_007()
@@ -819,6 +820,49 @@ func _ctr01_counters() -> void:
 	w.counters.serving.clear()
 	w.minutes = m0
 	p.pos = p0
+
+
+## FSE-12, FARM-06: behind the switch, a manor field is sown with real seed a cell, yields the player's crop a sown cell
+## and gives the seed back; with no seed it stays unsown. Off, the old model (the baseline) is untouched.
+func _fse12_shared_fields() -> void:
+	var w: World = main.world
+	var keep_sw = GameData.balance.get("shared_manor_farming", 0)
+	GameData.balance["shared_manor_farming"] = 1
+	var f: Dictionary = w.fields[0]
+	var saved := f.duplicate(true)
+	var ws: Array = w.field_workers(f)
+	var n: NPC = ws[0]
+	var held := {}
+	for o: NPC in ws:
+		held[o.id] = [o.inv.count("wheat_seed"), o.inv.count("wheat"), w.households[o.household].pantry.count("wheat_seed")]
+		o.inv.remove("wheat_seed", o.inv.count("wheat_seed"))
+		w.households[o.household].pantry.remove("wheat_seed", w.households[o.household].pantry.count("wheat_seed"))
+	w.set_field(f, "tilled")
+	check(w.farm.field_seed(f) == 0 and not w.brain.act(n, "sow", {"field": f.id}) and f.state == "tilled", "FSE-12: with no seed the field is not sown (no free seed)")
+	n.inv.add("wheat_seed", 10)
+	var used0 := float(w.stats.get("used_wheat_seed", 0.0))
+	check(w.brain.act(n, "sow", {"field": f.id}) and f.state == "growing" and int(f.sown) == 10 and n.inv.count("wheat_seed") == 0 and float(w.stats.get("used_wheat_seed", 0.0)) == used0 + 10.0,
+			"FSE-12: sowing takes one seed a cell (10 seeds, 10 of %d cells sown)" % Farming.field_cells(f))
+	check(w.farm.field_work_minutes(10, "sow") < w.farm.field_work_minutes(Farming.field_cells(f), "sow"), "FSE-12: sowing takes time by the cells sown")
+	f.ready = w.minutes
+	w.set_field(f, "ripe")
+	f.crop = int(f.sown) * int(Farming.crops().wheat.yield)
+	f.ripe_at = w.minutes - 1000.0 * 60.0
+	var wh0: int = n.inv.count("wheat") + w.households[n.household].pantry.count("wheat")
+	var made0 := float(w.stats.get("made_wheat_seed", 0.0))
+	w.brain.act(n, "harvest", {"field": f.id})
+	var got: int = n.inv.count("wheat") + w.households[n.household].pantry.count("wheat") - wh0
+	check(got == 10 * int(Farming.crops().wheat.yield) and n.inv.count("wheat_seed") == 10 * int(Farming.crops().wheat.seeds_back) and float(w.stats.get("made_wheat_seed", 0.0)) == made0 + 10.0,
+			"FSE-12: the cut gives the crop of the sown cells (%d wheat) and their seed back (%d)" % [got, n.inv.count("wheat_seed")])
+	for o: NPC in ws:
+		o.inv.remove("wheat_seed", o.inv.count("wheat_seed"))
+		o.inv.add("wheat_seed", held[o.id][0])
+		w.households[o.household].pantry.add("wheat_seed", held[o.id][2])
+	for k in saved:
+		f[k] = saved[k]
+	f.erase("sown")
+	w.set_field(f, str(saved.state))
+	GameData.balance["shared_manor_farming"] = keep_sw
 
 
 func _pick01_reports() -> void:

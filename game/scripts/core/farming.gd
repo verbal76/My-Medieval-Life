@@ -593,6 +593,73 @@ func seed_offers(n: NPC) -> Array:
 	return crops().keys().filter(func(c): return n.inv.has(str(crops()[c].seed)))
 
 
+# ---------------------------------------------------------------- the manor's fields, shared model (FSE-12) -----
+## FSE-12, FARM-06 (owner, 2026-10-21: behind a test switch, compared before activation): with balance
+## `shared_manor_farming` 1, the manor's fields follow the player's per-cell rules: sowing takes one seed a cell (the
+## crop's seed, from the field's farmers' packs, then their households' pantries; as many cells as there is seed), each
+## sown cell yields the crop's `yield` and gives back `seeds_back` seed to the cutter, and the work takes the player's
+## time a cell (sowing, cutting, ploughing). Off (0), the old field model: a field yields field_yield, sown without seed.
+static func shared_manor() -> bool:
+	return int(GameData.b("shared_manor_farming")) == 1
+
+
+static func field_cells(f: Dictionary) -> int:
+	return int(f.w) * int(f.h)
+
+
+## Game minutes a villager spends on `cells` cells of a manor field: sowing ("sow") or cutting and ploughing ("cut").
+func field_work_minutes(cells: int, what: String) -> float:
+	var gmps := float(GameData.b("game_minutes_per_second"))
+	var per := float(cfg().sow_seconds) if what == "sow" else float(cfg().harvest_seconds) + float(cfg().till.plough.seconds)
+	return maxf(15.0, per * gmps * cells)
+
+
+## The seed the farmers of field `f` can sow it with now: their packs, then their households' pantries.
+func field_seed(f: Dictionary) -> int:
+	var seed := str(crops().wheat.seed)
+	var n := 0
+	for o: NPC in w.field_workers(f):
+		n += o.inv.count(seed)
+		if o.household >= 0 and o.household < w.households.size():
+			n += (w.households[o.household].pantry as Inventory).count(seed)
+	return n
+
+
+## Sow field `f` (shared model): take one seed a cell, the sower's own first; the field's crop is what the sown cells
+## will yield. Returns the cells sown (0: no seed).
+func sow_field(n: NPC, f: Dictionary) -> int:
+	var seed := str(crops().wheat.seed)
+	var want := field_cells(f)
+	var stores: Array = [n.inv]
+	if n.household >= 0 and n.household < w.households.size():
+		stores.append(w.households[n.household].pantry)
+	for o: NPC in w.field_workers(f):
+		if o != n:
+			stores.append(o.inv)
+			if o.household >= 0 and o.household < w.households.size() and not stores.has(w.households[o.household].pantry):
+				stores.append(w.households[o.household].pantry)
+	var sown := 0
+	for inv: Inventory in stores:
+		var k := mini(want - sown, inv.count(seed))
+		if k > 0:
+			inv.remove(seed, k)
+			sown += k
+	if sown > 0:
+		w.stat("used_" + seed, float(sown))
+		f.sown = sown
+		f.crop = sown * int(crops().wheat.yield)
+	return sown
+
+
+## A cutter of a field sown under the shared model gets back `seeds_back` seed a sown cell (the player's rule).
+func seed_back(n: NPC, f: Dictionary) -> void:
+	var back := int(f.get("sown", 0)) * int(crops().wheat.seeds_back)
+	if back > 0:
+		n.inv.add(str(crops().wheat.seed), back)
+		w.stat("made_" + str(crops().wheat.seed), float(back))
+	f.sown = 0
+
+
 ## A farmer cutting a field keeps seed_keep of the crop back as wheat seed, up to seed_cap (seed saving);
 ## the rest of `wheat` is theirs as grain. Returns the grain left to add.
 func save_seed(n: NPC, wheat: int) -> int:

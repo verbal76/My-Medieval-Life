@@ -123,6 +123,13 @@ static func populate(w: World) -> void:
 		hh.pantry.add("pottage", 3)
 		hh.pantry.add("wheat", int(GameData.b("start_household_wheat_per_member")) * hh.members.size())   # provisions the settlers brought
 
+	if Farming.shared_manor():           # FSE-12 comparison: the village starts the year with its seed corn, a field's worth
+		for f: Dictionary in w.fields:   # shared among the field's farmers (a world-setup assumption, not a rescue)
+			var ws: Array = w.field_workers(f)
+			var cells := Farming.field_cells(f)
+			for i in ws.size():
+				(ws[i] as NPC).inv.add("wheat_seed", cells / ws.size() + (1 if i < cells % ws.size() else 0))
+
 	for i in int(GameData.b("bandits")):
 		var b := NPC.new()
 		b.id = next_id

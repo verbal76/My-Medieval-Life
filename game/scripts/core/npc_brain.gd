@@ -1209,10 +1209,17 @@ func _farmer(n: NPC) -> bool:
 	match "hired" if f.state == "ripe" and not w.quests.hired_on(f).is_empty() else st:
 		"ripe":
 			n.doing = "harvesting wheat"
-			n.plan = [go(spot), work(90, "harvest", {"field": f.id}, "work")]
+			var cut := w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0
+			n.plan = [go(spot), work(cut, "harvest", {"field": f.id}, "work")]
 		"tilled":
+			if Farming.shared_manor() and w.farm.field_seed(f) <= 0:
+				n.doing = "no seed to sow the field"          # FSE-12: no seed, no sowing (no free seed)
+				w.stat("field_unsown_no_seed")
+				n.plan = [go(spot), work(60, "", {}, "idle")]
+				return true
 			n.doing = "sowing"
-			n.plan = [go(spot), work(45, "sow", {"field": f.id}, "work")]
+			var sow := w.farm.field_work_minutes(mini(Farming.field_cells(f), w.farm.field_seed(f)), "sow") if Farming.shared_manor() else 45.0
+			n.plan = [go(spot), work(sow, "sow", {"field": f.id}, "work")]
 		_:
 			if n.inv.count("wheat") > reserve(n, "wheat") and _buyer_for(n, "wheat") != null:
 				return _plan_sell(n, "wheat")
@@ -2122,7 +2129,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
 				return false                                       # (left to the player hired to cut it)
-			n.inv.add("wheat", w.farm.save_seed(n, w.take_crop(f, 1 << 30)))   # whatever is left on the field, less the seed kept back
+			if Farming.shared_manor():                    # FSE-12: the crop of the sown cells and their seed back
+				w.farm.seed_back(n, f)
+				n.inv.add("wheat", w.take_crop(f, 1 << 30))
+			else:
+				n.inv.add("wheat", w.farm.save_seed(n, w.take_crop(f, 1 << 30)))   # whatever is left on the field, less the seed kept back
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
 			# who shares this field before anything is sold
 			for pid in w.fauna.pens:
@@ -2141,6 +2152,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"sow":
 			var f := _field(a.field)
 			if f.is_empty() or f.state != "tilled":
+				return false
+			if Farming.shared_manor() and w.farm.sow_field(n, f) <= 0:
 				return false
 			w.set_field(f, "growing")
 			return true

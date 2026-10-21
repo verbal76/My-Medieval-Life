@@ -23,6 +23,10 @@ on:
         description: "Sample every N days"
         default: "10"
         required: true
+      set:
+        description: "Balance overrides for a comparison run, space-separated key=value (e.g. shared_manor_farming=1); empty for none"
+        default: ""
+        required: false
 
 permissions:
   contents: read
@@ -91,6 +95,7 @@ jobs:
           SEED: ${{ matrix.seed }}
           DAYS: ${{ inputs.days }}
           EVERY: ${{ inputs.every }}
+          SETS: ${{ inputs.set }}
         run: |
           out="$RUNNER_TEMP/sim-seed$SEED-days$DAYS"
           mkdir -p "$out/userdata" "$out/tmp"
@@ -99,7 +104,7 @@ jobs:
           $godot --headless --path game --import > "$out/import.log" 2>&1 || true
           start=$(date +%s)
           set +e
-          timeout 19200 $godot --headless --path game --script res://tests/economy_sim.gd -- --days "$DAYS" --seed "$SEED" --every "$EVERY" --out "$out/sim.json" > "$out/sim.log" 2>&1
+          timeout 19200 $godot --headless --path game --script res://tests/economy_sim.gd -- --days "$DAYS" --seed "$SEED" --every "$EVERY" --out "$out/sim.json" $(for kv in $SETS; do printf -- '--set %s ' "$kv"; done) > "$out/sim.log" 2>&1
           code=$?
           set -e
           end=$(date +%s)
@@ -107,7 +112,7 @@ jobs:
           python3 - "$out" "$code" "$((end - start))" "$errors" <<'PY'
           import json, os, sys
           out, code, secs, errors = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
-          summary = {"commit": os.environ["GITHUB_SHA"], "seed": int(os.environ["SEED"]), "days": int(os.environ["DAYS"]),
+          summary = {"commit": os.environ["GITHUB_SHA"], "sets": os.environ.get("SETS", ""), "seed": int(os.environ["SEED"]), "days": int(os.environ["DAYS"]),
                      "runtime_seconds": secs, "exit_code": code, "script_errors": errors, "runner": os.environ.get("RUNNER_NAME", ""), "cpus": os.cpu_count()}
           try:
               d = json.load(open(os.path.join(out, "sim.json")))
