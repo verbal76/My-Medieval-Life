@@ -114,7 +114,7 @@ func work_look(n: NPC) -> Array:
 			return ["swing", "hammer"]
 		"hunt", "slaughter":
 			return ["swing", "rusty_sword"]
-		"harvest", "sow", "feed_pen":
+		"harvest", "sow", "feed_pen", "fp_work":
 			return ["gather", ""]
 		"craft":
 			var st: String = str(w.stations[s.args.station].type) if w.stations.has(s.args.get("station", "")) else ""
@@ -195,6 +195,8 @@ func decide(n: NPC) -> void:
 		n.plan = [go(wander_cell(spot, 6), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
 		return
 	if n.role == "elder":
+		if w.farm_plots.plan_work(n):          # FARM-04: an elder's light work on the family's farmland, by day
+			return
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
 		n.doing = "taking the air"
 		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
@@ -696,6 +698,8 @@ func _plan_evening(n: NPC, h: float) -> void:
 	if _plan_provision(n):
 		return
 	if _plan_buy_seed(n):
+		return
+	if w.farm_plots.plan_work(n):              # FARM-04: the family's farmland, in the time the day leaves
 		return
 	if _plan_home_work(n):
 		return
@@ -2319,6 +2323,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
+		"fp_work", "fp_fence":                  # FARM-02..04: work on the family's farmland (FarmPlots)
+			return w.farm_plots.act(n, what, a)
 	return true
 
 
