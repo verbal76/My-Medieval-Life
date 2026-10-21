@@ -7,6 +7,9 @@ extends RefCounted
 
 static func add_pages(w: Wiki) -> void:
 	_stoneworking(w)
+	w.add_page("todo:stonecutters", "Stonecutters and villagers dressing their own stone", "notyet", [   # STONE-02, X18-STONECUT
+		Wiki.note("Not in the game yet. A stonecutter's trade: a villager who keeps a workshop, buys or quarries raw stone, dresses it into blocks and sells them to anyone who wants them, or makes them to order. Also not built yet: villagers who are not labourers dressing blocks for their own house or repairs. Both will use the same dressing as today: the same workbench, mallet, stone and time. Also planned: how much of the stone becomes blocks depending on the worker's skill, the rest left as chips and spoil. Also planned: a Stoneworking skill of its own and an iron chisel, made by smiths, used with the mallet. Today dressing uses your Crafting skill and a mallet, and two stone always make two blocks."),
+		Wiki.links(["sys:stoneworking", "recipe:dress_stone", "job:laborer"], "See also")], "", "not implemented planned stonecutter mason")
 
 
 # recipe dress_stone (World.work_craft: tool, exact; player_craft_refusal); NPCBrain._mason, _block_demand, BUYS.merchant_raw,
@@ -25,6 +28,6 @@ static func _stoneworking(w: Wiki) -> void:
 		Wiki.h("What needs blocks"),
 		Wiki.p("Houses (%d blocks), every workshop and every room added to a property take building blocks; each room's page lists how many. Raw stone is still what the oven, stove and forge you fit in a room take, what the gate of family farmland takes, and what the manor mends the roads, bridges and well with. A building site marked out before blocks were needed still takes the stone it was planned with." % house),
 		Wiki.h("Who makes them"),
-		Wiki.p("The labourers are the village's stoneworkers. When the raw-goods merchants want blocks for builders, or the village's building sites need more than are on sale, a labourer with a mallet dresses the stone they have quarried at a workbench and sells the blocks to the raw-goods merchant; a labourer without one buys a mallet first. When nobody wants blocks, nobody dresses any. Builders and their hired helpers buy blocks from the raw-goods merchants and the labourers, as they buy planks and logs. The caravan brings raw stone, never blocks, and does not carry the village's blocks away."),
-		Wiki.links(["item:stone", "item:building_block", "item:mallet", "recipe:dress_stone", "recipe:make_mallet", "skill:crafting", "job:laborer", "sys:property_modules"])],
+		Wiki.p("No trade is needed to dress stone: you can dress your own at any workbench you may use, with a mallet, two stone at a time, for your own building or to sell. Among the villagers, the labourers are the stoneworkers. When the raw-goods merchants want blocks for builders, or the village's building sites need more than are on sale, a labourer with a mallet dresses the stone they have quarried at a workbench and sells the blocks to the raw-goods merchant; a labourer without one buys a mallet first. When nobody wants blocks, nobody dresses any. Builders and their hired helpers buy blocks from the raw-goods merchants and the labourers, as they buy planks and logs. The caravan brings raw stone, never blocks, and does not carry the village's blocks away."),
+		Wiki.links(["item:stone", "item:building_block", "item:mallet", "recipe:dress_stone", "recipe:make_mallet", "skill:crafting", "job:laborer", "sys:property_modules", "todo:stonecutters"])],
 		"", "stone block building block mason stoneworking dress quarry mallet workbench construction house")

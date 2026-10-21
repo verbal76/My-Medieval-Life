@@ -1575,6 +1575,7 @@ Rules:
 - **Source:** `game/data/recipes.json`, `game/scripts/core/npc_brain.gd::_mason`, `game/scripts/core/world.gd::work_craft`, `game/data/balance.json`
 - **Affects:** Crafting, Building, Resources, Market, Inventory, Employment, Save
 - **Expected:** Quarried raw stone is the only source of blocks, 2 stone to 2 blocks (`exact`, no skill save or bonus); labourers dress only when the raw-goods merchant or open building sites want blocks, buying a mallet and stone if needed, and sell blocks to the merchant and builders; houses, workshops and rooms take blocks where they took stone, in the same numbers; fittings, mending, the farmland gate, contracts and the caravan keep raw stone; sites from older saves keep their recorded stone cost and refund stone. No block from nothing.
+- **Planned (Expansion 18, not built):** the Stoneworking skill governs dressing and how much stone becomes blocks, the rest conserved as waste (STONE-04, STONE-05); an iron chisel from the smiths is needed with the mallet (STONE-06), linking stoneworking to smithing and iron; the stonecutter trade and villagers dressing for their own use (X18-STONECUT, STONE-02); materials by kind of repair (STONE-03).
 - **Tests:** `game/tests/stone_test.gd`, `game/tests/housing_test.gd`, `game/tests/play_test.gd`
 
 ### INT-199 · A recipe's required tool, one rule for player and villagers (STONE-01)

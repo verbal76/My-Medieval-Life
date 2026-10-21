@@ -3001,7 +3001,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Check whether a new player can still afford an axe for the woodcutting job (the item's second half)",
+   "next_action": "Lead: report the measurement; close the item only on the owner's word or when the starting kit or price rules change",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -3021,6 +3021,11 @@
      "date": "2026-10-21",
      "change": "BLOCKED -> PARTIALLY IMPLEMENTED; next_action",
      "why": "OD-01 answers the mine part: no mining wage, the shift quest retired, miners earn by sale or CON-01 contracts. The woodcutting-axe part of the original item is not covered by OD-01 and stays to be checked"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Axe half measured on Build 17 (cca7f2b+, probe not committed): seeds 1 and 2, days 0-3, the cheapest axe for sale (smith or merchant) costs 45-46 coins; the player starts with 20 coins, a rusty pickaxe and no axe. Without an axe the player can still earn: manor board quarrying (6 coins a job, the starting pickaxe qualifies), mending (4), carrying (2), mining and selling ore or stone. So an axe takes a few days' work, not never. No mechanism is broken (WDR-022: an economic outcome, measured, no hidden help); no change made"
     }
    ],
    "acceptance_derived": true,
@@ -15168,7 +15173,7 @@
    "id": "JOB-01",
    "title": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Salaried manor hands remain eligible to take appropriate work from the same job board used by independent workers and the player.",
    "description": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
    "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
@@ -15176,8 +15181,8 @@
    "acceptance": [
     "Hands take board jobs unpaid; pickaxe and survey exclusions kept; first come, no priority; one job at a time"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/manor_work.gd (open_for, take, can_fund, is_staff); game/tests/job_board_test.gd",
+   "tests": "job_board_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15202,6 +15207,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "As built (ManorWork.open_for/can_fund/is_staff: staff unpaid, one job per worker, quarry/trial/excavate need a pickaxe, surveys exclude staff, no staff priority); a focused test of 'no priority, no double booking' is still to be written"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "Focused test game/tests/job_board_test.gd (16 checks, 0 failures): the same open jobs in the same order for a hand and a labourer (no priority), first come, a taken job is nobody else's, one job at a time, hands unpaid, wages set aside and returned with the treasury conserved, pickaxe and survey exclusions held for hands. Added to tests.yml"
     }
    ],
    "target_build": "17"
@@ -28670,7 +28680,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Full CI and the gate re-baseline on wip/build17; owner questions STONE-Q1..Q3 (fittings and mending on blocks, dressing waste, a mason trade)",
+   "next_action": "Determinism gate re-baseline once after the parity and equipment merges",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28690,15 +28700,267 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit d28503c; tests; implementation; next_action",
      "why": "Lead merged wip/b17-stone (d28503c) into wip/build17: building_block item, dress_stone recipe (workbench, mallet, Crafting 1, exact), labourers dress to demand, construction takes blocks, raw stone kept for fittings/mending/gate/contracts/caravan; older sites keep stone cost. stone_test 45 checks and the affected suites pass on the worker's merge; determinism re-baseline and full CI still to run on the integrated branch"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "STONE-Q1 (Option C) checked against the build: blocks for houses, workshops and rooms; raw stone for fittings, gate and mending already matches where the system distinguishes; the finer split is STONE-03; personal dressing by non-labourer villagers is STONE-02"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "CI Tests run 39678592892 on 0a086af (the STONE-01 + wiki merge) passed"
     }
    ],
    "target_build": "17"
   },
   {
+   "id": "STONE-02",
+   "title": "Personal-use stone dressing by any villager (own house or repairs), same rules as the player",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "A player or NPC may dress raw stone into finished building blocks for personal use, including constructing or repairing their own house. ... An NPC must not be required to hold the formal occupation of stonecutter merely to make blocks for personal use. Likewise, having the title of stonecutter must not bypass material, skill, equipment, or labor requirements.",
+   "description": "Personal-use stone dressing by any villager (own house or repairs), same rules as the player",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21 section 2",
+   "acceptance": [
+    "Any villager household that needs blocks for its own building or repair may dress them itself when it has stone, a mallet, a workbench, the Crafting level and the time, by the same dress_stone recipe",
+    "No job title required and none bypasses the recipe's requirements; conservation and tool wear as STONE-01"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Verified 2026-10-21 on 0a086af: the dress_stone recipe has no job gate (station workbench, 2 stone, mallet worn 1, Crafting 1, 30 min; NPCBrain._can_make checks skill and tool for anyone), and the player can dress stone for their own house today. Missing: a non-labourer villager never decides to dress stone for its own household (only NPCBrain._mason, labourers, to market demand). Placed with X18-STONECUT because both extend the same NPC production decision; not a Build 17 blocker.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed for Expansion 18 with the professional trade (shared NPC decision logic); Build 17 not expanded"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-03",
+   "title": "Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Where the existing system cannot distinguish ordinary maintenance from major structural reconstruction, retain the current functioning behavior and record the more detailed distinction for future implementation.",
+   "description": "Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q1, Option C), the part the Build 17 repair system cannot yet distinguish",
+   "acceptance": [
+    "Repairs distinguish ordinary maintenance (raw stone) from major masonry reconstruction (blocks)",
+    "Jobs that genuinely need both consume the right quantity of each",
+    "Conservation and determinism hold; fittings and sites refund what was actually consumed; no stone-to-block conversion through saves"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q1"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 state (verified 0a086af): houses, workshops and rooms take blocks; shop fittings (oven 6, stove 4, forge 8), the farmland gate and the manor's mending and public works take raw stone; ManorWork mending has one kind (stone), so ordinary maintenance and major reconstruction are not distinguished. Fittings refund their cost in stone, so no conversion exploit.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Recorded for later; Build 17 keeps its functioning behaviour as the owner directed"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-04",
+   "title": "Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Stone dressing efficiency depends on the actual skill of the person performing the work. Less experienced workers produce more waste. More experienced workers recover a greater proportion of usable building material. The same mechanics apply to players, independent homeowners, ordinary NPCs, and professional stonecutters. Occupation titles do not grant automatic production bonuses. ... The owner has not approved specific conversion ratios or skill thresholds.",
+   "description": "Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers)",
+   "source": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md",
+   "approval": "Owner decision 2026-10-21 (STONE-Q2, Option C), Expansion 18",
+   "acceptance": [
+    "The STONE-01 dress_stone process, extended: blocks out depend on the worker's skill in the existing skill and capability systems; no title bonus; same rule for player, homeowners, villagers and stonecutters",
+    "Every stone accounted for: what is not a block is conserved waste, chips or spoil in an existing material; never destroyed, never turned back into blocks without an approved recovery process; no unlimited recycling loop",
+    "Before values are locked, a proposed skill-to-efficiency model is presented to the owner with its effects on depletion, construction costs, production economics and NPC viability; no ratio, percentage or table invented",
+    "Tests on implementation: conservation, determinism, parity, economic consequences"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q2"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 keeps 1:1 (dress_stone: 2 stone to 2 blocks, exact). Governed by Stoneworking (STONE-05) per STONE-Q3. Owner question for Expansion 18 design: the skill-to-efficiency values, with effects on depletion, construction affordability, stoneworker profitability and settlement viability. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-06.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner STONE-Q3: the efficiency is governed by the new Stoneworking skill (STONE-05), not Crafting"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-05",
+   "title": "Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Introduce Stoneworking as a distinct skill using the existing player and NPC skill architecture. It must behave consistently with existing skills such as Mining, Smithing, and Cooking. Stoneworking proficiency is gained through actual stoneworking activity under the game's normal skill-progression rules. A character's general Crafting proficiency must not automatically make them an expert stonecutter.",
+   "description": "Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q3, 1B), Expansion 18",
+   "acceptance": [
+    "A stoneworking skill in the existing skills (player and NPC), raised only by stoneworking under the normal progression; dress_stone uses it instead of Crafting; it governs the STONE-04 efficiency",
+    "One rule for players, villagers for their own needs, general workers, professional stonecutters and hired services; no occupation needed, none grants levels",
+    "Saves migrate by the existing skill conventions without corruption or invented history; the starting level and any migration credit are put to the owner before being chosen; player and NPC skill displays updated; deterministic",
+    "Focused tests: parity, progression, efficiency, save migration"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q3",
+    "STONE-04"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 unaffected (Crafting and the mallet; 2 stone to 2 blocks). Owner questions for the Expansion 18 design phase (not Build 17): starting Stoneworking levels and migration credit; skill-to-efficiency values (STONE-04); chisel durability and wear; chisel recipe quantities where conventions do not settle them. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-04.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-06",
+   "title": "Iron chisel: smith-made, worn by use, needed with the mallet to dress stone",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Stone dressing will require both: 1. A mallet. 2. An iron chisel. The chisel is a real, physically conserved inventory item. Blacksmiths manufacture chisels using the existing smithing and production systems. ... Do not invent a permanent chisel durability value, wear rate, production recipe quantity, or market price without first checking existing conventions and obtaining owner approval where a new balancing decision is needed.",
+   "description": "Iron chisel: smith-made, worn by use, needed with the mallet to dress stone",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q3, 2B), Expansion 18",
+   "acceptance": [
+    "A chisel item made by smiths at the forge or anvil from real inputs with labour and time, through the existing smithing recipes; sold, transferred and procured by the ordinary systems; nobody gets one free",
+    "dress_stone needs a usable mallet and chisel for everyone, professionals included; missing tools refuse the work by the normal rules; chisels wear with use and are replaced",
+    "Durability, wear, recipe quantities and price follow existing conventions where they settle them, otherwise go to the owner before being fixed",
+    "Focused tests: production, wear, missing-tool behaviour, conservation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q3"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 unaffected (Crafting and the mallet; 2 stone to 2 blocks). Owner questions for the Expansion 18 design phase (not Build 17): starting Stoneworking levels and migration credit; skill-to-efficiency values (STONE-04); chisel durability and wear; chisel recipe quantities where conventions do not settle them. Related: X18-STONECUT (staging), STONE-02, STONE-03, STONE-04.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "STONE-Q",
    "title": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "1. Should fittings and the manor's mending use blocks? (recommend raw stone). 2. Should dressing waste stone, e.g. 3 to 2? (recommend 1:1 until balance review). 3. A dedicated mason trade, Stoneworking skill or chisel? (recommend revisiting with the labour-market work)",
    "description": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "source": "docs/build17/STONE_01_BLOCKS.md",
@@ -28742,9 +29004,137 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "Open owner decisions carry target 'owner decision' like CON-08-Q"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Owner answered part 1 (STONE-Q1, Option C, 2026-10-21). Part 3 (mason trade) answered in the same directive: stonecutting is a general activity (STONE-02) and a profession in Expansion 18 (X18-STONECUT on staging). Part 2 (dressing waste) still open"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Clarification: the directive settles the mason trade (general activity plus an Expansion 18 profession); whether that profession needs its own Stoneworking skill or a chisel is not settled and is left to X18-STONECUT's design, under the existing capability system"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Owner answered part 2 (STONE-Q2, Option C: skill-based efficiency in Expansion 18, STONE-04; Build 17 stays 1:1). Part 3 to present"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; next_action",
+     "why": "All three parts answered by the owner on 2026-10-21: STONE-Q1 (Option C, materials match the work), STONE-Q2 (Option C, skill-based efficiency, STONE-04), STONE-Q3 (1B + 2B, Stoneworking skill STONE-05 and iron chisel STONE-06); all implementation in Expansion 18, Build 17 unchanged"
     }
    ],
    "target_build": "owner decision"
+  },
+  {
+   "id": "STONE-Q1",
+   "title": "STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Approved: Option C — materials must match the actual construction or repair being performed. Raw stone: rough construction, rubble filling, road maintenance, minor repairs, and ordinary ovens, stoves, and forge hearths where dressed masonry is unnecessary. Finished building blocks: structural masonry, substantial stone construction, and major masonry reconstruction. Mixed materials: construction or repairs that genuinely require both rough stone and finished masonry must consume the appropriate quantities of each.",
+   "description": "STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both)",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21: Approved: Option C",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    }
+   ]
+  },
+  {
+   "id": "STONE-Q2",
+   "title": "STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Decision: Option C approved. The owner approves skill-based stone dressing efficiency as part of Expansion 18. ... Build 17 retains its existing 1:1 stone-to-block conversion.",
+   "description": "STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18",
+   "source": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md",
+   "approval": "Owner decision 2026-10-21: Option C approved",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    }
+   ]
+  },
+  {
+   "id": "STONE-Q3",
+   "title": "STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "1B: A dedicated Stoneworking skill within the existing character skill system. 2B: Stone dressing requires both a mallet and an iron chisel. Implementation assignment: Expansion 18. Build 17: No changes required or authorized by this decision.",
+   "description": "STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18",
+   "source": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md",
+   "approval": "Owner directive 2026-10-21: OWNER DECISION: 1B + 2B APPROVED",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q3_stoneworking_skill_chisel.md"
+    }
+   ]
   },
   {
    "id": "TIME-01",
