@@ -21086,11 +21086,12 @@
     "Code and tests on wip/expansion19-preparation in isolated scenarios with provisional adapters; the live NPC decision system is not replaced; SJD-Q01..Q14 stay open for the owner"
    ],
    "implementation": "",
-   "tests": "judgment_test 99, judgment_live_test 26, judgment_perf 10; sim_gate identical when off",
+   "tests": "judgment_test 105, judgment_live_test 27, judgment_perf 19; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off",
    "playtest": [],
    "branch": "wip/expansion19-preparation",
    "commits": [
-    "e05d367"
+    "e05d367",
+    "693e0c3"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21118,6 +21119,11 @@
      "date": "2026-10-21",
      "change": "commit e05d367; tests; branch",
      "why": "Round 1 on wip/expansion19-preparation (e05d367): memory with provenance, signed opinions, need-vs-opinion weighting (iron example both ways), gossip, provisional save section, live hooks off by default; judgment_test 99, judgment_live_test 26, judgment_perf 10 checks; gate identical with judgment off; 10-day sim with judgment on: no leaks. Not ready for live use: SJD-Q01,Q02,Q06,Q07,Q08,Q10,Q11,Q14 block it; daily update over phone frame budget (round 2 in progress)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 693e0c3; tests",
+     "why": "Round 2 (693e0c3): daily update spread over 24 hourly slices with identical results; packed records cut memory at 500 people to 4.0 MB live / 16.1 MB stress; trade hook cost +5% (from +20%) with identical choices; suites pass, gate identical with judgment off. Open: gossip frame cost at 500 people (~76 ms on the assumed phone), round 3 in progress; SJD-Q01,02,06,07,08,10,11,14 still block live use"
     }
    ],
    "target_build": "19"
