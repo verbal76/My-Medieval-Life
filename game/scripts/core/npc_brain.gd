@@ -3342,10 +3342,12 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 	var place := str(v.workplace)
 	if v.job == "merchant":
 		var t := w.tenant_of(w.stalls[place]) if w.stalls.has(place) else "x"
-		if t != "" and w.party(t) != null and w.party(t).alive:
+		if (t != "" and w.party(t) != null and w.party(t).alive) or (w.stalls.has(place) and Business.is_pitch(w.stalls[place])):
 			place = ""                                # the stall was let again meanwhile: another one that is vacant
 			for sid in _sorted_keys(w.stalls):
-				if w.tenant_of(w.stalls[sid]) == "":
+				# only a merchants' stall: a pitch is the player's to rent (PL1-10) and a built stall its builder's or,
+				# once their household is gone, the manor's (STALL-01); neither is let to a merchant
+				if w.tenant_of(w.stalls[sid]) == "" and not Business.is_pitch(w.stalls[sid]):
 					place = str(sid)
 					break
 		if place == "":

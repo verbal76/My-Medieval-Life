@@ -40,6 +40,8 @@ func _init() -> void:
 	_merchant()
 	_npc_cycle()
 	_save_load(built)
+	_save_exact()
+	_vacancy()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -399,3 +401,83 @@ func _save_load(s: Dictionary) -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), old)
 	check(w3.business.stalls.built().is_empty() and not w3.business.stalls.is_open(w3.stalls.pitch0), "an older save loads with no built stalls and nothing open")
+
+
+## A built stall with stock, an open session made of real sales and a carried fraction survives to_dict / load_dict
+## exactly: the record is identical, a second round trip is identical, and the session goes on and settles as it would have.
+func _save_exact() -> void:
+	var b: Business = w.business
+	var st: Stalls = b.stalls
+	var s: Dictionary = st.built(World.PLAYER)[0]
+	st.close(s)
+	w.player.inv.add("plank", 8)
+	b.list_item(s, "plank", 8)
+	b.set_price(s, "plank", 7)
+	s.frac = 65
+	check(st.open(s, World.PLAYER) == "", "open with planks at 7 and 65 hundredths carried")
+	var buyer := _adult("carpenter")
+	buyer.coins = 500
+	check(b.sell(s, buyer, "plank", 3, 7), "3 planks sold in the session (21 coins)")
+	var before: String = JSON.stringify(JSON.parse_string(JSON.stringify(s)), "", true)          # as a save writes it (numbers as JSON numbers)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var s2: Dictionary = w2.stalls[str(s.id)]
+	check(JSON.stringify(s2, "", true) == before, "the stall's record is the same after loading, field for field")
+	check(w2.business.stalls.is_open(s2) and w2.business.stalls.unsettled(s2) == 21 and int(s2.till) == 21 and int(s2.frac) == 65 and int(s2.stock.plank) == int(s.stock.plank) and int(s2.prices.plank) == 7,
+		"open, 21 coins of session sales in the till, 65 hundredths carried, the planks at 7")
+	var d2: Dictionary = JSON.parse_string(JSON.stringify(w2.to_dict(), "", true, true))
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), d2)
+	check(JSON.stringify(w3.stalls[str(s.id)], "", true) == before, "and after a second save and load")
+	# the session continues in both worlds alike and settles the same
+	var r1 := []
+	for ww: World in [w, w2]:
+		var ss: Dictionary = ww.stalls[str(s.id)]
+		var by: NPC = null
+		for n: NPC in ww.npcs:
+			if n.alive and n.role == "adult" and n.job == "carpenter":
+				by = n
+				break
+		by.coins = 500
+		ww.business.sell(ss, by, "plank", 2, 7)
+		var t0 := ww.treasury
+		var r := ww.business.stalls.close(ss)
+		r1.append([int(r.gross), int(r.commission), int(r.net), int(ss.frac), ww.treasury - t0])
+	var h := 35 * 5 + 65
+	check(r1[0] == r1[1] and r1[0] == [35, h / 100, 35 - h / 100, h % 100, h / 100], "the loaded session settles exactly as the unsaved one: %s" % str(r1[0]))
+
+
+## The merchant-hiring code (NPCBrain._install) lets only a vacant merchants' stall: never a vacant pitch (the player's
+## to rent, PL1-10) or a built stall left by a household that died out (the manor's, STALL-01).
+func _vacancy() -> void:
+	var st: Stalls = w.business.stalls
+	var s: Dictionary = {}
+	for x in st.npc_built():
+		s = x
+	var h := World.ref_id(w.holder_of(s))
+	w.property.household_ended(h)
+	check(w.owner_of(s) == World.MANOR and w.tenant_of(s) == "", "a household that dies out leaves its built stall to the manor, untenanted until the morning")
+	var p1: Dictionary = w.stalls.pitch1
+	check(w.tenant_of(p1) == "" and w.tenant_of(w.stalls.pitch0) == "", "both pitches are vacant")
+	var idle: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.job == "" and n.household >= 0 and n.household != h:
+			idle = n
+			break
+	if idle == null:
+		idle = _adult("laborer")
+	var job0 := idle.job
+	w.brain._install(idle, {"job": "merchant", "workplace": "stall0", "household": idle.household}, "test")
+	check(idle.job == job0 and w.tenant_of(s) == "" and w.tenant_of(p1) == "" and w.tenant_of(w.stalls.pitch0) == "",
+		"with every merchants' stall let, nobody is made a merchant of a pitch or the built stall")
+	w.brain._install(idle, {"job": "merchant", "workplace": "pitch1", "household": idle.household}, "test")
+	check(idle.job == job0 and w.tenant_of(p1) == "", "not even when the post names a pitch")
+	var m: NPC = w.party(w.tenant_of(w.stalls.stall3))
+	w.set_tenant(w.stalls.stall3, "")
+	w.brain._install(idle, {"job": "merchant", "workplace": "stall0", "household": idle.household}, "test")
+	check(idle.job == "merchant" and idle.workplace == "stall3" and w.tenant_of(w.stalls.stall3) == World.npc_ref(idle.id), "a vacant merchants' stall is still let as before")
+	check(m != null, "(stall3's merchant set aside for the test)")
+	w.minutes += 1440.0
+	st.daily()
+	check(w.tenant_of(s) == World.MANOR and s.stock.is_empty() and not st.is_open(s), "the next morning the stall is the manor's, closed, its goods in the granary")
