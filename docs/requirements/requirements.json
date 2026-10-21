@@ -21717,6 +21717,92 @@
    "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
+   "id": "Q18-10",
+   "title": "Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Anyone may purchase goods from another settlement, including individual villagers, households, merchants, businesses, and settlement treasuries.",
+   "description": "Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Decision recorded; Expansion 18 implements buying by any holder through the existing negotiation, contract, inventory, transport and conservation systems"
+   ],
+   "implementation": "Recorded owner decision; implementation follows in PROS-18",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; implementation",
+     "why": "Owner decision recorded in docs/DECISIONS.md and the directive file"
+    }
+   ],
+   "target_build": "18",
+   "owner_answer": "Anyone (villagers, households, merchants, businesses, settlement treasuries) may buy from another settlement, and either fetches the goods personally or negotiates and pays a willing carter or delivery service. No free delivery, no merchant-only buying, no coins or goods created; existing negotiation, contract, inventory, transport and conservation systems, no duplicates."
+  },
+  {
+   "id": "Q18-9",
+   "title": "Settlement capability levels affect pay scales and production output only; never a permission gate",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Capability levels affect pay scales and production output only. They must never function as permission gates or prevent an NPC, player, or settlement from performing an activity.",
+   "description": "Settlement capability levels affect pay scales and production output only; never a permission gate",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Decision recorded; no capability level gates an activity (MIN-D gates removed on wip/build17; Expansion 18 model reports and scales only)"
+   ],
+   "implementation": "Recorded owner decision; implementation follows in PROS-18",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; implementation",
+     "why": "Owner decision recorded in docs/DECISIONS.md and the directive file"
+    }
+   ],
+   "target_build": "18",
+   "owner_answer": "Capability levels affect pay scales and production output only; never a permission gate. A settlement with mining capability level 0 can still mine if it has the resources, tools and access."
+  },
+  {
    "id": "REC-001",
    "title": "Adoption and orphan guardianship (NPCs and the player)",
    "kind": "approved",

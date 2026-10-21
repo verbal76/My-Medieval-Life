@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **451** |
 | Outstanding (not complete, superseded or canceled) | 205 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 62 owner decision (open or answered), 26 world design rule, 1 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 64 owner decision (open or answered), 26 world design rule, 1 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -927,7 +927,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 38, status BLOCKED) (62)
+## Owner decisions, open and answered (open: 38, status BLOCKED) (64)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -978,6 +978,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
+| Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
+| Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
