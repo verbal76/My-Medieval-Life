@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 192 (84 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **278** = 195 still open from the baseline + 84 added and open |
+| Entries added since | | 198 (90 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **284** = 195 still open from the baseline + 90 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (192)
+## Added since the baseline (198)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -261,6 +261,12 @@ None.
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | ACTIVE DEVELOPMENT | 18 |
+| X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | BLOCKED | owner decision |
+| X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | BLOCKED | owner decision |
+| X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | decision | BLOCKED | owner decision |
+| X19-GUARD | A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine? | decision | BLOCKED | owner decision |
+| X19-HARMED | Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)? | decision | BLOCKED | owner decision |
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | decision | BLOCKED | owner decision |
+| X19-REGARD | Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard? | decision | BLOCKED | owner decision |
 
 The full, current list of open entries by build is the Roadmap section of `docs/DEVELOPMENT_LEDGER.md`.

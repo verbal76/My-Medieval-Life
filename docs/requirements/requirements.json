@@ -21086,13 +21086,14 @@
     "Code and tests on wip/expansion19-preparation in isolated scenarios with provisional adapters; the live NPC decision system is not replaced; SJD-Q01..Q14 stay open for the owner"
    ],
    "implementation": "",
-   "tests": "judgment_test 129, judgment_live_test 27, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off",
+   "tests": "judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off",
    "playtest": [],
    "branch": "wip/expansion19-preparation",
    "commits": [
     "e05d367",
     "693e0c3",
-    "6615da4"
+    "6615da4",
+    "1b05da0"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21130,6 +21131,11 @@
      "date": "2026-10-21",
      "change": "commit 6615da4; tests",
      "why": "Round 3 (6615da4): gossip spread over ticks with catch-up on read, identical results proven (1,933 tellings, 252 beliefs, same end hash); 500 people live rate p99 0.87 ms (about 3.5 ms phone), p99.9 2.15 ms (about 8.6 ms phone): budget met 99 frames in 100, not 999 in 1000; memory 6.1 MB at 500 live; live village cost within noise; suites pass, gate identical when off. Paused pending a real phone measurement and the owner's choice X19-Q-TIMING; SJD-Q01,02,06,07,08,10,11,14 still block live use"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 1b05da0; tests",
+     "why": "Round 4 (1b05da0): the eight owner SJD decisions implemented and tested (fading and permanent judgment parts, murder never fades; trust from Relations regard; no hop limit with dedupe; personal morality separate from law; no numbers in the UI; permanent memories); judgment wired into six existing decision points (selling, timber buying, hiring, taking work, friendship, courtship), each off by default and tested both ways; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23 and the regression suites 0 failures; gate identical when off; 10-day run with judgment on: no leaks. 500-villager p99 frame 1.45 ms (about 5.8 ms on the assumed phone, over the 4 ms target; an identical-results lazy-decay fix is available, not applied per the owner's no-more-optimisation instruction). Open owner questions X19-DECAY, X19-HARMED, X19-CRT12, X19-GUARD, X19-REGARD, X19-ASSAULT"
     }
    ],
    "target_build": "19"
@@ -28278,6 +28284,216 @@
    "target_build": "18"
   },
   {
+   "id": "X19-ASSAULT",
+   "title": "Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)?",
+   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "X19-CRT12",
+   "title": "Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs?",
+   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "X19-DECAY",
+   "title": "Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays)",
+   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "X19-GUARD",
+   "title": "A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine?",
+   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "X19-HARMED",
+   "title": "Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)?",
+   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "X19-Q-TIMING",
    "title": "Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)?",
    "kind": "decision",
@@ -28310,6 +28526,48 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/expansion19/PROGRESS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "X19-REGARD",
+   "title": "Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard?",
+   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-19",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md"
     },
     {
      "date": "2026-10-21",
