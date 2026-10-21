@@ -126,7 +126,6 @@ const CORNER_MARGIN := Vector2(28, 14)
 ## Windows keep CORNER_MARGIN; the HUD sits closer, moving only off a camera cutout it would overlap.
 const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
 const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
-const PICKPOCKET_REACH := 1.8      # tiles: the talk window offers "Pick <name>'s pocket" this close
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -2196,7 +2195,7 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
 	# ...never a child's (owner, 2026-10-18: B8-010, keep disabled)
-	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child":
+	if w.pickpocket_in_reach(n):                  # the reach is core's (World.PICKPOCKET_REACH, DVW-A12 R14)
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
 	_relation_choices(n, choices)
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))

@@ -1456,6 +1456,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_crafting()
 	_dvw_a12_combat()
 	_dvw_a12_fireball()
+	_dvw_a12_pickpocket_reach()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1696,6 +1697,31 @@ func _dvw_a12_fireball() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
 	check(w2.player.spells.get("fireball", false) and w2.player.coins == 5 and w2.npc(sage.id).coins == sage.coins, "DVW-A12 R12: the spell and both purses are saved")
+
+
+## R14: the pocket of a villager awake is in reach within 1.8 tiles and never a child's; the talk window offers the
+## try only then.
+func _dvw_a12_pickpocket_reach() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var adult: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and not w.asleep(x))[0]
+	var kids := w.npcs.filter(func(x): return x.alive and x.role == "child")
+	var p0 := p.pos
+	p.pos = adult.pos + Vector2(1.0, 0)
+	check(w.pickpocket_in_reach(adult), "DVW-A12 R14: a villager a tile away is within reach")
+	main.ui.show_talk(adult)
+	var near_offer := _buttons_named(main.ui.panel, "Pick pocket — theft").size()
+	main.ui.hide_all()
+	p.pos = adult.pos + Vector2(World.PICKPOCKET_REACH + 0.2, 0)
+	check(not w.pickpocket_in_reach(adult), "DVW-A12 R14: beyond %.1f tiles a pocket is out of reach" % World.PICKPOCKET_REACH)
+	main.ui.show_talk(adult)
+	var far_offer := _buttons_named(main.ui.panel, "Pick pocket — theft").size()
+	main.ui.hide_all()
+	check(near_offer == 1 and far_offer == 0, "DVW-A12 R14: the talk window offers the try only within core's reach (%d, %d)" % [near_offer, far_offer])
+	if not kids.is_empty():
+		p.pos = kids[0].pos + Vector2(1.0, 0)
+		check(not w.pickpocket_in_reach(kids[0]), "DVW-A12 R14: never a child's pocket")
+	p.pos = p0
 
 
 ## A clean pack for one rule's checks; returns what to restore.

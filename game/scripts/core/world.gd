@@ -2809,6 +2809,17 @@ func shop_name(n: NPC) -> String:
 
 
 ## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
+## DVW-A12 R14: how near (tiles) the player must stand to a villager awake for their pocket to be within reach.
+const PICKPOCKET_REACH := 1.8
+
+
+## DVW-A12 R14: whether villager `n` (awake, in the talk window) is someone whose pocket the player can reach: within
+## PICKPOCKET_REACH, and never a child (owner, B8-010). pickpocket() itself refuses a child but does not measure
+## the distance: the sleeper's window offers the try at the reach a target is chosen from (see the DVW-A12 report).
+func pickpocket_in_reach(n: NPC) -> bool:
+	return player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child"
+
+
 func pickpocket_chance() -> float:
 	return minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * Skills.value(player, "stealth", "pickpocket_steps"), float(GameData.b("pickpocket_chance_max")))
 
