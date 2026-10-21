@@ -5354,7 +5354,7 @@
    "id": "CON-01",
    "title": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
    "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
@@ -5363,11 +5363,12 @@
     "One contract system reused for player-NPC, NPC-player and NPC-NPC; offered through the existing conversation framework; NPCs evaluate feasibility, skills, tools, quantity, price, obligations, household needs, time, alternatives, relationship and risk; real goods and funds only; no duplicate delivery or payment; policy details decided by the owner before they are fixed"
    ],
    "implementation": "",
-   "tests": "contracts_test",
+   "tests": "contracts_test 135; prospecting 54, discovery 65, business 160, relations 79, world 339, run_tests 3536, start 499, play 37, parity 55, conservation 8; economy_sim 30d seed 1 no leaks",
    "playtest": [],
    "branch": "",
    "commits": [
-    "daf08f3"
+    "daf08f3",
+    "02563a8"
    ],
    "parent": null,
    "depends_on": [],
@@ -5400,6 +5401,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit daf08f3; tests",
      "why": "First slice: negotiated procurement contracts (item, quantity, unit price, accept, deliver, settle from reserved coins) and the contract window; provisional defaults per OD-29"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit 02563a8; tests",
+     "why": "Completed on wip/b17-con01b (09653f9), merged: all three party pairings, the full evaluation (feasibility, skill, tools, time, obligations, household needs, alternatives, relationship, risk), counters both ways, villager offers to the player, face-to-face signing of formal contracts (Q18-13); contracts_test 135, 12 related suites 0 failures, 30-day run no leaks; provisional numbers are owner questions Q-C1..Q-C9 in docs/build17/CON01_COMPLETION.md"
     }
    ],
    "target_build": "17",

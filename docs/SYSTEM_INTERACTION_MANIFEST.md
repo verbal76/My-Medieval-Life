@@ -1409,11 +1409,11 @@ Rules:
 - **Expected:** Each ore seam keeps a second finite pool of stone (20) that opens only once its ore is out; the ore never refills. Player and villagers quarry it, and the village's boulders, by the seam rule (time, wear, xp, mined_stone). The village's stone left (seams, leftover rock, boulders) sets the caravan's stone threshold, the reeve's quarry posting and contract feasibility. A fully quarried cell opens like a broken boulder, on the surface or widening the gallery.
 - **Tests:** `game/tests/quarry_test.gd`, `game/tests/underground_test.gd`
 
-### INT-175 · Negotiated procurement contracts (CON-01, first slice)
-- **Trigger:** A buyer (the player, a business or the manor) proposes a contract for an item, quantity, unit price and term; the seller accepts, delivers or lets it lapse.
-- **Source:** `game/scripts/core/contracts.gd::evaluate`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/contracts.gd::accept_offer`, `game/scripts/core/contracts.gd::deliver`, `game/scripts/core/contracts.gd::reserved_total`
-- **Affects:** Coins, Market, Inventory, Employment, Treasury, Ledger, Interface
-- **Expected:** A seller accepts only at or above its minimum price from its real means (stock, skill, time, the deposit left); the buyer's coins for the contract are reserved when it is agreed and paid per unit delivered; the reserve is counted in the coin census and returned when a contract ends unfilled. Player and villagers use the same terms (provisional defaults, OD-29).
+### INT-175 · Negotiated procurement contracts (CON-01)
+- **Trigger:** A buyer (the player, a villager, a business, the manor through its reeve) proposes a contract for an item, quantity, unit price and term; a villager makes the player a standing offer; the other side accepts, counters, refuses, signs, delivers or lets it lapse.
+- **Source:** `game/scripts/core/contracts.gd::evaluate`, `game/scripts/core/contracts.gd::obligations`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/contracts.gd::offer_to_player`, `game/scripts/core/contracts.gd::counter_offer`, `game/scripts/core/contracts.gd::buyer_answer`, `game/scripts/core/contracts.gd::accept_offer`, `game/scripts/core/contracts.gd::deliver`, `game/scripts/core/contracts.gd::reserved_total`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Coins, Market, Inventory, Employment, Treasury, Workshops, Households, Ledger, Interface, Save
+- **Expected:** One contract record for player-villager, villager-player and villager-villager. The seller weighs feasibility, skill, tools, stock, time (with a 15 % spare margin; a later day countered rather than a refusal), its obligations (manor jobs, building-site carrying, the manor's tool orders it is forging, a post at a stall: read, never changed), household needs, input costs and what its hours earn in its own trade, relationship (friend's price for friends, partners and kin) and risk (a premium per early cancellation on record); counters both ways through one buyer rule. A contract of at least `formal_total` coins is formal and is concluded only face to face (within `sign_reach`, same place and level; the reeve for the manor; owner Q18-13): a distant villager buyer walks over first, nothing set aside meanwhile; unsigned in 2 days, or a party dead, it ends with nothing moved. Small agreements need no signing. The buyer's coins are reserved on agreement, paid per unit delivered, counted in the coin census and returned on lapse or cancel; no double delivery or payment. Goods only (services are open: OD-LE-03). All new numbers provisional (`docs/build17/CON01_COMPLETION.md`, Q-C1..Q-C9).
 - **Tests:** `game/tests/contracts_test.gd`
 
 ### INT-176 · Goods decay: stored food spoils, clothes, armour and carts wear (DVW-B4)
@@ -1453,9 +1453,9 @@ Rules:
 
 ### INT-181 · A prospector orders its kit by contract (MIN-C, CON-01)
 - **Trigger:** A prospector has no kit and none is for sale.
-- **Source:** `game/scripts/core/prospecting.gd::_get_kit`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/world.gd::work_craft`
+- **Source:** `game/scripts/core/prospecting.gd::_get_kit`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/contracts.gd::buyer_answer`, `game/scripts/core/world.gd::work_craft`
 - **Affects:** Crafting, Workshops, Coins, Market
-- **Expected:** The prospector proposes a CON-01 contract for one kit at its value; a smith forges it (1 iron bar, 1 plank, 1 leather) and delivers it against the reserved coins.
+- **Expected:** The prospector proposes a CON-01 contract for one kit at its value and answers a smith's counter by the shared buyer rule; a smith forges it (1 iron bar, 1 plank, 1 leather) and delivers it against the reserved coins.
 - **Tests:** `game/tests/prospecting_test.gd`, `game/tests/contracts_test.gd`
 
 ### INT-182 · Trial pits open hidden bodies as ordinary seams (MIN-D, OD-28, OD-29)
@@ -1503,16 +1503,16 @@ Rules:
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083, INT-184 |
 | Relief | INT-024, INT-047, INT-066, INT-159 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159, INT-165, INT-172, INT-176 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160, INT-162, INT-164, INT-165, INT-166, INT-167, INT-168, INT-170, INT-171, INT-172, INT-176, INT-183 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160, INT-162, INT-164, INT-165, INT-166, INT-167, INT-168, INT-170, INT-171, INT-172, INT-175, INT-176, INT-183 |
 | Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156, INT-173, INT-174, INT-175, INT-180, INT-182, INT-183, INT-184 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080, INT-151 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145, INT-172 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127, INT-149, INT-163 |
 | Bandits | INT-012, INT-014, INT-050, INT-149, INT-153, INT-154 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153, INT-158, INT-168, INT-170, INT-174, INT-177 |
-| Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107, INT-178, INT-180, INT-181, INT-183, INT-184 |
+| Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107, INT-175, INT-178, INT-180, INT-181, INT-183, INT-184 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154, INT-160, INT-162, INT-165, INT-166, INT-167, INT-168, INT-169, INT-171, INT-174, INT-175, INT-176, INT-180, INT-182 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156, INT-162, INT-173, INT-179, INT-180, INT-182 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156, INT-162, INT-173, INT-175, INT-179, INT-180, INT-182 |
 | Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148, INT-149, INT-150, INT-173, INT-175, INT-180 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111, INT-138 |
