@@ -74,8 +74,10 @@ class ResourceRegistryTest(unittest.TestCase):
         s = cr.summary(self.ctx)
         self.assertEqual(s["no_source"], [])                # Build 13: the gold seam gives gold ore a source; B14: apple trees give apples
         self.assertEqual(s["missing_recipes"], [])          # so smelt_gold and forge_gold_ring can be made
-        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "iron_seam", "stone_seam"])
-        self.assertEqual(s["finite_no_replacement"], ["gold_seam"])   # Build 13: scarce by design; the caravan brings no gold
+        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "iron_seam", "prospect_clue", "stone_seam"])
+        # Build 13: scarce by design; the caravan brings no gold. MIN-C: a clue's samples are finite by design (new
+        # ground to read is MIN-D's)
+        self.assertEqual(s["finite_no_replacement"], ["gold_seam", "prospect_clue"])
         self.assertIn(("log", "plank", "pickaxe"), s["chains"])
         # PL2-013: the home food table makes bread (knead_flatbread, 3 wheat), so bread is a chain now
         self.assertIn(("wheat", "bread"), s["chains"])

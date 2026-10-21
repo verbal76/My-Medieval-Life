@@ -335,6 +335,8 @@
       "durability": 150,
       "speed": 1.0
     },
-    "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"}
+    "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"},
+    "prospecting_kit": {"name": "Prospector's kit", "type": "tool", "tool": "prospecting_kit", "value": 34, "durability": 40, "speed": 1.0},
+    "ore_sample": {"name": "Rock sample", "type": "resource", "value": 0}
   }
 }

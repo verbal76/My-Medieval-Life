@@ -25,6 +25,7 @@ const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "i
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
 const JOB_TEXT := {
 	"miner": "Works the ore seams in the mine and sells ore to the smith and the raw-goods merchant.",
+	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor.",
 	"laborer": "Day labour: mines, hauls and does odd work where it is needed.",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks.",

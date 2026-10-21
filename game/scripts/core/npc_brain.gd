@@ -36,7 +36,7 @@ const BUYS := {
 const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
 # items an NPC keeps for its own work and will not sell
-const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
+const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed", "flower_seed", "red_berry_cutting", "blue_berry_cutting"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
@@ -114,6 +114,8 @@ func work_look(n: NPC) -> Array:
 	match str(s.get("act", "")):
 		"mine", "mj_mine":
 			return ["swing", "pickaxe"]
+		"prospect":
+			return ["swing", "hammer"]
 		"chop":
 			return ["swing", "axe"]
 		"mj_step":
@@ -855,6 +857,8 @@ func _plan_job(n: NPC) -> bool:
 			return _miner(n)
 		"woodcutter":
 			return _woodcutter(n)
+		"prospector":
+			return w.prospecting.plan(n)          # MIN-C: clues, samples and the assayer (Prospecting.plan)
 		"carpenter":
 			if _carpenter_carts(n):
 				return true
@@ -2277,6 +2281,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if w.work_felled(n, logs, n.inv).broke:           # the player's felling (PAR-01)
 				w.note("%s %s's axe broke." % [n.name, n.family])
 			return true
+		"prospect":                                       # MIN-C: a rock sample from a clue's area, the player's rule
+			return w.prospecting.npc_sample(n, a)
+		"assay":                                          # MIN-C: the samples carried to a smith at the forge
+			return w.prospecting.npc_assay(n, a)
+		"assay_done":                                     # MIN-C: the smith's assay at the forge is over
+			release_station(n, a.get("station", ""))
+			return true
+		"report_find":                                    # MIN-C: a prospector tells the manor of its finds
+			return w.prospecting.report(n, int(a.id))
 		"craft":
 			release_station(n, a.get("station", ""))
 			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
@@ -3383,7 +3396,7 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 			n.workplace = pick.id if not pick.is_empty() else ""
 		"woodcutter", "hunter":
 			n.workplace = "forest"
-		"miner":
+		"miner", "prospector":
 			n.workplace = "mine"
 		"merchant":
 			n.workplace = place

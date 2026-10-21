@@ -133,6 +133,8 @@ static func instances(world: World, d: Dictionary) -> Array:
 			return world.plants.filter(func(pl): return pl.kind == m.plant and pl.state != "cleared")
 		"animal":
 			return world.fauna.animals.filter(func(a: Animal): return a.alive and a.species == m.species)
+		"clue":                                  # MIN-C: the prospecting clues (Prospecting.generate)
+			return world.prospecting.clues.duplicate() if world.prospecting != null else []
 	return []
 
 
@@ -172,7 +174,7 @@ static func _found(d: Dictionary, ref) -> Dictionary:
 ## Where an instance stands: a seam's or a tree trunk's cell, a field's middle cell, an animal's cell.
 static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 	match str(d.get("match", {}).get("kind", "")):
-		"deposit", "boulder", "tree", "plant":
+		"deposit", "boulder", "tree", "plant", "clue":
 			return Vector2i(int(ref.x), int(ref.y))
 		"field":
 			return Vector2i(int(ref.x) + int(ref.w) / 2, int(ref.y) + int(ref.h) / 2)
@@ -188,6 +190,8 @@ static func remaining(world: World, d: Dictionary, ref) -> int:
 	match str(d.get("match", {}).get("kind", "")):
 		"deposit", "boulder":
 			return maxi(0, int(ref.amount))
+		"clue":
+			return maxi(0, world.prospecting.samples_left(ref))
 		"tree":
 			return int(products(d).get("log", 0)) if ref.state == "grown" else 0
 		"field":
@@ -240,6 +244,9 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 		"animal":
 			if not (ref as Animal).alive:
 				return "It is gone."
+		"clue":
+			if world.prospecting.samples_left(ref) <= 0:
+				return "The ground round this stain has been sampled out."
 	if bool(d.get("tool_required", false)) and p.tool_of(str(d.tool)) == "":
 		return str(d.tool_hint)
 	if str(d.get("skill", "")) != "" and int(d.get("level", 0)) > 1 and p.level(str(d.skill)) < int(d.level):

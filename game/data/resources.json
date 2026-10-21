@@ -791,9 +791,59 @@
       "sources": ["game/scripts/core/farming.gd::daily_products", "game/scripts/core/farming.gd::collect", "game/scripts/core/farming.gd::buy_animal", "game/scripts/core/farming.gd::build_pen"],
       "status": "implemented",
       "risk": "Not at risk: bounded by product_cap and the animals' own pen caps."
+    },
+    "prospect_clue": {
+      "name": "Prospecting clue",
+      "category": "mineral",
+      "origin": "natural",
+      "match": {
+        "kind": "clue"
+      },
+      "where": "Stains on open ground in the village (a rust-red stain, black streaks, green-stained pebbles, a glitter of flecks), placed from the world seed by Prospecting.generate (prospecting.json); each marks a search area of `radius` cells round the stain, not a deposit",
+      "verb": "Prospecting",
+      "action_label": "Take a rock sample",
+      "action": "interact",
+      "tool": "prospecting_kit",
+      "tool_required": true,
+      "tool_hint": "You need a prospector's kit to take samples (forged at an anvil: an iron bar, a plank and leather).",
+      "skill": "mining",
+      "level": 1,
+      "minutes": 30,
+      "time_note": "sample_minutes (prospecting.json, 30) game minutes a sample for a villager, by the Mining mine_time effect; the player's is timed as a mining swing (Prospecting.player_secs).",
+      "action_cost": {
+        "stamina": 0,
+        "tool_wear": 1,
+        "note": "No stamina. The kit wears kit_wear a sample unless the Mining tool_wear_save effect spares it."
+      },
+      "yields": {
+        "ore_sample": 1
+      },
+      "yield_notes": "One rock sample a cell sampled, counted mined_ore_sample; where it was taken goes with it (the holder's bag). It is worth nothing until a smith assays it (Prospecting.assay: a fee, a coal, the forge's time).",
+      "total": "samples_per_clue (4) samples a clue, one a cell of its area; about a third of the village's 15-cell blocks hold a clue (clue_percent), some over a mineral body (true_percent), the rest misleading.",
+      "depletion": "finite",
+      "regeneration": "None: a cell sampled stays sampled and a clue sampled out stays so (saved in prospecting.taken). The stain itself stays.",
+      "owner": "Nobody: the ground's minerals are nobody's (the manor's mining rights are only proposed, P1.2).",
+      "theft": "Never theft.",
+      "npc_harvest": true,
+      "npc_note": "MIN-C: a prospector (job prospector) samples the nearest clue it has taken fewer than samples_per_visit samples from, carries up to carry_samples to a smith for assay, and reports finds to the manor (Prospecting.plan). No villager takes up prospecting by itself yet: that is MIN-D's adoption.",
+      "player_harvest": true,
+      "gather": true,
+      "range": 1,
+      "range_note": "The cell under the player's feet, inside a clue's area (main.gd _prospect_targets): one sample a cell, so Gather mode's repeated harvest does not apply; each sample is a Use on a fresh cell.",
+      "icon": "ore_sample",
+      "sources": [
+        "game/scripts/core/prospecting.gd::generate",
+        "game/scripts/core/prospecting.gd::take_sample",
+        "game/scripts/core/prospecting.gd::plan",
+        "game/scripts/main.gd::_prospect_targets"
+      ],
+      "status": "implemented",
+      "risk": "A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). Opening a found body into a deposit is MIN-D's."
     }
   },
   "materials": {"nails": [{"use": "building", "text": "B14-07: forged from iron bars at the anvil (forge_nails) and used up building wooden stairs (4 a rim cell) and walkways (3 a rim cell) through a mountain's cliff rim.", "source": "game/scripts/core/terrain.gd::build"}], 
+    "ore_sample": [{"use": "assay", "text": "Read by a smith at the forge for a fee, with a coal (Prospecting.assay, MIN-C): the sample is used up and its reading becomes a record its holder and the smith know.", "source": "game/scripts/core/prospecting.gd::assay"}],
+    "coal": [{"use": "fuel", "text": "An assay at the forge burns assay.fuel (one coal) of the smith's (Prospecting.assay, MIN-C).", "source": "game/scripts/core/prospecting.gd::assay"}],
     "log": [
       {"use": "fuel", "text": "Household firewood: every household burns a log from its pantry each night; a household without one is cold (noted, stat burned_log).", "source": "game/scripts/core/world.gd::_new_day"},
       {"use": "fuel", "text": "Villagers buy a log for the pantry in the evening from a carpenter or the raw-goods merchant.", "source": "game/scripts/core/npc_brain.gd::_plan_evening"},
@@ -886,6 +936,7 @@
     {"id": "decor", "what": "Decorative map tiles (flowers, cliffs and rock faces, worked-out seams, stumps' surroundings)", "reason": "Map art with no game object behind it.", "source": "tools/build_village.py"}
   ],
   "exceptions": [
+    {"item": "ore_sample", "finding": "import", "reason": "MIN-C: rock samples come only from the clues' finite search areas (samples_per_clue a clue, one a cell); nothing brings more, and none is meant to: once the village's clues are sampled out, new ground to read is MIN-D's (deeper strata, the larger map). The finite source is the design, not a gap.", "status": "implemented"},
     {"item": "feather", "finding": "no_consumer", "reason": "A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them.", "status": "implemented"},
     {"item": "handcart", "finding": "no_consumer", "reason": "B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; it is not consumed but used: pulled storage, parked at home or a cart hub, and households' market runs (carts in play, B14-06, game/scripts/core/carts.gd).", "status": "implemented"},
     {"item": "rotten_apple", "finding": "start_kit_only", "reason": "Only in the player's start kit: spoiled food that harms when eaten.", "status": "implemented"},

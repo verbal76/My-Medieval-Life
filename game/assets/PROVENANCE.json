@@ -814,6 +814,13 @@
    "sha256": "754f265a96b315852e964ed7569c0a868f6e58f5acdf29bbafa73a6b4d654508"
   },
   {
+   "file": "assets/icons/ore_sample.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-10.png",
+   "transform": "copied unchanged",
+   "sha256": "531a245423037ab805bbbaa58649988fdd4243c1561cc4438dd8b212a61faab0"
+  },
+  {
    "file": "assets/icons/padlock.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Metal/Metal-Nugget-02.png",
@@ -847,6 +854,13 @@
    "member": "16x16 Survival RPG Icons/Metal/Metal-Pot-01.png",
    "transform": "copied unchanged",
    "sha256": "4540e32914ab13fbbd20aba1bc15dc7fda97c9f2a107e43e9e6e8a1123014ead"
+  },
+  {
+   "file": "assets/icons/prospecting_kit.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Backpack-05.png",
+   "transform": "copied unchanged",
+   "sha256": "25e49a00e9a95a24e11f940200a936ecaa5de6d6ff642681c80a9f1f98805f8c"
   },
   {
    "file": "assets/icons/rabbit_pelt.png",

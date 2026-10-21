@@ -168,6 +168,9 @@ ICONS = {
     # a stick as the axle, an iron slab as the ironwork and a plank slab as the cart
     "cart_wheel": "Armour/Wooden-Shield-01", "cart_axle": "Wood/Stick-01", "cart_ironwork": "Blocks/Metal-Slab-02",
     "handcart": "Blocks/Wood-Plank-Slab-03",
+    # MIN-C prospecting: the brown leather pack as the prospector's kit (hammer, chisel and sample bags in a satchel),
+    # the reddish rock fragments as a rock sample
+    "prospecting_kit": "Tools/Backpack-05", "ore_sample": "Stone/Rocks-10",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

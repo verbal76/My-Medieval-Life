@@ -914,6 +914,9 @@ func _build_scene() -> void:
 	add_child(ow_view)
 	blood_layer = Node2D.new()
 	add_child(blood_layer)
+	var clues := ClueView.new()                   # MIN-C: prospecting stains on the ground, under the characters
+	blood_layer.add_child(clues)
+	clues.setup(world.prospecting, T)
 	actors = Node2D.new()
 	actors.y_sort_enabled = true
 	add_child(actors)
@@ -1959,6 +1962,7 @@ func _find_target() -> void:
 	# at the player's feet (the last of these was the only one offered before B8-014: it comes first)
 	var here: Array = []
 	here.append_array(_fit_targets(world.place_of(p.pos)))
+	here.append_array(_prospect_targets(cands))           # MIN-C: a clue's ground underfoot, a smith who can assay
 	# B14 carts: the one you pull can be let go anywhere; a cart beside you can be pulled (yours) or opened
 	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
 	if not pulling.is_empty():
@@ -2436,6 +2440,10 @@ func _use() -> void:
 			l.coins = 0
 			if l.inv.total() == 0:
 				world.loot.remove_at(target.i)
+		"sample":
+			_sample(target.clue, target.cell)
+		"assay":
+			_assay(target.npc)
 		"deposit":
 			var dep: Dictionary = target.dep
 			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
@@ -2567,6 +2575,66 @@ func _use() -> void:
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
+
+
+## MIN-C: what prospecting offers here: the ground of a clue's search area underfoot (sample it with a prospector's
+## kit, or what the stain is without one), and a smith in `cands` who could assay a rock sample the player carries.
+## The rules are Prospecting's (the same as a prospector's); this only offers them.
+func _prospect_targets(cands: Array) -> Array:
+	var out := []
+	var pr: Prospecting = world.prospecting
+	if pr == null or world.player_level != 0:
+		return out
+	var p := world.player
+	var cell := Vector2i(floori(p.pos.x), floori(p.pos.y))
+	var c := pr.area_at(cell)
+	if not c.is_empty():
+		var key := "%s@%d,%d" % [c.id, cell.x, cell.y]
+		if not p.inv.has(Prospecting.KIT):
+			out.append({"kind": "info", "id": key, "text": pr.sample_refusal(p, c, cell),
+					"label": "%s near here: a prospector's kit could sample it" % World.cap(pr.stain(c))})
+		elif pr.samples_left(c) > 0:
+			out.append({"kind": "sample", "id": key, "clue": c, "cell": cell,
+					"label": "Take a rock sample here (%s nearby; %d samples left round it)" % [pr.stain(c), pr.samples_left(c)]})
+	if p.inv.has(Prospecting.ITEM):
+		for t in cands:
+			if str(t.get("kind", "")) in ["npc", "shop"] and (t.npc as NPC).job == "smith" and not world.asleep(t.npc):
+				out.append({"kind": "assay", "npc": t.npc, "label": "Ask %s to assay a rock sample (%d coins)" % [(t.npc as NPC).name, int(Prospecting.cfg().assay.fee)]})
+	return out
+
+
+## MIN-C: take a rock sample from the ground underfoot, timed as a mining swing (Prospecting.take_sample: the kit
+## wears, the sample and its origin go to the pack, Mining xp).
+func _sample(c: Dictionary, cell: Vector2i) -> void:
+	var p := world.player
+	var why := world.prospecting.sample_refusal(p, c, cell)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Sampling", Prospecting.player_secs(), func():
+		var r := world.prospecting.take_sample(p, c, cell)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(Prospecting.ITEM), Prospecting.ITEM)
+		if r.broke:
+			ui.message("Your prospector's kit is worn out.")
+		_level_up("mining", int(r.up)), "swing", "hammer")
+
+
+## MIN-C: smith `n` assays the oldest rock sample the player carries (Prospecting.assay: the fee, the coal, the forge
+## for the assay's time); the player waits beside the forge for the reading.
+func _assay(n: NPC) -> void:
+	var r := world.prospecting.assay(world.player, n)
+	if r.result != "ok":
+		ui.message(str(r.why))
+		return
+	var rec: Dictionary = r.record
+	var c := world.prospecting.clue(str(rec.clue))
+	var said := "%s assays your sample from %s %s: %s." % [n.name, world.prospecting.stain(c), world.prospecting.place(c),
+			world.prospecting.reading_text(rec)]
+	start_action("Waiting for the assay", float(Prospecting.cfg().assay.minutes) / float(GameData.b("game_minutes_per_second")) * 0.6,
+			func(): ui.message(said), "gather")
 
 
 ## Fell a mature tree blow by blow: each blow is a short action that cuts the tree (its cut marks, chips

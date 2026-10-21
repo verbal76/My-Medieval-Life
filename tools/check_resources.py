@@ -225,7 +225,7 @@ def uses_of(ctx, item):
     return sorted(out)
 
 
-CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant"}
+CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant", "assay"}
 
 
 def reachable(ctx, node_ok):
@@ -431,6 +431,9 @@ def problems(ctx):
         elif m.get("kind") == "fruit_tree":
             if not isinstance(bal_.get("fruit_trees", {}).get(m.get("species", "")), dict):
                 out.append("%s: no fruit_trees entry %r in balance.json" % (nid, m.get("species")))
+        elif m.get("kind") == "clue":
+            if not (ctx["root"] / "game" / "data" / "prospecting.json").exists():
+                out.append("%s: a clue node needs game/data/prospecting.json" % nid)
         elif m.get("kind") not in ("tree", "field", "player_field", "player_pen"):
             out.append("%s: unknown match kind %r" % (nid, m.get("kind")))
     # every harvestable kind in the map and balance has a node, and no kind has two
@@ -626,6 +629,10 @@ def _instances(ctx, n):
         f = ctx["balance"]["fruit_trees"]
         return 0, "the village trees within %d tiles of a house door, one in %d (new worlds), and any planted from saplings; %d %s a picking" % (
             f["orchard_house_range"], f["orchard_share"], f[m["species"]]["yield"], f[m["species"]]["item"])
+    if m["kind"] == "clue":
+        pc = json.loads((ctx["root"] / "game" / "data" / "prospecting.json").read_text())
+        return 0, "generated from the world seed (MIN-C): a clue in about %d%% of the village's %d-cell blocks, %d samples each; %d%% lie over a mineral body" % (
+            pc["clue_percent"], pc["block"], pc["samples_per_clue"], pc["true_percent"])
     if m["kind"] == "plant":
         n_pl = sum(1 for pl in v.get("plants", []) if pl["kind"] == m["plant"])
         return n_pl, "%d plants on the map, each ripe again plant_regrow_seasons after it is picked" % n_pl

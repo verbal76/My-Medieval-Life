@@ -31,7 +31,7 @@ extends RefCounted
 
 ## What each trade is glad of: what it works with or most enjoys after work. Obvious on purpose.
 const FAVOURITES := {
-	"miner": ["pickaxe", "ale", "roast_meat"], "laborer": ["bread", "ale", "pottage"], "woodcutter": ["axe", "bread"],
+	"miner": ["pickaxe", "ale", "roast_meat"], "prospector": ["ale", "bread"], "laborer": ["bread", "ale", "pottage"], "woodcutter": ["axe", "bread"],
 	"carpenter": ["plank", "hammer"], "smith": ["coal", "iron_ore", "iron_bar"], "tanner": ["hide", "rabbit_pelt"],
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "plough"], "cook": ["meat", "egg", "milk", "cheese"],
 	"tavernkeeper": ["wheat", "apple"], "hunter": ["leather", "roast_meat", "iron_sword"], "merchant": ["copper_ring", "gold_ring", "wool_cloth"],

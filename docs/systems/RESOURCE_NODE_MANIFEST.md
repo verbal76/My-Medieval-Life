@@ -13,9 +13,9 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 25 (19 the player may harvest, 6 the keeper's livestock).
-- Materials they produce: 27 (apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
-- Finite node types: 6 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, stone_seam); with no replacement once worked out: 1 (gold_seam).
+- Implemented node types: 26 (20 the player may harvest, 6 the keeper's livestock).
+- Materials they produce: 28 (apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
+- Finite node types: 7 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, prospect_clue, stone_seam); with no replacement once worked out: 2 (gold_seam, prospect_clue).
 - At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
 - Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
 
@@ -34,6 +34,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `pig_pen` Pigs | livestock | bred | none | none | 1 hide, 4 meat | breeds | no | yes | no | implemented |
 | `player_field` Your field | crop | cultivated | none | none | 3 carrot, 1 carrot_seed, 2 flower, 1 herb_seed, 3 potato, 1 potato_seed, 3 wheat, 1 wheat_seed | ripens | no | no | no | implemented |
 | `player_pen` Your pen | livestock | bred | none | none | 1 egg, 2 milk, 1 wool | breeds | no | no | no | implemented |
+| `prospect_clue` Prospecting clue | mineral | natural | prospecting_kit | mining | 1 ore_sample | finite | yes | yes | yes | implemented |
 | `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | yes | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
@@ -283,6 +284,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Risk:** Not at risk: bounded by product_cap and the animals' own pen caps.
 - **Code:** `game/scripts/core/farming.gd::daily_products`, `game/scripts/core/farming.gd::collect`, `game/scripts/core/farming.gd::buy_animal`, `game/scripts/core/farming.gd::build_pen`
 
+### `prospect_clue` · Prospecting clue
+
+- **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "clue"}`.
+- **Where:** Stains on open ground in the village (a rust-red stain, black streaks, green-stained pebbles, a glitter of flecks), placed from the world seed by Prospecting.generate (prospecting.json); each marks a search area of `radius` cells round the stain, not a deposit. **In the world:** generated from the world seed (MIN-C): a clue in about 35% of the village's 15-cell blocks, 4 samples each; 55% lie over a mineral body.
+- **Action:** Prospecting (interact): "Take a rock sample". **Range (tiles):** 1. The cell under the player's feet, inside a clue's area (main.gd _prospect_targets): one sample a cell, so Gather mode's repeated harvest does not apply; each sample is a Use on a fresh cell.
+- **Tool:** prospecting_kit (required). You need a prospector's kit to take samples (forged at an anvil: an iron bar, a plank and leather). Where to get it: `prospecting_kit`: recipe (forge_prospecting_kit).
+- **Skill:** mining, level 1.
+- **Time:** 30 game minutes. sample_minutes (prospecting.json, 30) game minutes a sample for a villager, by the Mining mine_time effect; the player's is timed as a mining swing (Prospecting.player_secs).
+- **Cost:** stamina 0, tool wear 1. No stamina. The kit wears kit_wear a sample unless the Mining tool_wear_save effect spares it.
+- **Yields a cycle:** 1 ore_sample. One rock sample a cell sampled, counted mined_ore_sample; where it was taken goes with it (the holder's bag). It is worth nothing until a smith assays it (Prospecting.assay: a fee, a coal, the forge's time).
+- **Total:** samples_per_clue (4) samples a clue, one a cell of its area; about a third of the village's 15-cell blocks hold a clue (clue_percent), some over a mineral body (true_percent), the rest misleading.
+- **Depletion:** finite. None: a cell sampled stays sampled and a clue sampled out stays so (saved in prospecting.taken). The stain itself stays.
+- **Owner:** Nobody: the ground's minerals are nobody's (the manor's mining rights are only proposed, P1.2). **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers yes. MIN-C: a prospector (job prospector) samples the nearest clue it has taken fewer than samples_per_visit samples from, carries up to carry_samples to a smith for assay, and reports finds to the manor (Prospecting.plan). No villager takes up prospecting by itself yet: that is MIN-D's adoption.
+- **Gather mode:** yes. **Icon:** `ore_sample`.
+- **Risk:** A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). Opening a found body into a deposit is MIN-D's.
+- **Code:** `game/scripts/core/prospecting.gd::generate`, `game/scripts/core/prospecting.gd::take_sample`, `game/scripts/core/prospecting.gd::plan`, `game/scripts/main.gd::_prospect_targets`
+
 ### `red_berry_bush` · Red berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "redberry"}`.
@@ -523,6 +542,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 | `copper_seam` | 60 copper_ore in 2 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `gold_seam` | 8 gold_ore in 1 seams | **none** |
 | `iron_seam` | 300 iron_ore in 5 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
+| `prospect_clue` | generated from the world seed (MIN-C): a clue in about 35% of the village's 15-cell blocks, 4 samples each; 55% lie over a mineral body | **none** |
 | `stone_seam` | 240 stone in 3 seams | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 
 Other permanent losses: a felled tree whose ground is bought for building is cleared and never
@@ -549,6 +569,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `pig_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `player_field` | Not at risk: the player's crops are theirs alone and the manor's fields are untouched. |
 | `player_pen` | Not at risk: bounded by product_cap and the animals' own pen caps. |
+| `prospect_clue` | A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). Opening a found body into a deposit is MIN-D's. |
 | `red_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B). |
