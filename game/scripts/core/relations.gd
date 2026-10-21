@@ -42,6 +42,9 @@ const MEDICINE := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_
 var w
 var ties := {}          # "a:b" (a < b; the player is Life.PLAYER_ID) -> tie (see _blank)
 var interests := {}     # villager id -> the id of the one they are courting (CRT-04)
+var trades := {}         # X18 (Expansion 18, X18-Q12-POST): "a:b" -> {n, last}: the pair traded n times, the last on day
+                         # `last`. A commercial contact: a courier may deliver to a business one has traded with. Saved
+                         # (absent in older saves: none). Nothing in the game reads it yet.
 var killings := 0       # villagers the player has slain (CRT-12: no one marries a killer lightly)
 
 
@@ -653,7 +656,27 @@ func to_dict() -> Dictionary:
 	var ins := {}
 	for k in interests:
 		ins[str(k)] = int(interests[k])
-	return {"ties": out, "interests": ins, "killings": killings}
+	var tr := {}
+	var tk: Array = trades.keys()
+	tk.sort()
+	for k in tk:
+		tr[k] = {"n": int(trades[k].n), "last": int(trades[k].last)}
+	return {"ties": out, "interests": ins, "killings": killings, "trades": tr}
+
+
+## X18-Q12-POST: a trade between two parties (ids; the player is Life.PLAYER_ID) makes them commercial contacts.
+func note_trade(a: int, b: int, day: int) -> void:
+	if a == b:
+		return
+	var k := key(a, b)
+	var r: Dictionary = trades.get(k, {"n": 0, "last": -1})
+	r.n = int(r.n) + 1
+	r.last = day
+	trades[k] = r
+
+
+func traded_with(a: int, b: int) -> bool:
+	return trades.has(key(a, b))
 
 
 func load_dict(d: Dictionary) -> void:
@@ -679,6 +702,10 @@ func load_dict(d: Dictionary) -> void:
 			t[f] = float(t[f])
 		ties[str(k)] = t
 	killings = int(d.get("killings", 0))
+	trades.clear()
+	var trd: Dictionary = d.get("trades", {})             # X18-Q12-POST; saves before it have none
+	for k in trd:
+		trades[str(k)] = {"n": int(trd[k].n), "last": int(trd[k].last)}
 	var ins: Dictionary = d.get("interests", {})
 	for k in ins:
 		interests[int(k)] = int(ins[k])

@@ -615,6 +615,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		seller.earned += total
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
+	if relations:                      # X18 HOOK (X18-Q12-POST): the pair become commercial contacts (a record only)
+		relations.note_trade(buyer.id if buyer is NPC else Life.PLAYER_ID, seller.id if seller is NPC else Life.PLAYER_ID, day())
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
 	return true

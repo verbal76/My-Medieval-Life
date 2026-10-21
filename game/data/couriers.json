@@ -1,0 +1,34 @@
+{
+  "format": "mml-couriers/0",
+  "_note": "PROSPECTIVE (Expansion 18; owner Q18-12 and Q18-13 decided 2026-10-21, docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md, _courier_booths_known_recipients.md, _courier_contract_interface_pricing.md on staging). Courier booths, regular routes, special deliveries and notarised contracts. EVERY NUMBER BELOW IS AN UNAPPROVED PROVISIONAL DEFAULT for testing and analysis, not a balancing constant (the owner reviews the evidence first).",
+  "booths": {
+    "_note": "A booth is an existing market stall (World.stalls, STALL system) kept by a villager hired by the existing job rule (Construction.can_hire: an adult out of work or labouring). Placement default: the first free manor stall at the market; each off-map settlement has one booth of its own. Which businesses count as 'major' (owner question Q18-15) is provisional: a trader whose trade buys (NPCBrain.BUYS) and keeps a market stall.",
+    "per_settlement": 1,
+    "major_business_roles": ["merchant_raw", "merchant_food", "merchant_goods", "tavernkeeper"]
+  },
+  "routes": {
+    "_note": "Regular routes: a flat fee per load, paid at the booth when booked; the courier leaves every every_days and carries up to load_units a load, at most loads_per_departure loads (the route's cart). UNAPPROVED provisional numbers.",
+    "every_days": 2,
+    "fee_per_load": 6,
+    "load_units": 20,
+    "loads_per_departure": 3
+  },
+  "special": {
+    "_note": "Special deliveries are negotiated (CON-01-shaped, provisional adapter); the computed work informs the courier's least acceptable fee: carriers' day wage (balance helper_wage) x journey days there and back (the return leg always: to come home, to bring back payment or to deposit proceeds), plus per extra load, per stop, and the notarial fee when the courier also notarises. UNAPPROVED provisional coefficients.",
+    "per_extra_load": 3,
+    "per_stop": 2,
+    "minimum": 4,
+    "notary_fee": 10,
+    "counter_steps": 3
+  },
+  "notary": {
+    "_note": "Owner Q18-13: a courier with legal skill may act as a notary. The game has no 'law' skill; PROVISIONAL check: an existing skill at a level, until the owner decides which skill counts (owner question Q18-14).",
+    "skill": "trading",
+    "min_level": 5
+  },
+  "contracts": {
+    "_note": "Owner Q18-13: ordinary small agreements need no signatures; formal commercial contracts and ownership transfers need every party's signature, given face to face or before a travelling notary. small_value: the most an agreement may be worth to count as small (UNAPPROVED provisional). face_to_face_tiles: how near two parties must stand to sign together.",
+    "small_value": 50,
+    "face_to_face_tiles": 3.0
+  }
+}
