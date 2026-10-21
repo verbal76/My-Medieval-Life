@@ -1788,6 +1788,22 @@ func player_pick_lock(u: Dictionary) -> Dictionary:
 	return r
 
 
+## DVW-A12 R20: move `qty` of `id` between the player's pack and the home chest (`from_chest`: out of the chest), all
+## or nothing (transfer); that many stolen marks go with them (PlayerState.store_marks, take_marks), so the chest does
+## not wash stolen goods clean. True if they moved.
+func player_home_move(id: String, from_chest: bool, qty: int) -> bool:
+	var p := player
+	var src: Inventory = p.chest if from_chest else p.inv
+	var dst: Inventory = p.inv if from_chest else p.chest
+	if qty < 1 or not transfer(src, dst, id, qty):
+		return false
+	if from_chest:
+		p.take_marks(id, qty)
+	else:
+		p.store_marks(id, qty)
+	return true
+
+
 ## DVW-A12 R5: the player takes what lies in loot pile `i`: each kind of goods whole, as far as the pack takes it, and
 ## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
 ## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.

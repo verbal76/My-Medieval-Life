@@ -3147,19 +3147,10 @@ func _home_storable() -> Array:
 	return p.inv.ids().filter(func(id): return not worn.has(id))
 
 
-## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing.
+## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing. The rule is
+## core's (World.player_home_move, DVW-A12 R20).
 func home_move(id: String, from_chest: bool, qty: int) -> bool:
-	var w: World = main.world
-	var p := w.player
-	var src: Inventory = p.chest if from_chest else p.inv
-	var dst: Inventory = p.inv if from_chest else p.chest
-	if qty < 1 or not w.transfer(src, dst, id, qty):
-		return false
-	if from_chest:
-		p.take_marks(id, qty)
-	else:
-		p.store_marks(id, qty)
-	return true
+	return main.world.player_home_move(id, from_chest, qty)
 
 
 func _home_move_all(from: String) -> void:

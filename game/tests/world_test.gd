@@ -1469,6 +1469,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_theft_last()
 	_dvw_a12_rest()
 	_dvw_a12_sprint()
+	_dvw_a12_home_marks()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2215,6 +2216,31 @@ func _dvw_a12_sprint() -> void:
 	check(not p.sprint_drain(0.5) and p.stamina == 0.0, "DVW-A12 R19: out of breath at nothing, never below")
 	check(PlayerState.sprint_speed() == float(GameData.b("sprint_speed")), "DVW-A12 R19: the sprint's speed is the balance's")
 	p.stamina = p.stamina_cap()
+
+
+## R20: goods moved between the pack and the home chest take their stolen marks with them, all or nothing; the
+## interface's move is core's; kept over a save.
+func _dvw_a12_home_marks() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var chest0: Inventory = p.chest
+	var marks0: Dictionary = p.chest_stolen.duplicate(true)
+	p.chest = Inventory.new()
+	p.chest_stolen = {}
+	var victim: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult")[0]
+	p.inv.add("leather", 3)
+	p.mark_stolen("leather", victim.id, 2)
+	check(w.player_home_move("leather", false, 3) and p.chest.count("leather") == 3 and not p.inv.has("leather"), "DVW-A12 R20: three pieces go into the chest")
+	check(int(p.chest_stolen.get("leather", {}).get(str(victim.id), 0)) == 2 and p.stolen_count("leather") == 0, "DVW-A12 R20: their two stolen marks go with them")
+	check(not w.player_home_move("leather", true, 5) and p.chest.count("leather") == 3, "DVW-A12 R20: more than the chest holds: nothing moves")
+	check(main.ui.home_move("leather", true, 1) and p.inv.count("leather") == 1 and p.stolen_count("leather") == 1, "DVW-A12 R20: one taken out through the interface takes a stolen mark (stolen pieces first)")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(int(w2.player.chest_stolen.get("leather", {}).get(str(victim.id), 0)) == 1 and w2.player.stolen_count("leather") == 1, "DVW-A12 R20: the marks are saved where they are")
+	p.chest = chest0
+	p.chest_stolen = marks0
+	_restore_pack(keep)
 
 
 ## A clean pack for one rule's checks; returns what to restore.
