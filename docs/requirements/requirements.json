@@ -31447,7 +31447,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Add pages from parity/shovels and equipment/collapse when merged; close the listed gaps before the release review",
+   "next_action": "Release documentation check in the Build 17 readiness report",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -31477,6 +31477,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Equipment merge: sys:mine_equipment and sys:mine_collapse (wiki_mine_equipment.gd), the collapse outcome on sys:mine_stability, carpenter job text, shore job text; docs/build17/README.md rows for equipment, parity and stone added and the collapse gap closed. Remaining: code names on non-mining node pages, prospector JOB_TEXT orphan, MIN_F_UNDERGROUND.md section 4"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Closed the remaining gaps on wip/build17: plain-language wiki text for the 13 non-mining resource pages that showed code names (wiki.gd NODE_PLAYER_TEXT), a job page for the prospector (a trade taken up later, not in Population.JOBS), and MIN_F_UNDERGROUND.md section 4 marked answered with pointers. wiki_test passes. The release documentation gate (WIKI-01) remains for the readiness report"
     }
    ],
    "target_build": "17"

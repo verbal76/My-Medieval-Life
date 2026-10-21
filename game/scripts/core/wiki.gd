@@ -25,6 +25,24 @@ const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"],
 const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "items_gear", "head": "items_gear",
 	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials", "medicine": "items_medicine"}
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
+## Player-facing wording for resource pages whose data notes are written for developers (WIKI-B17): what the player sees,
+## without code names. The mining nodes' wording is WikiMining.NODE_TEXT.
+const NODE_PLAYER_TEXT := {
+	"tree": {"notes": "Only a full-grown tree can be felled: saplings and young trees give nothing and say why. A few blows of an axe bring it down for 4 logs; with Woodcutting 2 you get one more, and sometimes a sapling to plant. Villagers fell by the same blows and get 4 logs."},
+	"wheat_field": {"notes": "You can take a handful of a ripe field's grain each time it ripens (less if less is left); the farmer who works it takes the whole crop."},
+	"flower_patch": {"notes": "One flower a plant, all at once. Now and then whoever picks it, you or a villager, also finds a flower seed, which grows a new flower where it is planted."},
+	"red_berry_bush": {"notes": "Two red berries a bush, all at once. Now and then whoever picks it also takes a cutting, which grows a new bush where it is planted."},
+	"blue_berry_bush": {"notes": "Two blueberries a bush, all at once. Now and then whoever picks it also takes a cutting, which grows a new bush where it is planted."},
+	"apple_tree": {"where": "The cottagers' orchards near the houses, and any apple tree grown from a sapling.", "back": "Picked bare, it bears again in a later fruiting season (summer and autumn), never in winter or spring.", "notes": "A grown apple tree in fruit gives its apples all at once. It can also be felled like any tree for logs, and sometimes an apple sapling."},
+	"wild_boar": {"back": "A well-fed female and male sharing a wood have young from time to time, while the wood is not full. Nothing comes in from outside: a group of one sex never breeds again.", "notes": "A young animal gives half the meat (at least 1) and no hide. Your kill is left as a bag where it fell."},
+	"wild_rabbit": {"back": "As for boar: young while a well-fed pair shares the wood and it is not full.", "notes": "A rabbit gives no hide, but an adult gives a pelt, which you can tan to leather at the workbench or sell to the tanner or the goods merchant. A young one gives at least 1 meat and no pelt."},
+	"wild_bear": {"back": "Young while a well-fed pair shares the wood and it is not full.", "notes": "A young bear gives half the meat and no hide. Bears are tough."},
+	"wild_bird": {"back": "Young while a well-fed pair shares the wood and it is not full.", "notes": "A bird gives a feather and no meat."},
+	"sheep_pen": {"back": "Young while a well-fed pair shares the pen and it is not full.", "notes": "A young animal gives half the meat and no hide. The manor's sheep are not shorn: only a sheep in your own pen gives wool."},
+	"chicken_pen": {"back": "Young while a well-fed pair shares the pen and it is not full.", "notes": "Chickens give no hide and lay no eggs. An adult gives feathers, which only the goods merchant buys. A young one gives none."},
+	"player_field": {"notes": "Each ripe cell gives its crop (the herb crop is the wild flower the sage buys) and some seed of the same crop to sow again. Farmers and the food stall's merchant also sell seed."},
+}
+
 const JOB_TEXT := {
 	"miner": "Works the ore seams in the mine yard, the gallery and the cave, quarries the grey rock of worked-out seams, and sells ore and stone to the smith and the raw-goods merchant. When its ore is worked out it takes the manor's trial pit and digging work.",
 	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor. Takes the manor's surveys. See Prospecting and trial pits.",
@@ -373,7 +391,7 @@ func _nodes() -> void:
 		for i in n.get("yields", {}):
 			y.append(_iname(i))
 		rows.append(["Gives", ", ".join(y)])
-		var ov: Dictionary = WikiMining.NODE_TEXT.get(id, {})     # player-facing wording for the mining nodes (Build 17)
+		var ov: Dictionary = WikiMining.NODE_TEXT.get(id, NODE_PLAYER_TEXT.get(id, {}))     # player-facing wording (Build 17)
 		rows[0][1] = str(ov.get("where", rows[0][1]))
 		rows.append(["Comes back?", str(ov.get("back", str(n.get("regeneration", "?")).split(" Once")[0].split("; ")[0]))])
 		var blocks := [stats(rows)]
@@ -501,6 +519,12 @@ func _jobs() -> void:
 		if tools_kept.has(j):
 			blocks.append(links(tools_kept[j].map(func(i): return _item_link(i)), "Keeps for work"))
 		add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", blocks, "", j)
+	for j in JOB_TEXT:
+		if not Population.JOBS.has(j):          # a trade nobody starts in, taken up later by the job rules (the prospector)
+			var extra := [p(JOB_TEXT[j]), stats([["In the village", "none at the start; taken up when the village has need of it"]])]
+			if tools_kept.has(j):
+				extra.append(links(tools_kept[j].map(func(i): return _item_link(i)), "Keeps for work"))
+			add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", extra, "", j)
 
 
 func _controls() -> void:
