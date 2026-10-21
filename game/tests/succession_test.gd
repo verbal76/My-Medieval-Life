@@ -25,6 +25,9 @@ func _init() -> void:
 	reeve_from_the_village()
 	reeve_from_the_caravan()
 	provider_lost()
+	guards_replaced()
+	guards_unaffordable()
+	failed_business()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -136,3 +139,77 @@ func provider_lost() -> void:
 	check(heir.coins == hc0 + 120 and w.households[h].pantry.count("bread") == pantry0 + 3, "the heir holds the provider's coins and the food goes to the pantry")
 	check(int(econ.get("members", -1)) == w.brain._members(h).size(), "the household's position is recomputed at once (%d members)" % int(econ.get("members", -1)))
 	check(w.total_coins() == c0, "no coin made or lost")
+
+
+func free_adult(w: World) -> NPC:
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job in NPCBrain.APPRENTICE_FROM:
+			return o
+	return null
+
+
+## EQ-04: the watch. A slain guard's post opens while the treasury can pay a guard, and is taken up through the
+## succession of posts; the new guard takes the thinner shift and a guard's training; nothing else is given.
+func guards_replaced() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	var guards: Array = w.npcs.filter(func(o): return o.alive and o.job == "guard")
+	check(guards.size() == int(Population.JOBS.guard), "the village begins with its watch of %d" % guards.size())
+	w.last_reeve_day = -1
+	b.reeve_day()
+	check(b.open_posts("guard") == 0, "a full watch opens no post")
+	var dead: NPC = guards[0]
+	var shift := dead.workplace
+	w.kill(dead, "slain by Rob")
+	w.treasury = 100000
+	b.reeve_day()
+	b.reeve_day()
+	check(b.open_posts("guard") == 1 and str(w.vacancies.filter(func(v): return v.job == "guard")[0].workplace) == shift,
+		"the evening's business opens one guard's post, on the thinned %s shift" % shift)
+	var cand := free_adult(w)
+	check(cand != null, "an adult free to take it")
+	b.succession_dawn()
+	check(b.living_in("guard") == guards.size() - 1, "not at once")
+	skip_days(w, int(GameData.b("succession_days")))
+	b.succession_dawn()
+	var newg: Array = w.npcs.filter(func(o): return o.alive and o.job == "guard" and not guards.has(o))
+	check(newg.size() == 1 and b.open_posts("guard") == 0 and b.living_in("guard") == int(Population.JOBS.guard),
+		"after %d days an adult takes the post: the watch is whole again" % int(GameData.b("succession_days")))
+	if newg.is_empty():
+		return
+	var g: NPC = newg[0]
+	var items0: int = g.inv.total()
+	b.decide(g)
+	check(g.workplace == shift and g.max_hp >= 45.0 and g.damage >= 8.0, "the new guard takes the %s shift and a guard's training (%s, hp %d, blow %d)" % [shift, g.workplace, int(g.max_hp), int(g.damage)])
+	check(g.inv.total() <= items0, "and is given no goods by taking the post (%d things)" % g.inv.total())
+
+
+## A watch the treasury cannot pay is not filled (a village may fail: no hidden rescue).
+func guards_unaffordable() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	var g: NPC = w.npcs.filter(func(o): return o.alive and o.job == "guard")[0]
+	w.kill(g, "slain by Rob")
+	w.treasury = 0
+	w.last_reeve_day = -1
+	b.reeve_day()
+	check(b.open_posts("guard") == 0 and float(w.stats.get("guard_post_unaffordable", 0)) >= 1.0, "with an empty treasury no guard's post opens")
+
+
+## A business that fails: its tanner leaves the trade for other work (seek_work's path: _change_job, then _post_left);
+## the post re-opens and, after succession_days, another villager takes the trade up at the same workplace.
+func failed_business() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	var tanners: Array = w.npcs.filter(func(o): return o.alive and o.job == "tanner")
+	var t: NPC = tanners[0]
+	var place := t.workplace
+	b._change_job(t, "woodcutter", "the tannery did not keep the household fed")
+	b._post_left(t, "tanner", place)
+	check(b.open_posts("tanner") == 1, "the failed tannery's post re-opens (%s)" % place)
+	skip_days(w, int(GameData.b("succession_days")))
+	b.succession_dawn()
+	var now: Array = w.npcs.filter(func(o): return o.alive and o.job == "tanner")
+	var newt: Array = now.filter(func(o): return not tanners.has(o))
+	check(newt.size() == 1 and (newt[0] as NPC).workplace == place and b.open_posts("tanner") == 0,
+		"another villager takes up the trade at the same workplace (%s)" % ((newt[0] as NPC).name if not newt.is_empty() else "none"))

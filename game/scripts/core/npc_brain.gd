@@ -1362,6 +1362,7 @@ func _hunter(n: NPC) -> bool:
 
 
 func _guard(n: NPC, h: float) -> void:
+	_take_guard_post(n)
 	var on_duty := (h >= WAKE and h < SLEEP) if n.workplace == "day" else (h >= SLEEP - 1.0 or h < WAKE + 1.0)
 	var shops_open := h >= WORK_START and h < WORK_END
 	if not on_duty:
@@ -2412,6 +2413,7 @@ func fight(n: NPC, dt: float) -> void:
 func reeve_day() -> void:
 	update_market()
 	_reeve_succession()
+	_guard_posts()
 	var obligations := daily_obligations()
 	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
 	var taxed := 0
@@ -2516,6 +2518,56 @@ func _reeve_succession() -> void:
 	w.vacancies.append({"job": "reeve", "workplace": "manor", "home": rv.home if rv != null else "", "household": rv.household if rv != null else -1,
 			"day": w.day(), "who": who, "heir": -1})
 	w.note("The office of reeve, left by %s, is open: someone of the village or a newcomer will take it." % who)
+
+
+## EQ-04: the watch is kept at the strength the village began with (Population.JOBS.guard). Guards are not a trade
+## (nobody takes the post up by the job market), so a post left by a dead guard was never filled. Each evening, while
+## the watch is short and the treasury can pay one more guard as it pays a new manor hand (above its reserve,
+## `treasury_reserve_days`, with `manor_hire_runway_days` of the wage to spare: the hiring line the job board uses), one
+## guard's post opens in World.vacancies and the succession of posts fills it as a trade's (an adult without a trade,
+## else a caravan newcomer). The new guard takes the thinner shift and a guard's training (_take_guard_post); the sword
+## and armour come from the late guard's heir or household when one holds them spare (_install), or a newcomer brings
+## them; nothing else is given.
+func _guard_posts() -> void:
+	var missing := int(Population.JOBS.guard) - living_in("guard") - open_posts("guard")
+	if missing <= 0:
+		return
+	var obligations := daily_obligations()
+	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
+	var wage := float(GameData.b("guard_wage_per_day"))
+	if float(w.treasury) - reserve < wage * float(GameData.b("manor_hire_runway_days")):
+		w.stat("guard_post_unaffordable")
+		return
+	w.vacancies.append({"job": "guard", "workplace": _guard_shift(null), "home": "", "household": -1, "day": w.day(),
+			"who": "a guard of the watch", "heir": -1})
+	w.stat("guard_posts_opened")
+	w.note("The manor opens a guard's post: the watch is %d short." % missing)
+
+
+## The shift with fewer guards on it ("day" first when equal), not counting `except`.
+func _guard_shift(except: NPC) -> String:
+	var day := 0
+	var night := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "guard" and o != except:
+			if o.workplace == "day":
+				day += 1
+			elif o.workplace == "night":
+				night += 1
+	return "day" if day <= night else "night"
+
+
+## A guard new to the post (EQ-04: taken up through the succession of posts) gets its shift and a guard's training
+## (Population.GUARD_STATS), never below what they already have. Nothing is given but the training.
+func _take_guard_post(n: NPC) -> void:
+	if n.workplace == "day" or n.workplace == "night":
+		return
+	n.workplace = _guard_shift(n)
+	var g: Dictionary = Population.GUARD_STATS
+	n.max_hp = maxf(n.max_hp, float(g.hp))
+	n.damage = maxf(n.damage, float(g.damage))
+	n.armor = maxf(n.armor, float(g.armor))
+	w.stat("guards_taken_on")
 
 
 ## OD-16 (b), EQ-19 (owner 2026-10-20: "the manor uses its treasury to keep the smithy and woodlands working: it buys
@@ -3287,7 +3339,7 @@ const APPRENTICE_FROM := ["", "manor_hand", "laborer"]          # the adults who
 
 ## How many hold a trade when the village is whole: the starting count for a skilled trade, one for the rest.
 static func staff_target(job: String) -> int:
-	return int(Population.JOBS.get(job, 1)) if SKILLED.has(job) else 1
+	return int(Population.JOBS.get(job, 1)) if SKILLED.has(job) or job == "guard" else 1     # the watch too (EQ-04, _guard_posts)
 
 
 func is_essential(job: String) -> bool:

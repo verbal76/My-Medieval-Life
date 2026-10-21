@@ -9,6 +9,8 @@ const JOBS := {
 	"farmer": 10, "cook": 3, "tavernkeeper": 2, "hunter": 4, "merchant": 6, "guard": 6,
 	"reeve": 1, "sage": 1,
 }
+# A guard's training: health, blow and guard (the starting watch; one who takes up a guard's post later, EQ-04)
+const GUARD_STATS := {"hp": 45.0, "damage": 8.0, "armor": 3.0}
 const CHILDREN := 26
 const ELDERS := 18
 
@@ -209,10 +211,10 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 		"guard":
 			inv.add("iron_sword")
 			inv.add("leather_armor")
-			n.hp = 45.0
-			n.max_hp = 45.0
-			n.damage = 8.0
-			n.armor = 3.0
+			n.hp = float(GUARD_STATS.hp)
+			n.max_hp = float(GUARD_STATS.hp)
+			n.damage = float(GUARD_STATS.damage)
+			n.armor = float(GUARD_STATS.armor)
 			n.workplace = "day" if idx % 2 == 0 else "night"
 		"reeve":
 			n.coins = 300
