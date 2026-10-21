@@ -16905,10 +16905,55 @@
    "roadmap_reason": "Owner Build 17 start"
   },
   {
+   "id": "OD-30",
+   "title": "Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track",
+   "source": "docs/directives/2026-10-21_expansion_numbering_approval.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Roadmap organization and sequencing only: no design decision approved, no implementation authorized, no release dates"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion_numbering_approval.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner_answer; target_build; roadmap_gate; roadmap_reason",
+     "why": "Owner answered"
+    }
+   ],
+   "owner_answer": "Approved as the official long-term planning sequence (organization and sequencing only; unresolved design decisions, implementation and release dates not approved)",
+   "target_build": "owner decision",
+   "roadmap_gate": "Owner designation",
+   "roadmap_reason": "Roadmap numbering"
+  },
+  {
    "id": "OD-LE-01",
    "title": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
    "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
@@ -16942,11 +16987,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "Answered by the owner's numbering approval (sequencing only)"
     }
    ],
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
+   "owner_answer": "Expansion 20 (owner, 2026-10-21, OD-30: the official numbering); Build 19 Judgment not displaced"
   },
   {
    "id": "OD-LE-02",
@@ -22670,7 +22721,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Numbering approved by the owner 2026-10-21 (OD-30): 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration unnumbered, Multiplayer separate; sequencing only, no design or implementation approval",
    "history": [
     {
      "date": "2026-10-21",
@@ -22686,6 +22737,11 @@
      "date": "2026-10-21",
      "change": "source",
      "why": "Source path on staging"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner approved the numbering"
     }
    ],
    "target_build": "owner decision",

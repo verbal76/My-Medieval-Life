@@ -12,6 +12,15 @@ These are three independent expansions:
 
 Each has its own phases, tests, integration review and build decision. None is started; none interrupts the Build 15–16 equilibrium work (EQ-16). The directive assigned no build numbers; the owner's roadmap below (ROAD-01, the same day) did.
 
+## Official expansion numbering (owner, 2026-10-21, register OD-30)
+
+17 Mining & Industrial Development, 18 Settlement Advancement & Regional Economy, 19 NPC Judgment (all three as before);
+**20 Living Economy, 21 Village Politics, 22 Bandit Factions, 23 Generational Legacy**; World Exploration unnumbered until
+its scope and dependencies are established; Multiplayer a separate track
+(`docs/directives/2026-10-21_expansion_numbering_approval.md`). This is organization and sequencing only: it approves no
+open design decision, authorizes no implementation of a future expansion and sets no release date. The starter
+specifications and their comparisons are on `wip/roadmap-docs` (`docs/roadmap/`).
+
 ## The owner's five-build roadmap (2026-10-20, register ROAD-01)
 
 | Build | Content |
