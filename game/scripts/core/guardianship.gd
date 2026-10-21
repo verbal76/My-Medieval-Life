@@ -17,6 +17,20 @@ extends RefCounted
 ## members, so any housing need is the receiving household's own (crowding, HOUSE-01); no house is built.
 ## With no household able to take a child, the owner's fallback is the bandit clan (FAM-07, OD-11): the child joins
 ## the bandit camp as a dependant (join_clan).
+## REC-001 (owner #46/#47: "Orphaned children should have possible adoption or guardianship paths. Family members may
+## receive priority, followed by suitable willing households"; "The player must be eligible for ... adoption under the
+## same basic systems as NPCs"):
+##  - inheritance at once: an orphaned household's stores go with its children, shared out child by child (the last
+##    takes the rest), into the pantry of the household that takes each in (a clan child carries its share), so the
+##    food the parents left feeds their children and does not pass to the manor (escheat) while they live; the
+##    receiving household's position (food need, members) is recomputed at once (NPCBrain.evaluate_household);
+##  - the player in the same order: the player's household is the one the player's children are raised in (their
+##    partner's, Life.births). The player's kinship to the child counts through the family tree (parent, grandparent,
+##    relative), so a player's grandchild goes to the player's household before a more distant relative's;
+##  - the player's choice (player_adopt): the player may take in an orphaned child (no living parent but the player)
+##    who lives at the bandits' camp, with a household that is not kin, or with kin more distant than the player;
+##    never one that kin at least as close already care for (family first). The player's household must pass the
+##    same test as any villager's (a home of its own, a responsible adult, a sleeping place for the child).
 
 
 static func dawn(w: World) -> void:
@@ -65,16 +79,20 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 		var p := w.npc(int(pid)) if int(pid) >= 0 else null
 		if p != null and p.alive and p.role != "bandit" and _eligible(w, p.household, k):
 			parents.append(p.household)
+		elif int(pid) == Life.PLAYER_ID and _player_eligible(w, k):
+			parents.append(player_household(w))
 	out.parent = _ranked(w, k, parents)
 	var grand := []
 	for pid in [k.mother, k.father]:
-		var p := w.npc(int(pid)) if int(pid) >= 0 else null
+		var p = Life.parent_of(w, int(pid)) if int(pid) != -1 else null
 		if p == null:
 			continue
 		for gid in [p.mother, p.father]:
 			var g := w.npc(int(gid)) if int(gid) >= 0 else null
 			if g != null and g.alive and g.role != "bandit" and _eligible(w, g.household, k) and not grand.has(g.household):
 				grand.append(g.household)
+			if int(gid) == Life.PLAYER_ID and _player_eligible(w, k) and not grand.has(player_household(w)):
+				grand.append(player_household(w))
 	out.grandparent = _ranked(w, k, grand)
 	var dist := kin_distances(w, k)
 	var best := 1 << 30
@@ -82,15 +100,22 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 	var ids := dist.keys()
 	ids.sort()
 	for id in ids:
-		var o := w.npc(int(id))
-		if o == null or not o.alive or o.role == "child" or o.role == "bandit" or not _eligible(w, o.household, k):
-			continue
+		var hh := -1
+		if int(id) == Life.PLAYER_ID:
+			if not _player_eligible(w, k):
+				continue
+			hh = player_household(w)
+		else:
+			var o := w.npc(int(id))
+			if o == null or not o.alive or o.role == "child" or o.role == "bandit" or not _eligible(w, o.household, k):
+				continue
+			hh = o.household
 		var d := int(dist[id])
 		if d < best:
 			best = d
 			near = []
-		if d == best and not near.has(o.household):
-			near.append(o.household)
+		if d == best and not near.has(hh):
+			near.append(hh)
 	out.relative = _ranked(w, k, near)
 	var others := []
 	for h in w.households.size():
@@ -102,19 +127,20 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 
 ## Genealogical distance from the child to every relative reachable through parent and child links (the
 ## dead too, as links: a dead parent still joins a child to its grandparents and aunts). A parent is 1, a
-## grandparent or sibling 2, an aunt or uncle 3, a first cousin 4.
+## grandparent or sibling 2, an aunt or uncle 3, a first cousin 4. The living player is a node like any villager
+## (Life.PLAYER_ID, REC-001); an earlier generation's player (FORMER_PLAYER) is not.
 static func kin_distances(w: World, k: NPC) -> Dictionary:
 	var dist := {k.id: 0}
 	var queue := [k.id]
 	while not queue.is_empty():
 		var id: int = queue.pop_front()
-		var o := w.npc(id)
+		var o = (w.player if w.player.alive else null) if id == Life.PLAYER_ID else w.npc(id)
 		if o == null:
 			continue
-		var next := [o.mother, o.father] + o.children
+		var next: Array = [o.mother, o.father] + o.children
 		for nid in next:
 			var n := int(nid)
-			if n < 0 or dist.has(n):
+			if (n < 0 and n != Life.PLAYER_ID) or dist.has(n):
 				continue
 			dist[n] = int(dist[id]) + 1
 			queue.append(n)
@@ -168,6 +194,7 @@ static func _ranked(w: World, k: NPC, hs: Array) -> Array:
 static func join_clan(w: World, k: NPC) -> void:
 	var old := k.household
 	if old >= 0:
+		_take_share(w, k, old, k.inv)            # REC-001: the child carries its share of what the parents left
 		(w.households[old].members as Array).erase(k.id)
 	k.household = -1
 	k.home = ""
@@ -207,6 +234,7 @@ static func move(w: World, k: NPC, h: int, tier: String) -> void:
 	var old := k.household
 	var was_family := k.family
 	if old >= 0:
+		_take_share(w, k, old, w.households[h].pantry)
 		(w.households[old].members as Array).erase(k.id)
 	w.brain._lodge(k, h)
 	if k.family != was_family and k.birth_family == "":
@@ -218,3 +246,88 @@ static func move(w: World, k: NPC, h: int, tier: String) -> void:
 	w.note("%s %s is taken in by %s (%s)." % [k.name, was_family, "the %s household" % w.households[h].family if host == null else "%s %s" % [host.name, host.family], tier])
 	if old >= 0 and not w.property._anyone_alive(old):
 		w.property.household_ended(old)
+	w.brain.evaluate_household(h)                 # REC-001: its members and food need change at once
+	if old >= 0 and not w.households[old].get("ended", false):
+		w.brain.evaluate_household(old)
+
+
+## REC-001: the share of an orphaned household's stores (its pantry) that goes with child `k` into `into`: of each
+## good, the count divided by the living children still in it, rounded down, so the last child to leave takes the
+## rest. Nothing moves from a household that still has a living adult or elder (its stores are theirs). Goods only
+## move (World.transfer).
+static func _take_share(w: World, k: NPC, old: int, into: Inventory) -> void:
+	var left := 0
+	for o: NPC in w.brain._members(old):
+		if o.alive and o.role != "child":
+			return
+		if o.alive:
+			left += 1
+	if left <= 0 or into == null:
+		return
+	var pantry: Inventory = w.households[old].pantry
+	var moved := 0
+	for id in pantry.ids():
+		var n := pantry.count(id) / left
+		if n > 0 and w.transfer(pantry, into, id, n):
+			moved += n
+	if moved > 0:
+		w.stat("orphan_inherited_items", moved)
+
+
+## The household the player's family lives in with the player's partner (where the player's own children are raised,
+## Life.births), or -1: without a partner the player has no household of villagers to raise a child in.
+static func player_household(w: World) -> int:
+	var p := w.player
+	if not p.alive or p.partner < 0:
+		return -1
+	var o := w.npc(p.partner)
+	if o == null or not o.alive or o.partner != Life.PLAYER_ID:
+		return -1
+	return o.household
+
+
+## Whether the player's household can take child `k` in, by the test every household passes (_eligible, has_room).
+static func _player_eligible(w: World, k: NPC) -> bool:
+	var h := player_household(w)
+	return h >= 0 and _eligible(w, h, k) and Life.has_room(w, h, k)
+
+
+## Why the player cannot take child `k` in ("" if they can): REC-001's rules, above.
+static func player_adopt_refusal(w: World, k: NPC) -> String:
+	if k == null or not k.alive or k.role != "child":
+		return "Only a child can be taken in."
+	if not w.player.alive or Life.age_years(w.player.born, w.minutes) < float(Life.cfg().partner_min_age):
+		return "You are too young to take in a child."
+	for pid in [k.mother, k.father]:
+		var p := w.npc(int(pid)) if int(pid) >= 0 else null
+		if p != null and p.alive:
+			return "%s has a parent living." % k.name
+	var h := player_household(w)
+	if h < 0:
+		return "You have no household to raise a child in."
+	if k.household == h:
+		return "%s already lives with your family." % k.name
+	if not _eligible(w, h, k):
+		return "Your household has no home of its own to take a child into."
+	if not Life.has_room(w, h, k):
+		return "There is no sleeping place for %s in your home." % k.name
+	# family first: kin at least as close as the player who already care for the child keep them
+	var dist := kin_distances(w, k)
+	var mine := int(dist.get(Life.PLAYER_ID, 1 << 30))
+	if k.household >= 0 and k.clan == "":
+		for o: NPC in w.brain._members(k.household):
+			if o.alive and o.role != "child" and dist.has(o.id) and int(dist[o.id]) <= mine:
+				return "%s is cared for by family." % k.name
+	return ""
+
+
+## The player takes child `k` into their household (REC-001): "" when done, else why not. The child becomes a
+## dependant there as any taken-in child does (move); one from the bandits' camp leaves the clan.
+static func player_adopt(w: World, k: NPC) -> String:
+	var why := player_adopt_refusal(w, k)
+	if why != "":
+		return why
+	k.clan = ""
+	move(w, k, player_household(w), "player")
+	w.stat("player_adoptions")
+	return ""

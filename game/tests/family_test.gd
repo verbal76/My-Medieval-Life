@@ -32,6 +32,9 @@ func _init() -> void:
 	test_orphans_do_not_build()
 	test_occupancy_and_no_house()
 	test_nobody_can_take()
+	test_inheritance_at_once()
+	test_player_kin_first()
+	test_player_adopts()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -228,6 +231,7 @@ func test_nobody_can_take() -> void:
 		if int(hh.id) != f[0]:
 			hh.home = ""
 	var before := int(w.stats.get("orphans_to_clan", 0))
+	var carried0: int = kid.inv.total() + w.households[f[0]].pantry.total()
 	var tier := Guardianship.place(w, kid)
 	check(tier == "clan" and kid.clan == "bandit" and kid.household == -1, "with no household able, the child joins the bandit clan (FAM-07, OD-11) (%s)" % tier)
 	check(int(w.stats.get("orphans_to_clan", 0)) == before + 1, "and the case is counted")
@@ -239,7 +243,11 @@ func test_nobody_can_take() -> void:
 	kid.hunger = 10.0
 	w.brain.decide(kid)
 	check(str(kid.doing).contains("bandits' camp"), "a hungry clan child eats at the camp (%s)" % kid.doing)
-	# FSE-B06: from the band's stores, never from nothing
+	# FSE-B06: from the band's stores, never from nothing. The child carries what its household left (REC-001) and eats
+	# that first (band_eat); with it gone, the band's stores feed it
+	check(kid.inv.total() == carried0, "REC-001: the child carries its household's stores to the camp (%d things)" % carried0)
+	for id in NPCBrain.FOOD + NPCBrain.EDIBLE + ["meat"]:
+		kid.inv.items.erase(id)
 	var feeder: NPC = w.npcs.filter(func(o): return o.alive and o.role == "bandit")[0]
 	feeder.inv.add("bread", 2)
 	var bread0 := 0
@@ -276,3 +284,137 @@ func test_nobody_can_take() -> void:
 	Life._set_role(w3, k3, "adult")
 	check(k3.role == "adult" and k3.clan == "" and k3.household >= 0 and w3.buildings.has(k3.home), "with a household able to take them, the young adult leaves the camp for the village (%s, household %d)" % [k3.role, k3.household])
 	check(k3.job == "" and k3.mother == kid.mother, "as an adult without a trade, family tree kept")
+
+
+## A household of another family with a home, a responsible adult and a sleeping place for `kid`, not `but` or `skip`.
+func roomy_adult(w: World, kid: NPC, but: int, skip: Array = []) -> NPC:
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 3 and o.household != but and not skip.has(o.household) \
+				and w.buildings.has(str(w.households[o.household].home)) and w.construction.responsible_adult(o.household) != null \
+				and Life.has_room(w, o.household, kid) and not Life.has_partner(w, o):
+			return o
+	return null
+
+
+## Make the player an adult partnered with villager `o` (whose household is then the player's, REC-001).
+func partner_player(w: World, o: NPC) -> void:
+	w.player.born = Life.born_for_age(30.0, w.minutes)
+	w.player.partner = o.id
+	o.partner = Life.PLAYER_ID
+
+
+## Every good the village holds: villagers, pantries and the granary (what guardianship can move).
+func goods(w: World) -> Dictionary:
+	var out := {}
+	var stores: Array = [w.granary]
+	for hh in w.households:
+		stores.append(hh.pantry)
+	for o: NPC in w.npcs:
+		stores.append(o.inv)
+	for inv: Inventory in stores:
+		for id in inv.items:
+			out[id] = int(out.get(id, 0)) + int(inv.items[id])
+	return out
+
+
+## REC-001: what the parents left goes with their children, at once, and the receiving household's food need counts
+## the child at once; nothing goes to the manor while a child of the household lives; nothing made or lost.
+func test_inheritance_at_once() -> void:
+	var w := new_world()
+	var f := family(w)
+	if f.is_empty():
+		return
+	var h: int = f[0]
+	var kid: NPC = f[3]
+	orphan(w, h)
+	var pantry: Inventory = w.households[h].pantry
+	pantry.add("bread", 7)
+	pantry.add("wheat", 5)
+	var kids := Guardianship.orphans(w, h)
+	var g0 := goods(w)
+	var gran0 := w.granary.count("bread")
+	Guardianship.dawn(w)
+	check(kids.size() >= 1 and pantry.total() == 0 and w.granary.count("bread") == gran0,
+		"the orphaned household's stores go with its %d children, none to the manor's granary (left behind %d)" % [kids.size(), pantry.total()])
+	check(JSON.stringify(goods(w)) == JSON.stringify(g0), "no good made or lost when the children move")
+	var econ: Dictionary = w.households[kid.household].get("econ", {})
+	check(int(econ.get("members", 0)) == w.brain._members(kid.household).size(), "the receiving household's members and food need are recomputed at once (%d members)" % int(econ.get("members", 0)))
+	check(w.households[h].get("ended", false), "the emptied household ends")
+
+
+## REC-001: the player in the guardianship order: the player's grandchild goes to the player's household (their
+## partner's) before a more distant relative's and before an unrelated one.
+func test_player_kin_first() -> void:
+	var w := new_world()
+	var f := family(w)
+	if f.is_empty():
+		return
+	var mom: NPC = f[1]
+	var kid: NPC = f[3]
+	var mate := roomy_adult(w, kid, f[0])
+	var aunt := roomy_adult(w, kid, f[0], [mate.household])
+	check(mate != null and aunt != null, "a partner for the player and an aunt elsewhere")
+	if mate == null or aunt == null:
+		return
+	partner_player(w, mate)
+	mom.mother = Life.PLAYER_ID                      # the player is the child's grandparent
+	w.player.children.append(mom.id)
+	aunt.mother = Life.PLAYER_ID                     # and the aunt the player's other child (distance 3 from the kid)
+	w.player.children.append(aunt.id)
+	var d := Guardianship.kin_distances(w, kid)
+	check(int(d.get(Life.PLAYER_ID, -1)) == 2 and int(d.get(aunt.id, -1)) == 3, "by the family tree the player is 2 from the child, the aunt 3 (%s)" % [d.get(Life.PLAYER_ID)])
+	orphan(w, f[0])
+	var tier := Guardianship.place(w, kid)
+	check(tier == "grandparent" and kid.household == mate.household, "the player's household takes the grandchild in (%s, hh%d)" % [tier, kid.household])
+
+
+## REC-001: the player's own choice, by the same rules: not without a household, not a child with a living parent, not
+## one kin as close already care for; a child placed with strangers or at the bandits' camp can be taken in.
+func test_player_adopts() -> void:
+	var w := new_world()
+	var f := family(w)
+	if f.is_empty():
+		return
+	var kid: NPC = f[3]
+	w.player.born = Life.born_for_age(30.0, w.minutes)
+	check(Guardianship.player_adopt_refusal(w, kid).contains("parent living"), "a child whose parents live is not taken in (%s)" % Guardianship.player_adopt_refusal(w, kid))
+	orphan(w, f[0])
+	var tier := Guardianship.place(w, kid)
+	check(tier == "villager", "with no kin, an unrelated household takes the child in (%s)" % tier)
+	check(Guardianship.player_adopt_refusal(w, kid).contains("no household"), "a player without a household cannot take a child in (%s)" % Guardianship.player_adopt_refusal(w, kid))
+	var mate := roomy_adult(w, kid, kid.household, [f[0]])
+	if mate == null:
+		check(false, "a partner for the player")
+		return
+	partner_player(w, mate)
+	var host := kid.household
+	var c0 := goods(w)
+	var hp0: int = w.households[host].pantry.total()
+	var why := Guardianship.player_adopt(w, kid)
+	check(why == "" and kid.household == mate.household and w.households[mate.household].members.has(kid.id) and not w.households[host].members.has(kid.id),
+		"the player takes in a child cared for by strangers: it joins the player's household (%s)" % why)
+	check(w.households[host].pantry.total() == hp0 and JSON.stringify(goods(w)) == JSON.stringify(c0), "the strangers' stores stay theirs; nothing made or lost")
+	check(int(w.stats.get("player_adoptions", 0)) == 1 and kid.mother == (f[1] as NPC).id, "counted, and the birth parents stay recorded")
+	check(Guardianship.player_adopt_refusal(w, kid).contains("already"), "and not twice")
+	# a child cared for by a grandparent is not taken from them
+	var w2 := new_world()
+	var f2 := family(w2)
+	var kid2: NPC = f2[3]
+	var gran := roomy_adult(w2, kid2, f2[0])
+	(f2[1] as NPC).mother = gran.id
+	gran.children.append((f2[1] as NPC).id)
+	orphan(w2, f2[0])
+	Guardianship.place(w2, kid2)
+	var mate2 := roomy_adult(w2, kid2, gran.household, [f2[0]])
+	partner_player(w2, mate2)
+	check(kid2.household == gran.household and Guardianship.player_adopt_refusal(w2, kid2).contains("family"), "a child with its grandmother stays with family (%s)" % Guardianship.player_adopt_refusal(w2, kid2))
+	# a child at the bandits' camp can be brought home
+	var w3 := new_world()
+	var f3 := family(w3)
+	var kid3: NPC = f3[3]
+	var mate3 := roomy_adult(w3, kid3, f3[0])
+	orphan(w3, f3[0])
+	Guardianship.join_clan(w3, kid3)
+	partner_player(w3, mate3)
+	var why3 := Guardianship.player_adopt(w3, kid3)
+	check(why3 == "" and kid3.clan == "" and kid3.household == mate3.household, "a child at the bandits' camp is taken in by the player (%s)" % why3)
