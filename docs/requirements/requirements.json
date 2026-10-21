@@ -21093,7 +21093,8 @@
     "e05d367",
     "693e0c3",
     "6615da4",
-    "1b05da0"
+    "1b05da0",
+    "e91d903"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21136,6 +21137,11 @@
      "date": "2026-10-21",
      "change": "commit 1b05da0; tests",
      "why": "Round 4 (1b05da0): the eight owner SJD decisions implemented and tested (fading and permanent judgment parts, murder never fades; trust from Relations regard; no hop limit with dedupe; personal morality separate from law; no numbers in the UI; permanent memories); judgment wired into six existing decision points (selling, timber buying, hiring, taking work, friendship, courtship), each off by default and tested both ways; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23 and the regression suites 0 failures; gate identical when off; 10-day run with judgment on: no leaks. 500-villager p99 frame 1.45 ms (about 5.8 ms on the assumed phone, over the 4 ms target; an identical-results lazy-decay fix is available, not applied per the owner's no-more-optimisation instruction). Open owner questions X19-DECAY, X19-HARMED, X19-CRT12, X19-GUARD, X19-REGARD, X19-ASSAULT"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit e91d903",
+     "why": "SYNC-17: Expansion 19 merged Build 17 cd7439c one way (merge 93c107f, head e91d903): conflicts only where both sides added lines (world.gd, economy_sim.gd, tests.yml), kept both; judgment hooks fire on Build 17's level-aware witness and shared-hours paths; collapse deaths publish no judged event (accidents); contract breach/acceptance feeds and collapse-death memory deferred to reconciliation. judgment_test 164, judgment_live 53, decay_demo 24, world 339, run_tests 3544, equip 51, contracts 138, conservation 8, wiki all 0 failures; 30-day seed 1 judgment on: leaks 0; gossip ~24 ms per day (not worse); frame p99 1.41 ms. Determinism gate not rerun on the branch. Ready to resume"
     }
    ],
    "target_build": "19"
