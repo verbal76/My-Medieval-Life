@@ -10965,7 +10965,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Report written (docs/design/FARM08_YIELD_COMPARISON.md, provisional 2.0 a cell); 365-day variants on the integrated commit, then the owner's decision; switches stay off",
+   "next_action": "Owner decision on the yield and switches; optional trace of the keeper's income under seasonal farming before it",
    "priority": "",
    "workstream": "lead",
    "superseded_by": null,
@@ -10985,6 +10985,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Worker C report integrated"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "365-day variant run 39618523947 read (docs/design/FARM08_YIELD_COMPARISON.md): 24 runs, no leaks or errors, no villager starvation; 5 herds died out, all with seasonal_village_farming on, at every yield; mechanism: the cattle keeper's purse runs dry while grain is plentiful (legitimate outcome, WDR-022). Not yet established why seasonal farming drains the keeper. No recommendation; switches stay 0"
     }
    ],
    "target_build": "16",

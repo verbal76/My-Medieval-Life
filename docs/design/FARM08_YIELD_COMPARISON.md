@@ -324,3 +324,46 @@ Reasons:
 - **Variant 3:** both switches at 2.5.
 - **Variant 4:** shared farming only at 2.0.
 - **Variant 5:** seasonal farming only.
+
+## 365-day variant results (Actions run 39618523947, commit `dbbb66a`, read 2026-10-21)
+
+Twenty-four 365-day runs (seeds 1-4 by six configurations). **Integrity:** every run exited 0 with 0 script errors, coin
+leak 0, no item leak, no coin or holder mismatch, and the herd counts reconcile (start + born - slaughtered - starved -
+old age = end). Villager starvation deaths: 0 in all 24. Leaks, alive and errors come from each job's printed run
+summary; the job logs echo only the last 30 lines of `sim.log` (the artifacts could not be downloaded through the proxy).
+
+Every run starts with 3 cattle. "No feed" counts the keeper's failures to buy feed he could afford.
+
+| Configuration | Seed | Alive | Food days | Cattle at end | No feed |
+|---|---|---|---|---|---|
+| control (switches off) | 1/2/3/4 | 139/123/105/146 | 286/282/346/286 | 5/6/6/5 | 59/21/46/1 |
+| manor + seasonal, yield 2.0 | 1 | 114 | 586 | 6 | 1 |
+| | 2 | 145 | 553 | 0 (by day 169) | 226 |
+| | 3 | 148 | 456 | 0 (by day 49) | 146 |
+| | 4 | 132 | 364 | 5 | 345 |
+| manor + seasonal, yield 1.5 | 1 | 132 | 330 | 6 | 357 |
+| | 2 | 162 | 381 | 0 (by day 123) | 123 |
+| | 3 | 136 | 245 | 6 | 529 |
+| | 4 | 115 | 179 | 5 | 454 |
+| manor + seasonal, yield 2.5 | 1 | 109 | 797 | 0 (by day 113) | 76 |
+| | 2 | 120 | 623 | 5 | 164 |
+| | 3 | 104 | 817 | 0 (by day 218) | 346 |
+| | 4 | 161 | 489 | 5 | 466 |
+| manor only, yield 2.0 | 1/2/3/4 | 138/142/171/107 | 718/780/682/986 | 4/6/5/5 | 0/27/44/39 |
+| seasonal only | 1 | 136 | 211 | 5 | 834 |
+| | 2 | 150 | 189 | 5 | 362 |
+| | 3 | 147 | 231 | 0 (by day 240) | 447 |
+| | 4 | 121 | 263 | 5 | 514 |
+
+**Cattle decline (FARM-08B question).** Five of 24 herds died out, all with `seasonal_village_farming=1`, at yields 1.5,
+2.0 and 2.5 alike, so the yield does not explain it (the earlier partial reading that 1.5 was fine was wrong: seed 2 lost
+its herd at 1.5). Mechanism in every case: the keeper runs out of coins (0 at the end on seeds 2 and 3 at 2.0) while grain
+is plentiful (seed 3 at 2.0, day 49: farmers 1,780 wheat, chests 1,665), cannot buy one unit at price 2, culls for want of
+feed down to the breeding stock (`slaughter_no_feed_cow`), and the breeding stock then starves or ages out; in two runs a
+feed cull took the old bull first (old before young, by design) and the cows aged out. Classified a **legitimate
+economic outcome** (WDR-022), not a defect: every loss has a recorded cause and the ledgers reconcile.
+
+**Not yet established:** why seasonal farming drains the keeper's purse ("no feed" 76-834 a year with it, 0-59 without);
+tracing the keeper's daily income and spending would settle it. Also noted, unverified by the lead: most surviving herds
+produced about 1,450 milk with 930-1,410 unsold at day 365, and the season label appears to change about every 2 days in
+these runs. No recommendation is made here; the switches stay off until the owner decides.
