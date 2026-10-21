@@ -2727,6 +2727,48 @@
    "complexity": "S"
   },
   {
+   "id": "B17-DIR",
+   "title": "Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval",
+   "kind": "rule",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Do not publish a new APK, Windows, or Linux distributable without explicit owner approval.",
+   "description": "Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval",
+   "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Build 17 work integrated on wip/build17 with targeted tests; no Build 17 release run without the owner's explicit approval"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_combined_integration_direction.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -15184,6 +15226,133 @@
    "target_build": "17",
    "roadmap_gate": "",
    "roadmap_reason": "the Mining & Industrial Development expansion"
+  },
+  {
+   "id": "MIN-C-Q1",
+   "title": "Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Support manor commissioning without assuming the manor is the exclusive potential employer. Preserve compatibility with the existing negotiated-contract system.",
+   "description": "Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts",
+   "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
+   "approval": "owner directive 2026-10-21, decision 1",
+   "acceptance": [
+    "The manor can commission prospecting; other buyers can too through CON-01; no mining-specific wage"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_combined_integration_direction.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
+   "id": "MIN-C-Q2",
+   "title": "Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "Sharing or selling discoveries is proposed but not yet approved. Do not implement new ownership, access, or extraction-rights mechanics without approval.",
+   "description": "Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics",
+   "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
+   "approval": "owner directive 2026-10-21, decision 2: not yet approved",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_combined_integration_direction.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner's approval"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-C-Q3",
+   "title": "The smith remains the assayer; no separate assayer profession without approval",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Retain the smith as the current assayer. Do not create a separate profession without approval.",
+   "description": "The smith remains the assayer; no separate assayer profession without approval",
+   "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
+   "approval": "owner directive 2026-10-21, decision 3",
+   "acceptance": [
+    "Assay done by smiths (prospecting_test)"
+   ],
+   "implementation": "",
+   "tests": "prospecting_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "7b83fe8"
+   ],
+   "parent": "MIN-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_combined_integration_direction.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 7b83fe8; tests",
+     "why": "Already so built in MIN-C: the smith assays at the forge"
+    }
+   ]
   },
   {
    "id": "MIN-D",
