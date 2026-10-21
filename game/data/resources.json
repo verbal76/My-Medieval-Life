@@ -926,8 +926,8 @@
       "regeneration": "None: a cell cut through stays floor (saved in mine_works.opened); no rock grows back.",
       "owner": "Common rock, like the seams below: nobody owns a tunnel; whoever cuts a unit holds it (MIN-C-Q2: no mining rights are made).",
       "theft": "Never theft: the rock is no one's.",
-      "npc_harvest": false,
-      "npc_note": "MIN-F: a villager cuts by the same function as the player (MineWorks.dig with the villager as `who`, tested), but no villager decides to tunnel on its own yet: tunnels expose no new ore (the cave's and the gallery's seams are generated), so no job or manor posting calls for one (MIN_F_UNDERGROUND.md, owner question).",
+      "npc_harvest": true,
+      "npc_note": "MIN-F: a villager cuts by the same function as the player (MineWorks.dig with the villager as `who`). MIN-F2 (Q2): the manor posts one tunnel job at a time while its works lack stone and a sound support holds a face (ManorWork.post_tunnels, MineWorks.manor_face): a load of carry_ore units cut into the job's load and brought to the works yard, paid at the quarry job's rate a unit; a miner whose ore is worked out takes it as a trial or excavate job. The face is chosen by the works alone: hidden ore is unknown to everyone until a cut exposes it.",
       "player_harvest": true,
       "gather": true,
       "range": 1,
@@ -940,7 +940,7 @@
         "game/scripts/main.gd::_works_targets"
       ],
       "status": "implemented",
-      "risk": "Collapse, ventilation and lighting as a need are not simulated (MIN_F_UNDERGROUND.md): a support is what lets a tunnel be extended, nothing more. The hill holds little rock beyond the galleries, so tunnelling is short."
+      "risk": "MIN-F2: an excavated cell too weakly held (supports worn, few, far) may cave in at dawn (MineWorks.stability, collapse_chance): rubble refills it (spoil, dug out again); supports wear and fail unrepaired. Ventilation and lighting as needs are not simulated. The hill holds little rock beyond the galleries, so tunnelling is short; hidden ore lies in its deep rock (Underground.hidden)."
     }
   },
   "materials": {"nails": [{"use": "building", "text": "B14-07: forged from iron bars at the anvil (forge_nails) and used up building wooden stairs (4 a rim cell) and walkways (3 a rim cell) through a mountain's cliff rim.", "source": "game/scripts/core/terrain.gd::build"}], 
@@ -949,8 +949,10 @@
     "dirt": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was dirt (OpenPits.backfill, counted backfilled_dirt).", "source": "game/scripts/core/open_pit.gd::backfill"},
       {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).", "source": "game/scripts/core/open_pit.gd::tip"}],
     "timber_support": [{"use": "building", "text": "MIN-F: made at the sawhorse from a log and two planks (make_timber_support) and set up on the floor of an underground level with a mallet (MineWorks.place_support), used up (used_timber_support): rock within support.reach cells of a support may be cut.", "source": "game/scripts/core/mine_works.gd::place_support"}],
+    "ladder": [{"use": "building", "text": "MIN-F2 (Q4): made at the workbench from planks and nails (make_ladder) and set into a sunk shaft with a mallet (MineWorks.install_ladder), used up (used_ladder): the shaft becomes a way between two levels the level router uses. It wears like a support and is repaired with a plank and nails, or replaced when it has rotted through.", "source": "game/scripts/core/mine_works.gd::install_ladder"}],
     "track_section": [{"use": "building", "text": "MIN-F: made at the workbench from planks and nails (make_track_section) and laid one a cell with a mallet on an underground floor or in the mine's yard (MineWorks.lay_track), used up (used_track_section): a minecart runs on it.", "source": "game/scripts/core/mine_works.gd::lay_track"}],
-    "spoil": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was spoil (OpenPits.backfill, counted backfilled_spoil).", "source": "game/scripts/core/open_pit.gd::backfill"},
+    "spoil": [{"use": "backfill", "text": "MIN-F2 (Q5): put back into a passage below ground a unit at a time, by the player's own hands or by a worker on the player's paid order (MineWorks.fill, ManorWork backfill; counted filled_spoil): full, the passage is blocked and holds the cells beside it a little; dug again, it comes back as spoil.", "source": "game/scripts/core/mine_works.gd::fill"},
+      {"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was spoil (OpenPits.backfill, counted backfilled_spoil).", "source": "game/scripts/core/open_pit.gd::backfill"},
       {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).", "source": "game/scripts/core/open_pit.gd::tip"}],
     "ore_sample": [{"use": "assay", "text": "Read by a smith at the forge for a fee, with a coal (Prospecting.assay, MIN-C): the sample is used up and its reading becomes a record its holder and the smith know.", "source": "game/scripts/core/prospecting.gd::assay"}],
     "coal": [{"use": "fuel", "text": "An assay at the forge burns assay.fuel (one coal) of the smith's (Prospecting.assay, MIN-C).", "source": "game/scripts/core/prospecting.gd::assay"}],

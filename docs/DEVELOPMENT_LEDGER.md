@@ -11,10 +11,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 54 |
-| ACTIVE DEVELOPMENT | 14 |
+| APPROVED — NOT STARTED | 68 |
+| ACTIVE DEVELOPMENT | 13 |
 | PARTIALLY IMPLEMENTED | 34 |
-| IMPLEMENTED — TESTING REQUIRED | 37 |
+| IMPLEMENTED — TESTING REQUIRED | 38 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 12 |
 | DEFERRED | 10 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **461** |
-| Outstanding (not complete, superseded or canceled) | 212 |
+| **Total approved** | **475** |
+| Outstanding (not complete, superseded or canceled) | 226 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 97 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 54 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 100 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 43 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -41,14 +41,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
-| Build 17: Mining & Industrial Development | 25 | 25 |
+| Build 17: Mining & Industrial Development | 30 | 30 |
 | Build 18: Settlement Advancement & Regional Economy | 24 | 19 |
 | Build 19: NPC Judgment System | 29 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 79 | 20 |
+| Waiting on an owner decision | 77 | 29 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **296** | **212** |
+| **Total open** | **299** | **226** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -146,7 +146,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
-### Build 17: Mining & Industrial Development (25)
+### Build 17: Mining & Industrial Development (30)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -165,11 +165,16 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
 | MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | PARTIALLY IMPLEMENTED |  |  |
 | MIN-D | Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
+| MIN-D2 | The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2) | approved | APPROVED — NOT STARTED |  |  |
+| MIN-D3 | Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3) | approved | APPROVED — NOT STARTED |  |  |
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | approved | IMPLEMENTED — TESTING REQUIRED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | approved | IMPLEMENTED — TESTING REQUIRED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
-| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | ACTIVE DEVELOPMENT |  |  |
+| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | Build 17 | Owner Build 17 decisions 2026-10-21 |
+| MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | APPROVED — NOT STARTED |  |  |
+| MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | APPROVED — NOT STARTED |  |  |
+| MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | APPROVED — NOT STARTED |  |  |
 | PL1-12 | Red flowering plant not pickable | approved | IMPLEMENTED — TESTING REQUIRED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
 | STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | APPROVED — NOT STARTED |  |  |
 | WDR-001-C | Comply with World Design Rule 1: Material Interdependency | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
@@ -296,17 +301,18 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (79)
+### Waiting on an owner decision (77)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
-| CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | decision | BLOCKED |  |  |
-| CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | decision | BLOCKED |  |  |
-| CON02-S-3 | Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule? | decision | BLOCKED |  |  |
-| CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | decision | BLOCKED |  |  |
-| CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | decision | BLOCKED |  |  |
-| CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | decision | BLOCKED |  |  |
+| CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | APPROVED — NOT STARTED |  |  |
+| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | APPROVED — NOT STARTED |  |  |
+| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | APPROVED — NOT STARTED |  |  |
+| CON-06 | Agricultural labour contracts (CON02-S-4) | approved | APPROVED — NOT STARTED |  |  |
+| CON-07 | Independent villager service hiring across industries (CON02-S-5) | approved | APPROVED — NOT STARTED |  |  |
+| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | approved | APPROVED — NOT STARTED |  |  |
+| CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | decision | BLOCKED |  |  |
 | DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -325,9 +331,11 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B12 | Ethics/lore: thralldom, Church, content note | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DVW-B13 | Story kept as sparks; audit `story: true` quests | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | APPROVED — NOT STARTED |  |  |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision first | part of the standalone Living Economy build EXP-D, whose number and placement the owner decides (OD-LE-01) |
+| INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | approved | APPROVED — NOT STARTED |  |  |
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | approved | APPROVED — NOT STARTED |  |  |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
@@ -339,14 +347,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | LOG-01 | Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe | approved | APPROVED — NOT STARTED |  |  |
 | MAINT-01 | Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work | approved | APPROVED — NOT STARTED |  |  |
-| MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | decision | BLOCKED |  |  |
-| MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | decision | BLOCKED |  |  |
-| MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | decision | BLOCKED |  |  |
-| MIN-E-Q1 | What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks? | decision | BLOCKED |  |  |
-| MIN-E-Q2 | Should there be a spade (and its recipe) for digging earth? | decision | BLOCKED |  |  |
-| MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | decision | BLOCKED |  |  |
-| MIN-E-Q4 | Should 'excavator' become a job, or should capability level 3 count whoever digs? | decision | BLOCKED |  |  |
-| MIN-E-Q5 | Should bigger or overworld pits be built to allow spiral ramps and more layers? | decision | BLOCKED |  |  |
+| MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | decision | BLOCKED |  |  |
+| MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | decision | BLOCKED |  |  |
 | OD-02 | Owner decision: balance review of every provisional number | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-04 | Owner decisions: chest and lock questions | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -370,6 +372,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | approved | APPROVED — NOT STARTED |  |  |
 | PL1-11 | Google Drive cloud saves (staged) | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | Q-08 | Resource depletion and wildlife sustainability | approved | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | Q-11 | Design gap assessment, phased sequence | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -445,12 +448,18 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (54)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
+| CON-03 | Restricted negotiated service advances (CON02-S-1) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| CON-06 | Agricultural labour contracts (CON02-S-4) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| CON-07 | Independent villager service hiring across industries (CON02-S-5) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 274) |  |  |  |
@@ -458,6 +467,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-B5 | Predictable taxes with hysteresis, announced | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 277) |  |  |  |
 | DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
+| EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx; docs/directives/2026-10-20_fam07_clarification_living_economy.md |  |  |  |
@@ -466,6 +476,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
+| INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | docs/directives/2026-10-21_build17_rec013_final_decisions.md |  |  | Design the smallest safe path (e.g. workers compare the posted pay with their own trade's earnings, CON-01's opportunity rule) and propose its build; dependencies: the job board, NPC job choice, Expansion 18 Q18-11 pay factors |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
@@ -477,7 +488,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LOG-01 | Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe | docs/directives/2026-10-21_build17_rec013_final_decisions.md |  |  | Evaluate a narrow Build 17 change (assign an unclaimed delivery to an idle hand through the existing seek/plan path); otherwise schedule with JOB-02 |
 | MAINT-01 | Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work | docs/directives/2026-10-21_build17_rec013_final_decisions.md |  |  | Owner places it in a build; dependencies: construction, structural decay (DVW-B4, MIN-F2 supports), roads and regional routes (Expansion 18), village expansion (SET-D), the reeve and job board (JOB-02) |
+| MIN-D2 | The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| MIN-D3 | Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
+| MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
+| PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |  |  |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -504,7 +521,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (14)
+## ACTIVE DEVELOPMENT (13)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -513,7 +530,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Report written (docs/design/FARM08_YIELD_COMPARISON.md, provisional 2.0 a cell); 365-day variants on the integrated commit, then the owner's decision; switches stay off |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
-| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md |  |  |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
@@ -562,7 +578,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (37)
+## IMPLEMENTED — TESTING REQUIRED (38)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -593,6 +609,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-D | Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf | `b0506db`; discovery_test 65; sim_gate PASS | after MIN-C |  |
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf | `6ebf1ae`; openpit_test 66; worker ran 12 related suites 0 failures | after MIN-D |  |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf | `e929446`; underground_ext_test 113; underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3538, start 499, play 37, parity 55 | after MIN-E |  |
+| MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md | `f7f9f71`; underground_struct_test 90; underground_ext 113, underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3544, start 499, play 37, parity 55 |  |  |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md | `a659f42`, `e929446`; underground_ext_test, underground_test |  |  |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
 | PL1-12 | Red flowering plant not pickable | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 149) | `0ab1fa5`; crafts_test, overworld_test |  | Add tile 2656 to overworld flowers with the next overworld generator version (with B14-09) |
@@ -956,31 +973,34 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 54, status BLOCKED) (97)
+## Owner decisions, open and answered (open: 43, status BLOCKED) (100)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
-| CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | BLOCKED | docs/build17/CON02_SERVICES.md |
-| CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | BLOCKED | docs/build17/CON02_SERVICES.md |
-| CON02-S-3 | Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule? | BLOCKED | docs/build17/CON02_SERVICES.md |
-| CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | BLOCKED | docs/build17/CON02_SERVICES.md |
-| CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | BLOCKED | docs/build17/CON02_SERVICES.md |
-| CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | BLOCKED | docs/build17/CON02_SERVICES.md |
-| MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | BLOCKED | docs/directives/2026-10-21_build17_combined_integration_direction.md |
+| CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | BLOCKED | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |
+| CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | COMPLETE AND VERIFIED | docs/build17/CON02_SERVICES.md |
+| CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | COMPLETE AND VERIFIED | docs/build17/CON02_SERVICES.md |
+| CON02-S-3 | Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule? | COMPLETE AND VERIFIED | docs/build17/CON02_SERVICES.md |
+| CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | COMPLETE AND VERIFIED | docs/build17/CON02_SERVICES.md |
+| CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | COMPLETE AND VERIFIED | docs/build17/CON02_SERVICES.md |
+| CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | COMPLETE AND VERIFIED | docs/build17/CON02_SERVICES.md |
+| MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build17_combined_integration_direction.md |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | COMPLETE AND VERIFIED | docs/build17/MIN_D_DISCOVERY.md |
-| MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | BLOCKED | docs/build17/MIN_D_DISCOVERY.md |
-| MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | BLOCKED | docs/build17/MIN_D_DISCOVERY.md |
-| MIN-E-Q1 | What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks? | BLOCKED | docs/build17/MIN_E_OPEN_PIT.md |
-| MIN-E-Q2 | Should there be a spade (and its recipe) for digging earth? | BLOCKED | docs/build17/MIN_E_OPEN_PIT.md |
-| MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | BLOCKED | docs/build17/MIN_E_OPEN_PIT.md |
-| MIN-E-Q4 | Should 'excavator' become a job, or should capability level 3 count whoever digs? | BLOCKED | docs/build17/MIN_E_OPEN_PIT.md |
-| MIN-E-Q5 | Should bigger or overworld pits be built to allow spiral ramps and more layers? | BLOCKED | docs/build17/MIN_E_OPEN_PIT.md |
+| MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | COMPLETE AND VERIFIED | docs/build17/MIN_D_DISCOVERY.md |
+| MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | COMPLETE AND VERIFIED | docs/build17/MIN_D_DISCOVERY.md |
+| MIN-E-Q1 | What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks? | COMPLETE AND VERIFIED | docs/build17/MIN_E_OPEN_PIT.md |
+| MIN-E-Q2 | Should there be a spade (and its recipe) for digging earth? | COMPLETE AND VERIFIED | docs/build17/MIN_E_OPEN_PIT.md |
+| MIN-E-Q3 | Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)? | COMPLETE AND VERIFIED | docs/build17/MIN_E_OPEN_PIT.md |
+| MIN-E-Q4 | Should 'excavator' become a job, or should capability level 3 count whoever digs? | COMPLETE AND VERIFIED | docs/build17/MIN_E_OPEN_PIT.md |
+| MIN-E-Q5 | Should bigger or overworld pits be built to allow spiral ramps and more layers? | COMPLETE AND VERIFIED | docs/build17/MIN_E_OPEN_PIT.md |
 | MIN-F-Q1 | Should unsupported spans collapse, supports decay and need repair, and ventilation and lighting be real needs? | COMPLETE AND VERIFIED | docs/build17/MIN_F_UNDERGROUND.md |
 | MIN-F-Q2 | Should tunnelling find hidden underground deposits, the manor post tunnelling and track jobs, and the carpenter make supports and track to sell (no villager tunnels on its own now)? | COMPLETE AND VERIFIED | docs/build17/MIN_F_UNDERGROUND.md |
 | MIN-F-Q3 | Should miners haul by minecart instead of carrying? | COMPLETE AND VERIFIED | docs/build17/MIN_F_UNDERGROUND.md |
 | MIN-F-Q4 | Should there be shafts between underground levels? | COMPLETE AND VERIFIED | docs/build17/MIN_F_UNDERGROUND.md |
 | MIN-F-Q5 | Should spoil be allowed back into tunnels below ground? | COMPLETE AND VERIFIED | docs/build17/MIN_F_UNDERGROUND.md |
+| MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | BLOCKED | docs/build17/MIN_F2_STRUCTURE.md |
+| MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | BLOCKED | docs/build17/MIN_F2_STRUCTURE.md |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | COMPLETE AND VERIFIED | docs/build17/MIN_B_QUARRY.md |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | COMPLETE AND VERIFIED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md |
 | OD-02 | Owner decision: balance review of every provisional number | BLOCKED | docs/DECISIONS.md |

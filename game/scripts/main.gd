@@ -192,6 +192,8 @@ func _ready() -> void:
 				follow_at = _in_view(world.player.pos * T)
 			"mine_works", "cave":
 				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
+			"collapse", "shaft", "backfill":
+				_struct_shot(shot_panel)                # MIN-F2: a caved-in tunnel, a shaft with its ladder, a backfilled passage
 			"gain":
 				ui.gain("+2 red berries", "red_berries")
 				ui.gain("+1 Iron ore", "iron_ore")
@@ -2480,6 +2482,25 @@ func _use() -> void:
 			_tunnel_cut(target.cell, str(target.tool))
 		"support_place", "track_lay":
 			_works_place(str(target.kind), target.cell)
+		"works_repair", "ladder_set":
+			_works_fix(str(target.kind), target.cell)
+		"shaft_dig":
+			_shaft_dig(target.cell, str(target.tool))
+		"fill_own":
+			_fill_own(target.cell)
+		"fill_order":
+			var why: String = world.manor_work.order_backfill(world.player_level, target.cell, int(target.units))
+			ui.message(why if why != "" else "The order is made and its wage set aside. Leave the spoil at the mine's mouth, where the order's workers take it.")
+		"fill_cancel":
+			var fj: Dictionary = world.manor_work.job(int(target.job))
+			if not fj.is_empty():
+				world.manor_work.cancel_backfill(fj)
+				ui.message("The order is cancelled: its wage comes back to you; the fill placed stays where it is.")
+		"fill_stock":
+			var sj: Dictionary = world.manor_work.job(int(target.job))
+			if not sj.is_empty():
+				var q: int = world.manor_work.stock_backfill(sj, p.inv, world.manor_work.backfill_needs(sj))
+				ui.message("You leave %d spoil for the backfill order." % q)
 		"pit_fill":
 			var r := world.pits.backfill(target.pit, target.cell, p.inv)
 			ui.message("You put back a unit of %s." % GameData.item_name(str(r.item)).to_lower() if r.result == "ok" else str(r.why))
@@ -2817,10 +2838,14 @@ func _works_targets() -> Array:
 			var c: Vector2i = ahead + dc
 			if c == mine or maxi(absi(c.x - mine.x), absi(c.y - mine.y)) > 1 or not world.underground.is_solid(lv, c) or not world.deposit_at(c, lv).is_empty():
 				continue
-			var why := mw.rock_refusal(lv, c)
+			if not mw.shaft_at(lv, c).is_empty():
+				continue                                 # a shaft's mouth: its own offers below
+			var why := mw.cut_refusal(lv, c)
+			var held := mw.held_at(lv, c)
 			if why == "" and pick != "":
 				out.append({"kind": "tunnel_cut", "id": "cut@%d,%d" % [c.x, c.y], "cell": c, "tool": pick,
-						"label": "Cut into the rock (%d of %d units left here: stone, then spoil)" % [MineWorks.cell_units() - mw.cut_at(lv, c), MineWorks.cell_units()]})
+						"label": ("Dig out the %s (%d units of spoil)" % ["fallen rock" if mw.rubble_at(lv, c) > 0 else "backfill", held]) if held > 0
+						else "Cut into the rock (%d of %d units left here: stone, then spoil)" % [MineWorks.cell_units() - mw.cut_at(lv, c), MineWorks.cell_units()]})
 			elif why.begins_with("Set up a timber support") or (why == "" and pick == ""):
 				out.append({"kind": "info", "id": "face@%d,%d" % [c.x, c.y], "text": why if why != "" else "You need a pickaxe to cut rock.",
 						"label": "The rock face: " + (why if why != "" else "cut it with a pickaxe").to_lower().trim_suffix(".")})
@@ -2830,6 +2855,49 @@ func _works_targets() -> Array:
 				if mw.support_refusal(p, c) == "":
 					out.append({"kind": "support_place", "id": "support@%d,%d" % [c.x, c.y], "cell": c, "label": "Set up a timber support here"})
 					break
+		# MIN-F2 (Q1): a worn support or ladder beside the player
+		for c in [ahead, mine]:
+			var what := mw._repairable(lv, c)
+			if what != "":
+				var cond := mw.support_condition(lv, c) if what == "support" else int(mw.shaft_at(lv, c).ladder)
+				var rwhy := mw.repair_refusal(p, c)
+				out.append({"kind": "works_repair" if rwhy == "" else "info", "id": "repair@%d,%d" % [c.x, c.y], "cell": c, "text": rwhy,
+						"label": "Repair the %s (%d%% sound)%s" % ["timber support" if what == "support" else "ladder", roundi(100.0 * cond / float(MineWorks.cfg().stability.full)), "" if rwhy == "" else ": " + rwhy.to_lower().trim_suffix(".")]})
+				break
+		# MIN-F2 (Q4): a shaft ahead: dig it on, or set its ladder; or sink one in the floor ahead
+		var sh := mw.shaft_at(lv, ahead)
+		if not sh.is_empty():
+			if mw.shaft_done(sh) and int(sh.rubble) <= 0:
+				if int(sh.ladder) < 0:
+					var lwhy := mw.ladder_refusal(p, ahead)
+					out.append({"kind": "ladder_set" if lwhy == "" else "info", "id": "ladder@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "text": lwhy,
+							"label": "Set a ladder into the shaft" if lwhy == "" else "The shaft: " + lwhy.to_lower().trim_suffix(".")})
+			elif pick != "" and mw.shaft_refusal(p, ahead, pick) == "":
+				out.append({"kind": "shaft_dig", "id": "shaft@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "tool": pick,
+						"label": "Dig the shaft on (%d of %d dug)" % [int(sh.dug), MineWorks.shaft_units()]})
+		elif pick != "" and ahead != mine and mw.shaft_refusal(p, ahead, pick) == "" and p.inv.has(str(MineWorks.cfg().ladder.item)):
+			out.append({"kind": "shaft_dig", "id": "shaft@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "tool": pick,
+					"label": "Sink a shaft to the level below here"})
+		# MIN-F2 (Q5): backfill, only by the player's choice: with their own spoil, or by an order they pay for
+		if ahead != mine and mw.fill_ground_refusal(lv, ahead) == "":
+			var order := world.manor_work.backfill_order(lv, ahead)
+			if p.inv.has("spoil") and mw.fill_refusal(p, ahead, p.inv) == "":
+				out.append({"kind": "fill_own", "id": "fill@%d,%d" % [ahead.x, ahead.y], "cell": ahead,
+						"label": "Put spoil back into the passage (%d of %d)" % [mw.fill_at(lv, ahead), MineWorks.cell_units()]})
+			if order.is_empty():
+				var units := MineWorks.cell_units() - mw.fill_at(lv, ahead)
+				out.append({"kind": "fill_order", "id": "order@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "units": units,
+						"label": "Backfill Tunnel: order this passage filled (%d spoil, %d coins for the worker)" % [units, maxi(1, units * int(MineWorks.cfg().backfill.order_rate))]})
+			else:
+				out.append({"kind": "fill_cancel", "id": "cancel@%d,%d" % [ahead.x, ahead.y], "job": int(order.id),
+						"label": "Cancel the backfill order here (%d of %d placed)" % [int(order.placed), int(order.qty)]})
+	else:
+		# MIN-F2 (Q5): at a backfill order's depot, the player leaves spoil for it
+		for j in world.manor_work.jobs:
+			if j.kind == "backfill" and Vector2(int(j.depot[0]), int(j.depot[1])).distance_to(Vector2(mine)) <= 1.5 and p.inv.has("spoil") and world.manor_work.backfill_needs(j) > 0:
+				out.append({"kind": "fill_stock", "id": "stock@%d" % int(j.id), "job": int(j.id),
+						"label": "Leave spoil for the backfill order (%d wanted, you have %d)" % [world.manor_work.backfill_needs(j), p.inv.count("spoil")]})
+				break
 	if p.inv.has(str(MineWorks.cfg().track.item)):
 		for c in [mine, ahead]:
 			if mw.track_refusal(p, c) == "":
@@ -2877,6 +2945,55 @@ func _works_place(kind: String, cell: Vector2i) -> void:
 		if r.broke:
 			ui.message("Your mallet broke.")
 		_level_up(str(sc.skill), int(r.up)), "swing", str(sc.tool))
+
+
+## MIN-F2: repair a worn support or ladder, or set a ladder into a shaft (MineWorks), timed as building.
+func _works_fix(kind: String, cell: Vector2i) -> void:
+	var p := world.player
+	var mw: MineWorks = world.mine_works
+	var why := mw.repair_refusal(p, cell) if kind == "works_repair" else mw.ladder_refusal(p, cell)
+	if why != "":
+		ui.message(why)
+		return
+	var mins := float(MineWorks.cfg().support.repair_minutes) if kind == "works_repair" else float(MineWorks.cfg().ladder.minutes)
+	start_action("Building", mins / float(GameData.b("game_minutes_per_second")) * 0.6, func():
+		var r := mw.repair(p, cell) if kind == "works_repair" else mw.install_ladder(p, cell)
+		ui.message(str(r.why) if r.result != "ok" else ("It is sound again." if kind == "works_repair" else "The ladder stands in the shaft: it can be climbed."))
+		if r.result == "ok" and r.broke:
+			ui.message("Your mallet broke."), "swing", "mallet")
+
+
+## MIN-F2: dig a unit of a shaft, timed as a mining swing.
+func _shaft_dig(cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.mine_works.shaft_refusal(p, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Digging", world.mine_works.shaft_secs(cell, tool), func():
+		var r := world.mine_works.dig_shaft(p, cell, p.inv, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		if r.done:
+			ui.message("The shaft breaks through to the level below. Set a ladder in it to climb down.")
+		_level_up("mining", int(r.up)), "swing", "pickaxe")
+
+
+## MIN-F2 (Q5): the player puts a unit of their own spoil back into the passage ahead.
+func _fill_own(cell: Vector2i) -> void:
+	var p := world.player
+	var why := world.mine_works.fill_refusal(p, cell, p.inv)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Filling", world.mine_works.fill_secs(), func():
+		var r := world.mine_works.fill(p, cell, p.inv)
+		if r.result != "ok":
+			ui.message(str(r.why))
+		elif r.full:
+			ui.message("The passage is filled to the roof."))
 
 
 ## MIN-C: take a rock sample from the ground underfoot, timed as a mining swing (Prospecting.take_sample: the kit
@@ -4381,6 +4498,125 @@ func _pit_shot(full: bool) -> void:
 ## support in the gallery, cuts the rock beside it open, lays track from the adit's inner mouth to the new face and sets
 ## a minecart down on it with the stone cut; the player walks in and stands by it. With `cave` (MIN-H): the player
 ## goes in through the cave's own mouth and a villager stands on its floor, walked there through the router.
+## MIN-F2 screenshots, staged by the works' own rules from real goods (as _works_shot): "collapse" a tunnel cell beside a
+## worn support caved in after the dawns it took, "shaft" a shaft sunk from the gallery to the cave with its ladder,
+## "backfill" one passage filled by the player and the next part filled. The player and a labourer stand by it.
+func _struct_shot(kind: String) -> void:
+	var u := world.underground
+	var mw: MineWorks = world.mine_works
+	var e0: Dictionary = u.portals[0].ends[0]
+	var e1: Dictionary = u.portals[0].ends[1]
+	var lm := u.map_at(-1, e1.stand)
+	var n: NPC = world.brain._first_with_job("laborer")
+	if n == null:
+		n = world.npcs[0]
+	n.plan.clear()
+	n.target = -1
+	n.depth = -1
+	for it in ["pickaxe", "mallet"]:
+		n.inv.add(it, 1)
+	n.inv.add("timber_support", 4)
+	n.inv.add("ladder", 1)
+	world.player.pos = Vector2(e0.stand) + Vector2(0.5, 0.5)
+	world.player_through(Vector2(e1.stand - e0.stand))
+	var focus := Vector2i(-1, -1)
+	if kind == "shaft":
+		for sc in lm.floor_cells():
+			var bes := Vector2i(-1, -1)
+			for d: Vector2i in VillageMap.SIDES:
+				if not lm.is_solid(sc + d):
+					bes = sc + d
+			if bes.x < 0:
+				continue
+			n.pos = Vector2(bes) + Vector2(0.5, 0.5)
+			if not mw.supported(-1, sc) and mw.support_refusal(n, bes) == "":
+				mw.place_support(n, bes)
+			var cave := u.map_at(-2, sc)
+			if mw.shaft_refusal(n, sc) == "" and cave != null and not cave.is_solid(sc):
+				focus = sc
+				break
+		for k in 20:
+			var r := mw.dig_shaft(n, focus, n.inv)
+			if r.result != "ok" or r.done:
+				break
+		print("shaft shot: shaft at %s: %s" % [focus, mw.install_ladder(n, focus)])
+	else:
+		var face := Vector2i(-1, -1)
+		var f0 := Vector2i(-1, -1)
+		for fc in lm.floor_cells():
+			for d: Vector2i in VillageMap.SIDES:
+				var c := fc + d
+				if face.x < 0 and lm.is_solid(c) and world.deposit_at(c, -1).is_empty() and lm.region.grow(-1).has_point(c) and u.under_rock(world.map, c) and u.hidden_at(-1, c).is_empty():
+					face = c
+					f0 = fc
+		n.pos = Vector2(f0) + Vector2(0.5, 0.5)
+		mw.place_support(n, f0)
+		var cutc: Array[Vector2i] = []
+		for k in 3:
+			var nxt := Vector2i(-1, -1)
+			for c in lm.cells():
+				if mw.rock_refusal(-1, c) == "" and u.hidden_at(-1, c).is_empty():
+					nxt = c
+					break
+			if nxt.x < 0:
+				break
+			for d: Vector2i in VillageMap.SIDES:
+				if not lm.is_solid(nxt + d):
+					n.pos = Vector2(nxt + d) + Vector2(0.5, 0.5)
+			for k2 in MineWorks.cell_units():
+				mw.dig(n, nxt, n.inv)
+			cutc.append(nxt)
+		focus = cutc[0] if not cutc.is_empty() else f0
+		if kind == "collapse":
+			for s2 in mw.supports:
+				s2[3] = 150                           # the timber long unrepaired
+			for d in 200:
+				world.minutes += 1440.0
+				mw.dawn()
+				var fallen := cutc.filter(func(c): return lm.is_solid(c))
+				if not fallen.is_empty():
+					focus = fallen[0]
+					break
+			print("collapse shot: day %d, fallen %s, collapses %d" % [world.day(), focus, int(world.stats.get("tunnel_collapses", 0))])
+		else:
+			var p := world.player
+			p.inv.add("spoil", 12)
+			var fillc: Vector2i = cutc[cutc.size() - 1]
+			var stand := Vector2i(-1, -1)
+			for d: Vector2i in VillageMap.SIDES:
+				if not lm.is_solid(fillc + d) and fillc + d != focus:
+					stand = fillc + d
+			p.pos = Vector2(stand) + Vector2(0.5, 0.5)
+			for k in MineWorks.cell_units():
+				mw.fill(p, fillc, p.inv)
+			if cutc.size() > 1:
+				var part: Vector2i = cutc[cutc.size() - 2]
+				for d: Vector2i in VillageMap.SIDES:
+					if not lm.is_solid(part + d) and part + d != fillc:
+						p.pos = Vector2(part + d) + Vector2(0.5, 0.5)
+				for k in 2:
+					mw.fill(p, part, p.inv)
+			focus = fillc
+			print("backfill shot: filled %s (%d), fill in the ground %d" % [fillc, mw.fill_at(-1, fillc), mw.fill_in()])
+	# the player and the labourer stand beside it
+	var spots: Array[Vector2i] = []
+	for dy in range(-2, 3):
+		for dx in range(-2, 3):
+			var c := focus + Vector2i(dx, dy)
+			if not lm.is_solid(c) and c != focus and not mw.support_at(-1, c) and mw.shaft_at(-1, c).is_empty():
+				spots.append(c)
+	var weigh := func(c: Vector2i) -> float: return Vector2(c).distance_to(Vector2(focus)) + (2.5 if c.y > focus.y else 0.0)     # beside, not in front of it
+	spots.sort_custom(func(a2: Vector2i, b2: Vector2i): return weigh.call(a2) < weigh.call(b2))
+	if spots.size() >= 2:
+		world.player.pos = Vector2(spots[0]) + Vector2(0.5, 0.5)
+		n.pos = Vector2(spots[1]) + Vector2(0.5, 0.5)
+	n.plan = [{"k": "work", "min": 600.0, "anim": "work"}]
+	_sync_carts()
+	_sync_levels(0.0)
+	follow_at = _in_view(Vector2(focus) * T + Vector2(T, T) / 2.0)
+	camera.position = follow_at
+
+
 func _works_shot(cave: bool) -> void:
 	var u := world.underground
 	var pi := 1 if cave else 0
@@ -4755,8 +4991,18 @@ func _on_level_tile_changed(level: int, cell: Vector2i, value: int) -> void:
 func _on_works_changed(level: int, cell: Vector2i) -> void:
 	if level == 0:
 		return
-	var lm := world.underground.map_at(level, cell)
-	if lm != null and level_views.has(lm.id):
+	for d in [0, -1]:                                  # MIN-F2: a shaft also changes the level below its mouth
+		var lm := world.underground.map_at(level + d, cell)
+		if lm == null:
+			continue
+		if not level_views.has(lm.id):                 # a level a shaft has just reached: its view is made now
+			var lv := LevelView.new()
+			lv.name = "level_" + lm.id
+			add_child(lv)
+			move_child(lv, ow_view.get_index() + 1)
+			lv.setup_level(view, world, lm, world.underground.specs[lm.id])
+			lv.visible = false
+			level_views[lm.id] = lv
 		level_views[lm.id].redraw_around(world, cell)
 
 

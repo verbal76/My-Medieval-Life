@@ -391,6 +391,7 @@ func _new_day() -> void:
 	Life.dawn(self)                    # B8-029: roles by age, old-age deaths, partners, births
 	if profiling:
 		t = _prof("daily: life (ages, deaths, partners, births)", t)
+	mine_works.dawn()                  # MIN-F2: supports and ladders wear; excavations too weakly held may cave in
 	discovery.dawn()                   # MIN-D: the settlement's mining capability, from what the village has this morning
 	brain.dawn()
 	if profiling:
@@ -3885,9 +3886,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	for us in underground.seam_records():
 		if not have_seam.has(Vector3i(int(us.level), int(us.x), int(us.y))):
 			deposits.append(us)
-	villager_levels = underground.reachable_levels()     # MIN-F: the gallery and the cave
 	mine_works = MineWorks.create(self)
 	mine_works.load_dict(d.get("mine_works", {}))      # MIN-F: the tunnels cut reopen (absent: none), before anyone stands on them
+	underground.drop_found(deposits)                     # MIN-F2: hidden ore already exposed is a seam in the save
+	villager_levels = underground.reachable_levels()     # MIN-F: the gallery and the cave (MIN-F2: and levels a ladder reaches)
 	_add_host_rock()                    # MIN-B: a save from before it gets each ore seam's host rock, whole
 	for sd in deposits:
 		if sd.has("host") and int(sd.host.amount) <= 0:
@@ -4211,7 +4213,7 @@ func quarry_stone_left() -> int:
 func _npc_through(n: NPC, leg: Dictionary, s: Dictionary) -> void:
 	var cart := carts.pulled_by(npc_ref(n.id))
 	if not cart.is_empty():
-		if Carts.kind_of(cart) == "minecart" and mine_works.crossing_ok(leg.from, leg.to):
+		if Carts.kind_of(cart) == "minecart" and mine_works.crossing_ok(leg.from, leg.to, leg.portal):
 			carts.cross(cart, leg.to)
 			stat("minecart_crossings")
 		else:
@@ -4253,7 +4255,9 @@ func player_through(dir: Vector2) -> Dictionary:
 	if not cart.is_empty():
 		if Carts.kind_of(cart) != "minecart":
 			return {"refused": "Set the cart down first: it will not go through the adit."}
-		if not mine_works.crossing_ok(hit.from, hit.to):
+		if not mine_works.crossing_ok(hit.from, hit.to, hit.portal):
+			if str(hit.portal.get("kind", "")) == "shaft":
+				return {"refused": "A minecart does not go up or down a ladder: set it down, and carry its load."}
 			return {"refused": "The minecart runs only on its rails: lay track on both sides of the mouth."}
 		carts.cross(cart, hit.to)
 		stat("minecart_crossings")

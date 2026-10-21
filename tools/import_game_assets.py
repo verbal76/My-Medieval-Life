@@ -180,6 +180,8 @@ ICONS = {
     "minecart": "Metal/Metal-Bucket-02",
     # STONE-01: the light grey dressed block as the finished building block (squared faces), apart from raw stone's chunk
     "building_block": "Blocks/Stone-Block-02",
+    # MIN-F2: a bundle of sticks stands in for the ladder (the pack has none)
+    "ladder": "Wood/Sticks-01",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

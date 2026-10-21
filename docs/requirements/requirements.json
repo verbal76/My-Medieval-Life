@@ -5477,10 +5477,304 @@
    "target_build": "17"
   },
   {
+   "id": "CON-03",
+   "title": "Restricted negotiated service advances (CON02-S-1)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Restricted negotiated service advances (CON02-S-1)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Voluntary, purpose-bound, from real funds, auditable, reconciled, no duplicate reimbursement; coordinate with OD-LE-07"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON-04",
+   "title": "Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Knowingly agreed, objectively verifiable, funded; work-based pay remains the default meanwhile"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON-05",
+   "title": "Contract protections and dispute process before the local authority (CON02-S-3)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Contract protections and dispute process before the local authority (CON02-S-3)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Terms for deadlines, quality, retention, remedies; disputes decided on agreement, records and evidence; either party may win; coordinate with OD-LE-06; not in Build 17"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON-06",
+   "title": "Agricultural labour contracts (CON02-S-4)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Agricultural labour contracts (CON02-S-4)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Work, pay, deadlines, responsibilities, crop ownership and access named; authorised harvest not theft; crop stays the owner's; farmers weigh hiring; workers may decline"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON-07",
+   "title": "Independent villager service hiring across industries (CON02-S-5)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Independent villager service hiring across industries (CON02-S-5)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Eight-point evaluation by the hiring villager; one shared engine; phased by industry; no fabricated demand"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON-08",
+   "title": "Separate formal-signing threshold for service contracts (CON02-S-6)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Separate formal-signing threshold for service contracts (CON02-S-6)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Independently configurable; inactive until the owner approves its number; 50-coin rule meanwhile"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON-08-Q",
+   "title": "Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "open numerical parameter, owner directive section 17",
+   "acceptance": [
+    "Owner chooses the number"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-08",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "CON02-S-1",
    "title": "Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)?",
    "source": "docs/build17/CON02_SERVICES.md",
@@ -5488,7 +5782,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under CON-03",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -5514,15 +5808,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is CON-03"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Optional, negotiated buyer-funded advances for identified service expenses from real funds, restricted to purpose, auditable, reconciled, no duplicate reimbursement; coordinate with OD-LE-07."
   },
   {
    "id": "CON02-S-2",
    "title": "Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)?",
    "source": "docs/build17/CON02_SERVICES.md",
@@ -5530,7 +5830,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under CON-04",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -5556,15 +5856,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is CON-04"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Service compensation may be negotiated as pay for verified work, for verified results, or base plus performance bonus, knowingly agreed and objectively verifiable, backed by real funds; work-based pay stays the default until the others are built and tested."
   },
   {
    "id": "CON02-S-3",
    "title": "Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule?",
    "source": "docs/build17/CON02_SERVICES.md",
@@ -5572,7 +5878,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under CON-05",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -5598,15 +5904,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is CON-05"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Contracts may set deadlines, quality requirements, retention, completion criteria, remedies and obligations; disputes go before the local authority deciding on the agreement, records and evidence, either party may win; earned pay protected; coordinate with OD-LE-06; no untested judicial system in Build 17."
   },
   {
    "id": "CON02-S-4",
    "title": "Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)?",
    "source": "docs/build17/CON02_SERVICES.md",
@@ -5614,7 +5926,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under CON-06",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -5640,15 +5952,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is CON-06"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Agricultural labour contracts (harvest and other farm work) naming work, pay, deadlines, responsibilities, crop ownership and access; authorised harvesting is not theft and the crop stays the owner's; farmers weigh hiring, workers may decline; no guaranteed harvest."
   },
   {
    "id": "CON02-S-5",
    "title": "Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)?",
    "source": "docs/build17/CON02_SERVICES.md",
@@ -5656,7 +5974,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under CON-07",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -5682,15 +6000,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is CON-07"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Villagers eventually identify genuine service needs and negotiate work across industries through the one service-contract engine, weighing need, doing it themselves, benefit, affordability, providers, terms, feasibility and obligations; free to proceed, negotiate, postpone or decline; phased by industry."
   },
   {
    "id": "CON02-S-6",
    "title": "Confirm the 50-coin formal signing line for services as for goods",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Confirm the 50-coin formal signing line for services as for goods",
    "source": "docs/build17/CON02_SERVICES.md",
@@ -5698,7 +6022,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under CON-08",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -5724,9 +6048,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is CON-08"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Service contracts get their own configurable formal-signing threshold (approved in principle); the number is not yet chosen; the 50-coin rule stays the working default until the owner approves a number."
   },
   {
    "id": "CQ-01",
@@ -8594,6 +8924,48 @@
    "target_build": "20+",
    "roadmap_gate": "",
    "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
+  },
+  {
+   "id": "EARTH-01",
+   "title": "Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Each a physical process with material, transport, tools, labour, time; topsoil improves farmland only when applied; depends on agriculture, construction, terrain, roads (MAINT-01, Expansion 18)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "ECON-P1.1",
@@ -14589,6 +14961,48 @@
    "roadmap_reason": "OD-14 follow-up, owner's preferred direction"
   },
   {
+   "id": "INFO-01",
+   "title": "Sharing and selling prospecting information (MIN-C-Q2)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Sharing and selling prospecting information (MIN-C-Q2)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Only information actually held; uncertainty kept; negotiated; payments conserved; no rights transferred; through a future information-trading or service-contract framework"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "INFRA-01",
    "title": "Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results",
    "kind": "approved",
@@ -15834,7 +16248,7 @@
    "id": "MIN-C-Q2",
    "title": "Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Sharing or selling discoveries is proposed but not yet approved. Do not implement new ownership, access, or extraction-rights mechanics without approval.",
    "description": "Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics",
    "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
@@ -15842,7 +16256,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under INFO-01",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -15868,9 +16282,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner's approval"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is INFO-01"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Players and villagers may share prospecting discoveries or negotiate payment for information they actually hold; uncertainty preserved; no guaranteed discovery; selling information transfers no land, mineral, mining, access or extraction rights; through a future information-trading or service-contract framework."
   },
   {
    "id": "MIN-C-Q3",
@@ -16028,7 +16448,7 @@
    "id": "MIN-D-Q2",
    "title": "Should the player's tools and skills count toward the settlement's mining capability (built: they do not)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should the player's tools and skills count toward the settlement's mining capability (built: they do not)?",
    "source": "docs/build17/MIN_D_DISCOVERY.md",
@@ -16036,7 +16456,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-D2",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16062,15 +16482,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is MIN-D2"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "The player counts as a resident under exactly the same mining-capability rules as villagers (skills, usable equipment, facility access); equipment stays the player's; no bonus, no exclusion; recalculated when they leave; never a gate (Q18-9)."
   },
   {
    "id": "MIN-D-Q3",
    "title": "Should trial pits yield dirt or topsoil items (with MIN-E's item decision)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should trial pits yield dirt or topsoil items (with MIN-E's item decision)?",
    "source": "docs/build17/MIN_D_DISCOVERY.md",
@@ -16078,7 +16504,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-D3",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16104,9 +16530,99 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is MIN-D3"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Trial pits produce conserved, recoverable topsoil, dirt and spoil consistent with MIN-E's items and layers, stored, hauled, reused or disposed of through accounted processes; backfilling below ground stays player-directed only."
+  },
+  {
+   "id": "MIN-D2",
+   "title": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Same eligibility and contribution for player and villagers; no ownership transfer; no bonus or exclusion; recalculated on leaving; deterministic; never a gate"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
+   "id": "MIN-D3",
+   "title": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Each trial-pit unit removed becomes a counted item stored or heaped; hauling, reuse and disposal accounted; layers consistent with MIN-E; saves; no autonomous tunnel backfill"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "MIN-E",
@@ -16173,7 +16689,7 @@
    "id": "MIN-E-Q1",
    "title": "What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks?",
    "source": "docs/build17/MIN_E_OPEN_PIT.md",
@@ -16181,7 +16697,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under EARTH-01",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16207,15 +16723,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is EARTH-01"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Excavated earth may be reused for farmland improvement, road embankments, building-plot grading, defensive earthworks and landscaping, each a genuine physical process with material, transport, tools, labour and time; scheduled by dependencies, not in Build 17; Build 17 preserves and accounts for the materials."
   },
   {
    "id": "MIN-E-Q2",
    "title": "Should there be a spade (and its recipe) for digging earth?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should there be a spade (and its recipe) for digging earth?",
    "source": "docs/build17/MIN_E_OPEN_PIT.md",
@@ -16223,7 +16745,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-SHOVEL",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16249,15 +16771,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is MIN-SHOVEL"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Craftable shovels (carpenter-made wooden parts, smith-made metal parts, real labour, tools, facilities and time) for topsoil and loose earth; pickaxes stay for rock; both wear and need repair or replacement; same rules for player and villagers; saves not stranded. (Directive item MIN-E-Q4.)"
   },
   {
    "id": "MIN-E-Q3",
    "title": "Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)?",
    "source": "docs/build17/MIN_E_OPEN_PIT.md",
@@ -16265,7 +16793,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-RIGHTS",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16291,15 +16819,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is MIN-RIGHTS"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Open access to suitable common ground for player and villagers; no automatic manor rights, royalties, permits, authorization or quotas (P1.2 stays canceled); legitimate property respected, excavation on another's land needs consent or agreement. (Directive item MIN-E-Q5.)"
   },
   {
    "id": "MIN-E-Q4",
    "title": "Should 'excavator' become a job, or should capability level 3 count whoever digs?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should 'excavator' become a job, or should capability level 3 count whoever digs?",
    "source": "docs/build17/MIN_E_OPEN_PIT.md",
@@ -16307,7 +16841,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under MIN-SKILLCAP",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16333,15 +16867,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is MIN-SKILLCAP"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Specialist excavators and equipped general labourers both dig; specialisation grows from real experience and skill; capability counts real workers, skills, equipment and facilities, never job titles; same rules for the player. (Directive item MIN-E-Q6.)"
   },
   {
    "id": "MIN-E-Q5",
    "title": "Should bigger or overworld pits be built to allow spiral ramps and more layers?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should bigger or overworld pits be built to allow spiral ramps and more layers?",
    "source": "docs/build17/MIN_E_OPEN_PIT.md",
@@ -16349,7 +16889,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under PIT-02",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16375,9 +16915,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_build17_consolidated_14_decisions.md); implementation is PIT-02"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Larger and deeper pits, strata, spiral and switchback ramps approved for future expansion; the 5x5 pit stays in Build 17; not a release blocker. (Directive item MIN-E-Q7.)"
   },
   {
    "id": "MIN-F",
@@ -16684,7 +17230,7 @@
    "id": "MIN-F2",
    "title": "Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "These decisions are approved gameplay requirements, not suggestions or provisional design options.",
    "description": "Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling",
    "source": "docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md",
@@ -16695,10 +17241,12 @@
     "Report per section 11"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "underground_struct_test 90; underground_ext 113, underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3544, start 499, play 37, parity 55",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "f7f9f71"
+   ],
    "parent": "MIN-F",
    "depends_on": [],
    "blockers": [],
@@ -16720,9 +17268,98 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit f7f9f71; tests",
+     "why": "Built on wip/b17-minf2 (f7f9f71) and merged: stability, collapse and wear with repair; hidden underground ore and manor tunnelling jobs; minecart preference by haul cost; shafts, ladders, levels -3/-4; player-only backfill orders; underground_struct_test 90 and 12 related suites 0 failures; on the merged code underground_struct_test 90 and run_tests 3544 pass; 30-day run identical to the MIN-F baseline (no villager owns supports, ladders or minecarts: owner question MIN-F2-Q1); screenshots looked at by the worker"
     }
    ],
    "target_build": "17"
+  },
+  {
+   "id": "MIN-F2-Q1",
+   "title": "Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own)",
+   "source": "docs/build17/MIN_F2_STRUCTURE.md",
+   "approval": "open owner question from MIN-F2",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F2",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F2_STRUCTURE.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-F2-Q2",
+   "title": "Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)?",
+   "source": "docs/build17/MIN_F2_STRUCTURE.md",
+   "approval": "open owner question from MIN-F2",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-F2",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_F2_STRUCTURE.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "MIN-G",
@@ -16883,6 +17520,132 @@
    "target_build": "20+",
    "roadmap_gate": "",
    "roadmap_reason": "mining level 5 is a proposal pending later confirmation"
+  },
+  {
+   "id": "MIN-RIGHTS",
+   "title": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "No manor rights, royalties, permits or quotas; digging on land another owns refused without consent or agreement; tested for pits, trial pits and tunnels"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
+   "id": "MIN-SHOVEL",
+   "title": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Shovel from carpenter-made wooden part and smith-made metal part with labour, tools, facilities, time; earth layers dug with a shovel; wear, repair or replacement through existing processes; parity; older saves and open jobs not stranded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
+   "id": "MIN-SKILLCAP",
+   "title": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Capability evaluation reads skills and equipment rather than job names; excavation open to any equipped worker; specialisation from experience; same rules for the player"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "MIN-STONE-Q",
@@ -21401,6 +22164,48 @@
    "roadmap_reason": "owner decisions 2026-10-21",
    "b16_class": "required",
    "complexity": "S"
+  },
+  {
+   "id": "PIT-02",
+   "title": "Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5)",
+   "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Legitimate excavation, conserved materials, geology respected, access geometry; depends on terrain, world representation, pathfinding"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "PL1-01",
