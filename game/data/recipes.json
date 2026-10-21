@@ -21,6 +21,8 @@
     "forge_copper_ring":  {"station": "anvil", "in": {"copper_bar": 1},             "out": {"copper_ring": 1}, "minutes": 30, "skill": "smithing", "xp": 8, "level": 1},
     "forge_gold_ring":    {"station": "anvil", "in": {"gold_bar": 1},               "out": {"gold_ring": 1},   "minutes": 40, "skill": "smithing", "xp": 20, "level": 3},
     "forge_amulet":       {"station": "anvil", "in": {"copper_bar": 1, "leather": 1}, "out": {"amulet": 1},  "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},
+    "forge_nails": {"station": "anvil", "in": {"iron_bar": 1}, "out": {"nails": 12}, "minutes": 20, "skill": "smithing", "xp": 6, "level": 1},
+    "make_mallet": {"station": "workbench", "in": {"log": 1, "plank": 1}, "out": {"mallet": 1}, "minutes": 25, "skill": "crafting", "xp": 6, "level": 1},
     "saw_planks":    {"station": "sawhorse",  "in": {"log": 1},                    "out": {"plank": 2},     "minutes": 20, "skill": "crafting", "xp": 4, "level": 1},
     "cook_pottage":  {"station": "stove",     "in": {"wheat": 2},                  "out": {"pottage": 6},   "minutes": 30, "skill": "cooking", "xp": 5, "level": 1},
     "knead_flatbread": {"station": "prep",   "in": {"wheat": 3},                  "out": {"bread": 1},     "minutes": 25, "skill": "cooking", "xp": 3, "level": 1},
