@@ -22363,12 +22363,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner clarification 2026-10-21: completed milestone releases, Build 16 included, are published (visibility public) to the GitHub Releases tab once their acceptance tests pass",
    "history": [
     {
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_standing_continuous_release_directive.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner clarified publication"
     }
    ]
   },

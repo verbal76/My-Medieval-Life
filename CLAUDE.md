@@ -243,9 +243,11 @@ generated data. One implementation per concern.
     `.github/workflows/release.yml` by hand and publish its APK, Windows and Linux packages to GitHub Releases without
     asking again; reuse valid test evidence on unchanged code. All three platforms come from one exact commit and one
     build number, and the files live in GitHub Releases, never only on the cloud machine.
-  - Visibility: releases are made with the workflow's default `private` (a draft release in the Releases tab, visible to
-    the owner and collaborators); `public` stays behind the owner's `public-release` environment approval (the owner's
-    master directive of 2026-10-21: "Do not publish a public release").
+  - Visibility (owner clarification 2026-10-21, `docs/directives/2026-10-21_release_publication_clarification.md`): the
+    owner explicitly authorizes **publishing** completed milestone releases, Build 16 included, to the GitHub Releases
+    tab once their required acceptance tests pass: run the workflow with `visibility: public` (and its confirmation
+    text). This supersedes the master directive's "Do not publish a public release" for completed milestones;
+    intermediate or development builds are still not published.
   - The owner's playtesting is informal and never a release gate; device checks stay recorded in the register's
     `playtest` field. Move on to the next approved build once a release is out.
   - Decide minor implementation details yourself, document them (`docs/DECISIONS.md`, agent decision) and continue;
