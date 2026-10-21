@@ -14,7 +14,7 @@ extends RefCounted
 ## exactly as its map says. The world is cut into CHUNK x CHUNK tile chunks, generated on demand and
 ## cached (bounded; least recently used evicted).
 ##
-## Layout (GEN_VERSION 1):
+## Layout (GEN_VERSION 1, and 2: see GEN_COMPATIBLE):
 ##  - Value-noise fields (several octaves each) give forest density, a clearing mask, rockiness,
 ##    tree species and flower meadows. A ridge field masked by a regional field gives mountain
 ##    ranges: coherent ridge lines that come and go. Mountains are drawn with the free tileset's
@@ -23,7 +23,7 @@ extends RefCounted
 ##    ground is always connected: no range or ring of cliffs closes the world into pockets.
 ##    B14-07: a mountain's top (inside its rim) is ground but for its trees and boulders, out of reach until the
 ##    player cuts steps or builds stairs or a walkway through the rim (Terrain; `works`, saved, never undone). The
-##    generated chunk data is unchanged (the top flag is extra), so GEN_VERSION stays 1 and older saves keep their changes.
+##    generated chunk data is unchanged (the top flag is extra), so older saves keep their changes.
 ##  - Roads are a global network: a node on a jittered grid (NODE tiles apart), each joined to some
 ##    neighbours by a bent 4-connected polyline that depends only on the two nodes. Every chunk
 ##    rasterises the segments that touch it, so roads cross chunk seams unbroken. The village's four
@@ -32,7 +32,11 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 1
+const GEN_VERSION := 2
+## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
+## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
+## may be another colour than in version 1, and nothing else moved.
+const GEN_COMPATIBLE := [1, 2]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -836,7 +840,7 @@ func load_dict(d: Dictionary) -> void:
 	works_version += 1
 	for f in d.get("flowers", []):
 		plant_changes[Vector2i(int(f[0]), int(f[1]))] = int(f[2])
-	if int(d.get("gen", GEN_VERSION)) != GEN_VERSION:
+	if not int(d.get("gen", GEN_VERSION)) in GEN_COMPATIBLE:
 		return
 	for r in d.get("rocks", []):
 		rock_changes[Vector2i(int(r[0]), int(r[1]))] = int(r[2])

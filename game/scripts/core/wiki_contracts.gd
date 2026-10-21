@@ -1,7 +1,8 @@
 class_name WikiContracts
 extends RefCounted
-## Wiki pages for contracts (CON-01) and goods that spoil and wear (DVW-B4). Every statement is taken from the code
-## named beside it; numbers come from balance.json (GameData.b). Registered by one line in Wiki.build.
+## Wiki pages for contracts (CON-01), goods that spoil and wear (DVW-B4) and ways through a cliff (B14-07). Every
+## statement is taken from the code named beside it; numbers come from balance.json (GameData.b). Registered by one
+## line in Wiki.build.
 
 
 static func add_pages(w: Wiki) -> void:
@@ -9,6 +10,27 @@ static func add_pages(w: Wiki) -> void:
 		w.add_page("sys:" + id, title, "systems", blocks, "", keywords)
 	_contracts(sys)
 	_decay(sys)
+	_cliff_ways(sys)
+
+
+# Terrain (span, cost, refusal, targets_at, build); Overworld (is_top, is_rim, is_solid, note_tree, note_work, plant_refusal);
+# recipes forge_nails, make_mallet; NPCBrain._smith, _carpenter_mallet (made to order for the goods merchant).
+static func _cliff_ways(sys: Callable) -> void:
+	var c := Terrain.cfg()
+	var line := func(what: String) -> String:
+		var k: Dictionary = c[what]
+		var items := ", ".join((k.get("items", {}) as Dictionary).keys().map(func(id): return Terrain.count_of(id, int(k["items"][id]))))
+		return "%s and %s level %d%s" % [GameData.item_name(str(k.tool)).to_lower(), str(GameData.skills[str(k.skill)].name), int(k.level),
+				(", with " + items + " for each cell of rock") if items != "" else ""]
+	sys.call("cliff_ways", "Cliff steps, stairs and walkways", [
+		Wiki.p("The mountains outside the village are plateaus ringed by a cliff. Their tops are open ground among the pines and boulders, but nobody can walk up: you make the way yourself. Face the cliff's rocky rim from the ground, or from a top, and Use offers what you can make through it, up to %d cells of rock deep, straight on to the open ground beyond. A choice you cannot make yet is still shown, with what it needs." % int(c.max_span)),
+		Wiki.h("Steps, stairs and walkways"),
+		Wiki.p("Steps are cut into the rock: a %s. Wooden stairs are built against it: a %s. Both lead from the ground up to a top, or from a top down. A walkway joins one top to another across the rim between them: a %s. Each takes time and stamina, wears the tool and teaches the skill, as other work does; the planks and nails are used up." % [line.call("steps"), line.call("stairs"), line.call("walkway")]),
+		Wiki.p("Nails are forged from an iron bar at the anvil, a dozen at a time; a mallet is made from a log and a plank at the workbench. The smith forges nails and the carpenter makes mallets when the goods merchant wants them, so you can buy them at the goods stall."),
+		Wiki.h("Always a way back"),
+		Wiki.p("A way runs both ways and is never undone, so whoever goes up can come down the same way. No way is cut from the ground through to the ground on the other side: a mountain range is never tunnelled. Nothing grows back to close a top: a tree felled on a top never grows again, and nothing can be planted there. In the village too, there is no corner you can walk into and not out of."),
+		Wiki.links(["item:nails", "item:mallet", "item:pickaxe", "recipe:forge_nails", "recipe:make_mallet", "skill:mining", "skill:crafting"])],
+		"cliff steps stairs walkway mountain plateau climb rim nails mallet carpentry")
 
 
 # Contracts (evaluate, means, min_price, propose, fund_refusal, deliver, cancel, _lapse, dawn, on_death, plan,

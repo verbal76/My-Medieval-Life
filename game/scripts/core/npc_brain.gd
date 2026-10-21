@@ -27,7 +27,8 @@ const BUYS := {
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
 		# like the other made goods, and the caravan carries the surplus away
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
-		"herbal_poultice": 8},                     # households' home-brewed poultices, brought to market (B14)
+		"herbal_poultice": 8,                      # households' home-brewed poultices, brought to market (B14)
+		"nails": 24, "mallet": 2},                 # B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
 }
 # SHOP-01 (owner, 2026-10-20 section 6): the stations each producing trade works at. Their recipes (recipes.json) are
 # what its purchases of their inputs are for: it buys an input only for a recipe it has the skill for, up to its want
@@ -58,6 +59,7 @@ const OUTLETS := {
 	# PAR-04 (owner OD-18.4): the made goods only the player used to make, and where their makers sell them
 	"copper_ring": ["merchant_goods"], "gold_ring": ["merchant_goods"], "amulet": ["merchant_goods"], "iron_helmet": ["merchant_goods"],
 	"leather_cap": ["merchant_goods"], "gold_bar": ["merchant_goods"], "plough": ["merchant_goods"],
+	"nails": ["merchant_goods"], "mallet": ["merchant_goods"],     # B14-07: the smith's nails, the carpenter's mallets
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple"]
 const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
@@ -589,6 +591,22 @@ func _carpenter_goods(n: NPC) -> bool:
 	return false
 
 
+## B14-07, PAR-04: the carpenter makes a mallet (make_mallet: a log and a plank at the workbench) only for a buyer who wants
+## one, and sells what it has made to that buyer; with no buyer, or without the skill or the wood, it goes on with its
+## other work (false).
+func _carpenter_mallet(n: NPC) -> bool:
+	if n.inv.count("mallet") > 0:
+		return _plan_sell(n, "mallet") if _buyer_for(n, "mallet") != null else false
+	if not _can_make(n, "make_mallet") or not n.inv.has_all(GameData.recipes["make_mallet"]["in"]):
+		return false
+	if _buyer_for(n, "mallet") == null:
+		return false
+	if _do_recipe(n, "make_mallet"):
+		n.doing = "making a mallet"
+		return true
+	return false
+
+
 ## Who sells a cart part or a handcart: a carpenter, smith or merchant holding one (the nearest first).
 func _part_seller(id: String, n: NPC) -> NPC:
 	var best: NPC = null
@@ -842,6 +860,8 @@ func _plan_job(n: NPC) -> bool:
 				return true
 			if _carpenter_goods(n):
 				return true
+			if _carpenter_mallet(n):                 # B14-07
+				return true
 			if n.inv.count("plank") >= 30:
 				return _plan_sell(n, "plank") if _buyer_for(n, "plank") else _idle_at_work(n, "waiting for orders")
 			return _crafter(n, ["saw_planks"])
@@ -1084,7 +1104,7 @@ func _can_make(n: NPC, r: String) -> bool:
 
 
 ## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
-const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough"]
+const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet"]
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
@@ -1163,8 +1183,8 @@ func _smith(n: NPC) -> bool:
 		var cap := 1 if out in ["hammer", "iron_armor", "padlock", "cart_axle", "cart_ironwork"] else 3
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in) and _can_make(n, r):
 			wants.append([inv.count(out), r])
-	# PAR-04: the jewellery and the helmet only for a buyer who wants one
-	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring"]:
+	# PAR-04: the jewellery, the helmet and nails (B14-07) only for a buyer who wants them
+	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring", "forge_nails"]:
 		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
 			continue
 		var out: String = GameData.recipes[r].out.keys()[0]

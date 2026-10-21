@@ -62,7 +62,7 @@ JOB_WORK = {
     "smith": [BRAIN + "::_smith"],
     "tanner": [BRAIN + "::_tanner"],
     "cook": [BRAIN + "::_cook"],
-    "carpenter": [BRAIN + "::_plan_job@carpenter", BRAIN + "::_carpenter_carts", BRAIN + "::_carpenter_goods"],
+    "carpenter": [BRAIN + "::_plan_job@carpenter", BRAIN + "::_carpenter_carts", BRAIN + "::_carpenter_goods", BRAIN + "::_carpenter_mallet"],
     "sage": [BRAIN + "::_plan_job@sage"],
 }
 # households' own recipes (not a profession): home brewing, cooking at the hearth, a storefront's cart,
