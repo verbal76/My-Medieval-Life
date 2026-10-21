@@ -12,7 +12,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 69 |
-| ACTIVE DEVELOPMENT | 15 |
+| ACTIVE DEVELOPMENT | 16 |
 | PARTIALLY IMPLEMENTED | 34 |
 | IMPLEMENTED — TESTING REQUIRED | 38 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -22,8 +22,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **478** |
-| Outstanding (not complete, superseded or canceled) | 229 |
+| **Total approved** | **479** |
+| Outstanding (not complete, superseded or canceled) | 230 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 100 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 41 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -41,14 +41,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
-| Build 17: Mining & Industrial Development | 32 | 32 |
+| Build 17: Mining & Industrial Development | 33 | 33 |
 | Build 18: Settlement Advancement & Regional Economy | 24 | 19 |
 | Build 19: NPC Judgment System | 29 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 76 | 30 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **300** | **229** |
+| **Total open** | **301** | **230** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -146,7 +146,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
-### Build 17: Mining & Industrial Development (32)
+### Build 17: Mining & Industrial Development (33)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -182,6 +182,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-001-C | Comply with World Design Rule 1: Material Interdependency | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
+| WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | approved | ACTIVE DEVELOPMENT |  |  |
 
 ### Build 18: Settlement Advancement & Regional Economy (24)
 
@@ -523,7 +524,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (15)
+## ACTIVE DEVELOPMENT (16)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -542,6 +543,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`; judgment_test 99, judgment_live_test 26, judgment_perf 10; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
+| WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | docs/directives/2026-10-21_permanent_wiki_maintenance.md |  |  |  |
 
 ## PARTIALLY IMPLEMENTED (34)
 

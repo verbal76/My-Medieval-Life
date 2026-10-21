@@ -30757,6 +30757,51 @@
    "target_build": "15"
   },
   {
+   "id": "WIKI-B17",
+   "title": "Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation",
+   "source": "docs/directives/2026-10-21_permanent_wiki_maintenance.md",
+   "approval": "owner directive 2026-10-21 (permanent wiki maintenance, section 4)",
+   "acceptance": [
+    "Every merged Build 17 player-facing mechanic documented in the in-game wiki from its real behaviour; obsolete text corrected",
+    "Developer references current (docs/build17, manifest) and linked to requirement ids",
+    "Approved future items listed only as not yet in the game; health topics as placeholders; Build 17 collapse outcome documented as built",
+    "wiki_test passes; documentation gaps reported before the release review"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_permanent_wiki_maintenance.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "started"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
    "id": "WR-01",
    "title": "Protected wildlife breeding refuges, offspring cohorts and dispersal",
    "kind": "approved",

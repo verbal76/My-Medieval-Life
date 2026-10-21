@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 245 (105 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **300** = 197 still open from the baseline + 105 added and open |
+| Entries added since | | 246 (106 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **301** = 197 still open from the baseline + 106 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (34)
@@ -64,7 +64,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (245)
+## Added since the baseline (246)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -313,5 +313,6 @@ None.
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT | 15 |
+| WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | approved | ACTIVE DEVELOPMENT | 17 |
 
 The full, current list of open entries by build is the Roadmap section of `docs/DEVELOPMENT_LEDGER.md`.
