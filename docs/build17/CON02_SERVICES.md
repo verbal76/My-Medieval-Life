@@ -172,3 +172,12 @@ Results on this branch:
 | parity_test | 55 / 0 |
 | conservation_test | 8 / 0 |
 | wiki_test | all passed |
+| Python `unittest discover -s tests` | 105 OK |
+
+**30-day run** (`economy_sim --days 30 --seed 1`):
+
+- `LEAKS: currency 0; items {}; deposits []; animals {}`.
+- Every daily summary line is byte-identical to the same run on `70900c0` (before this change): day 30 alive 104,
+  starved 0, treasury 558, coins 4909.
+- Contracts: the same 6 goods contracts made, 55 offers to the player, no service contracts. No villager hires
+  services yet (section 3, Live use; S-5), so the village's economy is unchanged.
