@@ -262,6 +262,15 @@ corresponding documentation.** Every agent and worker, on every task:
 - **Testing philosophy (owner, 2026-10-20, WDR-022):** mechanical correctness and simulation integrity are mandatory;
   economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
   rerun year-long simulations in pursuit of favourable statistics.
+- **Continuous long-run simulation (owner, 2026-10-21, SIM-01, `docs/directives/2026-10-21_continuous_long_run_simulation.md`;
+  permanent).** Run the longest required duration once per required seed and configuration, monitored throughout, and read
+  shorter milestones (days 30, 90, 100, ...) from its checkpoints (`economy_sim.gd --every`); never restart the same world
+  only to report a shorter duration. A broken invariant (currency or item ledger) stops the run at the checkpoint where it
+  is seen (`FATAL day N` line), reported with seed, day and state; a village failing (starvation, decline, shortage) is an
+  outcome, recorded, and the run goes on. Separate runs only for genuinely different conditions (seeds, scenarios,
+  configurations, regression reproductions, focused tests) and the two independent runs a determinism comparison needs.
+  Reports name the commit, seed and configuration, intended and reached days, checkpoint results, failures, village
+  outcomes, conservation and determinism evidence, and why any separate run was needed.
 - Visual output must actually be looked at before it is reported as verified.
 - **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
   supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a
