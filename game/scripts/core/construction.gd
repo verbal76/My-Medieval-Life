@@ -281,6 +281,10 @@ func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
 	why = can_hire(n) if not own else ("" if n.alive and contract_of(n).is_empty() else "They cannot carry today.")
 	if why == "" and (p.site.is_empty() or p.site.get("done", false) or str(p.site.get("owner", "")) != employer):
 		why = "There is no building site of yours to carry to."
+	if why == "" and not own and w.judgment != null:                # PROSPECTIVE (PROS-19, Q14): off unless attached
+		var boss: NPC = responsible_adult(int(employer.trim_prefix("hh:"))) if employer.begins_with("hh:") else null
+		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID if employer == World.PLAYER else (boss.id if boss != null else -1),
+				0 if employer == World.PLAYER and w.relations.player_friend(n) else int(GameData.b("helper_wage")))
 	if why != "":
 		return why
 	# a friend of the player carries as a favour, for no wage (CRT-06)
@@ -1231,10 +1235,13 @@ func _keep_building(h: int) -> void:
 	var budget: int = w.property.purse(ref) - reserve
 	var helper: NPC = null
 	if budget - wage >= estimate(p.site.need):
-		for o: NPC in w.npcs:
-			if o.household != h and can_hire(o) == "":
-				helper = o
-				break
+		if JudgmentLive.on(w, "hire_choice"):
+			helper = JudgmentLive.pick_helper(w, h, wage)     # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
+		else:
+			for o: NPC in w.npcs:
+				if o.household != h and can_hire(o) == "":
+					helper = o
+					break
 	if helper != null:
 		hire(ref, helper, p, budget - wage)
 		return

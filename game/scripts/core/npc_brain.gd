@@ -1560,8 +1560,8 @@ func _plan_sell(n: NPC, id: String) -> bool:
 
 
 func _buyer_for(n: NPC, id: String) -> NPC:
-	if w.judgment != null:
-		return JudgmentLive.pick_buyer(w, self, n, id)      # PROSPECTIVE (PROS-19): off unless judgment is attached
+	if JudgmentLive.on(w, "trade_sell"):
+		return JudgmentLive.pick_buyer(w, self, n, id)      # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
 	for outlet in OUTLETS.get(id, []):
 		for b in _with_buy_role(outlet):
 			if b != n and b.alive and w.purchase_qty(b, n, id, maxi(1, n.inv.count(id))) > 0:     # TRADE-01: the one rule
@@ -1802,6 +1802,8 @@ func _vendor_with_food(n: NPC) -> NPC:
 ## woodcutter with logs in hand too (B7-016: a woodcutter whose buyers were out of coin could not sell
 ## what households needed and had the money to buy).
 func _seller_of(id: String, buyer: NPC) -> NPC:
+	if JudgmentLive.on(w, "trade_buy_from"):
+		return JudgmentLive.pick_seller(w, self, id, buyer)  # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
 	for o: NPC in w.npcs:
 		if o.alive and o != buyer and not w.asleep(o) and (o.job == "carpenter" or buy_role(o) == "merchant_raw") and o.inv.has(id):
 			return o

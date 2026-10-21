@@ -549,6 +549,8 @@ func share(a: int, b: int, kind: String) -> void:
 
 func _befriend_if_close(a: int, b: int, t: Dictionary) -> void:
 	if a != Life.PLAYER_ID and not bool(t.friends) and float(t.regard) >= float(cfg().befriend_at):
+		if w.judgment != null and not JudgmentLive.befriend_ok(w, a, b, float(t.regard)):
+			return                                      # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
 		befriend(a, b)                                  # villagers befriend each other on their own
 
 
@@ -608,14 +610,22 @@ func _villagers_court() -> void:
 			var best: NPC = null
 			var best_a := float(c.interest_at)
 			var gap := float(Life.cfg().partner_max_gap)
+			var judged := JudgmentLive.on(w, "court_choice")    # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
+			var pool := []
+			var pull := {}
 			for o: NPC in singles:
 				if o == n or o.partner >= 0 or not can_court(n.id, o.id):
 					continue
 				var tt := peek(n.id, o.id)
 				var a := float(tt.attraction)
+				if judged and not bool(tt.get("refused", false)) and int(tt.days_known) >= int(c.interest_days) and a >= float(c.interest_at) and absf(Life.npc_age(w, n) - Life.npc_age(w, o)) <= gap:
+					pool.append(o)
+					pull[o.id] = a
 				if not bool(tt.get("refused", false)) and int(tt.days_known) >= int(c.interest_days) and a >= best_a and absf(Life.npc_age(w, n) - Life.npc_age(w, o)) <= gap and (best == null or a > best_a):
 					best = o
 					best_a = a
+			if judged:
+				best = JudgmentLive.pick_court(w, n, pool, pull)
 			if best == null:
 				continue
 			interests[n.id] = best.id

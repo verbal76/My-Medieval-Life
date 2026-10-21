@@ -692,6 +692,8 @@ func hire(s: Dictionary, n: NPC) -> String:
 	if attendant_of(s) != null:
 		return "You have an attendant already."
 	var why := hire_refusal(n)
+	if why == "" and w.judgment != null:
+		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID, wage())   # PROSPECTIVE (PROS-19, Q14): off unless attached
 	if why != "":
 		return why
 	if not _charge(s, wage()):
