@@ -22569,6 +22569,55 @@
    "roadmap_reason": "the roadmap record itself, kept current from Build 15"
   },
   {
+   "id": "ROAD-02",
+   "title": "Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering",
+   "kind": "proposal",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering",
+   "source": "docs/directives/2026-10-21_master_expansion_roadmap.md (the pack's other documents on wip/roadmap-docs, docs/roadmap/)",
+   "approval": "Supplied by the owner 2026-10-21 as a planning baseline; numbers 20 onward are recommendations until the owner designates them",
+   "acceptance": [
+    "Starters stored as design documents on a planning branch; each compared with the original directives and register IDs with missing decisions recorded; 18 engineering plan; 19 SJD reconciliation; multiplayer audit; the owner designates 20-23 before they become build targets"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "wip/roadmap-docs: docs/roadmap/Master_Expansion_Roadmap.md and the pack"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "source",
+     "why": "Source path on staging"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "Owner designation",
+   "roadmap_reason": "Numbering 20+ needs the owner"
+  },
+  {
    "id": "SAVE-00",
    "title": "Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred",
    "kind": "approved",
