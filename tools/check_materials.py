@@ -64,6 +64,7 @@ JOB_WORK = {
     "cook": [BRAIN + "::_cook"],
     "carpenter": [BRAIN + "::_plan_job@carpenter", BRAIN + "::_carpenter_carts", BRAIN + "::_carpenter_goods", BRAIN + "::_carpenter_mallet"],
     "sage": [BRAIN + "::_plan_job@sage"],
+    "laborer": [BRAIN + "::_mason"],          # STONE-01: the labourers dress stone into building blocks
 }
 # households' own recipes (not a profession): home brewing, cooking at the hearth, a storefront's cart,
 # sawing planks for their own house

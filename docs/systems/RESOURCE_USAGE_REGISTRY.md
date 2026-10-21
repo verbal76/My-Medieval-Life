@@ -14,7 +14,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 |---|---|
 | Implemented harvestable node types | 28 (22 player-harvestable) |
 | Materials the nodes produce | 31: apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool |
-| Production chains documented (node product to finished item) | 82 (82 workable, 0 blocked by gold ore) |
+| Production chains documented (node product to finished item) | 83 (83 workable, 0 blocked by gold ore) |
 | Materials with no current use | 3: feather, handcart, minecart |
 | Recipes with a missing raw-material source | 0 |
 | Finite node types with no replacement | 4: gold_seam, open_pit, prospect_clue, tunnel_rock |
@@ -36,7 +36,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `boulder` · Boulder (implemented)
 
 - **stone** (1 a cycle)
-  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - 2 stone → **2 building_block** (dress_stone, workbench)
 
 ### `chicken_pen` · Chickens (implemented)
 
@@ -143,7 +143,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 - **spoil** (1 a cycle)
   - used as it is: MIN-E: put back into an open pit cell whose last unit dug was spoil (OpenPits.backfill, counted backfilled_spoil).; MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).
 - **stone** (1 a cycle)
-  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - 2 stone → **2 building_block** (dress_stone, workbench)
 - **topsoil** (1 a cycle)
   - used as it is: MIN-E: put back into an open pit cell whose last unit dug was topsoil (OpenPits.backfill, counted backfilled_topsoil): the pit's ground rises by it.; MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take): a heap is a solid cell while it holds anything.
 
@@ -224,7 +224,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `stone_seam` · Stone seam (implemented)
 
 - **stone** (1 a cycle)
-  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - 2 stone → **2 building_block** (dress_stone, workbench)
 
 ### `tree` · Tree (implemented)
 
@@ -262,7 +262,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 - **spoil** (1 a cycle)
   - used as it is: MIN-E: put back into an open pit cell whose last unit dug was spoil (OpenPits.backfill, counted backfilled_spoil).; MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).
 - **stone** (1 a cycle)
-  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - 2 stone → **2 building_block** (dress_stone, workbench)
 
 ### `wheat_field` · Wheat field (implemented)
 
@@ -444,6 +444,7 @@ Every recipe path from a node's product to an item no recipe consumes:
 - rabbit_pelt → leather → leather_armor
 - rabbit_pelt → leather → leather_cap
 - rabbit_pelt → leather → prospecting_kit
+- stone → building_block
 - wheat → ale → strong_healing_tonic
 - wheat → bread
 - wheat → pottage
@@ -459,6 +460,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | amulet | 1 coal, 2 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
 | axe | 2 coal, 4 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | bread | 0.5 egg, 1 wheat | `player_field`, `player_pen`, `wheat_field` | - |
+| building_block | 1 stone | `boulder`, `open_pit`, `stone_seam`, `tunnel_rock` | stone: import |
 | cart_axle | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | cart_ironwork | 2 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
 | cart_wheel | 1.5 log | `tree` | - |
@@ -518,6 +520,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `blue_berry_cutting` Blue berry cutting | resource | import `caravan` | buyer `merchant_food` ×4; export `caravan`; plant `blue_berry_cutting` |
 | `blueberries` Blueberries | food | node `blue_berry_bush` ×2 | buyer `merchant_food` ×15; export `caravan`; food `blueberries` |
 | `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | buyer `merchant_food` ×15; buyer `tavernkeeper` ×12; export `caravan`; food `bread` |
+| `building_block` Building block | resource | recipe `dress_stone` ×2 | building `apothecary` ×15; building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `kitchen` ×20; building `quarters` ×15; building `room` ×6; building `smithy` ×30; building `storage` ×10; buyer `merchant_raw` ×20 |
 | `carrot` Carrot | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `carrot` |
 | `carrot_seed` Carrot seed | resource | import `caravan`; node `player_field` ×1 | plant `carrot_seed`; plant `carrot_seed` |
 | `cart_axle` Cart axle | resource | recipe `forge_cart_axle` ×1 | recipe `build_handcart` ×1; recipe `build_minecart` ×2 |
@@ -580,7 +583,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `open_pit`; tool `stone_seam`; tool `tunnel_rock` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
 | `spoil` Spoil | resource | node `open_pit` ×1; node `tunnel_rock` ×1 | backfill `spoil`; storage `spoil` |
-| `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `open_pit` ×1; node `stone_seam` ×1; node `tunnel_rock` ×1; start_stock `start_0` | building `apothecary` ×15; building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `kitchen` ×20; building `quarters` ×15; building `room` ×6; building `smithy` ×30; building `stone`; building `storage` ×10; buyer `merchant_raw` ×40; manor_job `stone` |
+| `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `open_pit` ×1; node `stone_seam` ×1; node `tunnel_rock` ×1; start_stock `start_0` | building `stone`; buyer `merchant_raw` ×40; manor_job `stone`; recipe `dress_stone` ×2 |
 | `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
 | `timber_support` Timber support | resource | recipe `make_timber_support` ×1 | building `timber_support` |
 | `topsoil` Topsoil | resource | node `open_pit` ×1 | backfill `topsoil`; storage `topsoil` |
@@ -653,7 +656,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `spoil`, `stone`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
+`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `spoil`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
 
 ### Orphaned items
 
@@ -671,7 +674,7 @@ None.
 
 Items whose only lasting source, once the finite seams are worked out, is the caravan:
 
-`amulet`, `axe`, `blue_berry_cutting`, `cart_axle`, `cart_ironwork`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `dirt`, `flower_seed`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `handcart`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `lockpick`, `minecart`, `nails`, `ore_sample`, `padlock`, `pickaxe`, `plough`, `prospecting_kit`, `red_berry_cutting`, `spoil`, `stone`, `topsoil`, `track_section`
+`amulet`, `axe`, `blue_berry_cutting`, `building_block`, `cart_axle`, `cart_ironwork`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `dirt`, `flower_seed`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `handcart`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `lockpick`, `minecart`, `nails`, `ore_sample`, `padlock`, `pickaxe`, `plough`, `prospecting_kit`, `red_berry_cutting`, `spoil`, `stone`, `topsoil`, `track_section`
 
 Every building needs stone (house, workshops), and the smithy needs iron bars, so all building depends
 on caravan stone after the stone seams are gone.

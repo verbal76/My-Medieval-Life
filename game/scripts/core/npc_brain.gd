@@ -17,7 +17,8 @@ const BUYS := {
 	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
-	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
+	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20,
+		"building_block": 20},        # STONE-01: dressed blocks kept for builders, as the stone was
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
 		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
 		"red_berries": 15, "blueberries": 15, "apple": 15,    # households' gathered berries and apples, brought to market (B14)
@@ -36,14 +37,14 @@ const BUYS := {
 const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
 # items an NPC keeps for its own work and will not sell
-const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
+const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "mallet"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed", "flower_seed", "red_berry_cutting", "blue_berry_cutting"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
 # who to sell each item to, in order of preference
 const OUTLETS := {
 	"iron_ore": ["smith", "merchant_raw"], "copper_ore": ["smith", "merchant_raw"], "gold_ore": ["smith", "merchant_goods"],
-	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
+	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
@@ -68,7 +69,7 @@ const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese
 const EDIBLE := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple", "egg", "milk", "carrot", "potato"]
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
-const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block"]     # STONE-01: blocks are the village's stone, dressed
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -614,6 +615,59 @@ func _carpenter_mallet(n: NPC) -> bool:
 	return false
 
 
+## STONE-01 (owner decision 2026-10-21: "Quarry extraction → Raw stone → Stoneworking → Finished building blocks →
+## Construction"): the labourer is the village's stoneworker. While building blocks are wanted (the raw-goods merchant
+## buys them for builders, or open sites need more than anyone has on sale) a labourer with a mallet dresses the raw
+## stone they hold into blocks at a workbench (dress_stone, the player's recipe: two stone, half an hour, Crafting 1)
+## and sells them on; without a mallet they buy one (the goods merchant's, made by the carpenter); without stone in
+## hand they quarry it as before (false: _miner), or, when no stone is left to quarry or the merchant has all the stone
+## it will take, buy the merchant's (quarried stone, or the caravan's). Nothing is dressed for nobody: with no demand, false and the day goes on as before.
+func _mason(n: NPC) -> bool:
+	if n.role != "adult":
+		return false
+	if n.inv.count("building_block") > 0 and _buyer_for(n, "building_block") != null:
+		return _plan_sell(n, "building_block")
+	if not _block_demand(n):
+		return false
+	var rec: Dictionary = GameData.recipes["dress_stone"]
+	if n.level(str(rec.skill)) < int(rec.level):
+		return false
+	if w.craft_tool(n, "dress_stone") == "-":
+		for o: NPC in w.npcs:
+			if o.alive and o != n and not w.asleep(o) and (o.job == "carpenter" or buy_role(o) == "merchant_goods") \
+					and o.inv.has("mallet") and not keeps(o, "mallet") and n.coins - w.reserve_of(n) >= w.sell_price(o, "mallet"):
+				n.doing = "buying a mallet to dress stone"
+				n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": "mallet", "qty": 1})]
+				return true
+		return false
+	if n.inv.has_all(rec["in"]):
+		if _do_recipe(n, "dress_stone"):
+			n.doing = "dressing stone into building blocks"
+			return true
+		return false
+	if _buyer_for(n, "stone") != null and not w.nearest_seam(n, ["stone"]).is_empty():
+		return false                                    # quarry it (_miner: a labourer quarries stone while it sells)
+	var short := int(rec["in"]["stone"]) - n.inv.count("stone")
+	for v: NPC in _with_buy_role("merchant_raw"):
+		if v != n and not w.asleep(v) and v.inv.count("stone") >= short and n.coins - w.reserve_of(n) >= w.sell_price(v, "stone") * short:
+			n.doing = "buying stone to dress"
+			n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": "stone", "qty": short})]
+			return true
+	return false
+
+
+## STONE-01: whether building blocks are wanted now: a buyer takes them from `n` (the raw-goods merchant's stock for
+## builders), or the open building sites need more than the blocks on sale.
+func _block_demand(n: NPC) -> bool:
+	if _buyer_for(n, "building_block") != null:
+		return true
+	var held := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and (o.job == "laborer" or buy_role(o) == "merchant_raw"):
+			held += o.inv.count("building_block")
+	return w.construction.open_need("building_block") > held
+
+
 ## Who sells a cart part or a handcart: a carpenter, smith or merchant holding one (the nearest first).
 func _part_seller(id: String, n: NPC) -> NPC:
 	var best: NPC = null
@@ -859,6 +913,8 @@ func _plan_eat(n: NPC) -> bool:
 func _plan_job(n: NPC) -> bool:
 	match n.job:
 		"miner", "laborer":
+			if n.job == "laborer" and _mason(n):         # STONE-01: blocks dressed to demand
+				return true
 			return _miner(n)
 		"woodcutter":
 			return _woodcutter(n)
@@ -1109,10 +1165,11 @@ func _woodcutter(n: NPC) -> bool:
 	return true
 
 
-## PAR-01: whether `n` has the skill level recipe `r` needs (the player's requirement).
+## PAR-01: whether `n` has the skill level recipe `r` needs (the player's requirement), and the tool it names
+## (STONE-01: the mallet to dress stone; World.craft_tool).
 func _can_make(n: NPC, r: String) -> bool:
 	var rec: Dictionary = GameData.recipes[r]
-	return n.level(str(rec.skill)) >= int(rec.level)
+	return n.level(str(rec.skill)) >= int(rec.level) and (not rec.has("tool") or w.craft_tool(n, r) != "-")
 
 
 ## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
@@ -1927,6 +1984,8 @@ func _do_recipe(n: NPC, r: String) -> bool:
 	var rec: Dictionary = GameData.recipes[r]
 	if n.level(str(rec.skill)) < int(rec.level):        # PAR-01: the player's requirement
 		w.stat("skill_short_" + r)
+		return false
+	if rec.has("tool") and w.craft_tool(n, r) == "-":     # STONE-01: the recipe's tool, as for the player
 		return false
 	var st := _station_for(n, rec.station)
 	if st == "":
