@@ -11,9 +11,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 89 |
+| APPROVED — NOT STARTED | 88 |
 | ACTIVE DEVELOPMENT | 10 |
-| PARTIALLY IMPLEMENTED | 37 |
+| PARTIALLY IMPLEMENTED | 38 |
 | IMPLEMENTED — TESTING REQUIRED | 22 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 43 |
 | BLOCKED | 14 |
@@ -147,7 +147,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FSE-08 | The directive's 25 deterministic tests (section 17) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
 | FSE-12 | One agricultural model for player and village farming (parity) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
-| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
@@ -454,7 +454,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (89)
+## APPROVED — NOT STARTED (88)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -490,7 +490,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
-| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-12 |  |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | docs/directives/2026-10-20_agricultural_findings_followup.md |  |  |  |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-11; after FSE-12; after FSE-13 |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
@@ -563,7 +562,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (37)
+## PARTIALLY IMPLEMENTED (38)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -581,6 +580,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FSE-08 | The directive's 25 deterministic tests (section 17) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md | `68a3611`; world_test::_fse12_shared_fields | after FSE-16 | Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy |
+| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md | `01a83f0`; world_test::_fse13_seasonal_fields | after FSE-12 | Comparison runs with --set seasonal_village_farming=1; report per the owner's list; owner authorization before activation |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |

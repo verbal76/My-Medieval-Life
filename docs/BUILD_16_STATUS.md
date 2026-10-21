@@ -57,9 +57,9 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 | Status | Items |
 |---|---|
 | Complete | 31 |
-| In progress | 13 |
+| In progress | 14 |
 | Pending testing | 21 |
-| Not started | 31 |
+| Not started | 30 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -173,7 +173,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | In progress | Defects fixed: tab, relief order, relief sources, food valuation, eating and cooking parity, B05, B07-B10, TIME-04; open: B06, B11, B12 | Each defect fixed with a regression test; each foundation small, tested, baselined before and after |  |  |  | Required feature | M |
 | FSE-11 | Village sowing consumes seed (seed consumption correction) | Superseded | Covered by FARM-06 (OD-23: manor farms get no free seed; village sowing takes real seed), the owner's later decision |  |  | superseded by FARM-06 |  | Superseded |  |
 | FSE-12 | One agricultural model for player and village farming (parity) | In progress | Shared per-cell model for the manor's fields behind balance shared_manor_farming (off in the baseline; gate identical): seed a cell, crop and seed back a sown cell, per-cell labour; world_test::_fse12_shared_fields. Comp | Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy | `68a3611`, world_test::_fse12_shared_fields | after FSE-16 |  | Required feature | L |
-| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | Not started |  | Village fields follow the same season rates as player crops, behind a switch that is off in the baseline; Compared with the baseline: annual production, seasonal inventories, prices, household food access, starvation, po |  | after FSE-12 |  | Required feature | M |
+| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | In progress | Seasonal manor fields behind balance seasonal_village_farming (off; gate identical): no winter sowing, hourly growth at the season's rate; world_test::_fse13_seasonal_fields. Comparison runs and the owner's review next | Comparison runs with --set seasonal_village_farming=1; report per the owner's list; owner authorization before activation | `01a83f0`, world_test::_fse13_seasonal_fields | after FSE-12 |  | Required feature | M |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | Not started |  | Design for land supply, rental of small and large plots and pens, legitimate rent; foundations in Build 16 only where safe; the rest scheduled with the living-economy build (FSE-10) |  |  |  | Required feature | M |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | Not started |  | Productive capacity recalculated with labor availability and net edible yield after seed and losses |  | after FSE-11; after FSE-12; after FSE-13 |  | Required feature | S |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | Pending testing | Every death analysed from an exact reproduction of the baseline (docs/design/FOOD_SECURITY_AUDIT.md section 2); two defects fixed (9db091b, tests in reserve_test.gd that fail on the old code); the relief-source and eatin | FSE-17 (relief sources) and the eating and cooking parity, then rerun seed 2 for 365 days and compare with the 5625505 baseline | `9db091b`, reserve_test | after B7-015 |  | Testing and verification | S |

@@ -11861,7 +11861,7 @@
    "id": "FSE-13",
    "title": "Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "approved for implementation and testing, not immediate baseline activation ... Bring any major balance consequences back for owner review before activating the corrected seasonal model in the release baseline.",
    "description": "Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -11874,10 +11874,12 @@
     "The calendar kept: a year is 8 game days, four seasons of 2 (never 365 days a year)"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_fse13_seasonal_fields",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "01a83f0"
+   ],
    "parent": "FSE-00",
    "depends_on": [
     "FSE-12"
@@ -11886,7 +11888,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Comparison runs with --set seasonal_village_farming=1; report per the owner's list; owner authorization before activation",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11906,6 +11908,11 @@
      "date": "2026-10-21",
      "change": "owner decision recorded",
      "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 01a83f0; tests; next_action",
+     "why": "Seasonal manor fields behind balance seasonal_village_farming (off; gate identical): no winter sowing, hourly growth at the season's rate; world_test::_fse13_seasonal_fields. Comparison runs and the owner's review next"
     }
    ],
    "target_build": "16",

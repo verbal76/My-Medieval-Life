@@ -93,7 +93,7 @@ None.
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision |
 | FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | SUPERSEDED | 16 |
 | FSE-12 | One agricultural model for player and village farming (parity) | approved | PARTIALLY IMPLEMENTED | 16 |
-| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
