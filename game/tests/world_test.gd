@@ -1467,6 +1467,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_trading_xp()
 	_dvw_a12_field_owner()
 	_dvw_a12_theft_last()
+	_dvw_a12_rest()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2168,6 +2169,25 @@ func _dvw_a12_theft_last() -> void:
 			f.erase("_crop")
 	check(seen > 100 and thefts > 0 and bad.is_empty(), "DVW-A12 R16: core's theft flag matches every prompt that says theft (%d choices, %d thefts), offered last (%s)" % [seen, thefts, str(bad.slice(0, 3))])
 	_restore_pack(keep)
+
+
+## R18: resting by day runs the world on for rest.day_minutes and restores health and stamina; through the interface.
+func _dvw_a12_rest() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var day0 := floorf(w.minutes / World.DAY) * World.DAY
+	w.minutes = day0 + 10.0 * 60.0                          # ten in the morning
+	p.hp = 3.0
+	p.stamina = 1.0
+	var t0 := w.minutes
+	var r := w.player_rest()
+	var dm := float(GameData.b("rest").day_minutes)
+	check(not r.night and is_equal_approx(float(r.minutes), dm) and w.minutes - t0 >= dm - 1.0 and w.minutes - t0 <= dm + 1.0, "DVW-A12 R18: a rest by day lasts rest.day_minutes of the world going on (%.0f)" % (w.minutes - t0))
+	check(is_equal_approx(p.hp, p.hp_cap()) and is_equal_approx(p.stamina, p.stamina_cap()), "DVW-A12 R18: it restores health and stamina (the one recovery model)")
+	p.hp = 3.0
+	w.minutes = day0 + 11.0 * 60.0
+	main._rest_now()
+	check(is_equal_approx(p.hp, p.hp_cap()) and main.ui.toast.text.begins_with("You rest."), "DVW-A12 R18: the interface's rest is core's")
 
 
 ## A clean pack for one rule's checks; returns what to restore.

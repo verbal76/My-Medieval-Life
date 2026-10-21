@@ -2027,6 +2027,20 @@ func wake(n: NPC) -> bool:
 	return true
 
 
+## DVW-A12 R18: the player rests: at night until six in the morning, by day for balance rest.day_minutes; the world
+## runs on meanwhile (update in half-second steps of the game's speed), then rest_recover. Returns {minutes, night}.
+func player_rest() -> Dictionary:
+	var h := hour()
+	var until := 6.0 if h < 6.0 else 30.0
+	var night := h >= 18.0 or h < 6.0
+	var mins := (until - h) * 60.0 if night else float(GameData.b("rest").day_minutes)
+	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
+	for i in steps:
+		update(0.5)
+	rest_recover(player, mins, night)
+	return {"minutes": mins, "night": night}
+
+
 ## PAR-03 (owner OD-18.3): the one recovery model, the player's, for everyone. A rest of `minutes` that lasted to the
 ## morning (`to_morning`) or at least rest.day_minutes restores health to its cap (and the player's stamina).
 ## A rest cut short (a villager woken: its plan is cleared, so it never ends) restores nothing. True if it qualified.
