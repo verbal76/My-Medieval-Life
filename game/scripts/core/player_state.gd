@@ -124,6 +124,23 @@ func stamina_cap() -> float:
 	return BASE_STAMINA + bonus("max_stamina")
 
 
+## DVW-A12 R19 (B8-027): a sprint can start only with balance sprint_min_stamina.
+func can_sprint() -> bool:
+	return stamina >= float(GameData.b("sprint_min_stamina"))
+
+
+## DVW-A12 R19: `delta` seconds of sprinting cost sprint_stamina_per_sec, net of the regeneration the world has just
+## added (player_stamina_regen_per_second); never below 0. False when that leaves no breath (the sprint ends).
+func sprint_drain(delta: float) -> bool:
+	stamina = maxf(0.0, stamina - (float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))) * delta)
+	return stamina > 0.0
+
+
+## DVW-A12 R19: how much faster a sprint is than a walk (balance sprint_speed).
+static func sprint_speed() -> float:
+	return float(GameData.b("sprint_speed"))
+
+
 ## Health and stamina above the caps (after taking off a ring or an amulet) come down to them.
 func fit_caps() -> void:
 	hp = minf(hp, hp_cap())

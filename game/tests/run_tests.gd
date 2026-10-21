@@ -1410,7 +1410,7 @@ func test_interiors() -> void:
 	for n in [inside_eye, outside_eye]:
 		n.plan = [w.brain.work(600, "", {}, "idle")]
 		n.anim = "idle"
-	w.player.pos = Vector2(w.home_cell(walker, "chest")) + Vector2(0.5, 0.5)
+	w.player.pos = Vector2(int(crate.x), int(crate.y)) + Vector2(0.5, 0.5)        # at the crate: within reach (DVW-A12 R15)
 	var crimes0 := w.player.crimes.size()
 	w.player_take(crate)
 	check(w.player.crimes.size() == crimes0 + 1 and int(w.player.crimes[-1].witnesses) == 1, "a theft inside a house is seen by the one awake inside, not by the one at the door or the sleeper")

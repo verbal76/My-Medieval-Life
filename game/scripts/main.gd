@@ -971,6 +971,7 @@ func _build_scene() -> void:
 	ow_view.follow(world.player.pos, world.player.pos, 0.0, 6)      # the nearest chunks at once, the rest over the next frames
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
+	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
 	dying.clear()
 	fading.clear()
 	for n: NPC in world.npcs:
@@ -1686,12 +1687,12 @@ func cancel_action(why := "") -> void:
 ## when the balance's sprint_toggle is on. It needs stamina and ends when that is gone; the speed
 ## multiplier is returned and the cost taken (net of the regeneration the world just added).
 func _sprint_step(delta: float) -> float:
-	var p := world.player
-	if sprint_latched and not sprinting and p.stamina >= float(GameData.b("sprint_min_stamina")):
+	var p := world.player                 # the stamina rules are PlayerState's (DVW-A12 R19); the input latches are here
+	if sprint_latched and not sprinting and p.can_sprint():
 		sprinting = true
 	if not bool(GameData.b("sprint_toggle")):
 		if Input.is_action_pressed("sprint"):
-			if not sprinting and not sprint_spent and p.stamina >= float(GameData.b("sprint_min_stamina")):
+			if not sprinting and not sprint_spent and p.can_sprint():
 				sprinting = true
 		else:
 			sprint_spent = false
@@ -1699,22 +1700,21 @@ func _sprint_step(delta: float) -> float:
 				sprinting = false
 	if not sprinting:
 		return 1.0
-	p.stamina = maxf(0.0, p.stamina - (float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))) * delta)
-	if p.stamina <= 0.0:
+	if not p.sprint_drain(delta):
 		sprinting = false            # out of breath: back to walking until Shift is let go and pressed again
 		sprint_spent = true
 		if sprint_latched:
 			sprint_latched = false
 			ui.set_sprint_mode(false)
 		return 1.0
-	return float(GameData.b("sprint_speed"))
+	return PlayerState.sprint_speed()
 
 
 ## Sprint on or off (LT; Shift when sprint_toggle is on). It cannot start without some stamina.
 func toggle_sprint() -> void:
 	if sprinting:
 		sprinting = false
-	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")) and action.is_empty():
+	elif world.player.can_sprint() and action.is_empty():
 		sprinting = true
 
 
@@ -1725,13 +1725,13 @@ func toggle_run_latch() -> void:
 	if sprint_latched:
 		sprint_latched = false
 		sprinting = false
-	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")):
+	elif world.player.can_sprint():
 		sprint_latched = true
 	ui.set_sprint_mode(sprint_latched)
 
 
 func _sprint_scale() -> float:
-	return float(GameData.b("sprint_speed")) if sprinting else 1.0
+	return PlayerState.sprint_speed() if sprinting else 1.0
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes
@@ -1865,7 +1865,7 @@ func _find_target() -> void:
 		_find_target_below()               # MIN-A: below the surface only what is on the player's level
 		return
 	var p := world.player
-	var probe := p.pos + facing_vec() * 0.9
+	var probe := p.pos + facing_vec() * World.TARGET_PROBE      # the reach is core's (DVW-A12 R15)
 	var near: Array = []        # [distance to the probe, order, target]
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
@@ -1878,7 +1878,7 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
-		if at.distance_to(p.pos) > 2.2:
+		if at.distance_to(p.pos) > World.CONTAINER_REACH:
 			continue
 		var d := at.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, at):
@@ -1948,11 +1948,10 @@ func _find_target() -> void:
 			break
 		for f in world.fields:
 			if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
-				var whose := ""
-				for fo: NPC in world.field_workers(f):
-					whose = "%s %s's" % [fo.name, fo.family]
-					break
-				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
+				var fo := world.field_owner(f)                  # whose it is: core's (DVW-A12 R17)
+				var whose := "%s %s's" % [fo.name, fo.family] if fo != null else ""
+				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""],
+						"theft": world.field_is_theft(f)}
 				break
 		if not front.is_empty():
 			break
@@ -1978,7 +1977,7 @@ func _find_target() -> void:
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
-		if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+		if u.distance_to(p.pos) < World.STATION_REACH and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
 			var no := world.station_refusal(id)
 			here.append({"kind": "station", "id": id, "label": ("Use Stove" if st.type == "stove" else "Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
 	for pl in world.plots:
@@ -2091,8 +2090,9 @@ func _find_target() -> void:
 		cands.erase(front)
 		cands.push_front(front)
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
-	var lawful := cands.filter(func(c): return not str(c.get("label", "")).contains("theft"))
-	cands = lawful + cands.filter(func(c): return str(c.get("label", "")).contains("theft"))
+	# (whether a choice is theft is core's: World.chest_is_theft, container_is_theft, field_is_theft, DVW-A12 R16)
+	var lawful := cands.filter(func(c): return not c.get("theft", false))
+	cands = lawful + cands.filter(func(c): return c.get("theft", false))
 	target_options = cands
 	var pick := 0
 	for i in cands.size():
@@ -2252,7 +2252,7 @@ func _container_target(c: Dictionary) -> Dictionary:
 	var whose := world.container_whose(c)
 	if id == "":
 		return {"kind": "info", "label": "Empty %s (%s)" % [c.kind, whose], "text": "There is nothing in the %s." % c.kind}
-	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose]}
+	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose], "theft": world.container_is_theft(c)}
 
 
 ## A chest, crate or barrel (PL2-002): yours to fill, or someone else's (theft, perhaps locked).
@@ -2264,8 +2264,8 @@ func _chest_target(u: Dictionary) -> Dictionary:
 	if i.access == "own":
 		return {"kind": "chest", "id": u.id, "label": "Open %s: store things" % what}
 	if world.chests.is_locked(u):
-		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what}
-	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what}
+		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what, "theft": world.chest_is_theft(u)}
+	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what, "theft": world.chest_is_theft(u)}
 
 
 ## Pick a locked chest's lock (PL2-002): takes game time, may snap the pick, and may be seen.
@@ -2278,8 +2278,7 @@ func pick_lock(uid: String) -> void:
 	var secs := world.chests.pick_minutes(u) / float(GameData.b("game_minutes_per_second"))
 	ui.hide_all()
 	start_action("Picking the lock", secs, func():
-		var r: Dictionary = world.chests.attempt(u)
-		_xp("stealth", 4 if r.result == "open" else 1)
+		var r: Dictionary = world.player_pick_lock(u)          # the try and its xp are core's (DVW-A12 R6)
 		ui.message(r.text, 6.0)
 		if r.result == "open":
 			ui.show_chest(uid))
@@ -2314,7 +2313,9 @@ func _usable_at(wpos: Vector2) -> Vector2:
 func pickpocket(n: NPC) -> void:
 	ui.hide_all()
 	var r: Dictionary = world.pickpocket(n)
-	_xp("stealth", 8 if r.ok else 2)
+	if r.get("refused", false):                 # out of reach (DVW-A12 R14): no try was made
+		ui.message(r.text)
+		return
 	if not r.ok:
 		say(n, "Thief! Get your hand out of my purse!")
 	ui.message(r.text)
@@ -2372,12 +2373,19 @@ func _gain(text: String, item := "") -> void:
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
-	if str(target.get("kind", "")) in ["deposit", "tree", "plant", "loot", "fruit"]:
-		var tp: Vector2 = world.loot[target.i].pos if target.kind == "loot" and target.i < world.loot.size() else Vector2(_target_cell(target)) + Vector2(0.5, 0.5)
-		if not world.reaches(p.pos, tp):
-			stop_gather("")
-			ui.message("A wall is in the way.")
-			return
+	var far := ""                                  # the reach is core's (DVW-A12 R15)
+	match str(target.get("kind", "")):
+		"deposit", "tree", "plant", "fruit":
+			far = world.player_reach_cell(_target_cell(target), str(target.kind) in ["tree", "fruit"])
+		"loot":
+			if target.i < world.loot.size():
+				far = world.player_reach_point(world.loot[target.i].pos, World.TARGET_PROBE + World.TARGET_REACH)
+		"field":
+			far = world.player_reach_field(target.field)
+	if far != "":
+		stop_gather("")
+		ui.message(far)
+		return
 	match target.kind:
 		"npc":
 			approach(target.npc)
@@ -2410,36 +2418,30 @@ func _use() -> void:
 			var c: Dictionary = target.c
 			var place := world.container_place(c)
 			var got := world.player_take(c)
-			if got == "full":
+			if got == "far":
+				ui.message(world.player_container_reach(c))         # out of reach (DVW-A12 R15)
+			elif got == "full":
 				ui.message("Your pack is full.")
 			elif got == "":
 				ui.message("There is nothing to take.")
 			else:
-				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0
-				if seen == 0:
-					_xp("stealth", 3)
+				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0      # (the xp for it is core's, R6)
 				var said := "You take 1 %s from %s. %s" % [GameData.item_name(got).to_lower(), place,
 						"Nobody saw." if seen == 0 else ("%d %s saw you!" % [seen, "person" if seen == 1 else "people"])]
 				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
 		"loot":
-			var l: Dictionary = world.loot[target.i]
-			var taken := 0
-			for id in l.inv.ids():
-				var n: int = l.inv.count(id)
-				if p.inv.add(id, n):
-					l.inv.remove(id, n)
-					taken += n
-					_gain("+%d %s" % [n, GameData.item_name(id)], id)
-			if int(l.coins) > 0:
-				_gain("+%d coins" % int(l.coins), "coins")
-			elif taken == 0:
-				ui.message("Your pack is full." if l.inv.total() > 0 else "There is nothing left.")
-			elif l.inv.total() > 0:
+			var got := world.player_loot(int(target.i))             # the taking is core's (DVW-A12 R5)
+			if str(got.far) != "":
+				ui.message(str(got.far))
+				return
+			for pair in got.items:
+				_gain("+%d %s" % [int(pair[1]), GameData.item_name(str(pair[0]))], str(pair[0]))
+			if int(got.coins) > 0:
+				_gain("+%d coins" % int(got.coins), "coins")
+			elif got.items.is_empty():
+				ui.message("Your pack is full." if int(got.left) > 0 else "There is nothing left.")
+			elif int(got.left) > 0:
 				ui.message("Your pack is full: some is left behind.")
-			p.coins += int(l.coins)
-			l.coins = 0
-			if l.inv.total() == 0:
-				world.loot.remove_at(target.i)
 		"sample":
 			_sample(target.clue, target.cell)
 		"assay":
@@ -2690,13 +2692,10 @@ func plant_sapling(item: String) -> void:
 		return
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	start_action("Planting", float(Trees.cfg().plant_seconds), func():
-		if not p.inv.has(item) or world.plant_refusal(cell) != "":
+		var t := world.player_plant_sapling(cell, item)          # the rules are core's (DVW-A12 R4)
+		if t.is_empty():
 			ui.message("It cannot be planted there now.")
-			return
-		var t := world.plant_tree(cell, item)
-		if not t.is_empty():
-			p.inv.remove(item, 1)
-			world.stat("used_" + item)               # the sapling is used up (SEED-02: the ledger counts it)
+		else:
 			ui.message("You plant the %s. It will grow into a tree in a few days." % GameData.item_name(item).to_lower().replace(" sapling", " sapling"))
 	)
 
@@ -2732,8 +2731,9 @@ func start_action(label: String, secs: float, done: Callable, anim := "gather", 
 	player_sprite.play(anim)
 
 
+## Xp earned by the player: core's (World.player_xp, DVW-A12 R6); a new level's banner comes by player_leveled.
 func _xp(skill: String, n: int) -> void:
-	_level_up(skill, world.player.gain(skill, n))
+	world.player_xp(skill, n)
 
 
 ## The banner for a new level (`up` 0: none).
@@ -2909,34 +2909,13 @@ func _chase_step() -> void:
 
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
 ## livestock is theft from its keeper, a crime like attacking a villager.
+## The rules are core's (World.player_hit_animal, DVW-A12 R10); the blow and a guard's words are shown here.
 func _hit_animal(a: Animal, dmg: float) -> void:
 	var before := a.hp
-	a.hp -= dmg
-	_hit_fx(animal_sprites.get(a.id), before, a.hp, dmg)
-	if a.hp > 0.0:
-		world.fauna.provoke(a, "player")            # a wolf or a bear fights back (B14)
-		return
-	_xp("combat", Skills.kill_xp(a.species, world.player.damage()))     # per kill, as a villager's (FSE-B12)
-	var keeper: NPC = null
-	if not a.wild():
-		keeper = world.pen_keeper(world.fauna.pens[a.area])
-	var what := a.label().to_lower()
-	var beast := a.wild() and bool(a.spec().get("people", false))
-	world.stat(("hunted_" if a.wild() else "slaughtered_") + a.species)     # FSE-B10: the wildlife ledger, as for villagers
-	var bag: Inventory = world.fauna.kill(a)
-	if beast:
-		world.relations.defended(a.pos)        # a wolf or a bear put down near people (CRT-10)
-	if bag.total() > 0:
-		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
-	if keeper != null:                         # theft from the keeper, known the way a theft is (World.witness, PAR-05)
-		var saw := world.near(world.player.pos, float(GameData.b("witness_radius"))).has(keeper)
-		world.witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
-		keeper.remember(("%s killed my %s" % [world.player.name, what]) if saw else ("found my %s dead" % what))
-		if saw and keeper.role == "adult" and keeper.target == -1:
-			keeper.target = -2                # a keeper who sees it comes after the player
-		if world.last_guard != "":
-			ui.message(world.last_guard)
-		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
+	var h := world.player_hit_animal(a, dmg)
+	_hit_fx(animal_sprites.get(a.id), before, before - dmg, dmg)
+	if str(h.guard) != "":
+		ui.message(str(h.guard))
 
 
 ## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,
@@ -3000,44 +2979,36 @@ func fireball() -> void:
 	if world.player_level != 0:
 		ui.message("Nothing to fight here.")      # MIN-A: nobody but the player goes below yet
 		return
-	if not p.spells.get("fireball", false):
-		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
+	var cast := world.player_cast_fireball()          # knowing it, the cooldown, the stamina and the xp are core's (R11)
+	if not cast.ok:
+		if str(cast.why) != "":
+			ui.message(str(cast.why))
 		return
-	var cd := Skills.value(p, "magic", "fireball_cooldown", float(GameData.b("fireball_cooldown")))
-	var cost := float(GameData.b("fireball_stamina")) * Skills.value(p, "magic", "fireball_stamina", 1.0)
-	if p.fireball_cd > 0.0 or p.stamina < cost:
-		return
-	p.fireball_cd = cd
-	p.stamina -= cost
 	player_sprite.play("throw", true)
 	var node := Sprite2D.new()
 	node.texture = load("res://assets/icons/fireball.png")
 	node.z_index = 5
 	actors.add_child(node)
-	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": 8.0})
-	_xp("magic", 6)
+	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": World.FIREBALL_RANGE})
 
 
 func _projectiles_step(delta: float) -> void:
 	for pr in projectiles.duplicate():
-		var step: Vector2 = pr.dir * 9.0 * delta
+		var step: Vector2 = pr.dir * World.FIREBALL_SPEED * delta
 		pr.pos += step
 		pr.left -= step.length()
 		pr.node.position = pr.pos * T
 		pr.node.rotation += delta * 12.0
-		var hit := false
-		var dmg := 14.0 * Skills.value(world.player, "magic", "fireball_damage", 1.0)
-		for n: NPC in world.present(pr.pos, 0.6):
-			_hit(n, dmg)
-			hit = true
-			break
-		if not hit:
-			for a: Animal in world.fauna.near(pr.pos, 0.6):
-				_hit_animal(a, dmg)
-				hit = true
-				break
+		var h := world.player_fireball_hit(pr.pos)       # who it strikes, the harm and the xp are core's (DVW-A12 R11)
+		var hit: bool = h.who != null
+		if h.who is NPC:
+			_hit_fx(sprites.get(h.who.id), h.who.max_hp, float(h.before) - float(h.dealt), float(h.dealt))
+		elif h.who is Animal:
+			_hit_fx(animal_sprites.get(h.who.id), float(h.before), float(h.before) - float(h.dealt), float(h.dealt))
+			if str(h.guard) != "":
+				ui.message(str(h.guard))
 		if hit:
-			_xp("magic", 6)                    # a spell that lands teaches more than one that is cast
+			_level_up("magic", int(h.up))
 		if hit or pr.left <= 0.0 or map.is_solid_world(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
 			pr.node.queue_free()
 			projectiles.erase(pr)
@@ -3983,15 +3954,7 @@ func _sync_player_pose() -> void:
 
 
 func _rest_now() -> void:
-	var p := world.player
-	var h := world.hour()
-	var until := 6.0 if h < 6.0 else 30.0
-	var night := h >= 18.0 or h < 6.0
-	var mins := (until - h) * 60.0 if night else float(GameData.b("rest").day_minutes)
-	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
-	for i in steps:
-		world.update(0.5)
-	world.rest_recover(p, mins, night)        # the one recovery model (PAR-03)
+	world.player_rest()                         # how long, the world going on and the recovery are core's (DVW-A12 R18)
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
 

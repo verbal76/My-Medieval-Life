@@ -2448,10 +2448,7 @@ func _helper_choices(n: NPC, choices: GridContainer) -> void:
 				return
 			message("%s will carry%s for the rest of the working day." % [n.name, where])
 			_talk_view(n, "Right. I'll get to it.")
-		var need: Dictionary = pp.site.need.duplicate()
-		for id in need.keys():
-			need[id] = maxi(0, int(need[id]) - w.player.chest.count(id))
-		var spend := mini(c.estimate(need), maxi(0, w.player.coins - wage))
+		var spend := w.player_helper_budget(pp)                # what the helper may spend: core's (DVW-A12 R21)
 		_talk_choice(choices, "From my chest%s (%d coins)" % [where, wage], func(): hire.call(0), w.player.coins >= wage)
 		_talk_choice(choices, "Buy the rest too (%d + %d)" % [wage, spend], func(): hire.call(spend), w.player.coins >= wage and spend > 0)
 	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))
@@ -2613,16 +2610,14 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 	qp.confirmed.connect(func(q: int):
 		if buying:
 			var b: Dictionary = w.player_buy_many(n, id, q)
-			if b.result == "bought":
-				main._xp("trading", Skills.trade_xp(int(b.paid)))
+			if b.result == "bought":                    # (its Trading xp is core's, DVW-A12 R13)
 				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
 			else:
 				message(b.text)
 			show_trade(n)
 			return
 		var r: Dictionary = w.player_sell_many(n, id, q)
-		if r.sold > 0:
-			main._xp("trading", Skills.trade_xp(int(r.paid)))
+		if r.sold > 0:                                  # (its Trading xp is core's, DVW-A12 R13)
 			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
 		if r.result == "sold":
 			show_trade(n)
@@ -3149,19 +3144,10 @@ func _home_storable() -> Array:
 	return p.inv.ids().filter(func(id): return not worn.has(id))
 
 
-## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing.
+## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing. The rule is
+## core's (World.player_home_move, DVW-A12 R20).
 func home_move(id: String, from_chest: bool, qty: int) -> bool:
-	var w: World = main.world
-	var p := w.player
-	var src: Inventory = p.chest if from_chest else p.inv
-	var dst: Inventory = p.inv if from_chest else p.chest
-	if qty < 1 or not w.transfer(src, dst, id, qty):
-		return false
-	if from_chest:
-		p.take_marks(id, qty)
-	else:
-		p.store_marks(id, qty)
-	return true
+	return main.world.player_home_move(id, from_chest, qty)
 
 
 func _home_move_all(from: String) -> void:

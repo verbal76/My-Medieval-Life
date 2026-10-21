@@ -259,7 +259,8 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 static func theft_note(world: World, d: Dictionary, ref) -> String:
 	match str(d.get("match", {}).get("kind", "")):
 		"field":
-			for fo: NPC in world.field_workers(ref):
+			var fo := world.field_owner(ref)                 # one test of whose a field is (DVW-A12 R17)
+			if fo != null:
 				return "%s %s's field: taking it is theft" % [fo.name, fo.family]
 		"animal":
 			var a := ref as Animal

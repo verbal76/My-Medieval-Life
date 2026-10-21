@@ -25,6 +25,7 @@ signal building_added(b: Dictionary)
 signal bled(pos: Vector2)          # someone or something was slain here (drawn as blood; not saved)
 signal level_tile_changed(level: int, cell: Vector2i, value: int)   # a seam below the surface changed (worked out): the level's view redraws it
 signal player_level_changed(level: int)   # the player went through a portal (Main fades the surface or the level)
+signal player_leveled(skill: String, level: int)   # DVW-A12 R6: player_xp raised a skill to a new level (Main shows the banner)
 
 const DAY := 1440.0
 
@@ -931,6 +932,7 @@ func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	if not trade(player, vendor, id, qty, 0, bill):
 		return {"result": "failed", "text": "The trade fell through.", "bought": 0, "paid": 0}
 	deal_xp(player, vendor, bill)
+	player_xp("trading", Skills.trade_xp(bill))           # the player's Trading xp for the deal (DVW-A12 R13)
 	return {"result": "bought", "text": "", "bought": qty, "paid": bill}
 
 
@@ -954,7 +956,7 @@ func deal_price(base: int, buyer, seller) -> int:
 
 
 ## The Trading experience of a deal worth `coins`, the player's rule (Skills.trade_xp), for each villager in it (the
-## player's own comes through the trade window, which shows the new level).
+## player's own is awarded by player_buy_many and player_sell_many through player_xp, DVW-A12 R13).
 func deal_xp(buyer, seller, coins: int) -> void:
 	for who in [buyer, seller]:
 		if who is NPC:
@@ -1264,12 +1266,67 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
 
 
+## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
+## used, kept here so a host can refuse an action out of reach. A target is chosen near a probe TARGET_PROBE tiles in
+## front of the player: people, loot and containers within TARGET_REACH of it (containers also within
+## CONTAINER_REACH of the player); a seam, tree, plant or field in the probe's cell or one of its four neighbours, so
+## (the probe being less than a tile ahead) never more than CELL_REACH cells off the player's own cell on either axis.
+const TARGET_PROBE := 0.9
+const TARGET_REACH := 1.5
+const CONTAINER_REACH := 2.2
+const CELL_REACH := 2
+const STATION_REACH := 1.2       # a crafting station is offered (its window opened) closer than this to where it is used
+
+
+## DVW-A12 R15: why the player cannot reach the point `at` (a pile, a container), "" if they can: a wall between
+## (reaches), else farther than `reach` tiles.
+func player_reach_point(at: Vector2, reach: float) -> String:
+	if not reaches(player.pos, at):
+		return "A wall is in the way."
+	if player.pos.distance_to(at) > reach:
+		return "That is out of reach."
+	return ""
+
+
+## DVW-A12 R15: why the player cannot reach container `c` (its cell's middle, within CONTAINER_REACH), "" if they can.
+func player_container_reach(c: Dictionary) -> String:
+	return player_reach_point(Vector2(int(c.x) + 0.5, int(c.y) + 0.5), CONTAINER_REACH)
+
+
+## DVW-A12 R15: why the player cannot reach the cell `cell` (a seam, a tree, a plant), "" if they can: a wall between
+## (reaches, to the cell's middle), else more than CELL_REACH cells off the player's cell on either axis. `tall`: a
+## tree, which is also found by the cell above its trunk (tree_at), so that cell counts too.
+func player_reach_cell(cell: Vector2i, tall := false) -> String:
+	if not reaches(player.pos, Vector2(cell) + Vector2(0.5, 0.5)):
+		return "A wall is in the way."
+	var pc := Vector2i(floori(player.pos.x), floori(player.pos.y))
+	for c: Vector2i in ([cell, cell + Vector2i(0, -1)] if tall else [cell]):
+		if absi(c.x - pc.x) <= CELL_REACH and absi(c.y - pc.y) <= CELL_REACH:
+			return ""
+	return "That is out of reach."
+
+
+## DVW-A12 R15: why the player cannot reach field `f`, "" if they can: its nearest cell more than CELL_REACH cells off
+## the player's cell on either axis. (No wall test: the interface never made one for a field.)
+func player_reach_field(f: Dictionary) -> String:
+	var px := floori(player.pos.x)
+	var py := floori(player.pos.y)
+	var nx := clampi(px, int(f.x), int(f.x) + int(f.w) - 1)
+	var ny := clampi(py, int(f.y), int(f.y) + int(f.h) - 1)
+	if absi(nx - px) > CELL_REACH or absi(ny - py) > CELL_REACH:
+		return "That is out of reach."
+	return ""
+
+
 ## DVW-A12 R1: whether the player may start mining seam or boulder `d`, and how long the swing takes. A pickaxe is
 ## needed (the best one in the pack), and gold ore needs Mining level 3 (work_mine checks it again at the swing).
 ## The time: balance.json mine_minutes at the game's speed, by the pickaxe's speed and the Mining mine_time effect.
 ## Returns {ok: true, tool, secs} or {ok: false, why}.
 func player_mine_plan(d: Dictionary) -> Dictionary:
 	var p := player
+	var far := player_reach_cell(Vector2i(int(d.x), int(d.y)))       # R15
+	if far != "":
+		return {"ok": false, "why": far}
 	var pick := p.tool_of("pickaxe")
 	if pick == "":
 		return {"ok": false, "why": "Requires a pickaxe. The smith sells them."}
@@ -1298,6 +1355,9 @@ func player_mine(d: Dictionary, tool: String) -> Dictionary:
 ## Trees.cfg().chops blows of an equal share of it. Returns {ok: true, tool, secs} or {ok: false, why}.
 func player_fell_plan(t: Dictionary) -> Dictionary:
 	var p := player
+	var far := player_reach_cell(Vector2i(int(t.x), int(t.y)), true)       # R15
+	if far != "":
+		return {"ok": false, "why": far}
 	var axe := p.tool_of("axe")
 	if axe == "":
 		return {"ok": false, "why": "Requires an axe. The smith sells them."}
@@ -1351,6 +1411,8 @@ func player_craft_refusal(recipe: String) -> String:
 func player_craft_begin(recipe: String, station := "") -> Dictionary:
 	var r: Dictionary = GameData.recipes[recipe]
 	var p := player
+	if station != "" and stations.has(station) and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH:
+		return {"ok": false, "why": "That is out of reach."}         # R15: the craft window opens only this close
 	if station == "":
 		for id in stations_of(str(r.station)):
 			if (Vector2(station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
@@ -1420,6 +1482,82 @@ func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 		if n.role == "bandit":
 			relations.defended(n.pos)        # villagers who saw a bandit put down think better of the player (CRT-10)
 	return {"dealt": dealt, "killed": killed}
+
+
+## DVW-A12 R11: Fireball (owner, DECISIONS.md:57). Its base damage, its speed (tiles a second), how far it flies, and
+## how near it must pass someone to strike them.
+const FIREBALL_DAMAGE := 14.0
+const FIREBALL_SPEED := 9.0
+const FIREBALL_RANGE := 8.0
+const FIREBALL_HIT_RADIUS := 0.6
+
+
+## DVW-A12 R11: the player casts Fireball: refused if it is not known (with the reason), or silently while it cools
+## down or without the stamina (balance fireball_cooldown and fireball_stamina, by the Magic tier); a cast starts the
+## cooldown, spends the stamina and earns 6 Magic xp. Returns {ok, why}.
+func player_cast_fireball() -> Dictionary:
+	var p := player
+	if not p.spells.get("fireball", false):
+		return {"ok": false, "why": "You do not know any spells. The Sage in the hut north of the tavern teaches them."}
+	var cd := Skills.value(p, "magic", "fireball_cooldown", float(GameData.b("fireball_cooldown")))
+	var cost := float(GameData.b("fireball_stamina")) * Skills.value(p, "magic", "fireball_stamina", 1.0)
+	if p.fireball_cd > 0.0 or p.stamina < cost:
+		return {"ok": false, "why": ""}
+	p.fireball_cd = cd
+	p.stamina -= cost
+	player_xp("magic", 6)
+	return {"ok": true, "why": ""}
+
+
+## DVW-A12 R11: a fireball in flight at `pos` strikes the first villager within FIREBALL_HIT_RADIUS, else the first
+## animal: FIREBALL_DAMAGE by the Magic fireball_damage tier, as the player's blow (player_hit_npc, player_hit_animal),
+## and a spell that lands earns 6 more Magic xp (`up`: a new level, shown by the caller after the hit). Returns {who:
+## the one struck or null, before: their health before, dealt, guard: a guard's words, up}.
+func player_fireball_hit(pos: Vector2) -> Dictionary:
+	var dmg := FIREBALL_DAMAGE * Skills.value(player, "magic", "fireball_damage", 1.0)
+	for n: NPC in present(pos, FIREBALL_HIT_RADIUS):
+		var before := n.hp
+		var h := player_hit_npc(n, dmg)
+		return {"who": n, "before": before, "dealt": h.dealt, "guard": "", "up": player.gain("magic", 6)}
+	for a: Animal in fauna.near(pos, FIREBALL_HIT_RADIUS):
+		var before := a.hp
+		var h := player_hit_animal(a, dmg)
+		return {"who": a, "before": before, "dealt": dmg, "guard": h.guard, "up": player.gain("magic", 6)}
+	return {"who": null}
+
+
+## DVW-A12 R10: a blow of the player's of `dmg` lands on animal `a`. Still alive, it is provoked (a wolf or a bear
+## fights back, B14). Killed: Combat xp by Skills.kill_xp (per kill, as a villager's, FSE-B12), the wildlife ledger
+## (hunted_ or slaughtered_, FSE-B10), its meat and hide left where it fell, a wolf or bear put down near people a
+## defence (CRT-10); livestock is theft from its keeper, known the way a theft is (witness, PAR-05): the keeper
+## remembers it, and one who saw it comes after the player. Returns {killed, guard: a guard's words, "" for none}.
+func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
+	a.hp -= dmg
+	if a.hp > 0.0:
+		fauna.provoke(a, "player")
+		return {"killed": false, "guard": ""}
+	player_xp("combat", Skills.kill_xp(a.species, player.damage()))
+	var keeper: NPC = null
+	if not a.wild():
+		keeper = pen_keeper(fauna.pens[a.area])
+	var what := a.label().to_lower()
+	var beast := a.wild() and bool(a.spec().get("people", false))
+	stat(("hunted_" if a.wild() else "slaughtered_") + a.species)
+	var bag: Inventory = fauna.kill(a)
+	if beast:
+		relations.defended(a.pos)
+	if bag.total() > 0:
+		loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": minutes})
+	var guard := ""
+	if keeper != null:
+		var saw := near(player.pos, float(GameData.b("witness_radius"))).has(keeper)
+		witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
+		keeper.remember(("%s killed my %s" % [player.name, what]) if saw else ("found my %s dead" % what))
+		if saw and keeper.role == "adult" and keeper.target == -1:
+			keeper.target = -2
+		guard = last_guard
+		note("%s %s killed one of %s %s's animals." % [player.name, player.family, keeper.name, keeper.family])
+	return {"killed": true, "guard": guard}
 
 
 ## DVW-A12 R9: attacking a villager is a crime: the victim remembers it and thinks worse of the player, an adult fights
@@ -1666,6 +1804,85 @@ func plant_tree(cell: Vector2i, item: String) -> Dictionary:
 	return t
 
 
+## DVW-A12 R6: the player earns `n` xp in `skill` (PlayerState.gain); a new level is announced by player_leveled.
+## Returns the new level, or 0.
+func player_xp(skill: String, n: int) -> int:
+	var up := player.gain(skill, n)
+	if up > 0:
+		player_leveled.emit(skill, up)
+	return up
+
+
+## DVW-A12 R6: the player tries the lock of chest unit `u` (Chests.attempt) and earns Stealth xp for it: 4 when it
+## opens, 1 otherwise. Returns Chests.attempt's result.
+func player_pick_lock(u: Dictionary) -> Dictionary:
+	var r: Dictionary = chests.attempt(u)
+	player_xp("stealth", 4 if r.result == "open" else 1)
+	return r
+
+
+## DVW-A12 R21: what a helper hired to carry to the player's building site on plot `p` may spend of the player's
+## coins at the market: what the site still needs beyond the family chest, at today's estimate (Construction.estimate),
+## but never more than the player holds after the day's wage (helper_wage).
+func player_helper_budget(p: Dictionary) -> int:
+	var need: Dictionary = p.site.need.duplicate()
+	for id in need.keys():
+		need[id] = maxi(0, int(need[id]) - player.chest.count(id))
+	return mini(construction.estimate(need), maxi(0, player.coins - int(GameData.b("helper_wage"))))
+
+
+## DVW-A12 R20: move `qty` of `id` between the player's pack and the home chest (`from_chest`: out of the chest), all
+## or nothing (transfer); that many stolen marks go with them (PlayerState.store_marks, take_marks), so the chest does
+## not wash stolen goods clean. True if they moved.
+func player_home_move(id: String, from_chest: bool, qty: int) -> bool:
+	var p := player
+	var src: Inventory = p.chest if from_chest else p.inv
+	var dst: Inventory = p.inv if from_chest else p.chest
+	if qty < 1 or not transfer(src, dst, id, qty):
+		return false
+	if from_chest:
+		p.take_marks(id, qty)
+	else:
+		p.store_marks(id, qty)
+	return true
+
+
+## DVW-A12 R5: the player takes what lies in loot pile `i`: each kind of goods whole, as far as the pack takes it, and
+## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
+## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
+func player_loot(i: int) -> Dictionary:
+	var l: Dictionary = loot[i]
+	var far := player_reach_point(l.pos, TARGET_PROBE + TARGET_REACH)
+	if far != "":
+		return {"items": [], "coins": 0, "left": l.inv.total(), "far": far}
+	var items := []
+	for id in l.inv.ids():
+		var n: int = l.inv.count(id)
+		if player.inv.add(id, n):
+			l.inv.remove(id, n)
+			items.append([id, n])
+	var coins := int(l.coins)
+	player.coins += coins
+	l.coins = 0
+	var left: int = l.inv.total()
+	if left == 0:
+		loot.remove_at(i)
+	return {"items": items, "coins": coins, "left": left, "far": ""}
+
+
+## DVW-A12 R4: the player plants the sapling `item` from the pack at `cell`: refused ({}) without one in the pack or
+## where plant_refusal says no; else the tree is planted (plant_tree) and the sapling is used up, counted for the
+## ledger (used_, SEED-02). Returns the tree record, {} if refused.
+func player_plant_sapling(cell: Vector2i, item: String) -> Dictionary:
+	if not player.inv.has(item) or plant_refusal(cell) != "":
+		return {}
+	var t := plant_tree(cell, item)
+	if not t.is_empty():
+		player.inv.remove(item, 1)
+		stat("used_" + item)
+	return t
+
+
 func nearest_tree(from: Vector2i, max_d := 60.0) -> Dictionary:
 	var best := {}
 	var bd := max_d
@@ -1868,6 +2085,20 @@ func wake(n: NPC) -> bool:
 	n.anim = "idle"
 	n.plan.clear()
 	return true
+
+
+## DVW-A12 R18: the player rests: at night until six in the morning, by day for balance rest.day_minutes; the world
+## runs on meanwhile (update in half-second steps of the game's speed), then rest_recover. Returns {minutes, night}.
+func player_rest() -> Dictionary:
+	var h := hour()
+	var until := 6.0 if h < 6.0 else 30.0
+	var night := h >= 18.0 or h < 6.0
+	var mins := (until - h) * 60.0 if night else float(GameData.b("rest").day_minutes)
+	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
+	for i in steps:
+		update(0.5)
+	rest_recover(player, mins, night)
+	return {"minutes": mins, "night": night}
 
 
 ## PAR-03 (owner OD-18.3): the one recovery model, the player's, for everyone. A rest of `minutes` that lasted to the
@@ -2398,9 +2629,8 @@ func player_harvest(f: Dictionary) -> int:
 		return 0
 	player.inv.add("wheat", n)
 	var taken := n - quests.hired_harvest(f, n)
-	var workers := field_workers(f)
-	if not workers.is_empty() and taken > 0:
-		var victim: NPC = workers[0]
+	var victim := field_owner(f)
+	if victim != null and taken > 0:
 		player.mark_stolen("wheat", victim.id, taken)
 		witness("theft", "%d wheat from %s" % [taken, f.id], victim, {"wheat": taken})
 	return n
@@ -2745,8 +2975,11 @@ func container_pick(c: Dictionary) -> String:
 
 ## The player takes one item from a container that is not theirs: theft (owner rule), witnessed like
 ## a field's wheat, and the item is marked as stolen from its owner. Returns the item taken, "" if
-## there was nothing, or "full" if the pack has no room.
+## there was nothing, "full" if the pack has no room, or "far" if it is out of the player's reach (DVW-A12 R15:
+## player_container_reach says why).
 func player_take(c: Dictionary) -> String:
+	if player_container_reach(c) != "":
+		return "far"
 	var id := container_pick(c)
 	if id == "":
 		return ""
@@ -2761,6 +2994,8 @@ func player_take(c: Dictionary) -> String:
 	witness("theft", "%s from %s" % [GameData.item_name(id).to_lower(), container_place(c)], victim, {id: 1}, store)
 	if c.kind == "table":
 		show_tables()
+	if (int(player.crimes[-1].witnesses) if not player.crimes.is_empty() else 0) == 0:
+		player_xp("stealth", 3)                      # a theft nobody saw teaches Stealth (DVW-A12 R6)
 	return id
 
 
@@ -2866,18 +3101,19 @@ func shop_name(n: NPC) -> String:
 	return {"raw": "ore and timber stall", "food": "food stall", "goods": "tools and arms stall"}.get(stalls[n.workplace].kind, "stall")
 
 
-## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
-## DVW-A12 R14: how near (tiles) the player must stand to a villager awake for their pocket to be within reach.
+## DVW-A12 R14: how near (tiles) the player must stand to a villager for their pocket to be within reach, awake or
+## asleep (lead decision under the owner's standing directive, 2026-10-21: the sleeper's window used to offer it at
+## any distance a target is chosen from).
 const PICKPOCKET_REACH := 1.8
 
 
-## DVW-A12 R14: whether villager `n` (awake, in the talk window) is someone whose pocket the player can reach: within
-## PICKPOCKET_REACH, and never a child (owner, B8-010). pickpocket() itself refuses a child but does not measure
-## the distance: the sleeper's window offers the try at the reach a target is chosen from (see the DVW-A12 report).
+## DVW-A12 R14: whether villager `n` is someone whose pocket the player can reach: within PICKPOCKET_REACH, and never
+## a child (owner, B8-010). The talk window offers the try only then; pickpocket() refuses it otherwise.
 func pickpocket_in_reach(n: NPC) -> bool:
 	return player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child"
 
 
+## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
 func pickpocket_chance() -> float:
 	return minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * Skills.value(player, "stealth", "pickpocket_steps"), float(GameData.b("pickpocket_chance_max")))
 
@@ -2889,12 +3125,22 @@ func pickpocket_chance() -> float:
 ## who sees it stops the player (guard_confront); Stealth's guard_radius shortens how far a caught try is seen.
 ## PICK-01 (owner OD-20, 2026-10-21): there is no cry a guard hears;
 ## otherwise the victim and those who saw it carry a theft report to a guard (report_crime, as PAR-05's attack), and
-## a theft nobody sees is known to no guard. Returns {ok, what, text}.
+## a theft nobody sees is known to no guard. Each try earns Stealth xp (DVW-A12 R6): 8 when it works, 2 otherwise; a
+## pocket out of reach is no try (`refused`, R14). Returns {ok, what, text} (and `refused`).
 func pickpocket(n: NPC) -> Dictionary:
+	var r := _pickpocket_try(n)
+	if not r.get("refused", false):
+		player_xp("stealth", 8 if r.ok else 2)
+	return r
+
+
+func _pickpocket_try(n: NPC) -> Dictionary:
 	if not n.alive or n.role == "bandit":
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
 	if n.role == "child":                       # owner, 2026-10-18 (B8-010): never a child's pocket
 		return {"ok": false, "what": "", "text": "You will not rob a child."}
+	if player.pos.distance_to(n.pos) > PICKPOCKET_REACH:          # DVW-A12 R14: beside them, awake or asleep
+		return {"ok": false, "what": "", "text": "%s is out of reach." % n.name, "refused": true}
 	var chance := pickpocket_chance()
 	var sleeping := asleep(n)
 	if sleeping:                        # a sleeper is unaware: easier, but a fumble wakes them
@@ -3011,10 +3257,13 @@ func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
 		if r.result != "sold":
 			r["sold"] = sold
 			r["paid"] = paid
+			if sold > 0:
+				player_xp("trading", Skills.trade_xp(paid))      # what was sold before it stopped (DVW-A12 R13)
 			return r
 		sold += 1
 		paid += price
 	deal_xp(buyer, player, paid)
+	player_xp("trading", Skills.trade_xp(paid))               # the player's Trading xp for the deal (DVW-A12 R13)
 	return {"result": "sold", "text": "", "sold": sold, "paid": paid}
 
 
@@ -3311,6 +3560,30 @@ func field_workers(f: Dictionary) -> Array:
 		if n.alive and n.job == "farmer" and n.workplace == str(f.id):
 			out.append(n)
 	return out
+
+
+## DVW-A12 R16: whether opening chest unit `u` (a chest, crate, barrel or cart) is theft: it is not the player's own
+## (Chests.info access "own") nor only for show ("decor").
+func chest_is_theft(u: Dictionary) -> bool:
+	return not str(chests.info(u).access) in ["own", "decor"]
+
+
+## DVW-A12 R16: whether taking from container `c` (a table, a shelf, a stall left alone) is theft: always (owner rule,
+## player_take: it is never the player's).
+func container_is_theft(_c: Dictionary) -> bool:
+	return true
+
+
+## DVW-A12 R16: whether harvesting field `f` is theft: someone works it (field_owner).
+func field_is_theft(f: Dictionary) -> bool:
+	return field_owner(f) != null
+
+
+## DVW-A12 R17: whose field `f` is for a harvest: the first farmer working it (field_workers), whose wheat the player
+## takes in theft (player_harvest); null when nobody works it.
+func field_owner(f: Dictionary) -> NPC:
+	var workers := field_workers(f)
+	return workers[0] if not workers.is_empty() else null
 
 
 ## The keeper of a pen (its tenant), alive, or null.
