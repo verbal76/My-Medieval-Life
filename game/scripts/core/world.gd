@@ -1788,6 +1788,16 @@ func player_pick_lock(u: Dictionary) -> Dictionary:
 	return r
 
 
+## DVW-A12 R21: what a helper hired to carry to the player's building site on plot `p` may spend of the player's
+## coins at the market: what the site still needs beyond the family chest, at today's estimate (Construction.estimate),
+## but never more than the player holds after the day's wage (helper_wage).
+func player_helper_budget(p: Dictionary) -> int:
+	var need: Dictionary = p.site.need.duplicate()
+	for id in need.keys():
+		need[id] = maxi(0, int(need[id]) - player.chest.count(id))
+	return mini(construction.estimate(need), maxi(0, player.coins - int(GameData.b("helper_wage"))))
+
+
 ## DVW-A12 R20: move `qty` of `id` between the player's pack and the home chest (`from_chest`: out of the chest), all
 ## or nothing (transfer); that many stolen marks go with them (PlayerState.store_marks, take_marks), so the chest does
 ## not wash stolen goods clean. True if they moved.

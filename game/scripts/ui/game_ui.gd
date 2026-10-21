@@ -2448,10 +2448,7 @@ func _helper_choices(n: NPC, choices: GridContainer) -> void:
 				return
 			message("%s will carry%s for the rest of the working day." % [n.name, where])
 			_talk_view(n, "Right. I'll get to it.")
-		var need: Dictionary = pp.site.need.duplicate()
-		for id in need.keys():
-			need[id] = maxi(0, int(need[id]) - w.player.chest.count(id))
-		var spend := mini(c.estimate(need), maxi(0, w.player.coins - wage))
+		var spend := w.player_helper_budget(pp)                # what the helper may spend: core's (DVW-A12 R21)
 		_talk_choice(choices, "From my chest%s (%d coins)" % [where, wage], func(): hire.call(0), w.player.coins >= wage)
 		_talk_choice(choices, "Buy the rest too (%d + %d)" % [wage, spend], func(): hire.call(spend), w.player.coins >= wage and spend > 0)
 	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))

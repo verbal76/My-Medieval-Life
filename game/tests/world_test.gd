@@ -1470,6 +1470,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_rest()
 	_dvw_a12_sprint()
 	_dvw_a12_home_marks()
+	_dvw_a12_helper_budget()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2241,6 +2242,49 @@ func _dvw_a12_home_marks() -> void:
 	p.chest = chest0
 	p.chest_stolen = marks0
 	_restore_pack(keep)
+
+
+## R21: a hired helper's buying budget: the site's need beyond the family chest at today's estimate, never more than
+## the coins left after the wage; the talk window offers exactly that.
+func _dvw_a12_helper_budget() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var pl: Dictionary = {}
+	for x in w.plots:
+		if pl.is_empty() and w.property.for_sale(x):
+			pl = x
+	p.coins += int(w.property.price_of(pl)) + 10
+	check(w.buy_plot(pl), "DVW-A12 R21: the family buys a plot")
+	w.start_site(pl)
+	var wage := int(GameData.b("helper_wage"))
+	var need: Dictionary = pl.site.need.duplicate()
+	var full := w.construction.estimate(need)
+	p.coins = wage + 100000
+	check(w.player_helper_budget(pl) == full, "DVW-A12 R21: with coins enough, the whole estimate (%d)" % full)
+	var first: String = need.keys()[0]
+	p.chest.add(first, int(need[first]))
+	var less := need.duplicate()
+	less[first] = 0
+	check(w.player_helper_budget(pl) == w.construction.estimate(less), "DVW-A12 R21: what the family chest holds is not bought")
+	p.coins = wage + 5
+	check(w.player_helper_budget(pl) == mini(5, w.construction.estimate(less)), "DVW-A12 R21: never more than the coins after the wage")
+	p.coins = wage - 1
+	check(w.player_helper_budget(pl) == 0, "DVW-A12 R21: none when the wage takes it all")
+	p.chest.remove(first, int(need[first]))
+	# the talk window offers it
+	p.coins = wage + 40
+	var helper: NPC = null
+	for n: NPC in w.npcs:
+		if helper == null and n.alive and w.construction.can_hire(n) == "":
+			helper = n
+	if helper != null:
+		main.ui.show_talk(helper)
+		for b in _buttons_named(main.ui.panel, "Hire to carry building materials"):
+			b.pressed.emit()
+		var want := "Buy the rest too (%d + %d)" % [wage, w.player_helper_budget(pl)]
+		check(_buttons_named(main.ui.panel, want).size() == 1, "DVW-A12 R21: the talk window offers the helper core's budget (%s)" % want)
+		main.ui.hide_all()
 
 
 ## A clean pack for one rule's checks; returns what to restore.
