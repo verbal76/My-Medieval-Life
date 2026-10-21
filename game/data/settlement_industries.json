@@ -1,0 +1,102 @@
+{
+  "format": "mml-capabilities/1",
+  "_note": "PROSPECTIVE (Expansion 18, PROS-18, wip/expansion18-preparation; not live gameplay). A settlement's capability per industry, SET-B (spec s.4), in the schema MIN_A_ARCHITECTURE.md s.9 sketched for SET-A: industries -> levels -> needs. A level holds when every need of it and of every level below it holds; levels are derived from the world (people, skills, tools, stock, structures, transport, records), never stored as truth. Mining is external: its level comes from MIN-D (Build 17) through MiningCapabilityAdapter and is never computed here. Every threshold below is an agent proposal, provisional (owner question Q18-2: thresholds and the first industries).",
+  "need_kinds": ["practitioners", "tool_stock", "stock", "structure", "transport", "records", "portal", "industry", "any"],
+  "industries": {
+    "mining": {
+      "name": "Mining",
+      "external": "mining",
+      "max_level": 4,
+      "_note": "Owned by MIN-D (Build 17, wip/b17-mind, not final). Levels 1-4: surface extraction, prospecting and assay, open pit, underground (spec s.4). Consumed only through MiningCapabilityAdapter."
+    },
+    "forestry": {
+      "name": "Forestry",
+      "levels": [
+        {"level": 1, "name": "Felling",
+         "needs": [{"kind": "practitioners", "job": "woodcutter", "count": 1},
+                   {"kind": "tool_stock", "tool": "axe", "count": 1}]},
+        {"level": 2, "name": "Managed woodland",
+         "needs": [{"kind": "practitioners", "skill": "woodcutting", "min_level": 3, "count": 2},
+                   {"kind": "tool_stock", "tool": "axe", "count": 2},
+                   {"kind": "transport", "any": ["handcart"]}]}
+      ]
+    },
+    "carpentry": {
+      "name": "Carpentry",
+      "levels": [
+        {"level": 1, "name": "Sawing",
+         "needs": [{"kind": "practitioners", "job": "carpenter", "count": 1},
+                   {"kind": "structure", "what": "sawhorse", "count": 1},
+                   {"kind": "industry", "id": "forestry", "min": 1}]},
+        {"level": 2, "name": "Joinery and cartwrighting",
+         "needs": [{"kind": "practitioners", "skill": "crafting", "min_level": 3, "count": 1},
+                   {"kind": "structure", "what": "workbench", "count": 1},
+                   {"kind": "tool_stock", "tool": "hammer", "count": 1}]}
+      ]
+    },
+    "smithing": {
+      "name": "Smithing",
+      "levels": [
+        {"level": 1, "name": "Smithy",
+         "needs": [{"kind": "practitioners", "job": "smith", "count": 1},
+                   {"kind": "structure", "what": "anvil", "count": 1},
+                   {"kind": "structure", "what": "forge", "count": 1}]},
+        {"level": 2, "name": "Toolmaking",
+         "needs": [{"kind": "practitioners", "skill": "smithing", "min_level": 3, "count": 1},
+                   {"kind": "tool_stock", "tool": "hammer", "count": 1},
+                   {"kind": "any", "of": [{"kind": "industry", "id": "mining", "min": 1},
+                                          {"kind": "stock", "item": "iron_bar", "count": 4}]}]},
+        {"level": 3, "name": "Master smithy",
+         "needs": [{"kind": "practitioners", "skill": "smithing", "min_level": 6, "count": 2},
+                   {"kind": "industry", "id": "carpentry", "min": 1}]}
+      ]
+    },
+    "farming": {
+      "name": "Farming",
+      "levels": [
+        {"level": 1, "name": "Field husbandry",
+         "needs": [{"kind": "practitioners", "job": "farmer", "count": 1},
+                   {"kind": "structure", "what": "field", "count": 1}]},
+        {"level": 2, "name": "Ploughland",
+         "needs": [{"kind": "practitioners", "job": "farmer", "count": 4},
+                   {"kind": "tool_stock", "tool": "plough", "count": 1},
+                   {"kind": "structure", "what": "field", "count": 4}]}
+      ]
+    },
+    "tanning": {
+      "name": "Tanning",
+      "levels": [
+        {"level": 1, "name": "Tannery",
+         "needs": [{"kind": "practitioners", "job": "tanner", "count": 1},
+                   {"kind": "structure", "what": "workbench", "count": 1}]}
+      ]
+    },
+    "trade": {
+      "name": "Trade",
+      "levels": [
+        {"level": 1, "name": "Market",
+         "needs": [{"kind": "practitioners", "job": "merchant", "count": 1},
+                   {"kind": "structure", "what": "stall", "count": 1}]},
+        {"level": 2, "name": "Carrying trade",
+         "needs": [{"kind": "practitioners", "skill": "trading", "min_level": 3, "count": 1},
+                   {"kind": "transport", "any": ["handcart"]}]}
+      ]
+    }
+  },
+  "transport": {
+    "_note": "Route planning (TradeRoutes). Capacity in units of goods a trip; speed in tiles a day; a carter is paid the manor's day wage (balance helper_wage), so a route's cost is labour paid to the party that hauls, never coins destroyed. terrain: tiles of each kind cost this many tiles of travel (solid is impassable). Agent proposals, provisional.",
+    "modes": {
+      "carrier": {"units": 12, "tiles_per_day": 480},
+      "handcart": {"units": 60, "tiles_per_day": 360, "item": "handcart"}
+    },
+    "terrain": {"road": 1.0, "open": 1.6, "rough": 2.5},
+    "carters_per_trip": 1
+  },
+  "market": {
+    "_note": "Regional supply and demand (RegionalMarket). reserve_days: how many days of its own need a settlement keeps before it sells, and wants in store before it stops buying; scarcity_premium: how far above value a buyer will pay when it holds none of its horizon need (linearly less as it holds more); cash_floor: coins a settlement keeps back from trade; preferred_margin_pct: a cooperation partner wins a sale when its delivered price is within this margin of the cheapest. Agent proposals, provisional.",
+    "reserve_days": 6,
+    "scarcity_premium": 1.0,
+    "cash_floor": 20,
+    "preferred_margin_pct": 10
+  }
+}
