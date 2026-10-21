@@ -112,6 +112,7 @@ static func build() -> Wiki:
 	WikiProperty.add_pages(w)
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
+	WikiManor.add_pages(w)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -605,7 +606,7 @@ func _systems() -> void:
 	sys.call("inheritance", "Inheritance", [
 		p("When a villager dies their coins and goods go to the family first: the eldest adult child, then the partner, then other kin; only with no family does the household take them. A household with nobody left leaves the goods where they fell and its house returns to the manor."),
 		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps your name and look; with none, a new heir of your family takes over. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
-		links(["sys:death", "sys:saving", "sys:family"])])
+		links(["sys:death", "sys:saving", "sys:family", "sys:orphans", "sys:posts"])])
 	sys.call("animal_life", "Animals through life", [
 		p("Animals are newborn, juvenile, adult and elderly by their age in game days. Only adults breed, and breeding slows as an area fills up. The elderly move slower and die of old age somewhere in their last stage. Young animals are drawn with the baby art. Each animal's page lists its stage lengths."),
 		links(["animal:cow", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "animal:deer", "animal:wolf", "animal:fox", "animal:bear", "animal:bird", "sys:calendar"])])
