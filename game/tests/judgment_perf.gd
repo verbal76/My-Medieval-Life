@@ -195,9 +195,20 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 	var counts := j.counts()
 	var cap := int(cfg.memory.capacity)
 	var over := 0
+	var permanent := 0
 	for o in j.memories:
-		if (j.memories[o] as Dictionary).size() > cap:
+		var ordinary := 0
+		for ev in j.memories[o]:
+			if (j.memories[o][ev][JudgmentStore.M_FLAGS] & 1) == 0:
+				ordinary += 1
+			else:
+				permanent += 1
+		if ordinary > cap:
 			over += 1
+	var old_ordinary := 0                   # facts past the horizon that are not permanent records (Q11): must be none
+	for ev in j.facts:
+		if int(j.facts[ev][JudgmentStore.F_DAY]) < days - 1 - int(cfg.memory.horizon_days) and j._perm[j.facts[ev][JudgmentStore.F_TYPE]] == 0 and not j._perm_refs.has(ev):
+			old_ordinary += 1
 	var ts := Time.get_ticks_usec()
 	var text := JSON.stringify(j.to_dict())
 	var save_us := Time.get_ticks_usec() - ts
@@ -207,14 +218,14 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 	var load_us := Time.get_ticks_usec() - ts
 	var h := j.state_hash()
 	if report:
-		check(over == 0, "%s, %d people: nobody holds more than %d memories" % [rate, n, cap])
-		check(int(counts.facts) <= int(ceil(per_day)) * (int(cfg.memory.horizon_days) + 1), "%s, %d people: facts stay within the horizon (%d)" % [rate, n, int(counts.facts)])
+		check(over == 0, "%s, %d people: nobody holds more than %d ordinary memories (%d permanent memories besides, Q11)" % [rate, n, cap, permanent])
+		check(old_ordinary == 0, "%s, %d people: every fact older than the horizon is a permanent record (%d facts in all)" % [rate, n, int(counts.facts)])
 		check(err == "" and j2.state_hash() == h, "%s, %d people: the save loads back to the same state" % [rate, n])
 		print("%s, %d people: %d events; %s; stats %s" % [rate, n, ev_count, JSON.stringify(counts), JSON.stringify(j.stats)])
 		print("%s, %d people: time (us) %s" % [rate, n, JSON.stringify(j.timing)])
 	var ms := func(us: int) -> float:
 		return float(us) / 1000.0 / maxf(1.0, float(measured))
-	var row := {"rate": rate, "n": n, "days": days, "events_day": int(round(per_day)), "ev_ms": ms.call(sums.ev), "gossip_ms": ms.call(sums.gossip),
+	var row := {"permanent_memories": permanent, "rate": rate, "n": n, "days": days, "events_day": int(round(per_day)), "ev_ms": ms.call(sums.ev), "gossip_ms": ms.call(sums.gossip),
 		"dec_ms": ms.call(sums.dec), "dawn_ms": ms.call(sums.dawn), "max_hour_ms": float(max_hour) / 1000.0, "max_update_ms": float(max_update) / 1000.0, "median_update_max_ms": _median(day_update_max) / 1000.0,
 		"max_frame_ms": float(max_frame) / 1000.0, "median_frame_max_ms": _median(day_frame_max) / 1000.0, "gossip": gossip if spread else "now", "worst_frame_parts_us": worst_parts,
 		"p99_frame_ms": _pct(frames, 0.99) / 1000.0, "p999_frame_ms": _pct(frames, 0.999) / 1000.0, "idle_max_ms": float(idle_max) / 1000.0,
