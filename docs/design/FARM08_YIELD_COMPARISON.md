@@ -210,7 +210,11 @@ Sources (before the fixes):
 - **Both switches at 1.0-3.0:** run 39580481791 (`cd68f58`), end-of-year counts.
 - **Seed 1, both switches at 2.0:** local herd logs.
 
-The seasonal-only and both-switches herd logs of run 39598992347 were still queued when this was written. Section 7 lists
+Seasonal-only herd logs are from the same run. In those runs the whole village ran out of grain: the granary was
+empty from about day 18, farmers and chests held almost nothing, the village was in famine, and 12-50 people starved a
+seed. The cattle there died of a real shortage (legitimate). On seed 1 the last cows starved on day 43, leaving a lone
+bull until it died of old age on day 139. The both-switches herd logs of run 39598992347 were still queued when this
+was written; the lead adds them. Section 7 lists
 the 365-day runs that verify the fixes.
 
 1. **Starting cattle, by seed.** Three on every seed and in every variant: a bull, a cow and a juvenile heifer. The pen
@@ -221,6 +225,7 @@ the 365-day runs that verify the fixes.
    |---|---|---|---|---|---|---|
    | Control | 118 / 64 / 55 / 119 | 115 / 32 / 39 / 115 | 0 / 32 / 16 / 2 | 0 / 0 / 3 / 0 | 0 / 3 / 0 / 0 | 6 / 0 / 0 / 5 |
    | Shared only, 2.0 | 115 / 120 / 119 / 116 | 109 / 114 / 104 / 101 | 3 / 3 / 12 / 12 | 0 | 0 | 6 / 6 / 6 / 6 |
+   | Seasonal only (old fields) | 14 / 17 / 13 / 12 | 0 / 2 / 1 / 0 | 9+5 famine / 5+10 / 6+6 / 4+8 | 2 / 3 / 3 / 3 | 1 / 0 / 0 / 0 | 0 / 0 / 0 / 0 (empty on days 139 / 56 / 50 / 41) |
    | Both, 2.0 (`cd68f58`, end counts) | — | 14 / 107 / 114 / 35 slaughtered in all | | | | 0 / 6 / 6 / 0 |
 
    Seed 1 with both at 2.0 (local log): 8 calves by day 26; 9 culled for no feed from day 9; 2 cows starved on day 26.
@@ -268,6 +273,8 @@ the 365-day runs that verify the fixes.
    - The old model's keeper field is cut every 2 days and each cutting fills the trough, so the herd lives on its own
      field. Even so, the control lost its herd on seeds 2 and 3, through the elderly and chest defects.
    - Shared farming alone keeps the herd on all four seeds: it is the same harvest rhythm with more grain.
+   - Seasonal farming alone (old fields) loses the herd on every seed by day 41-139. The village's whole grain year is
+     about a quarter short, and people starve too. This is legitimate scarcity, not a care failure.
    - Seasonal farming stretches the gap between cuttings to 6-8 days. In the gap the keeper must buy, and the defects
      stopped the keeper buying when grain was there. With the fixes the herd survives the gaps on seed 1, shrinking to
      its breeding stock in a gap and growing again after each harvest.
