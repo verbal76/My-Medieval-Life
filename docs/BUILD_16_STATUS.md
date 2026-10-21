@@ -369,6 +369,18 @@ FARM-02's fence and gate and STALL-01..06 wait on them; FARM-06, the plot lease 
    settled; (b) all but the commission's share may be taken; (c) free withdrawal, an unpaid commission under the
    existing arrears rules.
 
+**Readings made for seeds and the seed merchant (2026-10-21; SEED-02..04, MERCH-01), implemented, for the owner:**
+
+14. **Berry bushes bear in Summer and Autumn** (as the apple trees), bare in Spring and Winter; wild flowers all year.
+    Berries are a food: this changes the food supply in two seasons (measured in the next runs).
+15. **Recovery chances and growing times** (balance, provisional): a picked flower gives a seed 1 time in 4, a picked
+    bush a cutting 1 time in 5; flower seed grows in 1 season, a cutting in 2; prices 1-2 coins.
+16. **Where cuttings and flower seed are planted:** free village grass, by the sapling rule (not on a surveyed plot, not
+    outside the village). Only the player plants them so far; villagers forage and keep or sell the material.
+17. **A farmer short of wheat seed buys it** at the food stall with the household's coins, within its reserve.
+18. **Art:** no pack has a cutting or sprout; the cuttings use seed-packet icons, and a young plant is not drawn until it
+    bears.
+
 **OD-17, still blocked: the entry as recorded** (source `docs/game-designer/SPEC_RECONCILIATION.md` section 4):
 
 - **C1, the hero.** Spec, the owner's interview: "One hero (owner said: "Your main character is the hero")"; Bob's
