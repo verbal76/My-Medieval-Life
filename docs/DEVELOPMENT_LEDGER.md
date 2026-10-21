@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **456** |
 | Outstanding (not complete, superseded or canceled) | 210 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 76 owner decision (open or answered), 26 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 76 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -1020,7 +1020,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | BLOCKED | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
 | X19-REGARD | Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 
-## World design rule (26)
+## World design rule (27)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1050,6 +1050,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-020 | World Design Rule 20: Autonomous Housing | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | COMPLETE AND VERIFIED | docs/directives/2026-10-20_final_development_mandate.md sections 1-4, 11, 12 (text in docs/WORLD_DESIGN_RULES.md) |
+| WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | COMPLETE AND VERIFIED | docs/directives/2026-10-21_permanent_wiki_maintenance.md |
 
 ## Proposal awaiting an owner decision (not approved) (32)
 

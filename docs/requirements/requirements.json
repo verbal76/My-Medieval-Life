@@ -27956,6 +27956,49 @@
    "target_build": "15"
   },
   {
+   "id": "WIKI-01",
+   "title": "Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate",
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "A feature should not be considered complete without accurate corresponding documentation.",
+   "description": "Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate",
+   "source": "docs/directives/2026-10-21_permanent_wiki_maintenance.md",
+   "approval": "owner directive 2026-10-21 (standing)",
+   "acceptance": [
+    "In CLAUDE.md (section 3, 'Wiki and documentation maintenance') so every session and worker reads it",
+    "Every completion report has a Wiki and Documentation section; the release gate checks documentation"
+   ],
+   "implementation": "CLAUDE.md section 3 'Wiki and documentation maintenance'; register rule",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_permanent_wiki_maintenance.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "implementation; target_build",
+     "why": "Rule in force: recorded in CLAUDE.md and the register"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
    "id": "WR-01",
    "title": "Protected wildlife breeding refuges, offspring cohorts and dispersal",
    "kind": "approved",
