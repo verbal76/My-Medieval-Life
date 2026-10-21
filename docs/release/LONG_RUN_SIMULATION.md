@@ -1256,3 +1256,19 @@ isolated.
 **FSE-12 comparison (the manor's fields on the shared per-cell model, switch on), Actions 39531422104 on the same commit:**
 no starvation either way; the grain harvest triples (about 136,000 against 43,920) and 67,000-90,000 wheat is left unsold.
 Full report: `docs/design/FSE12_COMPARISON.md`. The switch stays off.
+
+## EQ-06 on the integrated Build 16 push: intervention scenarios, 100 days (2026-10-21, staging `dbbb66a`)
+
+Local runs, seed 1, 100 days, player inactive, `economy_sim.gd --scenario NAME` (intervention on day 20). Farmland,
+market stalls, treasury relief, succession, ecology and the cattle fixes are in; the farming switches are off.
+
+| Scenario | Alive (starved, other deaths) | Food days | Unemployed | Household coins min/med/max | Treasury | Logs | Script errors | Leaks |
+|---|---|---|---|---|---|---|---|---|
+| none | 124 (0, 11) | 13.5 | 17 | 0 / 157 / 580 | 1064 | 4669 | 0 | none |
+| kill_smiths | 121 (0, 19) | 14.2 | 17 | 0 / 171 / 416 | 1097 | 3227 | 0 | none |
+| corner_wheat | 117 (0, 16) | 15.2 | 19 | 1 / 160 / 476 | 1226 | 3111 | 0 | none |
+| gift_coins | 117 (0, 13) | 13.8 | 13 | 6 / 146 / 537 | 1298 | 4025 | 0 | none |
+
+No starvation in any scenario; each intervention changes the course (EQ-06's "separate intervention scenarios change
+the results"); conservation exact. Unemployment of 13-19 at day 100 is noted for the 365-day runs (Actions run
+39618523947).
