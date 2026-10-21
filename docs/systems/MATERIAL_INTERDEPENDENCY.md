@@ -16,12 +16,12 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 
 | Measure | Count |
 |---|---|
-| Standard crafting materials | 21 |
+| Standard crafting materials | 22 |
 | Production professions | 10 |
-| Recipes | 40 |
-| Threshold findings | 30 |
+| Recipes | 43 |
+| Threshold findings | 32 |
 | ... with a recorded exception | 14 |
-| ... open (no exception) | 16 |
+| ... open (no exception) | 18 |
 | Orphaned recipes | 0 |
 | Broken references | 0 |
 | Stale or invalid exceptions | 0 |
@@ -30,9 +30,9 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 
 | Material | Meaningful uses | Consuming recipes | Construction | Professions | Made by | Gathered by | Result |
 |---|---|---|---|---|---|---|---|
-| `cart_axle` | 1 | `build_handcart` (carpenter) | none | carpenter | `forge_cart_axle` | none | few uses: exception; few professions: exception |
-| `cart_ironwork` | 1 | `build_handcart` (carpenter) | none | carpenter | `forge_cart_ironwork` | none | few uses: exception; few professions: exception |
-| `cart_wheel` | 1 | `build_handcart` (carpenter) | none | carpenter | `make_cart_wheel` | none | few uses: exception; few professions: exception |
+| `cart_axle` | 2 | `build_handcart` (carpenter); `build_minecart` (player only) | none | carpenter | `forge_cart_axle` | none | few uses: exception; few professions: exception |
+| `cart_ironwork` | 2 | `build_handcart` (carpenter); `build_minecart` (player only) | none | carpenter | `forge_cart_ironwork` | none | few uses: exception; few professions: exception |
+| `cart_wheel` | 2 | `build_handcart` (carpenter); `build_minecart` (player only) | none | carpenter | `make_cart_wheel` | none | few uses: exception; few professions: exception |
 | `coal` | 4 | `forge_cart_ironwork` (smith); `smelt_copper` (smith); `smelt_gold` (smith); `smelt_iron` (smith) | none | smith | none | laborer, miner | few professions: **open** |
 | `copper_bar` | 3 | `forge_amulet` (smith); `forge_copper_ring` (smith); `forge_copper_sword` (smith) | none | smith | `smelt_copper` | none | few professions: **open** |
 | `copper_ore` | 1 | `smelt_copper` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
@@ -43,9 +43,10 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `iron_bar` | 16 | `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_lockpicks` (smith); `forge_nails` (smith); `forge_padlock` (smith); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only) | shop fittings, storefront, workshop | carpenter, smith | `smelt_iron` | none | pass |
 | `iron_ore` | 1 | `smelt_iron` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
 | `leather` | 7 | `forge_amulet` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_prospecting_kit` (player only); `leather_armor` (tanner); `leather_cap` (tanner) | none | smith, tanner | `tan_leather`, `tan_pelts` | none | pass |
-| `log` | 6 | `make_mallet` (carpenter); `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
+| `log` | 7 | `make_mallet` (carpenter); `make_timber_support` (player only); `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
 | `meat` | 1 | `roast_meat` (cook) | none | cook | none | farmer, hunter | few uses: **open**; few professions: **open** |
-| `plank` | 16 | `build_handcart` (carpenter); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only); `make_cart_wheel` (carpenter); `make_mallet` (carpenter) | house, loft, market stall, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
+| `nails` | 1 | `make_track_section` (player only) | none | none | `forge_nails` | none | few uses: **open**; few professions: **open** |
+| `plank` | 19 | `build_handcart` (carpenter); `build_minecart` (player only); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only); `make_cart_wheel` (carpenter); `make_mallet` (carpenter); `make_timber_support` (player only); `make_track_section` (player only) | house, loft, market stall, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
 | `rabbit_pelt` | 1 | `tan_pelts` (tanner) | none | tanner | none | hunter | few uses: exception; few professions: exception |
 | `stone` | 3 | none | house, shop fittings, workshop | none | none | laborer, miner | few professions: **open** |
 | `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook) | none | cook | none | farmer | few professions: **open** |
@@ -87,6 +88,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `brew_strong_tonic` | stove | 1 ale, 2 healing_tonic | 1 strong_healing_tonic | sage |
 | `brew_tonic` | stove | 3 flower | 1 herbal_tonic | sage |
 | `build_handcart` | workbench | 1 cart_axle, 1 cart_ironwork, 2 cart_wheel, 4 plank | 1 handcart | carpenter, households |
+| `build_minecart` | workbench | 2 cart_axle, 2 cart_ironwork, 4 cart_wheel, 6 plank | 1 minecart | player only |
 | `cook_pottage` | stove | 2 wheat | 6 pottage | cook, households |
 | `craft_plough` | workbench | 2 iron_bar, 4 plank | 1 plough | carpenter |
 | `forge_amulet` | anvil | 1 copper_bar, 1 leather | 1 amulet | smith |
@@ -110,6 +112,8 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `leather_cap` | workbench | 2 leather | 1 leather_cap | tanner |
 | `make_cart_wheel` | sawhorse | 3 plank | 1 cart_wheel | carpenter |
 | `make_mallet` | workbench | 1 log, 1 plank | 1 mallet | carpenter |
+| `make_timber_support` | sawhorse | 1 log, 2 plank | 1 timber_support | player only |
+| `make_track_section` | workbench | 4 nails, 2 plank | 1 track_section | player only |
 | `press_cheese` | prep | 3 milk | 1 cheese | cook |
 | `roast_meat` | oven | 1 log, 1 meat | 2 roast_meat | cook, households |
 | `saw_planks` | sawhorse | 1 log | 2 plank | carpenter, households |
@@ -130,11 +134,11 @@ None.
 | Subject | Finding | Detail | Exception (rule: reason) |
 |---|---|---|---|
 | material `cart_axle` | few_professions | consumed by 1 professions (carpenter), fewer than 2 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
-| material `cart_axle` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
+| material `cart_axle` | few_uses | 2 meaningful uses (2 recipes, 0 construction), fewer than 3 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
 | material `cart_ironwork` | few_professions | consumed by 1 professions (carpenter), fewer than 2 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
-| material `cart_ironwork` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
+| material `cart_ironwork` | few_uses | 2 meaningful uses (2 recipes, 0 construction), fewer than 3 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
 | material `cart_wheel` | few_professions | consumed by 1 professions (carpenter), fewer than 2 | WDR-001: Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part. |
-| material `cart_wheel` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part. |
+| material `cart_wheel` | few_uses | 2 meaningful uses (2 recipes, 0 construction), fewer than 3 | WDR-001: Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part. |
 | material `coal` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `copper_bar` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `copper_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet). |
@@ -150,6 +154,8 @@ None.
 | material `iron_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume. |
 | material `meat` | few_professions | consumed by 1 professions (cook), fewer than 2 | **none: open** |
 | material `meat` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
+| material `nails` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
+| material `nails` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `rabbit_pelt` | few_professions | consumed by 1 professions (tanner), fewer than 2 | WDR-001: Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes. |
 | material `rabbit_pelt` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes. |
 | material `stone` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |

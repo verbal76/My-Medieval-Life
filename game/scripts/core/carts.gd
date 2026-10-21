@@ -12,6 +12,12 @@ extends RefCounted
 ## at one is unloaded into the player's stall store by their attendant (the delivery service). Saved whole.
 ## DVW-B4: a cart wears by the tiles it is pulled (`worn`, saved; decay.cart_tiles in all): its condition is shown in
 ## words (Decay.condition); a worn-out cart falls apart where it stands and what it held is left lying there (loot).
+## MIN-F: a cart may be a minecart ("kind": "minecart", set down from the item on track: MineWorks.set_down_minecart) on a
+## level ("level": 0 the surface). A minecart follows its puller only onto track cells of its level: pulled off the rails
+## it stays where they end, and once its puller is `let_go` tiles away they let go of it; on track it is pulled at
+## mine_works.json minecart.track_speed of walking speed (a handcart at pull_speed). It crosses a portal with its puller
+## where track lies on both stands (World.player_through, World._npc_through). Saved with "kind" and "level" when not a
+## surface handcart (absent: a handcart on the surface).
 
 var w
 var carts: Array = []          # Dictionary records, by id
@@ -33,20 +39,34 @@ func by_id(id: int) -> Dictionary:
 	return {}
 
 
-## Set a handcart down at `at` for `owner`: the item becomes a cart in the world.
-func place(owner: String, at: Vector2) -> Dictionary:
+## Set a handcart (or, MIN-F, a minecart on `level`) down at `at` for `owner`: the item becomes a cart in the world.
+func place(owner: String, at: Vector2, kind := "handcart", level := 0) -> Dictionary:
 	var inv := Inventory.new()
-	inv.max_stacks = int(cfg().stacks)
+	inv.max_stacks = stacks_of(kind)
 	var c := {"id": next_id, "owner": owner, "pos": at, "store": inv, "puller": "", "facing": Vector2.DOWN, "worn": 0.0}
+	if kind != "handcart":
+		c.kind = kind
+	if level != 0:
+		c.level = level
 	next_id += 1
 	carts.append(c)
 	w.stat("carts_set_down")
-	w.stat("used_handcart")                  # the item became a cart in the world (the economy ledger)
+	w.stat("used_" + kind)                   # the item became a cart in the world (the economy ledger)
 	return c
 
 
-func of(owner: String) -> Array:
-	return carts.filter(func(c): return str(c.owner) == owner)
+## "handcart" or "minecart" (MIN-F); absent is a handcart.
+static func kind_of(c: Dictionary) -> String:
+	return str(c.get("kind", "handcart"))
+
+
+static func stacks_of(kind: String) -> int:
+	return int(MineWorks.cfg().minecart.stacks) if kind == "minecart" else int(cfg().stacks)
+
+
+## An owner's carts of one kind (handcarts unless asked: the market runs and the stall's deliveries use handcarts).
+func of(owner: String, kind := "handcart") -> Array:
+	return carts.filter(func(c): return str(c.owner) == owner and kind_of(c) == kind)
 
 
 ## The cart `ref` ("player" or "npc:<id>") is pulling, or {}.
@@ -105,11 +125,29 @@ static func pull_speed() -> float:
 	return float(cfg().pull_speed)
 
 
-## The nearest cart within `r` tiles of `at`, or {}.
-func near(at: Vector2, r: float) -> Dictionary:
+## Walking speed while pulling cart `c`: a minecart on its rails rolls at minecart.track_speed (MIN-F), else pull_speed.
+func pull_speed_for(c: Dictionary) -> float:
+	if kind_of(c) == "minecart" and w.mine_works != null and w.mine_works.track_at(World.level_of(c), Vector2i((c.pos as Vector2).floor())):
+		return float(MineWorks.cfg().minecart.track_speed)
+	return pull_speed()
+
+
+## A minecart goes through a portal with its puller: it stands on the other end's stand, on its level (MIN-F).
+func cross(c: Dictionary, to_end: Dictionary) -> void:
+	c.pos = Vector2(to_end.stand) + Vector2(0.5, 0.5)
+	if int(to_end.level) != 0:
+		c.level = int(to_end.level)
+	else:
+		c.erase("level")
+
+
+## The nearest cart within `r` tiles of `at` on `level`, or {}.
+func near(at: Vector2, r: float, level := 0) -> Dictionary:
 	var best := {}
 	var bd := r
 	for c in carts:
+		if World.level_of(c) != level:
+			continue
 		var d: float = (c.pos as Vector2).distance_to(at)
 		if d <= bd:
 			bd = d
@@ -144,6 +182,14 @@ func update(_dt: float) -> void:
 		var d: Vector2 = at - (c.pos as Vector2)
 		if d.length() > float(cfg().trail):
 			var to: Vector2 = at - d.normalized() * float(cfg().trail)
+			if kind_of(c) == "minecart" and not w.mine_works.track_at(World.level_of(c), Vector2i(to.floor())):
+				# MIN-F: off the rails the minecart stays where they end; far enough off, its puller lets go
+				if d.length() > float(MineWorks.cfg().minecart.let_go):
+					c.puller = ""
+					w.stat("minecart_let_go")
+					if ref == World.PLAYER:
+						w.note("The minecart stays on its rails; you let go of it.")
+				continue
 			c.worn = float(c.get("worn", 0.0)) + (to - (c.pos as Vector2)).length()     # DVW-B4: wear by the tiles pulled
 			c.pos = to
 			c.facing = d.normalized()
@@ -168,6 +214,8 @@ func fall_apart(c: Dictionary) -> void:
 		for id in inv.ids():
 			bag.add(id, inv.count(id))
 		w.loot.append({"pos": c.pos, "inv": bag, "coins": 0, "from": "a broken cart"})
+		if World.level_of(c) != 0:
+			w.loot[w.loot.size() - 1].level = World.level_of(c)      # MIN-F: it lies on the cart's level
 	carts.erase(c)
 	w.stat("carts_broken")
 	var who := whose(c)
@@ -212,6 +260,10 @@ func to_dict() -> Dictionary:
 	for c in carts:
 		out.append({"id": c.id, "owner": c.owner, "pos": [c.pos.x, c.pos.y], "store": (c.store as Inventory).to_dict(), "puller": c.puller,
 			"worn": float(c.get("worn", 0.0))})
+		if c.has("kind"):
+			out[out.size() - 1].kind = str(c.kind)          # MIN-F: a minecart
+		if World.level_of(c) != 0:
+			out[out.size() - 1].level = World.level_of(c)   # MIN-F: below the surface
 	return {"next_id": next_id, "carts": out}
 
 
@@ -220,6 +272,10 @@ func load_dict(d: Dictionary) -> void:
 	carts = []
 	for r in d.get("carts", []):
 		var inv := Inventory.from_dict(r.store)
-		inv.max_stacks = int(cfg().stacks)
+		inv.max_stacks = stacks_of(str(r.get("kind", "handcart")))
 		carts.append({"id": int(r.id), "owner": str(r.owner), "pos": Vector2(float(r.pos[0]), float(r.pos[1])), "store": inv,
 			"puller": str(r.get("puller", "")), "facing": Vector2.DOWN, "worn": float(r.get("worn", 0.0))})     # older saves: unworn
+		if r.has("kind"):
+			carts[carts.size() - 1].kind = str(r.kind)        # MIN-F (absent: a handcart)
+		if int(r.get("level", 0)) != 0:
+			carts[carts.size() - 1].level = int(r.level)      # MIN-F (absent: the surface)

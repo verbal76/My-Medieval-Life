@@ -94,7 +94,8 @@ var prospecting: Prospecting  # MIN-C: clues, samples and assays (scripts/core/p
 var pits: OpenPits            # MIN-E: open pits on the surface, their depths dug and spoil heaps (scripts/core/open_pit.gd; saved in "pits")
 var underground: Underground  # MIN-A: the levels below the surface and their portals (generated from the seed, not saved)
 var player_level := 0         # MIN-A: the depth the player is on (0 the surface, -1 the mine gallery); saved in "underground"
-var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the level router walks them through the portals)
+var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the level router walks them through the portals); MIN-F: every level a portal reaches ([0, -1, -2] with the cave), set from Underground.reachable_levels
+var mine_works: MineWorks     # MIN-F: tunnels cut, timber supports, track (scripts/core/mine_works.gd; saved in "mine_works")
 
 
 func _init() -> void:
@@ -141,6 +142,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
 	underground = Underground.create(world_seed, m)     # MIN-A: hashed from the seed, no rng draw
 	deposits.append_array(underground.seam_records())   # the gallery's seams: the same records, with their level
+	villager_levels = underground.reachable_levels()     # MIN-F: the gallery and the cave
+	mine_works = MineWorks.create(self)                  # MIN-F: nothing cut, set up or laid yet
 	_add_host_rock()                                     # MIN-B: the grey rock round each ore seam, quarried for stone after the ore
 	_make_boulders(m)
 	prospecting = Prospecting.create(self)               # MIN-C: hashed from the seed, no rng draw
@@ -3397,7 +3400,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 17          # 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 17          # 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -3758,6 +3761,7 @@ func to_dict() -> Dictionary:
 		"prospecting": prospecting.to_dict(),
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
+		"mine_works": mine_works.to_dict(),
 	}
 
 
@@ -3847,6 +3851,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	for us in underground.seam_records():
 		if not have_seam.has(Vector3i(int(us.level), int(us.x), int(us.y))):
 			deposits.append(us)
+	villager_levels = underground.reachable_levels()     # MIN-F: the gallery and the cave
+	mine_works = MineWorks.create(self)
+	mine_works.load_dict(d.get("mine_works", {}))      # MIN-F: the tunnels cut reopen (absent: none), before anyone stands on them
 	_add_host_rock()                    # MIN-B: a save from before it gets each ore seam's host rock, whole
 	for sd in deposits:
 		if sd.has("host") and int(sd.host.amount) <= 0:
@@ -4063,10 +4070,21 @@ func villagers_reach(d: Dictionary) -> bool:
 
 ## The level a point (tiles) lies on (Underground.level_at: a gallery's floor and walls under the hill's rock are the
 ## gallery's, everything else the surface's). The awareness and reach rules (near, present, reaches) see one level.
+## MIN-F: where levels stack (the cave under the gallery) the ground cannot tell; the point is then the level of the
+## one standing there (the player, a villager below: the rules are asked about where someone stands), else the
+## player's level if it is one of them (what the player taps and sees), else the shallowest.
 func level_at(p: Vector2) -> int:
 	if underground == null:
 		return 0
-	return underground.level_at(map, Vector2i(floori(p.x), floori(p.y)))
+	var lv := underground.levels_at(map, Vector2i(floori(p.x), floori(p.y)))
+	if lv.size() <= 1:
+		return 0 if lv.is_empty() else int(lv[0])
+	if p == player.pos and lv.has(player_level):
+		return player_level
+	for n: NPC in npcs:
+		if n.depth != 0 and n.pos == p and lv.has(n.depth):
+			return n.depth
+	return player_level if lv.has(player_level) else int(lv[0])
 
 
 ## The nearest seam of one of `ores` with something left that villager `n` can walk to, on any level villagers reach,
@@ -4154,11 +4172,16 @@ func quarry_stone_left() -> int:
 
 
 ## A villager goes through a portal (the level router): they stand on its other end, on its level; a cart they pull
-## is set down at the mouth first (carts below are MIN-F's rails). The step walks on from there.
+## is set down at the mouth first, unless it is a minecart and track lies on both stands (MIN-F: it goes through with
+## them, as with the player). The step walks on from there.
 func _npc_through(n: NPC, leg: Dictionary, s: Dictionary) -> void:
 	var cart := carts.pulled_by(npc_ref(n.id))
 	if not cart.is_empty():
-		carts.park(cart)
+		if Carts.kind_of(cart) == "minecart" and mine_works.crossing_ok(leg.from, leg.to):
+			carts.cross(cart, leg.to)
+			stat("minecart_crossings")
+		else:
+			carts.park(cart)
 	n.depth = int(leg.to.level)
 	n.pos = Vector2(leg.to.stand) + Vector2(0.5, 0.5)
 	n.path = PackedVector2Array()
@@ -4184,15 +4207,22 @@ func path_for_player(from: Vector2i, to: Vector2i) -> PackedVector2Array:
 
 ## The player steps in direction `dir`: standing on a portal's stand and heading for its door, they go through it and
 ## stand on the other end's stand, on its level. {} when there is no portal there; {refused: why} when they may not
-## (a cart is not taken through: carts below are MIN-F's rails); else {level, pos, portal}.
+## (a handcart is not taken through; MIN-F: a minecart goes through on its rails when track lies on both stands);
+## else {level, pos, portal}.
 func player_through(dir: Vector2) -> Dictionary:
 	if underground == null or not player.alive:
 		return {}
 	var hit := underground.portal_from(player_level, Vector2i(floori(player.pos.x), floori(player.pos.y)), dir)
 	if hit.is_empty():
 		return {}
-	if not carts.pulled_by(PLAYER).is_empty():
-		return {"refused": "Set the cart down first: it will not go through the adit."}
+	var cart := carts.pulled_by(PLAYER)
+	if not cart.is_empty():
+		if Carts.kind_of(cart) != "minecart":
+			return {"refused": "Set the cart down first: it will not go through the adit."}
+		if not mine_works.crossing_ok(hit.from, hit.to):
+			return {"refused": "The minecart runs only on its rails: lay track on both sides of the mouth."}
+		carts.cross(cart, hit.to)
+		stat("minecart_crossings")
 	player.pos = Vector2(hit.to.stand) + Vector2(0.5, 0.5)
 	_set_player_level(int(hit.to.level))
 	return {"level": player_level, "pos": player.pos, "portal": str(hit.portal.id)}

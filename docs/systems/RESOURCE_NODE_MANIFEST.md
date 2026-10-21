@@ -13,9 +13,9 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 27 (21 the player may harvest, 6 the keeper's livestock).
+- Implemented node types: 28 (22 the player may harvest, 6 the keeper's livestock).
 - Materials they produce: 31 (apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool).
-- Finite node types: 8 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, open_pit, prospect_clue, stone_seam); with no replacement once worked out: 3 (gold_seam, open_pit, prospect_clue).
+- Finite node types: 9 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, open_pit, prospect_clue, stone_seam, tunnel_rock); with no replacement once worked out: 4 (gold_seam, open_pit, prospect_clue, tunnel_rock).
 - At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
 - Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
 
@@ -40,6 +40,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
 | `tree` Tree | wood | natural | axe | woodcutting | 1 apple_sapling, 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
+| `tunnel_rock` Tunnel rock | mineral | natural | pickaxe | mining | 1 spoil, 1 stone | finite | yes | no | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
 | `wild_bear` Bear | game | natural | weapon | combat | 2 hide, 6 meat | breeds | yes | no | yes | implemented |
 | `wild_bird` Bird | game | natural | weapon | combat | 1 feather | breeds | yes | yes | yes | implemented |
@@ -393,6 +394,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Risk:** Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9).
 - **Code:** `game/scripts/core/world.gd::fell`, `game/scripts/core/world.gd::tree_at`, `game/scripts/core/world.gd::chop_tree`, `game/scripts/core/world.gd::plant_tree`, `game/scripts/core/trees.gd::sync`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_woodcutter`, `game/scripts/core/property.gd::claim`
 
+### `tunnel_rock` · Tunnel rock
+
+- **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "tunnel"}`.
+- **Where:** The rock beside the floor of an underground level (the adit gallery, the cave under the hill), under the hill's static rock with rock all round it and inside the level map's edge; never a seam's cell (OD-29: tunnels only below ground). **In the world:** cut in play below ground (MIN-F): each rock cell under the hill gives 3 stone, 2 spoil.
+- **Action:** Cutting (interact): "Cut into the rock". **Range (tiles):** 1. A rock cell beside the player below ground, ahead or one of its neighbours (main.gd _works_targets). Each unit is a Use: Gather mode's repeated harvest does not reach tunnel rock (ResourceNodes.node_at finds seams).
+- **Tool:** pickaxe (required). You need a pickaxe to cut rock, and a timber support standing within 2 cells (mine_works.json support.reach) of the face. Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
+- **Skill:** mining, level 1.
+- **Time:** 30 game minutes. Each unit's minutes (mine_works.json cell: stone 30, spoil 25) for a villager, by the Mining mine_time effect; the player's swing is timed as a mining swing (MineWorks.player_secs).
+- **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears `wear` (1) a unit unless the Mining tool_wear_save effect spares it; each unit earns `xp` (4) Mining xp.
+- **Yields a cycle:** 1 spoil, 1 stone. One unit a cut from the rock face beside the cutter (MineWorks.dig): every rock cell holds the same finite units (mine_works.json cell: 3 stone, then 2 spoil), counted cut_<item>; the last unit opens the cell as floor of its level (its A* at once). Unsupported rock is not cut: a timber support must stand within support.reach cells.
+- **Total:** Bounded by the hill: only rock under the hill's static rock with rock all round may be cut (Underground.under_rock), 5 units a cell; the books (MineWorks.ground_cut) count every unit cut.
+- **Depletion:** finite. None: a cell cut through stays floor (saved in mine_works.opened); no rock grows back.
+- **Owner:** Common rock, like the seams below: nobody owns a tunnel; whoever cuts a unit holds it (MIN-C-Q2: no mining rights are made). **Theft:** Never theft: the rock is no one's.
+- **Harvested by:** the player yes; villagers no. MIN-F: a villager cuts by the same function as the player (MineWorks.dig with the villager as `who`, tested), but no villager decides to tunnel on its own yet: tunnels expose no new ore (the cave's and the gallery's seams are generated), so no job or manor posting calls for one (MIN_F_UNDERGROUND.md, owner question).
+- **Gather mode:** yes. **Icon:** `stone`.
+- **Risk:** Collapse, ventilation and lighting as a need are not simulated (MIN_F_UNDERGROUND.md): a support is what lets a tunnel be extended, nothing more. The hill holds little rock beyond the galleries, so tunnelling is short.
+- **Code:** `game/scripts/core/mine_works.gd::dig`, `game/scripts/core/mine_works.gd::rock_refusal`, `game/scripts/core/mine_works.gd::place_support`, `game/scripts/main.gd::_works_targets`
+
 ### `wheat_field` · Wheat field
 
 - **Status:** implemented. **Category:** crop, cultivated. **Found by:** `{"kind": "field"}`.
@@ -564,6 +583,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 | `open_pit` | staked in play (MIN-E): each 5 x 5 cells over the layers 2 topsoil, 3 dirt, 3 spoil, 8 stone | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `prospect_clue` | generated from the world seed (MIN-C): a clue in about 35% of the village's 15-cell blocks, 4 samples each; 55% lie over a mineral body | **none** |
 | `stone_seam` | 240 stone in 3 seams | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
+| `tunnel_rock` | cut in play below ground (MIN-F): each rock cell under the hill gives 3 stone, 2 spoil | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 
 Other permanent losses: a felled tree whose ground is bought for building is cleared and never
 regrows (`Property.claim`); a wood whose wild animals are all one sex never breeds again (no
@@ -595,6 +615,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B). |
 | `tree` | Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9). |
+| `tunnel_rock` | Collapse, ventilation and lighting as a need are not simulated (MIN_F_UNDERGROUND.md): a support is what lets a tunnel be extended, nothing more. The hill holds little rock beyond the galleries, so tunnelling is short. |
 | `wheat_field` | Not at risk: farmers hold surplus grain (14495 wheat by day 365, seed 1; LONG_RUN_SIMULATION.md finding 6). |
 | `wild_bear` | A single pair; numbers provisional (B14). |
 | `wild_bird` | Numbers provisional (B14). |

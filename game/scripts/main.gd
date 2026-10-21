@@ -11,6 +11,7 @@ var world: World
 var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
 var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
+var surface_works: WorksView   # MIN-F: track laid in the mine's yard (drawn from World.mine_works)
 var _pit_site := {}            # MIN-E: the last site looked at for staking a pit ({key, ok}: the cheap check, cached)
 var actors: Node2D
 var above: Node2D
@@ -189,6 +190,8 @@ func _ready() -> void:
 					world.player.pos = shot_warp
 				_sync_levels(0.0)
 				follow_at = _in_view(world.player.pos * T)
+			"mine_works", "cave":
+				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
 			"gain":
 				ui.gain("+2 red berries", "red_berries")
 				ui.gain("+1 Iron ore", "iron_ore")
@@ -1464,7 +1467,8 @@ func approach(n: NPC) -> void:
 		ui.show_talk(n)
 
 
-## B14: each cart drawn with the mine cart tile (a stand-in until the owner's own art).
+## B14: each cart drawn with the mine cart tile (a stand-in until the owner's own art). MIN-F: a minecart with the
+## atlas's own mine cart, empty or heaped with rock when it holds anything; on its level only (_sync_levels).
 func _sync_carts() -> void:
 	var seen := {}
 	for c in world.carts.carts:
@@ -1472,10 +1476,15 @@ func _sync_carts() -> void:
 		var s: Sprite2D = cart_sprites.get(int(c.id))
 		if s == null:
 			s = Sprite2D.new()
-			s.texture = _tile_texture(CART_TILE)
 			s.offset = Vector2(0, -T / 2.0 + 2.0)
 			actors.add_child(s)
 			cart_sprites[int(c.id)] = s
+		var tile := CART_TILE
+		if Carts.kind_of(c) == "minecart":
+			tile = MINECART_FULL_TILE if (c.store as Inventory).total() > 0 else MINECART_TILE
+		if s.get_meta("tile", -1) != tile:
+			s.texture = _tile_texture(tile)
+			s.set_meta("tile", tile)
 		s.position = (c.pos as Vector2) * T
 		s.flip_h = (c.facing as Vector2).x < 0.0
 	for id in cart_sprites.keys():
@@ -1485,6 +1494,8 @@ func _sync_carts() -> void:
 
 
 const CART_TILE := 3009          # the mine cart on its rail (tools/build_village.py MINE_CART, atlas 0)
+const MINECART_TILE := 3229      # MIN-F: the paid atlas's empty mine cart (the column of carts beside CART_TILE)
+const MINECART_FULL_TILE := 3449  # MIN-F: the same cart heaped with grey rock
 
 
 ## One tile of the map's atlases as a texture (tile = atlas * 100000 + index).
@@ -1621,7 +1632,7 @@ func _player_step(delta: float) -> void:
 	walking = v.length() > 0.1
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
-				* (Carts.pull_speed() if not world.carts.pulled_by(World.PLAYER).is_empty() else 1.0)     # B14: a cart is slower going
+				* (world.carts.pull_speed_for(world.carts.pulled_by(World.PLAYER)) if not world.carts.pulled_by(World.PLAYER).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
 		var before := p.pos
 		var moved_x := _try_move(Vector2(step.x, 0))
@@ -1971,18 +1982,8 @@ func _find_target() -> void:
 	here.append_array(_fit_targets(world.place_of(p.pos)))
 	here.append_array(_prospect_targets(cands))           # MIN-C: a clue's ground underfoot, a smith who can assay
 	here.append_array(_pit_targets(cands))                # MIN-E: the player's own open pit and spoil heaps, or ground to stake one
-	# B14 carts: the one you pull can be let go anywhere; a cart beside you can be pulled (yours) or opened
-	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
-	if not pulling.is_empty():
-		here.append({"kind": "cart_park", "id": int(pulling.id), "label": "Let go of your cart"})
-		if (pulling.pos as Vector2).distance_to(p.pos) < 1.6:
-			here.append({"kind": "chest", "id": "cart:%d" % int(pulling.id), "label": "Open your cart: store things"})
-	else:
-		var cart: Dictionary = world.carts.near(p.pos, 1.3)
-		if not cart.is_empty():
-			if world.carts.may_use(cart, World.PLAYER):
-				here.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your cart (%s)" % world.carts.condition(cart)})     # DVW-B4: its wear
-			here.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
+	here.append_array(_cart_targets(0))
+	here.append_array(_works_targets())                   # MIN-F: track in the mine's yard
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
@@ -2475,6 +2476,10 @@ func _use() -> void:
 			_pit_stake(target.origin)
 		"pit_dig":
 			_pit_dig(target.pit, target.cell, str(target.tool))
+		"tunnel_cut":
+			_tunnel_cut(target.cell, str(target.tool))
+		"support_place", "track_lay":
+			_works_place(str(target.kind), target.cell)
 		"pit_fill":
 			var r := world.pits.backfill(target.pit, target.cell, p.inv)
 			ui.message("You put back a unit of %s." % GameData.item_name(str(r.item)).to_lower() if r.result == "ok" else str(r.why))
@@ -2774,6 +2779,106 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 		_level_up("mining", int(r.up)), "swing", "pickaxe")
 
 
+## B14 carts: the one you pull can be let go anywhere; a cart beside you on `level` can be pulled (yours) or opened.
+## MIN-F: below the surface the same, for a minecart on the player's level.
+func _cart_targets(level: int) -> Array:
+	var out := []
+	var p := world.player
+	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
+	if not pulling.is_empty():
+		var what := "minecart" if Carts.kind_of(pulling) == "minecart" else "cart"
+		out.append({"kind": "cart_park", "id": int(pulling.id), "label": "Let go of your %s" % what})
+		if (pulling.pos as Vector2).distance_to(p.pos) < 1.6:
+			out.append({"kind": "chest", "id": "cart:%d" % int(pulling.id), "label": "Open your %s: store things" % what})
+	else:
+		var cart: Dictionary = world.carts.near(p.pos, 1.3, level)
+		if not cart.is_empty():
+			if world.carts.may_use(cart, World.PLAYER):
+				out.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your %s (%s)" % ["minecart" if Carts.kind_of(cart) == "minecart" else "cart", world.carts.condition(cart)]})     # DVW-B4: its wear
+			out.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
+	return out
+
+
+## MIN-F: below the surface, the rock face ahead (cut it with a pickaxe; or why it may not be cut yet), a timber
+## support to set up on the floor ahead or underfoot, a track section to lay underfoot or ahead; on the surface, track
+## in the mine's yard. The rules are MineWorks' (the same for villagers); these are only the offers.
+func _works_targets() -> Array:
+	var out := []
+	var mw: MineWorks = world.mine_works
+	if mw == null:
+		return out
+	var p := world.player
+	var lv := world.player_level
+	var mine := Vector2i(p.pos.floor())
+	var ahead := Vector2i((p.pos + facing_vec() * 0.9).floor())
+	if lv != 0:
+		var pick := p.tool_of("pickaxe")
+		for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+			var c: Vector2i = ahead + dc
+			if c == mine or maxi(absi(c.x - mine.x), absi(c.y - mine.y)) > 1 or not world.underground.is_solid(lv, c) or not world.deposit_at(c, lv).is_empty():
+				continue
+			var why := mw.rock_refusal(lv, c)
+			if why == "" and pick != "":
+				out.append({"kind": "tunnel_cut", "id": "cut@%d,%d" % [c.x, c.y], "cell": c, "tool": pick,
+						"label": "Cut into the rock (%d of %d units left here: stone, then spoil)" % [MineWorks.cell_units() - mw.cut_at(lv, c), MineWorks.cell_units()]})
+			elif why.begins_with("Set up a timber support") or (why == "" and pick == ""):
+				out.append({"kind": "info", "id": "face@%d,%d" % [c.x, c.y], "text": why if why != "" else "You need a pickaxe to cut rock.",
+						"label": "The rock face: " + (why if why != "" else "cut it with a pickaxe").to_lower().trim_suffix(".")})
+			break
+		if p.inv.has(str(MineWorks.cfg().support.item)):
+			for c in [ahead, mine]:
+				if mw.support_refusal(p, c) == "":
+					out.append({"kind": "support_place", "id": "support@%d,%d" % [c.x, c.y], "cell": c, "label": "Set up a timber support here"})
+					break
+	if p.inv.has(str(MineWorks.cfg().track.item)):
+		for c in [mine, ahead]:
+			if mw.track_refusal(p, c) == "":
+				out.append({"kind": "track_lay", "id": "track@%d,%d" % [c.x, c.y], "cell": c, "label": "Lay a track section here"})
+				break
+	return out
+
+
+## MIN-F: cut a unit from the rock face, timed as a mining swing (MineWorks.dig: the unit to the pack, the pickaxe
+## wears, Mining xp; the cell's last unit opens it as floor).
+func _tunnel_cut(cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.mine_works.dig_refusal(p, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Cutting", world.mine_works.player_secs(cell, tool), func():
+		var r := world.mine_works.dig(p, cell, p.inv, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		if r.opened:
+			ui.message("The rock is cut through: the tunnel goes on.")
+		if r.broke:
+			ui.message("Your pickaxe broke.")
+		_level_up("mining", int(r.up)), "swing", "pickaxe")
+
+
+## MIN-F: set up a timber support or lay a track section (MineWorks), timed by its minutes as a building job.
+func _works_place(kind: String, cell: Vector2i) -> void:
+	var p := world.player
+	var mw: MineWorks = world.mine_works
+	var sc: Dictionary = MineWorks.cfg().support if kind == "support_place" else MineWorks.cfg().track
+	var why := mw.support_refusal(p, cell) if kind == "support_place" else mw.track_refusal(p, cell)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Building", float(sc.minutes) / float(GameData.b("game_minutes_per_second")) * 0.6, func():
+		var r := mw.place_support(p, cell) if kind == "support_place" else mw.lay_track(p, cell)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		ui.message("The timber support stands: the rock within %d cells may be cut." % int(sc.reach) if kind == "support_place" else "You lay a track section.")
+		if r.broke:
+			ui.message("Your mallet broke.")
+		_level_up(str(sc.skill), int(r.up)), "swing", str(sc.tool))
+
+
 ## MIN-C: take a rock sample from the ground underfoot, timed as a mining swing (Prospecting.take_sample: the kit
 ## wears, the sample and its origin go to the pack, Mining xp).
 func _sample(c: Dictionary, cell: Vector2i) -> void:
@@ -2857,9 +2962,16 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
-## B14: set the handcart from the pack down in front of you; it becomes a cart in the world.
-func set_down_cart() -> void:
+## B14: set the handcart from the pack down in front of you; it becomes a cart in the world. MIN-F: a minecart is set
+## down on track, underfoot or ahead, on the player's level (MineWorks.set_down_minecart).
+func set_down_cart(item := "handcart") -> void:
 	var p := world.player
+	if item == "minecart":
+		var mine := Vector2i(p.pos.floor())
+		var cell := mine if world.mine_works.track_at(world.player_level, mine) else Vector2i((p.pos + facing_vec()).floor())
+		var r := world.mine_works.set_down_minecart(p, World.PLAYER, cell)
+		ui.message(str(r.why) if r.result != "ok" else "You set the minecart down on its rails. Pull it along the track, or open it to load it.")
+		return
 	if not p.inv.has("handcart"):
 		return
 	var at := p.pos + facing_vec()
@@ -4265,6 +4377,110 @@ func _pit_shot(full: bool) -> void:
 	camera.position = follow_at
 
 
+## MIN-F screenshot: a labourer, by the works' own rules (MineWorks, from real goods in their pack), sets up a timber
+## support in the gallery, cuts the rock beside it open, lays track from the adit's inner mouth to the new face and sets
+## a minecart down on it with the stone cut; the player walks in and stands by it. With `cave` (MIN-H): the player
+## goes in through the cave's own mouth and a villager stands on its floor, walked there through the router.
+func _works_shot(cave: bool) -> void:
+	var u := world.underground
+	var pi := 1 if cave else 0
+	var e0: Dictionary = u.portals[pi].ends[0]
+	var e1: Dictionary = u.portals[pi].ends[1]
+	var lm := u.map_at(int(e1.level), e1.stand)
+	var n: NPC = world.brain._first_with_job("laborer")
+	if n == null:
+		n = world.npcs[0]
+	n.plan.clear()
+	n.target = -1
+	world.player.pos = Vector2(e0.stand) + Vector2(0.5, 0.5)
+	world.player_through(Vector2(e1.stand - e0.stand))
+	if cave:
+		# the villager walks from the surface into the cave through its mouth (the level router)
+		var floors := lm.floor_cells()
+		var goal: Vector2i = floors[floors.size() / 2]
+		n.depth = 0
+		n.pos = Vector2(e0.stand) + Vector2(0, 1.5)
+		n.plan = [world.brain.go(goal, 1.0, lm.level), {"k": "work", "min": 600.0, "anim": "work"}]
+		for k in 400:
+			world._run_plan(n, 0.25, 0.25 * float(GameData.b("game_minutes_per_second")))
+			if n.depth == lm.level and n.plan.size() == 1:
+				break
+		print("cave shot: villager on level %d at %s (goal %s), plan left %d" % [n.depth, n.cell(), goal, n.plan.size()])
+		world.player.pos = n.pos + Vector2(-1.5, 0.5) if not lm.is_solid(Vector2i((n.pos + Vector2(-1.5, 0.5)).floor())) else n.pos + Vector2(0, 1.0)
+		if lm.is_solid(Vector2i(world.player.pos.floor())):
+			world.player.pos = Vector2(lm.nearest_walkable(Vector2i(world.player.pos.floor()))) + Vector2(0.5, 0.5)
+	else:
+		var mw: MineWorks = world.mine_works
+		n.depth = lm.level
+		n.inv.add("pickaxe", 1)                     # the staged picture's goods (as _pit_shot's pickaxe)
+		n.inv.add("mallet", 1)
+		n.inv.add("timber_support", 3)
+		n.inv.add("track_section", 40)
+		n.inv.add("minecart", 1)
+		# the face: the floor cell with the most cuttable rock beside it, farthest from the mouth
+		var best := Vector2i(-1, -1)
+		var bscore := -1
+		for f in lm.floor_cells():
+			var k := 0
+			for d: Vector2i in VillageMap.SIDES:
+				var c := f + d
+				if lm.is_solid(c) and world.deposit_at(c, lm.level).is_empty() and lm.region.grow(-1).has_point(c) and u.under_rock(world.map, c):
+					k += 1
+			var score := k * 100 + int(Vector2(f).distance_to(Vector2(e1.stand)))
+			if k > 0 and score > bscore:
+				bscore = score
+				best = f
+		n.pos = Vector2(best) + Vector2(0.5, 0.5)
+		print("works shot: support at %s: %s" % [best, mw.place_support(n, best)])
+		var opened := 0
+		for _pass in 3:
+			for c in lm.cells():
+				if mw.rock_refusal(lm.level, c) != "":
+					continue
+				var stand := Vector2i(-1, -1)
+				for d: Vector2i in VillageMap.SIDES:
+					if not lm.is_solid(c + d):
+						stand = c + d
+				n.pos = Vector2(stand) + Vector2(0.5, 0.5)
+				var r := {}
+				for k in MineWorks.cell_units():
+					r = mw.dig(n, c, n.inv)
+				if r.get("opened", false):
+					opened += 1
+				if opened >= 4:
+					break
+			if opened >= 4:
+				break
+		var path: Array[Vector2i] = []
+		for pt in lm.find_path(e1.stand, best):         # four ways: a diagonal step goes round by its side cell
+			if not path.is_empty() and path[path.size() - 1].x != int(pt.x) and path[path.size() - 1].y != int(pt.y):
+				path.append(Vector2i(int(pt.x), path[path.size() - 1].y))
+			path.append(Vector2i(pt))
+		for pt in path:
+			n.pos = Vector2(pt) + Vector2(0.5, 0.5)
+			mw.lay_track(n, Vector2i(pt))
+		print("works shot: %d cells cut open, %d track, stone cut %d" % [opened, mw.track_cells(lm.level).size(), n.inv.count("stone")])
+		var cart_at: Vector2i = Vector2i(path[maxi(0, path.size() - 2)]) if path.size() > 0 else best
+		n.pos = Vector2(cart_at) + Vector2(0.5, 0.5)
+		var sd := mw.set_down_minecart(n, World.hh_ref(n.household), cart_at)
+		if sd.result == "ok":
+			var store: Inventory = sd.cart.store
+			for id in ["stone", "spoil"]:
+				var q := n.inv.count(id)
+				n.inv.remove(id, q)
+				store.add(id, q)
+		n.pos = Vector2(best) + Vector2(0.5, 0.5)
+		n.plan = [{"k": "work", "min": 600.0, "anim": "work"}]
+		world.player.pos = Vector2(cart_at) + Vector2(0.5, 0.5) + Vector2(0, 0.0)
+		var side := Vector2i(world.player.pos.floor()) + Vector2i(0, 1)
+		if not lm.is_solid(side):
+			world.player.pos = Vector2(side) + Vector2(0.5, 0.5)
+	_sync_carts()
+	_sync_levels(0.0)
+	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
+
+
 func _farm_shot(kind: String) -> void:
 	var p := world.player
 	p.coins = 3000
@@ -4516,7 +4732,16 @@ func _build_levels() -> void:
 		lv.setup_level(view, world, lm, world.underground.specs[lm.id])
 		lv.visible = false
 		level_views[lm.id] = lv
+		var spec: Dictionary = world.underground.specs[lm.id]
+		if spec.has("mouth") and view.layer(str(spec.mouth.layer)) != null:     # MIN-H: a cave's own mouth in the rock face
+			view.set_tile(view.layer(str(spec.mouth.layer)), Vector2i(int(spec.portal.door[0]), int(spec.portal.door[1])), int(spec.mouth.tile))
 	world.level_tile_changed.connect(_on_level_tile_changed)
+	if world.mine_works != null:
+		world.mine_works.changed.connect(_on_works_changed)
+		surface_works = WorksView.new()               # MIN-F: track in the mine's yard, faded with the surface
+		surface_works.setup(world.mine_works, 0)
+		view.add_child(surface_works)
+		view.move_child(surface_works, view.layer("below0").get_index())
 	_sync_levels(0.0)
 
 
@@ -4524,6 +4749,15 @@ func _on_level_tile_changed(level: int, cell: Vector2i, value: int) -> void:
 	var lm := world.underground.map_at(level, cell)
 	if lm != null and level_views.has(lm.id):
 		level_views[lm.id].set_seam(cell, value)
+
+
+## MIN-F: a tunnel cell cut open is drawn again with the rock round it (the WorksViews redraw track and supports).
+func _on_works_changed(level: int, cell: Vector2i) -> void:
+	if level == 0:
+		return
+	var lm := world.underground.map_at(level, cell)
+	if lm != null and level_views.has(lm.id):
+		level_views[lm.id].redraw_around(world, cell)
 
 
 ## The player crosses a portal when walking into its door from its stand (`v` the way they move), or when a tapped
@@ -4635,6 +4869,8 @@ func _find_target_below() -> void:
 			cands.push_front({"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
 					else "%s seam" % GameData.item_name(dep.ore) + ": requires a pickaxe (the smith sells them)"})
 			break
+	cands.append_array(_cart_targets(world.player_level))     # MIN-F: a minecart on this level
+	cands.append_array(_works_targets())                       # MIN-F: the rock face, supports, track
 	talk_alt = {}
 	target_options = cands
 	target = cands[0] if not cands.is_empty() else {}
@@ -4670,12 +4906,16 @@ func _sync_levels(delta: float) -> void:
 		var b = bubbles.get(n.id)
 		if b != null and is_instance_valid(b):
 			b.visible = n.depth == world.player_level
+	for c in world.carts.carts:                   # MIN-F: carts too show on their own level
+		var cs: Sprite2D = cart_sprites.get(int(c.id))
+		if cs != null:
+			var cl := World.level_of(c)
+			cs.modulate.a = surf if cl == 0 else (level_alpha if cl == level_shown else 0.0)
 	if level_alpha == 0.0 and was == 0.0:
 		return
 	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
 	fade.append_array(view.sorted_of.values())
 	fade.append_array(animal_sprites.values())
-	fade.append_array(cart_sprites.values())
 	fade.append_array(house_signs.values())
 	for node in fade:
 		if is_instance_valid(node):

@@ -394,10 +394,12 @@ func tool_stock(tool: String) -> int:
 
 
 ## Built mining structures of a kind: pit ramps (MIN-E: an open pit whose ramp is dug down to its floor, OpenPits);
-## timber supports (MIN-F) are not built yet, so none.
+## timber supports (MIN-F: those set up below the surface, MineWorks). Counted for the capability level only (Q18-9).
 func structures(what: String) -> int:
 	if what == "pit_ramp" and w.pits != null:
 		return w.pits.ramps_done()
+	if what == "timber_support" and w.mine_works != null:
+		return w.mine_works.support_count()
 	return 0
 
 

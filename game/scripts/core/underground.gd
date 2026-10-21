@@ -9,8 +9,12 @@ extends RefCounted
 ## layout (village.json "solid"), never from world.rng or runtime state, and never in the overworld's chunks: the same
 ## seed gives the same galleries on every machine. Not saved: World.load_dict makes it again from the seed. The
 ## galleries and their seams are described by data/underground.json (mml-underground/1).
+##
+## MIN-F/MIN-H: a gallery entry may be a natural cave ("kind": "cave") on a deeper level under the same rock, with its
+## own mouth on the surface (its own portal) and its own salt, so its passages are not the gallery's. Maps of different
+## levels may lie under the same ground (levels stack); `levels_at` lists every level a point may lie on.
 
-const GEN_VERSION := 1
+const GEN_VERSION := 2                 # 2 (MIN-F): the natural cave under the hill added (the adit gallery is unchanged)
 const SURFACE := 0
 
 var seed := 1
@@ -105,14 +109,48 @@ func next_leg(from: int, to: int) -> Dictionary:
 
 ## The level a point lies on as far as the ground can tell: the floor of a level map, and the rock walls beside it
 ## (where its seams are), under the surface's static rock are that level's (the galleries lie only there, with a cell
-## of rock all round their floor, MIN-A); anything else is the surface's. Not for stacked levels (one level so far).
+## of rock all round their floor, MIN-A); anything else is the surface's. Where levels stack (MIN-F: the cave under the
+## gallery) the ground alone cannot tell: this is the shallowest, and World.level_at settles it by who stands there.
 func level_at(village: VillageMap, c: Vector2i) -> int:
+	var lv := levels_at(village, c)
+	return SURFACE if lv.is_empty() else int(lv[0])
+
+
+## Every level whose floor or walls lie at `c` under the surface's static rock, shallowest first ([] the surface's).
+func levels_at(village: VillageMap, c: Vector2i) -> Array:
+	var out := []
+	if not _static_solid(village, c):
+		return out
 	for m: LevelMap in maps:
-		if not m.in_level(c) or not _static_solid(village, c):
-			continue
-		if not m.is_solid(c) or m._touches_floor(c):
-			return m.level
-	return SURFACE
+		if m.in_level(c) and (not m.is_solid(c) or m._touches_floor(c)) and not out.has(m.level):
+			out.append(m.level)
+	out.sort()
+	out.reverse()
+	return out
+
+
+## The levels below the surface that a walker can reach from it through the portals (World.villager_levels), deepest
+## last: [0, -1, -2] with the cave.
+func reachable_levels() -> Array:
+	var out := [SURFACE]
+	var lv := []
+	for m: LevelMap in maps:
+		if not lv.has(m.level) and not next_leg(SURFACE, m.level).is_empty():
+			lv.append(m.level)
+	lv.sort()
+	lv.reverse()
+	out.append_array(lv)
+	return out
+
+
+## The cell rule every level's floor keeps (MIN-A; MIN-F's tunnels too): under the surface's static rock with a cell of
+## rock all round it, so no surface walker ever stands beside a floor below.
+func under_rock(village: VillageMap, c: Vector2i) -> bool:
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if not _static_solid(village, c + Vector2i(dx, dy)):
+				return false
+	return true
 
 
 ## The end of a portal on `level` whose door is `cell` ({} none): a tap on the adit means "go in".
@@ -140,9 +178,12 @@ func fingerprint() -> String:
 
 
 # ---------------------------------------------------------------- generation -----------------
+var _salt := 0                         # the gallery being made: its data's "salt" (0 the adit gallery; the cave its own)
+
+
 ## 0..n-1 from the hash of the seed, a salt and a cell.
 func _roll(salt: int, a: int, b: int, n: int) -> int:
-	return Overworld.hash32(seed, salt, a, b) % n
+	return Overworld.hash32(seed, salt + _salt, a, b) % n
 
 
 static func _static_solid(village: VillageMap, c: Vector2i) -> bool:
@@ -156,11 +197,22 @@ static func _static_solid(village: VillageMap, c: Vector2i) -> bool:
 ## from the entrance, chambers where they end, one smoothing pass, then only what the entrance reaches is kept.
 func _make_gallery(g: Dictionary, village: VillageMap) -> void:
 	var level := int(g.level)
+	_salt = int(g.get("salt", 0))
 	var surface_stand := Vector2i(int(g.portal.stand[0]), int(g.portal.stand[1]))
 	var door := Vector2i(int(g.portal.door[0]), int(g.portal.door[1]))
 	var inside := door - surface_stand + door             # one step further in, beyond the adit's mouth
-	# the rock it lies under: flood the static solid cells from the door, within the cap
-	var cap := Rect2i(door - Vector2i(int(g.max_half_w), int(g.max_depth)), Vector2i(2 * int(g.max_half_w) + 1, int(g.max_depth) + 1))
+	# the rock it lies under: flood the static solid cells from the door, within the cap (max_depth cells inward from
+	# the door, max_half_w either side; for a mouth facing south, as the adit's, the old rectangle exactly)
+	var inward := inside - door
+	var hw := int(g.max_half_w)
+	var dp := int(g.max_depth)
+	var cap := Rect2i(door - Vector2i(hw, dp), Vector2i(2 * hw + 1, dp + 1))
+	if inward == Vector2i(0, 1):
+		cap = Rect2i(door - Vector2i(hw, 0), Vector2i(2 * hw + 1, dp + 1))
+	elif inward == Vector2i(1, 0):
+		cap = Rect2i(door - Vector2i(0, hw), Vector2i(dp + 1, 2 * hw + 1))
+	elif inward == Vector2i(-1, 0):
+		cap = Rect2i(door - Vector2i(dp, hw), Vector2i(dp + 1, 2 * hw + 1))
 	var rock := {door: true}
 	var queue: Array[Vector2i] = [door]
 	var qi := 0
@@ -202,9 +254,10 @@ func _make_gallery(g: Dictionary, village: VillageMap) -> void:
 	var start: Vector2i = keep[keep.size() - 1]
 	var dirs := [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1)]
 	var ends: Array[Vector2i] = []
+	var turn0 := posmod(dirs.find(inward) - 6, 8) if dirs.has(inward) else 0      # 0 for a mouth facing south
 	for wk in int(g.worms):
 		var at := start
-		var dir: int = [4, 0, 6, 5, 7][wk % 5]                    # west, east, inward, then the diagonals
+		var dir: int = posmod([4, 0, 6, 5, 7][wk % 5] + turn0, 8)  # across, across, inward, then the diagonals
 		for s in int(g.worm_steps):
 			var turn: int = [-1, 0, 0, 1][_roll(11 + wk, s, 0, 4)]
 			dir = posmod(dir + turn, 8)
@@ -268,6 +321,7 @@ func _make_gallery(g: Dictionary, village: VillageMap) -> void:
 		{"level": SURFACE, "stand": surface_stand, "door": door},
 		{"level": level, "stand": door, "door": surface_stand}]})
 	_place_seams(g, m, village, rock, door)
+	_salt = 0
 
 
 ## The gallery's seams: on wall cells (rock beside the floor) under the surface rock, away from the entrance, no two
@@ -282,7 +336,7 @@ func _place_seams(g: Dictionary, m: LevelMap, village: VillageMap, rock: Diction
 	for c in m.wall_cells():
 		if not rock.has(c) or maxi(absi(c.x - door.x), absi(c.y - door.y)) <= 2:
 			continue
-		cands.append([Overworld.hash32(seed, 41, c.x, c.y), c.y, c.x])
+		cands.append([Overworld.hash32(seed, 41 + _salt, c.x, c.y), c.y, c.x])
 	cands.sort()
 	var taken := {}
 	var ci := 0

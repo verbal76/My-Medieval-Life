@@ -77,7 +77,7 @@ func _init() -> void:
 	w.npc_died.connect(_on_died)
 	player_min_hp = w.player.hp
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
-		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "animals": _animal_counts(), "alive": _villagers().size(),
+		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
 	var samples: Array = [_sample(start)]
 	_herd_day(0)
@@ -752,7 +752,7 @@ func _animal_counts() -> Dictionary:
 ## = held(now); produced = made_ (recipes, harvest, kills, home cooking) + mined_ + felled_ + dug_ (MIN-E open pits);
 ## consumed = eaten_ + used_ (recipes, home cooking) + used_building_ + used_works_ + used_repairs_
 ## + feed_eaten_ (troughs) + burned_ (firewood) + broke_ (tools) + poached_lost_ (the bandits' game) + spoiled_ (carcasses left to spoil)
-## + backfilled_ (earth put back into a pit).
+## + backfilled_ (earth put back into a pit); MIN-F: cut_ (rock cut from a tunnel face) is produced too.
 ## Only non-zero residuals are kept, with their terms.
 func _ledger(start: Dictionary) -> Dictionary:
 	var st0: Dictionary = start.stats
@@ -764,7 +764,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for id in start.goods:
 		ids[id] = true
 	for k in w.stats:
-		for p in ["made_", "mined_", "felled_", "dug_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "spoiled_", "wild_eaten_", "farm_harvest_", "backfilled_"]:
+		for p in ["made_", "mined_", "felled_", "dug_", "cut_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "spoiled_", "wild_eaten_", "farm_harvest_", "backfilled_"]:
 			if str(k).begins_with(p):
 				ids[str(k).substr(p.length())] = true
 				break
@@ -778,7 +778,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 	var keys := ids.keys()
 	keys.sort()
 	for id in keys:
-		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id) + d.call("dug_" + id)
+		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id) + d.call("dug_" + id) + d.call("cut_" + id)
 		var consumed: int = d.call("eaten_" + id) + d.call("used_" + id) + d.call("used_building_" + id) + d.call("used_works_" + id) \
 			+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id) + d.call("spoiled_" + id) \
 			+ d.call("wild_eaten_" + id) + d.call("backfilled_" + id)
@@ -834,6 +834,12 @@ func _ledger(start: Dictionary) -> Dictionary:
 		var net: int = d.call("dug_" + id) - d.call("backfilled_" + id)
 		if fall != net:
 			dep.append({"pit": id, "taken_from_pits": fall, "dug_counted": net})
+	# MIN-F: the rock cut from the tunnels, a pool per item: (now - start) of MineWorks.ground_cut = cut_
+	var cut_now: Dictionary = w.mine_works.ground_cut()
+	for id in ["stone", "spoil"]:
+		var taken: int = int(cut_now.get(id, 0)) - int(start.get("cut", {}).get(id, 0))
+		if taken != d.call("cut_" + id):
+			dep.append({"tunnel": id, "taken_from_rock": taken, "cut_counted": d.call("cut_" + id)})
 	var animals := {}
 	var now_a := _animal_counts()
 	var kinds: Array = GameData.b("animals").keys().filter(func(k): return k != "_note")

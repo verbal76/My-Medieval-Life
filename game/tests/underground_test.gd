@@ -82,9 +82,10 @@ func _test_generation() -> void:
 		var walls := {}
 		for c in lm.wall_cells():
 			walls[c] = true
-		var seam_ok := u.seams.size() == 6
+		var gseams := u.seams.filter(func(x): return int(x.level) == -1)      # MIN-F: the cave's (-2) are underground_ext_test's
+		var seam_ok := gseams.size() == 6
 		var kinds := {}
-		for sd in u.seams:
+		for sd in gseams:
 			var c := Vector2i(int(sd.x), int(sd.y))
 			kinds[str(sd.ore)] = int(kinds.get(str(sd.ore), 0)) + 1
 			if not walls.has(c) or not _static_rock(m, c) or int(sd.level) != -1 or int(sd.amount) <= 0:
@@ -106,7 +107,7 @@ func _test_portals_and_collision() -> void:
 	var p := w.player
 	var stand := Vector2i(int(w.map.data.mine.entrance[0]), int(w.map.data.mine.entrance[1]))
 	var door := stand + Vector2i.UP
-	check(w.underground.portals.size() == 1 and w.underground.portals[0].id == "adit", "one portal: the adit")
+	check(w.underground.portals.size() == 2 and w.underground.portals[0].id == "adit" and w.underground.portals[1].id == "cave_mouth", "two portals: the adit first, then the cave's mouth (MIN-H)")
 	p.pos = Vector2(stand) + Vector2(0.5, 0.5)
 	check(w.player_through(Vector2.LEFT).is_empty() and w.player_level == 0, "walking along the rock face does not go in")
 	var seen := []
@@ -154,13 +155,14 @@ func _test_mining_below() -> void:
 	var w := _world()
 	var p := w.player
 	var below := w.deposits.filter(func(d): return World.level_of(d) == -1)
-	check(below.size() == 6 and w.deposits.size() == w.map.data.deposits.size() + 6, "the gallery's seams are ordinary records in World.deposits")
+	var cave := w.deposits.filter(func(d): return World.level_of(d) == -2)
+	check(below.size() == 6 and cave.size() == 3 and w.deposits.size() == w.map.data.deposits.size() + 6 + 3, "the gallery's seams (and the cave's three, MIN-H) are ordinary records in World.deposits")
 	var seam: Dictionary = below.filter(func(d): return d.ore == "iron_ore")[0]
 	var c := Vector2i(int(seam.x), int(seam.y))
 	check(w.deposit_at(c, -1) == seam and w.deposit_at(c).is_empty(), "a seam below is found on its level only, not on the surface above it")
 	check(w.nearest_deposit(c, ["iron_ore"]).get("level", 0) == 0 and w.nearest_deposit(c, ["iron_ore"], -1) == seam,
 			"the nearest seam is looked for on one level (the surface unless named)")
-	check(w.villagers_reach(seam) and w.villagers_reach(w.deposits[0]) and w.villager_levels == [0, -1], "villagers reach the gallery's seams and the surface's")
+	check(w.villagers_reach(seam) and w.villagers_reach(w.deposits[0]) and w.villager_levels == [0, -1, -2], "villagers reach the gallery's seams and the surface's (and the cave's, MIN-H)")
 	var node := ResourceNodes.def_for_deposit(seam)
 	check(not node.is_empty() and str(node.id) == "iron_seam", "a seam below is the same resource node as on the surface (iron_seam)")
 	p.inv.add("pickaxe")
@@ -456,7 +458,8 @@ func _surface_print(w: World) -> String:
 func _run_scene() -> void:
 	main.new_game()
 	var w: World = main.world
-	check(main.level_views.size() == 1 and not main.level_views.values()[0].visible and main.view.modulate.a == 1.0, "the gallery's view is built and hidden on the surface")
+	check(main.level_views.size() == 2 and not main.level_views.values()[0].visible and not main.level_views.values()[1].visible and main.view.modulate.a == 1.0,
+			"the gallery's view (and the cave's, MIN-H) is built and hidden on the surface")
 	var lv: LevelView = main.level_views.values()[0]
 	var tiles: Dictionary = GameData.resources.deposit_tiles.ore
 	var wrong := 0

@@ -821,6 +821,13 @@
    "sha256": "754f265a96b315852e964ed7569c0a868f6e58f5acdf29bbafa73a6b4d654508"
   },
   {
+   "file": "assets/icons/minecart.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Metal/Metal-Bucket-02.png",
+   "transform": "copied unchanged",
+   "sha256": "cd73ee48200fbd481c2629a37e0ebf26bb541ea747825dbc0ce29e5b12827498"
+  },
+  {
    "file": "assets/icons/ore_sample.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Rocks-10.png",
@@ -912,11 +919,25 @@
    "sha256": "fb811d75ea147c20c54f1b73f6876e7f4ea521d22f69fe237aaf5dda62d5ad88"
   },
   {
+   "file": "assets/icons/timber_support.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Wood-Log-Block-06.png",
+   "transform": "copied unchanged",
+   "sha256": "19f72aee59308e079e1171be025d7906d713d8cd8a34fe230aa381f8a095b79b"
+  },
+  {
    "file": "assets/icons/topsoil.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Blocks/Dirt-Block-01.png",
    "transform": "copied unchanged",
    "sha256": "4a813af2eb1520d0660580cd6be5740cadf3d20e5e33423594e1d95dc757da97"
+  },
+  {
+   "file": "assets/icons/track_section.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Wood-Plank-Type-B-04.png",
+   "transform": "copied unchanged",
+   "sha256": "653c619529f1647f4986d4cafcb38c45534e89c5e9165d9809b47e3714a7649e"
   },
   {
    "file": "assets/icons/wheat.png",

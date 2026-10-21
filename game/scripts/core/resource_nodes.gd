@@ -137,6 +137,15 @@ static func instances(world: World, d: Dictionary) -> Array:
 			return world.prospecting.clues.duplicate() if world.prospecting != null else []
 		"pit":                                   # MIN-E: the open pits staked (OpenPits)
 			return world.pits.pits.duplicate() if world.pits != null else []
+		"tunnel":                                # MIN-F: the rock cells being cut (MineWorks.cut), sorted
+			var out := []
+			if world.mine_works != null:
+				var keys: Array = world.mine_works.cut.keys()
+				keys.sort()
+				for k in keys:
+					var p: PackedStringArray = str(k).split(",")
+					out.append({"level": int(p[0]), "x": int(p[1]), "y": int(p[2])})
+			return out
 	return []
 
 
@@ -176,7 +185,7 @@ static func _found(d: Dictionary, ref) -> Dictionary:
 ## Where an instance stands: a seam's or a tree trunk's cell, a field's middle cell, an animal's cell.
 static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 	match str(d.get("match", {}).get("kind", "")):
-		"deposit", "boulder", "tree", "plant", "clue":
+		"deposit", "boulder", "tree", "plant", "clue", "tunnel":
 			return Vector2i(int(ref.x), int(ref.y))
 		"field":
 			return Vector2i(int(ref.x) + int(ref.w) / 2, int(ref.y) + int(ref.h) / 2)
@@ -196,6 +205,8 @@ static func remaining(world: World, d: Dictionary, ref) -> int:
 			return maxi(0, int(ref.amount))
 		"clue":
 			return maxi(0, world.prospecting.samples_left(ref))
+		"tunnel":
+			return MineWorks.cell_units() - world.mine_works.cut_at(int(ref.level), Vector2i(int(ref.x), int(ref.y)))
 		"pit":
 			var gl := OpenPits.left(ref)
 			var n := 0

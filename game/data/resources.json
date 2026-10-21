@@ -892,6 +892,55 @@
       ],
       "status": "implemented",
       "risk": "Space: the village's dense ground holds few pit sites (66 on the static layout), so the manor stakes a pit only where a known find lies near one; a pit dug for a find may expose nothing (WDR-022). Whether topsoil, dirt, spoil, quarry stone and building blocks are different goods, and what earth is used for beyond backfill, are the owner's open questions (MIN_E_OPEN_PIT.md)."
+    },
+    "tunnel_rock": {
+      "name": "Tunnel rock",
+      "category": "mineral",
+      "origin": "natural",
+      "match": {
+        "kind": "tunnel"
+      },
+      "where": "The rock beside the floor of an underground level (the adit gallery, the cave under the hill), under the hill's static rock with rock all round it and inside the level map's edge; never a seam's cell (OD-29: tunnels only below ground)",
+      "verb": "Cutting",
+      "action_label": "Cut into the rock",
+      "action": "interact",
+      "tool": "pickaxe",
+      "tool_required": true,
+      "tool_hint": "You need a pickaxe to cut rock, and a timber support standing within 2 cells (mine_works.json support.reach) of the face.",
+      "skill": "mining",
+      "level": 1,
+      "minutes": 30,
+      "time_note": "Each unit's minutes (mine_works.json cell: stone 30, spoil 25) for a villager, by the Mining mine_time effect; the player's swing is timed as a mining swing (MineWorks.player_secs).",
+      "action_cost": {
+        "stamina": 0,
+        "tool_wear": 1,
+        "note": "No stamina. The pickaxe wears `wear` (1) a unit unless the Mining tool_wear_save effect spares it; each unit earns `xp` (4) Mining xp."
+      },
+      "yields": {
+        "stone": 1,
+        "spoil": 1
+      },
+      "yield_notes": "One unit a cut from the rock face beside the cutter (MineWorks.dig): every rock cell holds the same finite units (mine_works.json cell: 3 stone, then 2 spoil), counted cut_<item>; the last unit opens the cell as floor of its level (its A* at once). Unsupported rock is not cut: a timber support must stand within support.reach cells.",
+      "total": "Bounded by the hill: only rock under the hill's static rock with rock all round may be cut (Underground.under_rock), 5 units a cell; the books (MineWorks.ground_cut) count every unit cut.",
+      "depletion": "finite",
+      "regeneration": "None: a cell cut through stays floor (saved in mine_works.opened); no rock grows back.",
+      "owner": "Common rock, like the seams below: nobody owns a tunnel; whoever cuts a unit holds it (MIN-C-Q2: no mining rights are made).",
+      "theft": "Never theft: the rock is no one's.",
+      "npc_harvest": false,
+      "npc_note": "MIN-F: a villager cuts by the same function as the player (MineWorks.dig with the villager as `who`, tested), but no villager decides to tunnel on its own yet: tunnels expose no new ore (the cave's and the gallery's seams are generated), so no job or manor posting calls for one (MIN_F_UNDERGROUND.md, owner question).",
+      "player_harvest": true,
+      "gather": true,
+      "range": 1,
+      "range_note": "A rock cell beside the player below ground, ahead or one of its neighbours (main.gd _works_targets). Each unit is a Use: Gather mode's repeated harvest does not reach tunnel rock (ResourceNodes.node_at finds seams).",
+      "icon": "stone",
+      "sources": [
+        "game/scripts/core/mine_works.gd::dig",
+        "game/scripts/core/mine_works.gd::rock_refusal",
+        "game/scripts/core/mine_works.gd::place_support",
+        "game/scripts/main.gd::_works_targets"
+      ],
+      "status": "implemented",
+      "risk": "Collapse, ventilation and lighting as a need are not simulated (MIN_F_UNDERGROUND.md): a support is what lets a tunnel be extended, nothing more. The hill holds little rock beyond the galleries, so tunnelling is short."
     }
   },
   "materials": {"nails": [{"use": "building", "text": "B14-07: forged from iron bars at the anvil (forge_nails) and used up building wooden stairs (4 a rim cell) and walkways (3 a rim cell) through a mountain's cliff rim.", "source": "game/scripts/core/terrain.gd::build"}], 
@@ -899,6 +948,8 @@
       {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take): a heap is a solid cell while it holds anything.", "source": "game/scripts/core/open_pit.gd::tip"}],
     "dirt": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was dirt (OpenPits.backfill, counted backfilled_dirt).", "source": "game/scripts/core/open_pit.gd::backfill"},
       {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).", "source": "game/scripts/core/open_pit.gd::tip"}],
+    "timber_support": [{"use": "building", "text": "MIN-F: made at the sawhorse from a log and two planks (make_timber_support) and set up on the floor of an underground level with a mallet (MineWorks.place_support), used up (used_timber_support): rock within support.reach cells of a support may be cut.", "source": "game/scripts/core/mine_works.gd::place_support"}],
+    "track_section": [{"use": "building", "text": "MIN-F: made at the workbench from planks and nails (make_track_section) and laid one a cell with a mallet on an underground floor or in the mine's yard (MineWorks.lay_track), used up (used_track_section): a minecart runs on it.", "source": "game/scripts/core/mine_works.gd::lay_track"}],
     "spoil": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was spoil (OpenPits.backfill, counted backfilled_spoil).", "source": "game/scripts/core/open_pit.gd::backfill"},
       {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).", "source": "game/scripts/core/open_pit.gd::tip"}],
     "ore_sample": [{"use": "assay", "text": "Read by a smith at the forge for a fee, with a coal (Prospecting.assay, MIN-C): the sample is used up and its reading becomes a record its holder and the smith know.", "source": "game/scripts/core/prospecting.gd::assay"}],
@@ -997,7 +1048,8 @@
   "exceptions": [
     {"item": "topsoil", "finding": "import", "reason": "MIN-E: earth comes only from the finite ground of the open pits staked in the village (OpenPits: each cell's layers, counted pit_ground_ when staked); nothing brings more, and none is meant to: the ground is finite (WDR-022).", "status": "implemented"},
     {"item": "dirt", "finding": "import", "reason": "MIN-E: earth comes only from the finite ground of the open pits staked in the village (OpenPits); nothing brings more, and none is meant to.", "status": "implemented"},
-    {"item": "spoil", "finding": "import", "reason": "MIN-E: spoil comes only from the finite ground of the open pits staked in the village (OpenPits); nothing brings more, and none is meant to.", "status": "implemented"},
+    {"item": "spoil", "finding": "import", "reason": "MIN-E: spoil comes only from the finite ground of the open pits staked in the village (OpenPits) and, MIN-F, from the rock cut to extend the tunnels below ground (MineWorks, bounded by the hill); nothing brings more, and none is meant to.", "status": "implemented"},
+    {"item": "minecart", "finding": "no_consumer", "reason": "MIN-F: built from cart parts at the workbench (build_minecart); it is not consumed but used: set down on track it becomes a cart of kind minecart (Carts, MineWorks.set_down_minecart) that hauls goods along the rails below ground and out to the mine's yard.", "status": "implemented"},
     {"item": "ore_sample", "finding": "import", "reason": "MIN-C: rock samples come only from the clues' finite search areas (samples_per_clue a clue, one a cell); nothing brings more, and none is meant to: once the village's clues are sampled out, new ground to read is MIN-D's (deeper strata, the larger map). The finite source is the design, not a gap.", "status": "implemented"},
     {"item": "feather", "finding": "no_consumer", "reason": "A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them.", "status": "implemented"},
     {"item": "handcart", "finding": "no_consumer", "reason": "B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; it is not consumed but used: pulled storage, parked at home or a cart hub, and households' market runs (carts in play, B14-06, game/scripts/core/carts.gd).", "status": "implemented"},
