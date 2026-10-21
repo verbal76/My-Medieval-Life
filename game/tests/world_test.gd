@@ -676,17 +676,17 @@ func _par05_awareness() -> void:
 	p.pos = at
 	victim.pos = at + Vector2(0.8, 0)
 	guard.pos = at + Vector2(25, 0)
-	main._crime(victim)
+	w.player_assault(victim)
 	check(guard.target == -1, "PAR-05: a guard who does not see the attack knows nothing of it")
 	victim.target = -1
 	guard.pos = at + Vector2(6, 0)
-	main._crime(victim)
+	w.player_assault(victim)
 	check(guard.target == -2, "PAR-05: a guard who sees the attack answers it")
 	guard.target = -1
 	victim.target = -1
 	guard.pos = victim.pos + Vector2(float(GameData.b("witness_radius")) + 4.0, 0)
 	victim.report = {}
-	main._crime(victim)
+	w.player_assault(victim)
 	check(guard.target == -1, "PAR-05: a guard out of sight does not hear an attack (there is no hearing)")
 	check(int(victim.report.get("offender", 0)) == -2, "PAR-05: the victim will report it")
 	victim.target = -1
@@ -705,7 +705,7 @@ func _par05_awareness() -> void:
 	wit.pos = at + Vector2(0, 2.0)
 	wit.report = {}
 	victim.pos = at + Vector2(0.8, 0)
-	main._crime(victim)
+	w.player_assault(victim)
 	check(int(wit.report.get("offender", 0)) == -2, "PAR-05: a witness will report it too")
 	wit.pos = guard.pos + Vector2(0, 1.5)
 	w.brain._report(wit)
@@ -728,7 +728,7 @@ func _par05_awareness() -> void:
 	p.pos = cell + Vector2(0, 3.0) if w.place_of(cell + Vector2(0, 3.0)) == "" else cell + Vector2(0, 5.0)
 	victim.pos = p.pos + Vector2(0.5, 0)
 	if w.place_of(p.pos) == "" and inside != "":
-		main._crime(victim)
+		w.player_assault(victim)
 		check(guard.target == -1, "PAR-05: a guard indoors neither sees nor hears an attack outside")
 	guard.target = -1
 	var bandit: NPC = null
@@ -1454,6 +1454,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_mining()
 	_dvw_a12_felling()
 	_dvw_a12_crafting()
+	_dvw_a12_combat()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1597,6 +1598,76 @@ func _dvw_a12_crafting() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
 	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("crafting", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
+	_restore_pack(keep)
+
+
+## R7-R9: the player's blow (the weapon's damage, a crit), its harm, 4 Combat xp, assault as a crime seen within the
+## witness radius, a bandit fighting back and no crime, death, and the outcome kept over a save.
+func _dvw_a12_combat() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var at := Vector2(60.5, 60.5)
+	for dd in range(0, 40):
+		if w.place_of(at) == "" and not main.map.is_solid(Vector2i(at)):
+			break
+		at += Vector2(1, 0)
+	var victim: NPC = null
+	var wit: NPC = null
+	var far: NPC = null
+	var bandit: NPC = null
+	for n: NPC in w.npcs:
+		if not n.alive:
+			continue
+		if n.role == "bandit" and bandit == null:
+			bandit = n
+		elif n.role == "adult" and n.job != "guard":
+			if victim == null:
+				victim = n
+			elif wit == null:
+				wit = n
+			elif far == null:
+				far = n
+	for n: NPC in [victim, wit, far]:
+		n.plan.clear()
+		n.target = -1
+		n.anim = "idle"
+	for n: NPC in w.npcs:
+		if n.alive and not [victim, wit, far, bandit].has(n):
+			n.pos = Vector2(116.5, 86.5)
+	p.pos = at
+	victim.pos = at + Vector2(0.8, 0)
+	wit.pos = at + Vector2(0, 2.0)
+	far.pos = at + Vector2(float(GameData.b("witness_radius")) + 4.0, 0)
+	var s := w.player_strike()
+	check(not s.crit and float(s.dmg) == p.damage(), "DVW-A12 R7: with no Combat tier a blow is the weapon's damage, never doubled (%s)" % str(s))
+	var hp0 := victim.hp
+	var assault0 := float(w.stats.get("player_assault", 0.0))
+	var want := maxf(0.5, p.damage() * Skills.value(victim, "combat", "damage_taken", 1.0) - victim.armor * 0.5)
+	var h := w.player_melee_npc(victim)
+	check(is_equal_approx(float(h.dealt), want) and is_equal_approx(victim.hp, hp0 - want) and not h.killed, "DVW-A12 R8: the blow takes the villager's armour into account (%s)" % str(h))
+	check(int(p.skills.get("combat", 0)) == 4, "DVW-A12 R7: 4 Combat xp a blow on a villager")
+	check(float(w.stats.get("player_assault", 0.0)) - assault0 == 1.0 and victim.target == -2 and victim.memory.has("attacked by %s" % p.name), "DVW-A12 R9: assault: counted, remembered, and an adult fights back")
+	check(wit.memory.any(func(m): return str(m).begins_with("saw %s" % p.name)) and not far.memory.any(func(m): return str(m).begins_with("saw %s" % p.name)), "DVW-A12 R9: a witness within the witness radius saw it; one beyond did not")
+	if bandit != null:
+		bandit.target = -1
+		bandit.pos = at + Vector2(-0.8, 0)
+		var a1 := float(w.stats.get("player_assault", 0.0))
+		w.player_hit_npc(bandit, 0.1)
+		check(bandit.target == -2 and float(w.stats.get("player_assault", 0.0)) == a1, "DVW-A12 R8: a bandit struck fights back, and it is no crime")
+	victim.hp = 0.5
+	var h2 := w.player_hit_npc(victim, 50.0)
+	check(h2.killed and not victim.alive, "DVW-A12 R8: a villager at no health dies, slain by the player")
+	# the interface's spell hit uses the same rules
+	far.target = -1
+	var a2 := float(w.stats.get("player_assault", 0.0))
+	var fhp := far.hp
+	main._hit(far, 3.0)
+	check(far.hp < fhp and far.target == -2 and float(w.stats.get("player_assault", 0.0)) == a2 + 1.0, "DVW-A12 R8: the interface's hit is core's (harm, crime)")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var v2 := w2.npc(victim.id)
+	check(v2 != null and not v2.alive and w2.npc(far.id).memory.has("attacked by %s" % p.name), "DVW-A12 R8, R9: the death and the victim's memory of the attack are saved (the stats are session counters, not saved)")
 	_restore_pack(keep)
 
 

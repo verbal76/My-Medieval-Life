@@ -2716,20 +2716,18 @@ func _blow() -> void:
 	var who: Object = Combat.target(world, p.pos, facing_vec(), swing.only)
 	if who is NPC:
 		swing.hits += 1
-		_hit(who, _strike(p))
-		_xp("combat", 4)
+		var hp0: float = who.hp
+		var h := world.player_melee_npc(who)          # the strike, the harm, the crime and the xp are core's (DVW-A12 R7-R9)
+		if h.crit:
+			ui.message("A telling blow!")
+		_hit_fx(sprites.get(who.id), who.max_hp, hp0 - float(h.dealt), float(h.dealt))
+		_level_up("combat", int(h.up))
 	elif who is Animal:
 		swing.hits += 1
-		_hit_animal(who, _strike(p))
-
-
-## The damage of one blow: the weapon's, and a double blow with the Combat tier's crit chance.
-func _strike(p: PlayerState) -> float:
-	var d := p.damage()
-	if world.rng.randf() < Skills.value(p, "combat", "crit_chance"):
-		ui.message("A telling blow!")
-		return d * 2.0
-	return d
+		var s := world.player_strike()
+		if s.crit:
+			ui.message("A telling blow!")
+		_hit_animal(who, float(s.dmg))
 
 
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
@@ -2846,19 +2844,12 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
 
 
+## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,
+## DVW-A12 R8); the blow is shown here.
 func _hit(n: NPC, dmg: float) -> void:
-	var dealt := world.harm_npc(n, dmg)          # their Combat damage_taken and armour, as the player's (PAR-01)
-	_hit_fx(sprites.get(n.id), n.max_hp, n.hp, dealt)
-	# the blow wakes a sleeper and the noise wakes those near, who then see it (owner rule)
-	world.wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
-	if n.role != "bandit":
-		_crime(n)
-	elif n.target == -1:
-		n.target = -2
-	if n.hp <= 0.0:
-		world.kill(n, "slain by %s %s" % [world.player.name, world.player.family])
-		if n.role == "bandit":
-			world.relations.defended(n.pos)    # villagers who saw a bandit put down think better of you (CRT-10)
+	var hp0 := n.hp
+	var h := world.player_hit_npc(n, dmg)
+	_hit_fx(sprites.get(n.id), n.max_hp, hp0 - float(h.dealt), float(h.dealt))
 
 
 ## A blow that landed (Build 8 report: no sign of damage): the target flashes red, the damage floats
@@ -2907,25 +2898,6 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 	get_tree().create_timer(3.1).timeout.connect(func():
 		if is_instance_valid(bar) and Time.get_ticks_msec() >= int(bar.get_meta("until", 0)):
 			bar.visible = false)
-
-
-## Attacking a villager is a crime: adults who are hit fight back, and those who see it (World.aware_of_attack, PAR-05)
-## remember it; the guards among them answer, and the victim and the other witnesses carry word to a guard
-## (World.raise_alarm, report_crime). Nobody else knows.
-func _crime(victim: NPC) -> void:
-	var p := world.player
-	victim.remember("attacked by %s" % p.name)
-	world.relations.harmed(victim, float(Relations.cfg().victim_harm))
-	if victim.role == "adult":
-		victim.target = -2
-	var aware := world.aware_of_attack(p.pos, victim)
-	for n: NPC in aware.seen:
-		if n.role != "bandit":
-			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
-			world.relations.harmed(n, float(Relations.cfg().witness_harm))
-	world.raise_alarm(aware, -2)
-	world.stat("player_assault")
-	world.note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
 
 func fireball() -> void:

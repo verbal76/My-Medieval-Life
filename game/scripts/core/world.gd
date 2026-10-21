@@ -1339,6 +1339,64 @@ func harm_npc(n: NPC, dmg: float) -> float:
 	return dealt
 
 
+## DVW-A12 R7: the damage of one blow of the player's: their weapon's (PlayerState.damage), doubled by the Combat
+## tier's crit_chance. Returns {dmg, crit}.
+func player_strike() -> Dictionary:
+	var d := player.damage()
+	if rng.randf() < Skills.value(player, "combat", "crit_chance"):
+		return {"dmg": d * 2.0, "crit": true}
+	return {"dmg": d, "crit": false}
+
+
+## DVW-A12 R7: the player's sword blow lands on villager `n`: player_strike, player_hit_npc, and 4 Combat xp a blow.
+## Returns player_hit_npc's result plus {crit, up} (up: a new Combat level, or 0).
+func player_melee_npc(n: NPC) -> Dictionary:
+	var s := player_strike()
+	var h := player_hit_npc(n, float(s.dmg))
+	h["crit"] = s.crit
+	h["up"] = player.gain("combat", 4)
+	return h
+
+
+## DVW-A12 R8: a blow of the player's (a sword's or a spell's) of `dmg` lands on villager `n`: harm_npc (their Combat
+## damage_taken and armour, PAR-01); the blow wakes a sleeper and the noise wakes those near, who then see it (owner
+## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
+## slain by the player, and a bandit put down near villagers is a defence (CRT-10). Returns {dealt, killed}.
+func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
+	var dealt := harm_npc(n, dmg)
+	wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
+	if n.role != "bandit":
+		player_assault(n)
+	elif n.target == -1:
+		n.target = -2
+	var killed := false
+	if n.hp <= 0.0:
+		kill(n, "slain by %s %s" % [player.name, player.family])
+		killed = true
+		if n.role == "bandit":
+			relations.defended(n.pos)        # villagers who saw a bandit put down think better of the player (CRT-10)
+	return {"dealt": dealt, "killed": killed}
+
+
+## DVW-A12 R9: attacking a villager is a crime: the victim remembers it and thinks worse of the player, an adult fights
+## back, and those who see it (aware_of_attack, witness_radius, PAR-05) remember it; the guards among them answer, and
+## the victim and the other witnesses carry word to a guard (raise_alarm, report_crime). Nobody else knows.
+func player_assault(victim: NPC) -> void:
+	var p := player
+	victim.remember("attacked by %s" % p.name)
+	relations.harmed(victim, float(Relations.cfg().victim_harm))
+	if victim.role == "adult":
+		victim.target = -2
+	var aware := aware_of_attack(p.pos, victim)
+	for n: NPC in aware.seen:
+		if n.role != "bandit":
+			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
+			relations.harmed(n, float(Relations.cfg().witness_harm))
+	raise_alarm(aware, -2)
+	stat("player_assault")
+	note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
+
+
 ## PAR-01: a villager's blow, by the player's Combat rules: damage_mult, a crit_chance double blow.
 func npc_blow(n: NPC) -> float:
 	var dmg := n.damage * Skills.value(n, "combat", "damage_mult", 1.0)
