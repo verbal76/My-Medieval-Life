@@ -3400,8 +3400,8 @@ func _day_labour(n: NPC) -> bool:
 ## `caravan_float`, tapering to nothing as the village's coins reach `caravan_ceiling_per_head` a head)
 ## and every coin the village pays it for ore, coal and stone; it spends from it, at
 ## most `caravan_coins` a visit, and never pays out a coin it does not hold. It sells first, then buys
-## the market's surplus (never the mine's raw ore, coal and stone, NOT_EXPORTED) at 0.8 x value, the smiths' work first (their ore is paid for in the metal goods
-## the caravan carries off), one unit at a time from each seller in turn so a short purse is shared.
+## the market's surplus (never the mine's raw ore, coal and stone, NOT_EXPORTED) at 0.8 x value, one unit at a time,
+## each to the seller that needs the sale most (EQ-22: caravan_line_need), so a short purse goes where the need is.
 ## The village's currency can therefore grow only by the allowance, and never past its ceiling; the
 ## goods leave the village; the coins are logged in coin_sources.
 func caravan() -> void:
@@ -3466,41 +3466,74 @@ func caravan() -> void:
 			var extra := o.inv.count(id) - int(caps.get(id, 6)) / 2
 			if extra > 0:
 				lines.append([o, id, extra])
-	# the smiths' lines first (they pay for ore with the metal goods the caravan takes), then the others
-	var smiths := lines.filter(func(l): return (l[0] as NPC).job == "smith")
-	var others := lines.filter(func(l): return (l[0] as NPC).job != "smith")
-	for group in [smiths, others]:
-		var first: int = (w.day() / every) % maxi(1, group.size())          # who is served first turns
-		var moved := true
-		while moved and budget > 0:
-			moved = false
-			for k in group.size():
-				var line: Array = group[(k + first) % group.size()]
-				var o: NPC = line[0]
-				var id: String = line[1]
-				var price := maxi(1, roundi(GameData.value(id) * 0.8))
-				if int(line[2]) <= 0 or price > budget:
-					continue
-				if tool_need.has(id) and int(tool_stock.get(id, 0)) <= int(tool_need[id]):
-					line[2] = 0                              # kept for a villager who needs it
-					w.stat("caravan_tool_kept_" + id)
-					continue
-				tool_stock[id] = int(tool_stock.get(id, 0)) - 1
-				line[2] = int(line[2]) - 1
-				o.inv.remove(id)
-				w.stat("exported_" + id)
-				o.coins += price
-				o.earned += price
-				budget -= price
-				w.caravan_purse -= price
-				w.coin_sources += price
-				w.stat("caravan_coins_in", price)
-				w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
-				bought += price
-				moved = true
+	# EQ-22 (owner 2026-10-21: "allocate purchasing according to actual demand and need"): no seller is served first
+	# for its trade. Each unit goes to the line whose seller needs the sale most (caravan_line_need: its surplus over
+	# what it keeps, and the coins its trade's inputs still want), ties to the lower seller id and then item; a unit
+	# sold lowers that need, so a short purse goes where the need is, neither in turn nor shared out equally.
+	var restock := {}              # seller id -> coins its trade's missing inputs cost (they do not change this visit)
+	for line in lines:
+		var o: NPC = line[0]
+		if not restock.has(o.id):
+			restock[o.id] = restock_cost(o)
+	while budget > 0:
+		var best: Array = []
+		var best_need := -1.0
+		for line in lines:
+			var o: NPC = line[0]
+			var id: String = line[1]
+			if int(line[2]) <= 0 or maxi(1, roundi(GameData.value(id) * 0.8)) > budget:
+				continue
+			var need := caravan_line_need(o, id, int(line[2]), int(restock[o.id]))
+			if best.is_empty() or need > best_need or (need == best_need and (o.id < (best[0] as NPC).id
+					or (o.id == (best[0] as NPC).id and id < str(best[1])))):
+				best = line
+				best_need = need
+		if best.is_empty():
+			break
+		var o: NPC = best[0]
+		var id: String = best[1]
+		var price := maxi(1, roundi(GameData.value(id) * 0.8))
+		if tool_need.has(id) and int(tool_stock.get(id, 0)) <= int(tool_need[id]):
+			best[2] = 0                              # kept for a villager who needs it
+			w.stat("caravan_tool_kept_" + id)
+			continue
+		tool_stock[id] = int(tool_stock.get(id, 0)) - 1
+		best[2] = int(best[2]) - 1
+		o.inv.remove(id)
+		w.stat("exported_" + id)
+		o.coins += price
+		o.earned += price
+		budget -= price
+		w.caravan_purse -= price
+		w.coin_sources += price
+		w.stat("caravan_coins_in", price)
+		w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
+		bought += price
 	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s%s." % [bought,
 		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
 		(" and %d stone to the market" % stone) if stone > 0 else ""])
+
+
+## What the inputs a trader's trade buys (BUYS of its role) and it lacks would cost at their value: what it
+## needs coins for to keep working and stocked (EQ-22).
+func restock_cost(o: NPC) -> int:
+	var cost := 0
+	for id in BUYS.get(buy_role(o), {}):
+		cost += wants(o, id) * GameData.value(id)
+	return cost
+
+
+## How much a seller needs the caravan to buy one more unit of `id`, of which it has `extra` for sale (EQ-22,
+## owner 2026-10-21; the measure is an agent proposal): the share of its holding of `id` that is surplus over what
+## it keeps (0 to 1), plus the share of its inputs' cost (`restock`) its coins cannot pay (0 to 1). A seller well
+## stocked, or with the coins to restock, needs the sale less than one short of its trade's inputs and coins.
+func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
+	var held := maxi(1, o.inv.count(id))
+	var surplus := clampf(float(extra) / float(held), 0.0, 1.0)
+	var short := 0.0
+	if restock > 0:
+		short = clampf(float(restock - o.coins) / float(restock), 0.0, 1.0)
+	return surplus + short
 
 
 ## When the village's own seams of an ore (or coal) are worked out, the caravan brings it: each
