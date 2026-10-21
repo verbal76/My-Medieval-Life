@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 186 (80 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **282** = 203 still open from the baseline + 80 added and open |
+| Entries added since | | 189 (81 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **283** = 203 still open from the baseline + 81 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (28)
@@ -58,7 +58,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (186)
+## Added since the baseline (189)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -221,8 +221,8 @@ None.
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | decision | PARTIALLY IMPLEMENTED | 18 |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | decision | BLOCKED | owner decision |
 | Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | decision | BLOCKED | owner decision |
-| Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | decision | BLOCKED | owner decision |
-| Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | decision | BLOCKED | owner decision |
+| Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | decision | COMPLETE AND VERIFIED | 18 |
+| Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | COMPLETE AND VERIFIED | 18 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | COMPLETE AND VERIFIED |  |
@@ -248,5 +248,8 @@ None.
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT | 15 |
+| X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT | 18 |
+| X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | ACTIVE DEVELOPMENT | 18 |
+| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | ACTIVE DEVELOPMENT | 18 |
 
 The full, current list of open entries by build is the Roadmap section of `docs/DEVELOPMENT_LEDGER.md`.

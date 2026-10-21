@@ -21816,6 +21816,11 @@
      "date": "2026-10-21",
      "change": "BLOCKED -> PARTIALLY IMPLEMENTED; target_build; owner_answer",
      "why": "Owner approved the structure (Expansion 18 master directive section 5): every productive industry uses levels 0-10, level 0 is baseline not inability; separate PayMultiplier and OutputMultiplier per industry and level over the existing base pay and output; diminishing returns as the initial model; productivity never creates raw materials and is never applied twice. Still open: the numbers per industry (Q18-11A) and how experience, tools, facilities and infrastructure compose the rating (Q18-11B)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Owner approved the 0-10 scale and industry-specific productivity and compensation adjustments; percentages wait for simulation evidence (conservative 10/5, moderate 20/8, aggressive 35/15 at level 10 as test hypotheses)"
     }
    ],
    "target_build": "18",
@@ -21909,7 +21914,7 @@
    "id": "Q18-12",
    "title": "May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1",
    "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
@@ -21917,7 +21922,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Recorded owner decision; implementation in PROS-18 / CON-01",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -21943,15 +21948,21 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; target_build; implementation",
+     "why": "Owner decided 2026-10-21 (docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md); implementation follows in PROS-18 and, for signing between parties in the village, CON-01"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "18",
+   "owner_answer": "Regular routes use established flat-rate fees per load or scheduled delivery; special deliveries to a requested person or location use negotiated contracts; buyers may collect their own goods; payment and goods transfer correctly; no free transport, no currency created."
   },
   {
    "id": "Q18-13",
    "title": "Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant?",
    "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
@@ -21959,7 +21970,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Recorded owner decision; implementation in PROS-18 / CON-01",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -21985,9 +21996,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; target_build; implementation",
+     "why": "Owner decided 2026-10-21 (docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md); implementation follows in PROS-18 and, for signing between parties in the village, CON-01"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "18",
+   "owner_answer": "Ordinary small agreements need no notarization; formal commercial contracts and ownership transfers need signatures; parties meeting face to face may sign without a notary; when they cannot meet, a courier with legal skill may act as notary and physically carry the documents for signing and back; no remote instant signing."
   },
   {
    "id": "Q18-9",
@@ -27982,6 +27999,132 @@
    "roadmap_reason": "nature sustainability (EQ-02)",
    "b16_class": "verify",
    "complexity": "S"
+  },
+  {
+   "id": "X18-Q12",
+   "title": "Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests",
+   "source": "docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md",
+   "approval": "owner decision Q18-12",
+   "acceptance": [
+    "Payment and goods transfer correctly; no free transport; no currency created; smoke tests pass or the missing feature is named"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "X18-Q13",
+   "title": "Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements",
+   "source": "docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md",
+   "approval": "owner decision Q18-13",
+   "acceptance": [
+    "Smoke tests pass or the missing feature is named; no remote instant signing anywhere"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "X18-SIM",
+   "title": "Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Do not finalize capability percentages yet. We want simulation evidence first.",
+   "description": "Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review",
+   "source": "docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Report with seeds, durations, assumptions and the section 5 metrics table per model; recommendation per industry; no constants adopted"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
   }
  ]
 }
