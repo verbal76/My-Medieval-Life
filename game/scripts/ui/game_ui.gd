@@ -465,6 +465,7 @@ func _build_hud() -> void:
 	recenter_btn.pressed.connect(func(): main.recenter())
 	hud.add_child(recenter_btn)
 	_build_place_bar()
+	_build_farm_price()
 
 
 ## The bar shown while placing a building (main.begin_placement), at the foot of the screen: what the
@@ -523,6 +524,111 @@ func show_placing(on: bool) -> void:
 func placing_text(text: String, ok: bool) -> void:
 	place_label.text = text
 	place_label.add_theme_color_override("font_color", Color(0.75, 1.0, 0.7) if ok else Color(1.0, 0.7, 0.6))
+
+
+# ---------------------------------------------------------------- farmland (FARM-09) ---------
+var farm_price: PanelContainer        # while marking out farmland: its size, the week's lease and the price, mid-screen
+var farm_price_label: Label
+
+
+## The farmland price, large near the middle of the screen (owner Q11: seen before confirming, updated as the
+## rectangle changes). It never takes input, so the map under it still answers the pointer and fingers.
+func _build_farm_price() -> void:
+	farm_price = PanelContainer.new()
+	farm_price.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.82)))
+	farm_price.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	farm_price.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	farm_price.anchor_top = 0.16
+	farm_price.anchor_bottom = 0.16
+	farm_price.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	farm_price.visible = false
+	farm_price_label = Label.new()
+	farm_price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	farm_price_label.add_theme_font_size_override("font_size", 30)
+	farm_price_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	farm_price.add_child(farm_price_label)
+	hud.add_child(farm_price)
+
+
+func show_farm_price(on: bool) -> void:
+	farm_price.visible = on
+	if on:
+		(place_bar.find_child("Hint", true, false) as Label).text = {"touch": "Put a finger down on the first corner and drag to the opposite one; Place here confirms.",
+			"gamepad": "Stick: move. A: first corner, then A again to confirm. B: back.",
+			"kbm": "Click the first corner and drag (or click again) for the opposite one; click inside or press E to confirm; Esc goes back."}.get(scheme, "")
+
+
+func farm_price_text(text: String, ok: bool) -> void:
+	farm_price_label.text = text
+	farm_price_label.add_theme_color_override("font_color", Color(0.85, 1.0, 0.75) if ok else Color(1.0, 0.7, 0.6))
+
+
+## The farmland chosen: lease it for its weekly rent or buy it at its price from the manor (Q11), each refused
+## without the coins; or choose again. The lease is weekly to the manor; bought land pays no rent.
+func show_farm_deal(rect: Rect2i) -> void:
+	var w: World = main.world
+	var fp: FarmPlots = w.farm_plots
+	var t := fp.terms(rect)
+	var fence := fp.fence_cost({"x": rect.position.x, "y": rect.position.y, "w": rect.size.x, "h": rect.size.y, "farm": {}})
+	_open("farm_deal", "Farmland %d x %d" % [rect.size.x, rect.size.y])
+	_label("Lease: %d coins a week" % int(t.rent), 26, Color(0.85, 1.0, 0.75))
+	_label("Buy: %d coins" % int(t.price), 26, Color(0.85, 1.0, 0.75))
+	_label("The ground %s (%d cells) is the manor's. Leased, the first week is paid now and then each week to the manor; bought, it is yours and pays no rent. You have %d coins." % [
+		w.where(rect), rect.size.x * rect.size.y, w.player.coins], 17)
+	_label("Then clear it, put up the fence and gate (%d planks and %d stone), plough inside the fence and sow." % [int(fence.plank), int(fence.stone)], 16)
+	var deal := func(lease: bool) -> void:
+		var p: Dictionary = fp.claim(rect, World.PLAYER, lease)
+		if p.is_empty():
+			message("You cannot have it: %s." % fp.why)
+			return
+		main.end_placement()
+		message("The farmland is yours%s." % (" on lease" if lease else ""))
+		show_build(p)
+	_button("Lease for %d coins a week" % int(t.rent), func(): deal.call(true), w.player.coins >= int(t.rent))
+	_button("Buy for %d coins" % int(t.price), func(): deal.call(false), w.player.coins >= int(t.price))
+	if w.player.coins < int(t.rent):
+		_label("You have not the coins for either.", 16, Color(1.0, 0.7, 0.6))
+	_button("Choose another place", func(): main.resume_placement())
+	_button("Cancel", func():
+		hide_all()
+		main.end_placement())
+
+
+## A farm plot of the player's (FARM-02): the lease, what still stands on it, the fence and gate (built from the
+## pack when the ground is clear and the materials are there), and how its field is worked.
+func _show_farm_plot(pl: Dictionary) -> void:
+	var w: World = main.world
+	var fp: FarmPlots = w.farm_plots
+	var r := FarmPlots.rect_of(pl)
+	_label("Farmland, %d x %d (%d cells)%s." % [r.size.x, r.size.y, r.size.x * r.size.y, ", bought" if w.owner_of(pl) == World.PLAYER else ""], 17)
+	var left := 0
+	for y in range(r.position.y, r.end.y):
+		for x in range(r.position.x, r.end.x):
+			if not w.farm.obstacle(Vector2i(x, y)).is_empty() and not (bool(pl.farm.get("fence", false)) and fp.on_fence_line(pl, Vector2i(x, y))):
+				left += 1
+	if left > 0:
+		_label("%d cells still need clearing: dig out stumps (an axe), pull up saplings, grub up plants, break boulders." % left, 16)
+	if bool(pl.farm.get("fence", false)):
+		var tilled := 0
+		for c: Vector2i in w.farm.cells:
+			if r.has_point(c):
+				tilled += 1
+		_label("Fenced, the gate on the %s side. %d of %d cells inside are tilled: plough and sow them as any field of yours." % [
+			_side_of(pl), tilled, (r.size.x - 2) * (r.size.y - 2)], 16)
+		return
+	var cost := fp.fence_cost(pl)
+	var no := fp.fence_refusal(pl, World.PLAYER, [w.player.inv])
+	_label("The fence and gate take %d planks and %d stone from your pack%s." % [int(cost.plank), int(cost.stone), (": " + no.trim_suffix(".")) if no != "" else ""], 16)
+	_button("Put up the fence and gate", func():
+		var why: String = fp.build_fence(pl, World.PLAYER, [w.player.inv])
+		message(why if why != "" else "The fence and gate stand.")
+		show_build(pl), no == "")
+
+
+func _side_of(pl: Dictionary) -> String:
+	var g: Vector2i = main.world.farm_plots.gate_of(pl)
+	var r := FarmPlots.rect_of(pl)
+	return "north" if g.y == r.position.y else ("south" if g.y == r.end.y - 1 else ("west" if g.x == r.position.x else "east"))
 
 
 ## The controls in use changed: touch buttons only for touch (unless set otherwise), and prompts
@@ -2556,6 +2662,16 @@ func show_build_menu() -> void:
 		var k: String = kind
 		_button("Choose a place", func(): main.begin_placement(k), no == "", h)
 		panel_body.add_child(h)
+	var fh := HBoxContainer.new()             # FARM-09: farmland of any size, leased or bought by area
+	fh.add_theme_constant_override("separation", 8)
+	var fl := Label.new()
+	fl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	fl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fl.add_theme_font_size_override("font_size", 17)
+	fl.text = "Farmland: a plot of the size you mark out, leased by the week or bought, priced by its area"
+	fh.add_child(fl)
+	_button("Mark out", func(): main.begin_farm_placement(), true, fh)
+	panel_body.add_child(fh)
 	var estates: Array = w.property.held_by(World.PLAYER).filter(func(r): return w.property.is_parcel(r) and not w.property.building_on(r).is_empty() and w.property.estate_id(r) == str(r.id))
 	for r in estates:
 		var hh := HBoxContainer.new()
@@ -2641,6 +2757,9 @@ func show_build(pl: Dictionary) -> void:
 	if w.tenant_of(pl) == World.PLAYER:
 		_label("You lease this ground from the manor: %d coins a week, next due on day %d%s." % [int(pl.rent), int(pl.due_day) + 1,
 				(", %d owed" % int(pl.arrears)) if int(pl.get("arrears", 0)) > 0 else ""], 16)
+	if FarmPlots.is_farm(pl):
+		_show_farm_plot(pl)                    # FARM-02: farmland is fenced and farmed, not built on
+		return
 	if pl.site.is_empty():
 		_label("Mark out a building here (a house to start with; rooms and workshops can be added to it later, one beside the other):")
 		for kind in Construction.STANDALONE:

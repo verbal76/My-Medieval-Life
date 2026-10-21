@@ -528,6 +528,8 @@ func _ready() -> void:
 				v.pos = world.player.pos + Vector2(1.0, 0)
 				v.plan = [world.brain.work(600, "", {}, "idle")]
 				ui.show_talk(v)
+			"farm_place", "farm_place_bad", "farm_deal", "farm_fenced":
+				_farm_plot_shot(shot_panel)             # FARM-09: marking out farmland, its price, the deal, the fence
 			"place", "place_bad", "place_deal", "workshop", "workshop_in", "hire":
 				# property phase 2: placing a smithy in the north-east wood (its trees felled), red
 				# over a house; the deal for the ground; the finished smithy outside and inside; a
@@ -1071,6 +1073,7 @@ func _apply_world_changes() -> void:
 	for f in world.fields:
 		world._field_tiles(f)
 	world.farm.show_all()                     # the player's field and pens (PL2-015)
+	world.farm_plots.show_all()               # family farmland: fences and the households' fields (FARM-02/03)
 	_show_plants()
 	for p in world.plots:
 		if not p.site.is_empty() and not p.site.done:
@@ -3090,6 +3093,8 @@ func resume_placement() -> void:
 	ui.hide_all()
 	paused = true
 	ui.show_placing(true)
+	if placing.has("farm"):
+		ui.show_farm_price(true)
 	_update_ghost()
 
 
@@ -3097,12 +3102,15 @@ func end_placement() -> void:
 	placing = {}
 	ghost.visible = false
 	ui.show_placing(false)
+	ui.show_farm_price(false)
 	recenter()
 	if not ui.modal():
 		paused = false
 
 
 func place_rect() -> Rect2i:
+	if placing.has("farm"):
+		return FarmPlots.rect_between(placing.a, placing.b)
 	if placing.has("fit"):
 		return Rect2i(placing.at, Vector2i.ONE)
 	return Rect2i(placing.at, world.construction.footprint(placing.kind))
@@ -3110,6 +3118,8 @@ func place_rect() -> Rect2i:
 
 ## Why the footprint cannot go where it is, "" if it can.
 func place_refusal() -> String:
+	if placing.has("farm"):
+		return world.farm_plots.refusal(place_rect()) if placing.set else ""
 	if placing.has("fit"):
 		return world.fitting.why_not(world.buildings.get(str(placing.building), {}), str(placing.fit), placing.at)
 	return world.construction.can_place(placing.kind, place_rect(), World.PLAYER, world.plot(str(placing.get("anchor", ""))))
@@ -3118,6 +3128,9 @@ func place_refusal() -> String:
 func _update_ghost() -> void:
 	var r := place_rect()
 	var why := place_refusal()
+	if placing.has("farm"):
+		_update_farm_ghost(r, why)
+		return
 	if placing.has("fit"):
 		ghost.show_at(r, Vector2i(-1, -1), why == "")
 		var nm: String = Fitting.NAMES[placing.fit]
@@ -3136,6 +3149,9 @@ func _update_ghost() -> void:
 
 ## Put the footprint's middle on a cell.
 func move_ghost_to(cell: Vector2i) -> void:
+	if placing.has("farm"):
+		_move_farm_corner(cell)
+		return
 	var size := Vector2i.ONE if placing.has("fit") else world.construction.footprint(placing.kind)
 	var at := cell - size / 2
 	at.x = clampi(at.x, 0, map.w - size.x)
@@ -3146,12 +3162,18 @@ func move_ghost_to(cell: Vector2i) -> void:
 
 
 func move_ghost(d: Vector2i) -> void:
+	if placing.has("farm"):
+		_move_farm_corner(Vector2i(placing.b if placing.set else placing.a) + d)
+		return
 	var size := Vector2i.ONE if placing.has("fit") else world.construction.footprint(placing.kind)
 	move_ghost_to(Vector2i(placing.at) + d + size / 2)
 
 
 ## Place: the deal for the ground, when the footprint may go there.
 func confirm_placement() -> void:
+	if placing.has("farm"):
+		_confirm_farm()
+		return
 	if placing.has("fit"):
 		var bid: String = placing.building
 		var fwhy: String = world.fitting.place(world.buildings.get(bid, {}), str(placing.fit), placing.at)
@@ -3191,6 +3213,8 @@ func _placing_step(delta: float) -> void:
 func _placing_input(e: InputEvent) -> bool:
 	if placing.is_empty() or ui.modal():
 		return false
+	if placing.has("farm"):
+		return _farm_input(e)
 	if e is InputEventMouseMotion and e.device != InputEvent.DEVICE_ID_EMULATION and not mid_drag and touch_points.is_empty():
 		move_ghost_to(_cell_at(e.position))
 		return true
@@ -3212,6 +3236,174 @@ func _placing_input(e: InputEvent) -> bool:
 	if e.is_action_pressed("pause") or e.is_action_pressed("ui_cancel"):
 		end_placement()
 		ui.message("Building put off.")
+		return true
+	return false
+
+
+# ---------------------------------------------------------------- placing farmland (FARM-09) ----
+## Mark out farmland (owner Q11, 2026-10-21): the house-plot placing flow with an adjustable rectangle. First the
+## green corner marker follows the pointer, the stick or the arrow keys; a press (a click, a finger down, E / A)
+## sets the first corner; then dragging (the finger or the held mouse button, or the stick) moves the opposite
+## corner and the rectangle grows or shrinks with it, green where the land office would let it, red with the
+## reason where not. The lease (a week) and the price to buy, from the rectangle's area by the land office's
+## rules (FarmPlots.terms), stand large in the middle of the screen and change as it moves. Place (E, Enter, A,
+## a click inside the rectangle, or the Place button) opens the deal: lease, buy (each refused without the
+## coins), choose again or cancel. Esc or B goes back to the first corner, then stops.
+func begin_farm_placement() -> void:
+	ui.hide_all()
+	var front := world.player.pos + facing_vec() * 3.0
+	var c := Vector2i(floori(front.x), floori(front.y))
+	placing = {"farm": true, "a": c, "b": c, "set": false, "open": false}
+	paused = true
+	move_to = Vector2.INF
+	ui.show_placing(true)
+	ui.show_farm_price(true)
+	_update_ghost()
+
+
+func _move_farm_corner(cell: Vector2i) -> void:
+	cell = Vector2i(clampi(cell.x, 0, map.w - 1), clampi(cell.y, 0, map.h - 1))
+	if placing.set:
+		if cell == placing.b:
+			return
+		placing.b = cell
+	else:
+		if cell == placing.a:
+			return
+		placing.a = cell
+		placing.b = cell
+	_update_ghost()
+
+
+## The first corner goes down at `cell`; the opposite corner follows until it is set.
+func _farm_first_corner(cell: Vector2i) -> void:
+	placing.a = cell
+	placing.b = cell
+	placing.set = true
+	placing.open = true
+	_update_ghost()
+
+
+func _update_farm_ghost(r: Rect2i, why: String) -> void:
+	if not placing.set:
+		ghost.show_at(r, Vector2i(-1, -1), true)
+		ui.placing_text("Farmland: put the first corner where the plot should begin.", true)
+		ui.farm_price_text("Choose the first corner", true)
+		_farm_keep_in_view(r.position)
+		return
+	var t: Dictionary = world.farm_plots.terms(r)
+	var gate: Vector2i = world.farm_plots.gate_for(r) if why == "" else Vector2i(-1, -1)
+	ghost.show_at(r, gate, why == "")
+	var fence: Dictionary = world.farm_plots.fence_cost({"x": r.position.x, "y": r.position.y, "w": r.size.x, "h": r.size.y, "farm": {}})
+	ui.farm_price_text("%d x %d  (%d cells)\nLease: %d coins a week\nBuy: %d coins" % [r.size.x, r.size.y, r.size.x * r.size.y, int(t.rent), int(t.price)], why == "")
+	ui.placing_text(("Farmland %s: its fence and gate will take %d planks and %d stone. You have %d coins." % [world.where(r), int(fence.plank), int(fence.stone), world.player.coins])
+			if why == "" else "Farmland cannot go here: %s." % why, why == "")
+	_farm_keep_in_view(Vector2i(placing.b))
+
+
+## The view moves only when the corner being moved nears the screen's edge (the stick or the keys walking it
+## away), so a finger or the mouse dragging the corner is never chased by the map moving under it.
+func _farm_keep_in_view(cell: Vector2i) -> void:
+	var at := get_canvas_transform() * ((Vector2(cell) + Vector2(0.5, 0.5)) * T)
+	if not get_viewport().get_visible_rect().grow(-96.0).has_point(at):
+		look_at_tile(Vector2(cell) + Vector2(0.5, 0.5))
+
+
+## Screenshot scenes for FARM-09: a 6x5 rectangle being marked out near the start (farm_place), one dragged over a
+## house (farm_place_bad), the deal window (farm_deal), and a leased plot fenced (farm_fenced).
+func _farm_plot_shot(mode: String) -> void:
+	world.player.coins = 60
+	var sp = map.data.spawns.player
+	var r: Rect2i = world.farm_plots.find_ground(Vector2i(6, 5), Vector2i(int(sp[0]), int(sp[1])), 0)
+	world.player.pos = Vector2(r.position + Vector2i(2, -1)) + Vector2(0.5, 0.5)
+	follow_at = _in_view(world.player.pos * T)
+	if mode == "farm_fenced":
+		var p: Dictionary = world.farm_plots.claim(r, World.PLAYER, true)
+		for y in range(r.position.y, r.end.y):
+			for x in range(r.position.x, r.end.x):
+				var o: Dictionary = world.farm.obstacle(Vector2i(x, y))
+				if not o.is_empty() and o.kind == "plant":
+					world.farm.clear_plant(o.ref)
+		world.player.inv.add("plank", 6)
+		world.player.inv.add("stone", 2)
+		world.farm_plots.build_fence(p, World.PLAYER, [world.player.inv])
+		world.player.stamina = 1000.0
+		for x in range(r.position.x + 1, r.end.x - 1):
+			world.farm.till(Vector2i(x, r.position.y + 1), world.player)
+		_apply_world_changes()
+		return
+	begin_farm_placement()
+	_move_farm_corner(r.position)
+	_farm_first_corner(r.position)
+	if mode == "farm_place_bad":
+		_move_farm_corner(Vector2i(int(world.buildings["b5"].x) + 2, int(world.buildings["b5"].y) + 2))
+	else:
+		_move_farm_corner(r.end - Vector2i.ONE)
+	placing.open = false
+	if mode == "farm_deal":
+		_confirm_farm()
+
+
+## Place: set the first corner, or open the deal for a valid rectangle.
+func _confirm_farm() -> void:
+	if not placing.set:
+		_farm_first_corner(placing.a)
+		return
+	placing.open = false
+	var why := place_refusal()
+	if why != "":
+		ui.message("You cannot have farmland here: %s." % why)
+		return
+	ui.show_placing(false)
+	ui.show_farm_price(false)
+	ghost.visible = true
+	ui.show_farm_deal(place_rect())
+
+
+## Input while marking out farmland; true when handled. Two fingers still pan and zoom (the press and the drag
+## are left to the touch bookkeeping when more than one finger is down).
+func _farm_input(e: InputEvent) -> bool:
+	if e is InputEventMouseMotion and e.device != InputEvent.DEVICE_ID_EMULATION and not mid_drag and touch_points.is_empty():
+		if not placing.set or placing.open or (e.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+			_move_farm_corner(_cell_at(e.position))
+		return true
+	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.device != InputEvent.DEVICE_ID_EMULATION:
+		if ui.blocks(e.position):
+			return false
+		var cell := _cell_at(e.position)
+		if e.pressed:
+			if placing.set and placing.open:
+				_move_farm_corner(cell)
+				placing.open = false          # a second click sets the opposite corner
+			elif placing.set and place_rect().has_point(cell) and place_rect().size != Vector2i.ONE:
+				_confirm_farm()               # a click on the rectangle places it, as a building's footprint
+			else:
+				_farm_first_corner(cell)
+		elif placing.set and placing.open and cell != Vector2i(placing.a):
+			_move_farm_corner(cell)
+			placing.open = false              # released after a drag: the opposite corner is set
+		return true
+	if e is InputEventScreenTouch:
+		if not e.pressed:
+			placing.open = false              # the finger lifted: the opposite corner stays where it was dragged
+		elif touch_points.is_empty() and not multi_touch and not ui.blocks(e.position):
+			_farm_first_corner(_cell_at(e.position))      # a finger down: the first corner; dragging moves the other
+		return false                          # the touch bookkeeping still sees it (pinch and pan)
+	if e is InputEventScreenDrag and touch_points.size() <= 1 and not multi_touch and placing.set:
+		_move_farm_corner(_cell_at(e.position))
+		return true
+	if e.is_action_pressed("interact") or (e is InputEventKey and e.is_action_pressed("ui_accept")) or (e is InputEventJoypadButton and e.is_action_pressed("ui_accept")):
+		_confirm_farm()
+		return true
+	if e.is_action_pressed("pause") or e.is_action_pressed("ui_cancel"):
+		if placing.set:
+			placing.set = false
+			placing.open = false
+			placing.b = placing.a
+			_update_ghost()
+		else:
+			end_placement()
+			ui.message("Farmland put off.")
 		return true
 	return false
 
