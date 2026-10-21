@@ -508,7 +508,7 @@ func hour(h: int) -> void:
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
 				for o: NPC in grid.get(c + Vector2i(dx, dy), []):
-					if o.id <= n.id or n.pos.distance_to(o.pos) > r:
+					if o.id <= n.id or n.pos.distance_to(o.pos) > r or o.depth != n.depth:     # MIN-A: not through rock
 						continue
 					var kind := "met"
 					if working and n.job != "" and (n.job == o.job or (n.workplace != "" and n.workplace == o.workplace)):

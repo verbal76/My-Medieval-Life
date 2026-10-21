@@ -82,8 +82,9 @@ A portal joins two ends. Each end is `{level, stand, door}`: `stand` is the walk
 | Player collision | The four foot corners (`main.gd::_blocked_corners`) ask `World.solid_for_player(cell)`: the surface's `VillageMap.is_solid_world` on level 0, the level map's `is_solid` below. One added branch; the surface branch is the old call | DESIGN |
 | Player tap-to-walk | `World.path_for_player(from, to)`: `VillageMap.find_path_world` on level 0, the level map's own A* below (clamped to its region, the nearest floor cell when the goal is rock) | DESIGN |
 | Crossing | `World.player_through(dir)`: if the player's cell is a portal's stand and `dir` points at its door, the player moves to the other end and `World.player_level` changes. Called by Main after each movement step, and when a tap-to-walk ends at a stand with its goal on the door. Refused while the player pulls a cart ("The cart will not go down the adit.": carts below are MIN-F's rails) | DESIGN |
-| NPC router (next step, not in this branch) | `NPC.level` (saved; absent = 0). A plan step `{k: "go", to, level}` whose level differs from the walker's expands into: go to the nearest portal stand on its own level (the level's A*), cross, go on (the other level's A*). `World._walk` asks the map of the walker's level. The portal graph is tiny (one portal per entrance), so the route is a breadth-first search over portals, with no new cost on the surface | DESIGN |
-| Scheduling (next step) | `World.villager_levels` lists the levels villagers can reach. It is `[0]` until the NPC router exists; then `[0, -1]`. Miners pick seams with `nearest_deposit(from, ores, level)` per reachable level, preferring the walker's own level | DESIGN |
+| NPC router | `NPC.depth` (the villager's level; saved as `"level"` only below the surface; `NPC.level()` is the skill lookup, hence the name). A plan step `{k: "go", to, level}` (`NPCBrain.go(c, speed, level)`; the key is left out on the surface, so surface plans are unchanged) whose level differs from the walker's is routed by `World._walk`: walk to the portal's stand on the walker's own level (`Underground.next_leg`, a breadth-first search over the portals), go through (`World._npc_through`: the other end's stand, a pulled cart set down at the mouth, counted `portal_crossings`), and walk on with the other level's A*. Every plan to a surface place made below therefore walks out first. Plans are not saved; a villager loaded below plans again from there | IMPLEMENTED (`wip/b17-mining2`) |
+| Scheduling | `World.villager_levels` is `[0, -1]`. Miners, labourers and the manor's quarry hands pick seams with `World.nearest_seam(n, ores)`: the nearest by the same rule as on the surface, the distance across levels walked through the portal; `NPCBrain.seam_steps` plans the walk beside the seam on its level and the swing (`mine`, `mj_mine` with the seam's level). The labour market's miner places, the caravan's import check and `Quests.deposit_left` (the caravan's stone, the manor quarry, contracts) count the gallery's ore | IMPLEMENTED (`wip/b17-mining2`) |
+| Safeguard | A villager below whose cell is not floor of their level (moved by a rule that knows no levels, such as a door) is counted on the surface (`World._update_npc`); `World._unstick` leaves villagers below alone | IMPLEMENTED |
 | Path cost | One extra `AStarGrid2D` the size of the gallery's region (24 x 10 cells, 240 points, for the adit gallery), against the village's 10,800; the gallery has 56 to 81 floor cells for seeds 1, 2 and 7 | VERIFIED (measured) |
 
 ## 4. Rules across levels
@@ -98,7 +99,11 @@ their levels. **DESIGN:** a helper `World.same_level(a_level, b_level)` and, per
 | Attack and Fireball | surface creatures and projectiles | Refused below ground ("Nothing to fight here.") | when NPCs and animals can be below |
 | Loot | no level | `"level"` on loot dropped below (absent = 0); the surface lists skip it; guards never recover it | - |
 | Guards recovering loot (`NPCBrain._loot_to_recover`, `recover_loot`) | all loot | Skip loot below (one-line hooks) | villagers below |
-| Fauna aggression (`Fauna._foe_pos`, `_hunt_people`), fights (`NPCBrain.fight`, `_prey_for`), witnesses (`World.near`), `present`, `reaches` | player's position only | Not changed: at least one rock cell lies between the gallery's floor and any surface walker, so no surface actor stands within reach of the player below except at the adit itself (where the player is between the two stands) | `same_level` guard in each, before any gallery reaches under walkable ground |
+| Awareness and reach (`World.near`, `present`, `reaches`) | positions only | `World.level_at(p)` (`Underground.level_at`: a gallery's floor and walls under the hill's rock are its level, everything else the surface's) and only villagers of that level are seen or reached; `reaches` is false across levels. Every witness, chat partner, guard sighting and target list built on them sees one level | - |
+| Fights (`NPCBrain.fight`, `_prey_for`, `_bandit_seen`, `_guard_near`) | positions only | A fight across levels ends at once; bandits prey only on their own level; sightings compare levels | - |
+| Fauna (`Fauna._foe_pos`, `_hunt_people`, flight) | the player's and villagers' positions | Animals live on the surface: nobody below is a foe, prey or threat to them | animals below (none planned) |
+| Relations (`Relations` chats) | positions only | Chat partners are on one level | - |
+| The player and villagers below (`main.gd`) | - | Villagers working below are drawn in the gallery only, and can be talked to there (target list, taps); talking and striking need the same level | combat below (melee and Fireball stay refused) |
 
 ## 5. Saving
 
@@ -124,9 +129,10 @@ their levels. **DESIGN:** a helper `World.same_level(a_level, b_level)` and, per
     the village's `below0`.
   - Sums that mean "what the village's own workers can mine" (`NPCBrain.job_market` miner places,
     `NPCBrain._caravan_imports`, `Quests.deposit_left` used by the caravan's stone and the manor quarry) count only
-    seams on `villager_levels`. Until villagers go below, the gallery's ore is the player's to mine; the caravan
-    does not hold back imports for ore no villager can reach. This follows the recommendation for unknown seams
-    ("count only what the village can use") and changes nothing on the surface.
+    seams on `villager_levels`, which since `wip/b17-mining2` is `[0, -1]`: villagers walk to the gallery, so its
+    ore is the village's own and the caravan's import of iron ore, coal, copper ore and stone waits until the gallery
+    too is nearly worked out. (In the foundation branch, before villagers could go below, these sums left the
+    gallery out.)
   - `World.plant_refusal` and the placement checks ignore seams below (they lie under rock in any case).
 
 ## 7. Rendering and transitions
@@ -219,8 +225,9 @@ Design only; Build 18 implements the model. Sources: Settlement spec sections 4 
 | Done here | Remains |
 |---|---|
 | MIN-A record (this document) | MIN-B..E, G as planned in `BUILD_17_PLAN.md` |
-| `LevelMap`, `Underground` registry and generator, `underground.json` | The NPC level router, `NPC.level`, `villager_levels = [0, -1]` |
-| The adit portal pair, player crossing, collision and tap-walk below | Same-level guards in fauna, fights, witnesses, `present`, `reaches` |
-| Level seams as deposit records; level-keyed lookups and load merge | Gather mode below (`ResourceNodes.node_at` uses surface lookups) |
+| `LevelMap`, `Underground` registry and generator, `underground.json` | Carts through portals (MIN-F rails); a cart pulled to the adit is set down there |
+| The adit portal pair, player crossing, collision and tap-walk below; Gather mode below (`ResourceNodes.node_at` looks on the player's level) | Stacked levels: `level_at` reads the ground, which is enough for one level per place |
+| Level seams as deposit records; level-keyed lookups and load merge | Combat below (Attack and Fireball are refused below; `Combat` and projectiles are surface-only) |
 | Player level and loot level saved (SAVE_VERSION 17) | Carts, animals and NPCs below; rails, supports, lighting as a need (MIN-F) |
 | `LevelView`, fade, darkness overlay | Cave-specific art (supports, torches) through the asset skill |
+| (`wip/b17-mining2`) Villagers below: `NPC.depth`, the level router, `nearest_seam`, `seam_steps`, `villager_levels = [0, -1]`, same-level guards | |

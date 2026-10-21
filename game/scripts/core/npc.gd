@@ -33,6 +33,7 @@ var alive := true:
 		alive = v
 		roles_version += 1
 var pos := Vector2.ZERO      # tile coordinates (float); the feet are at the centre of a tile
+var depth := 0               # MIN-A: the depth they are on (0 the surface, -1 the mine gallery); saved only below the surface
 var plan: Array = []         # steps: {k: go|work|do, ...}
 var path := PackedVector2Array()
 var path_i := 0
@@ -103,7 +104,7 @@ func remember(text: String) -> void:
 
 
 func to_dict() -> Dictionary:
-	return {
+	var d := {
 		"id": id, "name": name, "family": family, "household": household, "role": role, "job": job,
 		"sprite": sprite, "home": home, "workplace": workplace, "inv": inv.to_dict(), "coins": coins,
 		"hunger": hunger, "hp": hp, "max_hp": max_hp, "damage": damage, "armor": armor, "alive": alive,
@@ -115,6 +116,9 @@ func to_dict() -> Dictionary:
 		"skills": skills.duplicate(),
 		"report": report.duplicate(),
 	}
+	if depth != 0:
+		d.level = depth                  # MIN-A: written only below the surface
+	return d
 
 
 static func from_dict(d: Dictionary) -> NPC:
@@ -129,6 +133,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	# save_version 1-3 had "hidden" (at home on the door step): World._move_indoors puts them inside
 	n.inv = Inventory.from_dict(d.inv)
 	n.pos = Vector2(float(d.pos[0]), float(d.pos[1]))
+	n.depth = int(d.get("level", 0))                          # MIN-A: older saves and the surface: none
 	n.memory = d.memory.duplicate()
 	n.income_days = d.get("income_days", []).duplicate()         # older saves: no history yet
 	n.job_since = int(d.get("job_since", 0))

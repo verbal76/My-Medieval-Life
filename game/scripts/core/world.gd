@@ -90,7 +90,7 @@ var relations: Relations      # friendship, courting and marriage (CRT-01..07)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var underground: Underground  # MIN-A: the levels below the surface and their portals (generated from the seed, not saved)
 var player_level := 0         # MIN-A: the depth the player is on (0 the surface, -1 the mine gallery); saved in "underground"
-var villager_levels := [0]    # MIN-A: the levels villagers can reach; the surface until the NPC level router exists
+var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the level router walks them through the portals)
 
 
 func _init() -> void:
@@ -411,6 +411,8 @@ func _update_npc(n: NPC, dt: float) -> void:
 			kill(n, "starvation")
 			return
 	n.attack_cd = maxf(0.0, n.attack_cd - dt)
+	if n.depth != 0 and (underground == null or underground.is_solid(n.depth, n.cell())):
+		n.depth = 0                    # MIN-A: set down off its level's floor by a rule that knows no levels (a door): the surface
 	if n.target != -1:
 		brain.fight(n, dt)
 		return
@@ -474,14 +476,27 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 ## Move along a path to s.to; returns true on arrival.
 func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	var to: Vector2i = s.to
+	# MIN-A level router: a step to another level walks to the portal on the walker's own level, goes through, and
+	# walks on (the surface's own path-finding is unchanged for a walk that stays on it)
+	var leg := {}
+	if n.depth != int(s.get("level", 0)):
+		leg = underground.next_leg(n.depth, int(s.get("level", 0))) if underground != null else {}
+		if leg.is_empty():
+			n.plan.clear()
+			n.doing = "lost"
+			return false
+		to = leg.from.stand
 	if not s.has("pathed"):
 		s.pathed = true
-		n.path = map.find_path(n.cell(), to)
+		n.path = map.find_path(n.cell(), to) if n.depth == 0 else underground.find_path(n.depth, n.cell(), to)
 		n.path_i = 0
 		if n.path.is_empty() and n.cell() != to:
 			n.plan.clear()
 			n.doing = "lost"
 			return false
+	if n.path_i >= n.path.size() and not leg.is_empty():
+		_npc_through(n, leg, s)
+		return false
 	if n.path_i >= n.path.size():
 		n.anim = "idle"
 		if not n.plan.is_empty() and n.plan.size() > 1 and n.plan[1].k == "work":
@@ -502,6 +517,9 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.pos += d / l * budget
 			n.facing = d
 			budget = 0.0
+	if n.path_i >= n.path.size() and not leg.is_empty():
+		_npc_through(n, leg, s)
+		return false
 	if n.path_i >= n.path.size():
 		if n.plan.size() > 1 and n.plan[1].k == "work":
 			n.work_left = float(n.plan[1].min)
@@ -1652,8 +1670,9 @@ func alive_count(role := "") -> int:
 func present(p: Vector2, r: float) -> Array:
 	var out := []
 	var here := place_of(p)
+	var lv := level_at(p)                # MIN-A: nobody reaches anyone on another level
 	for n: NPC in npcs:
-		if n.alive and n.pos.distance_to(p) <= r and place_of(n.pos) == here:
+		if n.alive and n.pos.distance_to(p) <= r and place_of(n.pos) == here and n.depth == lv:
 			out.append(n)
 	return out
 
@@ -1693,8 +1712,9 @@ func wake_near(p: Vector2, r: float) -> void:
 func near(p: Vector2, r: float) -> Array:
 	var out := []
 	var here := place_of(p)
+	var lv := level_at(p)                # MIN-A: nobody is aware of anyone on another level
 	for n: NPC in npcs:
-		if n.alive and not asleep(n) and n.pos.distance_to(p) <= r and place_of(n.pos) == here:
+		if n.alive and not asleep(n) and n.pos.distance_to(p) <= r and place_of(n.pos) == here and n.depth == lv:
 			out.append(n)
 	return out
 
@@ -1824,6 +1844,8 @@ func place_of(p: Vector2) -> String:
 ## in that building's doorway, and not through a building that neither is in. Used by every way of
 ## targeting (the target list, taps, gathering, using).
 func reaches(from: Vector2, to: Vector2) -> bool:
+	if level_at(from) != level_at(to):
+		return false                     # MIN-A: rock lies between two levels
 	var a := place_of(from)
 	var b := place_of(to)
 	if a != b:
@@ -3424,7 +3446,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 ## map) steps to the nearest open cell in the same place, so nobody loads stuck.
 func _unstick() -> void:
 	for n: NPC in npcs:
-		if not n.alive or not map.is_solid(n.cell()):
+		if not n.alive or n.depth != 0 or not map.is_solid(n.cell()):       # below the surface the level's map holds them
 			continue
 		var here := place_of(n.pos)
 		var best := Vector2i(-1, -1)
@@ -3522,10 +3544,55 @@ static func same_level(a: int, b: int) -> bool:
 	return a == b
 
 
-## Whether the village's own workers can reach a seam: it lies on a level they can walk to (World.villager_levels;
-## the surface only until the NPC level router exists). What they count as "the village's ore left" uses this.
+## Whether the village's own workers can reach a seam: it lies on a level they can walk to (World.villager_levels).
+## What they count as "the village's ore left" uses this.
 func villagers_reach(d: Dictionary) -> bool:
 	return villager_levels.has(level_of(d))
+
+
+## The level a point (tiles) lies on (Underground.level_at: a gallery's floor and walls under the hill's rock are the
+## gallery's, everything else the surface's). The awareness and reach rules (near, present, reaches) see one level.
+func level_at(p: Vector2) -> int:
+	if underground == null:
+		return 0
+	return underground.level_at(map, Vector2i(floori(p.x), floori(p.y)))
+
+
+## The nearest seam of one of `ores` with something left that villager `n` can walk to, on any level villagers reach,
+## by the same rule as on the surface (nearest first). Across levels the distance is walked through the portal: to
+## the portal's stand on the walker's level, then from its other stand to the seam.
+func nearest_seam(n: NPC, ores: Array) -> Dictionary:
+	var best := {}
+	var bd := 1e9
+	var from := n.cell()
+	for dp in deposits:
+		if int(dp.amount) <= 0 or not ores.has(dp.ore) or not villager_levels.has(level_of(dp)):
+			continue
+		var at := Vector2i(dp.x, dp.y)
+		var d := from.distance_to(at)
+		if level_of(dp) != n.depth:
+			var leg := underground.next_leg(n.depth, level_of(dp)) if underground != null else {}
+			if leg.is_empty():
+				continue
+			d = from.distance_to(leg.from.stand) + Vector2i(leg.to.stand).distance_to(at) + 1.0
+		if d < bd:
+			bd = d
+			best = dp
+	return best
+
+
+## A villager goes through a portal (the level router): they stand on its other end, on its level; a cart they pull
+## is set down at the mouth first (carts below are MIN-F's rails). The step walks on from there.
+func _npc_through(n: NPC, leg: Dictionary, s: Dictionary) -> void:
+	var cart := carts.pulled_by(npc_ref(n.id))
+	if not cart.is_empty():
+		carts.park(cart)
+	n.depth = int(leg.to.level)
+	n.pos = Vector2(leg.to.stand) + Vector2(0.5, 0.5)
+	n.path = PackedVector2Array()
+	n.path_i = 0
+	s.erase("pathed")
+	stat("portal_crossings")
 
 
 ## Collision for the player: on the surface the surface's own (VillageMap.is_solid_world, unchanged), below it the
