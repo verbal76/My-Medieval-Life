@@ -9,7 +9,8 @@ extends RefCounted
 ## works yard and job loads, and the stock and store of every stall and shop. The whole part of count x rate goes; the
 ## fraction left over goes as one more unit when a draw hashed from the world seed, the day, the holder and the item
 ## falls under it, so the expected loss is exactly the rate, small stacks spoil too, and no world.rng draw is taken.
-## What spoils is counted as spoiled_<item> (the goods ledger's drain, as carcasses left lying already are).
+## What spoils is counted as spoiled_<item> (the goods ledger's drain, as carcasses left lying already are), and the
+## same again as decay_<item> (diagnostics: the part of spoiled_ that is stores spoiling, not carcasses).
 ##
 ## Wear: clothes and armour worn wear by one a day of wear (items.json durability, in days worn): the player's body
 ## and head slots, and a villager's own armour (the guards' leather). When one wears out it is gone (broke_<item>, as
@@ -55,6 +56,7 @@ static func spoil_inv(w: World, inv: Inventory, key: String) -> int:
 		var k := spoiled(inv.count(id), rate(id), draw(w.seed, w.day(), key, id))
 		if k > 0 and inv.remove(id, k):
 			w.stat("spoiled_" + id, float(k))
+			w.stat("decay_" + id, float(k))           # the part of spoiled_ that is stores spoiling (diagnostics)
 			lost += k
 	return lost
 
@@ -74,6 +76,7 @@ static func spoil_dict(w: World, d: Dictionary, key: String) -> int:
 		else:
 			d[id] = c - k
 		w.stat("spoiled_" + id, float(k))
+		w.stat("decay_" + id, float(k))
 		lost += k
 	return lost
 

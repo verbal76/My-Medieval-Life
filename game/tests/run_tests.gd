@@ -2193,8 +2193,8 @@ func test_simulation(days: int) -> void:
 	check(w.total_coins() == coins0 + w.coin_sources, "coins conserved: %d + sources %d = %d" % [coins0, w.coin_sources, w.total_coins()])
 	var st: Dictionary = w.stats
 	var expect := wheat0 + int(st.get("made_wheat", 0)) - int(st.get("used_wheat", 0)) - int(st.get("feed_eaten_wheat", 0)) \
-		- int(st.get("eaten_wheat", 0)) - int(st.get("exported_wheat", 0)) - int(st.get("farm_seed_saved", 0))
-	check(_wheat_held(w) == expect, "grain conserved: held %d, expected %d (harvest - cooked - fed - eaten - exported - kept as seed)" % [_wheat_held(w), expect])
+		- int(st.get("eaten_wheat", 0)) - int(st.get("exported_wheat", 0)) - int(st.get("farm_seed_saved", 0)) - int(st.get("spoiled_wheat", 0))
+	check(_wheat_held(w) == expect, "grain conserved: held %d, expected %d (harvest - cooked - fed - eaten - exported - kept as seed - spoiled in store, DVW-B4)" % [_wheat_held(w), expect])
 	var c := _census(w)
 	check(c.alive_villagers >= 90, "most villagers alive after %d days (%d)" % [days, c.alive_villagers])
 	check(int(c.made.get("iron_bar", 0)) + int(c.made.get("pickaxe", 0)) + int(c.made.get("axe", 0)) > 0, "smith produced something")
