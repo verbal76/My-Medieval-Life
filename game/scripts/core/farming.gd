@@ -174,6 +174,8 @@ func till_refusal(c: Vector2i, p: PlayerState) -> String:
 		return why
 	if cells.has(c):
 		return "Already tilled."
+	if w.farm_plots != null and w.farm_plots.till_block(c) != "":     # FARM-02: farmland is fenced before it is ploughed
+		return w.farm_plots.till_block(c)
 	var o := obstacle(c)
 	if not o.is_empty():
 		return "Clear %s first." % obstacle_name(o)

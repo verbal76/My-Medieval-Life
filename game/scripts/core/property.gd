@@ -224,7 +224,7 @@ func _base_name(thing: Dictionary) -> String:
 		var by := str(site.get("owner", ""))
 		if not site.is_empty() and not site.get("done", false) and (by == World.PLAYER or by.begins_with("hh:")):
 			return "the %s family's building site for %s" % [_family(by), Construction.kind_name(str(site.get("kind", "house")), true)]
-		var what := "clearing" if w.map.data.plots.any(func(mp): return str(mp.id) == str(thing.id)) else "ground"
+		var what := "clearing" if w.map.data.plots.any(func(mp): return str(mp.id) == str(thing.id)) else ("farmland" if thing.has("farm") else "ground")
 		return "the %s %s" % [what, w.where(_rect(thing), "")]
 	return building_name(b)
 
@@ -616,19 +616,25 @@ func survey_under(b: Dictionary) -> Dictionary:
 	return p
 
 
-func claim(rect: Rect2i, ref: String, lease_it := false) -> Dictionary:
+## `grub` false (farmland, FARM-02): the stumps, saplings and wild plants stay; the holder clears them by the
+## farming actions (Farming, FarmPlots), as the owner's farmland rules ask. `extra` is merged into the parcel
+## before the deal (FarmPlots marks its farmland so).
+func claim(rect: Rect2i, ref: String, lease_it := false, grub := true, extra := {}) -> Dictionary:
 	why = can_claim(rect)
 	if why != "":
 		return {}
 	var p := {"id": "parcel%d" % next_parcel, "x": rect.position.x, "y": rect.position.y, "w": rect.size.x, "h": rect.size.y,
 		"door": [rect.position.x + rect.size.x / 2, rect.end.y - 1], "price": land_price(rect.size.x, rect.size.y),
 		"owner": World.MANOR, "tenant": "", "site": {}, "building": ""}
+	p.merge(extra.duplicate(true))
 	w.plots.append(p)
 	why = lease(p, ref) if lease_it else buy(p, ref)
 	if why != "":
 		w.plots.erase(p)
 		return {}
 	next_parcel += 1
+	if not grub:
+		return p
 	# the stumps and saplings of felled trees on it are grubbed up: they will not grow again there
 	for t in w.trees:
 		if t.state != "grown" and t.state != "cleared" and rect.has_point(Vector2i(int(t.x), int(t.y))):

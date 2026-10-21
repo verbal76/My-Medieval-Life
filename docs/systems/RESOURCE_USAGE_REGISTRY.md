@@ -36,7 +36,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `boulder` · Boulder (implemented)
 
 - **stone** (1 a cycle)
-  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
 
 ### `chicken_pen` · Chickens (implemented)
 
@@ -142,18 +142,18 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 - **carrot** (3 a cycle)
   - used as it is: bought by the cook; bought by the merchant food; bought by the passing caravan; eaten (12 food)
 - **carrot_seed** (1 a cycle)
-  - used as it is: Sown on a tilled cell of the player's field: one seed a cell (used up).
+  - used as it is: Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).; Sown on a tilled cell of the player's field: one seed a cell (used up).
 - **flower** (2 a cycle)
   - 5 flower → **1 healing_tonic** (brew_healing_tonic, stove)
     - 2 healing_tonic + 1 ale → **1 strong_healing_tonic** (brew_strong_tonic, stove)
   - 2 flower → **1 herbal_poultice** (brew_poultice, stove)
   - 3 flower → **1 herbal_tonic** (brew_tonic, stove)
 - **herb_seed** (1 a cycle)
-  - used as it is: Sown on a tilled cell of the player's field: one seed a cell (used up).
+  - used as it is: Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).; Sown on a tilled cell of the player's field: one seed a cell (used up).
 - **potato** (3 a cycle)
   - used as it is: bought by the cook; bought by the merchant food; bought by the passing caravan; eaten (14 food)
 - **potato_seed** (1 a cycle)
-  - used as it is: Sown on a tilled cell of the player's field: one seed a cell (used up).
+  - used as it is: Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).; Sown on a tilled cell of the player's field: one seed a cell (used up).
 - **wheat** (3 a cycle)
   - 2 wheat + 1 egg → **2 bread** (bake_egg_bread, prep)
   - 3 wheat → **4 ale** (brew_ale, stove)
@@ -161,7 +161,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
   - 2 wheat → **6 pottage** (cook_pottage, stove)
   - 3 wheat → **1 bread** (knead_flatbread, prep)
 - **wheat_seed** (1 a cycle)
-  - used as it is: Sown on a tilled cell of the player's field: one seed a cell (used up).
+  - used as it is: Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).; Sown on a tilled cell of the player's field: one seed a cell (used up).
 
 ### `player_pen` · Your pen (implemented)
 
@@ -194,7 +194,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `stone_seam` · Stone seam (implemented)
 
 - **stone** (1 a cycle)
-  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - used as it is: building a apothecary; building a bakehouse; building a carpentry; building a house; building a kitchen; building a quarters; building a room; building a smithy; The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.; building a storage; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
 
 ### `tree` · Tree (implemented)
 
@@ -441,7 +441,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `blueberries` Blueberries | food | node `blue_berry_bush` ×2 | buyer `merchant_food` ×15; export `caravan`; food `blueberries` |
 | `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | buyer `merchant_food` ×15; buyer `tavernkeeper` ×12; export `caravan`; food `bread` |
 | `carrot` Carrot | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `carrot` |
-| `carrot_seed` Carrot seed | resource | import `caravan`; node `player_field` ×1 | plant `carrot_seed` |
+| `carrot_seed` Carrot seed | resource | import `caravan`; node `player_field` ×1 | plant `carrot_seed`; plant `carrot_seed` |
 | `cart_axle` Cart axle | resource | recipe `forge_cart_axle` ×1 | recipe `build_handcart` ×1 |
 | `cart_ironwork` Cart ironwork | resource | recipe `forge_cart_ironwork` ×1 | recipe `build_handcart` ×1 |
 | `cart_wheel` Cart wheel | resource | recipe `make_cart_wheel` ×1 | recipe `build_handcart` ×2 |
@@ -461,7 +461,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `hammer` Smith's hammer | tool | recipe `forge_hammer` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `tool`; export `caravan`; tool `hammer` |
 | `handcart` Handcart | resource | recipe `build_handcart` ×1 | **none** |
 | `healing_tonic` Healing tonic | medicine | recipe `brew_healing_tonic` ×1 | recipe `brew_strong_tonic` ×2 |
-| `herb_seed` Herb seed | resource | import `caravan`; node `player_field` ×1 | plant `herb_seed` |
+| `herb_seed` Herb seed | resource | import `caravan`; node `player_field` ×1 | plant `herb_seed`; plant `herb_seed` |
 | `herbal_poultice` Herbal poultice | medicine | recipe `brew_poultice` ×1 | buyer `merchant_goods` ×8; export `caravan` |
 | `herbal_tonic` Herbal tonic | food | recipe `brew_tonic` ×1 | food `herbal_tonic` |
 | `hide` Hide | resource | node `cow_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_bear` ×2; node `wild_boar` ×1; node `wild_deer` ×1; node `wild_fox` ×1; node `wild_wolf` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `tan_leather` ×1 |
@@ -483,10 +483,10 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `pickaxe` Pickaxe | tool | recipe `forge_pickaxe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `stone_seam` |
 | `pine_sapling` Pine sapling | resource | node `tree` ×1 | plant `pine_sapling` |
 | `plain_clothes` Plain clothes | armor | start_kit `player_start_items` ×1 | equip `armor` |
-| `plank` Plank | resource | recipe `saw_planks` ×2; start_stock `start_0` | building `apothecary` ×20; building `bakehouse` ×20; building `carpentry` ×30; building `house` ×30; building `kitchen` ×15; building `quarters` ×25; building `room` ×14; building `smithy` ×20; building `storage` ×20; buyer `merchant_raw` ×20; buyer `smith` ×10; export `caravan`; manor_job `plank`; recipe `build_handcart` ×4; recipe `craft_plough` ×4; recipe `forge_axe` ×1; recipe `forge_cart_axle` ×1; recipe `forge_copper_sword` ×1; recipe `forge_hammer` ×1; recipe `forge_pickaxe` ×1; recipe `make_cart_wheel` ×3 |
+| `plank` Plank | resource | recipe `saw_planks` ×2; start_stock `start_0` | building `apothecary` ×20; building `bakehouse` ×20; building `carpentry` ×30; building `house` ×30; building `kitchen` ×15; building `plank`; building `quarters` ×25; building `room` ×14; building `smithy` ×20; building `storage` ×20; buyer `merchant_raw` ×20; buyer `smith` ×10; export `caravan`; manor_job `plank`; recipe `build_handcart` ×4; recipe `craft_plough` ×4; recipe `forge_axe` ×1; recipe `forge_cart_axle` ×1; recipe `forge_copper_sword` ×1; recipe `forge_hammer` ×1; recipe `forge_pickaxe` ×1; recipe `make_cart_wheel` ×3 |
 | `plough` Hand plough | tool | recipe `craft_plough` ×1 | buyer `merchant_goods` ×2; equip `tool`; export `caravan` |
 | `potato` Potato | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `potato` |
-| `potato_seed` Seed potato | resource | import `caravan`; node `player_field` ×1 | plant `potato_seed` |
+| `potato_seed` Seed potato | resource | import `caravan`; node `player_field` ×1 | plant `potato_seed`; plant `potato_seed` |
 | `pottage` Pottage | food | recipe `cook_pottage` ×6; start_stock `start_0`; start_stock `start_1` | buyer `merchant_food` ×20; buyer `tavernkeeper` ×60; export `caravan`; food `pottage`; quest `food_for_the_family` ×3 |
 | `rabbit_pelt` Rabbit pelt | resource | node `wild_rabbit` ×1 | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; recipe `tan_pelts` ×2 |
 | `red_berries` Red berries | food | node `red_berry_bush` ×2 | buyer `merchant_food` ×15; export `caravan`; food `red_berries` |
@@ -495,10 +495,10 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `rotten_apple` Rotten apple | food | start_kit `player_start_items` ×1 | food `rotten_apple` |
 | `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `stone_seam` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
-| `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `stone_seam` ×1; start_stock `start_0` | building `apothecary` ×15; building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `kitchen` ×20; building `quarters` ×15; building `room` ×6; building `smithy` ×30; building `storage` ×10; buyer `merchant_raw` ×40; manor_job `stone` |
+| `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `stone_seam` ×1; start_stock `start_0` | building `apothecary` ×15; building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `kitchen` ×20; building `quarters` ×15; building `room` ×6; building `smithy` ×30; building `stone`; building `storage` ×10; buyer `merchant_raw` ×40; manor_job `stone` |
 | `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
 | `wheat` Wheat | resource | node `player_field` ×3; node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_4` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `bake_egg_bread` ×2; recipe `brew_ale` ×3; recipe `cook_pottage` ×2; recipe `knead_flatbread` ×3 |
-| `wheat_seed` Wheat seed | resource | import `caravan`; node `player_field` ×1; start_stock `start_2` | plant `wheat_seed` |
+| `wheat_seed` Wheat seed | resource | import `caravan`; node `player_field` ×1; start_stock `start_2` | plant `wheat_seed`; plant `wheat_seed` |
 | `wool` Wool | resource | node `player_pen` ×1 | buyer `merchant_goods` ×20; buyer `tanner` ×12; export `caravan`; recipe `weave_cloth` ×2 |
 | `wool_cloth` Woollen cloth | resource | recipe `weave_cloth` ×1 | buyer `merchant_goods` ×10; export `caravan`; recipe `sew_bandages` ×1 |
 
@@ -512,9 +512,11 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `apple_sapling` | plant | Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into an apple tree that fruits in summer and autumn (B14). | `game/scripts/core/world.gd::plant_tree` |
 | `blue_berry_cutting` | plant | Planted by the player on free village grass in front of them (the pack window's Plant button): used up, a young blue berry bush that bears propagation grow_seasons later, in its seasons. | `game/scripts/core/world.gd::plant_bush` |
 | `carrot_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |
+| `carrot_seed` | plant | Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03). | `game/scripts/core/farm_plots.gd::sow` |
 | `flower_seed` | plant | Sown by the player on free village grass in front of them (the pack window's Plant button): used up, a young wild flower that bears propagation grow_seasons later. | `game/scripts/core/world.gd::plant_bush` |
 | `hammer` | tool | The smith's tool: it wears 2 with every anvil recipe a villager smith makes (the player needs none). | `game/scripts/core/npc_brain.gd::act` |
 | `herb_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |
+| `herb_seed` | plant | Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03). | `game/scripts/core/farm_plots.gd::sow` |
 | `iron_bar` | manor_job | Fittings and nails: bought for repairs and public works, carried to the works yard and used up mending. | `game/scripts/core/npc_brain.gd::_public_works` |
 | `lockpick` | tool | Picks a locked chest: one attempt takes game time, may open the lock until dawn or snap the pick (used up); a seen attempt is a crime. | `game/scripts/core/chests.gd::attempt` |
 | `log` | fuel | Household firewood: every household burns a log from its pantry each night; a household without one is cold (noted, stat burned_log). | `game/scripts/core/world.gd::_new_day` |
@@ -524,13 +526,17 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `padlock` | tool | Fitted to the player's own chest (used up once): the chest is then locked or unlocked with the player's key. | `game/scripts/core/chests.gd::set_own_lock` |
 | `pine_sapling` | plant | Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature pine by the game clock. | `game/scripts/core/world.gd::plant_tree` |
 | `plank` | manor_job | Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend). | `game/scripts/core/npc_brain.gd::_public_works` |
+| `plank` | building | Fence round family farmland (FARM-02, owner Q9): one plank per 3 fence cells of the plot's perimeter, the gate cell free (the player pen's rule), used up. | `game/scripts/core/farm_plots.gd::build_fence` |
 | `potato_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |
+| `potato_seed` | plant | Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03). | `game/scripts/core/farm_plots.gd::sow` |
 | `red_berry_cutting` | plant | Planted by the player on free village grass in front of them (the pack window's Plant button): used up, a young red berry bush that bears propagation grow_seasons later, in its seasons. | `game/scripts/core/world.gd::plant_bush` |
 | `stone` | manor_job | Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend). | `game/scripts/core/manor_work.gd::post_quarry` |
+| `stone` | building | The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up. | `game/scripts/core/farm_plots.gd::build_fence` |
 | `wheat` | feed | Livestock feed: keepers and the player put wheat in a pen's trough; each animal eats its feed a meal. | `game/scripts/core/fauna.gd::feed` |
 | `wheat` | home_cooking | Households cook pottage over the hearth from pantry wheat (the cook_pottage recipe, no station). | `game/scripts/core/npc_brain.gd::_cook_at_home` |
 | `wheat` | granary | The manor buys farmers' surplus for its granary and gives it out as relief (haul jobs carry it). | `game/scripts/core/npc_brain.gd::_relief` |
 | `wheat_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |
+| `wheat_seed` | plant | Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03). | `game/scripts/core/farm_plots.gd::sow` |
 | `pickaxe`, `axe`, `meat`, `log`, `plank`, `hammer`, `iron_bar`, `coal`, `iron_ore`, `iron_sword`, `leather`, `hide`, `wheat`, `pottage`, `roast_meat`, `ale`, `stone`, `copper_sword`, `leather_armor` | start stock (source) | The villagers' starting stock (a one-time source: each job starts with its tools and some goods). | `game/scripts/core/population.gd::_equip` |
 | `pottage`, `wheat` | start stock (source) | Each household's pantry starts with 3 pottage and start_household_wheat_per_member wheat a member. | `game/scripts/core/population.gd::populate` |
 | `wheat_seed` | start stock (source) | With the shared manor farming switch on (FSE-12), the manor fields' farmers start with one wheat seed a field cell, shared among them. | `game/scripts/core/population.gd::populate` |

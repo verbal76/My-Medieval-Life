@@ -800,10 +800,12 @@
       {"use": "manor_job", "text": "Bought by the manor for repairs and carried to the works yard (haul), then used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::reeve_day"}
     ],
     "plank": [
-      {"use": "manor_job", "text": "Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::_public_works"}
+      {"use": "manor_job", "text": "Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::_public_works"},
+      {"use": "building", "text": "Fence round family farmland (FARM-02, owner Q9): one plank per 3 fence cells of the plot's perimeter, the gate cell free (the player pen's rule), used up.", "source": "game/scripts/core/farm_plots.gd::build_fence"}
     ],
     "stone": [
-      {"use": "manor_job", "text": "Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).", "source": "game/scripts/core/manor_work.gd::post_quarry"}
+      {"use": "manor_job", "text": "Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).", "source": "game/scripts/core/manor_work.gd::post_quarry"},
+      {"use": "building", "text": "The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.", "source": "game/scripts/core/farm_plots.gd::build_fence"}
     ],
     "iron_bar": [
       {"use": "manor_job", "text": "Fittings and nails: bought for repairs and public works, carried to the works yard and used up mending.", "source": "game/scripts/core/npc_brain.gd::_public_works"}
@@ -835,16 +837,20 @@
       {"use": "tool", "text": "The smith's tool: it wears 2 with every anvil recipe a villager smith makes (the player needs none).", "source": "game/scripts/core/npc_brain.gd::act"}
     ],
     "wheat_seed": [
-      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"},
+      {"use": "plant", "text": "Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).", "source": "game/scripts/core/farm_plots.gd::sow"}
     ],
     "carrot_seed": [
-      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"},
+      {"use": "plant", "text": "Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).", "source": "game/scripts/core/farm_plots.gd::sow"}
     ],
     "potato_seed": [
-      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"},
+      {"use": "plant", "text": "Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).", "source": "game/scripts/core/farm_plots.gd::sow"}
     ],
     "herb_seed": [
-      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"},
+      {"use": "plant", "text": "Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).", "source": "game/scripts/core/farm_plots.gd::sow"}
     ],
     "flower_seed": [
       {"use": "plant", "text": "Sown by the player on free village grass in front of them (the pack window's Plant button): used up, a young wild flower that bears propagation grow_seasons later.", "source": "game/scripts/core/world.gd::plant_bush"}

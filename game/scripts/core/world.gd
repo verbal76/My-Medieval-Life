@@ -61,6 +61,7 @@ var construction: Construction     # building kinds, placement, hired helpers, h
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
+var farm_plots: FarmPlots          # family farmland of any size, leased or bought, for every household (FARM-01..05, scripts/core/farm_plots.gd)
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
 var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
 var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
@@ -155,6 +156,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
 	fauna = Fauna.new(self)
 	farm = Farming.new(self)
+	farm_plots = FarmPlots.new(self)
 	fauna.populate()
 	_assign_keepers()
 	_init_ownership()
@@ -320,6 +322,7 @@ func famine() -> bool:
 func _on_hour(h: int) -> void:
 	_grow_trees()
 	farm.hour()                        # the player's crops (PL2-015)
+	farm_plots.hour()                  # the households' farmland crops (FARM-03)
 	_update_food_days()
 	serve_tables()
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
@@ -377,6 +380,7 @@ func _new_day() -> void:
 	brain.relet_pens()
 	business.daily()                   # the stall's rent (PL1-10)
 	construction.daily()               # helpers' days end; crowded households split; founders build
+	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
 	if profiling:
 		_prof("daily: manor, rents, business, construction", t)
 	var cold := 0
@@ -3199,7 +3203,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(),
+		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(),
@@ -3332,6 +3336,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		fauna.populate()
 		_assign_keepers()
 	farm.load_dict(d.get("farm", {}))          # PL2-015: older saves have no field and no pens of the player's
+	farm_plots = FarmPlots.new(self)
+	farm_plots.load_dict(d.get("farm_plots", {}))   # FARM-01..05: older saves have no farmland
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
