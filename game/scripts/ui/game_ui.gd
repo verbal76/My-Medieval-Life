@@ -2226,6 +2226,9 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 					message("%s comes to live with your family." % n.name)
 				_talk_view(n, "With you? ...Yes. Thank you." if why == "" else why))
 		return
+	# CON-01: goods-procurement contracts: propose one, or see those open and offered with this villager
+	var deals: Array = w.contracts.with_player(n)
+	_talk_choice(choices, ("Contracts (%d)" % deals.size()) if not deals.is_empty() else "Propose a contract", func(): show_contract(n))
 	if not _giftable().is_empty():
 		_talk_choice(choices, "Give a gift", func(): show_gifts(n))
 	if r.can_befriend(n):
@@ -2249,6 +2252,141 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 				if why == "":
 					message("%s said yes: you are partners." % n.name)
 				_talk_view(n, "Yes. Yes, I will." if why == "" else why))
+
+
+## CON-01: the contract window with a villager. Open contracts and the villager's standing offers to the player, each
+## with what can be done now (collect or deliver what is in hand, cancel; agree to or decline an offer); the villager's
+## last answer (a counteroffer can be agreed to); and a new proposal: the goods (those the villager can come by first,
+## or all goods), then quantity, price per unit and days with - and + buttons (touch, pad and keyboard alike), the
+## total and Propose. The rules are Contracts'; this only shows them. `t`: the terms being drawn up; `reply`: the answer.
+func show_contract(n: NPC, t := {}, reply := {}) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	var p := w.player
+	_open("contract", "Contracts with %s  ·  you have %d coins" % [n.name, p.coins])
+	panel_back = func(): _talk_view(n, Dialogue.opening(w, n))
+	for c in k.with_player(n):
+		var cc: Dictionary = c
+		var item := GameData.item_name(cc.item).to_lower()
+		var h := HBoxContainer.new()
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 18)
+		h.add_child(l)
+		panel_body.add_child(h)
+		var done := func(said: String) -> void:
+			if said != "":
+				message(said)
+			show_contract(n, t)
+		if str(cc.state) == "offered":
+			l.text = "%s asks you for %d %s at %d each within %d days (%d coins, set aside when you agree)." % [n.name, int(cc.qty), item,
+					int(cc.price_each), int(cc.days), int(cc.qty) * int(cc.price_each)]
+			_button("Agree", func():
+				var why := k.accept_offer(cc)
+				done.call(why if why != "" else "Agreed: %d %s for %s." % [int(cc.qty), item, n.name]), true, h)
+			_button("Decline", func():
+				k.decline_offer(cc)
+				done.call(""), true, h)
+		elif cc.buyer == World.PLAYER:
+			l.text = "You buy %d %s at %d each: %d delivered, due by the end of day %d. %d coins set aside." % [int(cc.qty), item, int(cc.price_each),
+					int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
+			var held := mini(n.inv.count(cc.item), Contracts.left(cc))
+			_button("Collect %d" % held, func():
+				var got := k.deliver(cc, held)
+				done.call(("%s hands over %d %s; %d coins paid." % [n.name, got, item, got * int(cc.price_each)]) if got > 0 else "You have no room for it."),
+					held > 0 and p.inv.can_add(cc.item), h)
+			_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+		else:
+			l.text = "You supply %d %s at %d each: %d delivered, due by the end of day %d." % [int(cc.qty), item, int(cc.price_each),
+					int(cc.delivered), int(cc.deadline_day) + 1]
+			var have := mini(p.inv.count(cc.item), Contracts.left(cc))
+			_button("Deliver %d" % have, func():
+				var gave := k.deliver(cc, have)
+				done.call(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(cc.price_each)]) if gave > 0 else "%s has no room for it." % n.name),
+					have > 0, h)
+			_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+	if not reply.is_empty():
+		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
+		if str(reply.answer) == "counter":
+			var ct: Dictionary = t.duplicate()
+			ct.qty = int(reply.qty)
+			ct.price = int(reply.price_each)
+			ct.days = int(reply.days)
+			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
+				var r2 := k.propose(World.PLAYER, n, str(ct.item), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []))
+				if r2.has("contract"):
+					message("Contract made: %d %s from %s." % [int(ct.qty), GameData.item_name(str(ct.item)).to_lower(), n.name])
+					show_contract(n, {}, r2)
+				else:
+					show_contract(n, ct, r2))
+	_label("Propose a contract: what you want from %s, how many, the price for each and how many days they have. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
+	var all: bool = t.get("all", false)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	panel_body.add_child(grid)
+	var ids := GameData.items.keys()
+	ids.sort()
+	var able := []
+	for id in ids:
+		var m: Dictionary = k.means(n, id, 3)
+		if int(m.stock) + int(m.cap) > 0:
+			able.append(id)
+	for id in (ids if all else able):
+		var iid: String = id
+		var b := _button(("★ " if able.has(iid) else "") + GameData.item_name(iid), func():
+			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3}
+			var m3: Dictionary = k.means(n, iid, 3)
+			nt.qty = clampi(int(m3.stock) + int(m3.cap), 1, 10)
+			for d in range(1, int(Contracts.cfg().max_days) + 1):        # the deadline the seller's pace allows
+				var md: Dictionary = k.means(n, iid, d)
+				if int(md.stock) + int(md.cap) >= int(nt.qty):
+					nt.days = d
+					break
+			show_contract(n, nt), true, grid)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if str(t.get("item", "")) == iid:
+			b.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+	_button(("Only what %s can supply" % n.name) if all else "All goods", func():
+		var nt: Dictionary = t.duplicate()
+		nt.all = not all
+		show_contract(n, nt))
+	if str(t.get("item", "")) != "":
+		var step := func(key: String, by: int, hi: int) -> void:
+			var nt: Dictionary = t.duplicate()
+			nt[key] = clampi(int(nt[key]) + by, 1, hi)
+			show_contract(n, nt)
+		for row in [["Quantity", "qty", 999, [-10, -1], [1, 10]], ["Price each", "price", 999, [-1], [1]], ["Days", "days", int(Contracts.cfg().max_days), [-1], [1]]]:
+			var h := HBoxContainer.new()
+			h.alignment = BoxContainer.ALIGNMENT_CENTER
+			panel_body.add_child(h)
+			var key: String = row[1]
+			var hi: int = row[2]
+			for by in row[3]:
+				var bb: int = by
+				_button(str(bb), func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+			var l := Label.new()
+			l.text = "%s: %d" % [row[0], int(t[key])]
+			l.custom_minimum_size = Vector2(200, 0)
+			l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			l.add_theme_font_size_override("font_size", 20)
+			h.add_child(l)
+			for by in row[4]:
+				var bb: int = by
+				_button("+%d" % bb, func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+		var total := int(t.qty) * int(t.price)
+		_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), int(t.price), total,
+				w.day() + int(t.days)], 18)
+		_button("Propose", func():
+			var r := k.propose(World.PLAYER, n, str(t.item), int(t.qty), int(t.price), int(t.days))
+			if r.has("contract"):
+				message("Contract made: %d %s from %s." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), n.name])
+				show_contract(n, {}, r)
+			else:
+				show_contract(n, t, r), p.coins >= total)
+	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
 
 
 ## What the player can give: food, flowers, ale, clothes, jewellery, medicine and useful things in the pack

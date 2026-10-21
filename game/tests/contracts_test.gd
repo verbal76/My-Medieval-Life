@@ -36,6 +36,88 @@ func _init() -> void:
 	test_death_of_a_party()
 	test_save_and_load()
 	test_parity()
+	# the talk window, in the game itself (its buttons are what touch, pad and keyboard press)
+	DirAccess.make_dir_recursive_absolute("user://test_saves/contracts_test")
+	main = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	if main.get_script() == null or not main.has_method("interact"):
+		check(false, "the game's main script loads")
+		quit(1)
+		return
+	main.save_path = "user://test_saves/contracts_test/save1.json"     # never the player's own save
+	process_frame.connect(test_window, CONNECT_ONE_SHOT)
+
+
+var main
+
+
+func _buttons(node: Node, out: Array) -> Array:
+	for c in node.get_children():
+		if c is Button:
+			out.append(c)
+		_buttons(c, out)
+	return out
+
+
+func _press(text: String) -> bool:
+	for b: Button in _buttons(main.ui.panel_body, []):
+		if b.text.begins_with(text) and not b.disabled:
+			b.pressed.emit()
+			return true
+	return false
+
+
+## Press the button `text` (exactly) on the row whose label begins with `row` ("Quantity", "Price each", "Days").
+func _press_on(row: String, text: String) -> bool:
+	for h in main.ui.panel_body.find_children("*", "HBoxContainer", true, false):
+		if not h.get_children().any(func(x): return x is Label and (x as Label).text.begins_with(row)):
+			continue
+		for b in h.get_children():
+			if b is Button and b.text == text and not b.disabled:
+				b.pressed.emit()
+				return true
+	return false
+
+
+func _shows(text: String) -> bool:
+	for l in main.ui.panel_body.find_children("*", "Label", true, false):
+		if (l as Label).text.contains(text):
+			return true
+	return false
+
+
+## The player proposes through the talk window: "Propose a contract", the goods, the terms with - and +, Propose; a
+## too-low price is countered and the counter agreed to; the open contract is listed and its goods collected.
+func test_window() -> void:
+	main.new_game()
+	var w: World = main.world
+	var ui = main.ui
+	var m := miner(w)
+	m.inv.remove("iron_ore", m.inv.count("iron_ore"))
+	w.player.coins = 300
+	ui.show_talk(m)
+	check(_press("Propose a contract") and ui.is_open("contract"), "the talk offers \"Propose a contract\", which opens the contract window")
+	check(_press("★ Iron ore"), "the goods the miner can come by are listed first, iron ore among them")
+	var c0 := coins(w)
+	for row in ["Quantity", "Price each", "Days"]:     # each down to 1 (each press redraws the window; 1 is the least)
+		for i in 12:
+			_press_on(row, "-1")
+	check(_shows("Quantity: 1") and _shows("Price each: 1") and _shows("Days: 1"), "quantity, price and days are set with - and +")
+	check(_press_on("Quantity", "+10") and _shows("Quantity: 11"), "+10 raises the quantity")
+	check(_press_on("Days", "+1") and _shows("Days: 2"), "+1 gives the seller another day")
+	check(_press("Propose") and _shows("least I'd take"), "a price of 1 is countered with the miner's least price")
+	check(w.contracts.list.is_empty() and coins(w) == c0, "nothing is set aside for a counteroffer")
+	check(_press("Agree:") and w.contracts.open_of(World.PLAYER, "buyer").size() == 1, "agreeing to the counter opens the contract")
+	var c: Dictionary = w.contracts.open_of(World.PLAYER, "buyer")[0] if not w.contracts.open_of(World.PLAYER, "buyer").is_empty() else {}
+	check(not c.is_empty() and _shows("You buy %d iron ore" % int(c.qty)) and coins(w) == c0, "the window lists it; coins only moved")
+	m.inv.add("iron_ore", 2)
+	ui.show_contract(m)
+	var p0 := w.player.inv.count("iron_ore")
+	check(_press("Collect 2") and w.player.inv.count("iron_ore") == p0 + 2 and int(c.delivered) == 2, "the player collects what the miner holds, paid on delivery")
+	check(_press("Cancel") and str(c.state) == "cancelled" and coins(w) == c0, "and may cancel: the rest comes back")
+	ui.show_talk(m)
+	check(_press("Propose a contract"), "with nothing open the choice reads \"Propose a contract\" again")
+	ui.hide_all()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
