@@ -1948,7 +1948,8 @@ func _find_target() -> void:
 			if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
 				var fo := world.field_owner(f)                  # whose it is: core's (DVW-A12 R17)
 				var whose := "%s %s's" % [fo.name, fo.family] if fo != null else ""
-				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
+				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""],
+						"theft": world.field_is_theft(f)}
 				break
 		if not front.is_empty():
 			break
@@ -2086,8 +2087,9 @@ func _find_target() -> void:
 		cands.erase(front)
 		cands.push_front(front)
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
-	var lawful := cands.filter(func(c): return not str(c.get("label", "")).contains("theft"))
-	cands = lawful + cands.filter(func(c): return str(c.get("label", "")).contains("theft"))
+	# (whether a choice is theft is core's: World.chest_is_theft, container_is_theft, field_is_theft, DVW-A12 R16)
+	var lawful := cands.filter(func(c): return not c.get("theft", false))
+	cands = lawful + cands.filter(func(c): return c.get("theft", false))
 	target_options = cands
 	var pick := 0
 	for i in cands.size():
@@ -2247,7 +2249,7 @@ func _container_target(c: Dictionary) -> Dictionary:
 	var whose := world.container_whose(c)
 	if id == "":
 		return {"kind": "info", "label": "Empty %s (%s)" % [c.kind, whose], "text": "There is nothing in the %s." % c.kind}
-	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose]}
+	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose], "theft": world.container_is_theft(c)}
 
 
 ## A chest, crate or barrel (PL2-002): yours to fill, or someone else's (theft, perhaps locked).
@@ -2259,8 +2261,8 @@ func _chest_target(u: Dictionary) -> Dictionary:
 	if i.access == "own":
 		return {"kind": "chest", "id": u.id, "label": "Open %s: store things" % what}
 	if world.chests.is_locked(u):
-		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what}
-	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what}
+		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what, "theft": world.chest_is_theft(u)}
+	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what, "theft": world.chest_is_theft(u)}
 
 
 ## Pick a locked chest's lock (PL2-002): takes game time, may snap the pick, and may be seen.

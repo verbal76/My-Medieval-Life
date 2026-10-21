@@ -3485,6 +3485,23 @@ func field_workers(f: Dictionary) -> Array:
 	return out
 
 
+## DVW-A12 R16: whether opening chest unit `u` (a chest, crate, barrel or cart) is theft: it is not the player's own
+## (Chests.info access "own") nor only for show ("decor").
+func chest_is_theft(u: Dictionary) -> bool:
+	return not str(chests.info(u).access) in ["own", "decor"]
+
+
+## DVW-A12 R16: whether taking from container `c` (a table, a shelf, a stall left alone) is theft: always (owner rule,
+## player_take: it is never the player's).
+func container_is_theft(_c: Dictionary) -> bool:
+	return true
+
+
+## DVW-A12 R16: whether harvesting field `f` is theft: someone works it (field_owner).
+func field_is_theft(f: Dictionary) -> bool:
+	return field_owner(f) != null
+
+
 ## DVW-A12 R17: whose field `f` is for a harvest: the first farmer working it (field_workers), whose wheat the player
 ## takes in theft (player_harvest); null when nobody works it.
 func field_owner(f: Dictionary) -> NPC:

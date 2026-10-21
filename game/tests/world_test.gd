@@ -1466,6 +1466,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_cast()
 	_dvw_a12_trading_xp()
 	_dvw_a12_field_owner()
+	_dvw_a12_theft_last()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2114,6 +2115,58 @@ func _dvw_a12_field_owner() -> void:
 	check(p.stolen_count("wheat") > marked0 and p.stolen["wheat"].has(str(owner.id)), "DVW-A12 R17: the wheat is marked as theirs")
 	f.state = st0
 	f.crop = crop0
+	_restore_pack(keep)
+
+
+## R16: core says which choices are theft (a chest not the player's, a container, a worked field); the interface
+## offers them last. Checked at every container and field, 5x5 places round each, every facing: the flag is set exactly
+## where the prompt says "theft", and no theft choice comes before a lawful one.
+func _dvw_a12_theft_last() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	for f in w.fields:
+		if not w.field_workers(f).is_empty():
+			f["_st"] = f.state
+			f.state = "ripe"
+			f["_crop"] = f.get("crop", 0)
+			f.crop = 10
+	var spots := []
+	for c in w.containers:
+		spots.append(Vector2i(int(c.x), int(c.y)))
+	for f in w.fields:
+		spots.append(Vector2i(int(f.x), int(f.y)))
+	var seen := 0
+	var thefts := 0
+	var bad := []
+	for s0: Vector2i in spots:
+		for dx in range(-2, 3):
+			for dy in range(-2, 3):
+				var cc: Vector2i = s0 + Vector2i(dx, dy)
+				if main.map.is_solid(cc):
+					continue
+				p.pos = Vector2(cc) + Vector2(0.5, 0.5)
+				for dir in 8:
+					main.player_sprite.dir = dir
+					main._find_target()
+					var was_theft := false
+					for t in main.target_options:
+						seen += 1
+						var flag: bool = t.get("theft", false)
+						if flag != str(t.get("label", "")).contains("theft"):
+							bad.append("%s '%s' flag %s" % [t.kind, t.label, flag])
+						if flag:
+							thefts += 1
+							was_theft = true
+						elif was_theft:
+							bad.append("lawful %s after a theft at %s" % [t.kind, str(cc)])
+	for f in w.fields:
+		if f.has("_st"):
+			f.state = f._st
+			f.crop = f._crop
+			f.erase("_st")
+			f.erase("_crop")
+	check(seen > 100 and thefts > 0 and bad.is_empty(), "DVW-A12 R16: core's theft flag matches every prompt that says theft (%d choices, %d thefts), offered last (%s)" % [seen, thefts, str(bad.slice(0, 3))])
 	_restore_pack(keep)
 
 
