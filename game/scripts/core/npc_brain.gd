@@ -2411,6 +2411,7 @@ func fight(n: NPC, dt: float) -> void:
 ##     to one day of wages. A household that keeps needing relief is named in the log.
 func reeve_day() -> void:
 	update_market()
+	_reeve_succession()
 	var obligations := daily_obligations()
 	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
 	var taxed := 0
@@ -2489,6 +2490,32 @@ func reeve_day() -> void:
 	if works > 0:
 		w.note("The manor bought %d loads of planks, iron and stone for its public works." % works)
 	w.manor_work.refresh()
+
+
+## EQ-04 (owner, 2026-10-19: "When leadership changes, government should continue"). The manor's business (tax, relief,
+## wages) never needed the reeve, but public works wait for one, and before this a dead reeve was never replaced. The
+## office is handed on by the succession of posts the trades use (B8-016: succession_dawn, succession_caravan): when the
+## reeve is dead or gone, the evening's business opens the post (World.vacancies, saved); after `succession_days` an
+## adult without a trade takes it (the late reeve's household first), else a newcomer comes with the caravan, at the latest
+## `newcomer_max_days` on. The evening after, the new reeve takes up the office (World.reeve_id, the manor). The choice of
+## successor is the trades' rule, used until the owner sets one for the office (an open policy question).
+func _reeve_succession() -> void:
+	var rv := w.npc(w.reeve_id)
+	if rv != null and rv.alive and rv.job == "reeve":
+		return
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == "reeve" and (rv == null or o.id != rv.id):
+			w.reeve_id = o.id
+			o.workplace = "manor"
+			w.stat("reeve_successions")
+			w.note("%s %s is the new reeve: the manor's business goes on." % [o.name, o.family])
+			return
+	if open_posts("reeve") > 0:
+		return
+	var who := "%s %s" % [rv.name, rv.family] if rv != null else "the reeve"
+	w.vacancies.append({"job": "reeve", "workplace": "manor", "home": rv.home if rv != null else "", "household": rv.household if rv != null else -1,
+			"day": w.day(), "who": who, "heir": -1})
+	w.note("The office of reeve, left by %s, is open: someone of the village or a newcomer will take it." % who)
 
 
 ## OD-16 (b), EQ-19 (owner 2026-10-20: "the manor uses its treasury to keep the smithy and woodlands working: it buys
@@ -2678,6 +2705,11 @@ func _relief(obligations: float, reserve: float) -> int:
 			need -= wheat * food_points("wheat")
 			held += wheat
 			w.stat("gov_relief_grain", wheat)
+		# TREAS-01: the manor's other food in its granary (a house's stores fallen to the manor, Property.household_ended,
+		# or carried back from an ended household's work) is its own stock as much as the grain: it is given before any
+		# coin is spent buying food (before, it was counted in the village's food days but never given out)
+		if need > 0.0:
+			need -= _relief_from_granary(h, need, urgent)
 		# what the granary cannot give, the manor buys for the household: an emergency (under a day of
 		# food) may spend down to one day of wages, otherwise only money above the reserve
 		var floor_coins := obligations if days < 1.0 else reserve
@@ -2695,10 +2727,17 @@ func _relief(obligations: float, reserve: float) -> int:
 			var price: int = (w.sell_price(o.payee, o.item) if bool(o.trader) else int(o.price)) * qty
 			if w.treasury - price < floor_coins:
 				break
-			if urgent:
-				w.transfer(src, pantry, o.item, qty)
-			else:
-				w.manor_work.consign(src, o.cell, o.item, qty, {"kind": "pantry", "hh": h}, "relief", o.words)
+			# TREAS-01 (owner, 2026-10-21: "The purchased goods become actual manor inventory. The manor can then use
+			# legitimately owned supplies through the existing relief system"): what is bought becomes the manor's before it
+			# is given; an emergency's goes through the granary at once, a carried one waits in the manor's lot
+			var moved := false
+			if urgent and pantry.can_add(o.item):
+				moved = w.transfer(src, w.granary, o.item, qty) and w.transfer(w.granary, pantry, o.item, qty)
+			elif not urgent:
+				moved = w.manor_work.consign(src, o.cell, o.item, qty, {"kind": "pantry", "hh": h}, "relief", o.words)
+			if not moved:
+				k += 1                           # nothing changed hands, so nothing is paid
+				continue
 			var payee: NPC = o.payee
 			payee.coins += price
 			payee.earned += price
@@ -2713,6 +2752,26 @@ func _relief(obligations: float, reserve: float) -> int:
 			helped += 1
 			_note_relief(h)
 	return helped
+
+
+## TREAS-01: relief from the manor's own food other than grain (the granary's grain is given first, in whole pots, by
+## _relief): every edible the granary holds, in EDIBLE's order, up to `need` points for household `h`; given at once in an
+## emergency, else left at the manor's door for its carriers. Nothing is bought. Returns the food points given.
+func _relief_from_granary(h: int, need: float, urgent: bool) -> float:
+	var given := 0.0
+	var pantry: Inventory = w.households[h].pantry
+	for f in EDIBLE:
+		var pts := food_points(f)
+		if f == "wheat" or pts <= 0.0 or need - given <= 0.0 or not w.granary.has(f):
+			continue
+		var n := mini(w.granary.count(f), ceili((need - given) / pts))
+		var ok := w.transfer(w.granary, pantry, f, n) if urgent else \
+				w.manor_work.consign(w.granary, w.manor_work.yard_cell(), f, n, {"kind": "pantry", "hh": h}, "relief", "the manor's granary")
+		if ok:
+			given += float(n) * pts
+			w.stat("gov_relief_stock", n)
+			w.stat("gov_relief_stock_" + f, n)
+	return given
 
 
 ## FSE-17 (owner, 2026-10-20: "Relief should check all possible food stores"): what relief can buy for household `h`

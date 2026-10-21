@@ -2112,6 +2112,13 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 	var w: World = main.world
 	var r: Relations = w.relations
 	if n.role == "child":
+		# REC-001: an orphaned child the player may take in, by the guardianship rules (Guardianship.player_adopt)
+		if Guardianship.player_adopt_refusal(w, n) == "":
+			_talk_choice(choices, "Offer a home", func():
+				var why := Guardianship.player_adopt(w, n)
+				if why == "":
+					message("%s comes to live with your family." % n.name)
+				_talk_view(n, "With you? ...Yes. Thank you." if why == "" else why))
 		return
 	if not _giftable().is_empty():
 		_talk_choice(choices, "Give a gift", func(): show_gifts(n))
