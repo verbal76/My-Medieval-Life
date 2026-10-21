@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 83 |
+| APPROVED — NOT STARTED | 80 |
 | ACTIVE DEVELOPMENT | 11 |
 | PARTIALLY IMPLEMENTED | 38 |
-| IMPLEMENTED — TESTING REQUIRED | 19 |
+| IMPLEMENTED — TESTING REQUIRED | 21 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 43 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
-| COMPLETE AND VERIFIED | 194 |
+| COMPLETE AND VERIFIED | 195 |
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **441** |
-| Outstanding (not complete, superseded or canceled) | 226 |
+| Outstanding (not complete, superseded or canceled) | 225 |
 
 Also in the register: 31 proposal awaiting an owner decision (not approved), 58 owner decision (open or answered), 24 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 60 | 58 |
+| Build 16: long-term equilibrium and validation | 59 | 57 |
 | Build 17: Mining & Industrial Development | 24 | 19 |
 | Build 18: Settlement Advancement & Regional Economy | 23 | 18 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 59 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **299** | **226** |
+| **Total open** | **298** | **225** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (60)
+### Build 16: long-term equilibrium and validation (59)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -117,7 +117,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
-| CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | approved | ACTIVE DEVELOPMENT |  | money supply re-measured over 100/365 days on several seeds (EQ-06) |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | approved | APPROVED — NOT STARTED |  | player-disruption tests: exploits and no player-only perks (EQ-05) |
 | EQ-01 | Human civilization sustains itself without the player | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
@@ -158,7 +157,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | SEED-04 | Households save planting material from their own harvests | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
-| SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
@@ -168,7 +167,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
-| TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
@@ -447,7 +446,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (83)
+## APPROVED — NOT STARTED (80)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -455,7 +454,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
-| CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  | after CTR-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249) |  |  |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
@@ -514,7 +512,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-B |  |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-C |  |
 | SET-E | Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-D |  |
-| SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  |  |  |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  |  |  |
 | SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A |  |
 | SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-B |  |
@@ -529,7 +526,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | STALL-04 | CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  | Settlement audit, then the rounding question if no convention applies |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
-| TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  | after SHOP-01 |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
@@ -594,7 +590,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (19)
+## IMPLEMENTED — TESTING REQUIRED (21)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -615,7 +611,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 | Measure in the four-seed runs; owner to confirm the readings |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 | Measure in the four-seed runs; owner to confirm the readings |
 | SEED-04 | Households save planting material from their own harvests | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 | Measure in the four-seed runs; owner to confirm the readings |
+| SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need |  | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | docs/directives/2026-10-20_od21_time_model.md | `99e7448`; aging_test::test_time_units; gate identical | after TIME-01 | Update the older docs' key names (DECISIONS, BUILD_DECISIONS, audits) where they cite renamed keys |
+| TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need | after SHOP-01 | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
 ## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (43)
@@ -701,7 +699,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (194)
+## COMPLETE AND VERIFIED (195)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -786,6 +784,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B8R-018 | Villagers swing tools idly | docs/release/BUILD_8_ISSUES.md (audit inventory row 91) |  |  |  |
 | B8R-019 | Building collision, interior nav, roof flicker | docs/release/BUILD_8_ISSUES.md (audit inventory row 92) |  |  |  |
 | B8R-020 | Gathering banners fill phone screen | docs/release/BUILD_8_ISSUES.md (audit inventory row 93) |  |  |  |
+| CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_ctr04_counter_terms | after CTR-01 |  |
 | DVW-A1 | Stale heir comment (:26) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 245) |  |  |  |
 | DVW-A11 | Threats never scale to player (:36) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 255) |  |  |  |
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246) | run_tests.gd test_dated_backups; start_test.gd save safety case 4b |  |  |
