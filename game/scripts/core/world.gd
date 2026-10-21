@@ -25,6 +25,7 @@ signal building_added(b: Dictionary)
 signal bled(pos: Vector2)          # someone or something was slain here (drawn as blood; not saved)
 signal level_tile_changed(level: int, cell: Vector2i, value: int)   # a seam below the surface changed (worked out): the level's view redraws it
 signal player_level_changed(level: int)   # the player went through a portal (Main fades the surface or the level)
+signal player_leveled(skill: String, level: int)   # DVW-A12 R6: player_xp raised a skill to a new level (Main shows the banner)
 
 const DAY := 1440.0
 
@@ -1693,6 +1694,23 @@ func plant_tree(cell: Vector2i, item: String) -> Dictionary:
 	return t
 
 
+## DVW-A12 R6: the player earns `n` xp in `skill` (PlayerState.gain); a new level is announced by player_leveled.
+## Returns the new level, or 0.
+func player_xp(skill: String, n: int) -> int:
+	var up := player.gain(skill, n)
+	if up > 0:
+		player_leveled.emit(skill, up)
+	return up
+
+
+## DVW-A12 R6: the player tries the lock of chest unit `u` (Chests.attempt) and earns Stealth xp for it: 4 when it
+## opens, 1 otherwise. Returns Chests.attempt's result.
+func player_pick_lock(u: Dictionary) -> Dictionary:
+	var r: Dictionary = chests.attempt(u)
+	player_xp("stealth", 4 if r.result == "open" else 1)
+	return r
+
+
 ## DVW-A12 R5: the player takes what lies in loot pile `i`: each kind of goods whole, as far as the pack takes it, and
 ## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
 ## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
@@ -2823,6 +2841,8 @@ func player_take(c: Dictionary) -> String:
 	witness("theft", "%s from %s" % [GameData.item_name(id).to_lower(), container_place(c)], victim, {id: 1}, store)
 	if c.kind == "table":
 		show_tables()
+	if (int(player.crimes[-1].witnesses) if not player.crimes.is_empty() else 0) == 0:
+		player_xp("stealth", 3)                      # a theft nobody saw teaches Stealth (DVW-A12 R6)
 	return id
 
 
@@ -2952,8 +2972,16 @@ func pickpocket_chance() -> float:
 ## who sees it stops the player (guard_confront); Stealth's guard_radius shortens how far a caught try is seen.
 ## PICK-01 (owner OD-20, 2026-10-21): there is no cry a guard hears;
 ## otherwise the victim and those who saw it carry a theft report to a guard (report_crime, as PAR-05's attack), and
-## a theft nobody sees is known to no guard. Returns {ok, what, text}.
+## a theft nobody sees is known to no guard. Each try earns Stealth xp (DVW-A12 R6): 8 when it works, 2 otherwise; a
+## pocket out of reach is no try (`refused`, R14). Returns {ok, what, text} (and `refused`).
 func pickpocket(n: NPC) -> Dictionary:
+	var r := _pickpocket_try(n)
+	if not r.get("refused", false):
+		player_xp("stealth", 8 if r.ok else 2)
+	return r
+
+
+func _pickpocket_try(n: NPC) -> Dictionary:
 	if not n.alive or n.role == "bandit":
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
 	if n.role == "child":                       # owner, 2026-10-18 (B8-010): never a child's pocket

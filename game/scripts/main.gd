@@ -968,6 +968,7 @@ func _build_scene() -> void:
 	ow_view.follow(world.player.pos, world.player.pos, 0.0, 6)      # the nearest chunks at once, the rest over the next frames
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
+	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
 	dying.clear()
 	fading.clear()
 	for n: NPC in world.npcs:
@@ -2274,8 +2275,7 @@ func pick_lock(uid: String) -> void:
 	var secs := world.chests.pick_minutes(u) / float(GameData.b("game_minutes_per_second"))
 	ui.hide_all()
 	start_action("Picking the lock", secs, func():
-		var r: Dictionary = world.chests.attempt(u)
-		_xp("stealth", 4 if r.result == "open" else 1)
+		var r: Dictionary = world.player_pick_lock(u)          # the try and its xp are core's (DVW-A12 R6)
 		ui.message(r.text, 6.0)
 		if r.result == "open":
 			ui.show_chest(uid))
@@ -2313,7 +2313,6 @@ func pickpocket(n: NPC) -> void:
 	if r.get("refused", false):                 # out of reach (DVW-A12 R14): no try was made
 		ui.message(r.text)
 		return
-	_xp("stealth", 8 if r.ok else 2)
 	if not r.ok:
 		say(n, "Thief! Get your hand out of my purse!")
 	ui.message(r.text)
@@ -2423,9 +2422,7 @@ func _use() -> void:
 			elif got == "":
 				ui.message("There is nothing to take.")
 			else:
-				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0
-				if seen == 0:
-					_xp("stealth", 3)
+				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0      # (the xp for it is core's, R6)
 				var said := "You take 1 %s from %s. %s" % [GameData.item_name(got).to_lower(), place,
 						"Nobody saw." if seen == 0 else ("%d %s saw you!" % [seen, "person" if seen == 1 else "people"])]
 				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
@@ -2667,8 +2664,9 @@ func start_action(label: String, secs: float, done: Callable, anim := "gather", 
 	player_sprite.play(anim)
 
 
+## Xp earned by the player: core's (World.player_xp, DVW-A12 R6); a new level's banner comes by player_leveled.
 func _xp(skill: String, n: int) -> void:
-	_level_up(skill, world.player.gain(skill, n))
+	world.player_xp(skill, n)
 
 
 ## The banner for a new level (`up` 0: none).

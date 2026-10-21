@@ -1461,6 +1461,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_reach()
 	_dvw_a12_planting()
 	_dvw_a12_loot()
+	_dvw_a12_xp()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1923,6 +1924,46 @@ func _dvw_a12_loot() -> void:
 	main._use()
 	check(p.inv.count("plank") == 2 and w.loot.size() == n0 - 1 and p.coins == c0 + 5, "DVW-A12 R5: the interface's taking is core's")
 	main._sync_loot()
+	_restore_pack(keep)
+
+
+## R6: xp is awarded by core with the action that earns it (a pocket tried: 8 or 2, none out of reach; a theft from a
+## container nobody saw: 3; a lock tried: 4 or 1), and a new level reaches the interface's banner by player_leveled.
+func _dvw_a12_xp() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var saved: Array = [GameData.b("pickpocket_chance"), GameData.b("pickpocket_chance_max"), GameData.b("pickpocket_chance_per_level")]
+	var v: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and x.job != "guard")[1]
+	v.anim = "idle"
+	v.coins = 10
+	p.pos = v.pos + Vector2(1.0, 0)
+	GameData.balance.pickpocket_chance = 1.0
+	GameData.balance.pickpocket_chance_max = 1.0
+	var r := w.pickpocket(v)
+	check(r.ok and int(p.skills.get("stealth", 0)) == 8, "DVW-A12 R6: a pocket picked earns 8 Stealth xp")
+	GameData.balance.pickpocket_chance = 0.0
+	GameData.balance.pickpocket_chance_max = 0.0
+	GameData.balance.pickpocket_chance_per_level = 0.0
+	r = w.pickpocket(v)
+	check(not r.ok and int(p.skills.get("stealth", 0)) == 10, "DVW-A12 R6: a caught try earns 2")
+	p.pos = v.pos + Vector2(3.0, 0)
+	r = w.pickpocket(v)
+	check(r.get("refused", false) and int(p.skills.get("stealth", 0)) == 10, "DVW-A12 R6: no try out of reach, no xp")
+	GameData.balance.pickpocket_chance = saved[0]
+	GameData.balance.pickpocket_chance_max = saved[1]
+	GameData.balance.pickpocket_chance_per_level = saved[2]
+	v.target = -1
+	p.crimes.clear()
+	# the level-up banner: core announces it, the interface shows it
+	var heard := []
+	var cb := func(sk: String, lv: int): heard.append([sk, lv])
+	w.player_leveled.connect(cb)
+	p.skills["magic"] = Skills.xp_for_level(2) - 1
+	var up := w.player_xp("magic", 1)
+	w.player_leveled.disconnect(cb)
+	check(up == 2 and heard == [["magic", 2]] and main.ui.toast.text.contains("level 2"), "DVW-A12 R6: a new level is announced by core and shown by the interface (%s)" % main.ui.toast.text)
+	check(w.player_xp("magic", 1) == 0, "DVW-A12 R6: no banner without a new level")
 	_restore_pack(keep)
 
 
