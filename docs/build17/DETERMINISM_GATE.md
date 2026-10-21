@@ -30,3 +30,9 @@ CON-01's completion (merged at `9a56fcc`) changes behaviour (fewer contracts, si
 describes the code of `b4d1223` and no longer matches the head. It is recorded once more after MIN-E is merged rather
 than twice (owner: no repeated expensive runs); until then the leak check in CI (`tests.yml`, 10 days, seed 1) and
 CON-01's own 30-day run (no leaks) are the conservation evidence for the newer code.
+
+## CI on GitHub
+
+- Actions run 39656594571 (`tests.yml`, workflow_dispatch on `wip/build17` at `9f229f7`, the MIN-A..D code): **success**,
+  2026-10-21 18:52-19:00 UTC. The first CI run on the Build 17 branch (every suite in `tests.yml` plus the 10-day,
+  seed-1 leak check).

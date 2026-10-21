@@ -5413,6 +5413,53 @@
    "roadmap_reason": "Owner Build 17 decisions 2026-10-21"
   },
   {
+   "id": "CON-02",
+   "title": "Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The universal CON-01 system must support contracts for labor and services, not only goods procurement.",
+   "description": "Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules)",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — IMPLEMENTATION AUTHORIZED",
+   "acceptance": [
+    "One engine for goods and services; no second contract engine",
+    "Service terms: work, parties, location, quantity/duration/objective, compensation, materials or equipment, completion conditions, deadline, availability, negotiation and counters",
+    "NPCs evaluate feasibility from skills, tools, schedules, household obligations, competing opportunities and relationships; same rules for the player",
+    "Work actually performed through existing systems; payment from real funds; nothing created on acceptance; deterministic; save/load; conservation",
+    "Existing goods contracts, manor tool orders, paid work quests, the manor job board, carriers and stall attendants unchanged",
+    "Services needing missing gameplay are recorded as dependencies; payment questions documented as owner options"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
    "id": "CQ-01",
    "title": "Sword responsiveness and hit detection (buffer, reach, phases, walls)",
    "kind": "approved",
@@ -15455,7 +15502,7 @@
    "id": "MIN-D-Q1",
    "title": "Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)?",
    "source": "docs/build17/MIN_D_DISCOVERY.md",
@@ -15463,7 +15510,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner answer; implemented under CON-02",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -15489,9 +15536,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation; owner_answer",
+     "why": "Answered by the owner's approval of service contracts in CON-01 (directive 2026-10-21): a business or the player may commission work such as a survey through the universal contract system; implementation is CON-02"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Yes, through CON-01 service contracts (owner, 2026-10-21)"
   },
   {
    "id": "MIN-D-Q2",
@@ -15581,7 +15634,7 @@
    "id": "MIN-E",
    "title": "Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them)",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -15590,10 +15643,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "openpit_test 66; worker ran 12 related suites 0 failures",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "6ebf1ae"
+   ],
    "parent": "EXP-A",
    "depends_on": [
     "MIN-D"
@@ -15625,11 +15680,226 @@
      "date": "2026-10-20",
      "change": "roadmap: 17 (depends on MIN-A)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ebf1ae; tests",
+     "why": "Built on wip/b17-mine (6ebf1ae) and merged: surface open pits with finite layers, terraces, ramp, heaps, backfill, ore exposure as ordinary seams, the manor's excavate job, ground protection, saves; openpit_test 66; screenshot looked at by the lead: readable but reads as a flat paved square rather than a hole with depth (art polish needed); no pit is staked in the 30-day seed-1 run (no unreachable known find)"
     }
    ],
    "target_build": "17",
    "roadmap_gate": "depends on MIN-A",
    "roadmap_reason": "open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7)"
+  },
+  {
+   "id": "MIN-E-Q1",
+   "title": "What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "What is earth (topsoil, dirt, spoil) used for beyond backfill: topsoil on farmland, embankments, earthworks?",
+   "source": "docs/build17/MIN_E_OPEN_PIT.md",
+   "approval": "open owner question from MIN-E",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_E_OPEN_PIT.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-E-Q2",
+   "title": "Should there be a spade (and its recipe) for digging earth?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should there be a spade (and its recipe) for digging earth?",
+   "source": "docs/build17/MIN_E_OPEN_PIT.md",
+   "approval": "open owner question from MIN-E",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_E_OPEN_PIT.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-E-Q3",
+   "title": "Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should staking a pit need the manor's leave or mining rights (cf. ECON-P1.2)?",
+   "source": "docs/build17/MIN_E_OPEN_PIT.md",
+   "approval": "open owner question from MIN-E",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_E_OPEN_PIT.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-E-Q4",
+   "title": "Should 'excavator' become a job, or should capability level 3 count whoever digs?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should 'excavator' become a job, or should capability level 3 count whoever digs?",
+   "source": "docs/build17/MIN_E_OPEN_PIT.md",
+   "approval": "open owner question from MIN-E",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_E_OPEN_PIT.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MIN-E-Q5",
+   "title": "Should bigger or overworld pits be built to allow spiral ramps and more layers?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should bigger or overworld pits be built to allow spiral ramps and more layers?",
+   "source": "docs/build17/MIN_E_OPEN_PIT.md",
+   "approval": "open owner question from MIN-E",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-E",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_E_OPEN_PIT.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "MIN-F",
@@ -15838,6 +16108,48 @@
    "target_build": "20+",
    "roadmap_gate": "",
    "roadmap_reason": "mining level 5 is a proposal pending later confirmation"
+  },
+  {
+   "id": "MIN-STONE-Q",
+   "title": "Are quarry stone and building blocks different items?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Are quarry stone and building blocks different items?",
+   "source": "docs/build17/MIN_B_QUARRY.md",
+   "approval": "open owner question raised by MIN-B and MIN-E",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-B",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/MIN_B_QUARRY.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "MP-01",
@@ -22155,6 +22467,411 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "waiting on an owner decision, not development work"
+  },
+  {
+   "id": "Q-C1",
+   "title": "CON-01 Q-C1: Manor tool orders stay separate from CON-01 (advance payment preserved; counted as obligations)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C1: Manor tool orders stay separate from CON-01 (advance payment preserved; counted as obligations)",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: Manor tool orders stay separate from CON-01 (advance payment preserved; counted as obligations)"
+  },
+  {
+   "id": "Q-C2",
+   "title": "CON-01 Q-C2: Paid work quests stay separate (full payment on completion or none)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C2: Paid work quests stay separate (full payment on completion or none)",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: Paid work quests stay separate (full payment on completion or none)"
+  },
+  {
+   "id": "Q-C3",
+   "title": "CON-01 Q-C3: opportunity_weight = 1.0 (a seller weighs what the same hours earn in its own trade)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C3: opportunity_weight = 1.0 (a seller weighs what the same hours earn in its own trade)",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: opportunity_weight = 1.0 (a seller weighs what the same hours earn in its own trade)"
+  },
+  {
+   "id": "Q-C4",
+   "title": "CON-01 Q-C4: risk_margin = 0.15 (a scheduling buffer on work-time estimates, not a profit margin)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C4: risk_margin = 0.15 (a scheduling buffer on work-time estimates, not a profit margin)",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: risk_margin = 0.15 (a scheduling buffer on work-time estimates, not a profit margin)"
+  },
+  {
+   "id": "Q-C5",
+   "title": "CON-01 Q-C5: cancel_premium = 0.10 per recorded early cancellation with the same seller, 14-day record window; no blacklisting",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C5: cancel_premium = 0.10 per recorded early cancellation with the same seller, 14-day record window; no blacklisting",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: cancel_premium = 0.10 per recorded early cancellation with the same seller, 14-day record window; no blacklisting"
+  },
+  {
+   "id": "Q-C6",
+   "title": "CON-01 Q-C6: formal_total = 50 coins; smaller agreements unsigned and may be concluded remotely; formal ones signed physically",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C6: formal_total = 50 coins; smaller agreements unsigned and may be concluded remotely; formal ones signed physically",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: formal_total = 50 coins; smaller agreements unsigned and may be concluded remotely; formal ones signed physically"
+  },
+  {
+   "id": "Q-C7",
+   "title": "CON-01 Q-C7: sign_reach = 3 tiles, same place and level; the reeve represents the manor",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C7: sign_reach = 3 tiles, same place and level; the reeve represents the manor",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: sign_reach = 3 tiles, same place and level; the reeve represents the manor"
+  },
+  {
+   "id": "Q-C8",
+   "title": "CON-01 Q-C8: offer_days = 2: an unsigned formal agreement expires after two days, nothing reserved or moved before signing",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C8: offer_days = 2: an unsigned formal agreement expires after two days, nothing reserved or moved before signing",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: offer_days = 2: an unsigned formal agreement expires after two days, nothing reserved or moved before signing"
+  },
+  {
+   "id": "Q-C9",
+   "title": "CON-01 Q-C9: npc_counter_tolerance = 0.25 above the buyer's own price, within its real purchasing power; quantity limits and 10-day wait kept",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "CON-01 Q-C9: npc_counter_tolerance = 0.25 above the buyer's own price, within its real purchasing power; quantity limits and 10-day wait kept",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING",
+   "acceptance": [
+    "Recorded; matches the merged CON-01 defaults (02563a8)"
+   ],
+   "implementation": "Already the merged CON-01 default (02563a8); no code change",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "02563a8"
+   ],
+   "parent": "CON-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 02563a8; target_build; implementation",
+     "why": "Owner approved 2026-10-21 as a Build 17 default, review after playtesting"
+    }
+   ],
+   "target_build": "17",
+   "owner_answer": "OWNER APPROVED — BUILD 17 DEFAULT — REVIEW AFTER PLAYTESTING: npc_counter_tolerance = 0.25 above the buyer's own price, within its real purchasing power; quantity limits and 10-day wait kept"
   },
   {
    "id": "Q18-10",

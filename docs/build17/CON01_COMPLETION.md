@@ -174,3 +174,14 @@ how much was not isolated (no extra runs, per the testing philosophy). The other
 divergence of one seeded run (no deaths by starvation; no conservation fault). Outcomes are measured, not targets
 (WDR-022). A villager's order offered to the player writes one log line; over 30 days that was 55 lines (at most
 `npc_orders_per_day` a morning).
+
+
+## Owner decisions, 2026-10-21
+
+`docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md`. Q-C1 to Q-C9: **OWNER APPROVED — BUILD 17
+DEFAULT — REVIEW AFTER PLAYTESTING**, each with the default above (manor tool orders and paid work quests stay separate;
+opportunity_weight 1.0; risk_margin 0.15 as a scheduling buffer; cancel_premium 0.10 with the 14-day record window;
+formal_total 50; sign_reach 3; offer_days 2; npc_counter_tolerance 0.25 within real purchasing power). Register Q-C1..Q-C9.
+
+Service contracts: **OWNER APPROVED — IMPLEMENTATION AUTHORIZED** (register CON-02). Not yet implemented. The villagers'
+offers to the player and their log lines are approved provisionally; the notification design is for post-build playtesting.

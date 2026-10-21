@@ -108,6 +108,7 @@ jobs:
           $godot --headless --path game --script res://tests/crafts_test.gd
           $godot --headless --path game --script res://tests/prospecting_test.gd
           $godot --headless --path game --script res://tests/discovery_test.gd
+          $godot --headless --path game --script res://tests/openpit_test.gd
 
       - name: Short economy simulation (FR-07)
         run: |
