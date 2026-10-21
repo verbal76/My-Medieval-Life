@@ -271,6 +271,16 @@ corresponding documentation.** Every agent and worker, on every task:
   configurations, regression reproductions, focused tests) and the two independent runs a determinism comparison needs.
   Reports name the commit, seed and configuration, intended and reached days, checkpoint results, failures, village
   outcomes, conservation and determinism evidence, and why any separate run was needed.
+- **Simulation monitoring (owner, 2026-10-21, SIM-02, `docs/directives/2026-10-21_simulation_monitoring.md`; permanent,
+  supplements SIM-01).** Never cancel, restart, redispatch or duplicate an active simulation to check or report on it;
+  reading status, logs and artifacts is the only action, and a restart needs the owner's approval with the stall
+  evidence, progress, time to finish, time saved and evidence at risk (an automatic fail-fast on a real defect is the one
+  exception). Never change code under a running test. Set check-ins from the job's measured runtime: first soon after
+  dispatch (runner assigned), then near the expected finish and about every 10-15 minutes after it while it runs (for
+  GitHub 365-day economy runs, measured 41-84 minutes a seed on Build 16 code); read and report results as soon as a job
+  finishes, never waiting for a later scheduled check. Prefer completion events; no busy-wait loops. GitHub Actions jobs
+  show no log until they finish, so the simulated day of a running job is not visible; say so rather than claim live
+  monitoring.
 - Visual output must actually be looked at before it is reported as verified.
 - **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
   supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a

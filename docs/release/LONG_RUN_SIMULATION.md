@@ -4,6 +4,9 @@
 > 10/30/90/100-day results from that run's checkpoints (`--every`), not from separate runs; a broken ledger stops the run at
 > the checkpoint where it is seen (`FATAL day N seed S` line, `reached` in the JSON). The separate 10/30/100/365-day runs
 > below are historical. See CLAUDE.md section 5.
+> **Monitoring (owner, 2026-10-21, SIM-02):** observe, never restart an active run without the owner's approval; check-ins
+> are set from measured runtimes (GitHub 365-day jobs: 41-84 min a seed on Build 16 code, Actions run 39618523947; the 9 to
+> 11.5 minutes below were Build 7 on the development machine). A running GitHub job shows no log until it ends.
 
 This report describes what the village does on its own over 10, 30, 100 and 365 game days, with
 no player activity. It is diagnostics only: no game parameter was changed, and nothing was tuned.
