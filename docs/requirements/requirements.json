@@ -2982,7 +2982,7 @@
    "id": "B7-006",
    "title": "Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed)",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 47)",
@@ -2990,8 +2990,8 @@
    "acceptance": [
     "As recorded in the source document; evidence named in implementation and tests"
    ],
-   "implementation": "(B7_ISSUES:49) | \"Diagnosed; proposal awaits owner\" (B7_ISSUES:49); listed awaiting in B8_READINESS:81 | AWAIT-OWNER | — | Owner: P3.4 / mine wage 15+ | Owner explicitly did NOT approve \"mining wage 15+\" (DECISIONS:17)",
-   "tests": "",
+   "implementation": "No change: starting kit (balance.json player_start_items, start_coins_player), World.work_mine, World.player_sell_many; evidence game/tests/early_game_test.gd",
+   "tests": "early_game_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -3001,7 +3001,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Lead: report the measurement; close the item only on the owner's word or when the starting kit or price rules change",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -3026,12 +3026,23 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Axe half measured on Build 17 (cca7f2b+, probe not committed): seeds 1 and 2, days 0-3, the cheapest axe for sale (smith or merchant) costs 45-46 coins; the player starts with 20 coins, a rusty pickaxe and no axe. Without an axe the player can still earn: manor board quarrying (6 coins a job, the starting pickaxe qualifies), mending (4), carrying (2), mining and selling ore or stone. So an axe takes a few days' work, not never. No mechanism is broken (WDR-022: an economic outcome, measured, no hidden help); no change made"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests; implementation; next_action",
+     "why": "Closed — Working as Designed (owner, 2026-10-21, docs/directives/2026-10-21_build17_early_game_progression.md). Verified on wip/build17 by game/tests/early_game_test.gd (18 checks, 0 failures, seeds 1 and 2): the player starts with 20 coins, a rusty pickaxe (serves as a pickaxe) and a rusty sword, no axe; the starting pickaxe mines real stone, iron ore and coal deposits (6/6/8 and 6/6/7 units) and these sold to the raw-goods merchant for 32 and 31 coins paid from their own purses, total coins conserved, giving 51-52 coins against an axe at 45-46. Bandits carry only their own 5-14 coins and a copper sword and drop what they carried (play_test); a dangerous, conditional route. On day 0 the manor's board had no work open to a new player (treasury 270; work appears as the reeve posts it), conditional. Starting economy kept: no free axe, no extra coins, no price change"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "resolution",
+     "why": "Disposition recorded"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "the mine wage belongs with mining labour economics; still the owner's call (OD-01)"
+   "roadmap_reason": "the mine wage belongs with mining labour economics; still the owner's call (OD-01)",
+   "resolution": "Closed — Working as Designed (owner, 2026-10-21)"
   },
   {
    "id": "B7-007",
