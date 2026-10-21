@@ -1237,12 +1237,180 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
 
 
+## DVW-A12 R1: whether the player may start mining seam or boulder `d`, and how long the swing takes. A pickaxe is
+## needed (the best one in the pack), and gold ore needs Mining level 3 (work_mine checks it again at the swing).
+## The time: balance.json mine_minutes at the game's speed, by the pickaxe's speed and the Mining mine_time effect.
+## Returns {ok: true, tool, secs} or {ok: false, why}.
+func player_mine_plan(d: Dictionary) -> Dictionary:
+	var p := player
+	var pick := p.tool_of("pickaxe")
+	if pick == "":
+		return {"ok": false, "why": "Requires a pickaxe. The smith sells them."}
+	if str(d.get("ore", "")) == "gold_ore" and not Skills.has(p, "mining", "gold"):
+		return {"ok": false, "why": "Gold needs Mining level 3."}
+	var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
+	return {"ok": true, "tool": pick, "secs": secs}
+
+
+## DVW-A12 R1: the player's swing at seam `d` with pickaxe `tool`, when the swing's time is up: work_mine, as a miner's
+## (PAR-01), into the pack (a full pack sets the ore down: `full`); a broken pickaxe leaves the hand empty.
+## Returns work_mine's result plus `full` (the pack could not take the ore).
+func player_mine(d: Dictionary, tool: String) -> Dictionary:
+	var p := player
+	var full := not p.inv.can_add(str(d.get("ore", "stone")))
+	var r := work_mine(p, d, p.inv, tool)
+	r["full"] = full
+	if r.result == "ok" and r.broke and p.tool == tool:
+		p.tool = ""
+	return r
+
+
+## DVW-A12 R2: whether the player may start felling tree `t`, and how long the whole felling takes. An axe is needed
+## (the best one in the pack), and only a mature tree can be felled (Trees.refusal). The time: balance.json
+## chop_minutes at the game's speed, by the axe's speed and the Woodcutting chop_time effect; the felling is
+## Trees.cfg().chops blows of an equal share of it. Returns {ok: true, tool, secs} or {ok: false, why}.
+func player_fell_plan(t: Dictionary) -> Dictionary:
+	var p := player
+	var axe := p.tool_of("axe")
+	if axe == "":
+		return {"ok": false, "why": "Requires an axe. The smith sells them."}
+	var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
+	secs *= Skills.value(p, "woodcutting", "chop_time", 1.0)
+	var why := Trees.refusal(str(t.state))
+	if why != "":
+		return {"ok": false, "why": why}
+	return {"ok": true, "tool": axe, "secs": secs}
+
+
+## DVW-A12 R2: one blow of the player's axe `tool` at tree `t` from `side`. A tree no longer mature (felled by someone
+## else meanwhile) takes no blow: result "gone". Until the last blow: "blow". The last fells it ("felled"): its logs
+## (with the Woodcutting log_bonus) go to the pack through work_felled, as a woodcutter's (PAR-01), or are set down if
+## the pack is full (`full`); the tree may drop saplings (sapling_drop, with the sapling_bonus), and `saplings` holds
+## those the pack took whole; a broken axe leaves the hand. Returns {result, logs, full, saplings, broke, up}.
+func player_chop(t: Dictionary, side: int, tool: String) -> Dictionary:
+	var p := player
+	if t.state != "grown":
+		return {"result": "gone"}
+	var r := chop_tree(t, side, int(Skills.value(p, "woodcutting", "log_bonus")))
+	if int(r.logs) <= 0:
+		return {"result": "blow"}
+	var full := not p.inv.can_add("log")
+	var f := work_felled(p, int(r.logs), p.inv, tool)
+	var drop := sapling_drop(t, Skills.value(p, "woodcutting", "sapling_bonus"))
+	var saplings := {}
+	for id in drop:
+		if player_gain(id, int(drop[id])) == int(drop[id]):
+			saplings[id] = int(drop[id])
+	if f.broke and p.tool == tool:
+		p.tool = ""
+	return {"result": "felled", "logs": int(r.logs), "full": full, "saplings": saplings, "broke": f.broke, "up": f.up}
+
+
+## DVW-A12 R3: why the player cannot make `recipe` now, in the game's words ("" if they can): the recipe's skill level,
+## then its materials in the pack. The station is checked apart (station_refusal).
+func player_craft_refusal(recipe: String) -> String:
+	var r: Dictionary = GameData.recipes[recipe]
+	if player.level(r.skill) < int(r.level):
+		return "Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)]
+	if not player.inv.has_all(r.in):
+		return "You do not have the materials."
+	return ""
+
+
+## DVW-A12 R3: the player sets to work on `recipe` at `station` (the craft window's; without one, a station of the
+## recipe's kind within 2 tiles of the player). Refused if the station is not theirs to use (station_refusal), then by
+## player_craft_refusal. The time: the recipe's minutes at the game's speed, by the skill's craft_time effect; the
+## station is held for the player meanwhile (reserve_for_player). Returns {ok: true, station, secs} or {ok: false, why}.
+func player_craft_begin(recipe: String, station := "") -> Dictionary:
+	var r: Dictionary = GameData.recipes[recipe]
+	var p := player
+	if station == "":
+		for id in stations_of(str(r.station)):
+			if (Vector2(station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
+				station = id
+	if station != "":
+		var no := station_refusal(station)
+		if no != "":
+			return {"ok": false, "why": no}
+	var why := player_craft_refusal(recipe)
+	if why != "":
+		return {"ok": false, "why": why}
+	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(r.skill), "craft_time", 1.0)
+	if station != "":
+		reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	return {"ok": true, "station": station, "secs": secs}
+
+
+## DVW-A12 R3: the player's work on `recipe` is done: work_craft from the pack into the pack, as a villager's (PAR-01,
+## PAR-04). Returns work_craft's result.
+func player_craft(recipe: String) -> Dictionary:
+	return work_craft(player, recipe, player.inv)
+
+
 ## PAR-01: a blow of `dmg` (the attacker's, after their own Combat effects) landing on villager `n`: their Combat
 ## damage_taken, then half their armour, as the player's damage_player applies the player's. Returns what it took.
 func harm_npc(n: NPC, dmg: float) -> float:
 	var dealt := maxf(0.5, dmg * Skills.value(n, "combat", "damage_taken", 1.0) - n.armor * 0.5)
 	n.hp -= dealt
 	return dealt
+
+
+## DVW-A12 R7: the damage of one blow of the player's: their weapon's (PlayerState.damage), doubled by the Combat
+## tier's crit_chance. Returns {dmg, crit}.
+func player_strike() -> Dictionary:
+	var d := player.damage()
+	if rng.randf() < Skills.value(player, "combat", "crit_chance"):
+		return {"dmg": d * 2.0, "crit": true}
+	return {"dmg": d, "crit": false}
+
+
+## DVW-A12 R7: the player's sword blow lands on villager `n`: player_strike, player_hit_npc, and 4 Combat xp a blow.
+## Returns player_hit_npc's result plus {crit, up} (up: a new Combat level, or 0).
+func player_melee_npc(n: NPC) -> Dictionary:
+	var s := player_strike()
+	var h := player_hit_npc(n, float(s.dmg))
+	h["crit"] = s.crit
+	h["up"] = player.gain("combat", 4)
+	return h
+
+
+## DVW-A12 R8: a blow of the player's (a sword's or a spell's) of `dmg` lands on villager `n`: harm_npc (their Combat
+## damage_taken and armour, PAR-01); the blow wakes a sleeper and the noise wakes those near, who then see it (owner
+## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
+## slain by the player, and a bandit put down near villagers is a defence (CRT-10). Returns {dealt, killed}.
+func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
+	var dealt := harm_npc(n, dmg)
+	wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
+	if n.role != "bandit":
+		player_assault(n)
+	elif n.target == -1:
+		n.target = -2
+	var killed := false
+	if n.hp <= 0.0:
+		kill(n, "slain by %s %s" % [player.name, player.family])
+		killed = true
+		if n.role == "bandit":
+			relations.defended(n.pos)        # villagers who saw a bandit put down think better of the player (CRT-10)
+	return {"dealt": dealt, "killed": killed}
+
+
+## DVW-A12 R9: attacking a villager is a crime: the victim remembers it and thinks worse of the player, an adult fights
+## back, and those who see it (aware_of_attack, witness_radius, PAR-05) remember it; the guards among them answer, and
+## the victim and the other witnesses carry word to a guard (raise_alarm, report_crime). Nobody else knows.
+func player_assault(victim: NPC) -> void:
+	var p := player
+	victim.remember("attacked by %s" % p.name)
+	relations.harmed(victim, float(Relations.cfg().victim_harm))
+	if victim.role == "adult":
+		victim.target = -2
+	var aware := aware_of_attack(p.pos, victim)
+	for n: NPC in aware.seen:
+		if n.role != "bandit":
+			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
+			relations.harmed(n, float(Relations.cfg().witness_harm))
+	raise_alarm(aware, -2)
+	stat("player_assault")
+	note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
 
 ## PAR-01: a villager's blow, by the player's Combat rules: damage_mult, a crit_chance double blow.
@@ -2662,6 +2830,17 @@ func shop_name(n: NPC) -> String:
 
 
 ## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
+## DVW-A12 R14: how near (tiles) the player must stand to a villager awake for their pocket to be within reach.
+const PICKPOCKET_REACH := 1.8
+
+
+## DVW-A12 R14: whether villager `n` (awake, in the talk window) is someone whose pocket the player can reach: within
+## PICKPOCKET_REACH, and never a child (owner, B8-010). pickpocket() itself refuses a child but does not measure
+## the distance: the sleeper's window offers the try at the reach a target is chosen from (see the DVW-A12 report).
+func pickpocket_in_reach(n: NPC) -> bool:
+	return player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child"
+
+
 func pickpocket_chance() -> float:
 	return minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * Skills.value(player, "stealth", "pickpocket_steps"), float(GameData.b("pickpocket_chance_max")))
 
@@ -2877,6 +3056,26 @@ func player_gain(id: String, n: int, kind := "made_") -> int:
 	loot.append({"pos": player.pos + Vector2(0, 0.4), "inv": bag, "coins": 0, "from": "dropped by %s" % player.name})
 	_loot_on_player_level(loot[loot.size() - 1])
 	return 0
+
+
+## DVW-A12 R12: the player learns Fireball from `teacher` (the sage, DECISIONS.md:57): balance.json fireball_price
+## coins go from the player to the teacher, the spell is known, 100 Magic xp is earned, and a story quest to learn it is
+## completed (Quests.on_learned). Refused if it is known already or the player cannot pay. `thanks`: the story's
+## thanks line from the teacher, read before the quest is completed ("" for none). Returns {ok, why, thanks}.
+func player_learn_fireball(teacher: NPC) -> Dictionary:
+	var price := int(GameData.b("fireball_price"))
+	if player.spells.get("fireball", false):
+		return {"ok": false, "why": "You know Fireball."}
+	if player.coins < price:
+		return {"ok": false, "why": "You need %d coins." % price}
+	player.coins -= price
+	teacher.coins += price
+	player.spells["fireball"] = true
+	player.gain("magic", 100)
+	var story: Dictionary = quests.active_from(teacher)
+	var thanks := quests.line(story, "thanks") if not story.is_empty() else ""
+	quests.on_learned("fireball")
+	return {"ok": true, "why": "", "thanks": thanks}
 
 
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).

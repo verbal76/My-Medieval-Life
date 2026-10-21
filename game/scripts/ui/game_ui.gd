@@ -126,7 +126,6 @@ const CORNER_MARGIN := Vector2(28, 14)
 ## Windows keep CORNER_MARGIN; the HUD sits closer, moving only off a camera cutout it would overlap.
 const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
 const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
-const PICKPOCKET_REACH := 1.8      # tiles: the talk window offers "Pick <name>'s pocket" this close
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -2183,26 +2182,20 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 		var price := int(GameData.b("fireball_price"))
 		var known: bool = w.player.spells.get("fireball", false)
 		_talk_choice(choices, "Learn Fireball (%d coins)" % price if not known else "You know Fireball", func():
-			if w.player.coins >= price:
-				w.player.coins -= price
-				n.coins += price
-				w.player.spells["fireball"] = true
-				w.player.gain("magic", 100)
-				var story: Dictionary = w.quests.active_from(n)
-				var thanks := w.quests.line(story, "thanks") if not story.is_empty() else ""
-				w.quests.on_learned("fireball")
+			var learned := w.player_learn_fireball(n)          # the price, the payment and the spell are core's (DVW-A12 R12)
+			if learned.ok:
 				message("You learned Fireball. Press F (or the Fire button) to cast it; it uses stamina.")
-				if thanks != "":
-					_talk_view(n, thanks)
+				if str(learned.thanks) != "":
+					_talk_view(n, str(learned.thanks))
 				else:
 					hide_all()
 			else:
-				message("You need %d coins." % price), not known)
+				message(str(learned.why)), not known)
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
 	# ...never a child's (owner, 2026-10-18: B8-010, keep disabled)
-	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child":
+	if w.pickpocket_in_reach(n):                  # the reach is core's (World.PICKPOCKET_REACH, DVW-A12 R14)
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
 	_relation_choices(n, choices)
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
@@ -2658,7 +2651,6 @@ func show_craft(station_id: String) -> void:
 		var rec: Dictionary = GameData.recipes[r]
 		var ins := ", ".join(rec.in.keys().map(func(k): return "%d %s (%d)" % [int(rec.in[k]), GameData.item_name(k), p.inv.count(k)]))
 		var outs := ", ".join(rec.out.keys().map(func(k): return "%d %s" % [int(rec.out[k]), GameData.item_name(k)]))
-		var lv_ok := p.level(rec.skill) >= int(rec.level)
 		var h := HBoxContainer.new()
 		h.add_child(_icon(rec.out.keys()[0]))
 		var l := Label.new()
@@ -2667,7 +2659,7 @@ func show_craft(station_id: String) -> void:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(l)
 		var rr: String = r
-		_button("Make", func(): main.craft(rr, station_id), lv_ok and p.inv.has_all(rec.in) and no == "", h)
+		_button("Make", func(): main.craft(rr, station_id), w.player_craft_refusal(rr) == "" and no == "", h)     # core decides (DVW-A12 R3)
 		panel_body.add_child(h)
 
 

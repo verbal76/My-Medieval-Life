@@ -2438,45 +2438,33 @@ func _use() -> void:
 				world.loot.remove_at(target.i)
 		"deposit":
 			var dep: Dictionary = target.dep
-			var pick := p.tool_of("pickaxe")
-			if pick == "":
-				ui.message("Requires a pickaxe. The smith sells them.")
+			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
+			if not mp.ok:
+				ui.message(str(mp.why))
 				return
-			if dep.ore == "gold_ore" and not Skills.has(p, "mining", "gold"):
-				ui.message("Gold needs Mining level 3.")
-				return
-			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
-			start_action("Mining", secs, func():
-				var full := not p.inv.can_add(str(dep.get("ore", "stone")))
-				var r := world.work_mine(p, dep, p.inv, pick)          # the same swing as a miner's (PAR-01)
+			var pick: String = mp.tool
+			start_action("Mining", float(mp.secs), func():
+				var r := world.player_mine(dep, pick)                  # the same swing as a miner's (PAR-01)
 				if r.result == "out":
 					ui.message("The seam is worked out.")
 					return
 				if r.result == "gold":
 					ui.message("Gold needs Mining level 3.")
 					return
-				if full:
+				if r.full:
 					ui.message("Your pack is full: the ore is left at your feet.")
 				else:
 					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
 				if r.broke:
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
-					if p.tool == pick:
-						p.tool = ""
 				_level_up("mining", int(r.up)), "swing", pick)
 		"tree":
-			var axe := p.tool_of("axe")
-			if axe == "":
-				ui.message("Requires an axe. The smith sells them.")
-				return
-			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
-			secs *= Skills.value(p, "woodcutting", "chop_time", 1.0)
 			var tr: Dictionary = target.tree
-			var why := Trees.refusal(str(tr.state))         # only a mature tree can be felled
-			if why != "":
-				ui.message(why)
+			var fp := world.player_fell_plan(tr)                      # the rules are in core (DVW-A12 R2)
+			if not fp.ok:
+				ui.message(str(fp.why))
 				return
-			_chop(tr, axe, secs)
+			_chop(tr, str(fp.tool), float(fp.secs))
 		"station":
 			ui.show_craft(target.id)
 		"field":
@@ -2590,27 +2578,21 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
-		if tr.state != "grown":
+		var r := world.player_chop(tr, side, axe)          # the same felling as a woodcutter's (PAR-01, DVW-A12 R2)
+		if r.result == "gone":
 			return                                       # someone else felled it meanwhile
-		var r := world.chop_tree(tr, side, int(Skills.value(p, "woodcutting", "log_bonus")))
-		if int(r.logs) <= 0:
+		if r.result == "blow":
 			_chop(tr, axe, secs)
 			return
-		var full := not p.inv.can_add("log")
-		var f := world.work_felled(p, int(r.logs), p.inv, axe)     # the same as a woodcutter's (PAR-01)
-		if full:
+		if r.full:
 			ui.message("Your pack is full: the logs are left at your feet.")
 		else:
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
-		var saplings := world.sapling_drop(tr, Skills.value(p, "woodcutting", "sapling_bonus"))
-		for id in saplings:
-			if world.player_gain(id, int(saplings[id])) == int(saplings[id]):
-				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
-		if f.broke:
+		for id in r.saplings:
+			_gain("+%d %s" % [int(r.saplings[id]), GameData.item_name(id)], id)
+		if r.broke:
 			ui.message("Your %s broke." % GameData.item_name(axe).to_lower())
-			if p.tool == axe:
-				p.tool = ""
-		_level_up("woodcutting", int(f.up)), "swing", axe)
+		_level_up("woodcutting", int(r.up)), "swing", axe)
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
@@ -2700,28 +2682,14 @@ func _level_up(skill: String, up: int) -> void:
 ## does not hold is waited for (World.station_refusal); the player's work takes the station meanwhile.
 func craft(recipe: String, station := "") -> void:
 	var r: Dictionary = GameData.recipes[recipe]
-	var p := world.player
-	if station == "":
-		for id in world.stations_of(str(r.station)):
-			if (Vector2(world.station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
-				station = id
-	if station != "":
-		var no := world.station_refusal(station)
-		if no != "":
-			ui.message(no)
-			return
-	if p.level(r.skill) < int(r.level):
-		ui.message("Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)])
+	var cp := world.player_craft_begin(recipe, station)          # the rules are in core (DVW-A12 R3)
+	if not cp.ok:
+		ui.message(str(cp.why))
 		return
-	if not p.inv.has_all(r.in):
-		ui.message("You do not have the materials.")
-		return
-	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(r.skill), "craft_time", 1.0)
-	if station != "":
-		world.reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	station = str(cp.station)
 	ui.hide_all()
-	start_action("Crafting", secs, func():
-		var res := world.work_craft(p, recipe, p.inv)           # the same as a villager's (PAR-01, PAR-04)
+	start_action("Crafting", float(cp.secs), func():
+		var res := world.player_craft(recipe)                   # the same as a villager's (PAR-01, PAR-04)
 		if res.result != "ok":
 			return
 		_level_up(str(r.skill), int(res.up))
@@ -2773,20 +2741,18 @@ func _blow() -> void:
 	var who: Object = Combat.target(world, p.pos, facing_vec(), swing.only)
 	if who is NPC:
 		swing.hits += 1
-		_hit(who, _strike(p))
-		_xp("combat", 4)
+		var hp0: float = who.hp
+		var h := world.player_melee_npc(who)          # the strike, the harm, the crime and the xp are core's (DVW-A12 R7-R9)
+		if h.crit:
+			ui.message("A telling blow!")
+		_hit_fx(sprites.get(who.id), who.max_hp, hp0 - float(h.dealt), float(h.dealt))
+		_level_up("combat", int(h.up))
 	elif who is Animal:
 		swing.hits += 1
-		_hit_animal(who, _strike(p))
-
-
-## The damage of one blow: the weapon's, and a double blow with the Combat tier's crit chance.
-func _strike(p: PlayerState) -> float:
-	var d := p.damage()
-	if world.rng.randf() < Skills.value(p, "combat", "crit_chance"):
-		ui.message("A telling blow!")
-		return d * 2.0
-	return d
+		var s := world.player_strike()
+		if s.crit:
+			ui.message("A telling blow!")
+		_hit_animal(who, float(s.dmg))
 
 
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
@@ -2903,19 +2869,12 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
 
 
+## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,
+## DVW-A12 R8); the blow is shown here.
 func _hit(n: NPC, dmg: float) -> void:
-	var dealt := world.harm_npc(n, dmg)          # their Combat damage_taken and armour, as the player's (PAR-01)
-	_hit_fx(sprites.get(n.id), n.max_hp, n.hp, dealt)
-	# the blow wakes a sleeper and the noise wakes those near, who then see it (owner rule)
-	world.wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
-	if n.role != "bandit":
-		_crime(n)
-	elif n.target == -1:
-		n.target = -2
-	if n.hp <= 0.0:
-		world.kill(n, "slain by %s %s" % [world.player.name, world.player.family])
-		if n.role == "bandit":
-			world.relations.defended(n.pos)    # villagers who saw a bandit put down think better of you (CRT-10)
+	var hp0 := n.hp
+	var h := world.player_hit_npc(n, dmg)
+	_hit_fx(sprites.get(n.id), n.max_hp, hp0 - float(h.dealt), float(h.dealt))
 
 
 ## A blow that landed (Build 8 report: no sign of damage): the target flashes red, the damage floats
@@ -2964,25 +2923,6 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 	get_tree().create_timer(3.1).timeout.connect(func():
 		if is_instance_valid(bar) and Time.get_ticks_msec() >= int(bar.get_meta("until", 0)):
 			bar.visible = false)
-
-
-## Attacking a villager is a crime: adults who are hit fight back, and those who see it (World.aware_of_attack, PAR-05)
-## remember it; the guards among them answer, and the victim and the other witnesses carry word to a guard
-## (World.raise_alarm, report_crime). Nobody else knows.
-func _crime(victim: NPC) -> void:
-	var p := world.player
-	victim.remember("attacked by %s" % p.name)
-	world.relations.harmed(victim, float(Relations.cfg().victim_harm))
-	if victim.role == "adult":
-		victim.target = -2
-	var aware := world.aware_of_attack(p.pos, victim)
-	for n: NPC in aware.seen:
-		if n.role != "bandit":
-			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
-			world.relations.harmed(n, float(Relations.cfg().witness_harm))
-	world.raise_alarm(aware, -2)
-	world.stat("player_assault")
-	world.note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
 
 func fireball() -> void:
