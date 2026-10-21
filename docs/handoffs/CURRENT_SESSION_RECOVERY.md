@@ -16,6 +16,10 @@ run; **W** = reported by a worker, not yet re-checked by the lead.
 - STONE-Q part 1 answered (STONE-Q1, Option C); STONE-02, STONE-03 and X18-STONECUT (staging) placed in Expansion 18, not
   Build 17 blockers; STONE-Q part 2 (dressing waste) awaits the owner. `wip/build17` head after recording: `cca7f2b`.
 
+- Later the same evening: Worker N reported and was merged (`wip/b17-parity` `fbdc8fc`); JOB-01 closed (job_board_test);
+  B7-006 closed by the owner as working as designed (early_game_test); STONE-Q fully answered (STONE-Q1..Q3; STONE-02..06
+  and X18-STONECUT in Expansion 18). Remaining worker: L (equipment/collapse). LOG-01 waits for L's `manor_work.gd`.
+
 ## Branches (V, remote heads at the first checkpoint)
 
 | Branch | Head | What |

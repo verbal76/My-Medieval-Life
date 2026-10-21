@@ -16658,7 +16658,7 @@
    "id": "MIN-D2",
    "title": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "The player counts toward the settlement's mining capability by exactly the villagers' rules (MIN-D-Q2)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -16666,20 +16666,22 @@
    "acceptance": [
     "Same eligibility and contribution for player and villagers; no ownership transfer; no bonus or exclusion; recalculated on leaving; deterministic; never a gate"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-D",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16697,6 +16699,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
     }
    ],
    "target_build": "17"
@@ -16705,7 +16712,7 @@
    "id": "MIN-D3",
    "title": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Trial pits yield conserved, recoverable topsoil, dirt and spoil through the MIN-E item and heap system (MIN-D-Q3)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -16713,20 +16720,22 @@
    "acceptance": [
     "Each trial-pit unit removed becomes a counted item stored or heaped; hauling, reuse and disposal accounted; layers consistent with MIN-E; saves; no autonomous tunnel backfill"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-D",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -16744,6 +16753,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
     }
    ],
    "target_build": "17"
@@ -17710,7 +17724,7 @@
    "id": "MIN-RIGHTS",
    "title": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Open access to common ground; legitimate property respected (MIN-E-Q3)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17718,20 +17732,22 @@
    "acceptance": [
     "No manor rights, royalties, permits or quotas; digging on land another owns refused without consent or agreement; tested for pits, trial pits and tunnels"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-E",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17749,6 +17765,16 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "No code change needed: the existing refusals held; parity_mining_test covers them"
     }
    ],
    "target_build": "17"
@@ -17757,7 +17783,7 @@
    "id": "MIN-SHOVEL",
    "title": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17765,20 +17791,22 @@
    "acceptance": [
     "Shovel from carpenter-made wooden part and smith-made metal part with labour, tools, facilities, time; earth layers dug with a shovel; wear, repair or replacement through existing processes; parity; older saves and open jobs not stranded"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-E",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17796,6 +17824,16 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Not yet looked at on screen: the shovel icons and the trial-earth pile (headless only); visual review before the readiness report"
     }
    ],
    "target_build": "17"
@@ -17804,7 +17842,7 @@
    "id": "MIN-SKILLCAP",
    "title": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
@@ -17812,20 +17850,22 @@
    "acceptance": [
     "Capability evaluation reads skills and equipment rather than job names; excavation open to any equipped worker; specialisation from experience; same rules for the player"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/build17/MIN_PARITY_SHOVELS.md; INT-200..204",
+   "tests": "parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fbdc8fc"
+   ],
    "parent": "MIN-E",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "CI and the determinism re-baseline after the equipment merge",
    "priority": "",
-   "workstream": "wip/b17-parity",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -17843,6 +17883,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Worker N (wip/b17-parity) is implementing it; uncommitted snapshot pushed as wip/b17-parity-snapshot e28f621"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
+     "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
     }
    ],
    "target_build": "17"
@@ -23644,6 +23689,11 @@
      "date": "2026-10-21",
      "change": "commit 8eec56e; tests; branch",
      "why": "Rounds 1-3 on wip/expansion18-preparation (8eec56e): capability and specialization (mining read-only from MIN-D through an adapter; one-evaluator merge plan in docs/expansion18/DESIGN.md section 8), settlement holdings and reports, regional supply and demand, routes and haulage, competition and cooperation, caravan comparison harness; Q18-9 (levels scale pay and output, factors 1.0) and Q18-10 (any party buys, fetches or pays a carter) applied; settlement_test 63, regional_test 67, caravan_compare 50 checks; regression suites pass. SET-D not started (Q18-6, Q18-7, Q18-12, Q18-13, live CON-01)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Reconciliation note from MIN-D2/MIN-SKILLCAP (wip/build17 fbdc8fc): the Expansion 18 evaluator in industries.gd does not read capabilities.json's new optional tool key nor count the resident player; unchanged it would over-count practitioners. To be handled at Expansion 18's reconciliation gate (docs/build17/MIN_PARITY_SHOVELS.md)"
     }
    ],
    "target_build": "18"
@@ -31299,6 +31349,11 @@
      "date": "2026-10-21",
      "change": "commit 0147066; tests; next_action",
      "why": "Merged wip/b17-wiki (0147066): wiki_mining.gd (mining, prospecting, open pits, underground, minecarts, shafts, stability, backfill), sys:manor_jobs, 15 not-yet-in-game entries incl. 6 health placeholders, docs/build17/README.md; and STONE-01's sys:stoneworking. wiki_test passes on the merge. Gaps open: capability levels cap at 2 (no excavator job; with MIN-SKILLCAP), stability page lacks the collapse outcome (MIN-COLLAPSE), code names on non-mining node pages, prospector JOB_TEXT without a Population job, stale owner questions in MIN_F_UNDERGROUND.md section 4"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Parity merge: wiki_excavation.gd (shovels and pickaxes, trial-pit earth, where you may dig, mining capability) and contracts hiring text; lead corrected wiki_mining.gd (open pits and trial pits dug with a shovel for earth, fallen rock dug out with a shovel). wiki_test passes. Remaining: collapse outcome (equipment worker), code names on non-mining node pages, prospector JOB_TEXT orphan, MIN_F_UNDERGROUND.md section 4"
     }
    ],
    "target_build": "17"
