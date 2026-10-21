@@ -372,7 +372,7 @@ func _plan_home_work(n: NPC) -> bool:
 	var cfg := hp_cfg()
 	var pantry: Inventory = w.households[n.household].pantry
 	var house: Dictionary = w.buildings.get(n.home, {})
-	if _plan_market_run(n, house) or _plan_storefront(n, house) or _plan_cart(n, house):
+	if _plan_market_run(n, house) or _plan_storefront(n, house) or w.business.stalls.plan_npc(n, house) or _plan_cart(n, house):     # stalls: STALL-06
 		return true
 	var keep := int(cfg.poultice_keep) + (int(cfg.storefront_stock) if house.has("front") else 0)     # a storefront household makes some to sell
 	var flowers := pantry.count("flower") + n.inv.count("flower")
@@ -2034,6 +2034,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"build_front":
 			return w.business.build_npc_front(w.buildings.get(n.home, {}), n)
+		"build_stall":
+			return w.business.stalls.npc_build(n, a)        # a household's market stall (STALL-06)
 		"use_medicine":
 			var from: Inventory = w.households[n.household].pantry if a.get("pantry", false) and n.household >= 0 else n.inv
 			for m in MEDICINES:
@@ -2170,6 +2172,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return w.farm.buy_seed_item(v, str(a.item), mini(int(a.qty), v.inv.count(str(a.item))), n) == ""
 		"buy_stall":
 			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
+		"stall_stock":
+			return w.business.stalls.npc_stock(n, a)        # the household's surplus into its stall, opened (STALL-06)
 		"sell_to":
 			var b := w.npc(int(a.buyer))
 			if b == null or not b.alive:

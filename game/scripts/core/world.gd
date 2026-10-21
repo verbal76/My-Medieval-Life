@@ -611,6 +611,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		seller.earned += total
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
+	if business:
+		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
 	return true
 
 
@@ -643,7 +645,7 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 		if (o.job in jobs or at_post(o)) and o.inv.has(id) and not brain.keeps(o, id) \
 				and (o.job == "merchant" or not NPCBrain.BUYS.get(brain.buy_role(o), {}).has(id)):     # a trade's own materials are not for sale
 			n += o.inv.count(id)
-	for s: Dictionary in business.premises():
+	for s: Dictionary in business.premises() + business.stalls.npc_built():     # and villagers' built stalls (STALL-06)
 		if s != skip and s.has("stock") and Vector2(int(s.x), int(s.y)).distance_squared_to(at) <= r2:
 			n += int(s.stock.get(id, 0))
 	return n

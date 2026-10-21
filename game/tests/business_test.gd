@@ -181,8 +181,15 @@ func _attended_sales() -> void:
 	s.missed = 1
 	check(not b.attended(s), "no sales while the rent is owing")
 	s.missed = 0
+	# STALL-05 / Q13 (owner 2026-10-21): a market stall's proceeds come by closing it; the session is settled, the
+	# manor's 5% (with the carried fraction) to the treasury, the rest into the purse; it may be opened again at once
 	var held := w.player.coins
-	check(b.collect(s) == paid and w.player.coins == held + paid and int(s.till) == 0, "the till is collected into the purse")
+	var treasury := w.treasury
+	var due: Vector2i = b.stalls.due(s)
+	check(b.stalls.unsettled(s) == paid and b.stalls.withdrawable(s) == 0, "the open session's %d coins are held, not withdrawable" % paid)
+	check(b.collect(s) == paid - due.x and w.player.coins == held + paid - due.x and w.treasury == treasury + due.x and int(s.till) == 0, "collecting closes the stall and settles the till: %d to the purse, %d to the manor" % [paid - due.x, due.x])
+	check(w.total_coins() == total, "coins are conserved by the settlement")
+	check(not b.attended(s) and b.stalls.open(s, World.PLAYER) == "" and b.attended(s), "closed after settling, opened again at once")
 
 
 func _demand() -> void:
@@ -334,14 +341,25 @@ func _rent_daily() -> void:
 	check(w.total_coins() == total, "coins are conserved by the rent")
 	b.daily()
 	check(p.coins == 50 - Business.rent_day(), "never twice in a day")
-	# a poor morning: the till covers the rent
+	# a poor morning: settled coins left in the till cover the rent (an older save's till: no open session)
 	p.coins = 1
+	s.erase("session")
 	s.till = 12
 	w.minutes += 1440.0
 	b.daily()
 	check(int(s.missed) == 0 and int(s.till) + p.coins == 12 + 1 - Business.rent_day(), "the till pays the rent when the purse cannot")
+	# STALL-05 / Q13 (owner 2026-10-21): an open session's proceeds are not withdrawable, so the rent is not taken from them
+	p.coins = 1
+	s.till = 12
+	s.session = {"gross": 12, "sold": {"plank": 3}, "day": w.day(), "hour": 9, "seller": World.PLAYER}
+	w.minutes += 1440.0
+	b.daily()
+	check(int(s.missed) == 1 and int(s.till) == 12 and p.coins == 1, "the open session's proceeds do not pay the rent: it is owing")
+	p.coins = Business.rent_day() * 3
+	check(b.pay_arrears(s) == "" and int(s.missed) == 0, "paid from the purse")
 	# nothing to pay with: sales stop, then the pitch goes back with the goods
 	p.coins = 0
+	s.erase("session")
 	s.till = 0
 	var stock_planks := int(s.stock.get("plank", 0))
 	w.minutes += 1440.0

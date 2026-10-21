@@ -34,6 +34,11 @@ extends RefCounted
 ## their day through plan_attendant, so they are a real villager walking to the counter in the working day and
 ## sleeping at night). The wage is paid every morning from the till, then the purse. A premises sells
 ## while the player is near or its attendant is at the counter; with neither it does not sell.
+##
+## Market stalls (STALL-01..06, owner 2026-10-21; scripts/core/stalls.gd, `stalls`): a stall built from three planks
+## (`built`) sells unattended while OPEN, and every market stall (built, pitch, merchant's) settles each session's
+## sales on closing, 5% to the manor. A pitch is open from its renting until it is closed (collect() closes it and
+## settles), and its open session's proceeds cannot be taken or spent (Q13). Shops and storefronts keep their terms.
 
 const PITCHES := [{"id": "pitch0", "x": 42, "y": 61}, {"id": "pitch1", "x": 50, "y": 61}]
 const AWNING := [1890, 3502]          # the merchants' stall art (ground layer "below0"), two tiles wide
@@ -42,10 +47,12 @@ const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: 
 
 var w: World
 var heading := {}                     # npc id -> game hour they set out for the stall (not saved)
+var stalls: Stalls                    # market stalls: building, sessions and the 5% settlement (STALL-01..06)
 
 
 func _init(world: World) -> void:
 	w = world
+	stalls = Stalls.new(world, self)
 
 
 # ---------------------------------------------------------------- pitches --------------------
@@ -71,6 +78,11 @@ static func add_pitches(world: World, m: VillageMap) -> void:
 	for id in ids:
 		if world.buildings[id].has("front"):
 			_draw_front(world, m, world.buildings[id].front, lay)
+	var sids: Array = world.stalls.keys()
+	sids.sort()
+	for id in sids:
+		if Stalls.is_built(world.stalls[id]):          # stalls built by the player and villagers (STALL-01)
+			Stalls.draw(world, m, world.stalls[id])
 
 
 # ---------------------------------------------------------------- storefronts (B14) ---------
@@ -200,7 +212,7 @@ static func is_pitch(s: Dictionary) -> bool:
 func mine() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and w.tenant_of(s) == World.PLAYER:
+		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == World.PLAYER:
 			return s
 	return {}
 
@@ -228,12 +240,13 @@ func shops() -> Array:
 	return out
 
 
-## Everything the player sells from: their stall, then their shops.
+## Everything the player sells from: their pitch, the stalls they built, then their shops.
 func premises() -> Array:
 	var out := []
 	var m := mine()
 	if not m.is_empty():
 		out.append(m)
+	out.append_array(stalls.built(World.PLAYER))
 	out.append_array(shops())
 	return out
 
@@ -253,8 +266,8 @@ func is_mine(s: Dictionary) -> bool:
 
 ## The day's rent of a stall (more for a larger one) or licence of a shop.
 func rent_of(s: Dictionary) -> int:
-	if bool(s.get("front", false)):
-		return 0                          # a storefront: the household's own ground
+	if bool(s.get("front", false)) or Stalls.is_built(s):
+		return 0                          # a storefront: the household's own ground; a built stall pays the 5% (Stalls)
 	if is_shop(s):
 		return int(GameData.b("shop_licence_day"))
 	return int(GameData.b("stall_large_rent_day")) if bool(s.get("large", false)) else rent_day()
@@ -294,7 +307,7 @@ func sorted_ids() -> Array:
 func free_pitch() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and w.tenant_of(s) == "":
+		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "":
 			return s
 	return {}
 
@@ -343,6 +356,7 @@ func rent() -> String:
 	s.paid_day = w.day()
 	s.missed = 0
 	s.costs = {"rent": rent_day()}
+	s.open = true                         # a rented pitch is open for sales until it is closed (Stalls)
 	w.stat("stall_rented")
 	w.note("%s %s rented a market stall for %d coins a day." % [w.player.name, w.player.family, rent_day()])
 	return ""
@@ -399,8 +413,11 @@ func set_price(s: Dictionary, id: String, price: int) -> String:
 	return ""
 
 
-## Collect the till into the purse; the coins taken.
+## Collect the till into the purse; the coins taken. A market stall's proceeds come only by closing it: its session is
+## settled (5% to the manor) and the rest is the player's (Q13).
 func collect(s: Dictionary) -> int:
+	if stalls.is_market(s):
+		return int(stalls.close(s, "closed to collect").net)
 	var t := int(s.get("till", 0))
 	w.player.coins += t
 	s.till = 0
@@ -411,6 +428,8 @@ func collect(s: Dictionary) -> int:
 ## the till return to the player; what does not fit the pack lies at the stall as loot. No refund of rent
 ## paid. A closed shop leaves its counter and shelves standing. Returns a summary line.
 func close(s: Dictionary, because := "You closed your stall.") -> String:
+	if Stalls.is_built(s):                # a built stall is the builder's: closing ends the session, the goods stay in it
+		return "%s %s" % [because, stalls.settle_text(s, stalls.close(s))]
 	var bag := Inventory.new()
 	var back := 0
 	for pool: Dictionary in [s.stock, s.get("store", {})]:
@@ -445,9 +464,12 @@ func daily() -> void:
 		if is_shop(s) and not is_mine(s):
 			w.note(close(s, "You no longer hold the shop's room."))
 			continue
+		if Stalls.is_built(s):
+			continue                      # no rent: the 5% sales lease (Stalls)
 		_rent_due(s)
 		if s.has("stock"):
 			_wage_due(s)
+	stalls.daily()
 
 
 func _rent_due(s: Dictionary) -> void:
@@ -472,9 +494,10 @@ func _rent_due(s: Dictionary) -> void:
 
 
 ## Make `amount` ready in the purse, from the till when the purse is short. False (and nothing moved) when
-## the two together cannot cover it.
+## the two together cannot cover it. An open market session's proceeds are not drawn on (Q13: not withdrawable until
+## the session is settled).
 func _charge(s: Dictionary, amount: int) -> bool:
-	var from_till := mini(maxi(0, amount - w.player.coins), int(s.get("till", 0)))
+	var from_till := mini(maxi(0, amount - w.player.coins), stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0)))
 	if w.player.coins + from_till < amount:
 		return false
 	s.till = int(s.get("till", 0)) - from_till
@@ -748,7 +771,12 @@ func player_near(s: Dictionary) -> bool:
 
 ## Sales run only while the premises are open: the rent not owing, and the player near or the attendant at the
 ## counter. Nobody sells unattended.
+## A built stall sells unattended while it is open (STALL-03); a pitch only while its session is open as well.
 func attended(s: Dictionary) -> bool:
+	if Stalls.is_built(s):
+		return stalls.is_open(s) and int(s.get("missed", 0)) == 0
+	if stalls.is_market(s) and not stalls.is_open(s):
+		return false
 	return is_mine(s) and int(s.get("missed", 0)) == 0 and (player_near(s) or attendant_present(s))
 
 
@@ -801,9 +829,12 @@ func needs(n: NPC) -> Array:
 		if (hh.pantry as Inventory).count("log") < 1:
 			out.append({"item": "log", "qty": 2, "urgency": 2, "pantry": true})
 		var short: int = b._dependants(hh) + 1 - b._stocked(hh)
-		if short > 0:
-			for id in ["wheat", "pottage", "roast_meat", "bread"]:
+		if short > 0:                     # any food the household counts as food (NPCBrain.FOOD) will do; fruit too (STALL-06)
+			for id in ["wheat", "pottage", "roast_meat", "bread", "cheese", "apple", "red_berries", "blueberries"]:
 				out.append({"item": id, "qty": short * (2 if id == "wheat" else 1), "urgency": 2 if b._stocked(hh) == 0 else 1, "pantry": true})
+	# a hurt adult with no medicine to hand buys one, as NPCBrain._plan_heal would from the Apothecary (STALL-06)
+	if n.hp < n.max_hp * float(NPCBrain.hp_cfg().medicine_use_below) and not NPCBrain.MEDICINES.any(func(m): return n.inv.has(m) or (n.household >= 0 and (w.households[n.household].pantry as Inventory).has(m))):
+		out.append({"item": "herbal_poultice", "qty": 1, "urgency": 2, "pantry": false})
 	out.sort_custom(func(x, y): return int(x.urgency) > int(y.urgency))
 	return out
 
@@ -811,6 +842,8 @@ func needs(n: NPC) -> Array:
 ## The purchase this villager would make at the stall now, or {}: the first need the stall can meet at a
 ## price inside the ceiling and within what the villager can pay above their cash floor.
 func offer(n: NPC, s: Dictionary) -> Dictionary:
+	if Stalls.is_built(s) and n.household >= 0 and w.holds(World.hh_ref(n.household), s):
+		return {}                         # a household does not buy its own goods back
 	for need in needs(n):
 		var id: String = need.item
 		var have := int(s.stock.get(id, 0))
@@ -836,6 +869,9 @@ func hour() -> void:
 			heading.erase(id)
 	for s in premises():
 		_send_buyers(s, h)
+	for s in stalls.npc_built():          # villagers' built stalls sell unattended to the same buyers (STALL-06)
+		_send_buyers(s, h)
+	stalls.hour()
 
 
 func _send_buyers(s: Dictionary, h: int) -> void:
@@ -899,15 +935,23 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 	n.spent += total
 	s.till = int(s.till) + total
 	s.earned = int(s.earned) + total
-	var by_attendant := not player_near(s)
-	s.sales.append({"day": w.day(), "hour": int(w.hour()), "who": "%s %s" % [n.name, n.family], "item": id, "qty": qty, "price": price, "by": "attendant" if by_attendant else "you"})
+	var players := is_mine(s)
+	var by_attendant := not player_near(s) or not players
+	var by := "you" if not by_attendant else ("unattended" if Stalls.is_built(s) and attendant_of(s) == null else "attendant")
+	s.sales.append({"day": w.day(), "hour": int(w.hour()), "who": "%s %s" % [n.name, n.family], "item": id, "qty": qty, "price": price, "by": by})
 	while s.sales.size() > int(GameData.b("stall_sales_log")):
 		s.sales.pop_front()
 	w.stat("stall_sold_" + id, qty)
 	w.stat("stall_coins", total)
 	if not by_attendant:
 		w.player.gain("trading", 2)
-	w.note("%s %s bought %d %s from your %s for %d coins." % [n.name, n.family, qty, GameData.item_name(id).to_lower(), "shop" if is_shop(s) else "stall", total])
+	if players:
+		w.note("%s %s bought %d %s from your %s for %d coins." % [n.name, n.family, qty, GameData.item_name(id).to_lower(), "shop" if is_shop(s) else "stall", total])
+	else:
+		w.stat("stall_sold_villager_" + id, qty)
+	if stalls.is_market(s):               # a market stall's session: settled on closing, 5% to the manor (Stalls)
+		stalls.record_sale(s, stalls.seller_ref(s), id, qty, total)
+		stalls.after_sale(s)
 	return true
 
 
