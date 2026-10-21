@@ -11,11 +11,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 94 |
+| APPROVED — NOT STARTED | 91 |
 | ACTIVE DEVELOPMENT | 10 |
-| PARTIALLY IMPLEMENTED | 36 |
+| PARTIALLY IMPLEMENTED | 35 |
 | IMPLEMENTED — TESTING REQUIRED | 22 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 43 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 186 |
@@ -111,13 +111,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
-| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner instruction 2026-10-20 |
 | B7-015 | Missed meals while food piles up | approved | IMPLEMENTED — TESTING REQUIRED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
-| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
-| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
-| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | approved | ACTIVE DEVELOPMENT |  | money supply re-measured over 100/365 days on several seeds (EQ-06) |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | approved | APPROVED — NOT STARTED |  | player-disruption tests: exploits and no player-only perks (EQ-05) |
@@ -408,6 +408,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 
 | ID | Requirement | Needs | Status |
 |---|---|---|---|
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B12A-10 | Hardware verification of everything on real devices (umbrella of the device queue) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B13-12 | B closes only quantity selector | controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B13-13 | Touch sprint | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -432,6 +433,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | a controller: D-pad up opens the Journal, left stick press opens Build | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | two-device LAN, phone | ACTIVE DEVELOPMENT |
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -450,7 +454,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (94)
+## APPROVED — NOT STARTED (91)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -458,9 +462,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
-| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  |  |  |
-| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  | after CTR-01 |  |
-| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  | after CTR-02 |  |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  | after CTR-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249) |  |  |  |
@@ -564,12 +565,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (36)
+## PARTIALLY IMPLEMENTED (35)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | docs/release/AUDIT_REMEDIATION.md (audit inventory row 368) |  |  | PR #1 was closed unmerged on 2026-10-20 after its work was verified in staging (OPS-01). Its branch claude/charming-albattani-8jjfya still carries a push-triggered workflow; nothing pushes to it. Deleting or editing that branch is the owner's call (repository change). |
-| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  |  | Fix within CTR-01..03: a counter at s8 served by the smith on summons; the at-post and shop-name checks extended; the second smith's fallthrough; iron armour's outlet; a regression test |
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
@@ -632,10 +632,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | docs/directives/2026-10-20_od21_time_model.md | `99e7448`; aging_test::test_time_units; gate identical | after TIME-01 | Update the older docs' key names (DECISIONS, BUILD_DECISIONS, audits) where they cite renamed keys |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (39)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (43)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters |  | Owner playtest at the armoury counter; armour stock follows SHOP-01 |
 | B12A-10 | Hardware verification of everything on real devices (umbrella of the device queue) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 360) |  |  |  |
 | B13-12 | B closes only quantity selector | docs/DEVELOPMENT_LEDGER.md (audit inventory row 187) |  |  |  |
 | B13-13 | Touch sprint | docs/DEVELOPMENT_LEDGER.md (audit inventory row 188) |  |  |  |
@@ -660,6 +661,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_closeness, test_no_rushing |  |  |
 | CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_seek_company |  |  |
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_refusals |  |  |
+| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters |  | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
+| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters | after CTR-01 | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
+| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters | after CTR-02 | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md | start_test.gd (498 steps); screenshot of the gamepad controls list |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |

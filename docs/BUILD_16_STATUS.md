@@ -57,9 +57,9 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 | Status | Items |
 |---|---|
 | Complete | 31 |
-| In progress | 12 |
-| Pending testing | 17 |
-| Not started | 36 |
+| In progress | 11 |
+| Pending testing | 21 |
+| Not started | 33 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -88,10 +88,10 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
-| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: | In progress | Verified from the code (not yet seen in play): STILL PRESENT. No armorer occupation exists; the armoury counter s8 in b4 is decorative (no keeper, no prompt); the smith is never 'at a post' (World at-post check covers th | Fix within CTR-01..03: a counter at s8 served by the smith on summons; the at-post and shop-name checks extended; the second smith's fallthrough; iron armour's outlet; a regression test |  |  |  | Release blocker | M |
-| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer  | Not started |  | A counter per business, reachable, with a prompt in the conversation style; tests |  |  |  | Required feature | L |
-| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | Not started |  | Normal navigation (no teleport); the player need not search the village; tests |  | after CTR-01 |  | Required feature | M |
-| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees | Not started |  | Unavailable reasons shown; one service task at a time; tests |  | after CTR-02 |  | Required feature | M |
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: | Pending testing | The armoury counter (s8) now works: ring for service, a smith walks over by the ordinary path and serves through the trade window; told why when nobody can come; world_test::_ctr01_counters; all 27 suites pass, gate iden | Owner playtest at the armoury counter; armour stock follows SHOP-01 | `4bfc81b`, world_test::_ctr01_counters |  |  | Release blocker | M |
+| CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer  | Pending testing | Counters (core/counters.gd): one mechanism for skilled-trade counters, first the armoury counter kept by the smiths; ring, the keeper walks over, serves, stays while the player stays, returns to work; unavailable reasons | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) | `4bfc81b`, world_test::_ctr01_counters |  |  | Required feature | L |
+| CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | Pending testing | Counters (core/counters.gd): one mechanism for skilled-trade counters, first the armoury counter kept by the smiths; ring, the keeper walks over, serves, stays while the player stays, returns to work; unavailable reasons | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) | `4bfc81b`, world_test::_ctr01_counters | after CTR-01 |  | Required feature | M |
+| CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees | Pending testing | Counters (core/counters.gd): one mechanism for skilled-trade counters, first the armoury counter kept by the smiths; ring, the keeper walks over, serves, stays while the player stays, returns to work; unavailable reasons | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) | `4bfc81b`, world_test::_ctr01_counters | after CTR-02 |  | Required feature | M |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | Not started |  | OD-24's 5% applies to stalls only; counters keep their existing terms; tests |  | after CTR-01 |  | Required feature | S |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer material | Not started |  | Buying interest from inventory, production needs, coins and market; no infinite funds or duplicated goods; tests |  |  |  | Required feature | M |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | Not started |  | Player and villager sales to a business use one rule; tests |  | after SHOP-01 |  | Required feature | S |

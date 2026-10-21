@@ -323,7 +323,7 @@
    "id": "ARM-01",
    "title": "Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available)",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -332,17 +332,19 @@
     "Report fixed, still present or not verified, with evidence; fix if still present; a regression test"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_ctr01_counters",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "4bfc81b"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Fix within CTR-01..03: a counter at s8 served by the smith on summons; the at-post and shop-name checks extended; the second smith's fallthrough; iron armour's outlet; a regression test",
+   "next_action": "Owner playtest at the armoury counter; armour stock follows SHOP-01",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -362,6 +364,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; next_action",
      "why": "Verified from the code (not yet seen in play): STILL PRESENT. No armorer occupation exists; the armoury counter s8 in b4 is decorative (no keeper, no prompt); the smith is never 'at a post' (World at-post check covers the tavernkeeper, stall merchants and storefront keepers only), so the player can buy from the smith only by talking, which fails while they forge or walk; the second smith likely goes home when forge and anvil are taken; iron armour has no market outlet. The goods merchant's tools-and-arms stalls sell swords, tools and helmets but never armour"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 4bfc81b; tests; next_action",
+     "why": "The armoury counter (s8) now works: ring for service, a smith walks over by the ordinary path and serves through the trade window; told why when nobody can come; world_test::_ctr01_counters; all 27 suites pass, gate identical. Still to see on a device (the owner's playtest found it)"
     }
    ],
    "target_build": "16",
@@ -5913,7 +5920,7 @@
    "id": "CTR-01",
    "title": "Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -5922,17 +5929,19 @@
     "A counter per business, reachable, with a prompt in the conversation style; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_ctr01_counters",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "4bfc81b"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -5947,6 +5956,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 4bfc81b; tests; next_action",
+     "why": "Counters (core/counters.gd): one mechanism for skilled-trade counters, first the armoury counter kept by the smiths; ring, the keeper walks over, serves, stays while the player stays, returns to work; unavailable reasons shown; one service at a time"
     }
    ],
    "target_build": "16",
@@ -5959,7 +5973,7 @@
    "id": "CTR-02",
    "title": "At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -5968,10 +5982,12 @@
     "Normal navigation (no teleport); the player need not search the village; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_ctr01_counters",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "4bfc81b"
+   ],
    "parent": null,
    "depends_on": [
     "CTR-01"
@@ -5980,7 +5996,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -5995,6 +6011,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 4bfc81b; tests; next_action",
+     "why": "Counters (core/counters.gd): one mechanism for skilled-trade counters, first the armoury counter kept by the smiths; ring, the keeper walks over, serves, stays while the player stays, returns to work; unavailable reasons shown; one service at a time"
     }
    ],
    "target_build": "16",
@@ -6007,7 +6028,7 @@
    "id": "CTR-03",
    "title": "Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -6016,10 +6037,12 @@
     "Unavailable reasons shown; one service task at a time; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_ctr01_counters",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "4bfc81b"
+   ],
    "parent": null,
    "depends_on": [
     "CTR-02"
@@ -6028,7 +6051,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -6043,6 +6066,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 4bfc81b; tests; next_action",
+     "why": "Counters (core/counters.gd): one mechanism for skilled-trade counters, first the armoury counter kept by the smiths; ring, the keeper walks over, serves, stays while the player stays, returns to work; unavailable reasons shown; one service at a time"
     }
    ],
    "target_build": "16",
