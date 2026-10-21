@@ -28690,9 +28690,106 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit d28503c; tests; implementation; next_action",
      "why": "Lead merged wip/b17-stone (d28503c) into wip/build17: building_block item, dress_stone recipe (workbench, mallet, Crafting 1, exact), labourers dress to demand, construction takes blocks, raw stone kept for fittings/mending/gate/contracts/caravan; older sites keep stone cost. stone_test 45 checks and the affected suites pass on the worker's merge; determinism re-baseline and full CI still to run on the integrated branch"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "STONE-Q1 (Option C) checked against the build: blocks for houses, workshops and rooms; raw stone for fittings, gate and mending already matches where the system distinguishes; the finer split is STONE-03; personal dressing by non-labourer villagers is STONE-02"
     }
    ],
    "target_build": "17"
+  },
+  {
+   "id": "STONE-02",
+   "title": "Personal-use stone dressing by any villager (own house or repairs), same rules as the player",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "A player or NPC may dress raw stone into finished building blocks for personal use, including constructing or repairing their own house. ... An NPC must not be required to hold the formal occupation of stonecutter merely to make blocks for personal use. Likewise, having the title of stonecutter must not bypass material, skill, equipment, or labor requirements.",
+   "description": "Personal-use stone dressing by any villager (own house or repairs), same rules as the player",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21 section 2",
+   "acceptance": [
+    "Any villager household that needs blocks for its own building or repair may dress them itself when it has stone, a mallet, a workbench, the Crafting level and the time, by the same dress_stone recipe",
+    "No job title required and none bypasses the recipe's requirements; conservation and tool wear as STONE-01"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Verified 2026-10-21 on 0a086af: the dress_stone recipe has no job gate (station workbench, 2 stone, mallet worn 1, Crafting 1, 30 min; NPCBrain._can_make checks skill and tool for anyone), and the player can dress stone for their own house today. Missing: a non-labourer villager never decides to dress stone for its own household (only NPCBrain._mason, labourers, to market demand). Placed with X18-STONECUT because both extend the same NPC production decision; not a Build 17 blocker.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed for Expansion 18 with the professional trade (shared NPC decision logic); Build 17 not expanded"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "STONE-03",
+   "title": "Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Where the existing system cannot distinguish ordinary maintenance from major structural reconstruction, retain the current functioning behavior and record the more detailed distinction for future implementation.",
+   "description": "Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21 (STONE-Q1, Option C), the part the Build 17 repair system cannot yet distinguish",
+   "acceptance": [
+    "Repairs distinguish ordinary maintenance (raw stone) from major masonry reconstruction (blocks)",
+    "Jobs that genuinely need both consume the right quantity of each",
+    "Conservation and determinism hold; fittings and sites refund what was actually consumed; no stone-to-block conversion through saves"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q1"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 state (verified 0a086af): houses, workshops and rooms take blocks; shop fittings (oven 6, stove 4, forge 8), the farmland gate and the manor's mending and public works take raw stone; ManorWork mending has one kind (stone), so ordinary maintenance and major reconstruction are not distinguished. Fittings refund their cost in stone, so no conversion exploit.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Recorded for later; Build 17 keeps its functioning behaviour as the owner directed"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "STONE-Q",
@@ -28717,7 +28814,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Present part 2 (dressing waste ratio) to the owner",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28742,9 +28839,55 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "Open owner decisions carry target 'owner decision' like CON-08-Q"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Owner answered part 1 (STONE-Q1, Option C, 2026-10-21). Part 3 (mason trade) answered in the same directive: stonecutting is a general activity (STONE-02) and a profession in Expansion 18 (X18-STONECUT on staging). Part 2 (dressing waste) still open"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Clarification: the directive settles the mason trade (general activity plus an Expansion 18 profession); whether that profession needs its own Stoneworking skill or a chisel is not settled and is left to X18-STONECUT's design, under the existing capability system"
     }
    ],
    "target_build": "owner decision"
+  },
+  {
+   "id": "STONE-Q1",
+   "title": "STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Approved: Option C — materials must match the actual construction or repair being performed. Raw stone: rough construction, rubble filling, road maintenance, minor repairs, and ordinary ovens, stoves, and forge hearths where dressed masonry is unnecessary. Finished building blocks: structural masonry, substantial stone construction, and major masonry reconstruction. Mixed materials: construction or repairs that genuinely require both rough stone and finished masonry must consume the appropriate quantities of each.",
+   "description": "STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both)",
+   "source": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md",
+   "approval": "Owner directive 2026-10-21: Approved: Option C",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    }
+   ]
   },
   {
    "id": "TIME-01",

@@ -121,7 +121,26 @@ No save format change: `SAVE_VERSION` stays 17 (`building_block` is an ordinary 
 - Caravan (B7-007, INT-065): unchanged rule, raw stone only; blocks are not exported.
 - Contracts (CON-01): the craft route now honours a recipe's tool (`_can_make`).
 
-## 7. Owner questions (not built)
+## 7. Owner questions
+
+**Owner decisions, 2026-10-21** (`docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md`):
+
+- **Question 1 answered (STONE-Q1, Option C):** materials match the work. Raw stone for rough construction, rubble, road
+  maintenance, minor repairs and ordinary ovens, stoves and forge hearths; blocks for structural masonry, substantial
+  stone construction and major masonry reconstruction; both, in the right quantities, where a job needs both. Build 17
+  already matches this where it distinguishes the work (blocks for houses, workshops and rooms; stone for fittings, the
+  gate and the manor's mending). The manor's mending has one kind, so the split between ordinary maintenance and major
+  reconstruction, and mixed jobs, are recorded as STONE-03 (Expansion 18) and Build 17 keeps its behaviour. Fittings
+  refund their cost in stone, so no save turns stone into blocks.
+- **Question 3 answered:** stonecutting is a general activity, not only a trade. The recipe has no job gate and the
+  player can dress stone for their own house today; a villager household dressing blocks for its own building or repairs
+  is STONE-02 (Expansion 18, with the trade, since both extend the same villager production decision). The professional
+  stonecutter's business is X18-STONECUT (Expansion 18, register on staging), on these same mechanics: same recipe, tool,
+  station, skill and conservation; the business adds stock, buying, selling, orders and decisions.
+- **Question 2 still open** (below).
+
+Original questions:
+
 
 1. **Shop fittings and the manor's mending:** should ovens, stoves and forge hearths, and the manor's repairs and public
    works (roads, bridges, the well, the mill race), take dressed blocks rather than raw stone? Recommendation: keep raw
