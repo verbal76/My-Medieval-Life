@@ -8,7 +8,7 @@ extends RefCounted
 static func add_pages(w: Wiki) -> void:
 	_stoneworking(w)
 	w.add_page("todo:stonecutters", "Stonecutters and villagers dressing their own stone", "notyet", [   # STONE-02, X18-STONECUT
-		Wiki.note("Not in the game yet. A stonecutter's trade: a villager who keeps a workshop, buys or quarries raw stone, dresses it into blocks and sells them to anyone who wants them, or makes them to order. Also not built yet: villagers who are not labourers dressing blocks for their own house or repairs. Both will use the same dressing as today: the same workbench, mallet, stone and time."),
+		Wiki.note("Not in the game yet. A stonecutter's trade: a villager who keeps a workshop, buys or quarries raw stone, dresses it into blocks and sells them to anyone who wants them, or makes them to order. Also not built yet: villagers who are not labourers dressing blocks for their own house or repairs. Both will use the same dressing as today: the same workbench, mallet, stone and time. Also planned: how much of the stone becomes blocks depending on the worker's skill, the rest left as chips and spoil. Today two stone always make two blocks."),
 		Wiki.links(["sys:stoneworking", "recipe:dress_stone", "job:laborer"], "See also")], "", "not implemented planned stonecutter mason")
 
 

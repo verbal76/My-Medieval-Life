@@ -28802,6 +28802,54 @@
    "target_build": "18"
   },
   {
+   "id": "STONE-04",
+   "title": "Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Stone dressing efficiency depends on the actual skill of the person performing the work. Less experienced workers produce more waste. More experienced workers recover a greater proportion of usable building material. The same mechanics apply to players, independent homeowners, ordinary NPCs, and professional stonecutters. Occupation titles do not grant automatic production bonuses. ... The owner has not approved specific conversion ratios or skill thresholds.",
+   "description": "Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers)",
+   "source": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md",
+   "approval": "Owner decision 2026-10-21 (STONE-Q2, Option C), Expansion 18",
+   "acceptance": [
+    "The STONE-01 dress_stone process, extended: blocks out depend on the worker's skill in the existing skill and capability systems; no title bonus; same rule for player, homeowners, villagers and stonecutters",
+    "Every stone accounted for: what is not a block is conserved waste, chips or spoil in an existing material; never destroyed, never turned back into blocks without an approved recovery process; no unlimited recycling loop",
+    "Before values are locked, a proposed skill-to-efficiency model is presented to the owner with its effects on depletion, construction costs, production economics and NPC viability; no ratio, percentage or table invented",
+    "Tests on implementation: conservation, determinism, parity, economic consequences"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "STONE-01",
+    "STONE-Q2"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 keeps 1:1 (dress_stone: 2 stone to 2 blocks, exact). Owner question for Expansion 18 design: the skill-to-efficiency values. Related: X18-STONECUT (staging), STONE-02, STONE-03.",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; notes",
+     "why": "Placed in Expansion 18 by the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "STONE-Q",
    "title": "STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade",
    "kind": "decision",
@@ -28824,7 +28872,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Present part 2 (dressing waste ratio) to the owner",
+   "next_action": "Present part 3 (the remaining sub-question: a separate Stoneworking skill and/or a chisel)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28859,6 +28907,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Clarification: the directive settles the mason trade (general activity plus an Expansion 18 profession); whether that profession needs its own Stoneworking skill or a chisel is not settled and is left to X18-STONECUT's design, under the existing capability system"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Owner answered part 2 (STONE-Q2, Option C: skill-based efficiency in Expansion 18, STONE-04; Build 17 stays 1:1). Part 3 to present"
     }
    ],
    "target_build": "owner decision"
@@ -28896,6 +28949,42 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md"
+    }
+   ]
+  },
+  {
+   "id": "STONE-Q2",
+   "title": "STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Decision: Option C approved. The owner approves skill-based stone dressing efficiency as part of Expansion 18. ... Build 17 retains its existing 1:1 stone-to-block conversion.",
+   "description": "STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18",
+   "source": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md",
+   "approval": "Owner decision 2026-10-21: Option C approved",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "STONE-Q",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_stone_q2_skill_based_dressing.md"
     }
    ]
   },

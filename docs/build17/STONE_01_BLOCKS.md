@@ -137,7 +137,11 @@ No save format change: `SAVE_VERSION` stays 17 (`building_block` is an ordinary 
   is STONE-02 (Expansion 18, with the trade, since both extend the same villager production decision). The professional
   stonecutter's business is X18-STONECUT (Expansion 18, register on staging), on these same mechanics: same recipe, tool,
   station, skill and conservation; the business adds stock, buying, selling, orders and decisions.
-- **Question 2 still open** (below).
+- **Question 2 answered (STONE-Q2, Option C):** how much stone becomes blocks will depend on the worker's skill, by one
+  rule for everyone, with the rest kept as conserved waste or spoil. Expansion 18 (STONE-04); no ratios approved yet, a
+  model goes to the owner first. **Build 17 keeps 1:1** (`dress_stone` unchanged, `exact`).
+- **Question 3:** the trade itself is settled by the directive above; whether it needs its own skill or a chisel is
+  still open.
 
 Original questions:
 
