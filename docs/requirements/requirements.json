@@ -15743,7 +15743,7 @@
    "id": "LOG-01",
    "title": "Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "When a grain, relief, or other eligible manor delivery remains unclaimed for a reasonable period, the manor may assign the work to an available salaried manor hand or the reeve.",
    "description": "Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe",
    "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
@@ -15753,8 +15753,8 @@
     "The delay comes from existing scheduling and urgency, not an arbitrary universal number",
     "Urgent relief (today ManorWork.deliver_now, which unloads at once) keeps its protection until replaced by a tested physical delivery that cannot cause starvation"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/manor_work.gd (reeve_fallback, is_staff); game/scripts/core/npc_brain.gd (reeve branch); INT-209; wiki sys:manor_jobs",
+   "tests": "job_board_test, run_tests, world_test, equip_test, discovery_test, start_test, parity_mining_test, underground_struct_test, business_test, housing_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15764,7 +15764,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Evaluate a narrow Build 17 change (assign an unclaimed delivery to an idle hand through the existing seek/plan path); otherwise schedule with JOB-02",
+   "next_action": "CI and the determinism re-baseline",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -15779,6 +15779,11 @@
      "date": "2026-10-21",
      "change": "target_build; next_action",
      "why": "target set; smallest safe path to be evaluated against Build 17 stability"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; implementation; next_action",
+     "why": "Reviewed after the equipment merge: manor hands already take open deliveries unpaid through ManorWork.seek (the hand fallback existed). Added only the missing reeve part: ManorWork.reeve_fallback (the reeve takes an open haul only when no living manor hand is free, before latest_start), and is_staff counts the reeve so no wage is paid twice. Physical load and put through the existing haul steps; deliver_now for urgent relief untouched. job_board_test 28/0 (12 new LOG-01 checks); run_tests 3544, world 339, equip 51, discovery 65, start 499, parity_mining 62, underground_struct 90, business 160, housing 115 all 0 failures. Awaiting CI and the determinism re-baseline"
     }
    ],
    "target_build": "owner decision"

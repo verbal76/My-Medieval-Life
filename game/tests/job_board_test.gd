@@ -2,7 +2,8 @@ extends SceneTree
 ## JOB-01, the shared manor job board for salaried hands (owner REC-013 Q2, 2026-10-21): manor hands may take board work
 ## with no extra wage; the pickaxe and survey exclusions hold for them; nobody has priority (first come, the same list
 ## for a hand and a labourer); one job at a time for everyone, and a taken job is nobody else's; the wage set aside
-## comes back on release, so the treasury and the reserve always add up. Run headless:
+## comes back on release, so the treasury and the reserve always add up. LOG-01: an unclaimed delivery falls to the reeve
+## only when no manor hand is free, carried physically, delivered once, unpaid. Run headless:
 ##   godot --headless --path game --script res://tests/job_board_test.gd
 
 var failures := 0
@@ -21,6 +22,7 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	GameData.ensure()
 	_test_board()
+	_test_reeve_fallback()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -85,3 +87,37 @@ func _test_board() -> void:
 	hand.inv.add(Prospecting.KIT)
 	hand.coins += 500
 	check(not mw.open_for(h).has(s), "surveys stay closed to manor hands, kit and fees in hand or not")
+
+
+func _test_reeve_fallback() -> void:
+	var w := _world(2)
+	var mw := w.manor_work
+	w.treasury = 5000
+	mw.jobs.clear()
+	mw.lots.clear()
+	var reeve: NPC = w.brain._first_with_job("reeve")
+	var hand: NPC = w.brain._first_with_job("laborer")
+	w.brain._change_job(hand, "manor_hand", "a test")
+	check(reeve != null and hand != null, "a reeve and a manor hand")
+	var r := "npc:%d" % reeve.id
+	check(mw.is_staff(r), "the reeve is salaried staff: board work pays no extra wage")
+	mw.yard.add("wheat", 5)
+	check(mw.consign(mw.yard, mw.yard_cell(), "wheat", 5, {"kind": "granary"}, "a test", "test"), "goods consigned to the granary")
+	mw.refresh()
+	var hauls: Array = mw.jobs.filter(func(j): return j.kind == "haul")
+	check(hauls.size() == 1, "one delivery posted")
+	var j: Dictionary = hauls[0]
+	check(not mw.reeve_fallback(reeve) and j.taker == "", "a free manor hand: the reeve leaves the delivery to the hand")
+	mw._post({"kind": "mend", "item": "stone", "qty": 2, "wage": 6})
+	var m: Dictionary = mw.jobs[mw.jobs.size() - 1]
+	check(mw.take(m, "npc:%d" % hand.id), "the hand is busy with other work")
+	var grain0 := w.granary.count("wheat")
+	var t0 := w.treasury
+	var c0 := reeve.coins
+	var all0 := grain0 + reeve.inv.count("wheat") + 5
+	check(mw.reeve_fallback(reeve) and j.taker == r and int(j.reserved) == 0 and w.treasury == t0, "no free hand: the reeve takes the delivery, no wage set aside")
+	check(not mw.reeve_fallback(reeve), "the reeve does not take a second job")
+	check(mw.do_step(j, r, reeve.inv) and j.load.count("wheat") == 5, "the reeve loads the goods from where they lie")
+	check(mw.do_step(j, r, reeve.inv), "and puts them down at the granary")
+	check(w.granary.count("wheat") == grain0 + 5 and not mw.jobs.has(j), "delivered once; the job is done")
+	check(w.granary.count("wheat") + reeve.inv.count("wheat") == all0 and reeve.coins == c0 and w.treasury == t0, "every unit accounted for; no wage paid to the salaried reeve")

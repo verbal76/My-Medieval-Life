@@ -967,6 +967,8 @@ func _plan_job(n: NPC) -> bool:
 		"hunter":
 			return _hunter(n)
 		"tavernkeeper", "merchant", "reeve":
+			if n.job == "reeve" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.reeve_fallback(n):
+				return true          # LOG-01: an unclaimed delivery with no free manor hand
 			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor"}[n.job]
 			n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
 			return true

@@ -519,7 +519,7 @@ func is_staff(who: String) -> bool:
 	if not who.begins_with("npc:"):
 		return false
 	var n := w.npc(int(who.substr(4)))
-	return n != null and n.job == "manor_hand"
+	return n != null and n.job in ["manor_hand", "reeve"]          # LOG-01: the reeve is salaried too, never paid twice
 
 
 ## Whether the treasury can set this wage aside (manor hands are already paid: no wage). A day's job
@@ -1253,6 +1253,16 @@ func seek_kind(n: NPC, kinds: Array) -> bool:
 		if kinds.has(str(j.kind)) and take(j, who):
 			return plan(n)
 	return false
+
+
+## LOG-01 (owner REC-013 Q2, 2026-10-21): the reeve carries an unclaimed delivery only when no manor hand is free to
+## take it, by the same board rules (first come, one job at a time, no wage: the reeve is salaried). Urgent relief keeps
+## deliver_now. True with a plan.
+func reeve_fallback(n: NPC) -> bool:
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == "manor_hand" and job_of(World.npc_ref(o.id)).is_empty():
+			return false             # a free hand will take it on its own round
+	return seek_kind(n, ["haul"])
 
 
 ## A villager looking for the manor's work takes the most needed open job they can do.
