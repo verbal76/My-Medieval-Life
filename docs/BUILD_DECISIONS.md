@@ -102,7 +102,7 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 | Wild boar (Puny Monsters) and rabbits (Cozy Farm) in the two northern forests | The packs have no deer; boar and rabbit are the game animals available |
 | Hunger works like the villagers' (owner rule): it falls 3 points an hour. Below 55 an animal eats: livestock takes its `feed` of wheat from the trough (cow 2, others 1) and walks to the trough by the gate; wild animals graze, one animal per 15 open cells of their wood. At zero hunger an animal loses 10% of its health an hour and dies, about a day and a half after its last meal | The owner: "if you don't feed the humans they die... you get to feed the animals or they die as well". Keepers and the player feed the pens (owner answer) |
 | Breeding: a well-fed adult female (hunger 40 or more) gives birth when a well-fed adult male of her kind shares the area. Litter, time between births and growing age per kind (`balance.json` "animals"). Pens and woods have caps | The owner's rule, with numbers that keep herds stable over 10-day tests |
-| Babies are drawn at half scale until `grow_days`, then full scale; a baby gives half the meat and no hide | The owner's rule |
+| Babies are drawn at half scale until `grow_years` (named `grow_days` before TIME-02), then full scale; a baby gives half the meat and no hide | The owner's rule |
 | Keepers feed the pen from their wheat, the household's store, or feed they buy. Whoever harvests a keeper's field carries 4 days of feed to the pen first. Keepers slaughter surplus when the pen is nearly full, and cull beyond the breeding stock only when no feed can be had for the next morning | The wheat went to whichever farmer harvested, and pens starved |
 | Hunters hunt real animals and never take a kind below 2 adults per wood. Bandits poach near their camp. The player hunts with the sword or a fireball and takes the carcass (meat, hide) | Replaces the old invisible "deer count" |
 | Saves from before hunger load with every animal full. Old saves (`save_version` 1) load: the deer count is dropped, and pens and woods are stocked as in a new game | CLAUDE.md section 7 |
@@ -345,7 +345,7 @@ Generator v6 (`tools/build_village.py`) lays the village out as one settlement; 
 
 ## Calendar, ages, families and life cycles (B8-029; owner-approved 2026-10-19, the numbers are agent proposals)
 
-All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile_days`, `elder_days`, `death_days`,
+All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile_years`, `elder_years`, `death_years` (TIME-02 names; `_days` in game days before),
 `baby_frame`; `animal_breed_slow_from`, `animal_elder_speed`). Provisional:
 
 - Calendar: 8-day year, seasons Spring, Summer, Autumn, Winter of two days. The HUD clock reads
@@ -368,10 +368,10 @@ All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile
 - Player: starts 18-20; dies of old age by the same chance (cause "old age"). Heir: the eldest living child
   of 16+ (made through an explicit partner; ask a villager "Ask to be partners"), who leaves the villagers; none:
   a relative, 18 years old, as before. Links to the dead player become `FORMER_PLAYER` (-3).
-- Animals: existing `grow_days` and `breed_days` kept. Added juvenile_days, elder_days, death_days (game days):
+- Animals: existing `grow_days` and `breed_days` kept. Added juvenile_days, elder_days, death_days (game days; since TIME-02 kept in calendar years as `*_years`, read through `Life.years_to_days`):
   rabbit 0.5/24/[28,40], chicken 0.5/32/[40,56], pig 1/56/[64,96], boar 1/56/[64,80], sheep 1/64/[80,104],
   cow 2/96/[120,160]. Breeding chance is 1 up to half the cap, falling to 0 at the cap; the elderly do not breed and
-  move at 0.7x. The elderly die by a daily chance spread evenly over `death_days`. Start: adults, one juvenile
+  move at 0.7x. The elderly die by a daily chance spread evenly over `death_days` (now `death_years`). Start: adults, one juvenile
   per group, one elderly in groups of four or more.
 - Art: Cozy Farm baby sheets (cow, brown cow, pig, sheep, chicken, rabbit, grey rabbit; the brown chicken
   reuses the chick), full scale; the boar has none and is half scale.
@@ -435,7 +435,7 @@ Wiki notes (for the wiki agent):
 - Boulders: small 2 uses, large 6 (was 3 for all), about 55% small by a hash of the cell; the small
   sprite is the plain boulder scaled down at run time (a fourth, generated atlas in MapView).
 - Fields stand ripe 12 game hours before the farmers cut them; this slows the farmers' cycle by about
-  a fifth (wheat is in surplus). Seasons will plug into `World.field_grow_days`.
+  a fifth (wheat is in surplus). Seasons will plug into `World.field_grow_days` (which since TIME-02 reads `field_grow_seasons`).
 
 ## Known gaps
 

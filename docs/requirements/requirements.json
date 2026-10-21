@@ -24751,7 +24751,7 @@
    "id": "TIME-02",
    "title": "Explicit time units in configuration and code; one shared conversion layer (no third clock)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Explicit time units in configuration and code; one shared conversion layer (no third clock)",
    "source": "docs/directives/2026-10-20_od21_time_model.md",
@@ -24760,7 +24760,7 @@
     "Calendar-dependent values read through shared conversion functions (Life) in years or seasons; operational values stay in hours or days; behaviour identical at year_days 8 (the determinism gate unchanged); a test that calendar values scale with year_days and operational ones do not"
    ],
    "implementation": "",
-   "tests": "aging_test::test_time_units; gate identical",
+   "tests": "suites; Actions 39523615798, 39529507848",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -24794,6 +24794,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 99e7448; tests; next_action",
      "why": "Calendar values read in years or seasons through Life's conversion functions (years_to_days, seasons_to_days, ...); balance keys renamed with their unit; the determinism gate identical before and after; aging_test::test_time_units (12 checks)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "The last criterion done: the living documents (BUILD_DECISIONS, the interaction manifest) cite the renamed keys; historical audits keep the names of their time. Code in 99e7448, suites green since, the four-seed runs on 1fefddb and 62b7488 with it"
     }
    ],
    "target_build": "16",

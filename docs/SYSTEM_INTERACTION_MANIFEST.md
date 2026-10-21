@@ -802,7 +802,7 @@ Rules:
 - **Trigger:** The game hour passes; a farmer decides.
 - **Source:** `game/scripts/core/world.gd::_on_hour`, `game/scripts/core/world.gd::field_cuttable`, `game/scripts/core/world.gd::field_grow_days`, `game/scripts/core/npc_brain.gd::_farmer`
 - **Affects:** Fields, Employment, Granary
-- **Expected:** A sown field is ripe `field_grow_days` later; it then stands ripe for `field_ripe_wait_hours` (12) before the farmers cut it, so the player sees and can harvest ripe wheat (it used to be cut within the hour). Farmers then cut, till and sow again. `field_grow_days` is the hook for seasons.
+- **Expected:** A sown field is ripe `World.field_grow_days` later (`field_grow_seasons` calendar seasons, TIME-02); it then stands ripe for `field_ripe_wait_hours` (12) before the farmers cut it, so the player sees and can harvest ripe wheat (it used to be cut within the hour). Farmers then cut, till and sow again. `field_grow_days` is the hook for seasons.
 - **Tests:** `game/tests/world_test.gd::_pl2_007`
 
 ### INT-090 · A room added to a property is a parcel of the same estate

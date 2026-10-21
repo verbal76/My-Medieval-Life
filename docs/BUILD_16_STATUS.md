@@ -93,9 +93,9 @@ by Skills.seed_villagers; checked 2026-10-21 against a real save written by the 
 
 | Status | Items |
 |---|---|
-| Complete | 43 |
+| Complete | 44 |
 | In progress | 34 |
-| Pending testing | 20 |
+| Pending testing | 19 |
 | Not started | 8 |
 | Blocked | 2 |
 | Deferred | 0 |
@@ -303,7 +303,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 2, CTR 4, EQ 1, FARM 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | Complete | docs/design/TIME_MODEL.md (the audit document) |  | `b388bfb` |  |  | Done |  |
-| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | Pending testing | Calendar values read in years or seasons through Life's conversion functions (years_to_days, seasons_to_days, ...); balance keys renamed with their unit; the determinism gate identical before and after; aging_test::test_ | Update the older docs' key names (DECISIONS, BUILD_DECISIONS, audits) where they cite renamed keys | `99e7448`, aging_test::test_time_units; gate identical | after TIME-01 |  | Required feature | M |
+| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | Complete | The last criterion done: the living documents (BUILD_DECISIONS, the interaction manifest) cite the renamed keys; historical audits keep the names of their time. Code in 99e7448, suites green since, the four-seed runs on  |  | `99e7448`, suites; Actions 39523615798, 39529507848 | after TIME-01 |  | Required feature | M |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | Not started |  | Each outlier of OD-21 section 4 with a recommendation and its expected consequences; nothing changed without the owner |  | after TIME-01 |  | Optional | S |
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 
