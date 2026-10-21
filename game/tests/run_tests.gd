@@ -1213,16 +1213,36 @@ func test_hiring() -> void:
 	q2.day = w.day() - 3
 	w.quests.drop_failed()
 	check(not p.quests.has(q2), "work left undone lapses")
-	# a miner's shift, and it is saved
+	# the miner's shift is retired (owner, OD-01): never offered or accepted again ...
 	var mn: NPC = w.npcs.filter(func(o): return o.job == "miner")[0]
 	mn.inv.remove("iron_ore", mn.inv.count("iron_ore"))
 	mn.coins = 20
-	var q3: Dictionary = w.quests.accept(mn, "work_the_mine")
-	check(not q3.is_empty(), "a miner short of ore hires the player")
+	check(w.quests.hire_offer(mn).is_empty() and not w.quests.hires(mn), "a miner short of ore no longer offers the retired shift")
+	check(w.quests.accept(mn, "work_the_mine").is_empty(), "and it cannot be taken on")
+	w.quests.offers.clear()
+	w.quests.refresh()
+	check(not w.quests.offers.values().has("work_the_mine"), "nor offered at dawn")
+	# ... but a shift already accepted in an older save is honoured once: its wage was set aside then
+	var mine_coins0 := w.total_coins()
+	var q3 := {"id": "work_the_mine", "giver": mn.id, "day": w.day(), "target": -1, "reserved": 8}
+	mn.coins -= 8                                          # as the old save holds it: set aside from the miner's mine_purse
+	p.quests.append(q3)
+	check(w.total_coins() == mine_coins0, "the set-aside wage is counted while the shift is open")
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
-	check(w2.player.quests.any(func(x): return x.id == "work_the_mine" and int(x.giver) == mn.id), "accepted work is saved")
+	var q4: Dictionary = w2.player.quests.filter(func(x): return x.id == "work_the_mine")[0]
+	check(int(q4.reserved) == 8 and w2.total_coins() == mine_coins0, "an accepted shift loads with its wage still set aside")
+	w2.player.inv.add("iron_ore", 6)
+	var mine_purse := w2.player.coins
+	check(w2.quests.complete(q4) == 8 and w2.player.coins == mine_purse + 8 and not w2.player.quests.has(q4), "it is paid once, in full, from what was set aside")
+	check(w2.quests.complete(q4) <= 0 and w2.player.coins == mine_purse + 8, "and never twice")
+	var q5 := {"id": "work_the_mine", "giver": mn.id, "day": w.day() - 5, "target": -1, "reserved": 8}
+	var mine_mc := mn.coins
+	p.quests.erase(q3)
+	p.quests.append(q5)
+	w.quests.drop_failed()
+	check(not p.quests.has(q5) and mn.coins == mine_mc + 8, "a stale retired shift lapses and its wage goes back to the miner")
 	w.dispose()
 	w2.dispose()
 

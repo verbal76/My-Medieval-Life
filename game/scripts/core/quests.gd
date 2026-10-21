@@ -121,7 +121,7 @@ func diamond(n: NPC) -> bool:
 
 
 func _wants(n: NPC, t: Dictionary) -> bool:
-	if t.is_empty() or n.role == "bandit":
+	if t.is_empty() or n.role == "bandit" or t.get("retired", false):   # a retired template is never offered (OD-01)
 		return false
 	var g: Dictionary = t.giver
 	if g.has("job") and n.job != g.job:
@@ -215,7 +215,7 @@ func hires(n: NPC) -> bool:
 	if n.role != "adult" or n.job == "":
 		return false
 	for t in templates():
-		if t.get("hire", false) and str(t.giver.get("job", "")) == n.job:
+		if t.get("hire", false) and not t.get("retired", false) and str(t.giver.get("job", "")) == n.job:
 			return true
 	return false
 
@@ -233,7 +233,7 @@ func hire_offer(n: NPC) -> Dictionary:
 ## Why there is no work: the employer cannot pay the wage, or nothing needs doing.
 func no_work_line(n: NPC) -> String:
 	for t in templates():
-		if not t.get("hire", false) or str(t.giver.get("job", "")) != n.job:
+		if not t.get("hire", false) or t.get("retired", false) or str(t.giver.get("job", "")) != n.job:
 			continue
 		if not can_fund(n, t):
 			return "I can't pay anyone just now. I've hardly a coin to my name."

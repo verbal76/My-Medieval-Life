@@ -2982,7 +2982,7 @@
    "id": "B7-006",
    "title": "Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed)",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed)",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 47)",
@@ -3001,7 +3001,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Check whether a new player can still afford an axe for the woodcutting job (the item's second half)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -3016,6 +3016,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17 (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> PARTIALLY IMPLEMENTED; next_action",
+     "why": "OD-01 answers the mine part: no mining wage, the shift quest retired, miners earn by sale or CON-01 contracts. The woodcutting-axe part of the original item is not covered by OD-01 and stays to be checked"
     }
    ],
    "acceptance_derived": true,
@@ -8594,7 +8599,7 @@
    "id": "ECON-P1.1",
    "title": "Demand-driven mining (:71)",
    "kind": "proposal",
-   "status": "BLOCKED",
+   "status": "CANCELED BY OWNER",
    "owner_wording": null,
    "description": "Demand-driven mining (:71)",
    "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 298)",
@@ -8633,18 +8638,24 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> CANCELED BY OWNER",
+     "why": "Owner rejected mandatory demand-driven mining (OD-01, 2026-10-21): 'Do not require an existing buyer order before mining can begin.'"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
    "roadmap_gate": "",
-   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)",
+   "canceled_by_owner": "Owner, OD-01, 2026-10-21 (docs/directives/2026-10-21_build17_od01_final_decisions.md): \"P1.1 — REJECT MANDATORY DEMAND-DRIVEN MINING. OWNER DECISION: REJECT.\""
   },
   {
    "id": "ECON-P1.2",
    "title": "Manor mining rights, royalty, quota, stone reserve (:72)",
    "kind": "proposal",
-   "status": "BLOCKED",
+   "status": "CANCELED BY OWNER",
    "owner_wording": null,
    "description": "Manor mining rights, royalty, quota, stone reserve (:72)",
    "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 299)",
@@ -8683,18 +8694,24 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> CANCELED BY OWNER",
+     "why": "Owner rejected automatic manor mining rights, the 10% royalty, quotas and the 60-stone reserve (OD-01, 2026-10-21): 'The manor does not automatically own all mineral deposits.'"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
    "roadmap_gate": "",
-   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)",
+   "canceled_by_owner": "Owner, OD-01, 2026-10-21: \"P1.2 — REJECT AUTOMATIC MANOR MINING RIGHTS. OWNER DECISION: REJECT.\""
   },
   {
    "id": "ECON-P1.3",
    "title": "Caravan as finite regional market (:73)",
    "kind": "proposal",
-   "status": "BLOCKED",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": null,
    "description": "Caravan as finite regional market (:73)",
    "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 300)",
@@ -8707,7 +8724,7 @@
    "playtest": [],
    "branch": "",
    "commits": [],
-   "parent": null,
+   "parent": "PROS-18",
    "depends_on": [],
    "blockers": [],
    "rules": [],
@@ -8733,6 +8750,16 @@
      "date": "2026-10-20",
      "change": "roadmap: 18",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> APPROVED — NOT STARTED; target_build",
+     "why": "assigned to Expansion 18 (prospective regional market work exists on its branch)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "parent",
+     "why": "Owner, OD-01, 2026-10-21: 'EXPANSION 18 OWNS THIS WORK' — finite regional markets, caravan capacity, regional supply and demand and prices belong to Expansion 18; P1.3's numbers (e.g. 5% a visit) are not approved; no competing caravan economy in Build 17"
     }
    ],
    "acceptance_derived": true,
@@ -8744,7 +8771,7 @@
    "id": "ECON-P1.4",
    "title": "Prospecting new seams (:74)",
    "kind": "proposal",
-   "status": "BLOCKED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
    "description": "Prospecting new seams (:74)",
    "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 301)",
@@ -8766,7 +8793,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "MIN-C",
    "notes": "See EXP-A.",
    "history": [
     {
@@ -8783,6 +8810,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> SUPERSEDED; superseded_by",
+     "why": "Owner (OD-01, 2026-10-21): superseded by Build 17's MIN-C/MIN-D prospecting; no daily chance, no six-coin prospecting wage"
     }
    ],
    "acceptance_derived": true,
@@ -8794,7 +8826,7 @@
    "id": "ECON-P1.5",
    "title": "Distant quarry (:75)",
    "kind": "proposal",
-   "status": "BLOCKED",
+   "status": "CANCELED BY OWNER",
    "owner_wording": null,
    "description": "Distant quarry (:75)",
    "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 302)",
@@ -8828,12 +8860,18 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> CANCELED BY OWNER",
+     "why": "Owner rejected the special distant quarry (OD-01, 2026-10-21): 'Do not introduce the proposed special off-map quarry'"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
    "roadmap_gate": "",
-   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)",
+   "canceled_by_owner": "Owner, OD-01, 2026-10-21: \"P1.5 — REJECT SPECIAL DISTANT QUARRY. OWNER DECISION: REJECT.\""
   },
   {
    "id": "ECON-P2",
@@ -14669,6 +14707,92 @@
    "target_build": "15"
   },
   {
+   "id": "JOB-01",
+   "title": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "Salaried manor hands remain eligible to take appropriate work from the same job board used by independent workers and the player.",
+   "description": "Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking",
+   "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
+   "approval": "owner decision REC-013 Q3, 2026-10-21",
+   "acceptance": [
+    "Hands take board jobs unpaid; pickaxe and survey exclusions kept; first come, no priority; one job at a time"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "REC-013",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_rec013_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "As built (ManorWork.open_for/can_fund/is_staff: staff unpaid, one job per worker, quarry/trial/excavate need a pickaxe, surveys exclude staff, no staff priority); a focused test of 'no priority, no double booking' is still to be written"
+    }
+   ],
+   "target_build": "17"
+  },
+  {
+   "id": "JOB-02",
+   "title": "Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Replace the long-term fixed-wage design with offered compensation that workers can accept or reject.",
+   "description": "Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate",
+   "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
+   "approval": "owner decision REC-013 Q4, 2026-10-21",
+   "acceptance": [
+    "Offers respond to labour availability, competing work, demand, duration, difficulty and skills, travel, market conditions and the manor's funds",
+    "Workers may decline; the manor may raise offers; no guaranteed hiring",
+    "Today's fixed per-job rates are provisional starting offers only"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "REC-013",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Design the smallest safe path (e.g. workers compare the posted pay with their own trade's earnings, CON-01's opportunity rule) and propose its build; dependencies: the job board, NPC job choice, Expansion 18 Q18-11 pay factors",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_rec013_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; next_action",
+     "why": "Not built: today's board has fixed per-job wages and workers take what they find. Scheduled for a later build unless a narrow safe path exists (owner: do not destabilise Build 17)"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "K-1",
    "title": "5 coins vs land 60+",
    "kind": "approved",
@@ -15135,6 +15259,96 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LOG-01",
+   "title": "Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "When a grain, relief, or other eligible manor delivery remains unclaimed for a reasonable period, the manor may assign the work to an available salaried manor hand or the reeve.",
+   "description": "Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe",
+   "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
+   "approval": "owner decision REC-013 Q2, 2026-10-21",
+   "acceptance": [
+    "Fallback only to an available hand or the reeve, collecting from the real location, carrying within capacity, delivering once, no double booking, no extra wage",
+    "The delay comes from existing scheduling and urgency, not an arbitrary universal number",
+    "Urgent relief (today ManorWork.deliver_now, which unloads at once) keeps its protection until replaced by a tested physical delivery that cannot cause starvation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "REC-013",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Evaluate a narrow Build 17 change (assign an unclaimed delivery to an idle hand through the existing seek/plan path); otherwise schedule with JOB-02",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_rec013_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; next_action",
+     "why": "target set; smallest safe path to be evaluated against Build 17 stability"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "MAINT-01",
+   "title": "Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "The manor must not generate artificial repair work merely because it has surplus treasury funds.",
+   "description": "Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work",
+   "source": "docs/directives/2026-10-21_build17_rec013_final_decisions.md",
+   "approval": "owner decision REC-013 Q1, 2026-10-21",
+   "acceptance": [
+    "Wear of manor buildings and houses, wells, roads, fences, pens and other infrastructure with meaningful consequences",
+    "Repair and construction projects with purpose, location, materials, labour and funding; materials transported and used through construction mechanics; no restoration by payment",
+    "Expansion projects from real settlement conditions; roads to resource sites, farms, new areas and towns as real infrastructure, without generating towns or instant travel",
+    "Priorities and the right to defer or cancel nonessential projects; no guaranteed work",
+    "Today's money-driven repairs and works purchases replaced, not kept as the long-term rule"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "REC-013",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Owner places it in a build; dependencies: construction, structural decay (DVW-B4, MIN-F2 supports), roads and regional routes (Expansion 18), village expansion (SET-D), the reeve and job board (JOB-02)",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_rec013_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; next_action",
+     "why": "approved for a later build (owner: not forced into Build 17); placement is the owner's"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "MEM-01",
@@ -16674,7 +16888,7 @@
    "id": "MIN-STONE-Q",
    "title": "Are quarry stone and building blocks different items?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Are quarry stone and building blocks different items?",
    "source": "docs/build17/MIN_B_QUARRY.md",
@@ -16682,7 +16896,7 @@
    "acceptance": [
     "Owner decides"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; implementation under STONE-01",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16708,9 +16922,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered 2026-10-21 (docs/directives/2026-10-21_quarry_stone_blocks_decision.md): raw stone and building blocks are separate items, blocks made by stoneworkers from raw stone with labour, tools and time; implementation is STONE-01"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Separate items: raw quarry stone and finished building blocks; stoneworkers process raw stone into blocks with real labour, tools and time; no automatic conversion."
   },
   {
    "id": "MP-01",
@@ -16766,7 +16986,7 @@
    "id": "OD-01",
    "title": "Owner decision: deposit sustainability (P1) and the mine wage (B7-006)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision: deposit sustainability (P1) and the mine wage (B7-006)",
    "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md",
@@ -16774,7 +16994,7 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
+   "implementation": "Owner decision recorded; the quest retirement is implemented (OD01-QUEST)",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -16812,12 +17032,18 @@
      "date": "2026-10-20",
      "change": "roadmap_gate",
      "why": "gate made explicit (recovery test, MEM-01): an open owner decision placed in a build waits on the owner first"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered all six parts 2026-10-21 (docs/directives/2026-10-21_build17_od01_final_decisions.md): quest retired; P1.1, P1.2, P1.5 rejected; P1.3 to Expansion 18; P1.4 superseded by MIN-C/MIN-D; no mining wage"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits)"
+   "roadmap_reason": "deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits)",
+   "owner_answer": "Retire the mine-shift quest; reject P1.1 (mandatory demand-driven mining), P1.2 (automatic manor mining rights, royalty, quotas, stone reserve) and P1.5 (special distant quarry); P1.3 (finite regional caravan markets) belongs to Expansion 18, its numbers not approved; P1.4 superseded by MIN-C/MIN-D; no mining-specific wage; miners earn by sale or CON-01 contracts."
   },
   {
    "id": "OD-02",
@@ -18906,6 +19132,51 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD01-QUEST",
+   "title": "Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Remove the fixed-reward quest titled \"A shift in the mine,\" which currently pays 8 coins for delivering 6 iron ore.",
+   "description": "Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely",
+   "source": "docs/directives/2026-10-21_build17_od01_final_decisions.md",
+   "approval": "owner decision OD-01, 2026-10-21",
+   "acceptance": [
+    "Never offered at dawn, through 'Any work for me?' or accepted",
+    "An accepted shift in an older save is honoured once from its set-aside wage, or lapses with the wage returned; no double pay"
+   ],
+   "implementation": "",
+   "tests": "run_tests::test_paid_work (retired shift not offered, not accepted, old accepted shift saved, paid once, never twice, lapse refunds); start_test; play_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "PENDING"
+   ],
+   "parent": "OD-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_od01_final_decisions.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit PENDING; tests; target_build",
+     "why": "quests.json marks work_the_mine retired; quests.gd never offers, hires or accepts a retired template; run_tests 3544, start_test 499, play_test 37, 0 failures"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "OPS-01",
@@ -24223,7 +24494,7 @@
    "id": "REC-013",
    "title": "Need-based maintenance (wear) model and the other unanswered job-board questions",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Make sure the reeve can offer reasonable recurring maintenance and logistical work when the manor genuinely needs it, but do not guarantee employment when there is no funded work available.",
    "description": "Structures that wear so maintenance demand is real (instead of repairs bought with surplus money), plus three open questions from the same round.",
    "source": "owner message #109 2026-10-18T06:00Z; AskUserQuestion round 2026-10-18T06:46Z (wear model, staff fallback, manor hands on the job board, board wage basis) left unanswered; docs/HANDOFF.md and docs/DEVELOPMENT_QUEUE.md 'Waiting on the owner: A need-based maintenance model'",
@@ -24232,7 +24503,7 @@
     "As described: Structures that wear so maintenance demand is real (instead of repairs bought with surplus money), plus three open questions from the same round."
    ],
    "acceptance_derived": true,
-   "implementation": "Mend jobs exist (manor_work.gd KINDS haul/quarry/mend) driven by surplus spending, not wear. The decision is listed in the queue and HANDOFF without an id; requirements.json has no entry for maintenance, staff fallback or board wages (grep).",
+   "implementation": "Owner decisions recorded; implementation tracked separately (MAINT-01, LOG-01, JOB-01, JOB-02)",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -24260,11 +24531,17 @@
      "date": "2026-10-20",
      "change": "roadmap: 17 (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; implementation",
+     "why": "Owner answered all four questions 2026-10-21 (docs/directives/2026-10-21_build17_rec013_final_decisions.md); implementation tracked in MAINT-01, LOG-01, JOB-01, JOB-02"
     }
    ],
    "target_build": "17",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "wear and maintenance give tools, supports and carts real upkeep (industrial chains)"
+   "roadmap_reason": "wear and maintenance give tools, supports and carts real upkeep (industrial chains)",
+   "owner_answer": "Q1 real need-driven maintenance plus village expansion and road construction (later build); Q2 unclaimed deliveries fall back to available salaried hands or the reeve, urgent relief protected; Q3 shared job board for hands kept, no extra wage, no universal priority; Q4 offered compensation workers can accept or reject replaces fixed wages long-term."
   },
   {
    "id": "REC-014",
@@ -27381,6 +27658,50 @@
    "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
    "b16_class": "required",
    "complexity": "L"
+  },
+  {
+   "id": "STONE-01",
+   "title": "Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Quarry extraction → Raw stone → Stoneworking → Finished building blocks → Construction",
+   "description": "Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks",
+   "source": "docs/directives/2026-10-21_quarry_stone_blocks_decision.md",
+   "approval": "owner decision 2026-10-21 (MIN-STONE-Q)",
+   "acceptance": [
+    "A building-block item and a stoneworking recipe at a station with a tool, time and skill, by the same rule for player and villagers",
+    "Construction recipes that need finished stone use blocks; raw stone stays the quarry and mine output",
+    "A villager trade (stoneworker or an existing trade) makes blocks to demand; conservation, saves (existing stone in older saves handled explicitly), deterministic"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MIN-B",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_quarry_stone_blocks_decision.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "Build 17 (mining and industrial production chain); scheduled after MIN-F2 to avoid overlapping edits"
+    }
+   ],
+   "target_build": "17"
   },
   {
    "id": "TIME-01",

@@ -7,14 +7,14 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
+| Open entries (rules excluded) | 231 | 197 still open, 34 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 219 (97 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **298** = 203 still open from the baseline + 97 added and open |
+| Entries added since | | 225 (101 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **296** = 197 still open from the baseline + 101 added and open |
 | Open entries moved to another build | | 2 |
 
-## Closed since the baseline (28)
+## Closed since the baseline (34)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
@@ -28,6 +28,10 @@ entry leaves the register or changes without a history entry.
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged |
 | DVW-A7 | Over-production from raising skills by use (:32) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-20: Audit docs/release/BUILD_16_AUDITS.md: skill over-production is a legitimate outcome (finite inputs, purses cap sales); the one defect, player production missing from the ledger, fixed via World.player_gain; the invariant comment names the approved skill effects |
 | DVW-A8 | Audit player-only perks vs same rules (:33) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-20: Audit docs/release/BUILD_16_AUDITS.md lists 16 player-only perks with their recorded reasons; no code defect; the gaps needing a ruling are OD-18 |
+| ECON-P1.1 | Demand-driven mining (:71) | proposal | BLOCKED | 17 | CANCELED BY OWNER | 17 | 2026-10-21: Owner rejected mandatory demand-driven mining (OD-01, 2026-10-21): 'Do not require an existing buyer order before mining can begin.' |
+| ECON-P1.2 | Manor mining rights, royalty, quota, stone reserve (:72) | proposal | BLOCKED | 17 | CANCELED BY OWNER | 17 | 2026-10-21: Owner rejected automatic manor mining rights, the 10% royalty, quotas and the 60-stone reserve (OD-01, 2026-10-21): 'The manor does not automatically own all mineral deposits.' |
+| ECON-P1.4 | Prospecting new seams (:74) | proposal | BLOCKED | 17 | SUPERSEDED | 17 | 2026-10-21: Owner (OD-01, 2026-10-21): superseded by Build 17's MIN-C/MIN-D prospecting; no daily chance, no six-coin prospecting wage |
+| ECON-P1.5 | Distant quarry (:75) | proposal | BLOCKED | 17 | CANCELED BY OWNER | 17 | 2026-10-21: Owner rejected the special distant quarry (OD-01, 2026-10-21): 'Do not introduce the proposed special off-map quarry' |
 | EQ-01 | Human civilization sustains itself without the player | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | approved | PARTIALLY IMPLEMENTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only |
 | EQ-03 | Humans and nature affect each other through real NPC decisions | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Implemented and tested; the four-seed year runs of the integrated build pass |
@@ -40,8 +44,10 @@ entry leaves the register or changes without a history entry.
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Every child EQ-01..EQ-07 complete and verified |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: six pages added (game/scripts/core/wiki_topics.gd): Magic: the Fireball; the gold star over an employer; the Journal and the village map; causes of death; the merchant caravan; bandits. Every fact cites code, numbers come from balance data where the code reads them, links from the related pages; wiki_test passes (every link resolves) |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: CI run 39368652711 on 0ee0218 passed the new step: a 10-day seed-1 simulation with no leak and no script error |
+| OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | decision | BLOCKED | 17 | COMPLETE AND VERIFIED | 17 | 2026-10-21: Owner answered all six parts 2026-10-21 (docs/directives/2026-10-21_build17_od01_final_decisions.md): quest retired; P1.1, P1.2, P1.5 rejected; P1.3 to Expansion 18; P1.4 superseded by MIN-C/MIN-D; no mining wage |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Implemented and tested; the four-seed year runs of the integrated build pass |
 | REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | approved | UNKNOWN — INVESTIGATION REQUIRED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: the three files stored byte for byte in docs/game-designer/ (sha256 checked; Bob's CLAUDE.md as THE_WELL_SPEC_v1.md so it is not loaded as agent instructions), SPEC_RECONCILIATION.md classifies 98 points (54 agree, 19 differ, 14 not in project, 11 obsolete) and lists the open owner calls, and a DECISIONS entry records the merge; no existing document or feature was changed |
+| REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | approved | BLOCKED | 17 | COMPLETE AND VERIFIED | 17 | 2026-10-21: Owner answered all four questions 2026-10-21 (docs/directives/2026-10-21_build17_rec013_final_decisions.md); implementation tracked in MAINT-01, LOG-01, JOB-01, JOB-02 |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: brought up to date: HANDOFF.md and DEVELOPMENT_PLAN.md were already marked historical (MEM-01); GAME_DESIGN.md U1 moved to Confirmed item 13 with the owner's 2026-10-18 platform decision; BUILD_DECISIONS.md Known gaps rewritten from the code (births, ages, apprentices, player livestock, eggs/milk/wool exist; adoption is FAM-03/07, Build 16); CLAUDE.md release history lists draft Builds 9-11 (GitHub releases checked) and OVN-01's authority; resources.json's handcart exception is implemented (B14-06) |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | approved | ACTIVE DEVELOPMENT | 15 | SUPERSEDED | 15 | 2026-10-20: Builds 14 and 15 released; Builds 15-18 are under REL-15-18 and OVN-02 |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only |
@@ -58,7 +64,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (219)
+## Added since the baseline (225)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -147,6 +153,8 @@ None.
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | COMPLETE AND VERIFIED | 15 |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | COMPLETE AND VERIFIED | 15 |
+| JOB-01 | Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
+| JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | approved | APPROVED — NOT STARTED | owner decision |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | APPROVED — NOT STARTED | owner decision |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | APPROVED — NOT STARTED | owner decision |
@@ -155,6 +163,8 @@ None.
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | APPROVED — NOT STARTED | owner decision |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | APPROVED — NOT STARTED | owner decision |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | APPROVED — NOT STARTED | owner decision |
+| LOG-01 | Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe | approved | APPROVED — NOT STARTED | owner decision |
+| MAINT-01 | Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work | approved | APPROVED — NOT STARTED | owner decision |
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
@@ -177,7 +187,7 @@ None.
 | MIN-F-Q5 | Should spoil be allowed back into tunnels below ground? | decision | COMPLETE AND VERIFIED | owner decision |
 | MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | ACTIVE DEVELOPMENT | 17 |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
-| MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | BLOCKED | owner decision |
+| MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | COMPLETE AND VERIFIED | 16 |
@@ -214,6 +224,7 @@ None.
 | OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | decision | BLOCKED | owner decision |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | decision | BLOCKED | owner decision |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | decision | BLOCKED | owner decision |
+| OD01-QUEST | Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely | approved | COMPLETE AND VERIFIED | 17 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | COMPLETE AND VERIFIED | 16 |
@@ -271,6 +282,7 @@ None.
 | STALL-04 | CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | APPROVED — NOT STARTED | 17 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |
