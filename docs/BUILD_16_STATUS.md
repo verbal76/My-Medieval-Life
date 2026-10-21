@@ -56,9 +56,9 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 
 | Status | Items |
 |---|---|
-| Complete | 32 |
+| Complete | 39 |
 | In progress | 14 |
-| Pending testing | 25 |
+| Pending testing | 18 |
 | Not started | 25 |
 | Blocked | 2 |
 | Deferred | 0 |
@@ -106,7 +106,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
-| B7-015 | Missed meals while food piles up | Pending testing | (B7_ISSUES:58) / "Diagnosed; needs a design decision" / AWAIT-OWNER (recorded) / Partial code: guards provision households (INT-072), `87b3663` / Owner decision / Register not updated with INT-072 | Close on the 62b7488 four-seed run if it holds | `9db091b`, reserve_test (B7-015) |  |  | Testing and verification | S |
+| B7-015 | Missed meals while food piles up | Complete | (B7_ISSUES:58) / "Diagnosed; needs a design decision" / AWAIT-OWNER (recorded) / Partial code: guards provision households (INT-072), `87b3663` / Owner decision / Register not updated with INT-072 |  | `9db091b`, Actions 39523615798, 39529507848; suites |  |  | Testing and verification | S |
 | B7-016 | Tanners/goods merchants end at 0 coins | Blocked | (B7_ISSUES:59) / "Diagnosed; proposal P3 awaits owner" / AWAIT-OWNER (recorded) / Partial code: goods merchant retails smith tools, woodcutter sells firewood (INT-073), `9c13794` / Owner P3 / Register not updated | As recorded in the source document; evidence named in implementation and tests |  |  |  | Testing and verification | M |
 
 ### Audits and measurements
@@ -172,26 +172,26 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | FSE-08 | The directive's 25 deterministic tests (section 17) | In progress | The 25 tests are mapped (docs/design/FOOD_SECURITY_AUDIT.md section 7); the tests for implemented systems exist in part (reserve_test, world_test::_fse_defects); the rest follow their features | Each of the 25 mapped to an existing test, a new test for an implemented system, or the build whose feature it needs |  |  |  | Required feature | M |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | In progress | Defects fixed: tab, relief order, relief sources, food valuation, eating and cooking parity, B05, B07-B10, TIME-04; open: B06, B11, B12 | Each defect fixed with a regression test; each foundation small, tested, baselined before and after |  |  |  | Required feature | M |
 | FSE-11 | Village sowing consumes seed (seed consumption correction) | Superseded | Covered by FARM-06 (OD-23: manor farms get no free seed; village sowing takes real seed), the owner's later decision |  |  | superseded by FARM-06 |  | Superseded |  |
-| FSE-12 | One agricultural model for player and village farming (parity) | In progress | Shared per-cell model for the manor's fields behind balance shared_manor_farming (off in the baseline; gate identical): seed a cell, crop and seed back a sown cell, per-cell labour; world_test::_fse12_shared_fields. Comp | Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy | `68a3611`, world_test::_fse12_shared_fields | after FSE-16 |  | Required feature | L |
+| FSE-12 | One agricultural model for player and village farming (parity) | In progress | Comparison done (Actions 39531422104 against 39529507848): 3.1x the grain, a glut of 67,000-90,000 wheat, no starvation; report docs/design/FSE12_COMPARISON.md; not activated | Owner's choice: (a) the player's yield as is, (b) one lower per-cell yield for everyone, (c) fewer cells sown; decided with FSE-13 | `68a3611`, world_test::_fse12_shared_fields | after FSE-16 |  | Required feature | L |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | In progress | Comparison done (Actions 39526774144 against 39523615798): seasonal fields cut the grain year by 26-28 %, the pens' milk by 44-90 %, starvation 8-27 a seed against 0; report docs/design/FSE13_COMPARISON.md; not activated | Owner's review of docs/design/FSE13_COMPARISON.md; recommendation: pair with farm plots and FSE-12 and compare again | `01a83f0`, world_test::_fse13_seasonal_fields | after FSE-12 |  | Required feature | M |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | Not started |  | Design for land supply, rental of small and large plots and pens, legitimate rent; foundations in Build 16 only where safe; the rest scheduled with the living-economy build (FSE-10) |  |  |  | Required feature | M |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | Not started |  | Productive capacity recalculated with labor availability and net edible yield after seed and losses |  | after FSE-11; after FSE-12; after FSE-13 |  | Required feature | S |
-| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | Pending testing | Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms | Close on the 62b7488 four-seed run if it holds | `9db091b`, reserve_test | after B7-015 |  | Testing and verification | S |
-| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | Pending testing | Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms | Close on the 62b7488 four-seed run if it holds | reserve_test | after FSE-16 |  | Testing and verification | S |
-| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | Pending testing | Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms | Close on the 62b7488 four-seed run if it holds | reserve_test | after FSE-17 |  | Testing and verification | S |
+| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | Complete | Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |  | `9db091b`, Actions 39523615798, 39529507848; suites | after B7-015 |  | Testing and verification | S |
+| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | Complete | Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |  | Actions 39523615798, 39529507848; suites | after FSE-16 |  | Testing and verification | S |
+| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | Complete | Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |  | Actions 39523615798, 39529507848; suites | after FSE-17 |  | Testing and verification | S |
 
 ### Food-security defects
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
-| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | Pending testing | Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms | Close on the 62b7488 four-seed run if it holds | `6ab7d50`, world_test::_fse_defects (FSE-B06), family_test (clan meal) | after WDR-016-C |  | Release blocker | M |
+| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | Complete | Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |  | `6ab7d50`, Actions 39523615798, 39529507848; suites | after WDR-016-C |  | Release blocker | M |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 | FSE-B08 | A hunt cut short releases its claim on the animal | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 | FSE-B09 | Hunter job openings count only game hunters may take | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 | FSE-B10 | The player's kills enter the wildlife ledger | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
-| FSE-B11 | The home hearth gives the player and villagers the same recipes | Pending testing | Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms | Close on the 62b7488 four-seed run if it holds | `6ab7d50`, furniture_test (FSE-B11 checks) |  |  | Release blocker | S |
-| FSE-B12 | Hunting experience by one rule for the player and villagers | Pending testing | Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms | Close on the 62b7488 four-seed run if it holds | `6ab7d50`, world_test::_fse_defects (FSE-B12) |  |  | Release blocker | S |
+| FSE-B11 | The home hearth gives the player and villagers the same recipes | Complete | Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |  | `6ab7d50`, Actions 39523615798, 39529507848; suites |  |  | Release blocker | S |
+| FSE-B12 | Hunting experience by one rule for the player and villagers | Complete | Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |  | `6ab7d50`, Actions 39523615798, 39529507848; suites |  |  | Release blocker | S |
 
 ### Seeds and propagation
 

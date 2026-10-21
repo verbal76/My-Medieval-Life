@@ -3324,7 +3324,7 @@
    "id": "B7-015",
    "title": "Missed meals while food piles up",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Missed meals while food piles up",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 56)",
@@ -3333,7 +3333,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "(B7_ISSUES:58) | \"Diagnosed; needs a design decision\" | AWAIT-OWNER (recorded) | Partial code: guards provision households (INT-072), `87b3663` | Owner decision | Register not updated with INT-072",
-   "tests": "reserve_test (B7-015)",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -3385,6 +3385,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "acceptance_derived": true,
@@ -11819,7 +11824,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy",
+   "next_action": "Owner's choice: (a) the player's yield as is, (b) one lower per-cell yield for everyone, (c) fewer cells sown; decided with FSE-13",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11854,6 +11859,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 68a3611; tests; next_action",
      "why": "Shared per-cell model for the manor's fields behind balance shared_manor_farming (off in the baseline; gate identical): seed a cell, crop and seed back a sown cell, per-cell labour; world_test::_fse12_shared_fields. Comparison runs (old vs new, four seeds, 365 days) next, then the owner's review"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Comparison done (Actions 39531422104 against 39529507848): 3.1x the grain, a glut of 67,000-90,000 wheat, no starvation; report docs/design/FSE12_COMPARISON.md; not activated"
     }
    ],
    "target_build": "16",
@@ -12031,7 +12041,7 @@
    "id": "FSE-16",
    "title": "Seed-2 starvation: root cause of each of the 11 deaths",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Finish the seed-2 investigation into the 11 starvation deaths before materially changing agricultural production.",
    "description": "Seed-2 starvation: root cause of each of the 11 deaths",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -12041,7 +12051,7 @@
     "Defects fixed with regression tests; the existing seed-2 annual baseline preserved"
    ],
    "implementation": "",
-   "tests": "reserve_test",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -12080,6 +12090,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "target_build": "16",
@@ -12092,7 +12107,7 @@
    "id": "FSE-17",
    "title": "Manor relief checks and draws on every food store (amends the B3 relief rule)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Relief should check all possible food stores. (Answers: all food sellers, all foods; other households' surplus; the granary and manor stores first; raw food it can cook. A household's own reckoning counts all its stores, yes.)",
    "description": "Manor relief checks and draws on every food store (amends the B3 relief rule)",
    "source": "owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day",
@@ -12103,7 +12118,7 @@
     "Food is moved and paid for, never created; coins conserved; regression tests; the seed-2 baseline compared before and after"
    ],
    "implementation": "",
-   "tests": "reserve_test",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12140,6 +12155,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "target_build": "16",
@@ -12152,7 +12172,7 @@
    "id": "FSE-18",
    "title": "The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "cant we just keep the family food in a second chest? and have it be commuunal? (Answers: family food only: food kept for eating goes in, trade stock stays in the pack for sale, anything over what can be sold goes in, and the household eats from the chest before a trader sells the last of it. The player's house: yes, same rule.)",
    "description": "The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first",
    "source": "owner message 2026-10-20 ('cant we just keep the family food in a second chest? and have it be commuunal?') and the owner's answers to the agent's two questions the same day",
@@ -12164,7 +12184,7 @@
     "Tests; conservation; the seed-2 year compared with the baseline"
    ],
    "implementation": "",
-   "tests": "reserve_test",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12216,6 +12236,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "target_build": "16",
@@ -12281,7 +12306,7 @@
    "id": "FSE-B06",
    "title": "Bandits' poaching and the clan's camp meals feed them only from real food",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Bandits' poaching and the clan's camp meals feed them only from real food",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -12291,7 +12316,7 @@
     "Owner 2026-10-21: the deadwood camp fire kept as an interim exception; wood gathering and supply belong to bandit factions (WDR-016-C), not Build 16"
    ],
    "implementation": "",
-   "tests": "world_test::_fse_defects (FSE-B06), family_test (clan meal)",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -12335,6 +12360,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "target_build": "16",
@@ -12559,7 +12589,7 @@
    "id": "FSE-B11",
    "title": "The home hearth gives the player and villagers the same recipes",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The home hearth gives the player and villagers the same recipes",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -12568,7 +12598,7 @@
     "One rule for the hearth (villagers cook stove recipes there, the player only oven ones); a test"
    ],
    "implementation": "",
-   "tests": "furniture_test (FSE-B11 checks)",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -12605,6 +12635,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "target_build": "16",
@@ -12617,7 +12652,7 @@
    "id": "FSE-B12",
    "title": "Hunting experience by one rule for the player and villagers",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Hunting experience by one rule for the player and villagers",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -12626,7 +12661,7 @@
     "Combat xp for a kill (and for slaughter) by the same rule for both (per kill, or per blow for both); a test"
    ],
    "implementation": "",
-   "tests": "world_test::_fse_defects (FSE-B12)",
+   "tests": "Actions 39523615798, 39529507848; suites",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -12663,6 +12698,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites"
     }
    ],
    "target_build": "16",

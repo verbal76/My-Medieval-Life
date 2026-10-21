@@ -14,16 +14,16 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 83 |
 | ACTIVE DEVELOPMENT | 10 |
 | PARTIALLY IMPLEMENTED | 38 |
-| IMPLEMENTED — TESTING REQUIRED | 26 |
+| IMPLEMENTED — TESTING REQUIRED | 19 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 43 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
-| COMPLETE AND VERIFIED | 187 |
+| COMPLETE AND VERIFIED | 194 |
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **440** |
-| Outstanding (not complete, superseded or canceled) | 232 |
+| Outstanding (not complete, superseded or canceled) | 225 |
 
 Also in the register: 31 proposal awaiting an owner decision (not approved), 57 owner decision (open or answered), 24 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 66 | 64 |
+| Build 16: long-term equilibrium and validation | 59 | 57 |
 | Build 17: Mining & Industrial Development | 24 | 19 |
 | Build 18: Settlement Advancement & Regional Economy | 23 | 18 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 59 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **305** | **232** |
+| **Total open** | **298** | **225** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,13 +107,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (66)
+### Build 16: long-term equilibrium and validation (59)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner instruction 2026-10-20 |
-| B7-015 | Missed meals while food piles up | approved | IMPLEMENTED — TESTING REQUIRED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
@@ -150,12 +149,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
-| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
-| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner instruction 2026-10-20, after the seed-2 starvation findings |
-| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner instruction 2026-10-20 |
-| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
-| FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
-| FSE-B12 | Hunting experience by one rule for the player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | PARTIALLY IMPLEMENTED |  |  |
@@ -573,7 +566,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `68a3611`; world_test::_fse12_shared_fields |  | Activated with FSE-12 after the owner's review |
 | FSE-08 | The directive's 25 deterministic tests (section 17) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md | `68a3611`; world_test::_fse12_shared_fields | after FSE-16 | Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy |
+| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md | `68a3611`; world_test::_fse12_shared_fields | after FSE-16 | Owner's choice: (a) the player's yield as is, (b) one lower per-cell yield for everyone, (c) fewer cells sown; decided with FSE-13 |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md | `01a83f0`; world_test::_fse13_seasonal_fields | after FSE-12 | Owner's review of docs/design/FSE13_COMPARISON.md; recommendation: pair with farm plots and FSE-12 and compare again |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
@@ -599,13 +592,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (26)
+## IMPLEMENTED — TESTING REQUIRED (19)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
-| B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) | `9db091b`; reserve_test (B7-015) |  | Close on the 62b7488 four-seed run if it holds |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
 | EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | docs/release/LONG_RUN_SIMULATION.md | `5cce264`; od16_test::test_caravan_buys_by_need |  | Owner to confirm the reading of need (the seller's need to sell); measure in the four-seed runs |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
@@ -615,12 +607,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4 | game/tests/family_test.gd | after FAM-02; after HOUSE-03 |  |
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 | game/tests/family_test.gd; game/tests/housing_test.gd | after FAM-02 |  |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | suites; then COMPLETE once a long run has exercised it or tests suffice |
-| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | docs/directives/2026-10-20_agricultural_findings_followup.md | `9db091b`; reserve_test | after B7-015 | Close on the 62b7488 four-seed run if it holds |
-| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day | reserve_test | after FSE-16 | Close on the 62b7488 four-seed run if it holds |
-| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | owner message 2026-10-20 ('cant we just keep the family food in a second chest? and have it be commuunal?') and the owner's answers to the agent's two questions the same day | reserve_test | after FSE-17 | Close on the 62b7488 four-seed run if it holds |
-| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; world_test::_fse_defects (FSE-B06), family_test (clan meal) | after WDR-016-C | Close on the 62b7488 four-seed run if it holds |
-| FSE-B11 | The home hearth gives the player and villagers the same recipes | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; furniture_test (FSE-B11 checks) |  | Close on the 62b7488 four-seed run if it holds |
-| FSE-B12 | Hunting experience by one rule for the player and villagers | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; world_test::_fse_defects (FSE-B12) |  | Close on the 62b7488 four-seed run if it holds |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 | Measure in the four-seed runs; owner to confirm the readings |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
@@ -713,7 +699,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (187)
+## COMPLETE AND VERIFIED (194)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -756,6 +742,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-003 | Jewellery/helmets have buyers | docs/release/BUILD_7_ISSUES.md (audit inventory row 44) |  |  |  |
 | B7-004 | Harvest-work wheat theft | docs/release/BUILD_7_ISSUES.md (audit inventory row 45) |  |  |  |
 | B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  | Close with PAR-02 once the suites pass |
+| B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) | `9db091b`; Actions 39523615798, 39529507848; suites |  | Close on the 62b7488 four-seed run if it holds |
 | B8-001 | (earlier fix) | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 102) |  |  |  |
 | B8-002 | Village pasted over terrain | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 103) |  |  |  |
 | B8-003 | Floating/partial trees | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 104) |  |  |  |
@@ -822,11 +809,17 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
 | FSE-06 | Testing strategy for the food and living economy | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
 | FSE-07 | Unresolved owner questions arising from the food-security directive | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | docs/directives/2026-10-20_agricultural_findings_followup.md | `9db091b`; Actions 39523615798, 39529507848; suites | after B7-015 | Close on the 62b7488 four-seed run if it holds |
+| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day | Actions 39523615798, 39529507848; suites | after FSE-16 | Close on the 62b7488 four-seed run if it holds |
+| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | owner message 2026-10-20 ('cant we just keep the family food in a second chest? and have it be commuunal?') and the owner's answers to the agent's two questions the same day | Actions 39523615798, 39529507848; suites | after FSE-17 | Close on the 62b7488 four-seed run if it holds |
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
+| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; Actions 39523615798, 39529507848; suites | after WDR-016-C | Close on the 62b7488 four-seed run if it holds |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
 | FSE-B08 | A hunt cut short releases its claim on the animal | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
 | FSE-B09 | Hunter job openings count only game hunters may take | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
 | FSE-B10 | The player's kills enter the wildlife ledger | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
+| FSE-B11 | The home hearth gives the player and villagers the same recipes | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; Actions 39523615798, 39529507848; suites |  | Close on the 62b7488 four-seed run if it holds |
+| FSE-B12 | Hunting experience by one rule for the player and villagers | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `6ab7d50`; Actions 39523615798, 39529507848; suites |  | Close on the 62b7488 four-seed run if it holds |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.2 | `af60f94`; game/tests/housing_test.gd |  |  |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.3 | `af60f94`; game/tests/housing_test.gd |  |  |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.4 | `af60f94`; game/tests/housing_test.gd |  |  |

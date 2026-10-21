@@ -7,20 +7,21 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
+| Open entries (rules excluded) | 231 | 213 still open, 18 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 160 (91 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **305** = 214 still open from the baseline + 91 added and open |
+| Entries added since | | 160 (85 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **298** = 213 still open from the baseline + 85 added and open |
 | Open entries moved to another build | | 2 |
 
-## Closed since the baseline (17)
+## Closed since the baseline (18)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: docs/assets/SPRITE_NEEDS.md lists 53 missing or weak sprites found in the code (3 characters, 10 animals, 18 items and icons, 10 buildings and stations, 5 terrain and props, 2 effects, 5 UI), each with where it is used, what stands in now, why it is weak and the size needed; tools/assets/sprite_package.py builds a pixel-grid copy and a real-size Aseprite file for each into out/sprite_package.zip (107 files); grid copies looked at |
 | B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: 365-day runs on af60f94 (Actions 39396414426, local re-runs with the same fingerprints): every wild species alive at day 365 on both seeds, and the population grows from 100 to 115 and 122 |
 | B7-008 | Player can drain buyers to 0, kill all wildlife | approved | BLOCKED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Both halves done: wildlife verified earlier; the buyer half answered by the owner (OD-18.2) and implemented as PAR-02 |
+| B7-015 | Missed meals while food piles up | approved | BLOCKED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94 |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged |
@@ -96,17 +97,17 @@ None.
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |
-| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | approved | COMPLETE AND VERIFIED | 16 |
-| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B08 | A hunt cut short releases its claim on the animal | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B09 | Hunter job openings count only game hunters may take | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B10 | The player's kills enter the wildlife ledger | approved | COMPLETE AND VERIFIED | 16 |
-| FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| FSE-B12 | Hunting experience by one rule for the player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-B12 | Hunting experience by one rule for the player and villagers | approved | COMPLETE AND VERIFIED | 16 |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | COMPLETE AND VERIFIED | 15 |

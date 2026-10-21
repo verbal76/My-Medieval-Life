@@ -1235,3 +1235,24 @@ seasonal berry bushes (`62b7488`), measured by run 39529507848.
 
 **FSE-13 comparison (seasonal village farming, switch on), Actions 39526774144:** starvation 27 / 25 / 22 / 8 against
 0 on the baseline above; the full report is `docs/design/FSE13_COMPARISON.md`. The switch stays off.
+
+### Four seeds, 365 days, on `62b7488` (seed propagation, seasonal berry bushes, the seed seller for villagers), Actions 39529507848 (2026-10-21)
+
+| Day 365 | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Script errors / ledgers | 0 / balanced | 0 / balanced | 0 / balanced | 0 / balanced |
+| Starvation deaths | **0** | **0** | **0** | **0** |
+| Alive / births | 123 / 92 | 151 / 123 | 142 / 109 | 128 / 99 |
+| Unemployed | 1 | 18 | 5 | 0 |
+| Nights without firewood (`1fefddb` -> `62b7488`) | 1,466 -> 2,657 | 1,463 -> 1,546 | 1,414 -> 1,390 | 1,760 -> 1,737 |
+| Red berries picked (`1fefddb` -> `62b7488`) | 1,506 -> 1,406 | 2,174 -> 1,422 | 2,174 -> 1,760 | 2,504 -> 1,382 |
+| Red berry cuttings recovered / bought in / sold out | 98 / 305 / 152 | 119 / 213 / 161 | 156 / 259 / 105 | 98 / 120 / 30 |
+| Fingerprint | `b9a2b75f...` | `a7657c53...` | `92f37904...` | `29432c3c...` |
+
+Two four-seed years in a row with no starvation death (`1fefddb`, `62b7488`). Berries picked fall by 7-45 % with bare
+bushes in spring and winter, with no starvation. Seed 1's nights without firewood rose (1,466 to 2,657); the cause is not
+isolated.
+
+**FSE-12 comparison (the manor's fields on the shared per-cell model, switch on), Actions 39531422104 on the same commit:**
+no starvation either way; the grain harvest triples (about 136,000 against 43,920) and 67,000-90,000 wheat is left unsold.
+Full report: `docs/design/FSE12_COMPARISON.md`. The switch stays off.
