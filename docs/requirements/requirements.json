@@ -28376,6 +28376,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Owner STONE-Q2 (2026-10-21): dressing efficiency by skill (STONE-04 on wip/build17) is part of the same Expansion 18 work; values to be proposed to the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Owner STONE-Q3 (2026-10-21): the trade uses the Stoneworking skill (STONE-05) and the mallet plus iron chisel (STONE-06), the same as everyone; entries on wip/build17"
     }
    ],
    "target_build": "18"

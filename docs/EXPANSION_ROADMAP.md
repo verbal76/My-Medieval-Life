@@ -104,6 +104,11 @@ C replaces today's fixed thresholds, CRT-12's notoriety refusal and the single r
 - **Skill-based stone dressing (STONE-04, owner STONE-Q2, 2026-10-21) → Expansion 18**, with X18-STONECUT, STONE-02 and
   STONE-03: blocks recovered depend on the worker's skill (existing skill and capability systems), the rest conserved
   as waste or spoil; the skill-to-efficiency values are proposed to the owner before they are locked. Build 17 keeps 1:1.
+- **Stoneworking skill and iron chisel (STONE-05, STONE-06, owner STONE-Q3, 2026-10-21) → Expansion 18.** A dedicated
+  skill in the existing skill system governs dressing and STONE-04's efficiency; dressing needs a mallet and a smith-made
+  iron chisel (depends on smithing and iron supply). To the owner in the design phase: starting levels and migration
+  credit, efficiency values, chisel durability and wear, chisel recipe quantities. Settles the masonry part of the
+  Expansion 18 working note "Q18-1" (skills for farming, carpentry, masonry, tanning). Build 17 unchanged.
 
 ## Proposed sequence (agent proposal, before ROAD-01; superseded where it differs)
 
