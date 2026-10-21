@@ -381,6 +381,19 @@ FARM-02's fence and gate and STALL-01..06 wait on them; FARM-06, the plot lease 
 18. **Art:** no pack has a cutting or sprout; the cuttings use seed-packet icons, and a young plant is not drawn until it
     bears.
 
+**Readings made for SHOP-01, TRADE-01 and CTR-04 (2026-10-21), implemented, for the owner:**
+
+19. **A business buys by need:** only inputs of recipes it has the skill for (a smith below Smithing 3 buys no gold ore),
+    up to its stock limit (the existing `NPCBrain.BUYS` numbers kept as the limit), partial lots towards a batch allowed,
+    and within its coins and the OD-19 reserve. How far ahead a business should stock (a day's work, a week's) has no
+    rule; the existing limits stand until the owner sets one.
+20. **One sale rule** for the player and villagers selling to a business; a sale it cannot take whole is refused with
+    the reason ("can use only 2 more iron ore"); villager sales are one all-or-nothing trade.
+21. **Not yet under the rule:** purchases a business starts itself (the smith's trips for ore, coal and planks, the
+    carpenter's parts), and an input bought without its companion (ore without coal).
+22. **Counters keep their terms** (CTR-04): no commission on counter sales; the 5% applies to OD-24 stalls only (not yet
+    built, waiting on the stall questions 8-13).
+
 **OD-17, still blocked: the entry as recorded** (source `docs/game-designer/SPEC_RECONCILIATION.md` section 4):
 
 - **C1, the hero.** Spec, the owner's interview: "One hero (owner said: "Your main character is the hero")"; Bob's
