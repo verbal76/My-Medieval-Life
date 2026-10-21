@@ -10,30 +10,28 @@ register only: nothing is called complete because code was written or a design a
 
 ## F. Executive summary
 
+*Reconciled 2026-10-21 on `02ae508` for the owner's audit request (`docs/directives/2026-10-21_build16_audit_release_readiness.md`);
+the readiness answer is section R below.*
+
 | | |
 |---|---|
-| Build 16 items | **100** register entries (two standing rules, AGENT-01 and MILE-01, and the answered decisions OD-11, OD-12, OD-20 and OD-25 among them) |
-| Scope growth | 30 items when Build 16 began (the Build 15 release, `a8760be`); **72 added** since by owner directives (food security FSE 26, parity PAR 10, family farms FARM 7, stalls STALL 6, counters and trade CTR/SHOP/TRADE 6, seeds and merchants SEED/MERCH 5, time TIME 4, the armorer, the audit, the two standing rules, and on 2026-10-21 EQ-22 and OD-20 brought in, OD-25 and PICK-01 added); 2 moved out by the owner (DVW-A12, DVW-B6) |
-| Complete and verified | **31** (25 work items, the 2 rules, 4 answered decisions) |
-| In progress | **12** |
-| Awaiting testing (implemented) | **15** |
-| Not started | **38** |
+| Build 16 items | **105** register entries (30 when Build 16 began at the Build 15 release `a8760be`, 2026-10-20 12:33 UTC; **77 added since** by owner directives); 2 moved out by the owner (DVW-A12 to Build 17, DVW-B6 to Build 18) |
+| Complete and verified | **41** |
+| Implemented, awaiting testing | **21** (17 awaiting runs or owner readings; 4 awaiting a device playtest: ARM-01, CTR-01..03) |
+| In progress | **17** (7 active, 10 partially implemented) |
+| Not started | **22** (family farms FARM-01..05/07, stalls STALL-01..06, FSE-14/15, EQ-01/03/04/09, DVW-A5, REC-001, SJD-A, TIME-03) |
 | Blocked | **2** (B7-016 pending a re-measure; OD-17, an owner decision) |
 | Superseded | 2 (FSE-11 by FARM-06; OD-10) |
-| Deferred by the owner | **2**, now outside Build 16: DVW-A12 (Build 17), DVW-B6 (Build 18) |
-| Release blockers (defects) | **4**: ARM-01 not fixed; FSE-B06, FSE-B11, FSE-B12 implemented and tested (`6ab7d50`), awaiting the four-seed runs |
-| Outstanding owner decisions affecting Build 16 | **1**: OD-17 (blocked); the other ten answered 2026-10-21 (section C), with two conflicts reported there |
-| Branch and latest verified commit | `staging/my-medieval-life`, `d6d80a4` (pushed, remote hash checked) |
-| Test suites | All 27 Godot suites pass on `d6d80a4` (the last code change); Python tests OK; register, interactions, resources, materials: 0 problems |
-| Determinism | The gate passes, identical to its baseline (re-baselined on `d6d80a4`, no coin or goods leaks) |
-| Simulations | Family chest (`61750f1`), 365 days: starvation deaths by seed 1 / 2 / 3 / 4 = 1 / 1 / 2 / 7 (11 in all, against 31 after parity); 0 script errors and balanced ledgers on every seed. With the firewood fix (`1c7b9f4`), seed 4 (watched, local): **1** death (7 before), nights without firewood 1,722 (2,303); the death was a relief-grain defect, fixed in `d6d80a4`. A four-seed Actions run on `d6d80a4` (every fix so far) is under way |
-| Next three actions | 1. Read the four-seed run on `d6d80a4`; classify any death; close FSE-16/17/18, B7-015 and the three fixed blockers on it. 2. The armorer (ARM-01), with the counters (CTR-01..03). 3. The owner's open questions (section C), then FARM-06, FARM-01..05 and STALL-01 onwards |
+| Open release blockers | **1**: ARM-01, implemented and tested by suites (`4bfc81b`), awaiting the owner's device playtest. FSE-B06, B11 and B12 are closed (COMPLETE AND VERIFIED on the `62b7488` runs) |
+| Branch and latest verified commit | `staging/my-medieval-life`, `02ae508` (pushed, remote hash checked; local and remote equal) |
+| Test suites | All 27 Godot suites pass on `02ae508`; Python tests OK; register, interactions, resources: 0 problems |
+| Determinism | The gate passes on `02ae508`, identical to its baseline (no coin or goods leaks) |
+| Normal game, 365 days | Last four-seed run of the normal game (switches off): `62b7488`, starvation 0/0/0/0, 0 script errors, ledgers balanced. Code since then (SHOP-01/TRADE-01/CTR-04 `51fd1e5`, FARM-08A `49c530a`) has suites and the gate only; the four-seed run of `02ae508` is the control variant of Actions run 39598992347 (queued) |
+| Farming switches | `shared_manor_farming` 0 and `seasonal_village_farming` 0 in `game/data/balance.json`: both off in normal play |
 
-**Completion percentage.** By count, 27 of 96 work items are complete and verified: **28 %**. That figure treats every
-item as equal, which they are not: the size column (S = small, M = medium, L = large, XL = very large) is a judgement of
-effort, not a measurement. Weighting the open items S = 1, M = 3, L = 8, XL = 20 gives about 225 points of open work,
-of which the four release blockers are 8 points and the 41 required features about 165; most of the remaining effort is
-in a few large new systems (family farms, stalls, counters, seed propagation, the shared farming model).
+**Completion percentage.** By count, 41 of the 103 Build 16 items that are not superseded are complete and verified:
+**40 %**. Every item counts the same, which they are not; most of the open effort is in a few large systems not started
+(family farms, market stalls) and in the acceptance runs (EQ-01..06, EQ-16).
 
 ### Essential for stabilization versus a later milestone (no deferral without the owner)
 
@@ -48,17 +46,56 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 - **Already outside Build 16, and kept there** (MILE-01): the goal-driven living economy (FSE-10, with EXP-D, the
   standalone Living Economy build) and the NPC Judgment system (Build 19).
 
+## R. Release readiness and the audit of 2026-10-21
+
+The owner's request (`docs/directives/2026-10-21_build16_audit_release_readiness.md`): why there is no playable Build 16,
+what is finished, what blocks a private build. Facts as of `02ae508`.
+
+**Why there is no Build 16.** No technical cause: no test fails, nothing in the export pipeline changed since the Build 15
+release (the last `release.yml` run, Build 15 on `a8760be`, succeeded; `release.yml`, `export_presets.cfg` and
+`project.godot` are unchanged since), and no defect is known that breaks the normal game. The causes are process:
+
+1. **The build gate was "Build 16 complete".** OVN-01 section 4 counts a build complete only when its mandatory approved
+   requirements are implemented, and REL-15-18 authorizes Build 16 as a private draft when it meets that; OD-25 (2026-10-21)
+   then required explicit owner authorization for any release. No interim "development candidate" milestone existed,
+   and the agent did not propose one. That is the main reason.
+2. **The scope tripled while the work went on.** Build 16 began with 30 items; owner directives added 77 in the next 24
+   hours (food security 26, parity 10, farms 11, stalls 6, counters and trade 6, seeds 5, time 4, others 9). Each new
+   directive moved the gate.
+3. **Most of the time went into the food-security work and its verification.** Starvation deaths (31 after parity on
+   2026-10-20) were driven to 0 on four seeds through six fix-then-run cycles (B7-015, FSE-16/17/18, FSE-B06/B11/B12), each
+   needing a 365-day four-seed run of about 40 minutes. Then the owner-ordered comparisons (FSE-12, FSE-13, FARM-08 and
+   the cattle investigation) of systems that are switched off in the normal game.
+
+**Two milestones.**
+
+- **A. A private development candidate** (installable, for playtesting the current work; limitations stated). Needs:
+  the four-seed 365-day run of the current staging with both switches off (the control jobs of Actions run 39598992347),
+  0 script errors and balanced ledgers on all four; the owner's authorization; then `release.yml` as a private draft,
+  with artifacts checked against the tested commit. Nothing else: no open owner decision blocks it. Readiness today:
+  **not yet verified** (the normal game's code changed after the last four-seed run: SHOP-01/TRADE-01/CTR-04 and the
+  FARM-08A fix, which have suites and the determinism gate only).
+- **B. Build 16 complete** (the full approved scope): the 62 open items, of which the largest are family farms
+  (FARM-01..05, 07), market stalls (STALL-01..06, waiting on audit questions 8-13), the acceptance runs (EQ-01..06, EQ-16),
+  the activation decisions for FSE-12/FSE-13 (the FARM-08 yield and the cattle investigation, FARM-08B), the device
+  playtest of the counters (ARM-01, CTR-01..03), and the readings items 5-7 and 14-22 for the owner to confirm.
+
+**Known limitations a development candidate would carry:** the shared and seasonal farming switches off; no family
+farms or built stalls; one counter (the armoury); the Android build signed with a throwaway key (the stable test key's
+secrets do not exist), so Build 15 must be uninstalled first; save version 15 (a Build 15 save, version 14, is migrated
+by Skills.seed_villagers; not re-checked against a real Build 15 save file for this audit).
+
 ## Inventory (generated)
 
 <!-- b16:start (generated by tools/build_status.py --write) -->
 
-**102 Build 16 items in the register** (30 when Build 16 began at the Build 15 release `a8760be`; **74 added since**).
+**106 Build 16 items in the register** (30 when Build 16 began at the Build 15 release `a8760be`; **78 added since**).
 
 | Status | Items |
 |---|---|
 | Complete | 41 |
-| In progress | 15 |
-| Pending testing | 20 |
+| In progress | 18 |
+| Pending testing | 21 |
 | Not started | 22 |
 | Blocked | 2 |
 | Deferred | 0 |
@@ -67,7 +104,7 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 | Completion class | Items |
 |---|---|
 | Release blocker | 4 |
-| Required feature | 44 |
+| Required feature | 48 |
 | Testing and verification | 18 |
 | Optional | 1 |
 | Owner decision | 1 |
@@ -75,7 +112,7 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 | Superseded | 2 |
 | Unclassified | 1 |
 
-Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 8, FSE 26, MERCH 1, MILE 1, OD 3, PAR 10, PICK 1, SEED 4, SHOP 1, STALL 6, TIME 4, TRADE 1.
+Added since Build 16 began, by family: AGENT 1, ARM 1, B16 2, CTR 4, EQ 1, FARM 11, FSE 26, MERCH 1, MILE 1, OD 3, PAR 10, PICK 1, SEED 4, SHOP 1, STALL 6, TIME 4, TRADE 1.
 
 ### Other
 
@@ -101,6 +138,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | In progress | Roadmap target | docs/BUILD_16_STATUS.md: every Build 16 item with status, implementation, remaining work, evidence, blockers, owner input, and whether it blocks completion; open owner decisions; completion criteria; execution plan; exec |  |  |  | Required feature | S |
+| B16-READY | Build 16 development audit and release-readiness report | In progress | Report being delivered | The report answers sections 1-15 with evidence; docs/BUILD_16_STATUS.md and the state file are reconciled; verified work is in staging; no build is made or published without the owner's approval |  |  |  | Required feature | S |
 
 ### Economy defects
 
@@ -157,6 +195,9 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | In progress | Manor fields take real seed under the FSE-12 switch (off until the owner reviews the comparison) | Activated with FSE-12 after the owner's review | `68a3611`, world_test::_fse12_shared_fields |  |  | Required feature | M |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the own | Not started |  | Implement with FARM-01: confirm Property's weekly lease charges a farm plot 2 coins whatever its size (no size formula) |  |  |  | Required feature | S |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/ | In progress | Milk drop investigated (seed 1, 120 days, seasonal off vs on): feed availability through the famine rule (grain gone, herds culled, troughs empty, breeding stock starved), not a defect; recorded in docs/design/FSE13_COMP | Dispatch long-sims with variants shared_wheat_yield 1.0/1.5/2.0/2.5/3.0, both switches on, four seeds, 365 days; report |  | after FSE-12; after FSE-13 |  | Required feature | M |
+| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | Pending testing | Classified for the Build 16 status | Construction._found_couple, Construction._found and Guardianship ranking look up a household's place through World.household_cell, which falls back to a member's cell when the household has no house standing; an aging_te | `49c530a`, aging_test (135 checks); suites40; sim_gate PASS |  |  | Required feature | S |
+| FARM-08B | Cattle decline under the shared and seasonal farming model: investigation | In progress | Classified for the Build 16 status | Report, per seed over 365 days: starting cattle; births and deaths; causes and timing of deaths; feed available against feed eaten; whether cattle can reach their feed; seasonal and winter effects; breeding eligibility a |  |  |  | Required feature | S |
+| FARM-08C | Wheat price floor: record as an economic finding | In progress | Classified for the Build 16 status | The finding is recorded with its mechanism (World.sell_price_at saturates at about 20 held) and evidence; no pricing rule changes without an evaluation of the wider effects and the owner's approval |  |  |  | Required feature | S |
 
 ### Food security, relief, family chest
 
@@ -311,11 +352,11 @@ recorded on its entries with a history line; an approval is not an implementatio
 | FARM-07 | 2 coins a week, existing lease scheduling and accounting, no new fees, penalties or evictions | FARM-07, FARM-01 | Not started |
 | FARM-01/02 | Variable plot sizes (5x6 rejected); fence and gate materials from the actual perimeter by the existing construction rules; a missing recipe proposed for approval | FARM-01, FARM-02 | Not started (recipe audit first) |
 | STALL-01/05 | 5% of completed sales, settled at session close; audits first; 6 planks + 1 iron bar not adopted; no rounding rule approved; existing merchant arrangements not converted silently | STALL-01, STALL-05 | Not started (audits first) |
-| FSE-12 | Manor fields to the shared per-cell model behind a test switch; comparison; owner review before activation | FSE-12 | Not started |
-| FSE-13 | Comparison first, owner review before activation; the 8-day year kept | FSE-13 | Not started |
-| FSE-B06 | Deadwood camp fire kept as an interim exception until bandit factions (WDR-016-C) | FSE-B06 | Implemented (`6ab7d50`), awaiting the four-seed runs |
-| OD-20 | Witness reports for a caught pickpocket, no automatic alarm | OD-20 (answered), PICK-01 | Not started |
-| EQ-22 | The caravan buys by actual need; no fixed smiths-first order, no equal split | EQ-22 (now approved) | Not started |
+| FSE-12 | Manor fields to the shared per-cell model behind a test switch; comparison; owner review before activation | FSE-12 | Implemented behind the switch (`68a3611`), compared (`docs/design/FSE12_COMPARISON.md`); FARM-08 yield comparison in progress; switch off |
+| FSE-13 | Comparison first, owner review before activation; the 8-day year kept | FSE-13 | Implemented behind the switch (`01a83f0`), compared (`docs/design/FSE13_COMPARISON.md`); switch off |
+| FSE-B06 | Deadwood camp fire kept as an interim exception until bandit factions (WDR-016-C) | FSE-B06 | Complete and verified (`6ab7d50`, runs on `62b7488`) |
+| OD-20 | Witness reports for a caught pickpocket, no automatic alarm | OD-20 (answered), PICK-01 | Implemented (`b018185`), awaiting runs and two readings (items 6-7) |
+| EQ-22 | The caravan buys by actual need; no fixed smiths-first order, no equal split | EQ-22 (now approved) | Implemented (`5cce264`), awaiting runs and a reading (item 5) |
 | OD-17 | **Remains blocked**: no answer | OD-17 | Blocked |
 | DVW-A12 | Deferred to the start of Build 17 | DVW-A12 (DEFERRED, target 17) | Deferred, acceptance kept |
 | DVW-B6 | Deferred to Build 18 | DVW-B6 (DEFERRED, target 18) | Deferred, acceptance kept |

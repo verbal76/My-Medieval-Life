@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 213 still open, 18 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 165 (88 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **301** = 213 still open from the baseline + 88 added and open |
+| Entries added since | | 166 (89 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **302** = 213 still open from the baseline + 89 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (18)
@@ -48,13 +48,14 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (165)
+## Added since the baseline (166)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | COMPLETE AND VERIFIED | 16 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
+| B16-READY | Build 16 development audit and release-readiness report | approved | ACTIVE DEVELOPMENT | 16 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |

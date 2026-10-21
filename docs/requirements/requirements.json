@@ -2663,6 +2663,52 @@
    "complexity": "S"
   },
   {
+   "id": "B16-READY",
+   "title": "Build 16 development audit and release-readiness report",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Build 16 development audit and release-readiness report",
+   "source": "docs/directives/2026-10-21_build16_audit_release_readiness.md",
+   "approval": "owner directive 2026-10-21 (immediate reporting priority)",
+   "acceptance": [
+    "The report answers sections 1-15 with evidence; docs/BUILD_16_STATUS.md and the state file are reconciled; verified work is in staging; no build is made or published without the owner's approval"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build16_audit_release_readiness.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; roadmap_gate; roadmap_reason; b16_class; complexity",
+     "why": "Report being delivered"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16",
+   "roadmap_reason": "Owner audit request",
+   "b16_class": "required",
+   "complexity": "S"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -10752,11 +10798,18 @@
      "date": "2026-10-21",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "b16_class; complexity",
+     "why": "Classified for the Build 16 status"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16",
-   "roadmap_reason": "Script error found by the FARM-08 comparison"
+   "roadmap_reason": "Script error found by the FARM-08 comparison",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "FARM-08B",
@@ -10796,11 +10849,18 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; roadmap_gate; roadmap_reason; parent",
      "why": "Started on the owner's directive of 2026-10-21"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "b16_class; complexity",
+     "why": "Classified for the Build 16 status"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16",
-   "roadmap_reason": "FARM-08 comparison"
+   "roadmap_reason": "FARM-08 comparison",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "FARM-08C",
@@ -10840,11 +10900,18 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; roadmap_gate; roadmap_reason; parent",
      "why": "Started on the owner's directive of 2026-10-21"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "b16_class; complexity",
+     "why": "Classified for the Build 16 status"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16",
-   "roadmap_reason": "FARM-08 comparison"
+   "roadmap_reason": "FARM-08 comparison",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "FR-01",
