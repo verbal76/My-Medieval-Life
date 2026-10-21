@@ -1,23 +1,31 @@
 class_name SettlementLedger
 extends RefCounted
-## PROSPECTIVE (Expansion 18, SET-C; PROS-18): an abstract settlement's books -- the off-map settlements of the
-## regional economy (spec s.7 intermediate phase: "abstract off-map settlements with distinct finite stocks, needs,
-## productive strengths and budgets") and the fixtures standing in for further settlements until SET-E. The live
-## village is NOT one of these: its goods and coins stay in the World's own holders (no duplicated ledger); the
-## village enters regional calculations only as a read-only snapshot (SettlementReport.as_ledger), and in this
-## prospective branch nothing writes back to it.
+## PROSPECTIVE (Expansion 18, SET-C; PROS-18): the books of one PARTY to regional trade. A party is a whole abstract
+## off-map settlement (spec s.7 intermediate phase: "abstract off-map settlements with distinct finite stocks, needs,
+## productive strengths and budgets"), or one buyer or seller inside a settlement (owner Q18-10, 2026-10-21: "Anyone may
+## purchase goods from another settlement, including individual villagers, households, merchants, businesses, and
+## settlement treasuries"). `settlement` names the place a party belongs to (routes run between places); parties of
+## the same place do not trade through the regional market (that is the local market's business).
+##
+## The live village is NOT one of these: its goods and coins stay in the World's own holders (no duplicated ledger);
+## its parties enter regional calculations only as read-only snapshots (SettlementReport.parties), and in this
+## prospective branch nothing writes back to the World.
 ##
 ## Every change is an explicit, journaled line (spec s.7 "explicit restocking and settlement-accounting rules; avoid
 ## unexplained daily currency creation"):
-##   produce   goods made by the settlement's modeled labour (its `production`, a day's output; like extraction or
-##             a recipe in the village, the only way goods enter a ledger besides trade)
-##   consume   goods its people use up (its `needs`, a day's use); what it lacks is a recorded shortage, never filled
-##   income    coins from an explicit, configured income line (`income_per_day`; 0 by default; owner question Q18-3)
-##   buy/sell  matched transfers with another settlement (RegionalMarket.execute), equal and opposite
+##   produce          goods made by the party's modeled labour (`production` a day, times its industry's output factor,
+##                    Q18-9; the only way goods enter a ledger besides trade)
+##   consume          goods its people use up (`needs` a day); what it lacks is a recorded shortage, never filled
+##   income           coins from an explicit, configured income line (`income_per_day`; 0 by default; Q18-3)
+##   buy/sell         matched goods-for-coins transfers with another party (RegionalMarket.execute)
+##   carriage_paid /  a matched coins-for-carriage payment from a buyer to the carter who hauls its goods (Q18-10: a
+##   carriage_earned  willing carter, negotiated and paid; never free, never bundled into the price)
 ## so goods(end) = goods(start) + produced - consumed + bought - sold and coins likewise, checked by `balanced()`.
 
 var id := ""
 var name := ""
+var settlement := ""              # the place the party belongs to (routes are between places); its own id if a settlement
+var kind := "settlement"          # settlement | household | trader | treasury | villager | carter
 var pos := Vector2i.ZERO          # its place on the regional map (route planning), in tiles
 var population := 0
 var coins := 0
@@ -25,10 +33,12 @@ var stock := Inventory.new()
 var needs := {}                   # item -> units a day its people use
 var production := {}              # item -> units a day its labour makes
 var income_per_day := 0           # explicit outside income (Q18-3); 0 = closed purse
-var transport := {"handcart": 0}  # vehicles it can send (TradeRoutes.capacity)
+var transport := {"handcart": 0}  # what it can carry on its own trips (TradeRoutes.capacity)
+var can_travel := true            # false: it cannot fetch goods itself (a treasury), so it must hire a carter
+var carts_for_hire := false       # true: it offers carriage to others for a fee (a carter or delivery service)
 var capabilities := {}            # {industry: level} (fixtures; SettlementIndustries for real facts)
 var sale_limit = null             # null: anything beyond its reserve is for sale; else {item: most units for sale}
-                                  # (the village snapshot: only its traders' and producers' goods, not pantries)
+                                  # (a household's pantry is not for sale; its members' own packs are)
 var local_supply := {}            # {item: units} it can still extract itself (its own reachable seams, through the
                                   # mining adapter): counted against its demand, never as stock or for sale
 var journal: Array = []           # [{day, kind, item, n, coins, with}]
@@ -40,6 +50,8 @@ static func make(d: Dictionary) -> SettlementLedger:
 	var l := SettlementLedger.new()
 	l.id = str(d.id)
 	l.name = str(d.get("name", d.id))
+	l.settlement = str(d.get("settlement", d.id))
+	l.kind = str(d.get("kind", "settlement"))
 	var p: Array = d.get("pos", [0, 0])
 	l.pos = Vector2i(int(p[0]), int(p[1]))
 	l.population = int(d.get("population", 0))
@@ -52,6 +64,8 @@ static func make(d: Dictionary) -> SettlementLedger:
 		l.production[str(k)] = float(d.production[k])
 	l.income_per_day = int(d.get("income_per_day", 0))
 	l.transport = (d.get("transport", {"handcart": 0}) as Dictionary).duplicate()
+	l.can_travel = bool(d.get("can_travel", true))
+	l.carts_for_hire = bool(d.get("carts_for_hire", false))
 	l.capabilities = (d.get("capabilities", {}) as Dictionary).duplicate()
 	l.open_books()
 	return l
@@ -63,13 +77,17 @@ func open_books() -> void:
 	journal.clear()
 
 
-## A day's production, use and income. Fractional rates accumulate deterministically: on day `day` the settlement
-## makes floor(rate * (day + 1)) - floor(rate * day) units, so 0.5 a day is one unit every second day.
+## A day's production, use and income. Fractional rates accumulate deterministically: on day `day` the party makes
+## floor(rate * (day + 1)) - floor(rate * day) units, so 0.5 a day is one unit every second day. Production is scaled by
+## its industry's output factor at the party's level (Q18-9; 1.0 = no effect, the provisional default): a level never
+## stops production, it only scales it.
 func tick(day: int) -> void:
 	var ids := production.keys()
 	ids.sort()
 	for k in ids:
-		var n := _due(float(production[k]), day)
+		var ind := SettlementIndustries.industry_of(k)
+		var f := SettlementIndustries.output_factor(ind, int(capabilities.get(ind, 0))) if ind != "" else 1.0
+		var n := _due(float(production[k]) * f, day)
 		if n > 0 and stock.add(k, n):
 			_log(day, "produce", k, n, 0, "")
 	ids = needs.keys()
@@ -91,23 +109,29 @@ static func _due(rate: float, day: int) -> int:
 	return int(floor(rate * float(day + 1) + 1e-9)) - int(floor(rate * float(day) + 1e-9))
 
 
-func _log(day: int, kind: String, item: String, n: int, c: int, with: String) -> void:
+func _log(day: int, kind_: String, item: String, n: int, c: int, with: String) -> void:
 	if keep_journal:
-		journal.append({"day": day, "kind": kind, "item": item, "n": n, "coins": c, "with": with})
+		journal.append({"day": day, "kind": kind_, "item": item, "n": n, "coins": c, "with": with})
 
 
 ## Lines of a kind summed: {item: n} (goods) and coins.
 func totals() -> Dictionary:
-	var out := {"produce": {}, "consume": {}, "shortage": {}, "buy": {}, "sell": {}, "coins_in": 0, "coins_out": 0, "income": 0}
+	var out := {"produce": {}, "consume": {}, "shortage": {}, "buy": {}, "sell": {}, "coins_in": 0, "coins_out": 0, "income": 0,
+		"carriage_paid": 0, "carriage_earned": 0}
 	for e in journal:
-		if out.has(e.kind) and e.item != "":
+		if out.has(e.kind) and e.item != "" and out[e.kind] is Dictionary:
 			out[e.kind][e.item] = int(out[e.kind].get(e.item, 0)) + int(e.n)
-		if e.kind == "sell":
-			out.coins_in += int(e.coins)
-		elif e.kind == "buy":
-			out.coins_out += int(e.coins)
-		elif e.kind == "income":
-			out.income += int(e.coins)
+		match str(e.kind):
+			"sell":
+				out.coins_in += int(e.coins)
+			"buy":
+				out.coins_out += int(e.coins)
+			"income":
+				out.income += int(e.coins)
+			"carriage_paid":
+				out.carriage_paid += int(e.coins)
+			"carriage_earned":
+				out.carriage_earned += int(e.coins)
 	return out
 
 
@@ -115,7 +139,7 @@ func totals() -> Dictionary:
 ## do, else what does not.
 func balanced() -> String:
 	var t := totals()
-	var c0 := int(start.coins) + int(t.income) + int(t.coins_in) - int(t.coins_out)
+	var c0 := int(start.coins) + int(t.income) + int(t.coins_in) - int(t.coins_out) + int(t.carriage_earned) - int(t.carriage_paid)
 	if c0 != coins:
 		return "%s coins %d, books say %d" % [id, coins, c0]
 	var ids := {}
@@ -132,9 +156,10 @@ func balanced() -> String:
 
 
 func to_dict() -> Dictionary:
-	return {"id": id, "name": name, "pos": [pos.x, pos.y], "population": population, "coins": coins,
-		"stock": stock.items.duplicate(), "needs": needs.duplicate(), "production": production.duplicate(),
-		"income_per_day": income_per_day, "transport": transport.duplicate(), "capabilities": capabilities.duplicate()}
+	return {"id": id, "name": name, "settlement": settlement, "kind": kind, "pos": [pos.x, pos.y], "population": population,
+		"coins": coins, "stock": stock.items.duplicate(), "needs": needs.duplicate(), "production": production.duplicate(),
+		"income_per_day": income_per_day, "transport": transport.duplicate(), "can_travel": can_travel,
+		"carts_for_hire": carts_for_hire, "capabilities": capabilities.duplicate()}
 
 
 static func from_dict(d: Dictionary) -> SettlementLedger:

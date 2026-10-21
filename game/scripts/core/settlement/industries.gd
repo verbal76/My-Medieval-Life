@@ -248,6 +248,37 @@ static func specialization(profiles: Dictionary) -> Dictionary:
 	return out
 
 
+## Q18-9 (owner, 2026-10-21): a level's only effects are on pay and production output, never permission. The factor an
+## industry's level applies to its workers' pay, and to its output: data (effects.pay_factor / output_factor, a list
+## indexed by level); 1.0 when the data names none (every factor is 1.0 until the owner sets them, Q18-11). Nothing in
+## the settlement model refuses or blocks an activity because of a level.
+static func pay_factor(industry: String, level: int) -> float:
+	return _factor("pay_factor", industry, level)
+
+
+static func output_factor(industry: String, level: int) -> float:
+	return _factor("output_factor", industry, level)
+
+
+static func _factor(which: String, industry: String, level: int) -> float:
+	var e: Dictionary = data().get("effects", {})
+	var row: Array = (e.get(which, {}) as Dictionary).get(industry, [])
+	if row.is_empty():
+		return float(e.get("default_factor", 1.0))
+	return float(row[clampi(level, 0, row.size() - 1)])
+
+
+## The industry whose output factor scales a good ("" if none).
+static func industry_of(item: String) -> String:
+	var outs: Dictionary = (data().get("effects", {}) as Dictionary).get("outputs", {})
+	var ks := outs.keys()
+	ks.sort()
+	for k in ks:
+		if (outs[k] as Array).has(item):
+			return str(k)
+	return ""
+
+
 ## The leader in one industry among settlements: the highest level, ties to the lower settlement id ("" if none has it).
 static func leader(profiles: Dictionary, industry: String) -> String:
 	var ids := profiles.keys()

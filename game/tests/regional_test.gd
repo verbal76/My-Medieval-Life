@@ -24,6 +24,8 @@ func _init() -> void:
 	test_no_demand_no_sale()
 	test_cash_poor_town()
 	test_competition()
+	test_buyers_and_carriage()
+	test_levels_scale_never_gate()
 	test_cooperation()
 	test_routes()
 	test_independence()
@@ -115,8 +117,8 @@ func test_genuine_trade() -> void:
 	check(RegionalMarket.matched(ls) == "", "every transfer is matched by the other party's (%s)" % RegionalMarket.matched(ls))
 	for l: SettlementLedger in ls:
 		check(l.balanced() == "", "%s's books balance (%s)" % [l.id, l.balanced()])
-	check(int(wheat[0].unit_price) == GameData.value("wheat") + int(routes["a_farm>b_mine"].cost_per_unit),
-		"the delivered price is the value plus the haulage, paid to the hauling seller")
+	check(int(wheat[0].unit_price) == GameData.value("wheat") and wheat[0].carriage == "self" and int(wheat[0].fee_total) == 0,
+		"the buyer pays the seller's price at its door and fetches the grain itself (Q18-10: no free delivery, nothing bundled)")
 
 
 ## Spec s.6 row 3: lumber surplus, no lumber demand: no guaranteed sale.
@@ -136,8 +138,7 @@ func test_cash_poor_town() -> void:
 	for l in p.done:
 		if l.buyer == "d_starve":
 			bought += int(l.units)
-	var price := GameData.value("wheat") + int(TradeRoutes.table(ls, links(["a_farm", "d_starve"]))["a_farm>d_starve"].cost_per_unit)
-	check(bought == (coins0 - int(RegionalMarket.cfg().cash_floor)) / price, "the cash-poor town buys only what its coins above its floor pay for (%d)" % bought)
+	check(bought == (coins0 - int(RegionalMarket.cfg().cash_floor)) / GameData.value("wheat"), "the cash-poor town buys only what its coins above its floor pay for (%d)" % bought)
 	var un: Array = p.unmet.filter(func(u): return u.buyer == "d_starve" and u.item == "wheat")
 	check(un.size() == 1 and un[0].reason == "funds" and int(un[0].units) > 0, "the rest of its need is recorded unmet for want of funds (%d)" % (int(un[0].units) if un.size() > 0 else -1))
 	var broke := starving()
@@ -147,63 +148,147 @@ func test_cash_poor_town() -> void:
 	check(p2.done.is_empty() and ls2[1].coins == 0 and ls2[1].stock.count("wheat") == 0, "with no coins it gets nothing: no gift, no credit (Q18-5 open)")
 
 
+func carter(id: String, place: String, transport: Dictionary) -> SettlementLedger:
+	return SettlementLedger.make({"id": id, "settlement": place, "kind": "carter", "coins": 0, "transport": transport,
+		"carts_for_hire": true})
+
+
 ## Spec s.6 row 5: two settlements selling the same good, a third buying: price and distance decide.
 func test_competition() -> void:
 	var near := farm()
 	near.id = "a_near"
+	near.settlement = "a_near"
 	var far := farm()
 	far.id = "b_far"
+	far.settlement = "b_far"
 	var buyer := mine()
 	buyer.id = "c_buyer"
+	buyer.settlement = "c_buyer"
 	var ls := [near, far, buyer]
 	var routes := TradeRoutes.table(ls, [["a_near", "c_buyer", 100, {"road": 1.0}], ["b_far", "c_buyer", 2000, {"open": 1.0}]])
-	check(int(routes["a_near>c_buyer"].cost_per_unit) < int(routes["b_far>c_buyer"].cost_per_unit), "the nearer road route hauls cheaper")
 	var p := trade_round(ls, routes)
 	var wheat: Array = p.done.filter(func(l): return l.item == "wheat")
-	check(wheat.size() == 1 and wheat[0].seller == "a_near", "the cheaper delivered price wins the sale")
-	check(p.lost.any(func(l): return l.seller == "b_far" and l.item == "wheat"), "the dearer seller's lost sale is recorded")
-	# capacity: the near seller can carry only a carrier's load; the far one fills the rest
+	check(wheat.size() == 1 and wheat[0].seller == "a_near", "at the same price the buyer fetches from the nearer seller (a shorter trip)")
+	check(p.lost.any(func(l): return l.seller == "b_far" and l.item == "wheat"), "the other seller's lost sale is recorded")
+	# capacity: the buyer carries one pack itself; a carter of its own town hauls the rest, for a fee
 	near = farm()
 	near.id = "a_near"
-	near.transport = {"handcart": 0}
+	near.settlement = "a_near"
 	far = farm()
 	far.id = "b_far"
+	far.settlement = "b_far"
 	buyer = mine()
 	buyer.id = "c_buyer"
+	buyer.settlement = "c_buyer"
+	buyer.transport = {"carry": 1}
 	buyer.stock.remove("wheat", 2)
-	ls = [near, far, buyer]
+	buyer.open_books()
+	var cart := carter("c_carter", "c_buyer", {"handcart": 1})
+	ls = [near, far, buyer, cart]
 	routes = TradeRoutes.table(ls, [["a_near", "c_buyer", 100, {"road": 1.0}], ["b_far", "c_buyer", 600, {"road": 1.0}]])
+	var coins0: int = totals(ls).coins
 	p = trade_round(ls, routes)
 	wheat = p.done.filter(func(l): return l.item == "wheat")
-	var cap := TradeRoutes.capacity({"handcart": 0})
-	check(wheat.size() == 2 and wheat[0].seller == "a_near" and int(wheat[0].units) == cap and wheat[1].seller == "b_far",
-		"a seller sends no more than its transport carries; the next cheapest fills the rest")
-	check(RegionalMarket.matched(ls) == "" and totals(ls).coins == 100 + 100 + 600, "and every coin is still accounted for")
+	var cap := TradeRoutes.capacity({"carry": 1})
+	check(wheat.size() == 2 and wheat[0].carriage == "self" and int(wheat[0].units) == cap and wheat[1].carriage == "carter"
+		and wheat[1].carrier == "c_carter" and int(wheat[1].fee_total) > 0,
+		"the buyer carries what one pack holds (%d); a willing carter hauls the rest for a fee (%d coins)" % [cap, int(wheat[1].fee_total) if wheat.size() > 1 else -1])
+	check(cart.coins == int(wheat[1].fee_total) and int(buyer.totals().carriage_paid) == int(wheat[1].fee_total),
+		"the fee goes from the buyer to the carter, apart from the price of the goods")
+	check(RegionalMarket.matched(ls) == "" and totals(ls).coins == coins0, "every sale and every carriage payment is matched; no coin made or lost")
+	for l: SettlementLedger in ls:
+		check(l.balanced() == "", "%s's books balance (%s)" % [l.id, l.balanced()])
+
+
+## Owner Q18-10: anyone may buy; a buyer that cannot travel needs a willing, paid carter; there is no free delivery.
+func test_buyers_and_carriage() -> void:
+	var f := farm()
+	var manor := SettlementLedger.make({"id": "b_mine/manor", "settlement": "b_mine", "kind": "treasury", "coins": 300,
+		"needs": {"wheat": 2.0}, "can_travel": false})
+	var house := SettlementLedger.make({"id": "b_mine/hh:3", "settlement": "b_mine", "kind": "household", "coins": 40,
+		"needs": {"wheat": 1.0}, "transport": {"carry": 1}})
+	var ls := [f, manor, house]
+	var routes := TradeRoutes.table(ls, links(["a_farm", "b_mine"]))
+	var p := trade_round(ls, routes)
+	check(p.done.any(func(l): return l.buyer == "b_mine/hh:3" and l.carriage == "self"), "a household buys from another settlement and carries the grain home itself")
+	var mu: Array = p.unmet.filter(func(u): return u.buyer == "b_mine/manor")
+	check(not p.done.any(func(l): return l.buyer == "b_mine/manor") and mu.size() == 1 and mu[0].reason == "no carriage",
+		"a treasury that cannot travel gets nothing without a carter (no free delivery)")
+	f = farm()
+	manor = SettlementLedger.make({"id": "b_mine/manor", "settlement": "b_mine", "kind": "treasury", "coins": 300,
+		"needs": {"wheat": 2.0}, "can_travel": false})
+	var hired := carter("b_mine/npc:9", "b_mine", {"carry": 1})
+	ls = [f, manor, hired]
+	p = trade_round(ls, TradeRoutes.table(ls, links(["a_farm", "b_mine"])))
+	var ml: Array = p.done.filter(func(l): return l.buyer == "b_mine/manor")
+	check(ml.size() > 0 and ml.all(func(l): return l.carriage == "carter" and int(l.fee_each) > 0), "with a willing carter the treasury buys, and pays the carter")
+	check(int(ml[0].units) <= TradeRoutes.capacity({"carry": 1}) if ml.size() > 0 else false, "no more than the carter can carry")
+	check(RegionalMarket.matched(ls) == "" and hired.coins == ml.reduce(func(a, l): return a + int(l.fee_total), 0), "the carter is paid exactly the fees, matched")
+	check(p.done.all(func(l): return l.carriage == "self" or int(l.fee_total) > 0), "every line is fetched by the buyer or paid carriage: none is delivered free")
+	var offer := RegionalMarket.to_contract_offer(ml[0], 3)
+	check(offer.buyer == "b_mine/manor" and offer.seller == "a_farm" and int(offer.qty) == int(ml[0].units) and int(offer.price_each) == GameData.value("wheat")
+		and int(offer.deadline_day) > 3 and str(offer.carriage.mode) == "carter",
+		"a planned line maps to a CON-01 goods offer, with the carriage kept apart (CON-01 has no service contracts, Q18-12)")
+
+
+## Owner Q18-9: a level only scales pay and output; it never stops an activity. The magnitudes are the owner's (Q18-11):
+## the data's factors are all 1.0, so nothing changes until they are set.
+func test_levels_scale_never_gate() -> void:
+	check(SettlementIndustries.output_factor("farming", 0) == 1.0 and SettlementIndustries.pay_factor("mining", 4) == 1.0,
+		"every pay and output factor is 1.0 until the owner sets them (Q18-11)")
+	var a := farm()
+	a.capabilities = {"farming": 0}
+	var b := farm()
+	b.capabilities = {"farming": 2}
+	for day in 10:
+		a.tick(day)
+		b.tick(day)
+	check(int(a.totals().produce.get("wheat", 0)) == 100 and a.totals().produce == b.totals().produce,
+		"at level 0 a settlement still produces, and with neutral factors exactly as at level 2")
+	var eff: Dictionary = SettlementIndustries.data().effects
+	var saved: Dictionary = eff.output_factor.duplicate(true)
+	eff.output_factor["farming"] = [0.5, 1.0, 1.5]          # a test curve only, not a proposal
+	var c := farm()
+	c.capabilities = {"farming": 0}
+	var d := farm()
+	d.capabilities = {"farming": 2}
+	for day in 10:
+		c.tick(day)
+		d.tick(day)
+	check(int(c.totals().produce.wheat) == 50 and int(d.totals().produce.wheat) == 150 and c.balanced() == "" and d.balanced() == "",
+		"with factors in the data, the level scales output (50 at level 0, 150 at level 2), never to nothing, and the books balance")
+	eff.output_factor = saved
+	check(SettlementIndustries.industry_of("iron_ore") == "mining" and SettlementIndustries.industry_of("feather") == "",
+		"each good's industry for its output factor comes from the data")
 
 
 func test_cooperation() -> void:
-	# two toolmaking towns carrying pickaxes on their backs to a third that needs them; the partner is the dearer one
+	# two toolmaking towns with pickaxes; a third town's manor buys them through a carter on foot, so the carriage fee
+	# grows with distance; the partner is the dearer one
 	var mk := func(id: String, coins: int, stock: Dictionary, needs: Dictionary) -> SettlementLedger:
 		return SettlementLedger.make({"id": id, "coins": coins, "stock": stock, "needs": needs})
 	var a: SettlementLedger = mk.call("a_cheap", 50, {"pickaxe": 20}, {})
 	var b: SettlementLedger = mk.call("b_partner", 50, {"pickaxe": 20}, {})
 	var buyer: SettlementLedger = mk.call("c_buyer", 900, {}, {"pickaxe": 1.0})
-	var ls := [a, b, buyer]
+	buyer.can_travel = false
+	var cart := carter("c_carter", "c_buyer", {"carry": 1})
+	var ls := [a, b, buyer, cart]
 	var routes := TradeRoutes.table(ls, [["a_cheap", "c_buyer", 300, {"road": 1.0}], ["b_partner", "c_buyer", 1500, {"road": 1.0}]])
-	var pa := int(routes["a_cheap>c_buyer"].cost_per_unit) + GameData.value("pickaxe")
-	var pb := int(routes["b_partner>c_buyer"].cost_per_unit) + GameData.value("pickaxe")
-	var margin := 1.0 + float(RegionalMarket.cfg().preferred_margin_pct) / 100.0
-	check(pb > pa and float(pb) <= float(pa) * margin, "the fixture: the partner is dearer (%d vs %d coins) but within the margin" % [pb, pa])
 	var plain := RegionalMarket.plan(ls, routes)
+	var pa := int(plain.lines[0].unit_price) + int(plain.lines[0].fee_each)
+	var rb: Dictionary = routes["b_partner>c_buyer"]
+	var pb := GameData.value("pickaxe") + int(TradeRoutes.costed("b_partner", "c_buyer", int(rb.tiles), float(rb.effective), "carrier").cost_per_unit)
+	var margin := 1.0 + float(RegionalMarket.cfg().preferred_margin_pct) / 100.0
+	check(pb > pa and float(pb) <= float(pa) * margin, "the fixture: the partner is dearer delivered (%d vs %d coins) but within the margin" % [pb, pa])
 	check(plain.lines[0].seller == "a_cheap", "without an agreement the cheaper town wins")
 	var p := RegionalMarket.plan(ls, routes, [["b_partner", "c_buyer", "preferred"]])
 	check(p.lines[0].seller == "b_partner", "with one, the cooperation partner within the margin wins the sale")
-	check(int(p.lines[0].unit_price) == pb, "at its own price: cooperation lowers no price and gives nothing away")
+	check(int(p.lines[0].unit_price) + int(p.lines[0].fee_each) == pb, "at its own price: cooperation lowers no price and gives nothing away")
 	var far_routes := TradeRoutes.table(ls, [["a_cheap", "c_buyer", 300, {"road": 1.0}], ["b_partner", "c_buyer", 4000, {"rough": 1.0}]])
 	var p2 := RegionalMarket.plan(ls, far_routes, [["b_partner", "c_buyer", "preferred"]])
 	check(p2.lines[0].seller == "a_cheap", "a partner far dearer than the margin does not")
 	RegionalMarket.execute(p, ls)
-	check(RegionalMarket.matched(ls) == "" and a.coins + b.coins + buyer.coins == 1000, "and the cooperative trade is matched and conserves coins")
+	check(RegionalMarket.matched(ls) == "" and a.coins + b.coins + buyer.coins + cart.coins == 1000, "and the cooperative trade is matched and conserves coins")
 
 
 func test_routes() -> void:

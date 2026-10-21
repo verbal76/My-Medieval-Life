@@ -83,6 +83,21 @@
       ]
     }
   },
+  "effects": {
+    "_note": "Owner decision Q18-9 (2026-10-21, docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md): capability levels affect pay scales and production output only; they never gate or prevent an activity. pay_factor and output_factor give, per industry, the factor at each level (index 0 = level 0). Every factor is 1.0 (no effect) until the owner sets the magnitudes (open question Q18-11). outputs: which goods each industry's output factor scales (for abstract settlements' production; the live recipes and extraction take the same factors at integration).",
+    "default_factor": 1.0,
+    "pay_factor": {},
+    "output_factor": {},
+    "outputs": {
+      "mining": ["iron_ore", "coal", "copper_ore", "gold_ore", "stone"],
+      "forestry": ["log"],
+      "carpentry": ["plank", "cart_wheel", "handcart"],
+      "smithing": ["iron_bar", "copper_bar", "gold_bar", "pickaxe", "axe", "hammer", "plough"],
+      "farming": ["wheat", "carrot", "potato", "wheat_seed", "carrot_seed", "potato_seed"],
+      "tanning": ["leather"],
+      "trade": []
+    }
+  },
   "transport": {
     "_note": "Route planning (TradeRoutes). Capacity in units of goods a trip; speed in tiles a day; a carter is paid the manor's day wage (balance helper_wage), so a route's cost is labour paid to the party that hauls, never coins destroyed. terrain: tiles of each kind cost this many tiles of travel (solid is impassable). Agent proposals, provisional.",
     "modes": {

@@ -54,6 +54,7 @@ func _init() -> void:
 	var rows := []
 	var tot := {"actual_in": 0, "actual_out": 0, "allowance": 0, "shadow_in": 0, "shadow_out": 0, "visits": 0}
 	var unmet_reasons := {}
+	var buyer_kinds := {}
 	var untouched_checked := false
 	print("day | caravan: coins in / out, allowance created | genuine trade (shadow): coins in / out | region purses")
 	for day in days:
@@ -86,13 +87,15 @@ func _init() -> void:
 		var row := {"day": day, "actual_in": c_in, "actual_out": c_out, "allowance": allowance,
 			"exported": _prefixed(w.stats, s0, "exported_"), "imported": _prefixed(w.stats, s0, "imported_"),
 			"shadow_in": int(shadow.coins_in), "shadow_out": int(shadow.coins_out), "shadow_sold": shadow.sold,
-			"shadow_bought": shadow.bought, "unmet": shadow.unmet, "purses": regions.map(func(r): return r.coins)}
+			"shadow_bought": shadow.bought, "shadow_buyers": shadow.buyers, "unmet": shadow.unmet, "purses": regions.map(func(r): return r.coins)}
+		for k in shadow.buyers:
+			buyer_kinds[k] = int(buyer_kinds.get(k, 0)) + int(shadow.buyers[k])
 		rows.append(row)
 		for k in ["actual_in", "actual_out", "allowance", "shadow_in", "shadow_out"]:
 			tot[k] += int(row[k])
 		tot.visits += 1
 		for u in shadow.unmet:
-			var key := "%s:%s" % [str(u.buyer), str(u.reason)]
+			var key := "%s:%s" % [str(u.buyer).get_slice("/", 0), str(u.reason)]
 			unmet_reasons[key] = int(unmet_reasons.get(key, 0)) + int(u.units)
 		print("%3d | %4d / %4d, %4d | %4d / %4d | %s" % [day, c_in, c_out, allowance, int(shadow.coins_in), int(shadow.coins_out), str(row.purses)])
 	# integrity
@@ -105,6 +108,7 @@ func _init() -> void:
 	print("  current caravan: village coins in %d, out %d, net %+d; coins created by the allowance %d" % [tot.actual_in, tot.actual_out, tot.actual_in - tot.actual_out, tot.allowance])
 	print("  genuine trade:   village coins in %d, out %d, net %+d; coins created 0 (closed purses: %d left of %d)" % [tot.shadow_in, tot.shadow_out,
 		tot.shadow_in - tot.shadow_out, regions.reduce(func(a, r): return a + r.coins, 0), (fx.regions as Array).reduce(func(a, r): return a + int(r.coins), 0) + income * days * regions.size()])
+	print("  genuine trade, village purchases by buyer kind (coins, carriage included): %s" % str(buyer_kinds))
 	print("  unmet (buyer:reason units): %s" % str(unmet_reasons))
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
@@ -114,12 +118,15 @@ func _init() -> void:
 	quit(1 if failures > 0 else 0)
 
 
-## One visit's genuine trade, in shadow: the village as a read-only snapshot (its traders' coins, its goods, its
-## measured daily use), the regions as they stand. Region-side changes persist (their purses and stocks are real
-## within the shadow); the village snapshot is thrown away.
+## One visit's genuine trade, in shadow: the village as read-only snapshots of its parties (owner Q18-10: anyone may
+## buy -- its traders, households and treasury, each with its own purse; each fetches what it buys itself or pays a
+## carter; SettlementReport.parties), with its measured daily food use; the regions as they stand. Region-side changes
+## persist (their purses and stocks are real within the shadow); the village snapshots are thrown away. No carter is
+## offered on either side: the live game has no rule for hiring one between settlements (Q18-12), so a party that
+## cannot travel (the treasury) buys nothing here.
 func _shadow(w: World, needs: Dictionary, regions: Array, links: Array, day: int) -> Dictionary:
-	var v := SettlementReport.as_ledger(w, needs)
-	var ls := [v] + regions
+	var vs := SettlementReport.parties(w, needs)
+	var ls := vs + regions
 	var coins_before := 0
 	for l: SettlementLedger in ls:
 		coins_before += l.coins
@@ -131,14 +138,20 @@ func _shadow(w: World, needs: Dictionary, regions: Array, links: Array, day: int
 		coins_after += l.coins
 	check(coins_after == coins_before, "day %d: shadow trade conserves coins (%d)" % [day, coins_before])
 	check(RegionalMarket.matched(ls, day) == "", "day %d: every shadow transfer is matched" % day)
-	var out := {"coins_in": 0, "coins_out": 0, "sold": {}, "bought": {}, "unmet": []}
+	check(r.done.all(func(l): return l.carriage == "self" or int(l.fee_total) > 0), "day %d: nothing is delivered free" % day)
+	var village := {}
+	for l: SettlementLedger in vs:
+		village[l.id] = l.kind
+	var out := {"coins_in": 0, "coins_out": 0, "sold": {}, "bought": {}, "unmet": [], "buyers": {}}
 	for line in r.done:
-		if line.seller == v.id:
+		if village.has(line.seller):
 			out.coins_in += int(line.total)
 			out.sold[line.item] = int(out.sold.get(line.item, 0)) + int(line.units)
-		elif line.buyer == v.id:
-			out.coins_out += int(line.total)
+		elif village.has(line.buyer):
+			out.coins_out += int(line.total) + int(line.fee_total)
 			out.bought[line.item] = int(out.bought.get(line.item, 0)) + int(line.units)
+			var k: String = village[line.buyer]
+			out.buyers[k] = int(out.buyers.get(k, 0)) + int(line.total) + int(line.fee_total)
 	out.unmet = p.unmet
 	return out
 

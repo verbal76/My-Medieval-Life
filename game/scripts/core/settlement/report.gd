@@ -66,27 +66,110 @@ static func measured_use(stats0: Dictionary, stats1: Dictionary, days: float) ->
 	return out
 
 
-## The village as a read-only SettlementLedger snapshot for regional calculations (shadow planning): every good its
-## people and institutions hold counts against its need (pantries and the granary too), but only its traders' and
-## producers' goods (markets, stalls, carts, villagers' packs) are for sale, and only its traders' coins buy. A COPY:
-## executing a plan on it changes nothing in the World (live trade is the caravan's until SET-C is integrated).
-## Its own reachable seams (through the mining adapter: MIN-D's deposits and level) count against its ore demand.
-static func as_ledger(w: World, needs: Dictionary, id := SettlementFacts.VILLAGE, mining: MiningCapabilityAdapter = null) -> SettlementLedger:
+## The village's parties to regional trade, as read-only SettlementLedger snapshots (owner Q18-10, 2026-10-21: anyone
+## may buy from another settlement). Every coin and good is in exactly one party, as the World holds it:
+##   trader  "<place>/npc:<id>"  each villager whose trade buys inputs or stock (NPCBrain.BUYS: merchants, smith,
+##           carpenter, tanner, sage, cook, tavernkeeper): its own purse and pack; it wants what NPCBrain.wants says (the
+##           live rule, not a second one); it sells its pack beyond what it keeps; it carries one pack a round
+##   household "<place>/hh:<n>"  the other living members' purses and packs and the pantry: its members' packs are for
+##           sale (beyond what they keep), the pantry is not; it needs its share of the village's measured daily food
+##           use (by members); it carries one pack a round if it has an adult, more with its own handcarts
+##   villager "<place>/npc:<id>"  a villager of no household: their own purse and pack (no demand rule yet)
+##   treasury "<place>/manor"  the manor's treasury and granary: it can buy, but cannot travel (a carter must haul for
+##           it); no demand rule of its own yet (the reeve's buying is the live rule; provisional: none)
+## The player is not a party here (the player buys by hand). Bandits and loot are nobody's party. Its own reachable
+## seams (the mining adapter: MIN-D's deposits and level) count against the ore demand of the traders who buy ore.
+## COPIES: a plan executed on them changes nothing in the World (live trade is the caravan's until SET-C).
+static func parties(w: World, food_use: Dictionary, place := SettlementFacts.VILLAGE, mining: MiningCapabilityAdapter = null) -> Array:
 	if mining == null:
 		mining = MiningCapabilityAdapter.live(w)
-	var h := SettlementHoldings.holders(w)
-	var stock := {}
-	var sale := {}
-	for k in ["markets", "stalls", "carts", "npcs", "households", "granary"]:
-		for item in h.get(k, {}):
-			stock[item] = int(stock.get(item, 0)) + int(h[k][item])
-			if k in ["markets", "stalls", "carts", "npcs"]:
-				sale[item] = int(sale.get(item, 0)) + int(h[k][item])
-	var coins := SettlementHoldings.coins(w)
-	var facts := SettlementFacts.from_world(w, mining, id)
-	var l := SettlementLedger.make({"id": id, "name": "the village", "population": facts.population,
-		"coins": int(coins.markets), "stock": stock, "needs": needs, "transport": facts.transport,
-		"capabilities": SettlementIndustries.levels(facts)})
-	l.sale_limit = sale
-	l.local_supply = mining.local_supply(id)
-	return l
+	var days := float(RegionalMarket.cfg().reserve_days)
+	var own_ore := mining.local_supply(place)
+	var levels := SettlementIndustries.levels(SettlementFacts.from_world(w, mining, place))
+	var out := []
+	var pop := 0
+	var members := {}             # household -> [NPC] not trading on their own account
+	for o: NPC in w.npcs:
+		if not o.alive or o.role == "bandit":
+			continue
+		pop += 1
+		var role: String = w.brain.buy_role(o)
+		if NPCBrain.BUYS.has(role) and o.role == "adult":
+			var needs := {}
+			var held := {}
+			for id in NPCBrain.BUYS[role]:
+				var want: int = w.brain.wants(o, id)
+				if want > 0 or o.inv.count(id) > 0:
+					needs[id] = float(want + o.inv.count(id)) / days
+			for id in o.inv.items:
+				if not w.brain.keeps(o, id):
+					held[id] = int(o.inv.items[id])
+			var t := SettlementLedger.make({"id": "%s/npc:%d" % [place, o.id], "name": "%s %s" % [o.name, o.family],
+				"settlement": place, "kind": "trader", "coins": o.coins, "stock": o.inv.items, "needs": needs,
+				"transport": {"carry": 1}, "capabilities": levels})
+			t.sale_limit = held
+			for ore in own_ore:
+				if (NPCBrain.BUYS[role] as Dictionary).has(ore):
+					t.local_supply[ore] = int(own_ore[ore])
+			out.append(t)
+		elif o.household >= 0:
+			if not members.has(o.household):
+				members[o.household] = []
+			members[o.household].append(o)
+		else:                         # a villager of no household buys and sells on their own account
+			var v := SettlementLedger.make({"id": "%s/npc:%d" % [place, o.id], "name": "%s %s" % [o.name, o.family],
+				"settlement": place, "kind": "villager", "coins": o.coins, "stock": o.inv.items,
+				"needs": {}, "transport": {"carry": 1 if o.role == "adult" else 0}, "can_travel": o.role == "adult",
+				"capabilities": levels})
+			var vs := {}
+			for id in o.inv.items:
+				if not w.brain.keeps(o, id):
+					vs[id] = int(o.inv.items[id])
+			v.sale_limit = vs
+			out.append(v)
+	# every household, its pantry with it (one whose members all trade on their own account still has a pantry)
+	for h in w.households.size():
+		var ms: Array = members.get(h, [])
+		var stock := Inventory.new()
+		var sale := {}
+		var coins := 0
+		var adults := 0
+		for o: NPC in ms:
+			coins += o.coins
+			if o.role == "adult":
+				adults += 1
+			for id in o.inv.items:
+				stock.add(id, int(o.inv.items[id]))
+				if not w.brain.keeps(o, id):
+					sale[id] = int(sale.get(id, 0)) + int(o.inv.items[id])
+		var pantry: Inventory = w.households[h].pantry
+		for id in pantry.items:
+			stock.add(id, int(pantry.items[id]))
+		var needs := {}
+		for id in food_use:
+			if NPCBrain.FOOD.has(id):
+				needs[id] = float(food_use[id]) * float(ms.size()) / float(maxi(1, pop))
+		var hl := SettlementLedger.make({"id": "%s/hh:%d" % [place, h], "name": "the %s household" % str(w.households[h].family),
+			"settlement": place, "kind": "household", "coins": coins, "stock": stock.items, "needs": needs,
+			"transport": {"carry": 1 if adults > 0 else 0, "handcart": w.carts.of(World.hh_ref(h)).size()},
+			"can_travel": adults > 0, "capabilities": levels})
+		hl.sale_limit = sale
+		out.append(hl)
+	var tr := SettlementLedger.make({"id": "%s/manor" % place, "name": "the manor", "settlement": place, "kind": "treasury",
+		"coins": w.treasury, "stock": w.granary.items, "needs": {}, "transport": {"carry": 0}, "can_travel": false,
+		"capabilities": levels})
+	tr.sale_limit = {}
+	out.append(tr)
+	return out
+
+
+## The coins and goods the parties hold, as a check that parties() partitions the World's holdings without counting
+## anything twice: {coins, goods}.
+static func party_totals(ps: Array) -> Dictionary:
+	var coins := 0
+	var goods := {}
+	for l: SettlementLedger in ps:
+		coins += l.coins
+		for k in l.stock.items:
+			goods[k] = int(goods.get(k, 0)) + int(l.stock.items[k])
+	return {"coins": coins, "goods": goods}

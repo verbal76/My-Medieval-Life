@@ -247,6 +247,36 @@ func test_live_village() -> void:
 			grouped[id] = int(grouped.get(id, 0)) + int(rep.goods[grp][id])
 	check(grouped == rep.goods_total, "every good falls in exactly one group (market, private, public, player, loot)")
 	check(int(rep.outside.caravan_purse) == w.caravan_purse, "the caravan's purse is reported apart, outside the village")
+	# owner Q18-10: anyone may buy; the village's parties partition its purses and goods without counting twice
+	var ps := SettlementReport.parties(w, {"wheat": 10.0, "bread": 4.0})
+	var pt := SettlementReport.party_totals(ps)
+	var want_coins := w.treasury
+	var want_goods := w.granary.items.duplicate()
+	for n: NPC in w.npcs:
+		if n.alive and n.role != "bandit":
+			want_coins += n.coins
+			for id in n.inv.items:
+				want_goods[id] = int(want_goods.get(id, 0)) + int(n.inv.items[id])
+	for hh in w.households:
+		for id in hh.pantry.items:
+			want_goods[id] = int(want_goods.get(id, 0)) + int(hh.pantry.items[id])
+	check(int(pt.coins) == want_coins and pt.goods == want_goods, "the village's parties hold every villager's purse and pack, the pantries, the treasury and granary, once (%d coins)" % want_coins)
+	var kinds := {}
+	for l: SettlementLedger in ps:
+		kinds[l.kind] = int(kinds.get(l.kind, 0)) + 1
+	print("     the village's parties: %s" % str(kinds))
+	check(kinds.has("trader") and kinds.has("household") and int(kinds.get("treasury", 0)) == 1, "traders, households and the treasury may each buy")
+	var manor: SettlementLedger = ps.filter(func(l): return l.kind == "treasury")[0]
+	check(not manor.can_travel and manor.sale_limit is Dictionary and (manor.sale_limit as Dictionary).is_empty(),
+		"the treasury cannot fetch goods itself (it needs a carter) and the granary is not for sale")
+	var hh0: SettlementLedger = ps.filter(func(l): return l.kind == "household")[0]
+	var hh_id := int(hh0.id.get_slice(":", 1))
+	var pantry_ok := true
+	for id in w.households[hh_id].pantry.items:
+		if int((hh0.sale_limit as Dictionary).get(id, 0)) > hh0.stock.count(id) - int(w.households[hh_id].pantry.items[id]):
+			pantry_ok = false
+	check(pantry_ok and hh0.needs.has("wheat") and not hh0.needs.has("plank"), "a household needs its share of the village's food, and its pantry is not for sale")
+	check(JSON.stringify(w.to_dict()) == before, "taking the parties changes nothing in the World")
 	# the smiths die: smithing falls; the anvil and forge stay
 	for n: NPC in w.npcs:
 		if n.job == "smith":

@@ -3,9 +3,10 @@ extends RefCounted
 ## PROSPECTIVE (Expansion 18, SET-C/E; PROS-18): trade-route and transport planning (spec s.5 "Logistics: cart
 ## capacity, roads, travel time ... constrain quantity"; s.8 "roads, bridges ... and carts affect costs and throughput").
 ##
-## A route's cost is the haulage labour, paid as wages to the carters of the party that hauls (balance helper_wage,
-## the manor's day wage), so it is part of the delivered price and goes to the seller who carts the goods: no coin is
-## destroyed or created by distance (agent decision; DESIGN.md "Transport cost"). Terrain lengthens a route: each tile
+## Carriage is never free and never folded into the goods' price (owner Q18-10, 2026-10-21): the buyer fetches the
+## goods on its own trip (no coin; its own capacity), or pays a willing carter a fee: the carters' wages for the round
+## trip (balance helper_wage, the manor's day wage) spread over a full load, paid to the carter, so no coin is
+## destroyed or created by distance (DESIGN.md "Transport cost"). Terrain lengthens a route: each tile
 ## costs settlement_industries.json transport.terrain[kind] tiles of travel (road 1, open ground more, rough more
 ## still); solid ground is impassable. Carts are the existing B14 handcarts: a settlement's handcarts (facts.transport)
 ## set how much a trip can carry; with none, its people carry on their backs ("carrier").
@@ -118,13 +119,14 @@ static func mode_for(transport: Dictionary) -> String:
 	return "handcart" if int(transport.get("handcart", 0)) > 0 else "carrier"
 
 
-## Units a settlement can send in one round of trade: each handcart's load, or one carrier's when it has none.
+## Units a party can carry in one round of trade: each handcart's load, or with none, each of its carriers' packs
+## (transport.carry people; 1 when not given; 0 when it has nobody to carry).
 static func capacity(transport: Dictionary) -> int:
 	var modes: Dictionary = cfg().modes
 	var carts := int(transport.get("handcart", 0))
 	if carts > 0:
 		return carts * int(modes.handcart.units)
-	return int(modes.carrier.units)
+	return int(transport.get("carry", 1)) * int(modes.carrier.units)
 
 
 ## A route of `effective` terrain-weighted tiles hauled in `mode`: days there and back, and the haulage cost a unit
@@ -143,7 +145,7 @@ static func grid_route(a: SettlementLedger, b: SettlementLedger, classify: Calla
 	var p := grid_path(a.pos, b.pos, classify, bounds)
 	if not p.found:
 		return {}
-	var r := costed(a.id, b.id, int(p.tiles), float(p.effective), mode_for(a.transport))
+	var r := costed(a.settlement, b.settlement, int(p.tiles), float(p.effective), "carrier")
 	r.cells = p.cells
 	return r
 
@@ -158,33 +160,35 @@ static func abstract_route(from: String, to: String, tiles: int, mix: Dictionary
 	return costed(from, to, tiles, eff, mode)
 
 
-## A route table for RegionalMarket: {"a>b": route}, both directions, each costed in the hauling (selling) party's
-## own mode. `links`: [[a_id, b_id, tiles, mix]] for abstract links, or found on a grid with grid_links.
+## A route table for RegionalMarket, between PLACES (a party's `settlement`): {"a>b": route}, both directions.
+## `links`: [[place_a, place_b, tiles, mix]] for abstract links. A route is the way, its length and days; the carriage
+## fee is worked out for whoever hauls (the buyer's own trip costs no coin; a carter's fee in its own mode;
+## RegionalMarket). cost_per_unit here is a carrier's, for reports.
 static func table(ledgers: Array, links: Array) -> Dictionary:
-	var by := {}
+	var places := {}
 	for l: SettlementLedger in ledgers:
-		by[l.id] = l
+		places[l.settlement] = true
 	var out := {}
 	for k in links:
 		var a: String = str(k[0])
 		var b: String = str(k[1])
-		if not by.has(a) or not by.has(b):
+		if not places.has(a) or not places.has(b):
 			continue
-		out[a + ">" + b] = abstract_route(a, b, int(k[2]), k[3], mode_for(by[a].transport))
-		out[b + ">" + a] = abstract_route(b, a, int(k[2]), k[3], mode_for(by[b].transport))
+		out[a + ">" + b] = abstract_route(a, b, int(k[2]), k[3], "carrier")
+		out[b + ">" + a] = abstract_route(b, a, int(k[2]), k[3], "carrier")
 	return out
 
 
-## A route table found on a grid between every pair of settlements (pairs with no path get no route).
+## A route table found on a grid between every pair of places (pairs with no path get no route).
 static func grid_table(ledgers: Array, classify: Callable, bounds: Rect2i) -> Dictionary:
 	var out := {}
 	var ls := ledgers.duplicate()
 	ls.sort_custom(func(x, y): return x.id < y.id)
 	for i in ls.size():
 		for j in ls.size():
-			if i == j:
+			if i == j or ls[i].settlement == ls[j].settlement or out.has(ls[i].settlement + ">" + ls[j].settlement):
 				continue
 			var r := grid_route(ls[i], ls[j], classify, bounds)
 			if not r.is_empty():
-				out[ls[i].id + ">" + ls[j].id] = r
+				out[ls[i].settlement + ">" + ls[j].settlement] = r
 	return out
