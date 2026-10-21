@@ -56,10 +56,10 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 
 | Status | Items |
 |---|---|
-| Complete | 31 |
+| Complete | 32 |
 | In progress | 14 |
-| Pending testing | 21 |
-| Not started | 30 |
+| Pending testing | 25 |
+| Not started | 25 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -197,11 +197,11 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
-| MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and re | Not started |  | Player and villagers buy from it; stock is finite and restocked legitimately (the caravan or harvest-saved material); no free goods; tests |  | after SEED-02 |  | Required feature | M |
-| SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | Not started |  | Written audit of what exists, with code references |  |  |  | Required feature | S |
-| SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | Not started |  | Crops, fruit trees (seed or sapling), berry bushes (cuttings), flowers (seed): planting removes inventory; harvest gives recovery by seeded chance; conservation; tests |  | after SEED-01 |  | Required feature | L |
-| SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | Not started |  | Perennials stay after picking and fruit again in their seasons; growth in calendar time (OD-21); tests |  | after SEED-01 |  | Required feature | M |
-| SEED-04 | Households save planting material from their own harvests | Not started |  | Seed kept back from a harvest into the household's store, by the same rule for player and villagers; tests |  | after SEED-02 |  | Required feature | S |
+| MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and re | Pending testing | Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed se | Measure in the four-seed runs; owner to confirm the readings | `fd2f9de`, farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 |  | Required feature | M |
+| SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | Complete | The audit is written (BUILD_16_STATUS.md, findings for sections 1-8) with code references; the work it found is SEED-02..04 |  |  |  |  | Required feature | S |
+| SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | Pending testing | Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed se | Measure in the four-seed runs; owner to confirm the readings | `fd2f9de`, farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 |  | Required feature | L |
+| SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | Pending testing | Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed se | Measure in the four-seed runs; owner to confirm the readings | `fd2f9de`, farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 |  | Required feature | M |
+| SEED-04 | Households save planting material from their own harvests | Pending testing | Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed se | Measure in the four-seed runs; owner to confirm the readings | `fd2f9de`, farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 |  | Required feature | S |
 
 ### Owner decisions
 

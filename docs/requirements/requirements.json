@@ -14140,7 +14140,7 @@
    "id": "MERCH-01",
    "title": "A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -14149,10 +14149,12 @@
     "Player and villagers buy from it; stock is finite and restocked legitimately (the caravan or harvest-saved material); no free goods; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fd2f9de"
+   ],
    "parent": null,
    "depends_on": [
     "SEED-02"
@@ -14161,7 +14163,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Measure in the four-seed runs; owner to confirm the readings",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -14176,6 +14178,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit fd2f9de; tests; next_action",
+     "why": "Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed seller sells to villagers by the player's price rule; farming_test; all 27 suites pass; gate re-baselined, no leaks. Readings for the owner in BUILD_16_STATUS section C (14-18)"
     }
    ],
    "target_build": "16",
@@ -22142,7 +22149,7 @@
    "id": "SEED-01",
    "title": "Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest)",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -22176,6 +22183,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED",
+     "why": "The audit is written (BUILD_16_STATUS.md, findings for sections 1-8) with code references; the work it found is SEED-02..04"
     }
    ],
    "target_build": "16",
@@ -22188,7 +22200,7 @@
    "id": "SEED-02",
    "title": "Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -22197,10 +22209,12 @@
     "Crops, fruit trees (seed or sapling), berry bushes (cuttings), flowers (seed): planting removes inventory; harvest gives recovery by seeded chance; conservation; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fd2f9de"
+   ],
    "parent": null,
    "depends_on": [
     "SEED-01"
@@ -22209,7 +22223,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Measure in the four-seed runs; owner to confirm the readings",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -22224,6 +22238,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit fd2f9de; tests; next_action",
+     "why": "Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed seller sells to villagers by the player's price rule; farming_test; all 27 suites pass; gate re-baselined, no leaks. Readings for the owner in BUILD_16_STATUS section C (14-18)"
     }
    ],
    "target_build": "16",
@@ -22236,7 +22255,7 @@
    "id": "SEED-03",
    "title": "Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -22245,10 +22264,12 @@
     "Perennials stay after picking and fruit again in their seasons; growth in calendar time (OD-21); tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fd2f9de"
+   ],
    "parent": null,
    "depends_on": [
     "SEED-01"
@@ -22257,7 +22278,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Measure in the four-seed runs; owner to confirm the readings",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -22272,6 +22293,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit fd2f9de; tests; next_action",
+     "why": "Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed seller sells to villagers by the player's price rule; farming_test; all 27 suites pass; gate re-baselined, no leaks. Readings for the owner in BUILD_16_STATUS section C (14-18)"
     }
    ],
    "target_build": "16",
@@ -22284,7 +22310,7 @@
    "id": "SEED-04",
    "title": "Households save planting material from their own harvests",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Households save planting material from their own harvests",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -22293,10 +22319,12 @@
     "Seed kept back from a harvest into the household's store, by the same rule for player and villagers; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fd2f9de"
+   ],
    "parent": null,
    "depends_on": [
     "SEED-02"
@@ -22305,7 +22333,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Measure in the four-seed runs; owner to confirm the readings",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -22320,6 +22348,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit fd2f9de; tests; next_action",
+     "why": "Implemented (fd2f9de, 4375d4c): flower seed and berry cuttings recovered by a seeded chance on picking and planted on village grass; berry bushes bear in Summer and Autumn; households keep recovered material; the seed seller sells to villagers by the player's price rule; farming_test; all 27 suites pass; gate re-baselined, no leaks. Readings for the owner in BUILD_16_STATUS section C (14-18)"
     }
    ],
    "target_build": "16",
