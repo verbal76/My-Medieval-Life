@@ -174,6 +174,10 @@ ICONS = {
     # MIN-E open-pit earth: the grass-topped dirt block as topsoil, the plain brown dirt block as dirt (subsoil), the
     # grey pebbles as spoil (broken rock and gravel)
     "topsoil": "Blocks/Dirt-Block-01", "dirt": "Blocks/Dirt-Block-13", "spoil": "Stone/Rocks-02",
+    # MIN-F underground works (stand-ins: the pack has no pit prop, rail or mine cart): the dark squared log block as
+    # the timber support (a prop and cap), a plank as the track section, the dark iron tub as the minecart's body
+    "timber_support": "Blocks/Wood-Log-Block-06", "track_section": "Wood/Wood-Plank-Type-B-04",
+    "minecart": "Metal/Metal-Bucket-02",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

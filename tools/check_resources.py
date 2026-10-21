@@ -442,6 +442,14 @@ def problems(ctx):
                 layer_items = {str(l["item"]) for l in json.loads(pf.read_text())["layers"]}
                 if layer_items != set(products(ctx, n)):
                     out.append("%s: yields %s differ from open_pit.json's layers %s" % (nid, sorted(products(ctx, n)), sorted(layer_items)))
+        elif m.get("kind") == "tunnel":
+            wf = ctx["root"] / "game" / "data" / "mine_works.json"
+            if not wf.exists():
+                out.append("%s: a tunnel node needs game/data/mine_works.json" % nid)
+            else:
+                cell_items = {str(l["item"]) for l in json.loads(wf.read_text())["cell"]}
+                if cell_items != set(products(ctx, n)):
+                    out.append("%s: yields %s differ from mine_works.json's cell %s" % (nid, sorted(products(ctx, n)), sorted(cell_items)))
         elif m.get("kind") not in ("tree", "field", "player_field", "player_pen"):
             out.append("%s: unknown match kind %r" % (nid, m.get("kind")))
     # every harvestable kind in the map and balance has a node, and no kind has two
@@ -641,6 +649,10 @@ def _instances(ctx, n):
         pc = json.loads((ctx["root"] / "game" / "data" / "prospecting.json").read_text())
         return 0, "generated from the world seed (MIN-C): a clue in about %d%% of the village's %d-cell blocks, %d samples each; %d%% lie over a mineral body" % (
             pc["clue_percent"], pc["block"], pc["samples_per_clue"], pc["true_percent"])
+    if m["kind"] == "tunnel":
+        wc = json.loads((ctx["root"] / "game" / "data" / "mine_works.json").read_text())
+        return 0, "cut in play below ground (MIN-F): each rock cell under the hill gives %s" % (
+            ", ".join("%d %s" % (l["amount"], l["item"]) for l in wc["cell"]))
     if m["kind"] == "pit":
         pc = json.loads((ctx["root"] / "game" / "data" / "open_pit.json").read_text())
         return 0, "staked in play (MIN-E): each %d x %d cells over the layers %s" % (

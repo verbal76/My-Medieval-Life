@@ -1600,10 +1600,15 @@ func _dvw_a12_crafting() -> void:
 	# the craft window's Make button follows core's refusal
 	main.ui.show_craft(sid)
 	var make_on := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
+	var need_log := 0                  # the sawhorse's recipes the pack can make now that need a log (MIN-F: timber supports too)
+	for rid in GameData.recipes:
+		var rr: Dictionary = GameData.recipes[rid]
+		if str(rr.station) == str(w.stations[sid].type) and rr["in"].has("log") and p.inv.has_all(rr["in"]):
+			need_log += 1
 	p.inv.remove("log", p.inv.count("log"))
 	main.ui.show_craft(sid)
 	var make_on_none := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
-	check(make_on >= 1 and make_on_none == make_on - 1, "DVW-A12 R3: Make is on for a recipe core allows, off without its materials (%d -> %d)" % [make_on, make_on_none])
+	check(make_on >= 1 and need_log >= 1 and make_on_none == make_on - need_log, "DVW-A12 R3: Make is on for a recipe core allows, off without its materials (%d -> %d)" % [make_on, make_on_none])
 	main.ui.hide_all()
 	# through the interface
 	main.craft("saw_planks", sid)

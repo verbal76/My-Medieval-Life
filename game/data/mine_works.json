@@ -1,0 +1,15 @@
+{
+  "format": "mml-mine-works/1",
+  "note": "MIN-F underground works (Mining spec stage 4 and 5, sections 4, 7 and 11, phase F; docs/build17/MIN_F_UNDERGROUND.md), read by MineWorks (game/scripts/core/mine_works.gd). Below the surface (OD-29: levels are separate maps), the rock beside a level's floor may be cut away to extend a tunnel: each rock cell holds the finite units of `cell` (top of the list first), cut one unit at a time with a pickaxe (each unit's `minutes` for a villager; the player's swing is timed as a mining swing), counted cut_<item>; when the last unit is cut the cell is floor of its level. Only rock under the hill's static rock with a cell of rock all round it may be cut (the rule every level's floor keeps, MIN-A), never a seam's cell (seams are mined), and only from an open face beside the cutter. Unsupported rock is not cut: a timber support (the item `support.item`, placed on a floor cell from the placer's own inventory with a mallet, used up) must stand within `support.reach` cells (the larger of the two axes) of the cell. Collapse is not simulated (MIN_F_UNDERGROUND.md): supports are what a tunnel needs to be extended, nothing else. Track sections (`track.item`) are laid one a cell (used up) on a level's floor, and on the surface's open ground within `track.surface_reach` cells of a portal's surface stand (the mine yard), with a mallet. A minecart (`minecart.item`, built at a workbench from cart parts) is set down on a track cell and becomes a cart (Carts) of kind minecart: it holds `minecart.stacks` kinds of goods, follows its puller only along track cells of its level (pulled off the rails it stays where the rails end and is let go), is pulled at `minecart.track_speed` of walking speed, and crosses a portal only where track is laid on both ends' stands. Every number is an agent decision (a minor detail under the standing release directive), not owner-approved balance.",
+  "gen_version": 1,
+  "cell": [
+    {"item": "stone", "amount": 3, "minutes": 30},
+    {"item": "spoil", "amount": 2, "minutes": 25}
+  ],
+  "tool": "pickaxe",
+  "wear": 1,
+  "xp": 4,
+  "support": {"item": "timber_support", "reach": 2, "minutes": 30, "tool": "mallet", "wear": 1, "skill": "crafting", "xp": 4},
+  "track": {"item": "track_section", "minutes": 20, "tool": "mallet", "wear": 1, "skill": "crafting", "xp": 2, "surface_reach": 14},
+  "minecart": {"item": "minecart", "stacks": 16, "track_speed": 0.95, "let_go": 3.0}
+}

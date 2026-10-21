@@ -309,8 +309,8 @@ func _build_details() -> void:
 	if it.has("plant") or it.has("propagates"):
 		_action("Plant", func(): ui.main.plant_sapling(iid))
 	if it.get("cart", false):
-		_action("Set it down", func():                  # B14: a handcart becomes a cart in the world
-			ui.main.set_down_cart()
+		_action("Set it down", func():                  # B14: a handcart becomes a cart in the world (MIN-F: a minecart, on track)
+			ui.main.set_down_cart(iid)
 			_after())
 	_action("Drop", func():
 		w.player_drop(iid, 1)

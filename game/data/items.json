@@ -340,6 +340,9 @@
     "ore_sample": {"name": "Rock sample", "type": "resource", "value": 0},
     "topsoil": {"name": "Topsoil", "type": "resource", "value": 0},
     "dirt": {"name": "Dirt", "type": "resource", "value": 0},
-    "spoil": {"name": "Spoil", "type": "resource", "value": 0}
+    "spoil": {"name": "Spoil", "type": "resource", "value": 0},
+    "timber_support": {"name": "Timber support", "type": "resource", "value": 8},
+    "track_section": {"name": "Track section", "type": "resource", "value": 10},
+    "minecart": {"name": "Minecart", "type": "resource", "value": 170, "cart": true}
   }
 }
