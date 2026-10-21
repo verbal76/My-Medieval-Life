@@ -85,6 +85,7 @@ var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
+var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 
 
 func _init() -> void:
@@ -101,6 +102,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	relations = Relations.new(self)
+	contracts = Contracts.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -549,6 +551,7 @@ func give_start_kit(p: PlayerState) -> void:
 ## starting kit (owner rule); its coins are new to the village, counted in coin_sources.
 func continue_as_heir() -> void:
 	var p := player
+	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
 	var bag := Inventory.new()
 	for id in p.inv.items:
 		bag.add(id, p.inv.items[id])
@@ -933,6 +936,8 @@ func total_coins() -> int:
 		n += quests.reserved_total()
 	if manor_work:
 		n += manor_work.reserved_total()
+	if contracts:
+		n += contracts.reserved_total()           # CON-01: buyers' coins set aside for contracts
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -1544,6 +1549,7 @@ func kill(n: NPC, cause: String) -> void:
 	if cause.begins_with("slain by %s" % player.name) and n.role != "bandit":
 		relations.slain_by_player(n)       # family and friends never forget it (CRT-12)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
+	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
 	var heir := _heir(n)
 	if heir != null and not cause.begins_with("slain"):
 		_inherit(n, heir)
@@ -3208,7 +3214,7 @@ func to_dict() -> Dictionary:
 		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
-		"relations": relations.to_dict(),
+		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 	}
 
 
@@ -3225,6 +3231,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
+	contracts = Contracts.new(self)
+	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)

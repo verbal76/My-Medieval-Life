@@ -698,6 +698,7 @@ func _keys_with(prefix: String, ids: Array) -> Dictionary:
 func _coins() -> Dictionary:
 	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0,
 		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total(),
+		"contract_reserves": w.contracts.reserved_total(),   # CON-01: buyers' coins set aside for contracts
 		"stall_tills": w.business.tills()}         # takings held in stall tills until settled (STALL-05)
 	for n: NPC in w.npcs:
 		out["dead" if not n.alive else ("bandits" if n.role == "bandit" else "villagers")] += n.coins

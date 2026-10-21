@@ -210,6 +210,9 @@ func decide(n: NPC) -> void:
 	# a job taken for the manor is carried on to the end (ManorWork)
 	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
 		return
+	# a contract it accepted is worked on and delivered (CON-01, Contracts.plan)
+	if h >= WORK_START and h < WORK_END and w.contracts.plan(n):
+		return
 	if h >= WORK_START and h < WORK_END and n.job != "":
 		if h < 12.0 and _day_labour(n):
 			return
@@ -1284,12 +1287,14 @@ func _keeper_pen(n: NPC) -> Dictionary:
 	return {}
 
 
-## Stock an NPC holds back instead of selling: a keeper keeps four days of feed for the pen.
+## Stock an NPC holds back instead of selling: a keeper keeps four days of feed for the pen, and anyone what it still
+## owes on its contracts (CON-01).
 func reserve(n: NPC, id: String) -> int:
+	var owed: int = w.contracts.held_for(n, id) if w.contracts else 0
 	if id != "wheat" or n.job != "farmer":
-		return 0
+		return owed
 	var pen := _keeper_pen(n)
-	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4)
+	return owed + (0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4))
 
 
 ## FARM-08B: the feed a keeper still lacks to hold its reserve (0 for anyone keeping no pen): a buyer of wheat whom
@@ -2195,6 +2200,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if v == null or not v.alive:
 				return false
 			return w.farm.buy_seed_item(v, str(a.item), mini(int(a.qty), v.inv.count(str(a.item))), n) == ""
+		"contract_deliver":                                # CON-01: goods handed over on a contract, paid from the coins set aside
+			return w.contracts.npc_deliver(n, int(a.id))
 		"buy_stall":
 			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
 		"stall_stock":
@@ -3627,6 +3634,7 @@ func dawn(record := true) -> void:
 		seek_work()
 		w.quests.drop_failed()
 		w.quests.refresh()
+		w.contracts.dawn()                           # CON-01: lapses, withdrawn offers, businesses' orders
 
 
 func _day_labour(n: NPC) -> bool:
