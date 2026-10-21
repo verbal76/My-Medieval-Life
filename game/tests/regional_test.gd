@@ -231,35 +231,59 @@ func test_buyers_and_carriage() -> void:
 		"a planned line maps to a CON-01 goods offer, with the carriage kept apart (CON-01 has no service contracts, Q18-12)")
 
 
-## Owner Q18-9: a level only scales pay and output; it never stops an activity. The magnitudes are the owner's (Q18-11):
-## the data's factors are all 1.0, so nothing changes until they are set.
+## Owner Q18-9 and Q18-11: a level (0-10) only scales pay and output; it never stops an activity; the ACTIVE profile is
+## neutral (1.0), and an output multiplier never creates raw materials in an abstract settlement either: it speeds up
+## work only where the work has a finite source (a deposit, recipe inputs).
 func test_levels_scale_never_gate() -> void:
-	check(SettlementIndustries.output_factor("farming", 0) == 1.0 and SettlementIndustries.pay_factor("mining", 4) == 1.0,
-		"every pay and output factor is 1.0 until the owner sets them (Q18-11)")
+	check(SettlementIndustries.output_multiplier("farming", 0) == 1.0 and SettlementIndustries.pay_multiplier("smithing", 10) == 1.0,
+		"the active profile is neutral: every pay and output multiplier is 1.0 (Q18-11A open)")
 	var a := farm()
 	a.capabilities = {"farming": 0}
 	var b := farm()
-	b.capabilities = {"farming": 2}
+	b.capabilities = {"farming": 10}
 	for day in 10:
 		a.tick(day)
 		b.tick(day)
 	check(int(a.totals().produce.get("wheat", 0)) == 100 and a.totals().produce == b.totals().produce,
-		"at level 0 a settlement still produces, and with neutral factors exactly as at level 2")
-	var eff: Dictionary = SettlementIndustries.data().effects
-	var saved: Dictionary = eff.output_factor.duplicate(true)
-	eff.output_factor["farming"] = [0.5, 1.0, 1.5]          # a test curve only, not a proposal
+		"at level 0 a settlement still produces, and with the active profile exactly as at level 10")
+	# a candidate profile (analysis only): the crop is the land's, so farming's quantity does not rise
 	var c := farm()
-	c.capabilities = {"farming": 0}
-	var d := farm()
-	d.capabilities = {"farming": 2}
+	c.profile = "owner_candidate"
+	c.capabilities = {"farming": 10}
 	for day in 10:
 		c.tick(day)
-		d.tick(day)
-	check(int(c.totals().produce.wheat) == 50 and int(d.totals().produce.wheat) == 150 and c.balanced() == "" and d.balanced() == "",
-		"with factors in the data, the level scales output (50 at level 0, 150 at level 2), never to nothing, and the books balance")
-	eff.output_factor = saved
+	check(int(c.totals().produce.get("wheat", 0)) == 100, "under a candidate profile a level-10 farm grows no more grain than the land gives")
+	# mining from a finite reserve: faster work, never more than the reserve
+	var mk := func(prof: String, lvl: int, reserve: int) -> SettlementLedger:
+		return SettlementLedger.make({"id": "pit", "production": {"iron_ore": 10.0}, "reserves": {"iron_ore": reserve},
+			"capabilities": {"mining": lvl}, "profile": prof})
+	var m0: SettlementLedger = mk.call("owner_candidate", 0, 1000)
+	var m10: SettlementLedger = mk.call("owner_candidate", 10, 1000)
+	for day in 10:
+		m0.tick(day)
+		m10.tick(day)
+	check(int(m0.totals().produce.iron_ore) == 100 and int(m10.totals().produce.iron_ore) == 100,
+		"mining is MIN-D's, its stages unmapped to 0-10: its multiplier stays 1.0 under any profile (reconciliation item)")
+	var sm := func(lvl: int, bars: int) -> SettlementLedger:
+		return SettlementLedger.make({"id": "smithy", "stock": {"iron_bar": bars, "plank": 100}, "production": {"pickaxe": 1.0},
+			"recipes": {"pickaxe": {"iron_bar": 2, "plank": 1}}, "capabilities": {"smithing": lvl}, "profile": "owner_candidate"})
+	var s0: SettlementLedger = sm.call(0, 1000)
+	var s10: SettlementLedger = sm.call(10, 1000)
+	for day in 20:
+		s0.tick(day)
+		s10.tick(day)
+	var p0 := int(s0.totals().produce.pickaxe)
+	var p10 := int(s10.totals().produce.pickaxe)
+	check(p0 == 20 and p10 == 24, "a level-10 smithy works faster under the candidate (+20%%): %d pickaxes in 20 days against %d" % [p10, p0])
+	check(int(s10.totals().use_input.iron_bar) == 2 * p10 and int(s10.totals().use_input.plank) == p10 and s10.balanced() == "",
+		"and every pickaxe took its full inputs (%d bars, %d planks); the books balance" % [int(s10.totals().use_input.iron_bar), int(s10.totals().use_input.plank)])
+	var short: SettlementLedger = sm.call(10, 9)
+	for day in 20:
+		short.tick(day)
+	check(int(short.totals().produce.pickaxe) == 4 and short.stock.count("iron_bar") == 1 and short.balanced() == "",
+		"with 9 iron bars a level-10 smithy makes 4 pickaxes and stops: speed creates no material")
 	check(SettlementIndustries.industry_of("iron_ore") == "mining" and SettlementIndustries.industry_of("feather") == "",
-		"each good's industry for its output factor comes from the data")
+		"each good's industry for its output multiplier comes from the data")
 
 
 func test_cooperation() -> void:

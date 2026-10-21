@@ -85,6 +85,8 @@ static func validate(d: Dictionary) -> Array:
 			n += 1
 			if int(lv.level) != n:
 				bad.append("%s: level %d out of order" % [id, int(lv.level)])
+			if int(lv.level) > int(d.get("max_level", 10)):
+				bad.append("%s: level %d beyond the 0-%d scale" % [id, int(lv.level), int(d.get("max_level", 10))])
 			for need in lv.needs:
 				_check_need(id, need, kinds, inds, bad)
 	if order(d).size() != inds.size():
@@ -248,24 +250,59 @@ static func specialization(profiles: Dictionary) -> Dictionary:
 	return out
 
 
-## Q18-9 (owner, 2026-10-21): a level's only effects are on pay and production output, never permission. The factor an
-## industry's level applies to its workers' pay, and to its output: data (effects.pay_factor / output_factor, a list
-## indexed by level); 1.0 when the data names none (every factor is 1.0 until the owner sets them, Q18-11). Nothing in
-## the settlement model refuses or blocks an activity because of a level.
+## Q18-9 and Q18-11 (owner, 2026-10-21): a level (0-10, 0 = baseline, never inability) affects pay and production output
+## only, never permission. AdjustedPay = BasePay x pay_multiplier(industry, level); AdjustedOutput = BaseOutput x
+## output_multiplier(industry, level), the bases from the existing systems (wages, recipe and work times). From the data's
+## profiles (effects.profiles): multiplier = 1 + output_max[industry] x shape[level] (output), and 1 + output_max x pay_ratio
+## x shape[level] (pay). The game uses the ACTIVE profile, "neutral" (every multiplier 1.0) until the owner approves numbers
+## (Q18-11A); every other profile is an unapproved candidate, selectable only by passing its name (tests, analysis).
+## Nothing in the settlement model refuses or blocks an activity because of a level.
+static func max_level() -> int:
+	return int((data().get("effects", {}) as Dictionary).get("max_level", 10))
+
+
+static func active_profile() -> String:
+	return str((data().get("effects", {}) as Dictionary).get("active_profile", "neutral"))
+
+
+static func profile_names() -> Array:
+	var ks: Array = ((data().get("effects", {}) as Dictionary).get("profiles", {}) as Dictionary).keys()
+	ks.sort()
+	return ks
+
+
+static func pay_multiplier(industry: String, level: int, profile := "") -> float:
+	return 1.0 + _bonus(industry, level, profile, true)
+
+
+static func output_multiplier(industry: String, level: int, profile := "") -> float:
+	return 1.0 + _bonus(industry, level, profile, false)
+
+
+## The bonus (multiplier - 1) at a level; 0 for an industry the profile names no total for, a level outside 0..10 clamped,
+## and 0 for an external industry whose own scale has no agreed mapping to 0-10 (mining's MIN-D stages; DESIGN.md s.8).
+static func _bonus(industry: String, level: int, profile: String, pay: bool) -> float:
+	var e: Dictionary = data().get("effects", {})
+	var ind: Dictionary = (data().industries as Dictionary).get(industry, {})
+	if ind.has("external") and not ind.has("scale_map"):
+		return 0.0
+	var p: Dictionary = (e.get("profiles", {}) as Dictionary).get(profile if profile != "" else active_profile(), {})
+	var top := float((p.get("output_max", {}) as Dictionary).get(industry, 0.0))
+	if top == 0.0:
+		return 0.0
+	var shape_name: String = str(p.shape[industry]) if p.shape is Dictionary else str(p.shape)
+	var shape: Array = (e.shapes as Dictionary)[shape_name]
+	var share := float(shape[clampi(level, 0, shape.size() - 1)])
+	return top * share * (float(p.get("pay_ratio", 0.0)) if pay else 1.0)
+
+
+## Back-compatible names (Q18-9 round): the active profile's multipliers.
 static func pay_factor(industry: String, level: int) -> float:
-	return _factor("pay_factor", industry, level)
+	return pay_multiplier(industry, level)
 
 
 static func output_factor(industry: String, level: int) -> float:
-	return _factor("output_factor", industry, level)
-
-
-static func _factor(which: String, industry: String, level: int) -> float:
-	var e: Dictionary = data().get("effects", {})
-	var row: Array = (e.get(which, {}) as Dictionary).get(industry, [])
-	if row.is_empty():
-		return float(e.get("default_factor", 1.0))
-	return float(row[clampi(level, 0, row.size() - 1)])
+	return output_multiplier(industry, level)
 
 
 ## The industry whose output factor scales a good ("" if none).

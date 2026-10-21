@@ -13,8 +13,12 @@ extends RefCounted
 ##
 ## Every change is an explicit, journaled line (spec s.7 "explicit restocking and settlement-accounting rules; avoid
 ## unexplained daily currency creation"):
-##   produce          goods made by the party's modeled labour (`production` a day, times its industry's output factor,
-##                    Q18-9; the only way goods enter a ledger besides trade)
+##   produce          goods made by the party's modeled labour (`production` a day; the only way goods enter a ledger
+##                    besides trade). The capability output multiplier (Q18-11) speeds up work only where the work has a
+##                    finite source: a good with `reserves` (its deposit, depleted unit by unit: "deplete" lines) or with
+##                    a `recipes` entry (its inputs, taken from stock unit by unit: "use_input" lines). Elsewhere (a
+##                    field's crop, labour with no modeled source) the multiplier does not raise the quantity: faster work
+##                    there only saves time. A multiplier never creates a raw material.
 ##   consume          goods its people use up (`needs` a day); what it lacks is a recorded shortage, never filled
 ##   income           coins from an explicit, configured income line (`income_per_day`; 0 by default; Q18-3)
 ##   buy/sell         matched goods-for-coins transfers with another party (RegionalMarket.execute)
@@ -39,6 +43,9 @@ var carts_for_hire := false       # true: it offers carriage to others for a fee
 var capabilities := {}            # {industry: level} (fixtures; SettlementIndustries for real facts)
 var sale_limit = null             # null: anything beyond its reserve is for sale; else {item: most units for sale}
                                   # (a household's pantry is not for sale; its members' own packs are)
+var reserves := {}                # {item: units} the finite deposit its production of that good draws on (mining)
+var recipes := {}                 # {item: {input: units per unit}} what each unit of a made good consumes
+var profile := ""                 # capability profile for analysis only ("" = the active one, neutral)
 var local_supply := {}            # {item: units} it can still extract itself (its own reachable seams, through the
                                   # mining adapter): counted against its demand, never as stock or for sale
 var journal: Array = []           # [{day, kind, item, n, coins, with}]
@@ -67,13 +74,18 @@ static func make(d: Dictionary) -> SettlementLedger:
 	l.can_travel = bool(d.get("can_travel", true))
 	l.carts_for_hire = bool(d.get("carts_for_hire", false))
 	l.capabilities = (d.get("capabilities", {}) as Dictionary).duplicate()
+	for k in d.get("reserves", {}):
+		l.reserves[str(k)] = int(d.reserves[k])
+	for k in d.get("recipes", {}):
+		l.recipes[str(k)] = (d.recipes[k] as Dictionary).duplicate()
+	l.profile = str(d.get("profile", ""))
 	l.open_books()
 	return l
 
 
 ## Take the current holdings as the opening books (balanced() measures every line from here).
 func open_books() -> void:
-	start = {"coins": coins, "stock": stock.items.duplicate()}
+	start = {"coins": coins, "stock": stock.items.duplicate(), "reserves": reserves.duplicate()}
 	journal.clear()
 
 
@@ -86,8 +98,22 @@ func tick(day: int) -> void:
 	ids.sort()
 	for k in ids:
 		var ind := SettlementIndustries.industry_of(k)
-		var f := SettlementIndustries.output_factor(ind, int(capabilities.get(ind, 0))) if ind != "" else 1.0
+		var bounded: bool = reserves.has(k) or recipes.has(k)
+		var f := SettlementIndustries.output_multiplier(ind, int(capabilities.get(ind, 0)), profile) if bounded and ind != "" else 1.0
 		var n := _due(float(production[k]) * f, day)
+		if reserves.has(k):
+			n = mini(n, int(reserves[k]))
+			if n > 0:
+				reserves[k] = int(reserves[k]) - n
+				_log(day, "deplete", k, n, 0, "")
+		if recipes.has(k):
+			var ins: Dictionary = recipes[k]
+			for id in ins:
+				n = mini(n, stock.count(id) / maxi(1, int(ins[id])))
+			for id in ins:
+				if n > 0:
+					stock.remove(id, n * int(ins[id]))
+					_log(day, "use_input", id, n * int(ins[id]), 0, k)
 		if n > 0 and stock.add(k, n):
 			_log(day, "produce", k, n, 0, "")
 	ids = needs.keys()
@@ -116,7 +142,8 @@ func _log(day: int, kind_: String, item: String, n: int, c: int, with: String) -
 
 ## Lines of a kind summed: {item: n} (goods) and coins.
 func totals() -> Dictionary:
-	var out := {"produce": {}, "consume": {}, "shortage": {}, "buy": {}, "sell": {}, "coins_in": 0, "coins_out": 0, "income": 0,
+	var out := {"produce": {}, "consume": {}, "shortage": {}, "buy": {}, "sell": {}, "deplete": {}, "use_input": {},
+		"coins_in": 0, "coins_out": 0, "income": 0,
 		"carriage_paid": 0, "carriage_earned": 0}
 	for e in journal:
 		if out.has(e.kind) and e.item != "" and out[e.kind] is Dictionary:
@@ -142,6 +169,9 @@ func balanced() -> String:
 	var c0 := int(start.coins) + int(t.income) + int(t.coins_in) - int(t.coins_out) + int(t.carriage_earned) - int(t.carriage_paid)
 	if c0 != coins:
 		return "%s coins %d, books say %d" % [id, coins, c0]
+	for k in start.get("reserves", {}):
+		if int(start.reserves[k]) - int(t.deplete.get(k, 0)) != int(reserves.get(k, 0)):
+			return "%s reserve of %s %d, books say %d" % [id, k, int(reserves.get(k, 0)), int(start.reserves[k]) - int(t.deplete.get(k, 0))]
 	var ids := {}
 	for k in start.stock:
 		ids[k] = true
@@ -149,7 +179,7 @@ func balanced() -> String:
 		ids[k] = true
 	for k in ids:
 		var want := int(start.stock.get(k, 0)) + int(t.produce.get(k, 0)) - int(t.consume.get(k, 0)) \
-			+ int(t.buy.get(k, 0)) - int(t.sell.get(k, 0))
+			- int(t.use_input.get(k, 0)) + int(t.buy.get(k, 0)) - int(t.sell.get(k, 0))
 		if want != stock.count(k):
 			return "%s %s %d, books say %d" % [id, k, stock.count(k), want]
 	return ""
@@ -159,7 +189,8 @@ func to_dict() -> Dictionary:
 	return {"id": id, "name": name, "settlement": settlement, "kind": kind, "pos": [pos.x, pos.y], "population": population,
 		"coins": coins, "stock": stock.items.duplicate(), "needs": needs.duplicate(), "production": production.duplicate(),
 		"income_per_day": income_per_day, "transport": transport.duplicate(), "can_travel": can_travel,
-		"carts_for_hire": carts_for_hire, "capabilities": capabilities.duplicate()}
+		"carts_for_hire": carts_for_hire, "capabilities": capabilities.duplicate(), "reserves": reserves.duplicate(),
+		"recipes": recipes.duplicate(true)}
 
 
 static func from_dict(d: Dictionary) -> SettlementLedger:

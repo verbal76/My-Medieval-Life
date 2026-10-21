@@ -129,7 +129,7 @@ static func _carriage(s: SettlementLedger, b: SettlementLedger, r: Dictionary, r
 			continue
 		var fee := int(TradeRoutes.costed(s.settlement, b.settlement, int(r.tiles), float(r.effective),
 			TradeRoutes.mode_for(c.transport)).cost_per_unit)
-		fee = int(ceil(float(fee) * SettlementIndustries.pay_factor("trade", int(c.capabilities.get("trade", 0))) - 1e-9))
+		fee = int(ceil(float(fee) * SettlementIndustries.pay_multiplier("trade", int(c.capabilities.get("trade", 0)), c.profile) - 1e-9))
 		if best.is_empty() or fee < int(best[0]) or (fee == int(best[0]) and c.id < str(best[2])):
 			best = [fee, "carter", c.id, int(room[c.id])]
 	return best

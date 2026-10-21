@@ -1,7 +1,20 @@
 {
   "format": "mml-capabilities/1",
   "_note": "PROSPECTIVE (Expansion 18, PROS-18, wip/expansion18-preparation; not live gameplay). A settlement's capability per industry, SET-B (spec s.4), in the schema MIN_A_ARCHITECTURE.md s.9 sketched for SET-A: industries -> levels -> needs. A level holds when every need of it and of every level below it holds; levels are derived from the world (people, skills, tools, stock, structures, transport, records), never stored as truth. Mining is external: its level comes from MIN-D (Build 17) through MiningCapabilityAdapter and is never computed here. Need vocabulary is MIN-D's (game/data/capabilities.json on wip/b17-mind b0506db: practitioners {jobs, skill, min_level, count, as}, station {type}, structure {what}, transport {any: handcart | carry}, deposit_access, records, portal) plus stock, industry and any, so at the Build 18 reconciliation these industries move into capabilities.json unchanged (docs/expansion18/DESIGN.md section 8). Every threshold below is an agent proposal, provisional (owner question Q18-2: thresholds and the first industries).",
-  "need_kinds": ["deposit_access", "practitioners", "tool_stock", "stock", "station", "structure", "transport", "records", "portal", "industry", "any"],
+  "need_kinds": [
+    "deposit_access",
+    "practitioners",
+    "tool_stock",
+    "stock",
+    "station",
+    "structure",
+    "transport",
+    "records",
+    "portal",
+    "industry",
+    "any"
+  ],
+  "max_level": 10,
   "industries": {
     "mining": {
       "name": "Mining",
@@ -12,99 +25,463 @@
     "forestry": {
       "name": "Forestry",
       "levels": [
-        {"level": 1, "name": "Felling",
-         "needs": [{"kind": "practitioners", "jobs": ["woodcutter"], "count": 1},
-                   {"kind": "tool_stock", "tool": "axe", "count": 1}]},
-        {"level": 2, "name": "Managed woodland",
-         "needs": [{"kind": "practitioners", "skill": "woodcutting", "min_level": 3, "count": 2},
-                   {"kind": "tool_stock", "tool": "axe", "count": 2},
-                   {"kind": "transport", "any": ["handcart"]}]}
+        {
+          "level": 1,
+          "name": "Felling",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "woodcutter"
+              ],
+              "count": 1
+            },
+            {
+              "kind": "tool_stock",
+              "tool": "axe",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "name": "Managed woodland",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "woodcutting",
+              "min_level": 3,
+              "count": 2
+            },
+            {
+              "kind": "tool_stock",
+              "tool": "axe",
+              "count": 2
+            },
+            {
+              "kind": "transport",
+              "any": [
+                "handcart"
+              ]
+            }
+          ]
+        }
       ]
     },
     "carpentry": {
       "name": "Carpentry",
       "levels": [
-        {"level": 1, "name": "Sawing",
-         "needs": [{"kind": "practitioners", "jobs": ["carpenter"], "count": 1},
-                   {"kind": "station", "type": "sawhorse", "count": 1},
-                   {"kind": "industry", "id": "forestry", "min": 1}]},
-        {"level": 2, "name": "Joinery and cartwrighting",
-         "needs": [{"kind": "practitioners", "skill": "crafting", "min_level": 3, "count": 1},
-                   {"kind": "station", "type": "workbench", "count": 1},
-                   {"kind": "tool_stock", "tool": "hammer", "count": 1}]}
+        {
+          "level": 1,
+          "name": "Sawing",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "carpenter"
+              ],
+              "count": 1
+            },
+            {
+              "kind": "station",
+              "type": "sawhorse",
+              "count": 1
+            },
+            {
+              "kind": "industry",
+              "id": "forestry",
+              "min": 1
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "name": "Joinery and cartwrighting",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "crafting",
+              "min_level": 3,
+              "count": 1
+            },
+            {
+              "kind": "station",
+              "type": "workbench",
+              "count": 1
+            },
+            {
+              "kind": "tool_stock",
+              "tool": "hammer",
+              "count": 1
+            }
+          ]
+        }
       ]
     },
     "smithing": {
       "name": "Smithing",
       "levels": [
-        {"level": 1, "name": "Smithy",
-         "needs": [{"kind": "practitioners", "jobs": ["smith"], "count": 1},
-                   {"kind": "station", "type": "anvil", "count": 1},
-                   {"kind": "station", "type": "forge", "count": 1}]},
-        {"level": 2, "name": "Toolmaking",
-         "needs": [{"kind": "practitioners", "skill": "smithing", "min_level": 3, "count": 1},
-                   {"kind": "tool_stock", "tool": "hammer", "count": 1},
-                   {"kind": "any", "of": [{"kind": "industry", "id": "mining", "min": 1},
-                                          {"kind": "stock", "item": "iron_bar", "count": 4}]}]},
-        {"level": 3, "name": "Master smithy",
-         "needs": [{"kind": "practitioners", "skill": "smithing", "min_level": 6, "count": 2},
-                   {"kind": "industry", "id": "carpentry", "min": 1}]}
+        {
+          "level": 1,
+          "name": "Smithy",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "smith"
+              ],
+              "count": 1
+            },
+            {
+              "kind": "station",
+              "type": "anvil",
+              "count": 1
+            },
+            {
+              "kind": "station",
+              "type": "forge",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "name": "Toolmaking",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "smithing",
+              "min_level": 3,
+              "count": 1
+            },
+            {
+              "kind": "tool_stock",
+              "tool": "hammer",
+              "count": 1
+            },
+            {
+              "kind": "any",
+              "of": [
+                {
+                  "kind": "industry",
+                  "id": "mining",
+                  "min": 1
+                },
+                {
+                  "kind": "stock",
+                  "item": "iron_bar",
+                  "count": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "name": "Master smithy",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "smithing",
+              "min_level": 6,
+              "count": 2
+            },
+            {
+              "kind": "industry",
+              "id": "carpentry",
+              "min": 1
+            }
+          ]
+        }
       ]
     },
     "farming": {
       "name": "Farming",
       "levels": [
-        {"level": 1, "name": "Field husbandry",
-         "needs": [{"kind": "practitioners", "jobs": ["farmer"], "count": 1},
-                   {"kind": "structure", "what": "field", "count": 1}]},
-        {"level": 2, "name": "Ploughland",
-         "needs": [{"kind": "practitioners", "jobs": ["farmer"], "count": 4},
-                   {"kind": "tool_stock", "tool": "plough", "count": 1},
-                   {"kind": "structure", "what": "field", "count": 4}]}
+        {
+          "level": 1,
+          "name": "Field husbandry",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "farmer"
+              ],
+              "count": 1
+            },
+            {
+              "kind": "structure",
+              "what": "field",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "name": "Ploughland",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "farmer"
+              ],
+              "count": 4
+            },
+            {
+              "kind": "tool_stock",
+              "tool": "plough",
+              "count": 1
+            },
+            {
+              "kind": "structure",
+              "what": "field",
+              "count": 4
+            }
+          ]
+        }
       ]
     },
     "tanning": {
       "name": "Tanning",
       "levels": [
-        {"level": 1, "name": "Tannery",
-         "needs": [{"kind": "practitioners", "jobs": ["tanner"], "count": 1},
-                   {"kind": "station", "type": "workbench", "count": 1}]}
+        {
+          "level": 1,
+          "name": "Tannery",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "tanner"
+              ],
+              "count": 1
+            },
+            {
+              "kind": "station",
+              "type": "workbench",
+              "count": 1
+            }
+          ]
+        }
       ]
     },
     "trade": {
       "name": "Trade",
       "levels": [
-        {"level": 1, "name": "Market",
-         "needs": [{"kind": "practitioners", "jobs": ["merchant"], "count": 1},
-                   {"kind": "structure", "what": "stall", "count": 1}]},
-        {"level": 2, "name": "Carrying trade",
-         "needs": [{"kind": "practitioners", "skill": "trading", "min_level": 3, "count": 1},
-                   {"kind": "transport", "any": ["handcart"]}]}
+        {
+          "level": 1,
+          "name": "Market",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "jobs": [
+                "merchant"
+              ],
+              "count": 1
+            },
+            {
+              "kind": "structure",
+              "what": "stall",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "name": "Carrying trade",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "trading",
+              "min_level": 3,
+              "count": 1
+            },
+            {
+              "kind": "transport",
+              "any": [
+                "handcart"
+              ]
+            }
+          ]
+        }
       ]
     }
   },
   "effects": {
-    "_note": "Owner decision Q18-9 (2026-10-21, docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md): capability levels affect pay scales and production output only; they never gate or prevent an activity. pay_factor and output_factor give, per industry, the factor at each level (index 0 = level 0). Every factor is 1.0 (no effect) until the owner sets the magnitudes (open question Q18-11). outputs: which goods each industry's output factor scales (for abstract settlements' production; the live recipes and extraction take the same factors at integration).",
-    "default_factor": 1.0,
-    "pay_factor": {},
-    "output_factor": {},
+    "_note": "Owner Q18-9 and Q18-11 (2026-10-21, docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md and _expansion18_master_directive.md): capability levels 0-10 affect pay and production output only, never permission. AdjustedPay = BasePay x PayMultiplier(industry, level); AdjustedOutput = BaseOutput x OutputMultiplier(industry, level), the bases from the existing systems. OutputMultiplier is applied as less time per unit (faster work), never as more units from the same inputs: every unit still consumes its full recipe inputs or depletes its deposit (DESIGN.md section 9). Multiplier at level L = 1 + output_max[industry] x shape[L] for output, 1 + output_max[industry] x pay_ratio x shape[L] for pay. ACTIVE PROFILE = neutral (every multiplier 1.0). Every other profile is an UNAPPROVED candidate for analysis only (docs/expansion18/CAPABILITY_CURVES.md), selectable by tests and the analysis harness, never by the game: the numbers are the owner's to approve (Q18-11A); the composition of a level is Q18-11B.",
+    "max_level": 10,
+    "active_profile": "neutral",
+    "shapes": {
+      "_note": "Share of the full bonus reached at each level 0..10 (0 = baseline). owner_candidate: the owner's example table (master directive section 5, production bonus / 20 percent). front_loaded: (1 - e^(-kL)) / (1 - e^(-10k)) with k = 0.3812, 80 percent of the gain by level 4 (the research's ~80 percent of the gain by ~40 percent of the span, RESEARCH_DIGEST.md (b)). intermediate: their mean.",
+      "owner_candidate": [
+        0.0,
+        0.18,
+        0.34,
+        0.48,
+        0.6,
+        0.7,
+        0.79,
+        0.86,
+        0.92,
+        0.97,
+        1.0
+      ],
+      "front_loaded": [
+        0.0,
+        0.3241,
+        0.5455,
+        0.6967,
+        0.8,
+        0.8706,
+        0.9187,
+        0.9517,
+        0.9742,
+        0.9895,
+        1.0
+      ],
+      "intermediate": [
+        0.0,
+        0.252,
+        0.4427,
+        0.5883,
+        0.7,
+        0.7853,
+        0.8543,
+        0.9059,
+        0.9471,
+        0.9798,
+        1.0
+      ]
+    },
+    "profiles": {
+      "neutral": {
+        "label": "ACTIVE: no effect (every multiplier 1.0) until the owner approves numbers (Q18-11A)",
+        "shape": "owner_candidate",
+        "output_max": {},
+        "pay_ratio": 0.0
+      },
+      "owner_candidate": {
+        "label": "UNAPPROVED candidate: the owner's example, +20% output and +8% pay at level 10, every industry",
+        "shape": "owner_candidate",
+        "output_max": {
+          "mining": 0.2,
+          "forestry": 0.2,
+          "carpentry": 0.2,
+          "smithing": 0.2,
+          "farming": 0.2,
+          "tanning": 0.2,
+          "trade": 0.2
+        },
+        "pay_ratio": 0.4
+      },
+      "front_loaded": {
+        "label": "UNAPPROVED candidate: same totals, 80% of the gain by level 4",
+        "shape": "front_loaded",
+        "output_max": {
+          "mining": 0.2,
+          "forestry": 0.2,
+          "carpentry": 0.2,
+          "smithing": 0.2,
+          "farming": 0.2,
+          "tanning": 0.2,
+          "trade": 0.2
+        },
+        "pay_ratio": 0.4
+      },
+      "intermediate": {
+        "label": "UNAPPROVED candidate: same totals, between the two shapes",
+        "shape": "intermediate",
+        "output_max": {
+          "mining": 0.2,
+          "forestry": 0.2,
+          "carpentry": 0.2,
+          "smithing": 0.2,
+          "farming": 0.2,
+          "tanning": 0.2,
+          "trade": 0.2
+        },
+        "pay_ratio": 0.4
+      },
+      "differentiated": {
+        "label": "UNAPPROVED candidate: industry-differentiated totals and shapes (simple work lower and faster, crafts higher and slower)",
+        "shape": {
+          "mining": "front_loaded",
+          "forestry": "front_loaded",
+          "farming": "intermediate",
+          "trade": "intermediate",
+          "tanning": "intermediate",
+          "carpentry": "owner_candidate",
+          "smithing": "owner_candidate"
+        },
+        "output_max": {
+          "mining": 0.12,
+          "forestry": 0.12,
+          "farming": 0.16,
+          "trade": 0.16,
+          "tanning": 0.2,
+          "carpentry": 0.25,
+          "smithing": 0.28
+        },
+        "pay_ratio": 0.4
+      }
+    },
+    "unmapped_external": "An external industry (mining: MIN-D stages 1-4) has no agreed mapping to the 0-10 scale (a reconciliation item, DESIGN.md section 8): its multipliers stay 1.0 until the mapping is decided.",
     "outputs": {
-      "mining": ["iron_ore", "coal", "copper_ore", "gold_ore", "stone"],
-      "forestry": ["log"],
-      "carpentry": ["plank", "cart_wheel", "handcart"],
-      "smithing": ["iron_bar", "copper_bar", "gold_bar", "pickaxe", "axe", "hammer", "plough"],
-      "farming": ["wheat", "carrot", "potato", "wheat_seed", "carrot_seed", "potato_seed"],
-      "tanning": ["leather"],
+      "mining": [
+        "iron_ore",
+        "coal",
+        "copper_ore",
+        "gold_ore",
+        "stone"
+      ],
+      "forestry": [
+        "log"
+      ],
+      "carpentry": [
+        "plank",
+        "cart_wheel",
+        "handcart"
+      ],
+      "smithing": [
+        "iron_bar",
+        "copper_bar",
+        "gold_bar",
+        "pickaxe",
+        "axe",
+        "hammer",
+        "plough"
+      ],
+      "farming": [
+        "wheat",
+        "carrot",
+        "potato",
+        "wheat_seed",
+        "carrot_seed",
+        "potato_seed"
+      ],
+      "tanning": [
+        "leather"
+      ],
       "trade": []
     }
   },
   "transport": {
     "_note": "Route planning (TradeRoutes). Capacity in units of goods a trip; speed in tiles a day; a carter is paid the manor's day wage (balance helper_wage), so a route's cost is labour paid to the party that hauls, never coins destroyed. terrain: tiles of each kind cost this many tiles of travel (solid is impassable). Agent proposals, provisional.",
     "modes": {
-      "carrier": {"units": 12, "tiles_per_day": 480},
-      "handcart": {"units": 60, "tiles_per_day": 360, "item": "handcart"}
+      "carrier": {
+        "units": 12,
+        "tiles_per_day": 480
+      },
+      "handcart": {
+        "units": 60,
+        "tiles_per_day": 360,
+        "item": "handcart"
+      }
     },
-    "terrain": {"road": 1.0, "open": 1.6, "rough": 2.5},
+    "terrain": {
+      "road": 1.0,
+      "open": 1.6,
+      "rough": 2.5
+    },
     "carters_per_trip": 1
   },
   "market": {
