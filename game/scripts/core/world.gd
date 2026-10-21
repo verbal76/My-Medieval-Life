@@ -343,6 +343,8 @@ func _on_hour(h: int) -> void:
 		brain.pay_guards()
 	if h == 12 and day() % int(GameData.b("caravan_every_days")) == 1:
 		brain.caravan()
+	if judgment != null:
+		judgment.dawn_hour()           # PROSPECTIVE (PROS-19): a slice of the day's judgment update (JudgmentStore)
 
 
 func _new_day() -> void:
@@ -379,7 +381,7 @@ func _new_day() -> void:
 		t = _prof("daily: brain dawn (work, succession)", t)
 	manor_work.dawn()                  # undone manor jobs are released
 	if judgment != null:
-		judgment.advance_day(d)        # PROSPECTIVE (PROS-19): memories fade, old events retire
+		judgment.begin_day(d)          # PROSPECTIVE (PROS-19): old events retire; each person's fading follows by the hour
 	property.collect_rents()
 	property.relet_stalls()
 	brain.relet_pens()

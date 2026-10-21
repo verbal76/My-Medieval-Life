@@ -56,6 +56,7 @@ func _init() -> void:
 	test_traits()
 	test_save_and_migration()
 	test_determinism()
+	test_sliced_day()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -74,15 +75,13 @@ func test_math() -> void:
 func test_spec_fixtures() -> void:
 	var c := cfg()
 	var j := store(c)
-	j.ledger(JOHN, BOB, true)
-	(j.ledgers[JOHN][BOB] as Array)[1] = 12000          # John already judges Bob at -12: a rival
-	(j.ledgers[JOHN][BOB] as Array)[4] = 12000
+	j.set_ledger(JOHN, BOB, 0, 12000)          # John already judges Bob at -12: a rival
 	var ev := j.publish("theft", [THIEF], [BOB])
 	j.observe_all(ev, [COUSIN, JOHN])
 	check(j.bad(BOB, THIEF) == 1000 and j.good(BOB, THIEF) == 0, "the victim: BAD 1 x P +1.00 -> 1 BAD")
 	check(j.bad(COUSIN, THIEF) == 550, "the cousin: P +0.55 -> 0.55 BAD")
 	check(j.good(JOHN, THIEF) == 650 and j.bad(JOHN, THIEF) == 0, "Bob's rival John: P -0.65 -> 0.65 GOOD (the event stays BAD)")
-	check(str(j.definition("theft").polarity) == "BAD" and int(j.facts[ev].revision) == 0, "the event's base polarity and severity do not change when an observer disagrees")
+	check(str(j.definition("theft").polarity) == "BAD" and int(j.fact(ev).revision) == 0, "the event's base polarity and severity do not change when an observer disagrees")
 	check(j.net(STRANGER, THIEF) == 0 and j.ledger(STRANGER, THIEF)[2] == 0 and not j.ledgers.has(STRANGER),
 			"someone who never learned of it has no belief and no ledger, not a zero-valued judgment")
 	# disapproval of GOOD: GOOD 2 x P -0.5 -> BAD 1
@@ -100,9 +99,7 @@ func test_spec_fixtures() -> void:
 	check(not j3.belief(STRANGER, k).is_empty(), "...though they remember it")
 	# NET example: GOOD 20, BAD 26.59
 	var j4 := store()
-	var l := j4.ledger(JOHN, VERBAL, true)
-	l[0] = 20000
-	l[1] = 26590
+	j4.set_ledger(JOHN, VERBAL, 20000, 26590)
 	check(j4.net(JOHN, VERBAL) == -6590 and JudgmentMath.pts(j4.net(JOHN, VERBAL)) == "-6.590", "GOOD 20, BAD 26.59: NET -6.59, fractional and exact")
 	check(j4.disposition(JOHN, VERBAL) == 43410, "NET -6.59 maps to the spec's disposition 43.41")
 
@@ -128,18 +125,17 @@ func test_idempotent_and_correction() -> void:
 	j.observe(ev, STRANGER)
 	j.observe(ev, STRANGER)
 	check(j.bad(STRANGER, THIEF) == 300 and j.ledger(STRANGER, THIEF)[2] == 1, "the same belief delivered twice: no duplicate contribution")
-	check(not j.learn(STRANGER, ev, "told", COUSIN, 1, 560, j.facts[ev].actors), "a weaker telling of a known event changes nothing")
+	check(not j.learn(STRANGER, ev, "told", COUSIN, 1, 560, j.fact(ev).actors), "a weaker telling of a known event changes nothing")
 	# belief correction: it was John, not the thief
 	j.revise_fact(ev, [JOHN])
 	j.correct(STRANGER, ev)
 	check(j.bad(STRANGER, THIEF) == 0 and j.ledger(STRANGER, THIEF)[2] == 0, "a correction takes the old actor's points back")
 	check(j.bad(STRANGER, JOHN) == 300, "...and the new actor is judged instead")
-	check(int(j.facts[ev].revision) == 1 and int(j.facts[ev].original_actors[0][0]) == THIEF, "the fact keeps its original with the revision (auditable)")
+	check(int(j.fact(ev).revision) == 1 and int(j.fact(ev).original_actors[0][0]) == THIEF, "the fact keeps its original with the revision (auditable)")
 	j.correct(STRANGER, ev)
 	check(j.bad(STRANGER, JOHN) == 300, "a correction applied twice is idempotent")
 	# ledgers never go negative
-	var l := j.ledger(STRANGER, JOHN)
-	l[1] = 100
+	j.set_ledger(STRANGER, JOHN, 0, 100)
 	j.correct(STRANGER, ev, [THIEF])
 	check(j.bad(STRANGER, JOHN) == 0, "taking back more than a ledger holds leaves it at 0, never negative")
 
@@ -148,13 +144,13 @@ func test_confidence_policies() -> void:
 	var c := cfg()
 	var j := store(c)
 	var ev := j.publish("theft", [THIEF], [BOB])
-	j.learn(STRANGER, ev, "told", COUSIN, 1, 500, j.facts[ev].actors)
+	j.learn(STRANGER, ev, "told", COUSIN, 1, 500, j.fact(ev).actors)
 	check(j.bad(STRANGER, THIEF) == 150, "multiplier policy: S 1 x P 0.3 x C 0.5 -> 0.15 BAD")
 	c.belief.confidence_policy = "threshold"
 	var j2 := store(c)
 	var e2 := j2.publish("theft", [THIEF], [BOB])
-	j2.learn(STRANGER, e2, "told", COUSIN, 1, 500, j2.facts[e2].actors)
-	j2.learn(FRIEND + 10, e2, "rumour", COUSIN, 2, 200, j2.facts[e2].actors)
+	j2.learn(STRANGER, e2, "told", COUSIN, 1, 500, j2.fact(e2).actors)
+	j2.learn(FRIEND + 10, e2, "rumour", COUSIN, 2, 200, j2.fact(e2).actors)
 	check(j2.bad(STRANGER, THIEF) == 300, "threshold policy: believed above the threshold counts in full")
 	check(j2.bad(FRIEND + 10, THIEF) == 0 and not j2.belief(FRIEND + 10, e2).is_empty(), "...below it the rumour is remembered but posts nothing")
 
@@ -193,11 +189,11 @@ func test_memory_bounds_and_fading() -> void:
 	for i in 4:
 		evs.append(j.publish("help_minor", [100 + i], [], [STRANGER]))
 		j.observe(evs[-1], STRANGER)
-	check((j.memories[STRANGER] as Dictionary).size() == 3 and j.belief(STRANGER, evs[0]).is_empty(), "memory is bounded: the least salient, then the oldest, goes")
+	check(j.memory_count(STRANGER) == 3 and j.belief(STRANGER, evs[0]).is_empty(), "memory is bounded: the least salient, then the oldest, goes")
 	check(j.good(STRANGER, 100) == 500, "forgetting a memory keeps its points (retract_on_forget false: lifetime totals)")
 	var k := j.publish("killing", [THIEF], [BOB])
 	j.observe(k, STRANGER)
-	check(not j.belief(STRANGER, k).is_empty() and (j.memories[STRANGER] as Dictionary).size() == 3, "a grave event displaces a fading one")
+	check(not j.belief(STRANGER, k).is_empty() and j.memory_count(STRANGER) == 3, "a grave event displaces a fading one")
 	j.advance_day(5)
 	var s5 := int(j.belief(STRANGER, evs[3]).sal)
 	check(s5 < 500 and s5 > 0, "salience fades day by day (500 -> %d after 5 days)" % s5)
@@ -226,7 +222,7 @@ func test_horizon() -> void:
 	var ev := j.publish("theft", [THIEF], [BOB])
 	j.observe(ev, BOB)
 	j.advance_day(int(c.memory.horizon_days) + 1)
-	check(not j.facts.has(ev) and not (j.contrib.get(BOB, {}) as Dictionary).has(ev), "past the horizon the fact and its dedup key retire")
+	check(not j.has_fact(ev) and not (j.contrib.get(BOB, {}) as Dictionary).has(ev), "past the horizon the fact and its dedup key retire")
 	check(j.bad(BOB, THIEF) == 1000, "...the victim's judgment stays")
 	check(not j.learn(COUSIN, ev, "told", BOB, 1, 700, [[THIEF, 1000]]) and j.meet(BOB, COUSIN) == 0, "...and nobody can tell it on any more (no event counts twice)")
 
@@ -266,23 +262,21 @@ func test_gossip() -> void:
 	for i in 3:
 		j2.observe(j2.publish("theft", [THIEF + i], [BOB]), BOB)
 	j2.meet(BOB, STRANGER)
-	check((j2.memories.get(STRANGER, {}) as Dictionary).size() == 1, "a teller tells at most daily_budget a day")
+	check(j2.memory_count(STRANGER) == 1, "a teller tells at most daily_budget a day")
 	j2.advance_day(1)
 	j2.meet(BOB, STRANGER)
-	check((j2.memories.get(STRANGER, {}) as Dictionary).size() == 2, "...and more the next day")
+	check(j2.memory_count(STRANGER) == 2, "...and more the next day")
 	# no telling to someone the teller dislikes
 	var j3 := store()
 	var e3 := j3.publish("theft", [THIEF], [BOB])
 	j3.observe(e3, BOB)
-	var l := j3.ledger(BOB, JOHN, true)
-	l[1] = 30000
+	j3.set_ledger(BOB, JOHN, 0, 30000)
 	check(j3.meet(BOB, JOHN) == 0, "Bob tells nothing to someone he judges below share_net_at")
 	# credibility: a disliked teller is believed less
 	var j4 := store()
 	var e4 := j4.publish("theft", [THIEF], [BOB])
 	j4.observe(e4, BOB)
-	var l4 := j4.ledger(STRANGER, BOB, true)
-	l4[1] = 10000
+	j4.set_ledger(STRANGER, BOB, 0, 10000)
 	j4.tell(BOB, STRANGER)
 	check(int(j4.belief(STRANGER, e4).conf) == JudgmentMath.mul_div(1000 * 700, 600, 1000000), "credibility: a teller the listener dislikes (-10) is believed less (0.8 -> 0.6)")
 
@@ -291,8 +285,7 @@ func test_misattribution() -> void:
 	var c := cfg()
 	c.gossip.misattribute_permille = 1000
 	var j := store(c)
-	var l := j.ledger(BOB, JOHN, true)
-	l[1] = 5000                                    # Bob dislikes John
+	j.set_ledger(BOB, JOHN, 0, 5000)                    # Bob dislikes John
 	var ev := j.publish("theft", [THIEF], [BOB])
 	j.observe(ev, BOB)
 	j.tell(BOB, STRANGER)
@@ -305,13 +298,11 @@ func test_misattribution() -> void:
 
 func test_prior_bias() -> void:
 	var j := store()
-	var l := j.ledger(STRANGER, VERBAL, true)
-	l[1] = 10000                                   # the stranger dislikes Verbal (-10)
+	j.set_ledger(STRANGER, VERBAL, 0, 10000)                   # the stranger dislikes Verbal (-10)
 	var ev := j.publish("trade_fair", [VERBAL], [], [JOHN])
 	j.observe(ev, STRANGER)
 	check(int(j.last_trace.get("prior_bias", 0)) == -100 and j.good(STRANGER, VERBAL) == JudgmentMath.scale(200, 200), "an ambiguous deed by someone disliked reads worse (P 0.3 - 0.1)")
-	var l2 := j.ledger(STRANGER, VERBAL)
-	l2[1] = 900000
+	j.set_ledger(STRANGER, VERBAL, j.good(STRANGER, VERBAL), 900000)
 	var e2 := j.publish("trade_fair", [VERBAL], [], [JOHN])
 	j.observe(e2, STRANGER)
 	check(int(j.last_trace.prior_bias) == -150, "the bias is capped (prior_bias_cap 0.15), so dislike cannot snowball")
@@ -325,9 +316,7 @@ func test_prior_bias() -> void:
 func test_decision_iron() -> void:
 	var c := cfg()
 	var j := store(c)
-	var l := j.ledger(JOHN, VERBAL, true)
-	l[0] = 20000
-	l[1] = 26590
+	j.set_ledger(JOHN, VERBAL, 20000, 26590)
 	var cands := [{"id": "verbal", "counterparty": VERBAL, "factors": {"necessity": 90000, "affordability": 70000, "urgency": 75000}}]
 	var r := JudgmentWeighting.choose(j, c, JOHN, "trade_buy", cands)
 	check(int(r.utility) == 81841, "the iron problem: 27 + 25 + 10.5 + 15 + 4.341 = 81.841 (got %s)" % JudgmentMath.pts(int(r.utility)))
@@ -349,8 +338,8 @@ func test_decision_iron() -> void:
 func test_need_vs_opinion() -> void:
 	var c := cfg()
 	var j := store(c)
-	j.ledger(JOHN, VERBAL, true)[1] = 40000        # strongly negative: -40
-	j.ledger(JOHN, FRIEND, true)[0] = 30000        # a friend: +30
+	j.set_ledger(JOHN, VERBAL, 0, 40000)        # strongly negative: -40
+	j.set_ledger(JOHN, FRIEND, 30000, 0)        # a friend: +30
 	var mk := func(id: String, who: int, need: int, afford: int, urg: int) -> Dictionary:
 		return {"id": id, "counterparty": who, "factors": {"necessity": need, "affordability": afford, "urgency": urg}}
 	# 1. strong need, only the disliked supplier: buy
@@ -376,7 +365,7 @@ func test_need_vs_opinion() -> void:
 func test_feasibility() -> void:
 	var c := cfg()
 	var j := store(c)
-	j.ledger(JOHN, FRIEND, true)[0] = 100000       # adores the friend
+	j.set_ledger(JOHN, FRIEND, 100000, 0)       # adores the friend
 	var r := JudgmentWeighting.choose(j, c, JOHN, "trade_buy", [
 		{"id": "friend", "counterparty": FRIEND, "feasible": false, "why": "no iron in stock", "factors": {"necessity": 100000}},
 		{"id": "verbal", "counterparty": VERBAL, "factors": {"necessity": 100000, "affordability": 50000, "urgency": 100000}}])
@@ -433,11 +422,11 @@ func test_save_and_migration() -> void:
 	var err := j2.load_dict(JSON.parse_string(text))
 	check(err == "", "a saved judgment section loads")
 	check(JSON.stringify(j2.to_dict()) == text, "round trip through JSON text: identical")
-	check(j2.bad(COUSIN, THIEF) == 550 and str(j2.belief(FRIEND, ev).src) == "told" and int(j2.facts[ev + 1].revision) == 1, "...ledgers, provenance and revisions intact")
+	check(j2.bad(COUSIN, THIEF) == 550 and str(j2.belief(FRIEND, ev).src) == "told" and int(j2.fact(ev + 1).revision) == 1, "...ledgers, provenance and revisions intact")
 	j2.meet(BOB, FRIEND)
 	check(j2.ledger(FRIEND, THIEF)[2] == 1, "after loading, a retold rumour still adds nothing")
 	var j3 := store(c)
-	check(j3.load_dict({}) == "" and j3.facts.is_empty(), "a save from before judgment (every Build 16 save) loads an empty store")
+	check(j3.load_dict({}) == "" and j3.counts().facts == 0, "a save from before judgment (every Build 16 save) loads an empty store")
 	var v0 := {"format": "mml-judgment/0", "day": 3, "next_event": 9, "ledgers": {"3:4": {"good": 20.0, "bad": 26.59}}}
 	check(j3.load_dict(v0) == "" and j3.net(JOHN, VERBAL) == -6590 and j3.next_event == 9, "migration: the draft v0 layout (float points) becomes exact milli-points")
 	var future := {"format": "mml-judgment/1", "version": 99, "facts": []}
@@ -465,3 +454,61 @@ func test_determinism() -> void:
 				j.meet(a, (a + d + 1) % 15)
 		h.append(j.state_hash())
 	check(h[0] == h[1], "two runs of the same scenario end in the same state hash")
+
+
+## Round 2: the daily update spread over the day's hours (begin_day, dawn_slice, catch-up on touch) gives exactly the
+## state and the choices the whole update at dawn gives, with events, gossip and decisions in between; with the
+## default settings and with the options that make the update do more (forgetting takes points back, an effective
+## view that fades, distorted rumours).
+func test_sliced_day() -> void:
+	var variants := [{}, {"retract": true, "fade": 100, "mis": 300}]
+	for v in variants:
+		var out := []
+		for mode in ["whole", "sliced"]:
+			var c := cfg()
+			c.memory.capacity = 6
+			c.memory.horizon_days = 4
+			if v.has("retract"):
+				c.memory.retract_on_forget = true
+				c.memory.effective_fade_permille = int(v.fade)
+				c.gossip.misattribute_permille = int(v.mis)
+			var j := JudgmentStore.new(c, JudgmentSocial.new().set_kin(1, 2).set_friends(3, 4).set_kin(5, 6), 5)
+			var log := []
+			for d in 12:
+				for hr in 24:
+					if hr == 6:
+						if mode == "whole":
+							j.advance_day(d)
+						else:
+							j.begin_day(d)
+					if mode == "sliced":
+						j.dawn_slice(1)                  # a person an hour: most are caught up on touch, the rest late in the day
+					var i := d * 24 + hr
+					if i % 3 == 0:
+						var actor := JudgmentMath.hash_ints([i, 1]) % (20 + d * 3)      # newcomers join day by day, mid-day
+						var other := (actor + 1 + JudgmentMath.hash_ints([i, 2]) % 7) % (20 + d * 3)
+						var type: String = ["theft", "help_minor", "assault", "gift", "trade_fair"][i % 5]
+						var bad := str(j.definition(type).polarity) == "BAD"
+						var ev := j.publish(type, [actor], [other] if bad else [], [] if bad else [other])
+						j.observe_all(ev, [(other + 2) % (20 + d * 3), (other + 3) % (20 + d * 3)])
+					if hr >= 7 and hr < 21:
+						var a := JudgmentMath.hash_ints([i, 3]) % 20
+						log.append(j.meet(a, (a + 1 + JudgmentMath.hash_ints([i, 4]) % 5) % 20))
+					if hr == 12:
+						var r := JudgmentWeighting.choose(j, c, i % 20, "trade_buy", [
+							{"id": 1, "counterparty": (i + 1) % 20, "factors": {"necessity": 40000, "affordability": 60000, "urgency": 10000}},
+							{"id": 2, "counterparty": (i + 2) % 20, "factors": {"necessity": 40000, "affordability": 60000, "urgency": 10000}}])
+						log.append(str(r.chosen))
+						log.append(j.net(i % 20, (i + 1) % 20))
+			out.append([j.state_hash(), log, j.counts()])
+		var name := "with retraction, fading view and rumours" if v.has("retract") else "default settings"
+		check(out[0][1] == out[1][1], "sliced day (%s): every telling, choice and opinion along the way is the same" % name)
+		check(out[0][0] == out[1][0], "sliced day (%s): the same end state, hash for hash (%s)" % [name, JSON.stringify(out[0][2])])
+	var j := store()
+	j.observe(j.publish("theft", [THIEF], [BOB]), BOB)
+	j.begin_day(1)
+	var queued := j.pending(BOB)
+	check(queued and j.memory_count(BOB) == 1 and not j.pending(BOB), "a queued person is brought up to date the moment they are read")
+	j.begin_day(2)
+	var left := j.dawn_hour()
+	check(left == 0, "dawn_hour works through the queue (%d left)" % left)

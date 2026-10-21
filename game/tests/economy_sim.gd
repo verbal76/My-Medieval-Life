@@ -129,6 +129,7 @@ func _init() -> void:
 	_print_final(final, start, seed, days, secs)
 	if w.judgment != null:
 		print("judgment: %s; stats %s" % [JSON.stringify(w.judgment.counts()), JSON.stringify(w.judgment.stats)])
+		print("judgment time (us): %s" % JSON.stringify(w.judgment.timing))
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,

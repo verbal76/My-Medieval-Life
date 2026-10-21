@@ -17,6 +17,7 @@ extends RefCounted
 ##                 weighs among them (JudgmentWeighting).
 
 
+static var shortcut := true          # tests turn it off to compare with the full scan
 const LIVE_ORDER_STEP := 10000      # live_order: 100 points for the live rule's first choice, 10 less for each after
 
 
@@ -85,12 +86,59 @@ static func on_killing(w, n: NPC, killer: int) -> void:
 		w.judgment.observe_all(ev, _ids(seen))
 
 
+## Round 2 (cost): whether the live rule's first pick must win whatever the other candidates are, so the full scan can
+## be skipped with the same result. True only under the shipped trade_sell form (argmax, no per-person spread, only
+## live_order, necessity and disposition weighed; necessity is the same for every candidate): another buyer can win
+## only by a disposition advantage worth more than live_order's step, and no other can have a disposition above the
+## best the seller holds of anyone in their ledger (or 50, for someone they have no opinion of).
+static func _first_stands(j: JudgmentStore, seller: int, first: int) -> bool:
+	var dc: Dictionary = j.cfg.decision
+	var wt: Dictionary = dc.profiles.trade_sell.weights
+	if str(dc.selection) != "argmax" or int(dc.get("trait_spread_permille", 0)) > 0:
+		return false
+	for k in wt:
+		if not (str(k) in ["live_order", "necessity", "disposition"]) and int(wt[k]) != 0:
+			return false
+	var wd := int(wt.get("disposition", 0))
+	var wo := int(wt.get("live_order", 0))
+	var d0 := j.disposition(seller, first)
+	var best := int(dc.disposition_mid)
+	for s in (j.ledgers.get(seller, {}) as Dictionary):
+		if int(s) != first:
+			best = maxi(best, j.disposition(seller, int(s)))
+	var gain := JudgmentMath.mul_div(wd, best, 1000) - JudgmentMath.mul_div(wd, d0, 1000)
+	var step := JudgmentMath.mul_div(wo, 100000, 1000) - JudgmentMath.mul_div(wo, 100000 - LIVE_ORDER_STEP, 1000)
+	return gain <= step
+
+
 ## Prototype of the first live domain: whom villager `n` sells `id` to. The candidates are exactly the live rule's
 ## (OUTLETS order, NPCBrain buy roles, World.purchase_qty, the one rule for every sale); judgment weighs among them
 ## with the live order of preference (live_order), the seller's need for coin and the price each would pay (trade_sell
 ## profile; price weighs 0 until calibrated), so with every judgment neutral the live choice stands and any change is
 ## judgment's. Returns the buyer or null.
 static func pick_buyer(w, brain, n: NPC, id: String) -> NPC:
+	var t := Time.get_ticks_usec()
+	var b := _pick_buyer(w, brain, n, id)
+	var tm: Dictionary = w.judgment.timing
+	tm.trade_us = int(tm.get("trade_us", 0)) + Time.get_ticks_usec() - t
+	return b
+
+
+static func _pick_buyer(w, brain, n: NPC, id: String) -> NPC:
+	var first: NPC = null                     # the live rule's own pick: the first who can buy, in OUTLETS order
+	for outlet in NPCBrain.OUTLETS.get(id, []):
+		for b in brain._with_buy_role(outlet):
+			if b != n and b.alive and w.purchase_qty(b, n, id, maxi(1, n.inv.count(id))) > 0:
+				first = b
+				break
+		if first != null:
+			break
+	if first == null:
+		return null
+	if shortcut and _first_stands(w.judgment, n.id, first.id):
+		w.judgment._stat("trade_choices")
+		w.judgment._stat("trade_shortcut")
+		return first
 	var cands := []
 	var people := {}
 	var top := 1

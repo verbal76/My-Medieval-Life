@@ -1,19 +1,25 @@
 extends SceneTree
 ## PROSPECTIVE (Expansion 19, PROS-19; spec s.13): the judgment prototype's cost with large populations, no World. For
-## 100, 500 and 2000 people it simulates days of synthetic social life: households of four (kin), friends, a stream of
-## significant events (thefts, help, assaults, gifts) seen by nearby people, hours spent together (gossip), trade
-## choices weighed by judgment, and the dawn (fading, forgetting, expiry). It reports time per simulated day by part,
-## the dawn's single-call cost (a frame hitch), memory, store sizes and save size and time, and checks the bounds the
-## design promises (memories per person within capacity, facts within the horizon) and determinism (same hash twice).
-## It does not assert speed: the numbers are measurements for the proposed budgets (docs/expansion19/PROGRESS.md).
-##   godot --headless --path game --script res://tests/judgment_perf.gd [-- --sizes 100,500,2000 --days 40]
+## each population it simulates days of synthetic social life hour by hour, as the game runs: households of four (kin),
+## friends, significant events (thefts, help, assaults, gifts) seen by nearby people, hours spent together (gossip, in
+## the waking hours), trade choices weighed by judgment (working hours), and the daily update: begun at dawn (6:00) and,
+## when the store slices it (begin_day / dawn_slice), spread over the day's hours. Each game hour is one frame of work
+## here, so the largest hour is the frame cost to compare with the per-frame budget.
+## Two event rates: "live", what the live village produced with judgment on (7 events in 10 days for about 110 people,
+## economy_sim.gd --judgment), and "stress", 0.5 a person a day (about 80 times more).
+## It reports time per simulated day by part, the largest single hour of the daily update alone and of update + events +
+## gossip (a frame: Relations.hour runs an hour's meetings at once; trade choices happen one per villager decision, so
+## they are reported per choice), memory, store sizes and save size and time, and
+## checks the bounds the design promises (memories within capacity, facts within the horizon), the save round trip and
+## determinism. It does not assert speed: the numbers are measurements for the budgets (docs/expansion19/DESIGN.md).
+##   godot --headless --path game --script res://tests/judgment_perf.gd [-- --sizes 100,500,2000 --days 40 --rates live,stress]
 
 var failures := 0
 var checks := 0
-const EVENTS_PER_PERSON := 0.5      # significant events a person a day (generous: today's village sees far fewer)
+const RATES := {"live": 0.0064, "stress": 0.5}   # significant events a person a day
 const WITNESSES := 4
-const MEETINGS_PER_PERSON := 3      # hours a day spent with someone (Relations.share pairs)
-const DECISIONS_PER_PERSON := 2     # trade choices weighed by judgment a day
+const MEETINGS_PER_PERSON := 3      # hours a day spent with someone (Relations.share pairs), 7:00 to 21:00
+const DECISIONS_PER_PERSON := 2     # trade choices weighed by judgment a day, 7:00 to 18:00
 const TYPES := ["theft", "help_minor", "assault", "gift", "trade_fair", "help_build"]
 
 
@@ -30,31 +36,35 @@ func _init() -> void:
 	var args := OS.get_cmdline_user_args()
 	var sizes := [100, 500, 2000]
 	var days := 40
+	var rates := ["live", "stress"]
 	if "--sizes" in args:
 		sizes = Array(str(args[args.find("--sizes") + 1]).split(",")).map(func(x): return int(x))
 	if "--days" in args:
 		days = int(args[args.find("--days") + 1])
+	if "--rates" in args:
+		rates = Array(str(args[args.find("--rates") + 1]).split(","))
 	var rows := []
-	for n in sizes:
-		rows.append(run(n, days, true))
-	var again := run(sizes[0], mini(days, 10), false)
-	var first := run(sizes[0], mini(days, 10), false)
-	check(again.hash == first.hash, "determinism: the same %d-person run twice ends in the same state hash" % sizes[0])
-	print("\nRESULTS (ms per simulated day, averaged over the last half of %d days; memory in MB)" % days)
-	print("people | events/day | total ms/day | events | gossip | decisions | dawn (one call) | facts | memories | contributions | ledgers | mem MB | save KB | save ms | load ms")
+	for rate in rates:
+		for n in sizes:
+			rows.append(run(n, days, str(rate), true))
+	var a := run(sizes[0], mini(days, 10), str(rates[-1]), false)
+	var b := run(sizes[0], mini(days, 10), str(rates[-1]), false)
+	check(a.hash == b.hash, "determinism: the same %d-person run twice ends in the same state hash" % sizes[0])
+	print("\nRESULTS (ms per simulated day, averaged over the last half of %d days; the largest single hour; memory in MB)" % days)
+	print("rate   | people | events/day | ms/day | events | gossip | decisions | daily update | update max hour (median day / worst) | frame max hour | us/choice | facts | memories | ledgers | mem MB | save KB | save ms | load ms")
 	for r in rows:
-		print("%6d | %10d | %12.2f | %6.2f | %6.2f | %9.2f | %15.2f | %5d | %8d | %13d | %7d | %6.1f | %7.0f | %7.1f | %7.1f" % [r.n, r.events_day,
-			r.total_ms, r.ev_ms, r.gossip_ms, r.dec_ms, r.dawn_ms, r.counts.facts, r.counts.memories, r.counts.contributions, r.counts.ledgers,
-			r.mem_mb, r.save_kb, r.save_ms, r.load_ms])
+		print("%-6s | %6d | %10d | %6.1f | %6.2f | %6.2f | %9.2f | %12.2f | %16.2f / %6.2f | %14.2f | %9.1f | %5d | %8d | %7d | %6.1f | %7.0f | %7.1f | %7.1f" % [r.rate, r.n,
+			r.events_day, r.total_ms, r.ev_ms, r.gossip_ms, r.dec_ms, r.dawn_ms, r.median_update_max_ms, r.max_update_ms, r.max_frame_ms, r.us_per_choice, r.counts.facts, r.counts.memories,
+			r.counts.ledgers, r.mem_mb, r.save_kb, r.save_ms, r.load_ms])
 	print("JSON " + JSON.stringify(rows))
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
 
-## One population of `n` for `days` days. Households of four are kin; each person has two friends in the next
-## household; events and meetings fall among neighbours (a ring of clusters of 20), as people meet where they live
-## and work. All choices come from JudgmentMath's seeded hash.
-func run(n: int, days: int, report: bool) -> Dictionary:
+## One population of `n` for `days` days at event rate `rate`. Households of four are kin; each person has two friends
+## in the next household; events and meetings fall among neighbours (a ring of clusters of 20), as people meet where
+## they live and work. All choices come from JudgmentMath's seeded hash.
+func run(n: int, days: int, rate: String, report: bool) -> Dictionary:
 	var social := JudgmentSocial.new()
 	for i in n:
 		var h := i / 4 * 4
@@ -66,44 +76,74 @@ func run(n: int, days: int, report: bool) -> Dictionary:
 	var mem0 := OS.get_static_memory_usage()
 	var j := JudgmentStore.new(JudgmentStore.default_cfg(), social, 11)
 	var cfg := j.cfg
-	var events_day := int(n * EVENTS_PER_PERSON)
+	var sliced := j.has_method("begin_day")
+	var per_day := float(n) * float(RATES[rate])
 	var sums := {"ev": 0, "gossip": 0, "dec": 0, "dawn": 0}
 	var measured := 0
-	var dawn_max := 0
+	var max_hour := 0
+	var max_update := 0     # the largest single hour of the daily update alone
+	var max_frame := 0      # the largest hour of update + events + gossip (Relations.hour runs an hour's meetings in one frame)
+	var choices := 0
+	var day_update_max := []   # each measured day's largest update hour (the median is robust to timer noise)
+	var ev_count := 0
 	for d in days:
-		var t0 := Time.get_ticks_usec()
-		j.advance_day(d)
-		var t1 := Time.get_ticks_usec()
-		for e in events_day:
-			var actor := JudgmentMath.hash_ints([d, e, 1]) % n
-			var other := (actor + 1 + JudgmentMath.hash_ints([d, e, 2]) % 19) % n
-			var type: String = TYPES[JudgmentMath.hash_ints([d, e, 3]) % TYPES.size()]
-			var bad := str(j.definition(type).polarity) == "BAD"
-			var ev := j.publish(type, [actor], [other] if bad else [], [] if bad else [other])
-			var seen := []
-			for k in WITNESSES:
-				seen.append((other + 1 + JudgmentMath.hash_ints([d, e, 4, k]) % 19) % n)
-			j.observe_all(ev, seen)
-		var t2 := Time.get_ticks_usec()
-		for p in n:
-			for k in MEETINGS_PER_PERSON:
-				j.meet(p, (p + 1 + JudgmentMath.hash_ints([d, p, 5, k]) % 19) % n)
-		var t3 := Time.get_ticks_usec()
-		for p in n:
-			for k in DECISIONS_PER_PERSON:
-				var cands := []
-				for c in 3:
-					var who := (p + 1 + JudgmentMath.hash_ints([d, p, 6, k, c]) % 19) % n
-					cands.append({"id": who, "counterparty": who, "factors": {"necessity": 60000, "affordability": 50000 + c * 10000, "urgency": 40000}})
-				JudgmentWeighting.choose(j, cfg, p, "trade_buy", cands)
-		var t4 := Time.get_ticks_usec()
-		dawn_max = maxi(dawn_max, t1 - t0)
+		var due := int(floor(per_day * (d + 1))) - int(floor(per_day * d))     # a fractional rate spread evenly over the days
+		var part := {"ev": 0, "gossip": 0, "dec": 0, "dawn": 0}
+		var today_max := 0
+		for hr in 24:
+			var t0 := Time.get_ticks_usec()
+			if hr == 6:
+				if sliced:
+					j.call("begin_day", d)
+				else:
+					j.advance_day(d)
+			if sliced:
+				j.call("dawn_hour")
+			var t1 := Time.get_ticks_usec()
+			for e in range(due * hr / 24, due * (hr + 1) / 24):
+				var actor := JudgmentMath.hash_ints([d, e, 1]) % n
+				var other := (actor + 1 + JudgmentMath.hash_ints([d, e, 2]) % 19) % n
+				var type: String = TYPES[JudgmentMath.hash_ints([d, e, 3]) % TYPES.size()]
+				var bad := str(j.definition(type).polarity) == "BAD"
+				var ev := j.publish(type, [actor], [other] if bad else [], [] if bad else [other])
+				var seen := []
+				for k in WITNESSES:
+					seen.append((other + 1 + JudgmentMath.hash_ints([d, e, 4, k]) % 19) % n)
+				j.observe_all(ev, seen)
+				ev_count += 1
+			var t2 := Time.get_ticks_usec()
+			if hr >= 7 and hr < 21:
+				for p in range(n * (hr - 7) / 14, n * (hr - 6) / 14):
+					for k in MEETINGS_PER_PERSON:
+						j.meet(p, (p + 1 + JudgmentMath.hash_ints([d, p, 5, k]) % 19) % n)
+			var t3 := Time.get_ticks_usec()
+			if hr >= 7 and hr < 18:
+				for p in range(n * (hr - 7) / 11, n * (hr - 6) / 11):
+					for k in DECISIONS_PER_PERSON:
+						var cands := []
+						for c in 3:
+							var who := (p + 1 + JudgmentMath.hash_ints([d, p, 6, k, c]) % 19) % n
+							cands.append({"id": who, "counterparty": who, "factors": {"necessity": 60000, "affordability": 50000 + c * 10000, "urgency": 40000}})
+						JudgmentWeighting.choose(j, cfg, p, "trade_buy", cands)
+			var t4 := Time.get_ticks_usec()
+			part.dawn += t1 - t0
+			part.ev += t2 - t1
+			part.gossip += t3 - t2
+			part.dec += t4 - t3
+			if d >= days / 2:
+				max_hour = maxi(max_hour, t4 - t0)
+				max_update = maxi(max_update, t1 - t0)
+				today_max = maxi(today_max, t1 - t0)
+				max_frame = maxi(max_frame, t3 - t0)
+				if hr >= 7 and hr < 18:
+					choices += (n * (hr - 6) / 11 - n * (hr - 7) / 11) * DECISIONS_PER_PERSON
 		if d >= days / 2:
 			measured += 1
-			sums.dawn += t1 - t0
-			sums.ev += t2 - t1
-			sums.gossip += t3 - t2
-			sums.dec += t4 - t3
+			day_update_max.append(today_max)
+			for k in part:
+				sums[k] += part[k]
+	if sliced:
+		j.call("finish_dawn")
 	var mem_mb := float(OS.get_static_memory_usage() - mem0) / 1048576.0
 	var counts := j.counts()
 	var cap := int(cfg.memory.capacity)
@@ -120,15 +160,24 @@ func run(n: int, days: int, report: bool) -> Dictionary:
 	var load_us := Time.get_ticks_usec() - ts
 	var h := j.state_hash()
 	if report:
-		check(over == 0, "%d people: nobody holds more than %d memories" % [n, cap])
-		check(counts.facts <= events_day * (int(cfg.memory.horizon_days) + 1), "%d people: facts stay within the horizon (%d)" % [n, counts.facts])
-		check(err == "" and j2.state_hash() == h, "%d people: the save loads back to the same state" % n)
-		print("%d people: %s; stats %s" % [n, JSON.stringify(counts), JSON.stringify(j.stats)])
+		check(over == 0, "%s, %d people: nobody holds more than %d memories" % [rate, n, cap])
+		check(int(counts.facts) <= int(ceil(per_day)) * (int(cfg.memory.horizon_days) + 1), "%s, %d people: facts stay within the horizon (%d)" % [rate, n, int(counts.facts)])
+		check(err == "" and j2.state_hash() == h, "%s, %d people: the save loads back to the same state" % [rate, n])
+		print("%s, %d people: %d events; %s; stats %s" % [rate, n, ev_count, JSON.stringify(counts), JSON.stringify(j.stats)])
 	var ms := func(us: int) -> float:
 		return float(us) / 1000.0 / maxf(1.0, float(measured))
-	var row := {"n": n, "days": days, "events_day": events_day, "ev_ms": ms.call(sums.ev), "gossip_ms": ms.call(sums.gossip),
-		"dec_ms": ms.call(sums.dec), "dawn_ms": ms.call(sums.dawn), "dawn_max_ms": float(dawn_max) / 1000.0,
+	var row := {"rate": rate, "n": n, "days": days, "events_day": int(round(per_day)), "ev_ms": ms.call(sums.ev), "gossip_ms": ms.call(sums.gossip),
+		"dec_ms": ms.call(sums.dec), "dawn_ms": ms.call(sums.dawn), "max_hour_ms": float(max_hour) / 1000.0, "max_update_ms": float(max_update) / 1000.0, "median_update_max_ms": _median(day_update_max) / 1000.0, "max_frame_ms": float(max_frame) / 1000.0,
+		"us_per_choice": float(sums.dec) / maxf(1.0, float(choices)), "sliced": sliced,
 		"counts": counts, "mem_mb": mem_mb, "save_kb": float(text.length()) / 1024.0, "save_ms": float(save_us) / 1000.0,
 		"load_ms": float(load_us) / 1000.0, "hash": h}
 	row.total_ms = float(row.ev_ms) + float(row.gossip_ms) + float(row.dec_ms) + float(row.dawn_ms)
 	return row
+
+
+static func _median(xs: Array) -> float:
+	if xs.is_empty():
+		return 0.0
+	var v := xs.duplicate()
+	v.sort()
+	return float(v[v.size() / 2])

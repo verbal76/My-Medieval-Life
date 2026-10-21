@@ -124,18 +124,35 @@ func test_trade_choice() -> void:
 	check(pick == live, "...and while every judgment is neutral it is the live rule's own choice (%s)" % (pick.name if pick else "none"))
 	if all.size() >= 2:
 		var other: NPC = all[0] if pick != all[0] else all[1]
-		j.ledger(seller.id, pick.id, true)[1] = 60000              # the seller comes to dislike that buyer (-60)
+		j.set_ledger(seller.id, pick.id, 0, 60000)              # the seller comes to dislike that buyer (-60)
 		var again: NPC = w.brain._buyer_for(seller, "iron_ore")
 		check(again == other or again == pick, "a strong dislike may turn the seller to another buyer (%s -> %s)" % [pick.name, again.name])
 		check(again != pick, "...and here it does: two buyers, the disliked one avoided")
 		for b in all:
 			if b != pick:
-				j.ledger(seller.id, b.id, true)[1] = 60000
+				j.set_ledger(seller.id, b.id, 0, 60000)
 		var feasible_only: NPC = w.brain._buyer_for(seller, "iron_ore")
 		check(feasible_only != null, "disliking every buyer, the seller still sells: need for coin outweighs opinion")
 	else:
 		print("note: only one iron buyer in this village; the two-buyer case is covered by judgment_test")
-	j.ledger(seller.id, pick.id, true)[0] = 900000
+	# the shortcut (skip the full scan when the live pick must win) chooses exactly as the full scan, opinion by opinion
+	var same := 0
+	var tried := 0
+	for k in 12:
+		for b in all:
+			j.set_ledger(seller.id, b.id, (k * 7919 + b.id * 31) % 5 * 15000, (k * 104729 + b.id * 17) % 5 * 15000)
+		for b in [w.npcs[k % w.npcs.size()], w.npcs[(k * 7) % w.npcs.size()]]:
+			j.set_ledger(seller.id, b.id, k * 9000, 0)
+		JudgmentLive.shortcut = true
+		var fast: NPC = w.brain._buyer_for(seller, "iron_ore")
+		JudgmentLive.shortcut = false
+		var full: NPC = w.brain._buyer_for(seller, "iron_ore")
+		JudgmentLive.shortcut = true
+		tried += 1
+		if fast == full:
+			same += 1
+	check(same == tried, "the trade shortcut picks exactly as the full scan (%d of %d opinion mixes; %d shortcuts taken)" % [same, tried, int(j.stats.get("trade_shortcut", 0))])
+	j.set_ledger(seller.id, pick.id, 900000, 0)
 	var b2: NPC = w.brain._buyer_for(seller, "iron_ore")
 	check(b2 == null or all.has(b2), "a liked buyer cannot be chosen outside the live rule (no infeasible sale)")
 	w.dispose()
@@ -194,7 +211,7 @@ func test_running_world() -> void:
 			var told := 0
 			for o in j.memories:
 				for ev in j.memories[o]:
-					if str(j.memories[o][ev].src) in ["told", "rumour"]:
+					if str(j.belief(o, ev).src) in ["told", "rumour"]:
 						told += 1
 			check(told > 0, "some villagers now know of the theft or the attack only by word of mouth (%d beliefs)" % told)
 		hashes.append(j.state_hash())
