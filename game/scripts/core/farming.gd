@@ -223,6 +223,7 @@ func sow(c: Vector2i, crop: String, p: PlayerState) -> String:
 	if why != "":
 		return why
 	p.inv.remove(str(crops()[crop].seed), 1)
+	w.stat("used_" + str(crops()[crop].seed))          # the seed is used up (SEED-02: the ledger counts it)
 	cells[c] = {"crop": crop, "state": "growing", "progress": 0.0}
 	w.stat("farm_sown_" + crop)
 	_show_around(c)
@@ -681,24 +682,65 @@ func save_seed(n: NPC, wheat: int) -> int:
 
 
 func seed_price(crop: String) -> int:
-	return maxi(1, roundi(float(crops()[crop].seed_price) * w.player_price_factor(true)))
+	return seed_item_price(str(crops()[crop].seed), w.player)
+
+
+## The planting material a seed seller deals in besides crop seed (MERCH-01): berry cuttings and wild flower seed
+## (balance.json propagation.kinds), in a fixed order.
+static func propagule_items() -> Array:
+	var out := []
+	var kinds: Dictionary = GameData.b("propagation").kinds
+	var ks := kinds.keys()
+	ks.sort()
+	for k in ks:
+		out.append(str(kinds[k].item))
+	return out
+
+
+## The cuttings and flower seed `n` sells: those a seed seller holds (real stock: the caravan's or bought from
+## households, never made from nothing).
+func propagule_offers(n: NPC) -> Array:
+	if not sells_seed(n):
+		return []
+	return propagule_items().filter(func(id): return n.inv.has(id))
+
+
+## The price of one seed, cutting or flower seed to `buyer` (the player or a villager alike, MERCH-01): the crop's
+## seed_price or the kind's propagation price, less the buyer's Trading price_bonus (what the player always paid).
+func seed_item_price(item: String, buyer) -> int:
+	var base := 0.0
+	var crop := crop_of_seed(item)
+	if crop != "":
+		base = float(crops()[crop].seed_price)
+	else:
+		base = float(World.propagation_cfg(World.propagates(item)).get("price", GameData.value(item)))
+	return maxi(1, roundi(base * (1.0 - Skills.value(buyer, "trading", "price_bonus"))))
 
 
 ## Buy `qty` seeds of a crop from a villager's own stock; the coins are the villager's. "" when done.
 func buy_seed(n: NPC, crop: String, qty: int, p: PlayerState) -> String:
 	if not seed_offers(n).has(crop) or qty < 1:
 		return "They have no seed of that."
-	var seed := str(crops()[crop].seed)
-	if not n.inv.has(seed, qty):
-		return "They have only %d." % n.inv.count(seed)
-	var cost := seed_price(crop) * qty
-	if p.coins < cost:
-		return "You need %d coins." % cost
-	if not p.inv.can_add(seed):
+	return buy_seed_item(n, str(crops()[crop].seed), qty, p)
+
+
+## MERCH-01: `buyer` (the player or a villager: the same rule) buys `qty` of a seed seller's seed, cuttings or flower
+## seed from the seller's own stock, at seed_item_price; the coins go to the seller (World.trade). "" when done.
+func buy_seed_item(n: NPC, item: String, qty: int, buyer) -> String:
+	if not sells_seed(n) or qty < 1 or not (is_seed(item) or propagule_items().has(item)):
+		return "They have no seed of that."
+	if not n.inv.has(item, qty):
+		return "They have only %d." % n.inv.count(item)
+	var price := seed_item_price(item, buyer)
+	if int(buyer.coins) < price * qty:
+		return "You need %d coins." % (price * qty)
+	if not buyer.inv.can_add(item):
 		return "Your pack is full."
-	if not w.trade(p, n, seed, qty, seed_price(crop)):
+	if not w.trade(buyer, n, item, qty, price):
 		return "The trade fell through."
 	w.stat("farm_seed_bought", float(qty))
+	if buyer is NPC:
+		w.stat("villager_seed_bought_" + item, float(qty))
 	return ""
 
 

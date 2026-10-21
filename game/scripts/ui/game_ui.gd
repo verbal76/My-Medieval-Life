@@ -2286,6 +2286,18 @@ func show_trade(n: NPC, pick := {}) -> void:
 				if no != "":
 					message(no)
 				show_trade(snpc), p.coins >= sprice * 5)
+	var cuts: Array = w.farm.propagule_offers(n)           # MERCH-01: berry cuttings and wild flower seed, from real stock
+	if not cuts.is_empty():
+		_label("Cuttings and flower seed:", 20, Color(1, 0.85, 0.5))
+		for cid in cuts:
+			var cprice: int = w.farm.seed_item_price(cid, p)
+			var citem: String = cid
+			var cnpc := n
+			_item_row(citem, p.inv.count(citem), "%d coins each (%d for sale)" % [cprice, n.inv.count(citem)], "Buy 1", func():
+				var no: String = w.farm.buy_seed_item(cnpc, citem, 1, p)
+				if no != "":
+					message(no)
+				show_trade(cnpc), p.coins >= cprice)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	_label("They buy:", 20, Color(1, 0.85, 0.5))
 	var any := false

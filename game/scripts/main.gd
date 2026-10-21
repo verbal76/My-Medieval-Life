@@ -734,6 +734,7 @@ func new_game(spec := {}) -> void:
 		p.sprite = spec.sprite
 		p.heir_sprite = spec.sprite
 	_build_scene()
+	_show_plants()                            # SEED-03: berry bushes out of season are bare from the start
 	if spec.is_empty():
 		_start(true)
 	else:
@@ -1045,6 +1046,16 @@ func _trees_panel() -> void:
 	ui.toast_t = 0.01
 
 
+## The wild plants as the world has them: picked, bare out of season, young or grubbed up are not drawn; a ripe
+## plant grown from a cutting or seed (SEED-02) is drawn, as it is not map data.
+func _show_plants() -> void:
+	for pl in world.plants:
+		if pl.state != "ripe":
+			_on_tile_changed(Vector2i(pl.x, pl.y), World.PLANT_LAYER, -1)
+		elif pl.get("planted", false):
+			_on_tile_changed(Vector2i(pl.x, pl.y), World.PLANT_LAYER, int(pl.tile))
+
+
 func _apply_world_changes() -> void:
 	for d in world.deposits:
 		if int(d.amount) <= 0:
@@ -1060,9 +1071,7 @@ func _apply_world_changes() -> void:
 	for f in world.fields:
 		world._field_tiles(f)
 	world.farm.show_all()                     # the player's field and pens (PL2-015)
-	for pl in world.plants:
-		if pl.state != "ripe":
-			_on_tile_changed(Vector2i(pl.x, pl.y), World.PLANT_LAYER, -1)          # picked, or grubbed up for building
+	_show_plants()
 	for p in world.plots:
 		if not p.site.is_empty() and not p.site.done:
 			_on_tile_changed(world._frame_cell(p), "below", map.data.tiles.frame)
@@ -2450,6 +2459,11 @@ func _use() -> void:
 					p.inv.add(id, int(got[id]))
 				if got.is_empty():
 					ui.message("Nothing left to pick.")
+				else:
+					var cut := world.propagation_drop(pl)        # SEED-02: a cutting or seed by its chance, as for villagers
+					for id in cut:
+						if world.player_gain(id, int(cut[id])) > 0:
+							got[id] = int(cut[id])
 				for k in got:
 					_gain("+%d %s" % [int(got[k]), GameData.item_name(k)], k))
 		"pen":
@@ -2560,6 +2574,9 @@ func set_down_cart() -> void:
 
 
 func plant_sapling(item: String) -> void:
+	if World.propagates(item) != "":
+		plant_cutting(item)
+		return
 	var p := world.player
 	var cell := Vector2i((p.pos + facing_vec() * 1.0).floor())
 	var why := world.plant_refusal(cell)
@@ -2575,7 +2592,28 @@ func plant_sapling(item: String) -> void:
 		var t := world.plant_tree(cell, item)
 		if not t.is_empty():
 			p.inv.remove(item, 1)
+			world.stat("used_" + item)               # the sapling is used up (SEED-02: the ledger counts it)
 			ui.message("You plant the %s. It will grow into a tree in a few days." % GameData.item_name(item).to_lower().replace(" sapling", " sapling"))
+	)
+
+
+## SEED-02: plant a berry cutting or wild flower seed from the pack (the pack window's Plant button) on the free grass
+## in front of the player, by the sapling rule; it is used up and a young plant grows there (World.plant_bush).
+func plant_cutting(item: String) -> void:
+	var p := world.player
+	var cell := Vector2i((p.pos + facing_vec() * 1.0).floor())
+	var why := world.plant_bush_refusal(cell, item)
+	ui.hide_all()
+	if why != "":
+		ui.message(why)
+		return
+	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
+	start_action("Planting", float(Trees.cfg().plant_seconds), func():
+		var pl := world.plant_bush(cell, item, p.inv)
+		if pl.is_empty():
+			ui.message("It cannot be planted there now.")
+			return
+		ui.message("You plant the %s. It will bear in about %d days, in its season." % [GameData.item_name(item).to_lower(), maxi(1, int(pl.regrow) - world.day())])
 	)
 
 

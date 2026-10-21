@@ -1412,6 +1412,11 @@ func _plant_gather_tests() -> void:
 	main.stop_gather("")
 	if main.gather_mode:
 		main.gather_button()
+	# SEED-03: berry bushes bear only in their seasons (the game starts in spring): the clock is moved on to summer
+	while not w.plant_in_season("redberry") or not w.plant_in_season("blueberry"):
+		w.minutes += 1440.0
+	w.season_plants()
+	main._show_plants()
 	var bush: Dictionary = {}
 	var flower: Dictionary = {}
 	for pl in w.plants:

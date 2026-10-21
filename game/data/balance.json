@@ -124,6 +124,20 @@
     2
   ],
   "_plants_note": "Wild flowers and berry bushes (owner B8-015/B8-016): a picked plant is bare, and ripe again at the dawn this many calendar seasons later (plant_regrow_seasons, rounded to whole days by Life.seasons_to_days; TIME-02). field_grow_seasons: a sown village field ripens this many seasons later. Agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md).",
+  "plant_seasons": {
+    "_note": "SEED-03 (owner directive 2026-10-20 section 1: perennials bear again under appropriate conditions; growth respects the seasons): the calendar seasons (w.season()) a wild plant kind bears in. A ripe plant out of its seasons is bare at the dawn (its fruit is not an item yet, so nothing is lost from the ledger), and a picked or bare one is ripe again only at a dawn in its seasons, once plant_regrow_seasons have passed. A kind not listed bears in every season (wild flowers). Agent proposal, provisional.",
+    "redberry": ["Summer", "Autumn"],
+    "blueberry": ["Summer", "Autumn"]
+  },
+  "propagation": {
+    "_note": "SEED-02 and SEED-04 (owner directive 2026-10-20 section 1): planting material for the wild plants. Whoever picks a ripe plant of a kind below (the player or a villager; not the bear) recovers one `item` with probability `chance`, decided by a hash of the plant's cell, the day and the world seed (deterministic; no draw from the world's RNG). Planting one (the player, on free village grass by the sapling rule World.plant_refusal) uses it up and starts a young plant that bears grow_seasons calendar seasons later (Life.seasons_to_days), at a dawn in its plant_seasons. `price` is what a seed seller (Farming.sells_seed) asks a buyer, less the buyer's Trading bonus, as crop seed. A household keeps household_keep of each in its pantry and takes the rest to market (NPCBrain.front_goods). Agent proposal, provisional.",
+    "household_keep": 2,
+    "kinds": {
+      "flower": {"item": "flower_seed", "chance": 0.25, "grow_seasons": 1, "price": 1},
+      "redberry": {"item": "red_berry_cutting", "chance": 0.2, "grow_seasons": 2, "price": 2},
+      "blueberry": {"item": "blue_berry_cutting", "chance": 0.2, "grow_seasons": 2, "price": 2}
+    }
+  },
   "field_grow_seasons": 1,
   "field_ripe_wait_hours": 12,
   "field_yield": 60,
@@ -549,7 +563,7 @@
     "seed_stock": {"farmer": {"wheat_seed": 6}, "food_merchant": {"wheat_seed": 4, "carrot_seed": 6, "potato_seed": 6, "herb_seed": 6}},
     "seed_keep": 2,
     "seed_cap": 12,
-    "caravan_seed_stock": {"wheat_seed": 6, "carrot_seed": 8, "potato_seed": 8, "herb_seed": 8},
+    "caravan_seed_stock": {"wheat_seed": 6, "carrot_seed": 8, "potato_seed": 8, "herb_seed": 8, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2},
     "caravan_seed_per_visit": 6,
     "pens": {"chicken": [5, 4], "sheep": [7, 5], "pig": [6, 5], "cow": [7, 6]},
     "fence_cells_per_plank": 3,

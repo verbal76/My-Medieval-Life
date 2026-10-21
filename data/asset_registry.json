@@ -7629,7 +7629,7 @@
     "tiles"
    ],
    "status": "integrated",
-   "used_for": "Cows, pigs, sheep, chickens, rabbits (with baby sheets), farm produce icons, the inventory window, farm tiles.",
+   "used_for": "Cows, pigs, sheep, chickens, rabbits (with baby sheets), farm produce icons, the inventory window, farm tiles; seed packets as the crop seed icons and (SEED-02) the wild flower seed (yellow-flower packet) and, standing in for the red and blue berry cuttings, the red and blue berry-cluster packets (no pack has a cutting or sprig).",
    "scale": "16-24 px animals, 1:1",
    "scan": [
     {
@@ -7715,16 +7715,19 @@
     "assets/animals/sheep.png",
     "assets/animals/sheep_baby.png",
     "assets/icons/apple.png",
+    "assets/icons/blue_berry_cutting.png",
     "assets/icons/bread.png",
     "assets/icons/carrot.png",
     "assets/icons/carrot_seed.png",
     "assets/icons/cheese.png",
     "assets/icons/egg.png",
+    "assets/icons/flower_seed.png",
     "assets/icons/herb_seed.png",
     "assets/icons/milk.png",
     "assets/icons/plain_clothes.png",
     "assets/icons/potato.png",
     "assets/icons/potato_seed.png",
+    "assets/icons/red_berry_cutting.png",
     "assets/icons/rotten_apple.png",
     "assets/icons/wheat_seed.png",
     "assets/icons/wool.png",

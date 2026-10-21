@@ -3066,6 +3066,10 @@ func test_caravan_purse() -> void:
 	var stock := func() -> void:
 		for s: NPC in smiths:
 			s.inv.add("iron_bar", 12 - s.inv.count("iron_bar"))
+		var seeds: Dictionary = GameData.b("farming").caravan_seed_stock     # the seed sellers' stock full: no seed bought
+		for o: NPC in w.npcs.filter(func(o): return o.alive and w.farm.sells_seed(o) and o.job == "merchant"):
+			for id in seeds:
+				o.inv.add(id, maxi(0, int(seeds[id]) - o.inv.count(id)))
 	stock.call()
 	var coins0 := w.total_coins()
 	b.caravan()
@@ -3228,7 +3232,10 @@ func test_wild_plants() -> void:
 	changes.clear()
 	w._new_day()
 	check(fl.state == "ripe" and changes.size() == 1 and changes[0][2] == int(fl.tile), "at dawn on its day the plant is ripe and its tile returns")
-	# berries are food: picked, then eaten through the usual path
+	# berries are food: picked, then eaten through the usual path (SEED-03: in their season, so the clock moves to summer)
+	while not w.plant_in_season("redberry") or not w.plant_in_season("blueberry"):
+		w.minutes += 1440.0
+	w.season_plants()
 	for k in ["redberry", "blueberry"]:
 		var bush: Dictionary = by[k]
 		var item: String = "red_berries" if k == "redberry" else "blueberries"
