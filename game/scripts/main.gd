@@ -1947,7 +1947,7 @@ func _find_target() -> void:
 		var cart: Dictionary = world.carts.near(p.pos, 1.3)
 		if not cart.is_empty():
 			if world.carts.may_use(cart, World.PLAYER):
-				here.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your cart"})
+				here.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your cart (%s)" % world.carts.condition(cart)})     # DVW-B4: its wear
 			here.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]

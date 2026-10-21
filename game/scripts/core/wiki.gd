@@ -113,6 +113,7 @@ static func build() -> Wiki:
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
+	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -297,7 +298,9 @@ func _items() -> void:
 		if it.has("armor"):
 			rows.append(["Armour", str(int(it.armor))])
 		if it.has("durability"):
-			rows.append(["Durability", "%d uses" % int(it.durability)])
+			rows.append(["Durability", ("%d days worn" if str(it.get("type", "")) in ["armor", "head"] else "%d uses") % int(it.durability)])     # DVW-B4
+		if Decay.rate(id) > 0.0:
+			rows.append(["Keeps", "%s in a hundred spoil a day" % str(snappedf(Decay.rate(id) * 100.0, 0.1))])     # DVW-B4
 		if it.has("speed"):
 			rows.append(["Work speed", "x%s" % str(it.speed)])
 		if it.has("tool"):
