@@ -148,7 +148,7 @@ static func _ranked(w: World, k: NPC, hs: Array) -> Array:
 		var tie := 0.0
 		for o: NPC in members:
 			tie = maxf(tie, float(w.relations.peek(o.id, k.id).get("regard", 0.0)))
-		var near := -k.pos.distance_to(Vector2(w.building_door(str(w.households[h].home))))
+		var near := -k.pos.distance_to(Vector2(w.household_cell(h, k.cell())))
 		keyed.append([able, room, food, tie, near, -h, h])
 	keyed.sort_custom(func(a: Array, b: Array) -> bool:
 		for i in 6:

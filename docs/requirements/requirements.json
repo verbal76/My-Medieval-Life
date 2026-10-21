@@ -10708,6 +10708,42 @@
    "complexity": "M"
   },
   {
+   "id": "FARM-08A",
+   "title": "No script error when a homeless household's couple or founder looks for a building site",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "No script error when a homeless household's couple or founder looks for a building site",
+   "source": "Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple",
+   "approval": "CLAUDE.md section 1 and WDR-022: script errors are always fixed (the simulation is not allowed to fail)",
+   "acceptance": [
+    "Construction._found_couple, Construction._found and Guardianship ranking look up a household's place through World.household_cell, which falls back to a member's cell when the household has no house standing; an aging_test check reproduces the error without the fix; suites green; the variant re-run on the fixed commit ends with 0 script errors"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FARM-08",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple"
+    }
+   ]
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",

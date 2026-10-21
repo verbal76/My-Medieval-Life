@@ -1897,6 +1897,14 @@ func _built_collision(b: Dictionary) -> void:
 	map.set_solid(Vector2i(int(b.door[0]), int(b.door[1]) - 1), false)
 
 
+## Where household `h` is found: its house's door, or, for a household with no house standing (homeless, or its home
+## not a building), `fallback` (a member's cell). Seed 2 at shared_wheat_yield 2.5 (FARM-08 run): a couple of a homeless
+## household looked up the door of a home that was not there, 37 script errors.
+func household_cell(h: int, fallback: Vector2i) -> Vector2i:
+	var home := str(households[h].get("home", "")) if h >= 0 and h < households.size() else ""
+	return building_door(home) if home != "" and buildings.has(home) else fallback
+
+
 func building_door(id: String) -> Vector2i:
 	var b: Dictionary = buildings[id]
 	return Vector2i(int(b.door[0]), int(b.door[1]))

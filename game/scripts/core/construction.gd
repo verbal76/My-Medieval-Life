@@ -987,7 +987,7 @@ func _found_couple(f: NPC, m: NPC) -> bool:
 		gifts[h] = maxi(0, theirs - _keep(h, others.size()))
 		spare += int(gifts[h])
 	var nid := w.households.size()
-	var plan := _home_plan(spare, w.building_door(str(w.households[homes[0]].home)), World.hh_ref(nid))
+	var plan := _home_plan(spare, w.household_cell(homes[0], f.cell()), World.hh_ref(nid))
 	if plan.is_empty():
 		var need := start_cost("house", footprint("house"))
 		_goal(f.household, "couple:%d:%d" % [f.id, m.id], "couple", need, need - spare, "saving to found a household of their own")
@@ -1056,7 +1056,7 @@ func _found(h: int) -> bool:
 	if _partner_here(founder):
 		leaving.append(w.npc(founder.partner))
 	var spare: int = w.property.purse(World.hh_ref(h)) - _keep(h, w.brain._members(h).size() - leaving.size())
-	var plan := _home_plan(spare, w.building_door(str(hh.home)), World.hh_ref(h))
+	var plan := _home_plan(spare, w.household_cell(h, founder.cell()), World.hh_ref(h))
 	if plan.is_empty():
 		var need := start_cost("house", footprint("house"))
 		_goal(h, "crowded", "split", need, need - spare, "saving so %s can found a household of their own" % founder.name)

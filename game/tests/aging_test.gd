@@ -496,6 +496,17 @@ func test_couples_found_households() -> void:
 	check(not (w.households[hf].members as Array).has(f.id) and not (w.households[hm].members as Array).has(m.id), "and are no longer members of the old ones")
 	check(str(nh.get("build", "")) != "" or str(nh.home) != "", "the new household starts a house or takes an empty one")
 	check(int(w.stats.get("couples_founded", 0)) == 1, "the founding is counted")
+	# a household with no house standing is found where its member is (FARM-08 run, seed 2 at yield 2.5: a homeless
+	# couple's household looked up the door of a home that was not there)
+	var real_home := str(w.households[hf].home)
+	if real_home != "" and w.buildings.has(real_home):
+		check(w.household_cell(hf, Vector2i(-1, -1)) == w.building_door(real_home), "a household with a house is found at its door")
+	w.households[hf].home = ""
+	check(w.household_cell(hf, f.cell()) == f.cell(), "a homeless household is found at its member's cell")
+	w.households[hf].home = "no_such_building"
+	check(w.household_cell(hf, f.cell()) == f.cell(), "a household whose home is not a building is found at its member's cell")
+	check(w.household_cell(-1, f.cell()) == f.cell() and w.household_cell(w.households.size(), f.cell()) == f.cell(), "no household: the fallback")
+	w.households[hf].home = real_home
 	# 3. no coins and nothing to spare: nothing happens
 	var w2 := new_world()
 	var g: NPC = null
@@ -513,6 +524,10 @@ func test_couples_found_households() -> void:
 				w2.npc(int(mid)).coins = 0
 		var n_hh := w2.households.size()
 		check(not w2.construction._found_couple(g, h) and w2.households.size() == n_hh and g.household != n_hh, "a couple who cannot pay for any start stay where they are")
+		var g_home := str(w2.households[g.household].home)
+		w2.households[g.household].home = ""                     # homeless: the plan is looked for near them, no error
+		check(not w2.construction._found_couple(g, h) and w2.households.size() == n_hh, "a couple from a homeless household plans from where they stand (no script error)")
+		w2.households[g.household].home = g_home
 	# 4. a crowded house (owner: births need no bed) sends out a grown child with their partner, never one
 	# of a couple on their own
 	var w3 := new_world()
