@@ -21079,10 +21079,12 @@
     "Code and tests on wip/expansion19-preparation in isolated scenarios with provisional adapters; the live NPC decision system is not replaced; SJD-Q01..Q14 stay open for the owner"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 99, judgment_live_test 26, judgment_perf 10; sim_gate identical when off",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "e05d367"
+   ],
    "parent": "PROS-01",
    "depends_on": [],
    "blockers": [],
@@ -21104,6 +21106,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit e05d367; tests; branch",
+     "why": "Round 1 on wip/expansion19-preparation (e05d367): memory with provenance, signed opinions, need-vs-opinion weighting (iron example both ways), gossip, provisional save section, live hooks off by default; judgment_test 99, judgment_live_test 26, judgment_perf 10 checks; gate identical with judgment off; 10-day sim with judgment on: no leaks. Not ready for live use: SJD-Q01,Q02,Q06,Q07,Q08,Q10,Q11,Q14 block it; daily update over phone frame budget (round 2 in progress)"
     }
    ],
    "target_build": "19"
