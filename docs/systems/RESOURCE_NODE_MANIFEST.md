@@ -76,14 +76,14 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** none.
 - **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
-- **Yields a cycle:** 2 blueberries. 2 blueberries a plant, all at once (World.pick_plant).
+- **Yields a cycle:** 2 blueberries. 2 blueberries a plant, all at once (World.pick_plant). Whoever picks it (the player or a villager, not the bear) also recovers one blue_berry_cutting with chance propagation.kinds.blueberry.chance, by a hash of the cell, the day and the world seed (World.propagation_drop, SEED-02/SEED-04); planted, it grows a new bush (World.plant_bush).
 - **Total:** 2 blueberries from each ripe plant of this kind in village.json plants (tile 2662).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. SEED-03: it bears only in its plant_seasons (Summer and Autumn): out of season a ripe bush is bare at the dawn, and it ripens again at a dawn in season once its regrowth has passed (World.season_plants). Picking never removes it (perennial).
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
+- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry. SEED-04: a forager keeps the cutting or seed the player's rule gives and stores it in the household's pantry; the household keeps propagation.household_keep of each and takes the rest to the seed seller (the food stall) by cart.
 - **Gather mode:** yes. **Icon:** `blueberries`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
-- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::propagation_drop`, `game/scripts/core/world.gd::season_plants`
 
 ### `boulder` · Boulder
 
@@ -184,14 +184,14 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** none.
 - **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
-- **Yields a cycle:** 1 flower. 1 flower a plant, all at once (World.pick_plant).
+- **Yields a cycle:** 1 flower. 1 flower a plant, all at once (World.pick_plant). Whoever picks it (the player or a villager, not the bear) also recovers one flower_seed with chance propagation.kinds.flower.chance, by a hash of the cell, the day and the world seed (World.propagation_drop, SEED-02/SEED-04); planted, it grows a new flower (World.plant_bush).
 - **Total:** 1 flower from each ripe plant of this kind: village.json plants (tiles 2656 red, 2657 purple, 2658 yellow, 2659 white) and every flower the overworld generator draws outside the village (Overworld.flower_at).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes.
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes. Wild flowers bear in every season (no plant_seasons entry); picking never removes the plant (perennial).
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
+- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry. SEED-04: a forager keeps the cutting or seed the player's rule gives and stores it in the household's pantry; the household keeps propagation.household_keep of each and takes the rest to the seed seller (the food stall) by cart.
 - **Gather mode:** yes. **Icon:** `flower`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
-- **Code:** `game/scripts/core/overworld.gd::flower_at`, `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+- **Code:** `game/scripts/core/overworld.gd::flower_at`, `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::propagation_drop`, `game/scripts/core/world.gd::season_plants`
 
 ### `gold_seam` · Gold seam
 
@@ -292,14 +292,14 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** none.
 - **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
-- **Yields a cycle:** 2 red_berries. 2 red_berries a plant, all at once (World.pick_plant).
+- **Yields a cycle:** 2 red_berries. 2 red_berries a plant, all at once (World.pick_plant). Whoever picks it (the player or a villager, not the bear) also recovers one red_berry_cutting with chance propagation.kinds.redberry.chance, by a hash of the cell, the day and the world seed (World.propagation_drop, SEED-02/SEED-04); planted, it grows a new bush (World.plant_bush).
 - **Total:** 2 red_berries from each ripe plant of this kind in village.json plants (tile 2660).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. SEED-03: it bears only in its plant_seasons (Summer and Autumn): out of season a ripe bush is bare at the dawn, and it ripens again at a dawn in season once its regrowth has passed (World.season_plants). Picking never removes it (perennial).
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
+- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry. SEED-04: a forager keeps the cutting or seed the player's rule gives and stores it in the household's pantry; the household keeps propagation.household_keep of each and takes the rest to the seed seller (the food stall) by cart.
 - **Gather mode:** yes. **Icon:** `red_berries`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
-- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::propagation_drop`, `game/scripts/core/world.gd::season_plants`
 
 ### `sheep_pen` · Sheep
 

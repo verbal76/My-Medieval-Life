@@ -20,7 +20,8 @@ const BUYS := {
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
 		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
-		"red_berries": 15, "blueberries": 15, "apple": 15},    # households' gathered berries and apples, brought to market (B14)
+		"red_berries": 15, "blueberries": 15, "apple": 15,    # households' gathered berries and apples, brought to market (B14)
+		"flower_seed": 4, "red_berry_cutting": 4, "blue_berry_cutting": 4},   # MERCH-01: households' saved planting material, sold on as seed
 	"merchant_goods": {"pickaxe": 4, "axe": 4, "hammer": 2, "copper_sword": 3, "iron_sword": 3,
 		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "wool": 20, "wool_cloth": 10, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
@@ -31,7 +32,7 @@ const BUYS := {
 # items an NPC keeps for its own work and will not sell
 const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
-	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"],
+	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed", "flower_seed", "red_berry_cutting", "blue_berry_cutting"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
 # who to sell each item to, in order of preference
 const OUTLETS := {
@@ -45,6 +46,8 @@ const OUTLETS := {
 	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["tanner", "merchant_goods"], "wool_cloth": ["merchant_goods"],
 	"bread": ["tavernkeeper", "merchant_food"], "linen_bandage": ["sage"],
 	"red_berries": ["merchant_food"], "blueberries": ["merchant_food"], "apple": ["merchant_food"], "herbal_poultice": ["merchant_goods"],
+	# MERCH-01: the seed seller (the food stall) buys households' surplus cuttings and flower seed
+	"flower_seed": ["merchant_food"], "red_berry_cutting": ["merchant_food"], "blue_berry_cutting": ["merchant_food"],
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
 	# PAR-04 (owner OD-18.4): the made goods only the player used to make, and where their makers sell them
@@ -330,6 +333,29 @@ func _plan_heal(n: NPC) -> bool:
 	return false
 
 
+## MERCH-01: a farmer whose household holds less than seed_keep wheat seed (their pack and the pantry) buys the
+## shortfall from a seed seller's stock (the food stall's merchant) with their own coins, by the player's rule
+## (Farming.buy_seed_item) and within the household's reserve (OD-19).
+func _plan_buy_seed(n: NPC) -> bool:
+	if n.job != "farmer" or n.household < 0:
+		return false
+	var seed := str(Farming.crops().wheat.seed)
+	var have := n.inv.count(seed) + (w.households[n.household].pantry as Inventory).count(seed)
+	var short := int(Farming.seed_cfg().seed_keep) - have
+	if short <= 0:
+		return false
+	for o: NPC in w.npcs:
+		if o == n or o.job != "merchant" or not w.farm.sells_seed(o) or w.asleep(o) or not o.inv.has(seed):
+			continue
+		var qty := mini(short, o.inv.count(seed))
+		if not w.can_afford(n, w.farm.seed_item_price(seed, n) * qty):
+			return false
+		n.doing = "buying seed"
+		n.plan = [go(_workplace_cell(o)), doit("buy_seed", {"vendor": o.id, "item": seed, "qty": qty})]
+		return true
+	return false
+
+
 ## Evening work for the household (B14): forage ripe wild plants near home (flowers for medicine,
 ## berries for the pantry) and brew flowers into poultices at the home's hearth. Everything comes from
 ## real plants and the household's own stock; a household keeps poultice_keep poultices and
@@ -432,7 +458,7 @@ func _plan_storefront(n: NPC, house: Dictionary) -> bool:
 
 
 ## What a storefront household sells: medicine and berries beyond what the household keeps.
-const FRONT_WARES := ["herbal_poultice", "red_berries", "blueberries", "apple"]
+const FRONT_WARES := ["herbal_poultice", "red_berries", "blueberries", "apple", "flower_seed", "red_berry_cutting", "blue_berry_cutting"]
 
 
 func front_goods(h: int) -> Dictionary:
@@ -448,6 +474,10 @@ func front_goods(h: int) -> Dictionary:
 		if e > 0:
 			out[id] = e
 			spare -= e
+	var keep_cut := int(GameData.b("propagation").household_keep)     # SEED-04: planting material kept, the rest sold
+	for id in Farming.propagule_items():
+		if pantry.count(id) > keep_cut:
+			out[id] = pantry.count(id) - keep_cut
 	return out
 
 
@@ -658,6 +688,8 @@ func _plan_evening(n: NPC, h: float) -> void:
 	if _plan_heal(n):
 		return
 	if _plan_provision(n):
+		return
+	if _plan_buy_seed(n):
 		return
 	if _plan_home_work(n):
 		return
@@ -1984,10 +2016,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			for id in got:
 				n.inv.add(id, int(got[id]))
 				w.stat("villager_foraged_" + id, float(got[id]))
+			if not got.is_empty():                        # SEED-04: a cutting or seed by the player's rule, saved at home
+				var cut := w.propagation_drop(pl)
+				for id in cut:
+					n.inv.add(id, int(cut[id]))
+					w.stat("made_" + id, float(cut[id]))
 			return not got.is_empty()
 		"store_home":
 			var pantry: Inventory = w.households[n.household].pantry
-			for id in ["flower", "red_berries", "blueberries", "apple"]:
+			for id in ["flower", "red_berries", "blueberries", "apple"] + Farming.propagule_items():
 				if n.inv.has(id):
 					w.transfer(n.inv, pantry, id, n.inv.count(id))
 			while n.inv.has("handcart"):                  # B14: a household's handcart is set down at its house
@@ -2089,6 +2126,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if qty > 0 and a.get("pantry", false):
 				w.transfer(n.inv, w.households[n.household].pantry, a.item, qty)
 			return qty > 0
+		"buy_seed":                                       # MERCH-01: a villager buys seed by the player's rule
+			var v := w.npc(int(a.vendor))
+			if v == null or not v.alive:
+				return false
+			return w.farm.buy_seed_item(v, str(a.item), mini(int(a.qty), v.inv.count(str(a.item))), n) == ""
 		"buy_stall":
 			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
 		"sell_to":

@@ -33,6 +33,10 @@ func _init() -> void:
 	test_market()
 	test_save()
 	test_village_chain()
+	test_propagation()
+	test_perennials()
+	test_household_seed()
+	test_seed_seller()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -595,3 +599,250 @@ func test_village_chain() -> void:
 	check(int(st.get("used_egg", 0)) + int(st.get("used_milk", 0)) > 0, "and the cook uses them at the table")
 	check(int(st.get("eaten_cheese", 0)) + int(st.get("eaten_bread", 0)) > 0, "and villagers eat cheese or egg bread")
 	check(w2.total_coins() == start + w2.coin_sources, "coins conserved through the chain (%d + sources %d = %d)" % [start, w2.coin_sources, w2.total_coins()])
+
+
+# ---------------------------------------------------------------- SEED-02..04, MERCH-01 ----------
+## A wild plant of `kind` in the village (not grown from a cutting).
+func wild_plant(w: World, kind: String) -> Dictionary:
+	for pl in w.plants:
+		if str(pl.kind) == kind and not pl.get("planted", false):
+			return pl
+	return {}
+
+
+## The first day (from `from`) whose day of the year falls in `season`.
+func day_in(season: String, from := 0) -> int:
+	var d := from
+	while Life.season(float(d) * 1440.0 + 600.0) != season:
+		d += 1
+	return d
+
+
+func set_day(w: World, d: int) -> void:
+	w.minutes = float(d) * 1440.0 + 10.0 * 60.0
+
+
+## A village cell a cutting can be planted on, near (30, 30).
+func open_cell(w: World, item: String) -> Vector2i:
+	for r in range(0, 40):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var c := Vector2i(30 + dx, 30 + dy)
+				if w.plant_bush_refusal(c, item) == "":
+					return c
+	return Vector2i(-1, -1)
+
+
+func test_propagation() -> void:
+	var w := new_world()
+	var p := w.player
+	var prop: Dictionary = GameData.b("propagation")
+	for kind in prop.kinds:
+		var k: Dictionary = prop.kinds[kind]
+		check(GameData.items.has(str(k.item)) and World.propagates(str(k.item)) == kind and FileAccess.file_exists("res://assets/icons/%s.png" % k.item), "%s: %s is an item with an icon that plants it" % [kind, k.item])
+		check(float(k.chance) > 0.0 and float(k.chance) < 1.0 and float(k.grow_seasons) > 0.0, "%s: recovery is a chance, growth takes calendar time" % kind)
+	# the recovery roll: deterministic, from the cell and the day, near its chance over many days
+	var bush := wild_plant(w, "redberry")
+	var hits := 0
+	for d in 400:
+		set_day(w, d)
+		var a := w.propagation_drop(bush)
+		if d < 3:
+			check(a == w.propagation_drop(bush), "the roll is the same twice on day %d" % d)
+		hits += 1 if not a.is_empty() else 0
+	var share := float(hits) / 400.0
+	var want := float(prop.kinds.redberry.chance)
+	check(absf(share - want) < 0.07, "a red berry bush gives a cutting on %.2f of days (chance %.2f)" % [share, want])
+	check(w.propagation_drop({"kind": "nothing", "x": 1, "y": 1}).is_empty(), "a kind without propagation gives nothing")
+	# planting consumes the cutting, counted; the young plant bears only after growing, in its season
+	var cut := "red_berry_cutting"
+	set_day(w, day_in("Summer"))
+	var cell := open_cell(w, cut)
+	check(cell != Vector2i(-1, -1), "an open village cell to plant on: %s" % cell)
+	check(w.plant_bush(cell, cut, p.inv).is_empty(), "nothing is planted without a cutting in the pack")
+	check(w.plant_bush_refusal(cell, "wheat") != "", "wheat is no planting material")
+	var road: Array = w.map.data.road[0]
+	check(w.plant_bush_refusal(Vector2i(int(road[0]), int(road[1])), cut) != "", "not on the road")
+	p.inv.add(cut, 2)
+	var used0 := int(w.stats.get("used_" + cut, 0))
+	var pl := w.plant_bush(cell, cut, p.inv)
+	check(not pl.is_empty() and pl.state == "young" and pl.kind == "redberry" and p.inv.count(cut) == 1 and int(w.stats.get("used_" + cut, 0)) == used0 + 1, "planting takes one cutting from the pack (counted used_) and a young red berry bush stands there")
+	check(int(pl.get("tile", -1)) == 2660 and w.plant_at(cell) == pl, "it is a red berry bush of the map's tile, found where it was planted")
+	check(w.plant_bush_refusal(cell, cut) != "", "the cell is taken now")
+	check(w.pick_plant(pl).is_empty(), "a young bush has nothing to pick")
+	var grow := roundi(Life.seasons_to_days(float(prop.kinds.redberry.grow_seasons)))
+	check(int(pl.regrow) == w.day() + grow, "it bears %d days later (grow_seasons in calendar days)" % grow)
+	set_day(w, int(pl.regrow) - 1)
+	w.season_plants()
+	check(pl.state == "young", "a day before, it is still growing")
+	set_day(w, int(pl.regrow))
+	w.season_plants()
+	var ok_season := w.plant_in_season("redberry")
+	check(pl.state == ("ripe" if ok_season else "picked"), "grown on day %d (%s): %s" % [w.day(), w.season(), pl.state])
+	set_day(w, day_in("Summer", int(pl.regrow)))
+	w.season_plants()
+	check(pl.state == "ripe" and not w.pick_plant(pl).is_empty(), "in summer the planted bush bears berries")
+	# a flower seed grows a flower of one of the map's flower tiles
+	p.inv.add("flower_seed", 1)
+	var fcell := open_cell(w, "flower_seed")
+	var fl := w.plant_bush(fcell, "flower_seed", p.inv)
+	check(not fl.is_empty() and fl.kind == "flower" and [2656, 2657, 2658, 2659].has(int(fl.tile)) and not p.inv.has("flower_seed"), "a wild flower seed is used up and a young flower grows")
+	# the player's picking path: what is picked and the cutting both reach the pack, both counted made_
+	var wild := wild_plant(w, "blueberry")
+	var d := day_in("Summer", w.day())
+	set_day(w, d)
+	while w.propagation_drop(wild).is_empty() or not w.plant_in_season("blueberry"):
+		d += 1
+		set_day(w, d)
+	wild.state = "ripe"
+	var m0 := int(w.stats.get("made_blue_berry_cutting", 0))
+	var got := w.pick_plant(wild)
+	var drop := w.propagation_drop(wild)
+	for id in drop:
+		w.player_gain(id, int(drop[id]))
+	check(not got.is_empty() and p.inv.count("blue_berry_cutting") == 1 and int(w.stats.get("made_blue_berry_cutting", 0)) == m0 + 1, "the player picks blueberries and keeps the cutting (made_ counted)")
+	# a crop's seed is counted used_ when sown
+	var sd0 := int(w.stats.get("used_wheat_seed", 0))
+	var land := farm_land(w)
+	var fc := cell_in(land, 1, 1)
+	p.stamina = 100.0
+	p.inv.add("wheat_seed", 1)
+	set_day(w, day_in("Spring", w.day()))
+	w.farm.till(fc, p)
+	check(w.farm.sow(fc, "wheat", p) == "" and int(w.stats.get("used_wheat_seed", 0)) == sd0 + 1, "sowing a crop counts its seed used_")
+	# the save keeps the planted plants
+	var dd: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), dd)
+	var back := w2.plant_at(cell)
+	check(not back.is_empty() and back.get("planted", false) and str(back.kind) == "redberry" and str(back.state) == str(pl.state) and w2.plant_at(fcell).get("kind", "") == "flower", "the planted bush and flower load with the save")
+
+
+func test_perennials() -> void:
+	var w := new_world()
+	check(w.day() == 0 and w.season() == "Spring", "the game starts in spring")
+	var bush := wild_plant(w, "redberry")
+	var flower := wild_plant(w, "flower")
+	check(bush.state == "picked" and flower.state == "ripe", "out of season from the start: the red berry bush is bare, the flower is out")
+	check(w.pick_plant(bush).is_empty(), "nothing to pick from a bare bush")
+	var why := ResourceNodes.can_harvest(w, ResourceNodes.def_for("plant", "redberry"), bush)
+	check(why.contains("summer and autumn"), "the bush says when it bears: \"%s\"" % why)
+	set_day(w, day_in("Summer"))
+	w.season_plants()
+	check(bush.state == "ripe", "in summer the bush bears")
+	var got := w.pick_plant(bush)
+	check(not got.is_empty() and bush.state == "picked" and w.plants.has(bush), "picked, it stays where it grows (perennial)")
+	var regrow := int(bush.regrow)
+	set_day(w, regrow)
+	w.season_plants()
+	check(bush.state == ("ripe" if w.plant_in_season("redberry") else "picked"), "it bears again on day %d only if in season (%s)" % [regrow, w.season()])
+	set_day(w, day_in("Winter", w.day()))
+	bush.state = "ripe"
+	w.season_plants()
+	check(bush.state == "picked", "winter strips the bush; the berries were never items, so nothing leaves the ledger")
+	set_day(w, day_in("Summer", w.day()))
+	w.season_plants()
+	check(bush.state == "ripe", "next summer it bears again")
+	set_day(w, day_in("Winter", w.day()))
+	flower.state = "ripe"
+	w.season_plants()
+	check(flower.state == "ripe", "wild flowers are not seasonal (no plant_seasons entry)")
+	# fruit trees: picked, the tree stays and bears again in its seasons
+	var apple := {}
+	for t in w.trees:
+		if str(t.get("species", "")) == "apple_orchard" and t.state == "grown":
+			apple = t
+			break
+	check(not apple.is_empty(), "the village has a grown apple tree")
+	set_day(w, day_in("Summer", w.day()))
+	apple.fruit_day = 0
+	check(not w.pick_fruit(apple).is_empty() and apple.state == "grown", "picked, the apple tree stands")
+	check(not Trees.fruit_ripe(apple, w.day(), w.season()), "it is bare after picking")
+	check(not Trees.fruit_ripe(apple, int(apple.fruit_day) + 100, "Winter") and Trees.fruit_ripe(apple, int(apple.fruit_day), "Summer"), "it bears again after its regrowth, in summer, never in winter")
+
+
+func test_household_seed() -> void:
+	var w := new_world()
+	var n: NPC = w.npcs.filter(func(o): return o.alive and o.role == "adult" and o.household >= 0 and o.home != "")[0]
+	var pantry: Inventory = w.households[n.household].pantry
+	var bush := wild_plant(w, "redberry")
+	var d := day_in("Summer")
+	set_day(w, d)
+	while w.propagation_drop(bush).is_empty() or not w.plant_in_season("redberry"):
+		d += 1
+		set_day(w, d)
+	bush.state = "ripe"
+	var m0 := int(w.stats.get("made_red_berry_cutting", 0))
+	var c0 := n.inv.count("red_berry_cutting")
+	check(w.brain.act(n, "forage", {"plant": str(bush.id)}) and n.inv.count("red_berry_cutting") == c0 + 1 and int(w.stats.get("made_red_berry_cutting", 0)) == m0 + 1, "a villager foraging keeps the cutting, by the player's rule (made_ counted)")
+	var p0 := pantry.count("red_berry_cutting")
+	w.brain.act(n, "store_home", {})
+	check(pantry.count("red_berry_cutting") == p0 + c0 + 1 and not n.inv.has("red_berry_cutting"), "the cutting is saved in the household's pantry")
+	var keep := int(GameData.b("propagation").household_keep)
+	pantry.add("red_berry_cutting", keep + 3 - pantry.count("red_berry_cutting"))
+	check(int(w.brain.front_goods(n.household).get("red_berry_cutting", 0)) == 3, "the household keeps %d and offers the rest for market" % keep)
+	check(NPCBrain.OUTLETS["red_berry_cutting"] == ["merchant_food"], "the seed seller (the food stall) buys households' cuttings")
+
+
+func test_seed_seller() -> void:
+	var w := new_world()
+	var p := w.player
+	var food: NPC = null
+	var farmer: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "merchant" and w.farm.sells_seed(n) and food == null:
+			food = n
+		elif n.alive and n.job == "farmer" and n.household >= 0 and farmer == null:
+			farmer = n
+	check(food != null and farmer != null, "a seed seller and a farmer")
+	for id in Farming.propagule_items():
+		check(not food.inv.has(id), "no %s at the start: no free stock" % id)
+	check(w.farm.propagule_offers(food).is_empty(), "nothing offered without stock")
+	# the caravan sells the merchant cuttings and flower seed for the merchant's coins
+	var sellers: Array = w.npcs.filter(func(o): return o.alive and o.job == "merchant" and w.farm.sells_seed(o))
+	var coins0 := 0
+	for o: NPC in sellers:
+		o.coins = 2000
+		coins0 += o.coins
+	var spent := 0
+	for i in 4:
+		spent += w.brain._caravan_seeds()
+	var got := 0
+	var coins1 := 0
+	for o: NPC in sellers:
+		coins1 += o.coins
+	for id in Farming.propagule_items():
+		var held := 0
+		for o: NPC in sellers:
+			held += o.inv.count(id)
+		got += held
+		check(int(w.stats.get("imported_" + id, 0)) == held, "%s: every one the seed sellers hold was imported (counted %d)" % [id, held])
+	check(got > 0 and coins1 == coins0 - spent, "the caravan restocks %d cuttings and flower seed, paid from the sellers' coins (%d)" % [got, spent])
+	# the player buys one: coins to the merchant, stock down by one
+	var id: String = w.farm.propagule_offers(food)[0]
+	var price := w.farm.seed_item_price(id, p)
+	p.coins = 100
+	var s0 := food.inv.count(id)
+	var fc := food.coins
+	check(w.farm.buy_seed_item(food, id, 1, p) == "" and p.inv.count(id) == 1 and food.inv.count(id) == s0 - 1 and p.coins == 100 - price and food.coins == fc + price, "the player buys a %s for %d coins from the stock" % [id, price])
+	check(w.farm.buy_seed_item(food, id, 99, p) != "", "not more than the stock")
+	# a farmer short of seed buys it from the seller with their own coins, by the same rule
+	var pantry: Inventory = w.households[farmer.household].pantry
+	farmer.inv.items.erase("wheat_seed")
+	pantry.items.erase("wheat_seed")
+	farmer.coins = 300
+	if not food.inv.has("wheat_seed", 2):
+		food.inv.add("wheat_seed", 2)
+	var total := w.total_coins()
+	check(w.brain._plan_buy_seed(farmer) and farmer.plan.size() == 2, "a farmer without seed plans to buy it: " + farmer.doing)
+	var keep := int(Farming.seed_cfg().seed_keep)
+	var ws0 := food.inv.count("wheat_seed")
+	var sp := w.farm.seed_item_price("wheat_seed", farmer)
+	var f0 := farmer.coins
+	var m0 := food.coins
+	check(w.brain.act(farmer, "buy_seed", {"vendor": food.id, "item": "wheat_seed", "qty": keep}), "the farmer buys at the stall")
+	check(farmer.inv.count("wheat_seed") == keep and food.inv.count("wheat_seed") == ws0 - keep, "%d wheat seed moved from the merchant's stock to the farmer" % keep)
+	check(farmer.coins == f0 - sp * keep and food.coins == m0 + sp * keep and w.total_coins() == total, "the farmer paid %d coins to the merchant; coins conserved" % (sp * keep))
+	check(not w.brain._plan_buy_seed(farmer), "with seed_keep in hand the farmer buys no more")

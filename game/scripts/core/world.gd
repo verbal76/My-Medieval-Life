@@ -124,6 +124,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		Trees.sync(t, minutes)
 		m.set_solid(Vector2i(int(t.x), int(t.y)), Trees.solid(str(t.state)))
 	_make_plants(m)
+	season_plants()                    # SEED-03: the berry bushes are bare out of their seasons from the start
 	for d in m.data.deposits:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
 	_make_boulders(m)
@@ -360,10 +361,7 @@ func _new_day() -> void:
 				var back: Dictionary = map.overworld.flower_at(c)
 				if not back.is_empty():
 					tile_changed.emit(c, "below", int(back.tile))
-	for pl in plants:
-		if pl.state == "picked" and d >= pl.regrow:
-			pl.state = "ripe"
-			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, int(pl.tile))
+	season_plants()                    # wild plants ripen again, in their seasons (SEED-03)
 	fauna.new_day()
 	farm.daily_products()              # eggs, milk and wool wait in the player's pens (PL2-015)
 	var t := Time.get_ticks_usec() if profiling else 0
@@ -1011,6 +1009,83 @@ func pick_plant(pl: Dictionary) -> Dictionary:
 	for id in got:
 		stat("made_" + id, float(got[id]))     # the economy ledger's production count (economy_sim)
 	return got
+
+
+## SEED-02/SEED-04: the planting material whoever picked plant `pl` recovers from it, {item: 1} or {}: balance.json
+## propagation.kinds[kind] (its item, by its chance). The roll is a hash of the plant's cell, the day and the world seed,
+## so it is deterministic and draws nothing from the world's RNG. The same rule for the player and villagers; the caller
+## adds the item and counts it (made_), as with the picked goods.
+func propagation_drop(pl: Dictionary) -> Dictionary:
+	var k: Dictionary = propagation_cfg(str(pl.get("kind", "")))
+	if k.is_empty():
+		return {}
+	var roll := float(Overworld.hash32(int(pl.x), int(pl.y), day(), seed + 41) % 10000) / 10000.0
+	return {str(k.item): 1} if roll < float(k.chance) else {}
+
+
+## The propagation settings of a wild plant kind ({} if it has none).
+static func propagation_cfg(kind: String) -> Dictionary:
+	return (GameData.b("propagation").kinds as Dictionary).get(kind, {})
+
+
+## The wild plant kind an item plants ("" if it plants none): items.json `propagates`.
+static func propagates(item: String) -> String:
+	return str(GameData.item(item).get("propagates", "")) if GameData.items.has(item) else ""
+
+
+## SEED-03: whether a wild plant kind bears in the present season (balance.json plant_seasons; unlisted: always).
+func plant_in_season(kind: String) -> bool:
+	var s: Dictionary = GameData.b("plant_seasons")
+	return not s.has(kind) or (s[kind] as Array).has(season())
+
+
+## SEED-03, at dawn (and when a world is made): a ripe plant out of its seasons goes bare until its seasons come round;
+## a young planted one that has grown (its `regrow` day) and a bare one whose regrow day has come are ripe again, if in
+## season. Bare plants keep their place and are perennial: picking never removes a plant.
+func season_plants() -> void:
+	var d := day()
+	for pl in plants:
+		if pl.state == "young" and d >= pl.regrow:
+			pl.state = "picked"                       # grown: it bears like any bush, in its seasons
+		if pl.state == "ripe" and not plant_in_season(str(pl.kind)):
+			pl.state = "picked"
+			pl.regrow = float(d)
+			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, -1)
+		elif pl.state == "picked" and d >= pl.regrow and plant_in_season(str(pl.kind)):
+			pl.state = "ripe"
+			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, int(pl.tile))
+
+
+## Why `item` (a cutting or flower seed) cannot be planted at `cell`, "" if it can: the sapling rule (free, walkable
+## grass, away from roads, doors, buildings, fields, plots and trees), inside the village.
+func plant_bush_refusal(cell: Vector2i, item: String) -> String:
+	if propagates(item) == "":
+		return "That cannot be planted."
+	if not map.in_village(cell):
+		return "Plant it in the village, on open grass."
+	return plant_refusal(cell)
+
+
+## SEED-02: plant a cutting or flower seed at `cell` (check plant_bush_refusal first): the item is used up (taken from
+## `from` and counted used_), and a young wild plant of its kind stands there, belonging to no one like any wild plant; it
+## bears propagation grow_seasons later (season_plants). Returns the plant, {} if refused.
+func plant_bush(cell: Vector2i, item: String, from: Inventory) -> Dictionary:
+	if plant_bush_refusal(cell, item) != "" or not from.has(item):
+		return {}
+	var kind := propagates(item)
+	var tiles := []
+	for pl in plants:
+		if str(pl.kind) == kind and not tiles.has(int(pl.tile)) and not pl.get("planted", false):
+			tiles.append(int(pl.tile))
+	tiles.sort()
+	var tile := int(tiles[Overworld.hash32(cell.x, cell.y, 7, 29) % tiles.size()]) if not tiles.is_empty() else -1
+	from.remove(item, 1)
+	stat("used_" + item)
+	stat("plants_planted_" + kind)
+	var pl := {"id": "sown%d" % plants.size(), "x": cell.x, "y": cell.y, "kind": kind, "tile": tile, "state": "young",
+			"regrow": float(day() + roundi(Life.seasons_to_days(float(propagation_cfg(kind).grow_seasons)))), "planted": true}
+	plants.append(pl)
+	return pl
 
 
 ## PAR-01 (owner OD-18.1): the goods `who` makes go to `into`: the player's pack through player_gain (counted, a
@@ -3135,6 +3210,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		if not sp.is_empty():
 			pl.state = str(sp.state)
 			pl.regrow = float(sp.regrow)
+	for sp in d.get("plants", []):     # SEED-02: plants grown from cuttings and seed are not map data: the save holds them
+		if sp.get("planted", false):
+			plants.append({"id": str(sp.id), "x": int(sp.x), "y": int(sp.y), "kind": str(sp.kind), "tile": int(sp.tile),
+					"state": str(sp.state), "regrow": float(sp.regrow), "planted": true})
 	vacancies = d.get("vacancies", [])
 	manor_orders = d.get("manor_orders", [])
 	deposits = d.deposits

@@ -274,6 +274,8 @@ func _build_details() -> void:
 	var crafts := ResourceNodes.uses_of(id).filter(func(u): return u.kind == "recipe")
 	if not crafts.is_empty():
 		lines.append("Used for: " + "; ".join(crafts.map(func(u): return _use_line(w, id, u))) + ".")
+	if it.has("propagates"):
+		lines.append("Plant it on open village grass in front of you (not on a road, a door, a field or beside a tree). It grows into a %s that bears in its season." % ("flower" if str(it.propagates) == "flower" else "berry bush"))
 	if it.has("plant"):
 		lines.append("Plant it on open grass in front of you (not on a road, a door, a field or beside another tree). It grows into a tree in a few days.")
 	detail_box.add_child(_text("\n".join(lines), 16))
@@ -301,7 +303,7 @@ func _build_details() -> void:
 			_action({"tool": "Use", "weapon": "Wield"}.get(t, "Wear"), func():
 				w.player_equip(iid)
 				_after())
-	if it.has("plant"):
+	if it.has("plant") or it.has("propagates"):
 		_action("Plant", func(): ui.main.plant_sapling(iid))
 	if it.get("cart", false):
 		_action("Set it down", func():                  # B14: a handcart becomes a cart in the world

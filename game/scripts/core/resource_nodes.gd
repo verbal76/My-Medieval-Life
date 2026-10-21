@@ -43,11 +43,17 @@ static func def(id: String) -> Dictionary:
 ## for a nested one, "animals.boar.meat").
 static func number(v) -> float:
 	if v is String:
-		var at = GameData.balance
-		for part in (v as String).split("."):
-			at = at[part]
-		return float(at)
+		return float(balance_at(v))
 	return float(v)
+
+
+## A balance.json value by key, dotted for a nested one ("farming.caravan_seed_stock").
+static func balance_at(key: String):
+	GameData.ensure()
+	var at = GameData.balance
+	for part in key.split("."):
+		at = at[part]
+	return at
 
 
 ## The definition for an instance's kind: a deposit's ore, a tree, a field, an animal's species.
@@ -208,8 +214,12 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 			if why != "":
 				return why
 		"plant":
+			if ref.state == "picked" and not world.plant_in_season(str(ref.get("kind", ""))):      # SEED-03
+				return "Bare, or picked: it bears only in %s." % " and ".join(PackedStringArray(GameData.b("plant_seasons")[str(ref.kind)])).to_lower()
 			if ref.state == "picked":
 				return "Already picked. It grows back in a few days."
+			if ref.state == "young":
+				return "Young: it bears in a few days, in its season."
 			if ref.state != "ripe":
 				return "Nothing grows here now."
 		"field":
@@ -336,7 +346,7 @@ static func sources_of(item: String) -> Array:
 	for n in GameData.resources.get("imports", []):
 		var items: Array = n.get("items", [])
 		if n.has("items_key"):
-			items = (GameData.b(str(n.items_key)) as Dictionary).keys()
+			items = (balance_at(str(n.items_key)) as Dictionary).keys()
 		if items.has(item):
 			out.append({"kind": "import", "id": "caravan", "qty": 0, "text": str(n.text), "source": str(n.source)})
 	out.sort_custom(ResourceNodes._by_kind_id)
