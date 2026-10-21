@@ -2613,16 +2613,14 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 	qp.confirmed.connect(func(q: int):
 		if buying:
 			var b: Dictionary = w.player_buy_many(n, id, q)
-			if b.result == "bought":
-				main._xp("trading", Skills.trade_xp(int(b.paid)))
+			if b.result == "bought":                    # (its Trading xp is core's, DVW-A12 R13)
 				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
 			else:
 				message(b.text)
 			show_trade(n)
 			return
 		var r: Dictionary = w.player_sell_many(n, id, q)
-		if r.sold > 0:
-			main._xp("trading", Skills.trade_xp(int(r.paid)))
+		if r.sold > 0:                                  # (its Trading xp is core's, DVW-A12 R13)
 			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
 		if r.result == "sold":
 			show_trade(n)

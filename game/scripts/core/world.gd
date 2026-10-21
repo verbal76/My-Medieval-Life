@@ -910,6 +910,7 @@ func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	if not trade(player, vendor, id, qty, 0, bill):
 		return {"result": "failed", "text": "The trade fell through.", "bought": 0, "paid": 0}
 	deal_xp(player, vendor, bill)
+	player_xp("trading", Skills.trade_xp(bill))           # the player's Trading xp for the deal (DVW-A12 R13)
 	return {"result": "bought", "text": "", "bought": qty, "paid": bill}
 
 
@@ -933,7 +934,7 @@ func deal_price(base: int, buyer, seller) -> int:
 
 
 ## The Trading experience of a deal worth `coins`, the player's rule (Skills.trade_xp), for each villager in it (the
-## player's own comes through the trade window, which shows the new level).
+## player's own is awarded by player_buy_many and player_sell_many through player_xp, DVW-A12 R13).
 func deal_xp(buyer, seller, coins: int) -> void:
 	for who in [buyer, seller]:
 		if who is NPC:
@@ -3180,10 +3181,13 @@ func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
 		if r.result != "sold":
 			r["sold"] = sold
 			r["paid"] = paid
+			if sold > 0:
+				player_xp("trading", Skills.trade_xp(paid))      # what was sold before it stopped (DVW-A12 R13)
 			return r
 		sold += 1
 		paid += price
 	deal_xp(buyer, player, paid)
+	player_xp("trading", Skills.trade_xp(paid))               # the player's Trading xp for the deal (DVW-A12 R13)
 	return {"result": "sold", "text": "", "sold": sold, "paid": paid}
 
 

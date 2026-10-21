@@ -1464,6 +1464,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_xp()
 	_dvw_a12_livestock()
 	_dvw_a12_cast()
+	_dvw_a12_trading_xp()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2048,6 +2049,35 @@ func _dvw_a12_cast() -> void:
 		main._projectiles_step(0.05)
 	check(main.projectiles.size() == n0, "DVW-A12 R11: the fireball ends within its range")
 	p.spells = spells0
+	_restore_pack(keep)
+
+
+## R13: a purchase or a sale earns the player Skills.trade_xp of what it was worth, in core; a refused deal earns none.
+func _dvw_a12_trading_xp() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var c0 := p.coins
+	p.coins = 500
+	var deal: Array = []
+	for n: NPC in w.npcs:
+		if not n.alive or not deal.is_empty():
+			continue
+		for id in w.brain.for_sale(n):
+			if deal.is_empty() and n.inv.count(id) >= 1:
+				deal = [n, id]
+	check(not deal.is_empty(), "DVW-A12 R13: a villager with goods for sale")
+	var b := w.player_buy_many(deal[0], deal[1], 1)
+	check(b.result == "bought" and int(p.skills.get("trading", 0)) == Skills.trade_xp(int(b.paid)), "DVW-A12 R13: a purchase earns Trading xp by its price (%s)" % str(b))
+	var x1 := int(p.skills.get("trading", 0))
+	var f := w.player_buy_many(deal[0], deal[1], 100000)
+	check(f.result == "failed" and int(p.skills.get("trading", 0)) == x1, "DVW-A12 R13: a refused purchase earns none")
+	var s := w.player_sell_many(deal[0], deal[1], 1)
+	if int(s.sold) > 0:
+		check(int(p.skills.get("trading", 0)) == x1 + Skills.trade_xp(int(s.paid)), "DVW-A12 R13: a sale earns Trading xp by what it fetched")
+	else:
+		check(int(p.skills.get("trading", 0)) == x1, "DVW-A12 R13: a sale refused (%s) earns none" % str(s.text))
+	p.coins = c0
 	_restore_pack(keep)
 
 
