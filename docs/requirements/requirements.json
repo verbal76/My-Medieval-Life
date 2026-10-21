@@ -10759,6 +10759,94 @@
    "roadmap_reason": "Script error found by the FARM-08 comparison"
   },
   {
+   "id": "FARM-08B",
+   "title": "Cattle decline under the shared and seasonal farming model: investigation",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Cattle decline under the shared and seasonal farming model: investigation",
+   "source": "docs/directives/2026-10-21_farm08_cattle_investigation.md",
+   "approval": "owner directive 2026-10-21 (FARM-08 cattle investigation)",
+   "acceptance": [
+    "Report, per seed over 365 days: starting cattle; births and deaths; causes and timing of deaths; feed available against feed eaten; whether cattle can reach their feed; seasonal and winter effects; breeding eligibility and whether breeding happens; labour, scheduling or pathfinding failures in animal care; why the old model keeps cattle on three seeds and the new one loses them. Legitimate decline is told apart from defects; defects are fixed; no cattle, feed or births are injected"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FARM-08",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_farm08_cattle_investigation.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; roadmap_gate; roadmap_reason; parent",
+     "why": "Started on the owner's directive of 2026-10-21"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16",
+   "roadmap_reason": "FARM-08 comparison"
+  },
+  {
+   "id": "FARM-08C",
+   "title": "Wheat price floor: record as an economic finding",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Wheat price floor: record as an economic finding",
+   "source": "docs/directives/2026-10-21_farm08_cattle_investigation.md",
+   "approval": "owner directive 2026-10-21: record the wheat-price floor issue as an economic finding; do not change pricing rules without evaluating their wider effects",
+   "acceptance": [
+    "The finding is recorded with its mechanism (World.sell_price_at saturates at about 20 held) and evidence; no pricing rule changes without an evaluation of the wider effects and the owner's approval"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FARM-08",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_farm08_cattle_investigation.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; roadmap_gate; roadmap_reason; parent",
+     "why": "Started on the owner's directive of 2026-10-21"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16",
+   "roadmap_reason": "FARM-08 comparison"
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",
