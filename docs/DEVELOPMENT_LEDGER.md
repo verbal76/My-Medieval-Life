@@ -14,16 +14,16 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 66 |
 | ACTIVE DEVELOPMENT | 30 |
 | PARTIALLY IMPLEMENTED | 38 |
-| IMPLEMENTED — TESTING REQUIRED | 22 |
+| IMPLEMENTED — TESTING REQUIRED | 21 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 43 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
-| COMPLETE AND VERIFIED | 195 |
+| COMPLETE AND VERIFIED | 196 |
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **447** |
-| Outstanding (not complete, superseded or canceled) | 231 |
+| Outstanding (not complete, superseded or canceled) | 230 |
 
 Also in the register: 31 proposal awaiting an owner decision (not approved), 59 owner decision (open or answered), 24 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 65 | 63 |
+| Build 16: long-term equilibrium and validation | 64 | 62 |
 | Build 17: Mining & Industrial Development | 24 | 19 |
 | Build 18: Settlement Advancement & Regional Economy | 23 | 18 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 59 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **304** | **231** |
+| **Total open** | **303** | **230** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (65)
+### Build 16: long-term equilibrium and validation (64)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -143,7 +143,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner decision 2026-10-21 (FSE-12/13) |
-| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 | Script error found by the FARM-08 comparison |
 | FARM-08B | Cattle decline under the shared and seasonal farming model: investigation | approved | ACTIVE DEVELOPMENT | Build 16 | FARM-08 comparison |
 | FARM-08C | Wheat price floor: record as an economic finding | approved | ACTIVE DEVELOPMENT | Build 16 | FARM-08 comparison |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | approved | ACTIVE DEVELOPMENT | Build 16 | Owner master directive 2026-10-21 |
@@ -601,7 +600,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (22)
+## IMPLEMENTED — TESTING REQUIRED (21)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -616,7 +615,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4 | game/tests/family_test.gd | after FAM-02; after HOUSE-03 |  |
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 | game/tests/family_test.gd; game/tests/housing_test.gd | after FAM-02 |  |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | suites; then COMPLETE once a long run has exercised it or tests suffice |
-| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple | `49c530a`; aging_test (135 checks); suites40; sim_gate PASS |  |  |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 | Measure in the four-seed runs; owner to confirm the readings |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
@@ -711,7 +709,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (195)
+## COMPLETE AND VERIFIED (196)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -812,6 +810,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  | future improvement: earmark advances for materials, or the manor buys the coal for an order (Build 16/17); device-free, no blocker |
 | EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
 | EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
+| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple | `49c530a`; aging_test; Actions 39595792732 |  |  |
 | FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md | wiki_test.gd; run_tests.gd 3535 checks |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit | tests.yml 'Short economy simulation (FR-07)', run 39368652711 |  |  |

@@ -10797,7 +10797,7 @@
    "id": "FARM-08A",
    "title": "No script error when a homeless household's couple or founder looks for a building site",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "No script error when a homeless household's couple or founder looks for a building site",
    "source": "Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple",
@@ -10806,7 +10806,7 @@
     "Construction._found_couple, Construction._found and Guardianship ranking look up a household's place through World.household_cell, which falls back to a member's cell when the household has no house standing; an aging_test check reproduces the error without the fix; suites green; the variant re-run on the fixed commit ends with 0 script errors"
    ],
    "implementation": "",
-   "tests": "aging_test (135 checks); suites40; sim_gate PASS",
+   "tests": "aging_test; Actions 39595792732",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -10843,6 +10843,11 @@
      "date": "2026-10-21",
      "change": "b16_class; complexity",
      "why": "Classified for the Build 16 status"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Actions run 39595792732 on 98d2b27 (the fix): seeds 1-4 at shared_wheat_yield 2.5 with both switches on, 365 days, all four jobs passed (0 script errors, ledgers balanced), seed 2 being the case that crashed"
     }
    ],
    "target_build": "16",

@@ -83,7 +83,7 @@ release (the last `release.yml` run, Build 15 on `a8760be`, succeeded; `release.
 **Known limitations a development candidate would carry:** the shared and seasonal farming switches off; no family
 farms or built stalls; one counter (the armoury); the Android build signed with a throwaway key (the stable test key's
 secrets do not exist), so Build 15 must be uninstalled first; save version 15 (a Build 15 save, version 14, is migrated
-by Skills.seed_villagers; not re-checked against a real Build 15 save file for this audit).
+by Skills.seed_villagers; checked 2026-10-21 against a real save written by the Build 15 code `a8760be`: it passes SaveStore's check, loads, migrates (villagers get their skills), runs four game days with no script error and the same outcome as a new world of the same seed, and saves again as version 15).
 
 ## Inventory (generated)
 
@@ -93,9 +93,9 @@ by Skills.seed_villagers; not re-checked against a real Build 15 save file for t
 
 | Status | Items |
 |---|---|
-| Complete | 42 |
+| Complete | 43 |
 | In progress | 34 |
-| Pending testing | 21 |
+| Pending testing | 20 |
 | Not started | 8 |
 | Blocked | 2 |
 | Deferred | 0 |
@@ -196,7 +196,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 2, CTR 4, EQ 1, FARM 
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | In progress | Manor fields take real seed under the FSE-12 switch (off until the owner reviews the comparison) | Activated with FSE-12 after the owner's review | `68a3611`, world_test::_fse12_shared_fields |  |  | Required feature | M |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the own | In progress | Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push | Implement with the owner's answers OD-27 (Q8-Q13, 2026-10-21); worker branch per the master directive |  |  |  | Required feature | S |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/ | In progress | Milk drop investigated (seed 1, 120 days, seasonal off vs on): feed availability through the famine rule (grain gone, herds culled, troughs empty, breeding stock starved), not a defect; recorded in docs/design/FSE13_COMP | Dispatch long-sims with variants shared_wheat_yield 1.0/1.5/2.0/2.5/3.0, both switches on, four seeds, 365 days; report |  | after FSE-12; after FSE-13 |  | Required feature | M |
-| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | Pending testing | Classified for the Build 16 status | Construction._found_couple, Construction._found and Guardianship ranking look up a household's place through World.household_cell, which falls back to a member's cell when the household has no house standing; an aging_te | `49c530a`, aging_test (135 checks); suites40; sim_gate PASS |  |  | Required feature | S |
+| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | Complete | Actions run 39595792732 on 98d2b27 (the fix): seeds 1-4 at shared_wheat_yield 2.5 with both switches on, 365 days, all four jobs passed (0 script errors, ledgers balanced), seed 2 being the case that crashed |  | `49c530a`, aging_test; Actions 39595792732 |  |  | Required feature | S |
 | FARM-08B | Cattle decline under the shared and seasonal farming model: investigation | In progress | Classified for the Build 16 status | Report, per seed over 365 days: starting cattle; births and deaths; causes and timing of deaths; feed available against feed eaten; whether cattle can reach their feed; seasonal and winter effects; breeding eligibility a |  |  |  | Required feature | S |
 | FARM-08C | Wheat price floor: record as an economic finding | In progress | Classified for the Build 16 status | The finding is recorded with its mechanism (World.sell_price_at saturates at about 20 held) and evidence; no pricing rule changes without an evaluation of the wider effects and the owner's approval |  |  |  | Required feature | S |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | In progress | Assigned in the coordinated Build 16 push (owner master directive 2026-10-21) | The house-plot placement flow adapted: first corner, drag, rectangle grows and shrinks, validity preview, live lease and purchase price (Property.land_price and rent_of by area), confirm; insufficient funds refuse; no ov |  |  |  | Required feature | M |
