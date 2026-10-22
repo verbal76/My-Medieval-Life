@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **482** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 83 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 84 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 66 | 15 |
+| Waiting on an owner decision | 67 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **315** | **233** |
+| **Total open** | **316** | **233** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -328,12 +328,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (66)
+### Waiting on an owner decision (67)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED |  |  |
+| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | BLOCKED |  |  |
 | DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -996,12 +997,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 38, status BLOCKED) (83)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (84)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | BLOCKED | owner message 2026-10-22 with a photo after the band was killed |
+| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | BLOCKED | docs/build18/PHASE_A_INVENTORY.md |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | COMPLETE AND VERIFIED | docs/design/FARM08_YIELD_COMPARISON.md |
 | INV-Q1 | INV-18 borderline item classifications | COMPLETE AND VERIFIED | docs/build18/INV18_PLAN.md |

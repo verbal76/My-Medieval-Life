@@ -1,67 +1,64 @@
-# Current session recovery handoff (updated 2026-10-22, about 02:00 UTC)
+# Current session recovery handoff (updated 2026-10-22, overnight session start)
 
-Continuity checkpoint for the lead agent after a context compaction. Authoritative records: the register
-(`docs/requirements/requirements.json`), `docs/DECISIONS.md`, `docs/directives/`, `docs/CURRENT_DEVELOPMENT_STATE.md` and
-CLAUDE.md (rules MSW-01, SIM-01, SIM-02, WIKI-01 in sections 3 and 5). **V** = verified by the lead; **W** = worker-reported.
+Continuity checkpoint for the lead agent after a context compaction. The authoritative records are:
+- the register (`docs/requirements/requirements.json`);
+- `docs/DECISIONS.md`;
+- `docs/directives/`, newest first: `2026-10-22_build18_master_overnight_execution.md` (the overnight mandate);
+- `docs/CURRENT_DEVELOPMENT_STATE.md`;
+- CLAUDE.md (MSW-01, SIM-01, SIM-02, WIKI-01).
 
-## Branches (V, remote heads)
+Read the overnight directive first.
+
+## Mandate in force (owner, overnight, 2026-10-22)
+
+- **Scope:** Build 18 is combined (tracks A, B, C; register B18-SCOPE). Multiplayer is excluded: do not touch
+  `wip/multiplayer`.
+- **Usage control:**
+  - workers on Sonnet, routine work on Haiku;
+  - at most 2 or 3 workers;
+  - no repeated campaigns and no full gate early;
+  - checkpoint at 70–75% context.
+- **Decisions closed tonight:**
+  - INV-Q1: lockpick and padlock to Tools;
+  - INV-Q2: capacity 9/18/27 per category, two global upgrades sold by the tailor at 150 and 450 coins;
+  - ARMOR-Q: Option A.
+
+  Do not reopen them.
+- **No releases. Build 17 is frozen at `cd7439c`.**
+
+## Branches (remote heads at the start of the night)
 
 | Branch | Head | State |
 |---|---|---|
-| `staging/my-medieval-life` (local `wip/b16-integration`, main worktree; push both) | `aec7c6a` | Build 16 code + all records; Expansion 18/19/20/21 register entries |
-| `wip/build17` (worktree `scratchpad/b17wt`) | `dfec7ec` | **Build 17, FROZEN.** Released as a private playtest draft (release run 39706003658, commit `80e6b99`, packet `docs/release/BUILD_17_PACKET.md`); no gameplay change allowed |
-| `wip/farm-cropshare` (worktree `scratchpad/cropwt`) | `132960a` | FARM-CROP-01 (owner FARM-08-Q-CROP option B) implemented and tested; NOT merged; merge decision carried until after Build 17 (owner) |
-| `wip/expansion18-preparation` (worker `a5803847a53d8a4ff`) | `da4d610` (+ snapshot `wip/expansion18-snapshot` `d6b9254`) | Primary development; D1 implemented (`3de7a8f`); D2 presented to the owner |
-| `wip/expansion19-preparation` (worker `a6cffdef98c095994`) | `05adc9d` (+ snapshot `wip/expansion19-snapshot` `239aa50`) | Investigation done (`c4b10e4`): memory 13.5 MB heavy; timing proposal written; decisions with the owner |
-| `wip/expansion20-preparation` (worktree `scratchpad/x20wt`) | `d82f173` | LE-00 audit done; hold (no implementation without authorization) |
-| `wip/expansion21-preparation` (worktree `scratchpad/x21wt`; worker `a4ecc05968f664a95`, idle) | `0eeb3df` | Preliminary plan done; planning only |
-| `wip/juice-assessment` (worktree `scratchpad/juicewt`; worker `a4ecc05968f664a95`) | from `dfec7ec` | JUICE-00 assessment done (`bebf1f3`); top ten and decisions JD1-JD6 with the owner; nothing implemented |
-| `wip/multiplayer` | unchanged | never merged into staging without explicit approval |
+| `staging/my-medieval-life` (main worktree, local `wip/b16-integration`; push both) | latest decision record | records only |
+| `wip/build18` (worktree `scratchpad/b18wt`) | `0fafb8b` | integrated Build 18: tracks A fixes, CC-01, FARM-CROP-01, ORE, AXE, TREES, MAP, trade fixes, visuals |
+| `wip/b18-inventory` (worktree `scratchpad/b18inv`) | from `0fafb8b`, uncommitted work in progress | INV-18 plus TAILOR-18 (inventory worker, model inherited) |
+| `wip/b18-armour` (worktree `scratchpad/b18armour`) | from `0fafb8b` | ARMOR-01 Option A plus gear redraw (Sonnet worker) |
+| `wip/x18-readiness` (worktree `scratchpad/x18ready`) | from `wip/expansion18-preparation` `3de7a8f` | integration-readiness review only, no merge (Sonnet worker) |
+| `wip/expansion18-preparation` | `3de7a8f` | Expansion 18 code; D2–D9 open |
+| `wip/expansion19-preparation` | `c4b10e4` | waiting on owner decisions |
+| `wip/multiplayer` | `d18d7d1` | preserved, untouched |
 
-Snapshot branches are preservation copies only, never merged.
+## Next actions, in order
 
-## Workers (SendMessage ids)
+1. **When the inventory worker reports:**
+   - review its commits;
+   - spot-check one screenshot;
+   - merge into `wip/build18` (save version 19);
+   - run the focused tests the merge touches;
+   - register INV-18 and TAILOR-18.
+2. **When the armour worker reports:** merge it after the inventory work (both touch the player's look indirectly).
+   Register ARMOR-01 and CC-01 (the gear redraw completes CC-01).
+3. **When the readiness review reports:** integrate only the complete, approved, flag-off pieces of Expansion 18,
+   after INV-18 is merged (save-version ordering).
+4. **Barber (BARBER-01):** still blocked on owner decisions (BARBER-Q): who staffs it, where, the price, and whether
+   colour and beard count as hair. Record only.
+5. **Only if budget remains:** a restrained game-feel pass (part 9) on confirmed defects.
+6. **Morning report:** the format in part 16 of the overnight directive.
 
-- **Expansion 18** `a5803847a53d8a4ff`: implementing owner D1 (starting experience = cap × recorded skill ÷ 10, once,
-  new worlds and saves without records, never overwrite, farming from PAR-01A history, deterministic, hook OFF); then
-  report and finalise **D2 (facility limitations)** for the owner. Pending list D1-D9 in `docs/expansion18/DECISIONS_PENDING.md`
-  on its branch.
-- **Expansion 19** `a6cffdef98c095994`: written X19-Q-TIMING proposal (not implemented), byte-identical worst-frame
-  reduction investigation, heavy-rate memory breakdown (17.4 MB vs 16 MB).
-- **Planning worker** `a4ecc05968f664a95`: idle (JUICE-00 delivered).
+## Evidence on `wip/build18` `0048b56`/`0fafb8b` (reuse; do not rerun on unchanged code)
 
-## Decisions taken this session (all recorded; do not reopen)
-
-STONE-Q1..Q3 (stone: materials by work; skill-based dressing STONE-04; Stoneworking skill STONE-05 and iron chisel STONE-06;
-X18-STONECUT; all Expansion 18); B7-006 closed (working as designed); FARM-08 diagnostic and FARM-08-Q-CROP (option B,
-proportional crop sharing, FARM-CROP-01 on its branch); SIM-01 (one longest run per seed, checkpoints), SIM-02 (never
-restart active runs, check-ins from measured runtimes), MSW-01 (Minimum Sufficient Work); SYNC-17 (one-way Build 17 ->
-18/19 at `cd7439c`, done); Q18-11B (people's experience capped by facilities; clarified: per-worker modifiers, the industry
-average is reporting only); Q18-11A (bounded profile, farming F1: +10% work rate, +4% pay at L10); X18-CAPCOMP part 1
-(experience by hours, caps 12/18/24, straight-line level, one-season average); X18-D1 (starting experience); Build 17
-personal playtest release; Expansions 18/19/20 directive; Expansion 21 preliminary authorization (Village Politics).
-
-## Open owner decisions (present one at a time; never answer for the owner)
-
-- Expansion 18: **D2 facility limitations (next)**, D3 thresholds, D4 unattributed activities' industries, D5 level
-  rounding, D6 wages fixed at posting, D7 crop shares by base-equivalent work (FARM-CROP-01 interaction), D8 whole-coin
-  fractions, D9 drop timing; also Q18-1..8, Q18-14..16, stoneworking values, mining 0-10 mapping, CAP-TOOLHOLDER (review only).
-- Expansion 19: X19-Q-TIMING (proposal coming), the four mechanics conflicts, Q03/04/05/09/12/13, decay rate.
-- Expansion 20: OD-LE-02..15 (first stage needs 02, 10, 07, 13, 15).
-- Expansion 21: decisions 1-9 in `docs/expansion21/PRELIMINARY_PLAN.md` (1: interim voter model vs waiting for 19; 2:
-  political structure; 3: office powers vs manor, joint with OD-LE-06).
-- FARM-08: yield and switches, balance options; merge timing of `wip/farm-cropshare`; whether the seed kept back is shared.
-- Build 17 test tooling: B17F-SIMREPORT (economy_sim counts open pits as sites; checkpoint lines not in job logs) deferred.
-
-## Evidence (V)
-
-Build 17 `cd7439c`: CI 39689213264 success; determinism gate two identical runs; 365-day runs 39692107077 seeds 1-4 all
-passed (no leaks/errors/FATAL; `docs/build17/MIN_G_LONG_RUNS.md`); release run 39706003658 success. Deferred findings
-B17F-FOOD/JOBS/HENS (20+), B17F-DEPLETE/SIMREPORT (18), B17F-PERF (19) in the register.
-
-## Next steps
-
-1. When the Expansion 18 worker reports: record D1 (X18-CAPCOMP), present **D2** with options and a recommendation.
-2. When the Expansion 19 worker reports: record, present X19-Q-TIMING and any memory/worst-frame decisions.
-3. Expansions 20 and 21: hold at planning until the owner authorizes more.
-4. Build 17: frozen; nothing to do unless the owner reports a playtest defect.
+- `run_tests` 3,584 checks, start 503 steps, play 39 steps, wiki;
+- character look 24, prospecting 73, crop sharing 19, farming 224, trees 45;
+- Python 105 tests;
+- asset, interaction and register checks, 0 problems each.

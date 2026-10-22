@@ -5754,6 +5754,48 @@
    "target_build": "18"
   },
   {
+   "id": "BARBER-Q",
+   "title": "Barber: staffing, place, price and what counts as a haircut",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "Do not invent service prices, barber wages, resource consumption or production requirements. Present unresolved economic rules for owner approval.",
+   "description": "Barber: staffing, place, price and what counts as a haircut",
+   "source": "docs/build18/PHASE_A_INVENTORY.md",
+   "approval": "",
+   "acceptance": [
+    "Owner sets who is the barber, where, the price, and whether hair colour and beard changes are included"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "BARBER-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "recorded overnight; to present in the morning (the tailor's labour-market pattern can be reused once the owner sets price and scope)"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "CAP-TOOLHOLDER",
    "title": "Design review: a villager holding a tool only for sale counts as a capability practitioner",
    "kind": "idea",
