@@ -26866,7 +26866,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/expansion21-preparation",
    "commits": [],
    "parent": null,
    "depends_on": [
@@ -26900,6 +26900,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Owner 2026-10-22 authorized Expansion 21 (Village Politics, OD-30) preliminary preparation, planning only (docs/directives/2026-10-22_expansion21_preliminary_authorization.md), on wip/expansion21-preparation"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "branch",
+     "why": "Expansion 21 preliminary plan delivered (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md on that branch): 22 approved items inventoried; owner decisions 1-9 in dependency order (interim voter model vs waiting for Expansion 19; political structure; office powers vs the manor with OD-LE-06; franchise and candidacy; terms and calendar; ties and removal; ballot privacy; constable and law; tax powers); hard dependency on Expansion 19, soft on 18, shared with 20 (reeve_day, OD-LE-06); register gap: no WDR-019-C entry. Planning only"
     }
    ],
    "acceptance_derived": true,
