@@ -659,7 +659,7 @@ func give_start_kit(p: PlayerState) -> void:
 ## starting kit (owner rule); its coins are new to the village, counted in coin_sources.
 func continue_as_heir() -> void:
 	var p := player
-	credit.on_player_died()                # TRADE-CREDIT: the player's debts are written off
+	credit.on_player_died(Credit.slain_cause(p.death_cause), Life.player_heir_child(self))     # TRADE-CREDIT: debts and claims pass to the heir (written off where a villager's would be)
 	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
 	var bag := Inventory.new()
 	for id in p.inv.items:
@@ -4062,7 +4062,7 @@ func to_dict() -> Dictionary:
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.debts.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
