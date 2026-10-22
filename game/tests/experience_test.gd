@@ -33,6 +33,10 @@ func _init() -> void:
 	test_leaving()
 	test_save()
 	test_per_worker_path()
+	test_effective_kept_apart()
+	test_production_compat()
+	test_contract_compat()
+	test_report()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -203,3 +207,94 @@ func _run(s: int, days: float) -> World:
 		w.update(0.5)
 		w.player.hunger = 100.0
 	return w
+
+
+## Owner Q18-11B / X18-CAPCOMP: workforce experience and the facility-limited effective capability are kept apart by
+## structure. No facility rule is approved, so the test sets a cap itself and takes it away again.
+func test_effective_kept_apart() -> void:
+	var e := WorkExperience.new()
+	e.credit("npc:5", "smithing", 24.0 * DAY, 0.0)
+	e.credit("npc:5", "smithing", 60.0, 2000.0)
+	check(near(WorkExperience.facility_cap("smithing"), 10.0) and near(e.effective_level("npc:5", "smithing"), 10.0),
+		"with no facility rule approved there is no limit: the effective level equals the experience level (10)")
+	check(near(e.effective_level("npc:5", "smithing", 4.0), 4.0) and near(e.level("npc:5", "smithing"), 10.0) and near(e.days("npc:5", "smithing"), 24.0 + 60.0 / DAY),
+		"a facility limit (4, set by the test) lowers the effective level only: the experience level and days stay")
+	var caps: Dictionary = SettlementIndustries.data().facilities.caps
+	caps["smithing"] = 4
+	var wf := e.workforce("smithing", 2100.0)
+	check(near(float(wf.level), 10.0) and near(float(wf.effective), 4.0), "the report shows both: workforce 10, effective 4")
+	CapabilityHook.off()
+	CapabilityHook.per_worker = true
+	CapabilityHook.experience = e
+	var w := _fresh(1)
+	var n: NPC = w.npcs.filter(func(o): return o.alive and o.role == "adult")[0]
+	e.minutes[World.npc_ref(n.id)] = e.minutes["npc:5"].duplicate()
+	check(near(CapabilityHook.time(100.0, "smithing", n), 100.0 / SettlementIndustries.output_multiplier("smithing", 4, "", true)),
+		"the prepared per-worker path reads the effective level (4), not the experience level")
+	caps.erase("smithing")
+	check(near(CapabilityHook.time(100.0, "smithing", n), 100.0 / 1.15) and near(e.level(World.npc_ref(n.id), "smithing"), 10.0),
+		"the limit lifted, the same worker is back at 10: nothing was erased")
+	CapabilityHook.off()
+
+
+## Production compatibility: on the prepared per-worker path (switched on here only) the real mining and felling steps
+## take each worker's own time; the seam and the forest give exactly what they held. Off, nothing changes.
+func test_production_compat() -> void:
+	var w := _fresh(1)
+	var ad: Array = w.npcs.filter(func(o): return o.alive and o.role == "adult")
+	var master: NPC = ad[0]
+	var apprentice: NPC = ad[1]
+	w.experience.credit(World.npc_ref(master.id), "mining", 12.0 * DAY, 0.0)
+	var seam: Dictionary = {}
+	for d in w.deposits:
+		if str(d.ore) == "iron_ore" and int(d.amount) > 0:
+			seam = d
+			break
+	CapabilityHook.off()
+	var off_m := float(w.brain.seam_steps(master, seam, "mine", {})[-1].min)
+	var off_a := float(w.brain.seam_steps(apprentice, seam, "mine", {})[-1].min)
+	CapabilityHook.per_worker = true
+	CapabilityHook.experience = w.experience
+	var on_m := float(w.brain.seam_steps(master, seam, "mine", {})[-1].min)
+	var on_a := float(w.brain.seam_steps(apprentice, seam, "mine", {})[-1].min)
+	check(on_m < off_m and near(on_a, off_a), "a level-10 miner's swing is shorter (%.1f against %.1f min); the apprentice's is their own (%.1f)" % [on_m, off_m, on_a])
+	seam.amount = 2
+	var got := 0
+	for i in 6:
+		got += int(w.work_mine(master, seam, master.inv).get("n", 0))
+	check(got == 2 and int(seam.amount) == 0, "and the seam gives its 2 ore and no more")
+	CapabilityHook.off()
+	check(near(float(w.brain.seam_steps(master, seam, "mine", {})[-1].min), off_m), "off again: the existing time exactly")
+
+
+## CON-01/CON-02: capability modifiers never touch negotiated terms. The contract code calls the hook only for a work
+## time (felling a tree it was hired for), never for a price, quantity, wage or deadline; and contract work earns
+## experience like any other work of its kind.
+func test_contract_compat() -> void:
+	var bad := []
+	for path in ["res://scripts/core/contracts.gd", "res://scripts/core/contract_services.gd"]:
+		var src := FileAccess.get_file_as_string(path)
+		for line in src.split("\n"):
+			if "CapabilityHook." in line and not "CapabilityHook.work_time(" in line:
+				bad.append(line.strip_edges().left(80))
+			if "CapabilityHook.pay(" in line:
+				bad.append(line.strip_edges().left(80))
+	check(bad.is_empty(), "the contract code applies no pay modifier and no capability term: only the work time of felling %s" % str(bad))
+	check(WorkExperience.industry_of_step("chop", {}) == "forestry" and WorkExperience.industry_of_step("mine", {}) == "mining"
+		and WorkExperience.industry_of_step("svc_step", {"id": 1}) == "",
+		"a contract's felling and mining earn experience as any felling and mining; service-contract steps (pit digging, surveys) are unattributed (open)")
+	var t := {"hire": true, "wage": 8}
+	CapabilityHook.off()
+	CapabilityHook.forced = {"farming": 10, "mining": 10, "forestry": 10}
+	check(Quests.promised(t) == 8, "a hired job other than the harvest keeps its stated wage, whatever the level")
+	CapabilityHook.off()
+
+
+func test_report() -> void:
+	var w := _run(1, 1.0)
+	var r := SettlementReport.village(w)
+	var wf: Dictionary = r.workforce
+	check(wf.size() == 7 and wf.has("trade") and str(wf.trade.status) == "no active workers",
+		"the settlement report lists the seven industries' workforce; trade reports \"no active workers\" (no attributed trade hours)")
+	check(str(wf.mining.status) == "ok" and near(float(wf.mining.level), float(wf.mining.effective)),
+		"mining reports its workforce level %.3f, the effective average equal while no facility rule exists" % float(wf.mining.level))

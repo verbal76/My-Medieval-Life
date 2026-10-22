@@ -38,13 +38,14 @@ static func off() -> void:
 
 
 ## The level the modifiers read for `who` in `industry`, or -1 for none (the base applies): a forced analysis level;
-## else, only on the prepared per-worker path, the worker's own level, whole levels (floor) of WorkExperience.level
-## (no facility cap: none is approved, so the effective level equals the experience level).
+## else, only on the prepared per-worker path, the worker's own EFFECTIVE level (WorkExperience.effective_level:
+## experience within the facility limit; none approved, so equal to experience), as whole levels (floor; the rounding
+## rule is open, DECISIONS_PENDING.md D5).
 static func level_for(industry: String, who = null) -> int:
 	if forced.has(industry):
 		return int(forced[industry])
 	if per_worker and experience != null and who != null:
-		return int(floor(experience.level(WorkExperience.key_of(who), industry)))
+		return int(floor(experience.effective_level(WorkExperience.key_of(who), industry)))
 	return -1
 
 

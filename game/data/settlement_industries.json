@@ -596,5 +596,9 @@
       "smithing": 24
     },
     "window_game_days": 2
+  },
+  "facilities": {
+    "_note": "Owner Q18-11B (2026-10-22) and X18-CAPCOMP part 1: facility limitations may lower a worker's EFFECTIVE capability, never their experience. The rule and its numbers are NOT APPROVED (docs/expansion18/DECISIONS_PENDING.md D2): `caps` is empty, so every effective level equals the experience level. The structure (WorkExperience.effective_level, facility_cap) is ready for the owner's rule; nothing here invents one.",
+    "caps": {}
   }
 }

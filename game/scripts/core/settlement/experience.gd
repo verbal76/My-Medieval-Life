@@ -101,9 +101,23 @@ func days(who_key: String, industry: String) -> float:
 	return float((minutes.get(who_key, {}) as Dictionary).get(industry, 0.0)) / float(cfg().get("minutes_per_day", 480))
 
 
-## A worker's own level in an industry (0-10, real-valued).
+## A worker's own level in an industry (0-10, real-valued): their WORKFORCE (experience) level.
 func level(who_key: String, industry: String) -> float:
 	return level_of_days(industry, days(who_key, industry))
+
+
+## The facility limit on effective capability in an industry, 0-10 (`facilities.caps`). No rule is approved (D2 in
+## docs/expansion18/DECISIONS_PENDING.md), so with no cap given it is the top of the scale: no limit.
+static func facility_cap(industry: String) -> float:
+	var caps: Dictionary = (SettlementIndustries.data().get("facilities", {}) as Dictionary).get("caps", {})
+	return clampf(float(caps.get(industry, SettlementIndustries.max_level())), 0.0, float(SettlementIndustries.max_level()))
+
+
+## A worker's EFFECTIVE level (owner Q18-11B, X18-CAPCOMP: each worker's own): their experience level within the
+## facility limit (`cap`, or facility_cap). Kept apart from experience by structure: it is computed, never stored, and
+## nothing here writes `minutes`, so a facility shortage can never erase experience.
+func effective_level(who_key: String, industry: String, cap := -1.0) -> float:
+	return minf(level(who_key, industry), cap if cap >= 0.0 else facility_cap(industry))
 
 
 ## The person leaves the settlement (death, emigration): their experience goes with them.
@@ -133,11 +147,13 @@ func workforce(industry: String, now: float) -> Dictionary:
 	var ks := w.keys()
 	ks.sort()
 	var sum := 0.0
+	var eff := 0.0
 	var tot := 0.0
 	for k in ks:
 		sum += float(w[k]) * level(str(k), industry)
+		eff += float(w[k]) * effective_level(str(k), industry)
 		tot += float(w[k])
-	return {"industry": industry, "active": ks.size(), "hours": tot / 60.0, "level": sum / tot, "status": "ok"}
+	return {"industry": industry, "active": ks.size(), "hours": tot / 60.0, "level": sum / tot, "effective": eff / tot, "status": "ok"}
 
 
 ## Save section (optional key): {} when nothing is recorded, so a world nobody has worked in saves as before.

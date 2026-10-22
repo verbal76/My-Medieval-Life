@@ -43,7 +43,21 @@ static func village(w: World, mining: MiningCapabilityAdapter = null) -> Diction
 		"food_points": food, "food_days": food / maxf(1.0, day_need),
 		"capabilities": cap.levels, "blocked": cap.blocked, "mining_source": str(facts.external.mining.source),
 		"transport": facts.transport, "structures": facts.structures,
+		"workforce": workforce(w),
 	}
+
+
+## X18-CAPCOMP part 1: each industry's workforce level (hours-weighted average of its active workers' own experience
+## levels, last season) and the same average of their effective levels; "no active workers" where nobody worked. A
+## report for planning only: it changes nobody's level, work or pay.
+static func workforce(w: World) -> Dictionary:
+	var out := {}
+	var caps: Dictionary = (SettlementIndustries.data().get("experience", {}) as Dictionary).get("caps_days", {})
+	var inds := caps.keys()
+	inds.sort()
+	for ind in inds:
+		out[ind] = w.experience.workforce(str(ind), w.minutes)
+	return out
 
 
 ## Goods used up a day, measured from the World's running ledger between two stats snapshots `days` apart: what was
