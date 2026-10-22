@@ -225,32 +225,37 @@ func _run() -> void:
 	ui.show_inventory()
 	check(ui.is_open("inventory"), "the inventory opens")
 	var pack_win: InventoryWindow = ui.inventory_window()
-	check(pack_win != null and pack_win.cells.size() == 27 and pack_win.tab_buttons.size() == 8 and pack_win.gear_buttons.size() == 6, "a 9 x 3 bag grid, 8 tabs and 6 gear slots")
-	check(p.inv.max_stacks == 24 and pack_win.cells.slice(0, 24).all(func(b): return not b.disabled) \
-		and pack_win.cells.slice(24).all(func(b): return b.disabled and b.focus_mode == Control.FOCUS_NONE), "24 cells can be used; the last 3 are locked")
+	check(pack_win != null and pack_win.cells.size() == 27 and pack_win.tab_buttons.size() == 8 and pack_win.side_buttons.size() == 2 and pack_win.gear_buttons.size() == 6,
+		"a 9 x 3 grid, 8 category tabs, Skills and Journal buttons and 6 gear slots (INV-18)")
+	check(p.inv.category_cap == 9 and pack_win.cells.slice(0, 9).all(func(b): return not b.disabled) \
+		and pack_win.cells.slice(9).all(func(b): return b.disabled and b.focus_mode == Control.FOCUS_NONE), "the first row (9 cells) can be used; the second and third rows are locked")
 	check(not _press("Wield") and not _press("Drop"), "no actions until a slot is chosen")
+	pack_win.choose_tab("weapons")
 	pack_win.cells[pack_win.shown.find("rusty_sword")].pressed.emit()
 	check(pack_win.selected == "rusty_sword", "tapping a cell chooses its item")
 	check(_press("Wield"), "a Wield button for the sword")
 	check(p.weapon == "rusty_sword", "the rusty sword is in hand")
 	pack_win.choose("rusty_pickaxe")
 	check(_press("Use") and p.tool == "rusty_pickaxe", "the rusty pickaxe is the tool")
-	var tab_shows := {"food": ["bread", "linen_bandage", "rotten_apple"], "materials": [], "tools": ["rusty_pickaxe"], "weapons": ["rusty_sword"],
-		"armour": ["plain_clothes"], "all": ["bread", "linen_bandage", "plain_clothes", "rotten_apple", "rusty_pickaxe", "rusty_sword"]}
+	# INV-18: each tab its own category; worn and wielded things are in their gear slots, not the grid
+	var tab_shows := {"food": ["bread", "rotten_apple"], "raw": [], "tools": [], "weapons": [], "armour": [] if p.armor == "plain_clothes" else ["plain_clothes"],
+		"medicine": ["linen_bandage"], "general": [], "crafted": []}
 	for t in tab_shows:
 		pack_win.tab_buttons[pack_win.TABS.map(func(x): return x[0]).find(t)].pressed.emit()
 		check(pack_win.tab == t and pack_win.items_shown() == tab_shows[t], "the %s tab shows %s" % [t, pack_win.items_shown()])
-	pack_win.tab_buttons[6].pressed.emit()
-	check(ui.is_open("skills"), "the Skills tab opens the skills window")
+	pack_win.side_buttons[0].pressed.emit()
+	check(ui.is_open("skills"), "the Skills button opens the skills window")
 	ui.show_inventory()
-	ui.inventory_window().tab_buttons[7].pressed.emit()
-	check(ui.is_open("journal"), "the Journal tab opens the journal")
-	# the new gear: a cap on the head, an amulet and a ring, from the Armour tab
+	ui.inventory_window().side_buttons[1].pressed.emit()
+	check(ui.is_open("journal"), "the Journal button opens the journal")
+	# the new gear: a cap on the head (Armour), an amulet and a ring (Crafted goods and valuables, owner INV-Q1)
 	for id in ["leather_cap", "copper_ring", "amulet"]:
 		p.inv.add(id)
 	ui.show_inventory("armour")
 	pack_win = ui.inventory_window()
-	check(pack_win.tab == "armour" and pack_win.items_shown() == ["amulet", "copper_ring", "leather_cap", "plain_clothes"], "the Armour tab shows worn gear and jewellery")
+	check(pack_win.tab == "armour" and pack_win.items_shown().has("leather_cap") and not pack_win.items_shown().has("copper_ring"), "the Armour tab holds the cap")
+	pack_win.choose_tab("crafted")
+	check(pack_win.items_shown() == ["amulet", "copper_ring"], "the Crafted goods tab holds the jewellery")
 	var def0 := p.defense()
 	var stam0 := p.stamina_cap()
 	var hpcap0 := p.hp_cap()
@@ -281,7 +286,7 @@ func _run() -> void:
 	if pad_focus is Button:
 		(pad_focus as Button).pressed.emit()          # A again
 	check(p.armor == "plain_clothes", "A on Wear puts the clothes on")
-	check(main.get_viewport().gui_get_focus_owner() == pack_win.cells[pack_win.items_shown().find("plain_clothes")], "and focus returns to the item")
+	check(main.get_viewport().gui_get_focus_owner() == pack_win.gear_buttons["armor"], "and focus follows the item to its gear slot")
 	ui.set_scheme(scheme0)
 	ui.hide_all()
 	pack_win.choose("copper_ring")
@@ -771,9 +776,9 @@ func _run() -> void:
 	check(pack.get_viewport().gui_get_focus_owner() == pack.cells[0], "the pack's first bag cell has the pad's focus")
 	var inside := Rect2(Vector2.ZERO, pack.size).grow(0.5)
 	check(pack.cells.all(func(c): return inside.encloses(Rect2(c.position, c.size))) and inside.encloses(Rect2(pack.details.position, pack.details.size)), "the panel and the details fit the window")
-	check(pack.cells[0].find_valid_focus_neighbor(SIDE_RIGHT) == pack.cells[1] and pack.cells[0].find_valid_focus_neighbor(SIDE_BOTTOM) == pack.cells[9] \
-		and pack.cells[0].find_valid_focus_neighbor(SIDE_TOP) in pack.tab_buttons, "the pad moves right and down the grid, and up to the tabs")
-	check(pack.cells[23].find_valid_focus_neighbor(SIDE_RIGHT) != pack.cells[24], "focus skips the locked cells")
+	check(pack.cells[0].find_valid_focus_neighbor(SIDE_RIGHT) == pack.cells[1] \
+		and pack.cells[0].find_valid_focus_neighbor(SIDE_TOP) in pack.tab_buttons, "the pad moves right along the grid, and up to the tabs")
+	check(pack.cells[0].find_valid_focus_neighbor(SIDE_BOTTOM) != pack.cells[9] and pack.cells[8].find_valid_focus_neighbor(SIDE_RIGHT) != pack.cells[9], "focus skips the locked rows")
 	var pad_b := InputEventJoypadButton.new()
 	pad_b.button_index = JOY_BUTTON_B
 	pad_b.pressed = true
