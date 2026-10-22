@@ -469,6 +469,28 @@ func _st(k: String) -> float:
 
 
 ## CON-01: contracts over the run (counters from World.stats) and those on record now, by item and by who to whom.
+## Expansion 18 couriers (X18-Q12, X18-Q13): booths, deliveries by who booked them and how they ended, the villagers' own postings,
+## the notarised documents and the Law the keepers reached.
+func _couriers_summary() -> Dictionary:
+	var cs := w.couriers
+	var by_state := {}
+	var by_villager := 0
+	for j in cs.jobs:
+		by_state[str(j.state)] = int(by_state.get(str(j.state), 0)) + 1
+		if str(j.sender).begins_with("npc:"):
+			by_villager += 1
+	var docs := {}
+	for a in cs.agreements:
+		docs[str(a.state)] = int(docs.get(str(a.state), 0)) + 1
+	var law := []
+	for b in cs.booths:
+		if str(b.keeper).begins_with("npc:") and not bool(b.get("shop", false)):
+			law.append(Skills.level(w.npc(int(str(b.keeper).trim_prefix("npc:"))), "law"))
+	return {"booths": cs.booths.size(), "shop_booths": cs.booths.filter(func(b): return bool(b.get("shop", false))).size(), "routes": cs.routes.size(),
+		"deliveries": cs.jobs.size(), "by_state": by_state, "booked_by_villagers": by_villager, "villager_posts_stat": int(w.stats.get("courier_posts_villager", 0)),
+		"documents": docs, "keeper_law": law}
+
+
 func _contracts_summary() -> Dictionary:
 	var items := {}
 	var pairs := {}
@@ -1090,6 +1112,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("trade: %s" % JSON.stringify(s.trade))
 	print("manor work: %s" % JSON.stringify(s.manor_work))
 	print("contracts: %s" % JSON.stringify(_contracts_summary()))
+	print("couriers: %s" % JSON.stringify(_couriers_summary()))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
 	print("events: %s" % JSON.stringify(s.events))

@@ -31,12 +31,25 @@ func _recipients() -> Array:
 	return service.known_recipients(sender)
 
 
+## The couriers for a special delivery to the chosen recipient's settlement: the village booths' keepers and the willing carters
+## among the settlements' traders you know (CourierService.carriers).
 func _couriers() -> Array:
-	var out := []
-	for b in service.booths:
-		if str(b.keeper).begins_with("npc:") and service.alive(str(b.keeper)):
-			out.append(str(b.keeper))
-	return out
+	var recs := _recipients()
+	var place := ""
+	if not recs.is_empty():
+		var r: Dictionary = recs[clampi(int(choice.recipient), 0, recs.size() - 1)]
+		var locs := service.locations(str(r.ref))
+		place = str(locs[clampi(int(choice.where), 0, locs.size() - 1)].settlement)
+	return service.carriers(sender, place)
+
+
+func _courier_label(c: String) -> String:
+	var name: String = service._entry(c, "person", "").name
+	if c.begins_with("region:"):
+		return "%s (carter, from %s)" % [name, service.place_of(c)]
+	var n = service._npc(c)
+	var lv: int = Skills.level(n, "law") if n != null else 1
+	return "%s (Law %d%s)" % [name, lv, ", can notarise" if Law.qualified(service.w, c) else ""]
 
 
 ## The order the current choices describe (what CourierService books).
@@ -62,10 +75,12 @@ func order() -> Dictionary:
 	var cs := _couriers()
 	if not cs.is_empty():
 		o.courier = cs[clampi(int(choice.courier), 0, cs.size() - 1)]
+	if booth_id != "":
+		o.booth = booth_id                           # the booth you stand at: the route starts there, a special fee is held there
 	if o.kind == "route":
+		var own := service.home_booth(o)
 		for r in service.routes:
-			if str(service.booth(str(r.to)).settlement) == str(o.get("settlement", "")) \
-					and str(service.booth(str(r.from)).settlement) == service.place_of(sender):
+			if str(service.booth(str(r.to)).settlement) == str(o.get("settlement", "")) and str(r.from) == str(own.get("id", "")):
 				o.route = r.id
 	return o
 
@@ -97,14 +112,14 @@ func show() -> void:
 	_row(grid, "Recipient", recs.map(func(r): return "%s (%s)" % [r.name, "business" if r.kind == "business" else "person"]), "recipient")
 	var where := []
 	if not recs.is_empty():
-		where = service.locations(str(recs[clampi(int(choice.recipient), 0, recs.size() - 1)].ref)).map(func(l): return "%s, %s" % [l.what, l.settlement])
+		where = service.locations(str(recs[clampi(int(choice.recipient), 0, recs.size() - 1)].ref)).map(func(l): return "%s (%s)" % [l.what, service.place_name(str(l.settlement))] if not str(l.what).contains(service.place_name(str(l.settlement))) else str(l.what))
 	_row(grid, "Deliver to", where, "where")
 	_check(grid, "Collect payment", "collect")
 	_row(grid, "Payment in", ["coins"] + items.map(func(id): return GameData.item_name(id)), "pay_kind")
 	_spin(grid, "Amount", 0, 9999, "pay_amount")
 	_row(grid, "Proceeds", ["Bring them to me", "Deposit them at my booth"], "proceeds")
 	if int(choice.kind) == 1:
-		_row(grid, "Courier", _couriers().map(func(c): return service._entry(c, "person", "").name), "courier")
+		_row(grid, "Courier", _couriers().map(func(c): return _courier_label(c)), "courier")
 		_spin(grid, "Your offer (coins)", 0, 9999, "offer")
 	ui._button("Review the delivery", func():
 		var o := order()

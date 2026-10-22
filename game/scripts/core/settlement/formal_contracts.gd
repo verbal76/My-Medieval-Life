@@ -9,9 +9,12 @@ extends RefCounted
 ##     to the other for signing and brings it back; nothing is signed remotely or instantly.
 ## The notary's qualification is the Law skill (owner Q18-14, LAW-SKILL; Law.qualified; couriers.json notary: law at a
 ## provisional level). A notary gains Law by witnessing the signatures and carrying the document home (Law.witnessed, carried).
-## An agreement records who holds the document; a signature needs the signer where the document is. Not wired into the
-## live game: tests drive it. Reconciles with CON-01 (Build 17) at the gate: a formal goods contract is a CON-01 contract
-## whose acceptance waits for these signatures.
+## An agreement records who holds the document; a signature needs the signer where the document is.
+## LIVE (X18-Q13, Build 18): a delivery that asks for a payment above the small-agreement line (CourierService.is_formal) is a
+## formal commercial contract; its special delivery is the notary's journey (`CourierService.book_special`), and the records live in
+## CourierService.agreements (saved with the courier service). `sign_before_notary` and `bring_home` are the live steps; the
+## fee, timing and travel are the delivery's own. CON-01's formal contracts are signed face to face only (contracts.gd,
+## `face_to_face`): they are all between people of the village, who can meet.
 
 var couriers: CourierService
 var w
@@ -197,6 +200,32 @@ func _check_done(a: Dictionary) -> void:
 			return
 	if str(a.holder) in a.parties:
 		a.state = "signed"
+
+
+## The counterparty signs before the notary who stands in front of them (the live path): only while the notary holds the document and
+## has arrived, so there is no remote signing. The notary gains Law by witnessing. "" when done.
+func sign_before_notary(a: Dictionary, who: String, notary: String, day: float) -> String:
+	if str(a.class) == "small":
+		return "A small agreement needs no signatures."
+	if str(a.notary) != notary or str(a.holder) != notary:
+		return "The notary does not hold the document."
+	if not (a.parties as Array).has(who):
+		return "Not a party to it."
+	a.signatures[who] = day
+	a.history.append([day, "%s signed before the notary" % who])
+	Law.witnessed(w, notary)
+	return ""
+
+
+## The notary hands the document back to the sender: signed by every party it is binding, else it is rejected.
+func bring_home(a: Dictionary, sender: String, day: float) -> void:
+	a.holder = sender
+	if str(a.state) == "rejected_returning":
+		a.state = "rejected"
+	else:
+		a.state = "unsigned"
+		_check_done(a)
+	a.history.append([day, "the document is back (%s)" % str(a.state)])
 
 
 func binding(a: Dictionary) -> bool:

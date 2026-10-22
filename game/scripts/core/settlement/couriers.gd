@@ -34,6 +34,22 @@ extends RefCounted
 ## from world records (a person's home door, a business's stall or workplace, an off-map party's booth): no typed
 ## addresses. The same rules serve the player and villagers.
 ##
+## Shop booths (Q18-15, owner 2026-10-23: "any business with a shop"): a business (is_business: a trade that buys and sells, or one that
+## keeps a stall) may open a booth of its own at its shop (`open_shop_booth`): at its market stall or its workplace, kept by its owner,
+## with its own regular route to each settlement. A shop booth's route is carried by the village booth's keeper (the carrier), who is paid
+## the flat fee: nobody carries free, and an owner never pays himself. The village booth itself stands at a free market stall or at a
+## stall its keeper builds near the market by the STALL rules (Q18-16).
+##
+## Signing (X18-Q13, Q18-13): a delivery that asks for a payment worth more than `contracts.small_value` is a formal commercial contract
+## and needs signatures: the sender signs before the notary as it leaves, the recipient before the notary on arrival, and the document is
+## brought home; only a special delivery, carried by a courier whose Law reaches the notary level (Law.qualified), can do it. A regular
+## route cannot carry one. Nothing is signed remotely or at once. The notary gains Law by witnessing and carrying (Law.witnessed,
+## Law.carried). A small payment needs no signature.
+##
+## Villagers (X18-Q12-POST, "same rules for NPCs"): a business with surplus goods that a settlement's trader it has dealt with wants
+## (`villagers_post`, daily) sends them from its own booth by the regular route and asks the trader's payment on arrival, at the
+## price the caravan pays, paying the same flat fee. Booth keepers take the lessons that give them the Law a notary needs (`keepers_learn`).
+##
 ## Physical execution (tick): the goods leave the sender's pack when booked (handed over at the booth, or to the courier
 ## for a special delivery) and ride in the delivery's `cargo` (the courier's load, held by the delivery: a villager courier's own trading would otherwise sell it); after the journey's days the courier hands them over, takes
 ## the payment or goods it was told to collect, and travels back to hand them to the sender or deposit them at the
@@ -54,6 +70,7 @@ var jobs: Array = []       # deliveries (see book_route / book_special)
 var next_id := 1
 var live := false           # the game's own service (World.couriers): parties come from World.regions, boundary crossings are booked
 var contacts: Array = []   # live: [sender ref, party id] pairs, a villager's real dealings with a settlement's trader (saved)
+var agreements: Array = [] # formal agreements (FormalAgreements records) of notarised deliveries (saved)
 
 
 static func cfg() -> Dictionary:
@@ -219,6 +236,52 @@ func open_region_booth(region) -> void:
 	next_id += 1
 
 
+## Q18-15: a business with a shop opens a booth of its own at its shop. `owner` is "npc:<id>" or "player" (a player with a market
+## stall of their own). The booth stands at the shop (its market stall, else its workplace) and has a route to each settlement,
+## carried by the village booth's keeper. "" when done, else why not.
+func open_shop_booth(owner: String) -> String:
+	if w == null or not alive(owner) or not (owner == "player" or owner.begins_with("npc:")):
+		return "There is nobody to keep a booth."
+	if booths.any(func(b): return b.keeper == owner):
+		return "A booth is kept already."
+	var vb := booth_of(SettlementFacts.VILLAGE)
+	if vb.is_empty() or booths.any(func(b): return b.keeper == owner):
+		return "The village has no courier to carry for a booth yet."
+	var at := Vector2i.ZERO
+	var stall := ""
+	if owner == "player":
+		var mine: Array = w.business.stalls.built("player")
+		if mine.is_empty():
+			return "You have no shop to put a booth in."
+		stall = str(mine[0].id)
+		at = Vector2i(int(mine[0].x), int(mine[0].y))
+	else:
+		if not is_business(owner):
+			return "That is not a business."
+		var loc := location(owner, "business")
+		if str(loc.what) in ["their home", "where they are"]:
+			return "They have no shop."
+		at = Vector2i(int(loc.x), int(loc.y))
+		for sid in w.stalls:
+			if str(w.stalls[sid].get("tenant", "")) in [owner, owner.trim_prefix("npc:")]:
+				stall = str(sid)
+	var b := {"id": "b%d" % next_id, "settlement": SettlementFacts.VILLAGE, "stall": stall, "keeper": owner, "shop": true,
+		"store": Inventory.new(), "coins": 0, "escrow": 0, "deposits": {}, "x": at.x, "y": at.y}
+	next_id += 1
+	booths.append(b)
+	for sb in booths.duplicate():
+		if str(sb.settlement) != SettlementFacts.VILLAGE:
+			add_route(str(b.id), str(sb.id), -1.0, w.day() + 1, str(vb.id))
+	return ""
+
+
+func booth_of_keeper(ref: String) -> Dictionary:
+	for b in booths:
+		if str(b.keeper) == ref:
+			return b
+	return {}
+
+
 func booth(id: String) -> Dictionary:
 	for b in booths:
 		if b.id == id:
@@ -226,15 +289,29 @@ func booth(id: String) -> Dictionary:
 	return {}
 
 
+## A settlement's own booth (the village's is the one at its market, not a shop's: those are found by their keeper).
 func booth_of(settlement: String) -> Dictionary:
 	for b in booths:
-		if b.settlement == settlement:
+		if b.settlement == settlement and not bool(b.get("shop", false)):
 			return b
 	return {}
 
 
+## The booth a sender books at: the one `order.booth` names if it is in the sender's place, else the sender's own shop booth,
+## else the place's booth.
+func home_booth(order: Dictionary) -> Dictionary:
+	var sender := str(order.sender)
+	var named := booth(str(order.get("booth", "")))
+	if not named.is_empty() and str(named.settlement) == place_of(sender):
+		return named
+	var own := booth_of_keeper(sender)
+	if not own.is_empty() and bool(own.get("shop", false)):
+		return own
+	return booth_of(place_of(sender))
+
+
 ## A regular route between two booths, its journey days from the settlements' link (TradeRoutes) or `days`.
-func add_route(from_booth: String, to_booth: String, days := -1.0, first_day := 0) -> Dictionary:
+func add_route(from_booth: String, to_booth: String, days := -1.0, first_day := 0, carrier := "") -> Dictionary:
 	var c: Dictionary = cfg().routes
 	var a := booth(from_booth)
 	var b := booth(to_booth)
@@ -242,6 +319,8 @@ func add_route(from_booth: String, to_booth: String, days := -1.0, first_day := 
 	var r := {"id": "r%d" % next_id, "from": from_booth, "to": to_booth, "every_days": int(c.every_days),
 		"fee_per_load": int(c.fee_per_load), "load_units": int(c.load_units),
 		"days": days if days >= 0.0 else float(link.get("days", 1.0)), "next_day": first_day}
+	if carrier != "" and carrier != from_booth:
+		r["carrier"] = carrier                           # a shop booth's route is carried by another booth's keeper
 	next_id += 1
 	routes.append(r)
 	return r
@@ -252,6 +331,11 @@ func route(id: String) -> Dictionary:
 		if r.id == id:
 			return r
 	return {}
+
+
+## The booth whose keeper carries a route's loads: its own, or (a shop booth's) the one named in `carrier`.
+func carrier_booth(r: Dictionary) -> Dictionary:
+	return booth(str(r.get("carrier", r.from)))
 
 
 # ------------------------------------------------------------------------------ recipients
@@ -335,12 +419,19 @@ func _entry(ref: String, kind: String, why: String) -> Dictionary:
 		"where": loc.what, "why": why}
 
 
+## A place's name for the player: "the village", or the settlement's own name.
+func place_name(place: String) -> String:
+	if place == SettlementFacts.VILLAGE or w == null or w.regions == null or not w.regions.by_id.has(place):
+		return "the village"
+	return str(w.regions.by_id[place].name)
+
+
 ## Where a recipient is found, from world records: a business at its stall or workplace, a person at their home's door,
 ## the player at their home or where they stand, an off-map party at its booth. {settlement, x, y, what}.
 func location(ref: String, kind := "person") -> Dictionary:
 	if ref.begins_with("region:"):
 		var b := booth_of(place_of(ref))
-		return {"settlement": place_of(ref), "x": int(b.get("x", 0)), "y": int(b.get("y", 0)), "what": "the booth of " + place_of(ref)}
+		return {"settlement": place_of(ref), "x": int(b.get("x", 0)), "y": int(b.get("y", 0)), "what": "the booth of " + place_name(place_of(ref))}
 	if ref == "player":
 		var at: Vector2 = w.player.pos
 		return {"settlement": SettlementFacts.VILLAGE, "x": int(at.x), "y": int(at.y), "what": "where you are"}
@@ -423,7 +514,7 @@ func quote(order: Dictionary) -> Dictionary:
 		parts["extra loads"] = (loads - 1) * int(c.per_extra_load)
 	var stops := int(order.get("stops", 1))
 	parts["stops x %d" % stops] = stops * int(c.per_stop)
-	if bool(order.get("notarise", false)):
+	if notarised(order) or bool(order.get("notarise", false)):
 		parts["notarial service"] = int(c.notary_fee)
 	var fee := 0
 	for k in parts:
@@ -460,7 +551,7 @@ func refusal(order: Dictionary) -> String:
 		var from: Dictionary = booth(str(r.from))
 		if str(from.settlement) != place_of(sender):
 			return "That route does not start where you are."
-		if not alive(str(from.keeper)):
+		if not alive(str(from.keeper)) or not alive(str(carrier_booth(r).keeper)):
 			return "Nobody is keeping the booth."
 		if str(order.get("settlement", place_of(recipient))) != str(to.settlement):
 			return "That route does not go where they are."
@@ -469,12 +560,72 @@ func refusal(order: Dictionary) -> String:
 	else:
 		if not alive(str(order.courier)):
 			return "That courier cannot be found."
+		var why_not := carrier_refusal(sender, str(order.courier), str(order.get("settlement", place_of(recipient))))
+		if why_not != "":
+			return why_not
 		if units_of(items) > capacity(str(order.courier)) * 1:
 			return "That is more than the courier can carry (%d)." % capacity(str(order.courier))
+	if is_formal(order):                                      # X18-Q13: a formal contract is signed, never remotely or at once
+		if str(order.get("kind", "special")) == "route":
+			return "A payment of %d coins is a formal contract and must be signed: send it by a special delivery with a courier who knows the law, or meet face to face." % payment_value(order)
+		if not Law.qualified(w, str(order.courier)):
+			return "A payment of %d coins is a formal contract: it is signed before a notary, and that courier does not know enough law (Law %d)." % [payment_value(order), int(cfg().notary.min_level)]
+	elif bool(order.get("notarise", false)):
+		return "A small agreement needs no notary."
 	if coins_of(sender) < int(order.get("fee", q.fee)):
 		return "You cannot pay the fee (%d coins)." % int(order.get("fee", q.fee))
 	if order.has("collect") and str((order.collect as Dictionary).get("kind", "")) == "":
 		return "Say what is to be collected."
+	return ""
+
+
+## What a delivery asks the recipient to pay, in coins (coins, or the goods at their value): 0 when it asks nothing.
+func payment_value(order: Dictionary) -> int:
+	var col: Dictionary = order.get("collect", {})
+	if col.is_empty():
+		return 0
+	if str(col.get("kind", "")) == "coins":
+		return int(col.get("amount", 0))
+	return int(col.get("amount", 0)) * GameData.value(str(col.get("item", "")))
+
+
+## X18-Q13: whether the delivery is a formal commercial contract (a payment above the small-agreement line), which must be signed.
+func is_formal(order: Dictionary) -> bool:
+	return FormalAgreements.classify("commercial", payment_value(order)) == "formal"
+
+
+## Whether the delivery is carried by a notary: a formal one always is; a small one is not.
+func notarised(order: Dictionary) -> bool:
+	return is_formal(order) and str(order.get("kind", "special")) != "route"
+
+
+## The couriers a sender may hire for a special delivery to `settlement`: the keepers of the village's booths (villagers) and, as
+## willing carters (Q18-10: negotiated and paid, never free), the trader of a settlement the sender has dealt with, carrying to
+## its own settlement on its way home, or anywhere if its party offers carts for hire (SettlementParty.carts_for_hire).
+func carriers(sender: String, settlement: String) -> Array:
+	var out := []
+	for b in booths:
+		var k := str(b.keeper)
+		if k.begins_with("npc:") and alive(k) and not out.has(k) and not bool(b.get("shop", false)):
+			out.append(k)
+	for e in known_recipients(sender):
+		var ref := str(e.ref)
+		if ref.begins_with("region:") and carrier_refusal(sender, ref, settlement) == "":
+			out.append(ref)
+	return out
+
+
+## Why `courier` may not carry for `sender` to `settlement`, "" if it may.
+func carrier_refusal(sender: String, courier: String, settlement: String) -> String:
+	if not courier.begins_with("region:"):
+		return ""
+	if not is_known(sender, courier):
+		return "You do not know that carter."
+	var p = _party(courier.trim_prefix("region:"))
+	if p == null or not (p is SettlementParty) or int(TradeRoutes.capacity((p as SettlementParty).transport)) <= 0:
+		return "That trader has no way to carry it."
+	if place_of(courier) != settlement and not bool((p as SettlementParty).carts_for_hire):
+		return "That trader carries only on its own way home."
 	return ""
 
 
@@ -498,6 +649,8 @@ func describe(order: Dictionary) -> String:
 			s += "; collect %d %s" % [int(col.amount), GameData.item_name(str(col.item))]
 		s += " and %s" % ("bring them to you" if str(order.get("proceeds", "deliver")) == "deliver" else "deposit them at your booth")
 	s += ". Fee: %d coins (%s)." % [int(order.get("fee", q.fee)), "; ".join(q.parts.keys().map(func(k): return "%s: %d" % [k, int(q.parts[k])]))]
+	if is_formal(order):
+		s += " A payment of %d coins is a formal contract: you sign it before the notary as it leaves, they sign before the notary on arrival, and it is brought back to you; nothing is signed from afar." % payment_value(order)
 	return s
 
 
@@ -515,10 +668,12 @@ func book_route(order: Dictionary) -> Dictionary:
 	for id in order.items:
 		inv.remove(id, int(order.items[id]))
 		(b.store as Inventory).add(id, int(order.items[id]))
+	var carrier := str(carrier_booth(r).keeper)
 	add_coins(str(order.sender), -int(q.fee))
-	add_coins(str(b.keeper), int(q.fee))
-	var job := _job(order, q, str(b.keeper))
+	add_coins(carrier, int(q.fee))                         # the flat fee goes to whoever carries the load
+	var job := _job(order, q, carrier)
 	job.route = r.id
+	job.booth = b.id
 	job.state = "at_booth"
 	job.history.append([_day(), "booked at the booth; flat fee %d paid" % int(q.fee)])
 	return job
@@ -549,7 +704,7 @@ func book_special(order: Dictionary, fee: int) -> Dictionary:
 	var why := refusal(order)
 	if why != "":
 		return {"error": why}
-	var b := booth_of(place_of(str(order.sender)))
+	var b := home_booth(order)
 	if b.is_empty():
 		return {"error": "There is no courier booth here to hold the fee."}
 	var q := quote(order)
@@ -559,6 +714,17 @@ func book_special(order: Dictionary, fee: int) -> Dictionary:
 	add_coins(str(order.sender), -fee)
 	b.escrow = int(b.escrow) + fee
 	var job := _job(order, q, str(order.courier))
+	job.booth = b.id
+	if notarised(order):                                      # X18-Q13: the sender signs before the notary as it leaves
+		var fa := formal()
+		var ag := fa.draft("commercial", [str(order.sender), str(order.recipient)], payment_value(order), {"delivery": job.id})
+		ag.holder = str(order.courier)
+		ag.notary = str(order.courier)
+		ag.state = "with_notary"
+		ag.signatures[str(order.sender)] = _day()
+		ag.history.append([_day(), "%s signed before the notary %s" % [str(order.sender), str(order.courier)]])
+		Law.witnessed(w, str(order.courier))
+		job.agreement = ag.id
 	job.cargo = (order.items as Dictionary).duplicate()          # the courier's load: held by the delivery, see the header
 	job.fee = fee
 	job.held_at = b.id
@@ -575,7 +741,8 @@ func _job(order: Dictionary, q: Dictionary, courier: String) -> Dictionary:
 		"items": (order.items as Dictionary).duplicate(), "courier": courier, "fee": int(q.fee), "days": float(q.days),
 		"collect": (order.get("collect", {}) as Dictionary).duplicate(), "proceeds": str(order.get("proceeds", "deliver")),
 		"carried_coins": 0, "carried_items": {}, "returned_items": {}, "cargo": {}, "state": "", "route": "", "held_at": "", "depart": -1.0,
-		"arrive": -1.0, "back": -1.0, "outcome": "", "history": [], "notarise": bool(order.get("notarise", false))}
+		"arrive": -1.0, "back": -1.0, "outcome": "", "history": [], "notarise": notarised(order) or bool(order.get("notarise", false)),
+		"booth": "", "agreement": -1}
 	next_id += 1
 	jobs.append(j)
 	return j
@@ -583,6 +750,22 @@ func _job(order: Dictionary, q: Dictionary, courier: String) -> Dictionary:
 
 func _day() -> float:
 	return float(w.minutes) / World.DAY if w != null else 0.0
+
+
+## The formal agreement of id `id` (a notarised delivery's document), {} when none.
+func agreement(id: int) -> Dictionary:
+	for a in agreements:
+		if int(a.id) == id:
+			return a
+	return {}
+
+
+## FormalAgreements over this service's saved records (a fresh view each time: the records are the Array held here).
+func formal() -> FormalAgreements:
+	var fa := FormalAgreements.new(self)
+	fa.list = agreements
+	fa.next_id = agreements.size() + 1
+	return fa
 
 
 # ------------------------------------------------------------------------------ the journey
@@ -611,8 +794,9 @@ func _depart(r: Dictionary, day: float) -> void:
 	for j in jobs:
 		if str(j.route) != str(r.id) or str(j.state) != "at_booth":
 			continue
-		if not alive(str(j.courier)) and alive(str(b.keeper)):
-			j.courier = str(b.keeper)                  # the booth's keeper changed: the new keeper carries what waits there
+		var cb := carrier_booth(r)
+		if not alive(str(j.courier)) and alive(str(cb.keeper)):
+			j.courier = str(cb.keeper)                 # the carrier booth's keeper changed: the new keeper carries what waits there
 		if not alive(str(j.courier)):
 			continue                                   # no courier today: the goods wait at the booth
 		for id in j.items:
@@ -631,6 +815,7 @@ func _arrive(j: Dictionary, day: float) -> void:
 		return
 	j.back = day + float(j.days)
 	if not alive(str(j.recipient)):
+		_unsigned(j, day)
 		j.returned_items = (j.items as Dictionary).duplicate()
 		j.outcome = "recipient unavailable"
 		j.state = "returning"
@@ -642,6 +827,7 @@ func _arrive(j: Dictionary, day: float) -> void:
 	if not col.is_empty():
 		var can_pay: bool = (coins_of(str(j.recipient)) >= int(col.amount)) if str(col.kind) == "coins" else rinv.has(str(col.item), int(col.amount))
 		if not can_pay or bool(j.get("refuse", false)):
+			_unsigned(j, day)
 			j.returned_items = (j.items as Dictionary).duplicate()
 			j.outcome = "rejected by the recipient"
 			j.state = "returning"
@@ -649,10 +835,15 @@ func _arrive(j: Dictionary, day: float) -> void:
 			return
 	for id in j.items:
 		if not rinv.can_add(id):
+			_unsigned(j, day)
 			j.returned_items = (j.items as Dictionary).duplicate()
 			j.outcome = "recipient could not take it"
 			j.state = "returning"
 			return
+	if int(j.agreement) >= 0:                                  # X18-Q13: the recipient signs before the notary, on the spot, never from afar
+		var ag := agreement(int(j.agreement))
+		if not ag.is_empty():
+			formal().sign_before_notary(ag, str(j.recipient), courier, day)
 	for id in j.items:
 		rinv.add(id, int(j.items[id]))
 	j.cargo = {}
@@ -669,13 +860,27 @@ func _arrive(j: Dictionary, day: float) -> void:
 	j.history.append([day, "handed over%s" % (" and payment collected" if not col.is_empty() else "")])
 
 
+## A notarised delivery the recipient did not sign (nobody to sign, would not, could not): the agreement stays unsigned.
+func _unsigned(j: Dictionary, day: float) -> void:
+	var ag := agreement(int(j.get("agreement", -1)))
+	if not ag.is_empty():
+		ag.state = "rejected_returning"
+		ag.history.append([day, "%s did not sign" % str(j.recipient)])
+
+
 func _home(j: Dictionary, day: float) -> void:
 	var courier := str(j.courier)
 	if not alive(courier):
 		interrupt(j, "the courier did not come back")
 		return
 	var sender := str(j.sender)
-	var b := booth_of(place_of(sender))
+	var b := booth(str(j.get("booth", "")))
+	if b.is_empty():
+		b = booth_of(place_of(sender))
+	var ag := agreement(int(j.get("agreement", -1)))
+	if not ag.is_empty():                                       # the notary brings the document home (Law gained by the carrying)
+		formal().bring_home(ag, sender, day)
+		Law.carried(w, courier)
 	var deposit: bool = str(j.proceeds) == "deposit" or not alive(sender)
 	# goods that came back, and goods collected as payment
 	for src in [j.returned_items, j.carried_items]:
@@ -736,6 +941,11 @@ func withdraw(booth_id: String, who: String) -> Dictionary:
 func interrupt(j: Dictionary, why: String) -> void:
 	if str(j.state) in ["fulfilled", "returned", "interrupted"]:
 		return
+	var ag := agreement(int(j.get("agreement", -1)))
+	if not ag.is_empty():                                       # the document is lost with the notary: the agreement is incomplete
+		ag.state = "interrupted"
+		ag.holder = ""
+		ag.history.append([_day(), "interrupted: " + why])
 	if str(j.kind) == "special" and str(j.held_at) != "":
 		var hb := booth(str(j.held_at))
 		hb.escrow = int(hb.escrow) - int(j.fee)
@@ -830,17 +1040,18 @@ func daily() -> void:
 	_ensure_region_booths()
 	var vb := booth_of(SettlementFacts.VILLAGE)
 	if vb.is_empty():
+		var free := ""                                      # Q18-16: a free market stall, else a stall built near the market
+		for sid in w.stalls:
+			if str(w.stalls[sid].get("tenant", "")) == "" and not booths.any(func(b): return str(b.stall) == str(sid)):
+				free = str(sid)
+				break
 		for n: NPC in w.npcs:
-			if n.alive and w.construction.can_hire(n) == "" and not booths.any(func(b): return b.keeper == "npc:%d" % n.id):
-				var free := ""
-				for sid in w.stalls:
-					if str(w.stalls[sid].get("tenant", "")) == "" and not booths.any(func(b): return str(b.stall) == str(sid)):
-						free = str(sid)
-						break
-				if open_booth("npc:%d" % n.id, free) == "":
-					break
-				if free == "":
-					break                                   # nobody has the planks to build one: the next day tries again
+			if not n.alive or w.construction.can_hire(n) != "" or booths.any(func(b): return b.keeper == "npc:%d" % n.id):
+				continue
+			if free == "" and not n.inv.has_all(Stalls.cost()):
+				continue                                    # (the keeper builds it from their own planks: the next to have them)
+			if open_booth("npc:%d" % n.id, free) == "":
+				break
 		vb = booth_of(SettlementFacts.VILLAGE)
 	elif not alive(str(vb.keeper)):
 		for n: NPC in w.npcs:
@@ -849,12 +1060,129 @@ func daily() -> void:
 				break
 	if vb.is_empty():
 		return
+	_tidy_shop_booths()
+	keepers_learn()
+	villagers_post()
 	for b in booths.duplicate():
 		if str(b.settlement) == SettlementFacts.VILLAGE:
 			continue
 		for pair in [[vb.id, b.id], [b.id, vb.id]]:
 			if not routes.any(func(r): return r.from == pair[0] and r.to == pair[1]):
 				add_route(str(pair[0]), str(pair[1]), -1.0, w.day() + 1)
+		for sb in booths.duplicate():                       # and every shop booth is joined to it, carried by the village booth's keeper
+			if bool(sb.get("shop", false)) and not routes.any(func(r): return r.from == sb.id and r.to == b.id):
+				add_route(str(sb.id), str(b.id), -1.0, w.day() + 1, str(vb.id))
+
+
+## A shop booth whose owner is gone: the stall's new tenant keeps it, else it closes once it holds nothing and no delivery waits on it.
+func _tidy_shop_booths() -> void:
+	for b in booths.duplicate():
+		if not bool(b.get("shop", false)) or alive(str(b.keeper)):
+			continue
+		var heir := ""
+		if str(b.stall) != "" and w.stalls.has(str(b.stall)):
+			var t := str(w.stalls[str(b.stall)].get("tenant", ""))
+			heir = t if t.begins_with("npc:") else ("npc:" + t if t.is_valid_int() else t)
+		if heir != "" and alive(heir) and booth_of_keeper(heir).is_empty():
+			b.keeper = heir
+			continue
+		var busy: bool = int(b.coins) != 0 or int(b.escrow) != 0 or not (b.deposits as Dictionary).is_empty() or not (b.store as Inventory).items.is_empty() \
+				or jobs.any(func(j): return str(j.get("booth", "")) == str(b.id) and not str(j.state) in ["fulfilled", "returned", "interrupted"])
+		if not busy:
+			routes = routes.filter(func(r): return r.from != b.id and r.to != b.id)
+			booths.erase(b)
+
+
+## LAW-SKILL: the villagers who keep the village's booths (its couriers, the ones a notary delivery needs) learn the law they need
+## from the reeve or the preacher, a lesson a day by Law.teach's rule, until they reach the notary level (couriers.json notary).
+func keepers_learn() -> void:
+	if w == null or w.day() < 1:
+		return                                         # (a new world starts with nobody knowing any law)
+	var need := int(cfg().notary.min_level)
+	for b in booths:
+		var k := str(b.keeper)
+		if not k.begins_with("npc:") or bool(b.get("shop", false)) or not alive(k):
+			continue
+		var n: NPC = _npc(k)
+		if Skills.level(n, "law") >= need:
+			continue
+		for t: NPC in w.npcs:
+			if t != n and Law.teacher_cap(t) > Skills.level(n, "law"):
+				Law.teach(w, k, t)
+				break
+
+
+## X18-Q12-POST, "the same rules for NPCs": a merchant or smith (a business with a shop) that holds goods beyond what the caravan
+## would leave it (NPCBrain.export_caps, the caravan's own surplus rule; never food, never the village's own needs) and has dealt
+## with the trader of a settlement that wants them, and whose till pays the trader's price, sends them from its own booth by the
+## regular route, asking the trader's payment on arrival at the price the caravan pays, and pays the flat fee. At most one delivery
+## in flight a business; a payment above the small-agreement line is a formal contract and only a notary may carry it, so the
+## villagers post only small ones. Deterministic: villagers in id order, items and settlements by id.
+func villagers_post() -> void:
+	if not live or w == null or w.regions == null:
+		return
+	var rc: Dictionary = cfg().routes
+	var small := int(cfg().contracts.small_value)
+	var kept: Array = w.brain.local_tool_need().keys()
+	var lacks := {}                                      # settlement -> what it lacks now (OffMapSettlement.wants), read once a day
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult" or not n.job in ["merchant", "smith"]:
+			continue
+		var me := "npc:%d" % n.id
+		if jobs.any(func(j): return str(j.sender) == me and not str(j.state) in ["fulfilled", "returned", "interrupted"]):
+			continue
+		var best := {}
+		var caps: Dictionary = w.brain.export_caps(n)
+		var ids: Array = n.inv.ids()
+		ids.sort()
+		for id: String in ids:
+			if not caps.has(id) or NPCBrain.NOT_EXPORTED.has(id) or NPCBrain.FOOD.has(id) or id == "meat" or kept.has(id) or w.brain.keeps(n, id):
+				continue
+			var extra := n.inv.count(id) - int(caps[id]) / 2
+			if extra <= 0:
+				continue
+			var price := maxi(1, roundi(GameData.value(id) * 0.8))
+			for c in contacts:
+				if str(c[0]) != me or not str(c[1]).ends_with("/trader"):
+					continue
+				var sid := str(c[1]).split("/")[0]
+				var s: OffMapSettlement = w.regions.by_id.get(sid)
+				if s == null:
+					continue
+				var pending := 0
+				for j in jobs:
+					if str(j.recipient) == "region:" + str(c[1]) and str(j.state) in ["at_booth", "in_transit"]:
+						pending += int(j.items.get(id, 0))
+				if not lacks.has(sid):
+					lacks[sid] = s.wants()
+				var qty := mini(extra, int((lacks[sid] as Dictionary).get(id, 0)) - pending)
+				qty = mini(qty, s.trader_cash() / price)
+				qty = mini(qty, small / price)                 # (a payment above the line is a formal contract: not posted by route)
+				qty = mini(qty, int(rc.load_units) * int(rc.loads_per_departure))
+				var loads := maxi(1, int(ceil(float(qty) / float(rc.load_units))))
+				if qty <= 0 or qty * price <= loads * int(rc.fee_per_load):
+					continue
+				var gain := qty * price
+				if best.is_empty() or gain > int(best.gain):
+					best = {"id": id, "qty": qty, "price": price, "sid": sid, "party": str(c[1]), "gain": gain}
+		if best.is_empty():
+			continue
+		var sb := booth_of_keeper(me)
+		if sb.is_empty():
+			if open_shop_booth(me) != "":
+				continue
+			sb = booth_of_keeper(me)
+		var rt := {}
+		for r in routes:
+			if str(r.from) == str(sb.id) and str(booth(str(r.to)).get("settlement", "")) == str(best.sid):
+				rt = r
+		if rt.is_empty():
+			continue
+		var order := {"sender": me, "recipient": "region:" + str(best.party), "recipient_kind": "business", "settlement": str(best.sid),
+			"items": {str(best.id): int(best.qty)}, "route": rt.id, "collect": {"kind": "coins", "amount": int(best.qty) * int(best.price)}, "proceeds": "deliver"}
+		var job := book_route(order)
+		if not job.has("error"):
+			w.stat("courier_posts_villager")
 
 
 ## Step to the world's present moment (every game hour).
@@ -889,7 +1217,8 @@ func to_dict() -> Dictionary:
 		var c: Dictionary = (b as Dictionary).duplicate(true)
 		c.store = (b.store as Inventory).to_dict()
 		bs.append(c)
-	return {"format": FORMAT, "next_id": next_id, "booths": bs, "routes": routes.duplicate(true), "jobs": jobs.duplicate(true), "contacts": contacts.duplicate(true)}
+	return {"format": FORMAT, "next_id": next_id, "booths": bs, "routes": routes.duplicate(true), "jobs": jobs.duplicate(true), "contacts": contacts.duplicate(true),
+		"agreements": agreements.duplicate(true)}
 
 
 ## A saved service (JSON round trip: counts come back as numbers, made whole again here). The parties are not saved: they are
@@ -917,6 +1246,8 @@ static func from_dict(world, d: Dictionary) -> CourierService:
 		var c: Dictionary = (j as Dictionary).duplicate(true)
 		for k in ["fee", "carried_coins"]:
 			c[k] = int(c.get(k, 0))
+		c["agreement"] = int(c.get("agreement", -1))
+		c["booth"] = str(c.get("booth", ""))
 		for k in ["items", "carried_items", "returned_items", "cargo"]:
 			c[k] = _whole(c.get(k, {}))
 		var col: Dictionary = c.get("collect", {})
@@ -926,6 +1257,14 @@ static func from_dict(world, d: Dictionary) -> CourierService:
 			c[k] = float(c.get(k, -1.0))
 		cs.jobs.append(c)
 	cs.contacts = (d.get("contacts", []) as Array).duplicate(true)
+	for a in d.get("agreements", []):
+		var c: Dictionary = (a as Dictionary).duplicate(true)
+		c["id"] = int(c.id)
+		c["value"] = int(c.get("value", 0))
+		c["fee"] = int(c.get("fee", 0))
+		for k in ["due", "back"]:
+			c[k] = float(c.get(k, -1.0))
+		cs.agreements.append(c)
 	cs._ensure_region_booths()
 	return cs
 
