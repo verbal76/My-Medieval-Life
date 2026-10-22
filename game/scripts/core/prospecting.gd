@@ -274,7 +274,7 @@ func sample_refusal(who, c: Dictionary, cell: Vector2i) -> String:
 	if w.map.is_solid(cell):
 		return "There is no open ground there to sample."
 	if not who.inv.can_add(ITEM):
-		return "Your pack is full."
+		return who.inv.full_text(ITEM)
 	return ""
 
 

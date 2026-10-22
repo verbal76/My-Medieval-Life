@@ -256,7 +256,7 @@ func _ready() -> void:
 				_swing_panel(shot_panel.begins_with("mine"), int(shot_panel.right(1)))
 			"skills":
 				ui.show_skills()
-			"inventory", "inventory_pad", "inventory_tab":
+			"inventory", "inventory_pad", "inventory_tab", "inventory_raw", "inventory_over", "inventory_level1":
 				# a pack with something in most tabs, and the new gear worn
 				var kit := {"log": 6, "plank": 12, "iron_ore": 3, "coal": 4, "wheat": 9, "pottage": 2, "leather": 2,
 					"leather_cap": 1, "copper_ring": 1, "amulet": 1, "iron_bar": 2, "apple": 3}
@@ -264,9 +264,21 @@ func _ready() -> void:
 					world.player.inv.add(id, kit[id])
 				for id in ["rusty_sword", "rusty_pickaxe", "leather_cap", "copper_ring", "amulet"]:
 					world.player_equip(id)
-				if shot_panel != "inventory":
+				var raw := GameData.items.keys().filter(func(id): return GameData.category(id) == "raw")
+				raw.sort()
+				if shot_panel == "inventory_over":
+					# INV-18: an older save's pack with 12 raw materials: kept, shown over capacity
+					for id in raw.slice(0, 12):
+						world.player.inv.items[id] = world.player.inv.count(id) + 2
+				elif shot_panel == "inventory_level1":
+					world.player.pack_level = 1           # the screenshot path (in play: bought from the tailor)
+					for id in raw.slice(0, 16):
+						world.player.inv.add(id, 1)
+				if shot_panel in ["inventory_pad", "inventory_tab"]:
 					ui.set_scheme("gamepad")
-				ui.show_inventory()
+				ui.show_inventory("raw" if shot_panel in ["inventory_raw", "inventory_over", "inventory_level1"] else "general")
+				if shot_panel == "inventory":
+					ui.inventory_window().choose_tab("armour")
 				ui.inventory_window().choose("copper_ring")
 				if shot_panel == "inventory_pad":
 					ui.inventory_window().gear_buttons["weapon"].grab_focus()
@@ -2484,7 +2496,7 @@ func _use() -> void:
 			if got == "far":
 				ui.message(world.player_container_reach(c))         # out of reach (DVW-A12 R15)
 			elif got == "full":
-				ui.message("Your pack is full.")
+				ui.message(world.pack_full_text([world.container_pick(c)]))
 			elif got == "":
 				ui.message("There is nothing to take.")
 			else:
@@ -2502,9 +2514,9 @@ func _use() -> void:
 			if int(got.coins) > 0:
 				_gain("+%d coins" % int(got.coins), "coins")
 			elif got.items.is_empty():
-				ui.message("Your pack is full." if int(got.left) > 0 else "There is nothing left.")
+				ui.message(str(got.why) if int(got.left) > 0 else "There is nothing left.")
 			elif int(got.left) > 0:
-				ui.message("Your pack is full: some is left behind.")
+				ui.message(str(got.why) + " Some is left behind.")
 		"sample":
 			_sample(target.clue, target.cell)
 		"assay":
@@ -2549,7 +2561,7 @@ func _use() -> void:
 			if got > 0:
 				_gain("+%d %s" % [got, GameData.item_name(str(target.item))], str(target.item))
 			else:
-				ui.message("Your pack is full.")
+				ui.message(world.pack_full_text([str(target.item)]))
 		"deposit":
 			var dep: Dictionary = target.dep
 			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
@@ -2566,7 +2578,7 @@ func _use() -> void:
 					ui.message("Gold needs Mining level 3.")
 					return
 				if r.full:
-					ui.message("Your pack is full: the ore is left at your feet.")
+					ui.message(world.pack_full_text([str(dep.get("ore", "stone"))]) + " The ore is left at your feet.")
 				else:
 					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
 				if r.broke:
@@ -2593,7 +2605,7 @@ func _use() -> void:
 			var ftree: Dictionary = target.tree
 			var fitem: String = str(Trees.fruit_cfg(str(ftree.species)).item)
 			if not p.inv.can_add(fitem):
-				ui.message("Your pack is full.")
+				ui.message(p.inv.full_text(fitem))
 				return
 			start_action("Picking", 1.5, func():
 				var got := world.pick_fruit(ftree)
@@ -2605,10 +2617,9 @@ func _use() -> void:
 		"plant":
 			var pl: Dictionary = target.plant
 			var pdef := ResourceNodes.def_for("plant", str(pl.kind))
-			for id in ResourceNodes.products(pdef):
-				if not p.inv.can_add(id):
-					ui.message("Your pack is full.")
-					return
+			if not p.inv.can_add_all(ResourceNodes.products(pdef)):
+				ui.message(p.inv.full_text_all(ResourceNodes.products(pdef)))
+				return
 			start_action("Picking", 1.2, func():
 				var got := world.pick_plant(pl)
 				for id in got:
@@ -2643,7 +2654,7 @@ func _use() -> void:
 		"pen_collect":
 			var got: Dictionary = world.farm.collect(target.pen, p)
 			if got.is_empty():
-				ui.message("Your pack is full.")
+				ui.message(world.pack_full_text(world.farm.products_in(target.pen).keys()))
 			for id in got:
 				_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
 		"pen_buy":
@@ -3109,7 +3120,7 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 			_chop(tr, axe, secs)
 			return
 		if r.full:
-			ui.message("Your pack is full: the logs are left at your feet.")
+			ui.message(world.pack_full_text(["log"]) + " The logs are left at your feet.")
 		else:
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
 		for id in r.saplings:
@@ -3218,11 +3229,17 @@ func craft(recipe: String, station := "") -> void:
 	station = str(cp.station)
 	ui.hide_all()
 	start_action("Crafting", float(cp.secs), func():
+		var had := {}
+		for o in r.out:
+			had[o] = world.player.inv.count(o)
 		var res := world.player_craft(recipe)                   # the same as a villager's (PAR-01, PAR-04)
 		if res.result != "ok":
 			return
 		_level_up(str(r.skill), int(res.up))
-		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
+		# INV-18: what the pack had no place for is set down at the player's feet (World.player_gain), and said so
+		var left: Array = r.out.keys().filter(func(o): return world.player.inv.count(o) <= int(had[o]) and not world.player.inv.can_add(o))
+		ui.message("Made %s.%s" % [", ".join(r.out.keys().map(func(k): return GameData.item_name(k))),
+			(" " + world.pack_full_text(left) + " It is set down at your feet.") if not left.is_empty() else ""]),
 			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")
 	if station != "" and not action.is_empty():
 		action["station"] = station          # released the moment the work ends or is cut short (Build 13)
@@ -4983,10 +5000,9 @@ func _gather_step() -> void:
 			chase = ref
 		strike_pending = true          # keep striking until it falls
 		return
-	for id in ResourceNodes.products(d):
-		if not p.inv.can_add(id):
-			stop_gather("Your pack is full.")
-			return
+	if not p.inv.can_add_all(ResourceNodes.products(d)):
+		stop_gather(p.inv.full_text_all(ResourceNodes.products(d)))
+		return
 	var stand := _gather_stand(d, ref)
 	if p.pos.distance_to(stand) > 0.6:
 		if move_to == Vector2.INF:

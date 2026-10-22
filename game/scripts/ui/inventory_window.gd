@@ -1,10 +1,13 @@
 class_name InventoryWindow
 extends Control
 ## The pack window, drawn with Cozy Farm's inventory panel (imported by tools/import_game_assets.py):
-## a tab strip (All, Food, Materials, Tools, Weapons, Armour, then Skills and Journal, which open
-## those windows), the character panel (the player's figure in the portrait frame, the six gear slots
-## around it, the name on the plate) and the 9 x 3 bag grid. Beside it, or below it on a narrow
-## screen, the chosen item's name, what it does and what can be done with it.
+## a tab strip of the eight pack categories (INV-18: General, Food, Raw materials, Tools, Weapons, Armour,
+## Medicine, Crafted goods; each its own capacity, GameData.category), Skills and Journal buttons beside it, the
+## character panel (the player's figure in the portrait frame, the six gear slots around it, the name on the
+## plate) and the open category's 9 x 3 grid: the first row to start, the second row locked until the first pack
+## upgrade and the third until the second (PlayerState.PACK_CAPS; bought from the tailor, TAILOR-18). Worn and wielded items sit
+## in their gear slots and take no cell. Beside it, or below it on a narrow screen, the chosen item's name, what
+## it does and what can be done with it.
 ##
 ## The art is drawn at a whole number of screen pixels per art pixel (nearest filtering), with its
 ## corner on a whole screen pixel, so it stays crisp at any window size. Tabs, gear slots and bag
@@ -20,17 +23,25 @@ const TAB_X := 117                  # the first tab's inside; tabs are TAB_STEP 
 const TAB_STEP := 21
 const TAB_W := 16
 const BODY_TOP := 33                # where the panel's body (below the tabs) starts
-# id, caption, icon, item types shown ("skills" and "journal" open those windows instead)
+# category id (GameData.CATEGORIES), caption, icon: owned art with a distinct silhouette (INV-18; red berries,
+# not the loaf that read as a gold bar; a red tonic bottle, as the bandage read as a grey scrap at size)
 const TABS := [
-	["all", "All", "res://assets/ui/tab_all.png", []],
-	["food", "Food", "res://assets/icons/bread.png", ["food", "medicine"]],
-	["materials", "Materials", "res://assets/icons/log.png", ["resource"]],
-	["tools", "Tools", "res://assets/icons/pickaxe.png", ["tool"]],
-	["weapons", "Weapons", "res://assets/icons/iron_sword.png", ["weapon"]],
-	["armour", "Armour", "res://assets/icons/iron_armor.png", ["armor", "head", "amulet", "ring"]],
-	["skills", "Skills", "res://assets/ui/tab_skills.png", []],
-	["journal", "Journal", "res://assets/ui/tab_journal.png", []],
+	["general", "General", "res://assets/ui/tab_all.png"],
+	["food", "Food", "res://assets/icons/red_berries.png"],
+	["raw", "Raw materials", "res://assets/icons/log.png"],
+	["tools", "Tools", "res://assets/icons/pickaxe.png"],
+	["weapons", "Weapons", "res://assets/icons/iron_sword.png"],
+	["armour", "Armour", "res://assets/icons/iron_armor.png"],
+	["medicine", "Medicine", "res://assets/icons/healing_tonic.png"],
+	["crafted", "Crafted goods", "res://assets/icons/iron_bar.png"],
 ]
+# the two buttons beside the tabs (they were tabs before INV-18): id, caption, icon, where (art pixels)
+const SIDE := [
+	["skills", "Skills", "res://assets/ui/tab_skills.png", Vector2(70, 9)],
+	["journal", "Journal", "res://assets/ui/tab_journal.png", Vector2(90, 9)],
+]
+# older tab names a caller may still pass
+const OLD_TABS := {"all": "general", "": "general", "materials": "raw"}
 const COLS := 9
 const ROWS := 3
 const CELL0 := Vector2(95, 52)      # the first bag cell's corner
@@ -58,7 +69,7 @@ const PALE := Color8(246, 236, 214)
 const GOLD := Color8(236, 196, 72)
 
 var ui                       # GameUI
-var tab := "all"
+var tab := "general"
 var selected := ""           # item id chosen in the bag, or "gear:<slot>"
 var k := 1.0                 # interface units per art pixel
 var px := 1.0                # screen pixels per interface unit
@@ -68,6 +79,7 @@ var shown: Array = []        # item ids in the bag cells, in order
 var cells: Array[Button] = []
 var gear_buttons := {}
 var tab_buttons: Array[Button] = []
+var side_buttons: Array[Button] = []     # Skills, Journal
 var details: PanelContainer
 var detail_box: VBoxContainer
 var actions: BoxContainer
@@ -78,7 +90,8 @@ var _fitted := Vector4.ZERO
 
 func setup(game_ui, open_tab: String) -> void:
 	ui = game_ui
-	tab = open_tab if TABS.any(func(t): return t[0] == open_tab and t[3] != []) else "all"
+	var want: String = OLD_TABS.get(open_tab, open_tab)
+	tab = want if TABS.any(func(t): return t[0] == want) else "general"
 	name = "InventoryWindow"
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -106,6 +119,15 @@ func setup(game_ui, open_tab: String) -> void:
 		b.focus_entered.connect(queue_redraw)
 		b.focus_exited.connect(queue_redraw)
 		tab_buttons.append(b)
+	for t in SIDE:
+		var b := _flat_button()
+		var tid: String = t[0]
+		b.tooltip_text = t[1]
+		b.pressed.connect(func(): choose_tab(tid))
+		b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		b.focus_entered.connect(queue_redraw)
+		b.focus_exited.connect(queue_redraw)
+		side_buttons.append(b)
 	details = PanelContainer.new()
 	var st := StyleBoxFlat.new()
 	st.bg_color = TAN
@@ -142,17 +164,28 @@ func _icon(path: String) -> Texture2D:
 	return tex[path]
 
 
-## Item ids the open tab shows, in the pack's order.
+## Item ids the open category holds in the backpack (worn ones are in their gear slots), sorted.
 func items_shown() -> Array:
-	var p := _player()
-	var types: Array = TABS.filter(func(t): return t[0] == tab)[0][3]
-	return p.inv.ids().filter(func(id): return types.is_empty() or str(GameData.item(id).get("type", "")) in types)
+	return _player().inv.in_category(tab)
 
 
-## Cells past what the pack can hold (Inventory.max_stacks) are locked.
+## The upgrade a cell waits for: 0 = open at this pack level, 1 = the first upgrade, 2 = the second.
+func lock_stage(i: int) -> int:
+	if i < _player().pack_cap():
+		return 0
+	return i / COLS                     # the second row waits for the first upgrade, the third for the second
+
+
+## A cell shown locked: past the category's capacity and not holding a kind carried over capacity (an older save
+## can hold more kinds in one category than it now takes; they stay, shown, and nothing is ever dropped).
 func locked(i: int) -> bool:
-	var cap := _player().inv.max_stacks
-	return cap > 0 and i >= cap
+	return lock_stage(i) > 0 and i >= shown.size()
+
+
+## "Tools: 12 / 18".
+func capacity_text() -> String:
+	var p := _player()
+	return "%s: %d / %d" % [GameData.category_name(tab), p.inv.used(tab), p.pack_cap()]
 
 
 func choose_tab(id: String) -> void:
@@ -162,6 +195,9 @@ func choose_tab(id: String) -> void:
 		"journal":
 			ui.show_journal(-1)
 		_:
+			id = OLD_TABS.get(id, id)
+			if not TABS.any(func(t): return t[0] == id):
+				return
 			tab = id
 			if not selected.begins_with("gear:"):
 				selected = ""
@@ -204,7 +240,7 @@ func refresh() -> void:
 		var lock := locked(i)
 		b.disabled = lock
 		b.focus_mode = Control.FOCUS_NONE if lock else Control.FOCUS_ALL
-		b.tooltip_text = "Your pack holds %d kinds of things" % p.inv.max_stacks if lock else \
+		b.tooltip_text = ("Locked: the %s row opens with a pack upgrade from the tailor" % ("second" if lock_stage(i) == 1 else "third")) if lock else \
 			(GameData.item_name(shown[i]) if i < shown.size() else "")
 	_build_details()
 	queue_redraw()
@@ -249,7 +285,11 @@ func _build_details() -> void:
 			detail_box.add_child(_text(GEAR_HINT[slot], 16))
 		else:
 			title.text = "%s %s" % [p.name, p.family]
-			detail_box.add_child(_text("%d of %d kinds carried. Tap a slot to see what is in it." % [p.inv.items.size(), p.inv.max_stacks], 16))
+			var used := p.inv.used(tab)
+			var line := "%s: %d of %d places used. Worn and wielded things take no place. Tap a slot to see what is in it." % [GameData.category_name(tab), used, p.pack_cap()]
+			if used > p.pack_cap():
+				line = "%s: %d of %d places used, more kinds than it holds. Nothing is lost, but no new kind fits here until some go." % [GameData.category_name(tab), used, p.pack_cap()]
+			detail_box.add_child(_text(line, 16))
 		_fit_details()
 		return
 	var it: Dictionary = GameData.item(id)
@@ -300,11 +340,15 @@ func _build_details() -> void:
 	elif t in PlayerState.GEAR:
 		if worn != "":
 			_action("Take off", func():
-				w.player_unequip(worn)
+				var why: String = w.unequip_refusal(worn)
+				if why != "":
+					ui.message(why + " It stays worn.")
 				_after())
 		else:
 			_action({"tool": "Use", "weapon": "Wield"}.get(t, "Wear"), func():
-				w.player_equip(iid)
+				var why: String = w.equip_refusal(iid)
+				if why != "":
+					ui.message(why)
 				_after())
 	if it.has("plant") or it.has("propagates"):
 		_action("Plant", func(): ui.main.plant_sapling(iid))
@@ -366,11 +410,15 @@ func _after() -> void:
 	var focus := get_viewport().gui_get_focus_owner()
 	var keep := cells.find(focus)
 	refresh()
+	if not is_inside_tree():
+		return
 	if ui.scheme != "touch":
 		if selected.begins_with("gear:"):
 			gear_buttons[selected.substr(5)].grab_focus()
 		elif selected != "" and shown.has(selected):
 			cells[shown.find(selected)].grab_focus()
+		elif selected != "" and _slot_of(selected) != "":
+			gear_buttons[_slot_of(selected)].grab_focus()      # worn now: its gear slot (INV-18)
 		else:
 			cells[clampi(keep, 0, cells.size() - 1)].grab_focus()
 
@@ -428,6 +476,8 @@ func _layout() -> void:
 		_place(gear_buttons[slot], Rect2(GEAR_AT[slot], CELL))
 	for i in tab_buttons.size():
 		_place(tab_buttons[i], Rect2(TAB_X - 3 + TAB_STEP * i, 2, TAB_W + 6, BODY_TOP - 2))
+	for i in side_buttons.size():
+		_place(side_buttons[i], Rect2(SIDE[i][3] - Vector2(1, 1), CELL + Vector2(2, 2)))
 	queue_redraw()
 
 
@@ -457,8 +507,17 @@ func _draw() -> void:
 	draw_texture_rect_region(strips, _r(Rect2(0, 0, ART.x, STRIP)), Rect2(0, ti * STRIP, ART.x, STRIP))
 	var font := get_theme_default_font()
 	# the title where the tab strip leaves room, over the darkened game
-	_outlined(font, Vector2(4, 13), "Pack", int(round(7.5 * k)), PALE)
-	_outlined(font, Vector2(4, 25), "%d coins · %d of %d kinds" % [p.coins, p.inv.items.size(), p.inv.max_stacks], int(round(5.2 * k)), PALE)
+	_outlined(font, Vector2(4, 13), "Pack · %d coins" % p.coins, int(round(6.5 * k)), PALE)
+	_outlined(font, Vector2(4, 25), capacity_text(), int(round(5.2 * k)), Color(1, 0.62, 0.5) if p.inv.used(tab) > p.pack_cap() else PALE)
+	for i in SIDE.size():
+		var at: Vector2 = SIDE[i][3]
+		draw_rect(_r(Rect2(at - Vector2(1, 1), CELL)), EDGE)
+		draw_rect(_r(Rect2(at, CELL - Vector2(2, 2))), TAN)
+		var st: Texture2D = _icon(SIDE[i][2])
+		if st:
+			draw_texture_rect(st, _r(Rect2(at, Vector2(16, 16))), false)
+		if side_buttons[i].has_focus():
+			draw_rect(_r(Rect2(at - Vector2(1, 1), CELL)), PALE, false, 2.0)
 	for i in TABS.size():
 		var t: Texture2D = _icon(TABS[i][2])
 		if t:
@@ -480,15 +539,18 @@ func _draw() -> void:
 	for i in COLS * ROWS:
 		var at := CELL0 + CELL_STEP * Vector2(i % COLS, i / COLS)
 		if locked(i):
-			_draw_lock(at)
+			_draw_lock(at, lock_stage(i))
 			continue
 		if i >= shown.size():
 			continue
 		var id: String = shown[i]
+		if lock_stage(i) > 0:
+			# a kind carried over this category's capacity (an older save): shown, marked, never dropped
+			draw_rect(_r(Rect2(at + Vector2(1, 1), CELL - Vector2(2, 2))), Color(0.75, 0.2, 0.12, 0.35))
 		var icon: Texture2D = _icon(ICON % id)
 		if icon:
 			draw_texture_rect(icon, _r(Rect2(at + Vector2(1, 1), Vector2(16, 16))), false)
-		var n := p.inv.count(id)
+		var n := p.inv.count(id) - p.inv.worn(id)
 		if n > 1:
 			var s := str(n)
 			var w := font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
@@ -496,7 +558,7 @@ func _draw() -> void:
 			draw_string_outline(font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, maxi(3, int(k * 1.2)), INK)
 			draw_string(font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, PALE)
 		if _slot_of(id) != "":
-			draw_rect(_r(Rect2(at + Vector2(1, 1), Vector2(4, 4))), INK)       # worn: a gold mark in the corner
+			draw_rect(_r(Rect2(at + Vector2(1, 1), Vector2(4, 4))), INK)       # another of these is worn: a gold mark
 			draw_rect(_r(Rect2(at + Vector2(1.5, 1.5), Vector2(3, 3))), GOLD)
 		if id == selected:
 			draw_rect(_r(Rect2(at, CELL)), PALE, false, k)
@@ -534,14 +596,19 @@ func _draw_portrait(p: PlayerState, font: Font) -> void:
 	draw_string(font, pos, nm, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 
 
-## A locked cell: darkened, with a small padlock drawn in art pixels.
-func _draw_lock(at: Vector2) -> void:
-	draw_rect(_r(Rect2(at + Vector2(1, 1), CELL - Vector2(2, 2))), Color(0.2, 0.13, 0.08, 0.55))
-	var c := Color8(70, 50, 36)
-	var hi := Color8(150, 120, 80)
-	draw_rect(_r(Rect2(at + Vector2(6, 4), Vector2(6, 2))), c)      # shackle
-	draw_rect(_r(Rect2(at + Vector2(6, 4), Vector2(1, 5))), c)
-	draw_rect(_r(Rect2(at + Vector2(11, 4), Vector2(1, 5))), c)
-	draw_rect(_r(Rect2(at + Vector2(5, 8), Vector2(8, 6))), c)      # body
-	draw_rect(_r(Rect2(at + Vector2(6, 9), Vector2(6, 1))), hi)
-	draw_rect(_r(Rect2(at + Vector2(8, 10), Vector2(2, 2))), Color8(30, 20, 14))   # keyhole
+## A locked cell, drawn in art pixels: darkened, with a padlock and one pip for the first upgrade (a bronze lock,
+## the second row) or two for the second (an iron lock on a darker cell, the third row).
+func _draw_lock(at: Vector2, stage: int) -> void:
+	var second := stage >= 2
+	draw_rect(_r(Rect2(at + Vector2(1, 1), CELL - Vector2(2, 2))), Color(0.12, 0.08, 0.05, 0.72) if second else Color(0.2, 0.13, 0.08, 0.5))
+	var c := Color8(78, 78, 84) if second else Color8(120, 78, 40)
+	var hi := Color8(150, 150, 160) if second else Color8(214, 160, 84)
+	draw_rect(_r(Rect2(at + Vector2(6, 3), Vector2(6, 2))), c)      # shackle
+	draw_rect(_r(Rect2(at + Vector2(6, 3), Vector2(1, 5))), c)
+	draw_rect(_r(Rect2(at + Vector2(11, 3), Vector2(1, 5))), c)
+	draw_rect(_r(Rect2(at + Vector2(5, 7), Vector2(8, 6))), c)      # body
+	draw_rect(_r(Rect2(at + Vector2(6, 8), Vector2(6, 1))), hi)
+	draw_rect(_r(Rect2(at + Vector2(8, 9), Vector2(2, 2))), Color8(30, 20, 14))   # keyhole
+	for j in stage:                                                   # pips: which upgrade opens it
+		var x := 9.0 - stage + j * 2.0
+		draw_rect(_r(Rect2(at + Vector2(x, 14), Vector2(1, 2))), hi)

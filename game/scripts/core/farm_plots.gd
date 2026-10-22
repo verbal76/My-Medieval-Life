@@ -356,9 +356,8 @@ func harvest(c: Vector2i, into: Inventory) -> Dictionary:
 	var out := harvest_goods(c)
 	if out.is_empty():
 		return {}
-	for id in out:
-		if not into.can_add(id):
-			return {}
+	if not into.can_add_all(out):
+		return {}
 	for id in out:
 		into.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))

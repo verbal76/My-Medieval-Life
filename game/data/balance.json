@@ -228,6 +228,11 @@
   "founder_build_days": 3,
   "found_start_share": 0.25,
   "_found_note": "EQ-07 (agent proposal, provisional): a founding household starts its house with the ground and found_start_share of the materials' price in hand and buys the rest as it earns, instead of needing the whole price first; couples who live apart, or a grown child and partner in a full house, found households (Construction.couples_needing_home). founder_build_days is no longer used for the start.",
+  "tailor": {
+    "note": "TAILOR-18 (owner, 2026-10-22, docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md): a tailor sells the pack's two upgrades as a service, not an item: the second row of every pack category, then the third (PlayerState.pack_level 0 -> 1 -> 2). pack_rows: the price of each, in order; owner provisional targets 150 and 450 coins (evidence: a day's wage is 6 coins; the owner had 85 coins by day 4 from 20; the village holds about 2,900 coins at the start). The coins go from the player's purse to the tailor's own. job: the villager's job that sells them.",
+    "job": "tailor",
+    "pack_rows": [150, 450]
+  },
   "fireball_price": 50,
   "fireball_cooldown": 6.0,
   "fireball_stamina": 30,

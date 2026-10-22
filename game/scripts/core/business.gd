@@ -395,7 +395,7 @@ func unlist(s: Dictionary, id: String, qty: int) -> String:
 	if qty <= 0 or qty > have:
 		return "The stall does not hold that many."
 	if not w.player.inv.can_add(id):
-		return "Your pack is full."
+		return w.player.inv.full_text(id)
 	s.stock[id] = have - qty
 	w.player.inv.add(id, qty)
 	if int(s.stock[id]) == 0:
@@ -619,7 +619,7 @@ func fetch(s: Dictionary, id: String, qty: int) -> String:
 	if qty <= 0 or qty > have:
 		return "The back room does not hold that many."
 	if not w.player.inv.can_add(id):
-		return "Your pack is full."
+		return w.player.inv.full_text(id)
 	w.player.inv.add(id, qty)
 	s.store[id] = have - qty
 	if int(s.store[id]) == 0:

@@ -403,7 +403,7 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 			info = "It holds %d. They come back to your pack." % mx
 	var verb := {"put": "Put up", "store": "Store", "fetch": "Bring out"}.get(mode, "Take back") as String
 	var qp := QuantityPicker.new().setup(verb + " " + nm, info, mx, verb, -1,
-		"Nothing to move." if up else "Your pack is full." if not w.player.inv.can_add(id) else "Nothing to move.")
+		"Nothing to move." if up else w.player.inv.full_text(id) if not w.player.inv.can_add(id) else "Nothing to move.")
 	qp.cancelled.connect(func(): show(ui, sid))
 	qp.confirmed.connect(func(q: int):
 		var why := ""
