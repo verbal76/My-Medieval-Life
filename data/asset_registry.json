@@ -12628,7 +12628,7 @@
    "opportunities": "Plum and yellow-fruit trees (new fruit items); crop growth stages for the existing crops (wheat, carrot, potato, herb) where they read better than Cozy Farm's; produce crates as storefront and stall displays (the storefront counter is a stand-in); produce icons; grapes on vines and sunflowers. Palms and pineapples do not fit an English medieval setting.",
    "scale": "Trees and crops drawn at the world's pixel density: 1:1",
    "used_for": "Apple trees (5 growth stages and the fruiting stage; tools/craftpix_plants.py): orchard trees by the houses that bear apples, felled and replanted like any tree (INT-147).",
-   "known_issues": "The pack has no stump or cut art: the stump is the mature tree's foot and the notches are drawn by the import tool. The grass patch under each tree is a slightly different green from the village grass.",
+   "known_issues": "The pack has no stump or cut art: a felled apple tree shows Living Forest's summer oak stump (VIS-TREE-02: the earlier stump, the mature tree's clipped foot, read as a broken piece of tree in a grass patch) and the notches are drawn by the import tool. The grass patch under each tree is a slightly different green from the village grass.",
    "scan": [
     {
      "source": "private-assets/craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
@@ -12724,7 +12724,6 @@
     "assets/trees/apple_orchard_growing.png",
     "assets/trees/apple_orchard_mature.png",
     "assets/trees/apple_orchard_sapling.png",
-    "assets/trees/apple_orchard_stump.png",
     "assets/trees/apple_orchard_young.png",
     "assets/trees/fruit_trees.json"
    ]
