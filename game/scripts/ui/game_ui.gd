@@ -2235,6 +2235,8 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	var w: World = main.world
 	if Chapel.is_clergy(n):
 		_chapel_choices(n, choices)
+	if n.job == "tavernkeeper":
+		_feast_choices(n, choices)
 	var q: Dictionary = w.quests.active_from(n)
 	if not q.is_empty() and not Quests.template(q.id).get("story", false):
 		if w.quests.ready(q):
@@ -2306,6 +2308,20 @@ func _chapel_choices(n: NPC, choices: GridContainer) -> void:
 		_talk_view(n, r.text))
 	_talk_choice(choices, "How can I help the church?", func():
 		_talk_view(n, "Whatever you can spare goes first to feeding those in need, coins or food. The church keeps its own small plot beside the chapel; villagers who have the time work it, and when none do, we work it ourselves."))
+
+
+## DVW-B3-FEAST: the feasts the player may pay the tavern keeper for in the evening: their wedding feast (when the family has come)
+## and a table for the room. The keeper lays out food and ale from the tavern's own stock; the guests eat and drink it.
+func _feast_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	for opt in w.feast.player_choices():
+		var kind: String = opt.kind
+		var size: int = opt.size
+		_talk_choice(choices, str(opt.label), func():
+			var r := w.feast.player_feast(kind, size)
+			if r.ok:
+				message(r.text)
+			_talk_view(n, r.text))
 
 
 ## The reeve's list of the manor's open jobs, each with its wage (paid when it is done), or why there

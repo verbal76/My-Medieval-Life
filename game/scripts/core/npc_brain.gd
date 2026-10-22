@@ -205,6 +205,8 @@ func decide(n: NPC) -> void:
 	if h >= SLEEP or h < WAKE:
 		_plan_sleep(n)
 		return
+	if w.feast.plan_attend(n):                 # DVW-B3-FEAST: an invited guest goes to the tavern in the evening
+		return
 	if n.role == "child":
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.6 else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
 		n.doing = "playing"

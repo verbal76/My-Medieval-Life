@@ -474,11 +474,15 @@ func propose(a: int, n: NPC) -> String:
 	t.stage = ""
 	w.stat("proposals_accepted")
 	if a == Life.PLAYER_ID:
-		return Life.partner_player(w, n)
+		var pwhy := Life.partner_player(w, n)
+		if pwhy == "":
+			w.feast.on_partnered(a, n.id)            # DVW-B3-FEAST: the wedding feast is owed
+		return pwhy
 	var o: NPC = w.npc(a)
 	var together := Life._move_in(w, o, n)
 	Life._link_partners(o, n)
 	w.stat("partnerships")
+	w.feast.on_partnered(a, n.id)                    # DVW-B3-FEAST: the wedding feast is owed
 	if not together:
 		w.stat("partners_apart")
 	w.note("%s %s and %s %s are to be partners%s." % [o.name, o.family, n.name, n.family,

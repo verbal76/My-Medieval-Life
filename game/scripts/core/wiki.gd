@@ -136,6 +136,7 @@ static func build() -> Wiki:
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
+	WikiFeast.add_pages(w)          # DVW-B3-FEAST: wedding and seasonal feasts at the tavern
 	WikiChapel.add_pages(w)         # DVW-B3-CHAPEL: the chapel, offerings, asking for help, the church's plot
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
@@ -669,7 +670,8 @@ func _systems() -> void:
 		p("Gifts to someone you could marry also draw them to you. When they are drawn to you, Ask to court appears; ask too early and they say you hardly know each other. While courting, keep up the gifts and visits: Propose when the time is right. Propose too soon (before %d days of courting, or before they are truly in love) and they say it is too soon, and cool a little. Feelings fade slowly if you stay away." % int(rc.propose_min_days)),
 		p("A proposal can be refused even after a good courtship. Some people do not mean to marry at all. Someone else courting them may hold more of their heart. They may not think well enough of you: harm you have done them lowers it, and so does harm to their family or friends, such as robbing their mother or a friend. Nobody will court or marry someone who has killed a villager, or who has been seen stealing again and again; that reputation takes time to fade, and a killing never does."),
 		p("Villagers court each other the same way: they take an interest in someone they have come to know, bring gifts or spend time together, court, and propose. Anyone may court anyone of the same age range who is not kin and not already spoken for, man or woman."),
-		links(["sys:family", "sys:trading"])])
+		p("When two villagers become partners (or you and a villager do), a wedding feast follows at the tavern (see Feasts at the tavern)."),
+		links(["sys:family", "sys:trading", "sys:feasts"])])
 	sys.call("inheritance", "Inheritance", [
 		p("When a villager dies their coins and goods go to the family first: the eldest adult child, then the partner, then other kin; only with no family does the household take them. A household with nobody left leaves the goods where they fell and its house returns to the manor."),
 		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps their own name and looks; with none, a relative of your family takes over, looking as you did when you began. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
