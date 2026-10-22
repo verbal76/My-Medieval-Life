@@ -14,8 +14,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 63 |
 | ACTIVE DEVELOPMENT | 21 |
 | PARTIALLY IMPLEMENTED | 32 |
-| IMPLEMENTED — TESTING REQUIRED | 41 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
+| IMPLEMENTED — TESTING REQUIRED | 40 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 45 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
@@ -225,7 +225,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| VIS-STEPS-01 | Steps cut through rock need real step art | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| VIS-STEPS-01 | Steps cut through rock need real step art | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -461,6 +461,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| VIS-STEPS-01 | Steps cut through rock need real step art | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -596,7 +597,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (41)
+## IMPLEMENTED — TESTING REQUIRED (40)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -637,12 +638,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `3829098`; furniture_test, start_test; branch wip/b18-axe |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
-| VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps | `8366315`; terrain_test; branch wip/b18-polish |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `7c4d1ac`; tree_test, check_assets; branch wip/b18-trees |  |  |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (44)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (45)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -688,6 +688,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
+| VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps | `8366315`, `c160de1`; terrain_test 34/0, start_test 506/0, check_assets 0 problems; screenshots of all four climb directions looked at; branch wip/b18-polish |  |  |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device check of wiki navigation on touch and controller |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 

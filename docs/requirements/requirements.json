@@ -28351,7 +28351,7 @@
    "id": "VIS-STEPS-01",
    "title": "Steps cut through rock need real step art",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "I cut steps through the Rock. That's the best you can give me for an image of steps",
    "description": "Steps cut through rock need real step art",
    "source": "owner message 2026-10-22 with a photo of cut steps",
@@ -28360,11 +28360,12 @@
     "Cut steps read as stone steps in the rock at normal zoom, from art the project owns"
    ],
    "implementation": "",
-   "tests": "terrain_test",
+   "tests": "terrain_test 34/0, start_test 506/0, check_assets 0 problems; screenshots of all four climb directions looked at",
    "playtest": [],
    "branch": "wip/b18-polish",
    "commits": [
-    "8366315"
+    "8366315",
+    "c160de1"
    ],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -28397,6 +28398,11 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 8366315; tests",
      "why": "Puny World's own stone cliff-stair tile imported with provenance (8366315), merged into wip/build18 c7df646; north-south steps looked at in the world, east-west only as the tile (unverified in-world); terrain_test 34/0"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit c160de1; tests",
+     "why": "steps now face the open ground: north-south ways (rock line across the screen) use the horizontal treads, east-west ways (rock line up the screen) the rotated tile, mirrored when the ground is north or west; multi-cell ways join with mid tiles; a thin seam remains visible at one join in the ns2 case"
     }
    ],
    "target_build": "18"
