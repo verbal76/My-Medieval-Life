@@ -347,10 +347,10 @@ func _test_tailor() -> void:
 			t = n
 			break
 	check(not w.is_tailor(t) and w.pack_row_refusal(t) == "Only a tailor can open more of your pack.", "a villager who is not a tailor sells no rows")
-	check(not w.npcs.any(func(n): return w.is_tailor(n)), "no villager is a tailor in a new world yet (placement awaits the owner)")
-	# the test makes one (the job only; where a tailor works is not settled)
-	t.job = str(cfg.job)
-	t.workplace = ""
+	var tailors := w.npcs.filter(func(n): return w.is_tailor(n))
+	check(tailors.size() == 1, "a new world has one tailor (TAILOR-18)")
+	t = tailors[0]
+	t.pos = Vector2(w.brain._workplace_cell(t)) + Vector2(0.5, 0.5)         # at the pitch
 	t.anim = "idle"
 	var coins0 := w.total_coins()
 	p.coins = 100

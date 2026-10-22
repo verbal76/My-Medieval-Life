@@ -40,7 +40,8 @@ extends RefCounted
 ## sales on closing, 5% to the manor. A pitch is open from its renting until it is closed (collect() closes it and
 ## settles), and its open session's proceeds cannot be taken or spent (Q13). Shops and storefronts keep their terms.
 
-const PITCHES := [{"id": "pitch0", "x": 42, "y": 61}, {"id": "pitch1", "x": 50, "y": 61}]
+const PITCHES := [{"id": "pitch0", "x": 42, "y": 61}, {"id": "pitch1", "x": 50, "y": 61},
+	{"id": "pitch2", "x": 46, "y": 61, "service": "tailor"}, {"id": "pitch3", "x": 54, "y": 61, "service": "barber"}]   # TAILOR-18, BARBER-18: the last two are let to the village's tailor and barber, never to the player
 const AWNING := [1890, 3502]          # the merchants' stall art (ground layer "below0"), two tiles wide
 const PRICE_CAP := 4                  # a listing may be priced up to this many times the item's value
 const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: out of work, a manor hand with no job taken, a labourer
@@ -67,7 +68,7 @@ static func add_pitches(world: World, m: VillageMap) -> void:
 		if not world.stalls.has(id):
 			# made as a loaded one is (JSON numbers), so a save of an upgraded old save is the same as of the next load
 			world.stalls[id] = JSON.parse_string(JSON.stringify({"id": id, "x": int(p.x), "y": int(p.y), "use": [int(p.x), int(p.y) + 1],
-				"kind": "pitch", "pitch": true, "owner": World.MANOR, "tenant": ""}))
+				"kind": "pitch", "pitch": true, "owner": World.MANOR, "tenant": "", "service": str(p.get("service", ""))}))
 		if not lay.is_empty():
 			for k in 2:
 				lay.data[int(p.y) * m.w + int(p.x) + k] = AWNING[k]
@@ -307,9 +308,32 @@ func sorted_ids() -> Array:
 func free_pitch() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "":
+		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "" and str(s.get("service", "")) == "":
 			return s
 	return {}
+
+
+## TAILOR-18 / BARBER-18: the pitch kept for a service trade ("tailor", "barber"), or {}.
+static func service_pitch(w: World, job: String) -> Dictionary:
+	for id in w.stalls.keys():
+		if is_pitch(w.stalls[id]) and str(w.stalls[id].get("service", "")) == job:
+			return w.stalls[id]
+	return {}
+
+
+## Let the service pitch of `job` to `n` (rent-free like the merchants' stalls: no villager pays rent yet); it never sells
+## goods (not open). "" when done, else why not.
+static func let_service_pitch(w: World, n: NPC, job: String) -> String:
+	var s := service_pitch(w, job)
+	if s.is_empty():
+		return "no pitch"
+	var t := w.tenant_of(s)
+	if t != "" and t != World.npc_ref(n.id):
+		return "let already"
+	w.set_tenant(s, World.npc_ref(n.id))
+	s.open = false
+	n.workplace = str(s.id)
+	return ""
 
 
 static func rent_day() -> int:
