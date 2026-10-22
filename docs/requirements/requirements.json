@@ -27344,7 +27344,7 @@
    "id": "TAILOR-18",
    "title": "Tailor: a village NPC service selling the two backpack upgrades",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "A real tailor shop selling meaningful backpack upgrades. Clothing customization belongs at the tailor.",
    "description": "Tailor: a village NPC service selling the two backpack upgrades",
    "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
@@ -27356,7 +27356,7 @@
    "implementation": "",
    "tests": "inventory18_test",
    "playtest": [],
-   "branch": "wip/b18-inventory",
+   "branch": "wip/b18-tailor",
    "commits": [
     "ba1369e"
    ],
@@ -27368,7 +27368,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "b18-inventory",
+   "workstream": "b18-tailor",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -27386,6 +27386,11 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit ba1369e; tests",
      "why": "purchase built and tested (ba1369e merged 5f82f0c: rows sold in order once, coins to the tailor's purse, saved; refusals tested); no villager is a tailor yet: every placement displaces, adds or merges (TAILOR-Q)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "PARTIALLY IMPLEMENTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "TAILOR-Q answered: add a tailor villager at a rented pitch; worker on wip/b18-tailor"
     }
    ],
    "target_build": "18"
@@ -27394,7 +27399,7 @@
    "id": "TAILOR-Q",
    "title": "Where the tailor comes from",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "If introducing a new tailor NPC or shop requires displacing an existing worker, adding a building, or changing settlement economic balance, report the consequences",
    "description": "Where the tailor comes from",
    "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
@@ -27428,9 +27433,15 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "worker finding: all 56 starting adults employed; tailor has no income besides the two sales"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "owner answered 2026-10-23 (question in session)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Add a tailor villager: new worlds start with one extra villager who is the tailor, working from a rented market pitch; existing saves unaffected (agent detail: older saves get the tailor's place opened in the labour market)"
   },
   {
    "id": "TIME-01",
