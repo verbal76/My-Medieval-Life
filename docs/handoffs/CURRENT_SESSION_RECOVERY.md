@@ -77,7 +77,7 @@ Read the overnight directive first.
 - Next: merge the polish branch; then stop optional work and write the morning report (part 16 of the overnight
   directive). The release gate is premature: the tailor placement and the D-decisions are open.
 
-## STATUS (2026-10-23): wip/build18 at e8e9d5b. Owner answered TAILOR/BARBER, X18 D2-D9, HORSE-Q, BANDIT-Q, OD-05, OD-06, OD-08, WORLD-LIFE-01, CON-UX-01, seed share, coin sinks (feasts, luxury imports, chapel with priest + alms; clergy directive 2026-10-23_chapel_clergy_relief.md); answers in docs/directives/2026-10-23_*. Merged today: steps orientation, tailor+barber, horse, returning outlaws, capability hook ON (D2-D9, seed share), countryside life. Workers running: wip/b18-rooms (ROOMS-18), wip/b18-contractui (CON-UX-01). Next: merge them; then coin sinks (DVW-B3-FEAST/LUX/CHAPEL), DVW-B5 taxes, settlement Q18 questions, X18-SIM, release gate (determinism re-record, year runs, Build 17 save load, export). No release without the owner.
+## STATUS (2026-10-23, later): wip/build18 at 83d3afc, all 66 Godot suites + Python pass. Merged since: contract window (+plural fix), trade/Law/farming-etc skills, rooms+plots (generator v8), import-validation fix (fresh map). X19-DECAY held (owner asked for calendar explanation; given; awaiting their call). Workers running: wip/b18-chapel (DVW-B3-CHAPEL), wip/b18-regions (SET-C-SIM/FIVE from docs/world gazetteer, caravan as their traders). Next: feasts, luxury imports, ECON-P3 tills, TRADE-CREDIT, MIGRATE-18, courier booths (Q18-14..16), DVW-B5 taxes, X18-SIM, then release gate. No release without the owner.
 
 ## Next actions, in order (historical)
 
