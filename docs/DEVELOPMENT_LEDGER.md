@@ -11,10 +11,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 65 |
+| APPROVED — NOT STARTED | 66 |
 | ACTIVE DEVELOPMENT | 26 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 27 |
+| IMPLEMENTED — TESTING REQUIRED | 28 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **477** |
-| Outstanding (not complete, superseded or canceled) | 228 |
+| **Total approved** | **479** |
+| Outstanding (not complete, superseded or canceled) | 230 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 78 owner decision (open or answered), 30 world design rule, 8 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 78 owner decision (open or answered), 30 world design rule, 9 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 52 | 43 |
+| Build 18: Settlement Advancement & Regional Economy | 55 | 45 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **307** | **228** |
+| **Total open** | **310** | **230** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (52)
+### Build 18: Settlement Advancement & Regional Economy (55)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -189,6 +189,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | PARTIALLY IMPLEMENTED |  |  |
+| CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | DEFERRED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
@@ -212,6 +213,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | UNKNOWN — INVESTIGATION REQUIRED |  |  |
+| TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT |  |  |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | ACTIVE DEVELOPMENT |  |  |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | ACTIVE DEVELOPMENT |  |  |
@@ -220,6 +222,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-STEPS-01 | Steps cut through rock need real step art | approved | APPROVED — NOT STARTED |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -456,7 +459,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (65)
+## APPROVED — NOT STARTED (66)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -520,6 +523,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-E |  |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
+| VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps |  |  |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III | branch wip/expansion21-preparation | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
@@ -595,7 +599,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (27)
+## IMPLEMENTED — TESTING REQUIRED (28)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -622,6 +626,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need |  | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; stalls_test |  |  |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need | after SHOP-01 | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
+| TRADE-UI-02 | Contract proposal's answer shown in view | owner message 2026-10-22 with a photo of the contract window | `1bbf0ab`; start_test |  |  |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | docs/directives/2026-10-22_build18_master_integration.md | `63f96c6`; wiki_test, start_test; branch wip/b18-wiki |  |  |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `3829098`; furniture_test, start_test; branch wip/b18-axe |  |  |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
@@ -1138,7 +1143,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | APPROVED — NOT STARTED | docs/directives/2026-10-21_master_expansion_roadmap.md (the pack's other documents on wip/roadmap-docs, docs/roadmap/) |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | COMPLETE AND VERIFIED | docs/directives/2026-10-20_od21_time_model.md |
 
-## Unapproved idea (8)
+## Unapproved idea (9)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1150,4 +1155,5 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B17F-PERF | Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93) | APPROVED — NOT STARTED | docs/directives/2026-10-22_build17_personal_playtest_release.md |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | APPROVED — NOT STARTED | docs/directives/2026-10-22_build17_personal_playtest_release.md |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | APPROVED — NOT STARTED | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md |
+| CON-UX-01 | Contract window needs design work | UNKNOWN — INVESTIGATION REQUIRED | owner message 2026-10-22 with a photo of the contract window |
 

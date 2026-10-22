@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 232 (116 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **307** = 195 still open from the baseline + 116 added and open |
+| Entries added since | | 235 (119 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **310** = 195 still open from the baseline + 119 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (232)
+## Added since the baseline (235)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -86,6 +86,7 @@ None.
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | PARTIALLY IMPLEMENTED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |
+| CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED | 18 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
@@ -271,6 +272,7 @@ None.
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | COMPLETE AND VERIFIED | 16 |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | UNKNOWN — INVESTIGATION REQUIRED | 18 |
+| TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | TREAS-01 | The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock | approved | COMPLETE AND VERIFIED | 16 |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT | 18 |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | ACTIVE DEVELOPMENT | 18 |
@@ -280,6 +282,7 @@ None.
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT | 18 |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT | 18 |
+| VIS-STEPS-01 | Steps cut through rock need real step art | approved | APPROVED — NOT STARTED | 18 |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT | 18 |
 | WDR-020 | World Design Rule 20: Autonomous Housing | rule | COMPLETE AND VERIFIED |  |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |

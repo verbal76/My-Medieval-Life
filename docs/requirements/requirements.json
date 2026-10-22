@@ -5823,7 +5823,9 @@
    "description": "Contract window needs design work",
    "source": "owner message 2026-10-22 with a photo of the contract window",
    "approval": "",
-   "acceptance": [],
+   "acceptance": [
+    "Scope agreed with the owner before any work (an idea, not approved work)"
+   ],
    "implementation": "",
    "tests": "",
    "playtest": [],
