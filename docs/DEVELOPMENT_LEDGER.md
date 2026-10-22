@@ -12,9 +12,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 65 |
-| ACTIVE DEVELOPMENT | 28 |
+| ACTIVE DEVELOPMENT | 27 |
 | PARTIALLY IMPLEMENTED | 32 |
-| IMPLEMENTED — TESTING REQUIRED | 24 |
+| IMPLEMENTED — TESTING REQUIRED | 25 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
@@ -200,7 +200,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OD-05 | Owner decisions: inner doorways, relaying survey plots | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | OD-08 | Owner decision: is honest arbitrage intended? | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
-| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | ACTIVE DEVELOPMENT |  |  |
+| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | PL1-10 | Player businesses, staged (1-4) | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
 | PL2-008 | Expandable property | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
 | PL2-014 | Modular house/workshop expansion | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
@@ -523,7 +523,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (28)
+## ACTIVE DEVELOPMENT (27)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -534,7 +534,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Owner decision on the FARM-08 yield and switches and on the remaining balance options (herd cost vs milk income, 4-day trough vs harvest gaps, household feed purse or granary sales, unsold milk and cheese); crop sharing decided (FARM-08-Q-CROP, option B) and implemented on wip/farm-cropshare (FARM-CROP-01) |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
-| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | docs/directives/2026-10-22_build18_ore_deposit_placement.md | branch wip/b18-ore |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
@@ -593,7 +592,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (24)
+## IMPLEMENTED — TESTING REQUIRED (25)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -612,6 +611,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | docs/directives/2026-10-22_farm08_q_crop_decision.md | `132960a`, `9cb011d`; crop_share_test; branch wip/build18 | after FARM-08-Q-CROP | Owner: authorize merging into Build 17 now, or carry it to the next build |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 | Measure in the four-seed runs; owner to confirm the readings |
+| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | docs/directives/2026-10-22_build18_ore_deposit_placement.md | `1ac0b0b`; prospecting_test, discovery_test, openpit_test, parity_mining_test, services_test, contracts_test, job_board_test, wiki_test; branch wip/b18-ore |  | Build 18 integration gate (determinism re-baseline: clue placement changed) |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 | Measure in the four-seed runs; owner to confirm the readings |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-01 | Measure in the four-seed runs; owner to confirm the readings |

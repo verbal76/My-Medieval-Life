@@ -18384,7 +18384,7 @@
    "id": "ORE-PLACE-01",
    "title": "Natural ore evidence and finds kept out of the developed village footprint",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "natural mining deposits belong outside the developed village",
    "description": "Natural ore evidence and finds kept out of the developed village footprint",
    "source": "docs/directives/2026-10-22_build18_ore_deposit_placement.md",
@@ -18395,17 +18395,19 @@
     "No ore deleted, no ownership change, same depletion rules everywhere"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "prospecting_test, discovery_test, openpit_test, parity_mining_test, services_test, contracts_test, job_board_test, wiki_test",
    "playtest": [],
    "branch": "wip/b18-ore",
-   "commits": [],
+   "commits": [
+    "1ac0b0b"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Build 18 integration gate (determinism re-baseline: clue placement changed)",
    "priority": "",
    "workstream": "b18-ore",
    "superseded_by": null,
@@ -18420,6 +18422,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
      "why": "lead investigating and fixing on wip/b18-ore"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 1ac0b0b; tests; next_action",
+     "why": "fixed on wip/b18-ore 1ac0b0b, merged into wip/build18 ff8749f; prospecting (8-seed footprint checks), discovery, openpit, parity_mining, services, contracts, job_board, wiki tests pass; awaits the owner's playtest and the Build 18 integration gate"
     }
    ],
    "target_build": "18"
