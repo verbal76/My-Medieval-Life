@@ -20,8 +20,8 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | Production professions | 10 |
 | Recipes | 48 |
 | Threshold findings | 39 |
-| ... with a recorded exception | 18 |
-| ... open (no exception) | 21 |
+| ... with a recorded exception | 19 |
+| ... open (no exception) | 20 |
 | Orphaned recipes | 0 |
 | Broken references | 0 |
 | Stale or invalid exceptions | 0 |
@@ -75,7 +75,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | hunter | `feather`, `hide`, `meat`, `rabbit_pelt` | cook: meat (recipe roast_meat); tanner: hide (recipe tan_leather), rabbit_pelt (recipe tan_pelts) | `feather`, `hide`, `meat`, `rabbit_pelt` | pass |
 | laborer | `building_block`, `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `spoil`, `stone`, `topsoil` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron) | `building_block`, `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
 | miner | `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `spoil`, `stone`, `topsoil` | laborer: stone (recipe dress_stone); smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
-| sage | `healing_tonic`, `herbal_poultice`, `herbal_tonic`, `strong_healing_tonic` | nobody | `herbal_poultice` | supplies nobody: **open** |
+| sage | `healing_tonic`, `herbal_poultice`, `herbal_tonic`, `strong_healing_tonic` | nobody | `herbal_poultice` | supplies nobody: exception |
 | smith | `amulet`, `axe`, `cart_axle`, `cart_ironwork`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `lockpick`, `nails`, `padlock`, `pickaxe`, `shovel_blade` | carpenter: cart_axle (recipe build_handcart), cart_ironwork (recipe build_handcart), iron_bar (recipe craft_plough), shovel_blade (buys it); guard: iron_sword (keeps it for its work); laborer: pickaxe (keeps it for its work); miner: pickaxe (keeps it for its work); woodcutter: axe (keeps it for its work) | `amulet`, `axe`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `nails`, `pickaxe` | pass |
 | tanner | `leather`, `leather_armor`, `leather_cap`, `linen_bandage`, `wool_cloth` | guard: leather_armor (keeps it for its work); sage: linen_bandage (buys it); smith: leather (recipe forge_iron_sword) | `leather`, `leather_armor`, `leather_cap`, `wool_cloth` | pass |
 | woodcutter | `apple_sapling`, `log`, `oak_sapling`, `pine_sapling` | carpenter: log (recipe make_mallet); cook: log (recipe roast_meat) | `log` | pass |
@@ -179,7 +179,7 @@ None.
 | material `wool` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `wool_cloth` | few_professions | consumed by 1 professions (tanner), fewer than 2 | **none: open** |
 | material `wool_cloth` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
-| profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice, herbal_tonic, strong_healing_tonic is needed by another profession | **none: open** |
+| profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice, herbal_tonic, strong_healing_tonic is needed by another profession | WDR-002: The sage's medicines are not a production input of another trade: they are bought by people of every profession when hurt (a guard hurt on duty, a miner, a hunter), from the sage with their own coins, to recover and keep working (NPCBrain._plan_heal). A functioning cross-profession relationship, not an isolated menu; no stockpile or artificial dependency is added. |
 
 ## Broken references
 

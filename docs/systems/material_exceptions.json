@@ -127,6 +127,22 @@
       "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
       "rule": "WDR-001",
       "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+    },
+    {
+      "profession": "sage",
+      "finding": "supplies_nobody",
+      "reason": "The sage's medicines are not a production input of another trade: they are bought by people of every profession when hurt (a guard hurt on duty, a miner, a hunter), from the sage with their own coins, to recover and keep working (NPCBrain._plan_heal). A functioning cross-profession relationship, not an isolated menu; no stockpile or artificial dependency is added.",
+      "rule": "WDR-002",
+      "approval": "owner B18-DP-15, 2026-10-23 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md): APPROVE A, with verification",
+      "evidence": {
+        "code": "game/scripts/core/npc_brain.gd::_plan_heal",
+        "goods": [
+          "herbal_poultice",
+          "healing_tonic",
+          "strong_healing_tonic"
+        ],
+        "test": "game/tests/interdependency_test.gd::test_sage_medicine"
+      }
     }
   ]
 }

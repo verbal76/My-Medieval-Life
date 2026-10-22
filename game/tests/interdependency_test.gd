@@ -4,6 +4,7 @@ extends SceneTree
 ## (NPCBrain.wants, World.purchase_qty/trade, the villagers' own craft step), each link a different profession:
 ##   grain:  farmer -> cook (wheat, paid) -> pottage -> tavernkeeper (paid)
 ##   timber: woodcutter -> carpenter (log, paid) -> planks -> smith (paid)
+##   medicine: sage -> a guard hurt at work (a poultice, paid), the evidence behind the sage's Rule 2 exception (B18-DP-15)
 ## Each link moves goods and coins between actual owners (nothing created but by a recipe), a short supply stops the next
 ## link, a demand already met buys nothing, and a buyer without coins buys nothing. Which professions supply which is
 ## audited per profession in docs/systems/MATERIAL_INTERDEPENDENCY.md (tools/check_materials.py). Pure World. Run headless:
@@ -27,6 +28,7 @@ func _init() -> void:
 	w.setup(VillageMap.load_default(), 1)
 	test_grain(w)
 	test_timber(w)
+	test_sage_medicine(w)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -127,3 +129,44 @@ func test_timber(w: World) -> void:
 	check(s2.ok and s2.goods > 0 and s2.paid > 0 and s2.paid == s2.received, "payment: the smith pays the carpenter for the planks (%d for %d)" % [s2.paid, s2.goods])
 	check(carp.inv.count("plank") + smith.inv.count("plank") == 2, "inventories: the planks moved from the carpenter to the smith")
 	check(w.total_coins() == coins0, "the village's coins are the same after the chain: they only changed hands")
+
+
+## B18-DP-15 (owner): the sage's medicine serves injured villagers of every profession. The evidence for its documented Rule 2
+## exception (docs/systems/material_exceptions.json): a hurt guard with no medicine of its own plans to buy from the sage
+## (NPCBrain._plan_heal) and pays for it coin for coin; a guard with its own medicine buys none; with nothing on sale, or
+## no coins, nothing changes hands.
+func test_sage_medicine(w: World) -> void:
+	var sage := w.npc(w.sage_id)
+	var guard := one(w, "guard")
+	check(sage != null and sage.alive and guard != null, "the village has a sage and a guard")
+	w.front_keepers.clear()                      # only the sage sells here (storefront keepers also sell poultices)
+	var meds: Array = NPCBrain.MEDICINES
+	clear(guard, meds)
+	if guard.household >= 0:
+		clear_inv(w.households[guard.household].pantry, meds)
+	clear(sage, meds)
+	guard.hp = guard.max_hp * 0.3
+	guard.coins = 50
+	# shortage: the sage has nothing, the guard finds no seller
+	check(not w.brain._plan_heal(guard), "shortage: with nothing on sale the hurt guard has no medicine to buy")
+	sage.inv.add("herbal_poultice", 3)
+	var coins0 := w.total_coins()
+	# demand: a hurt guard plans to buy from the sage
+	check(w.brain._plan_heal(guard) and guard.doing == "buying medicine", "demand: a hurt guard sets out to buy medicine from the sage")
+	var g0 := guard.coins
+	var s0 := sage.coins
+	var ok: bool = w.brain.act(guard, "buy_from", {"vendor": sage.id, "item": "herbal_poultice", "qty": 1})
+	check(ok and guard.inv.count("herbal_poultice") == 1 and sage.inv.count("herbal_poultice") == 2, "the poultice moves from the sage to the guard")
+	check(g0 - guard.coins > 0 and g0 - guard.coins == sage.coins - s0, "payment: the guard pays the sage %d, coin for coin" % (g0 - guard.coins))
+	check(w.total_coins() == coins0, "the village's coins only changed hands")
+	# demand met: with medicine of its own the guard dresses its wound and buys none
+	check(w.brain._plan_heal(guard) and guard.doing == "dressing a wound", "demand met: a guard holding a poultice uses it and buys none")
+	# no purchasing power
+	clear(guard, meds)
+	guard.coins = 0
+	check(not w.brain._plan_heal(guard), "no coins: a hurt guard with no money buys nothing")
+
+
+func clear_inv(inv: Inventory, ids: Array) -> void:
+	for id in ids:
+		inv.remove(id, inv.count(id))
