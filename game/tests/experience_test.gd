@@ -2,7 +2,7 @@ extends SceneTree
 ## PROSPECTIVE (Expansion 18, X18-CAPCOMP part 1; owner decision 2026-10-22): each person's industry experience from the
 ## hours they work (WorkExperience), the caps, the straight-line individual level, the hours-weighted workforce level of
 ## the last season (a report only), experience leaving with the person, the save section, and the prepared per-worker
-## hook path (not enabled). Nothing here changes the game.
+## hook path, which the owner's answers (2026-10-23) have switched on (test_switched_on and after).
 ##   godot --headless --path game --script res://tests/experience_test.gd
 
 var checks := 0
@@ -42,6 +42,8 @@ func _init() -> void:
 	test_d1_once()
 	test_d1_old_save()
 	test_d1_determinism()
+	test_switched_on()
+	test_d6_wages()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -118,9 +120,22 @@ func test_step_mapping() -> void:
 		and m.call("craft", {"recipe": "tan_leather"}) == "tanning" and m.call("craft", {"recipe": "cook_pottage"}) == "",
 		"work maps to industries as the capability hook maps it: mining swings, felling, recipes by station (cooking none)")
 	check(m.call("harvest") == "farming" and m.call("sow") == "farming" and m.call("feed_pen") == "farming" and m.call("collect_pen") == "farming"
-		and m.call("fp_work", {"task": "till"}) == "farming" and m.call("fp_work", {"task": "clear"}) == ""
-		and m.call("mj_step", {}, "mend") == "carpentry" and m.call("mj_step", {}, "excavate") == "" and m.call("slaughter") == "" and m.call("hunt") == "",
-		"farm tasks the owner listed are farming; clearing, slaughter, hunting and manor jobs other than mending are not attributed (open questions)")
+		and m.call("fp_work", {"task": "till"}) == "farming" and m.call("mj_step", {}, "mend") == "carpentry" and m.call("hunt") == "",
+		"farm tasks the owner listed are farming; mending is carpentry; hunting is none")
+	# owner D4 (2026-10-23, "Use the table"): slaughter, clearing ground, fencing farmland -> farming; survey, trial pits,
+	# excavation, tunnelling, shoring, backfill, service-contract digging -> mining; hunting, foraging, picking, building,
+	# hauling, carting -> none
+	check(m.call("slaughter") == "farming" and m.call("fp_work", {"task": "clear"}) == "farming" and m.call("fp_fence") == "farming",
+		"D4: slaughter, clearing ground and fencing farmland are farming")
+	var mine_kinds := true
+	for k in ["survey", "trial", "excavate", "tunnel", "shore", "backfill"]:
+		mine_kinds = mine_kinds and m.call("mj_step", {}, k) == "mining"
+	check(mine_kinds and m.call("svc_step", {"id": 1}) == "mining" and m.call("prospect") == "mining",
+		"D4: survey, trial pits, excavation, tunnelling, shoring, backfill and service-contract digging are mining")
+	var none_ok := true
+	for a in ["hunt", "forage", "pick_fruit", "build_front", "build_stall", "cart_hitch", "cart_load", "mc_load", "assay"]:
+		none_ok = none_ok and m.call(a) == ""
+	check(none_ok and m.call("mj_step", {}, "haul") == "", "D4: hunting, foraging, picking, building, hauling and carting earn nothing")
 
 
 func test_live_world() -> void:
@@ -237,10 +252,10 @@ func test_effective_kept_apart() -> void:
 	caps["smithing"] = 4
 	var wf := e.workforce("smithing", 2100.0)
 	check(near(float(wf.level), 10.0) and near(float(wf.effective), 4.0), "the report shows both: workforce 10, effective 4")
+	var w := _fresh(1)
 	CapabilityHook.off()
 	CapabilityHook.per_worker = true
 	CapabilityHook.experience = e
-	var w := _fresh(1)
 	var n: NPC = w.npcs.filter(func(o): return o.alive and o.role == "adult")[0]
 	e.minutes[World.npc_ref(n.id)] = e.minutes["npc:5"].duplicate()
 	check(near(CapabilityHook.time(100.0, "smithing", n), 100.0 / SettlementIndustries.output_multiplier("smithing", 4, "", true)),
@@ -294,8 +309,8 @@ func test_contract_compat() -> void:
 				bad.append(line.strip_edges().left(80))
 	check(bad.is_empty(), "the contract code applies no pay modifier and no capability term: only the work time of felling %s" % str(bad))
 	check(WorkExperience.industry_of_step("chop", {}) == "forestry" and WorkExperience.industry_of_step("mine", {}) == "mining"
-		and WorkExperience.industry_of_step("svc_step", {"id": 1}) == "",
-		"a contract's felling and mining earn experience as any felling and mining; service-contract steps (pit digging, surveys) are unattributed (open)")
+		and WorkExperience.industry_of_step("svc_step", {"id": 1}) == "mining",
+		"a contract's felling and mining earn experience as any felling and mining; service-contract steps (pit digging, surveys) are mining (owner D4)")
 	var t := {"hire": true, "wage": 8}
 	CapabilityHook.off()
 	CapabilityHook.forced = {"farming": 10, "mining": 10, "forestry": 10}
@@ -307,8 +322,8 @@ func test_report() -> void:
 	var w := _run(1, 1.0)
 	var r := SettlementReport.village(w)
 	var wf: Dictionary = r.workforce
-	check(wf.size() == 7 and wf.has("trade") and str(wf.trade.status) == "no active workers",
-		"the settlement report lists the seven industries' workforce; trade reports \"no active workers\" (no attributed trade hours)")
+	check(wf.size() == 7 and wf.has("trade") and str(wf.trade.status) == "ok" and float(wf.trade.hours) > 0.0,
+		"the settlement report lists the seven industries' workforce; trade now has hours (the merchants keep the stall open, owner D4): %s" % str(wf.trade))
 	check(str(wf.mining.status) == "ok" and near(float(wf.mining.level), float(wf.mining.effective)),
 		"mining reports its workforce level %.3f, the effective average equal while no facility rule exists" % float(wf.mining.level))
 
@@ -429,3 +444,93 @@ func test_d1_determinism() -> void:
 	var e := b.to_dict()
 	e.erase(WorkExperience.KEY)
 	check(JSON.stringify(d) == JSON.stringify(e), "and the rest of the saved world is the same")
+
+
+# ------------------------------------------------------------------ owner answers 2026-10-23 (D2-D9): the hook is ON
+func test_switched_on() -> void:
+	# D5: a real-valued level reads between the whole levels around it
+	var m7 := SettlementIndustries.output_multiplier("smithing", 7.0, "approved", true)
+	var m8 := SettlementIndustries.output_multiplier("smithing", 8.0, "approved", true)
+	check(near(SettlementIndustries.output_multiplier("smithing", 7.3, "approved", true), m7 + 0.3 * (m8 - m7))
+		and near(SettlementIndustries.pay_multiplier("farming", 2.5, "approved", true),
+			0.5 * (SettlementIndustries.pay_multiplier("farming", 2.0, "approved", true) + SettlementIndustries.pay_multiplier("farming", 3.0, "approved", true)))
+		and near(SettlementIndustries.output_multiplier("smithing", 11.0, "approved", true), SettlementIndustries.output_multiplier("smithing", 10.0, "approved", true)),
+		"D5: 7.3 takes 30%% of the way from level 7 to 8 (no floor); beyond 10 reads 10")
+	# D3: bands name the levels for the player; they gate nothing
+	check(WorkExperience.band(0.0) == "novice" and WorkExperience.band(2.99) == "novice" and WorkExperience.band(3.0) == "journeyman"
+		and WorkExperience.band(6.99) == "journeyman" and WorkExperience.band(7.0) == "master" and WorkExperience.band(10.0) == "master",
+		"D3: novice below 3, journeyman 3 to below 7, master 7 and above")
+	# D2: effective = experience; the wear seam exists and today limits nothing
+	check(near(WorkExperience.wear_cap("smithing", "npc:1"), 10.0), "D2: the wear cap seam limits nothing yet")
+	# the game's own world binds the hook to its record
+	var w := _fresh(1)
+	check(CapabilityHook.per_worker and CapabilityHook.experience == w.experience, "the capability hook is on and reads the world's experience record")
+	var smith: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "smith" and w.experience.level(World.npc_ref(n.id), "smithing") > 5.0:
+			smith = n
+			break
+	var novice: NPC = _novice(w, "smithing", 0)
+	if smith != null:
+		var lv := w.experience.effective_level(World.npc_ref(smith.id), "smithing")
+		check(near(CapabilityHook.time(100.0, "smithing", smith), 100.0 / SettlementIndustries.output_multiplier("smithing", lv, "", true))
+			and CapabilityHook.time(100.0, "smithing", smith) < 100.0 and near(CapabilityHook.time(100.0, "smithing", novice), 100.0),
+			"a seeded smith (level %.1f) works faster at their own level; a villager with none works at the base time" % lv)
+	else:
+		check(false, "seed 1 has an experienced smith")
+	# the player's own record is their own (none seeded)
+	check(near(CapabilityHook.time(100.0, "farming", w.player), 100.0), "the player starts at the base time (no starting experience)")
+	w.experience.credit(WorkExperience.PLAYER, "farming", 18.0 * DAY, 0.0)
+	check(near(CapabilityHook.time(100.0, "farming", w.player), 100.0 / 1.1), "and earns it by working: farming experience shortens the player's own farm work")
+	# D4: a merchant's hours at the stall are trade experience (a day of the live world)
+	var d := _run(1, 1.0)
+	var tr: Dictionary = d.experience.workforce("trade", d.minutes)
+	check(str(tr.status) == "ok" and float(tr.hours) > 0.0, "D4: trade hours accrue from the merchants keeping the stall (%s h)" % str(snappedf(float(tr.get("hours", 0.0)), 0.1)))
+	# an analysis run (forced levels alone) leaves the per-worker path unbound
+	CapabilityHook.off()
+	CapabilityHook.analysis = true
+	var a := _fresh(1)
+	check(not CapabilityHook.per_worker and CapabilityHook.experience == null, "analysis runs keep the forced levels alone (bind does nothing)")
+	CapabilityHook.off()
+	a = null
+
+
+## D6 and D8: a posted manor job carries the base wage; the wage is fixed when it is taken, at the taker's own effective
+## level, rounded to the nearest coin; the treasury check and the sum set aside move to acceptance.
+func test_d6_wages() -> void:
+	var w := _fresh(1)
+	var mw := w.manor_work
+	w.treasury = 5000
+	mw.jobs.clear()
+	var lab: Array = w.npcs.filter(func(o): return o.alive and o.role == "adult" and not mw.is_staff(World.npc_ref(o.id)))
+	var master: NPC = lab[0]
+	var novice: NPC = lab[1]
+	w.experience.minutes.erase(World.npc_ref(master.id))
+	w.experience.minutes.erase(World.npc_ref(novice.id))
+	w.experience.credit(World.npc_ref(master.id), "mining", 12.0 * DAY, 0.0)
+	mw._post({"kind": "quarry", "item": "stone", "qty": 2, "wage": 100})
+	mw._post({"kind": "quarry", "item": "stone", "qty": 2, "wage": 100})
+	var base_mult := SettlementIndustries.pay_multiplier("mining", 10.0, "", true)
+	check(int(mw.jobs[0].wage) == 100 and mw.wage_for(mw.jobs[0], World.npc_ref(master.id)) == roundi(100.0 * base_mult)
+		and mw.wage_for(mw.jobs[0], World.npc_ref(novice.id)) == 100 and roundi(100.0 * base_mult) == 102,
+		"the posted wage is the base (100); the master's wage when taken is 102 (+2%% at level 10, nearest coin), the novice's 100")
+	var held := w.treasury
+	check(mw.take(mw.jobs[0], World.npc_ref(master.id)) and int(mw.jobs[0].reserved) == 102 and w.treasury == held - 102,
+		"the master takes it: 102 is set aside from the treasury at acceptance (one payment, no new money)")
+	var held2 := w.treasury
+	check(mw.take(mw.jobs[1], World.npc_ref(novice.id)) and int(mw.jobs[1].reserved) == 100 and w.treasury == held2 - 100, "the novice takes the other: 100 set aside")
+	# the treasury check is at acceptance, with the taker's wage: a chest that can spare 100 but not 102
+	var j1: Dictionary = mw.jobs[1]
+	mw.release(mw.jobs[0])
+	mw.release(j1)
+	check(w.treasury == held, "released, both wages are back in the treasury (%d)" % w.treasury)
+	mw.jobs.clear()
+	mw._post({"kind": "quarry", "item": "stone", "qty": 2, "wage": 100})
+	var reserve_need: float = w.brain.daily_obligations() * float(GameData.b("manor_job_reserve_days"))
+	w.treasury = int(ceil(reserve_need)) + 101
+	check(mw.can_fund(mw.jobs[0], World.npc_ref(novice.id)) and not mw.can_fund(mw.jobs[0], World.npc_ref(master.id)),
+		"a chest that can spare 100 pays the novice's wage but not the master's 102: the check is made for the taker")
+	# D8: small wages round to the nearest coin, as now (6 * 1.0 + fraction stays 6)
+	w.experience.credit(World.npc_ref(master.id), "farming", 18.0 * DAY, 0.0)
+	check(CapabilityHook.pay(6, "farming", master) == 6 and CapabilityHook.pay(50, "farming", master) == 52 and CapabilityHook.pay(50, "farming", novice) == 50,
+		"D8: 6 coins at +4%% (6.24) stays 6, 50 becomes 52: the nearest whole coin, no carried fractions")

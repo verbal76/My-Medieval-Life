@@ -783,6 +783,7 @@ func plan_attendant(n: NPC) -> bool:
 			continue
 		n.doing = "minding the player's %s" % ("shop" if is_shop(s) else "stall")
 		n.plan = [w.brain.go(counter_cell(s)), w.brain.work(60, "", {}, "idle")]
+		n.plan[1]["industry"] = "trade"      # X18-D4: hours keeping the stall open are trade experience
 		return true
 	return false
 

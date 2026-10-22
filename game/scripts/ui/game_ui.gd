@@ -1776,7 +1776,7 @@ func _quest_items() -> Array:
 		out.append({"day": true, "text": ("%s (story)" % t.title) if t.get("story", false) else str(t.title)})
 		var who := "%s %s" % [giver.name, giver.family] if giver else "someone"
 		if t.get("hire", false):
-			out.append({"day": false, "text": "Work for %s, taken on day %d, for %d coins. It lapses if not done by the end of day %d." % [who, int(q.day), int(t.wage), int(q.day) + int(t.get("days", 1))]})
+			out.append({"day": false, "text": "Work for %s, taken on day %d, for %d coins. It lapses if not done by the end of day %d." % [who, int(q.day), int(q.get("wage", t.wage)), int(q.day) + int(t.get("days", 1))]})
 		else:
 			out.append({"day": false, "text": "Asked by %s on day %d." % [who, int(q.day)]})
 		var want: String
@@ -1798,7 +1798,7 @@ func _quest_items() -> Array:
 	var mj: Dictionary = w.manor_work.job_of("player")
 	if not mj.is_empty():
 		out.append({"day": true, "text": "Work for the manor"})
-		out.append({"day": false, "text": "%s, for %d coins (taken on day %d; it lapses if not done by the next morning)." % [w.manor_work.describe(mj), int(mj.wage), int(mj.day)]})
+		out.append({"day": false, "text": "%s, for %d coins (taken on day %d; it lapses if not done by the next morning)." % [w.manor_work.describe(mj), int(mj.reserved), int(mj.day)]})
 		out.append({"day": false, "text": _manor_next(mj)})
 	if out.is_empty():
 		out.append({"day": false, "text": "No quests. Look for people with a marker over their head."})
@@ -2290,7 +2290,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 	var lines := []
 	var seen := {}
 	for j in open:
-		var key := "%s|%d" % [mw.describe(j), int(j.wage)]
+		var key := "%s|%d" % [mw.describe(j), mw.wage_for(j, World.PLAYER)]
 		if seen.has(key):
 			seen[key].n += 1
 		else:
@@ -2300,7 +2300,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 		var j: Dictionary = line.job
 		var h := HBoxContainer.new()
 		var l := Label.new()
-		l.text = "%s  ·  %d coins%s" % [mw.describe(j), int(j.wage), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
+		l.text = "%s  ·  %d coins%s" % [mw.describe(j), mw.wage_for(j, World.PLAYER), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.add_theme_font_size_override("font_size", 18)

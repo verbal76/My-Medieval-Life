@@ -298,19 +298,19 @@ static func profile_names() -> Array:
 	return ks
 
 
-static func pay_multiplier(industry: String, level: int, profile := "", on_0_10 := false) -> float:
+static func pay_multiplier(industry: String, level: float, profile := "", on_0_10 := false) -> float:
 	return 1.0 + _bonus(industry, level, profile, true, on_0_10)
 
 
 ## `on_0_10`: the caller already gives a level on the 0-10 scale (an analysis run forcing a level, X18-SIM), so an
 ## external industry's own unmapped scale does not apply.
-static func output_multiplier(industry: String, level: int, profile := "", on_0_10 := false) -> float:
+static func output_multiplier(industry: String, level: float, profile := "", on_0_10 := false) -> float:
 	return 1.0 + _bonus(industry, level, profile, false, on_0_10)
 
 
 ## The bonus (multiplier - 1) at a level; 0 for an industry the profile names no total for, a level outside 0..10 clamped,
 ## and 0 for an external industry whose own scale has no agreed mapping to 0-10 (mining's MIN-D stages; DESIGN.md s.8).
-static func _bonus(industry: String, level: int, profile: String, pay: bool, on_0_10 := false) -> float:
+static func _bonus(industry: String, level: float, profile: String, pay: bool, on_0_10 := false) -> float:
 	var e: Dictionary = data().get("effects", {})
 	var ind: Dictionary = (data().industries as Dictionary).get(industry, {})
 	if ind.has("external") and not ind.has("scale_map") and not on_0_10:
@@ -321,7 +321,12 @@ static func _bonus(industry: String, level: int, profile: String, pay: bool, on_
 		return 0.0
 	var shape_name: String = str(p.shape[industry]) if p.shape is Dictionary else str(p.shape)
 	var shape: Array = (e.shapes as Dictionary)[shape_name]
-	var share := float(shape[clampi(level, 0, shape.size() - 1)])
+	# X18-D5 (owner, 2026-10-23): a real-valued level reads between the two whole levels around it, in a straight line
+	# (7.3 takes 30% of the way from level 7 to level 8); no flooring or rounding. A whole level reads its own value.
+	var lv := clampf(level, 0.0, float(shape.size() - 1))
+	var lo := int(floor(lv))
+	var hi := mini(lo + 1, shape.size() - 1)
+	var share := lerpf(float(shape[lo]), float(shape[hi]), lv - float(lo))
 	return top * share * (float(p.get("pay_ratio", 0.0)) if pay else 1.0)
 
 

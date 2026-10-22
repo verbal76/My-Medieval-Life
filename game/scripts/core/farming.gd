@@ -766,6 +766,37 @@ func save_seed(n: NPC, wheat: int) -> int:
 	return wheat - keep
 
 
+## FARM-CROP-SEED (owner, 2026-10-23, "Share seed by work too"): the seed kept back from a field cut by several workers is
+## split by their work, as the grain is (split_crop: largest remainder, ties to the smaller id). One cutter's part:
+## `share` seed units, given to them as seed (the pool is made by seed_pool). Under the earlier model the farmer's store
+## holds at most seed_cap and only farmers keep seed: what does not fit is returned for the caller to add to the grain,
+## so nothing is made or lost. Returns the units kept as seed.
+func keep_seed(c: NPC, share: int, shared: bool) -> int:
+	if share <= 0:
+		return 0
+	var kept := share
+	if not shared:
+		if c.job != "farmer":
+			return 0
+		kept = mini(share, maxi(0, int(seed_cfg().seed_cap) - c.inv.count("wheat_seed")))
+	if kept > 0:
+		c.inv.add(str(crops().wheat.seed), kept)
+		w.stat("made_" + str(crops().wheat.seed) if shared else "farm_seed_saved", float(kept))
+	return kept
+
+
+## The seed kept back from the cutting of field `f` whose crop `crop` has been taken: the shared model returns
+## `seeds_back` seed a sown cell (new seed, as the player's rule) and clears the sowing; the earlier model keeps seed_keep
+## of the crop. {pool: seed units to split, grain: the crop that stays grain}.
+func seed_pool(f: Dictionary, crop: int) -> Dictionary:
+	if shared_manor():
+		var back := int(f.get("sown", 0)) * int(crops().wheat.seeds_back)
+		f.sown = 0
+		return {"pool": maxi(back, 0), "grain": crop}
+	var keep := mini(int(seed_cfg().seed_keep), maxi(crop, 0))
+	return {"pool": keep, "grain": crop - keep}
+
+
 func seed_price(crop: String) -> int:
 	return seed_item_price(str(crops()[crop].seed), w.player)
 

@@ -35,14 +35,14 @@ const SKILL_TIME_EFFECTS := {"mining": "mine_time", "forestry": "chop_time", "sm
 ## Minutes one unit takes: the base time, shortened by the worker's own skill (skill_time, the Skills time factor, 1.0 =
 ## none) and the settlement's level, their gains added over the base (rule 2). With a neutral level it is exactly the
 ## Skills' own time, base x skill_time.
-static func unit_minutes(base: float, industry: String, level: int, skill_time := 1.0, profile := "", on_0_10 := false) -> float:
+static func unit_minutes(base: float, industry: String, level: float, skill_time := 1.0, profile := "", on_0_10 := false) -> float:
 	var g_skill := 1.0 / maxf(0.05, skill_time) - 1.0
 	var g_place := SettlementIndustries.output_multiplier(industry, level, profile, on_0_10) - 1.0
 	return base / (1.0 + g_skill + g_place)
 
 
 ## Coins for a piece of paid work at a level: the existing base pay times the pay multiplier, rounded to whole coins.
-static func adjusted_pay(base_pay: int, industry: String, level: int, profile := "") -> int:
+static func adjusted_pay(base_pay: int, industry: String, level: float, profile := "") -> int:
 	return roundi(float(base_pay) * SettlementIndustries.pay_multiplier(industry, level, profile))
 
 

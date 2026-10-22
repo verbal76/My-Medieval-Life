@@ -1,8 +1,10 @@
 # Expansion 18: owner decisions pending, in dependency order
 
 Prepared 2026-10-22 by the Expansion 18 worker (`wip/expansion18-preparation`) for the coordinator to put to the owner
-one at a time (directive `docs/directives/2026-10-22_expansions_18_19_20_directive.md`). **Nothing below is decided or
-implemented.** Every recommendation is an agent proposal. Approved so far: Q18-9, Q18-10, Q18-11 structure, Q18-11A
+one at a time (directive `docs/directives/2026-10-22_expansions_18_19_20_directive.md`). **Update 2026-10-23: D2 to D9 are ANSWERED by the owner (option 1 for D2 and D3; the table for D4; interpolate for D5;
+set at acceptance for D6; by ground cut for D7; round to nearest for D8; as now for D9) and implemented on
+`wip/b18-capability`; see PROGRESS.md. The text below is the record of the options as put.** (Original header: nothing
+below was decided or implemented.) Every recommendation is an agent proposal. Approved so far: Q18-9, Q18-10, Q18-11 structure, Q18-11A
 (the `approved` profile, X18-CAPNUM), Q18-11B (workforce and effective levels), X18-CAPCOMP part 1 (experience by hours,
 caps, straight-line level, hours-weighted workforce report; each worker's own level is the basis of their performance
 and pay).

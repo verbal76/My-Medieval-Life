@@ -115,6 +115,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	carts = Carts.new(self)
 	relations = Relations.new(self)
 	experience = WorkExperience.new()            # X18-CAPCOMP: seeded once below (owner D1), after PAR-01A
+	CapabilityHook.bind(experience)              # X18 HOOK ON (owner D1-D9, 2026-10-23): each worker's own level reads this record
 	contracts = Contracts.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
@@ -270,6 +271,7 @@ func is_night() -> bool:
 # ---------------------------------------------------------------- update ---------------------
 ## Advance the world by `real_dt` seconds of play.
 func update(real_dt: float) -> void:
+	CapabilityHook.bind(experience)          # X18: the hook reads THIS world's record (several worlds may exist in one process)
 	var gm: float = real_dt * float(GameData.b("game_minutes_per_second"))
 	minutes += gm
 	if map.overworld != null:
@@ -555,15 +557,18 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	return false
 
 
-## X18 HOOK (Expansion 18, X18-CAPCOMP part 1): credit `mins` of a villager's work step to its industry (WorkExperience
-## .industry_of_step, the capability hook's mapping); a record only, it changes nothing the game does.
+## X18 HOOK (Expansion 18, X18-CAPCOMP, owner D4): credit `mins` of a villager's work step to its industry
+## (WorkExperience.industry_of_step, the capability hook's mapping, or the step's own `industry` for hours at a stall).
 func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
 	var act := str(s.get("act", ""))
-	if act == "":
+	var ind := str(s.get("industry", ""))
+	if act == "" and ind == "":
 		return
-	var args: Dictionary = s.get("args", {})
-	var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
-	experience.credit(World.npc_ref(n.id), WorkExperience.industry_of_step(act, args, kind), mins, minutes)
+	if ind == "":
+		var args: Dictionary = s.get("args", {})
+		var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
+		ind = WorkExperience.industry_of_step(act, args, kind)
+	experience.credit(World.npc_ref(n.id), ind, mins, minutes)
 
 
 ## X18 HOOK (X18-CAPCOMP part 1): credit the player's finished work (`secs` real seconds of an action in `industry`).
@@ -4001,6 +4006,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
 	experience = WorkExperience.new()
+	CapabilityHook.bind(experience)
 	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it is seeded once below (D1)
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside

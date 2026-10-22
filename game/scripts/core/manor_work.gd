@@ -238,7 +238,7 @@ func refresh() -> void:
 	var free := yard.total() - claimed
 	while free >= int(cfg("mend_load")) and not sites.is_empty():
 		var site: Array = sites[next_id % sites.size()]
-		_post({"kind": "mend", "qty": int(cfg("mend_load")), "site": [site[0].x, site[0].y], "place": site[1], "wage": CapabilityHook.pay(int(cfg("mend_wage")), "carpentry")})   # X18 HOOK: off in the game
+		_post({"kind": "mend", "qty": int(cfg("mend_load")), "site": [site[0].x, site[0].y], "place": site[1], "wage": int(cfg("mend_wage"))})   # X18-D6: posted at the base rate; the taker's wage is set at acceptance (wage_for)
 		free -= int(cfg("mend_load"))
 
 
@@ -261,7 +261,7 @@ func post_quarry() -> void:
 		return
 	if _works_stock("stone") >= 2 * int(cfg("mend_load")):
 		return
-	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": CapabilityHook.pay(int(cfg("quarry_wage")), "mining")})   # X18 HOOK: off in the game
+	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})   # X18-D6: posted at the base rate; the taker's wage is set at acceptance (wage_for)
 
 
 ## MIN-D, the reeve's evening: one survey of a clue the manor has heard nothing of, and one trial pit for the best
@@ -522,6 +522,18 @@ func is_staff(who: String) -> bool:
 	return n != null and n.job in ["manor_hand", "reeve"]          # LOG-01: the reeve is salaried too, never paid twice
 
 
+## X18-D6 (owner, 2026-10-23, "Set wage when taken"): a posted job carries the BASE wage; the wage it pays is fixed when a
+## worker takes it, at that worker's own effective level in the job's industry (mending: carpentry; quarrying: mining),
+## rounded to the nearest coin (D8). The treasury check and the sum set aside both use it: one payment, no new money.
+## Jobs of other kinds, a player's order and the salaried staff pay their posted wage as before.
+func wage_for(j: Dictionary, who: String) -> int:
+	var base := int(j.get("wage", 0))
+	if is_player_order(j) or is_staff(who):
+		return base
+	var ind := {"mend": "carpentry", "quarry": "mining"}.get(str(j.get("kind", "")), "") as String
+	return CapabilityHook.pay(base, ind, who) if ind != "" and who != "" else base
+
+
 ## Whether the treasury can set this wage aside (manor hands are already paid: no wage). A day's job
 ## is a small, short promise: it keeps `manor_job_reserve_days` of obligations after the wage, the
 ## same line the evening's repairs are bought above (B7-009; the 10 days stay for hiring staff). The
@@ -532,7 +544,7 @@ func can_fund(j: Dictionary, who: String) -> bool:
 		return true                   # MIN-F2: the player's order holds its wage already
 	if is_staff(who):
 		return true
-	return w.treasury - int(j.wage) >= w.brain.daily_obligations() * float(GameData.b("manor_job_reserve_days"))
+	return w.treasury - wage_for(j, who) >= w.brain.daily_obligations() * float(GameData.b("manor_job_reserve_days"))
 
 
 ## The jobs open to this worker now, most needed first (relief, the granary, the yard, mending,
@@ -625,7 +637,7 @@ func take(j: Dictionary, who: String) -> bool:
 		last_refusal = "The manor's chest can't spare that wage today."
 		return false
 	if not is_player_order(j):
-		j.reserved = 0 if is_staff(who) else int(j.wage)
+		j.reserved = 0 if is_staff(who) else wage_for(j, who)
 		w.treasury -= int(j.reserved)
 	j.taker = who
 	j.day = w.day()

@@ -37,6 +37,7 @@ static func wanted(args: Array) -> bool:
 ## Before World.setup: the forced levels and the field-yield part of a scenario.
 static func pre_setup(args: Array) -> Dictionary:
 	CapabilityHook.off()
+	CapabilityHook.analysis = true          # forced levels alone: the per-worker path (the game's own) is not bound
 	var info := {"level": int(_arg(args, "--capability", "-1")), "profile": _arg(args, "--cap-profile", ""),
 		"scenario": _arg(args, "--cap-scenario", "normal"), "industries": IMPLEMENTED.duplicate()}
 	if "--cap-industries" in args:

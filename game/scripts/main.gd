@@ -1871,6 +1871,8 @@ func cancel_action(why := "") -> void:
 	if furn.get("kind", "") == "lie":
 		stand_up()                         # woken: up beside the bed, the rest cut short
 	if not action.is_empty():
+		if action.has("industry"):             # X18-D4: a cancelled action credits the seconds actually worked
+			world.note_player_work(str(action.industry), maxf(0.0, float(action.total) - float(action.left)))
 		world.release_player_station(str(action.get("station", "")))
 	action = {}
 	stop_gather("")
@@ -2842,8 +2844,10 @@ func _use() -> void:
 				next_industry = WorkExperience.industry_of_step("mj_step", {}, "mend")
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "sample":
+				next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "dig":
+				next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "shovel")
 			elif step == "excavate":
 				var pit := world.pits.pit(int(mj.pit))
@@ -2852,6 +2856,7 @@ func _use() -> void:
 				if pit.is_empty() or cell.x < 0 or pick == "":
 					ui.message("There is nothing in the pit you can dig now: earth needs a shovel, rock a pickaxe." if OpenPits.kinds_held(p).size() < 2 else "There is nothing in the pit that can be dug now.")
 					return
+				next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 				start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), pick), func():
 					var was: int = mj.load.total()
 					var ok := mw.do_step(mj, "player", p.inv)
@@ -2977,6 +2982,7 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), tool), func():
 		var r := world.pits.dig(p, pit, cell, p.inv, tool)
 		if r.result != "ok":
@@ -3106,6 +3112,7 @@ func _tunnel_cut(cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Cutting", world.mine_works.player_secs(cell, tool), func():
 		var r := world.mine_works.dig(p, cell, p.inv, tool)
 		if r.result != "ok":
@@ -3162,6 +3169,7 @@ func _shaft_dig(cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Digging", world.mine_works.shaft_secs(cell, tool), func():
 		var r := world.mine_works.dig_shaft(p, cell, p.inv, tool)
 		if r.result != "ok":
@@ -3180,6 +3188,7 @@ func _fill_own(cell: Vector2i) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Filling", world.mine_works.fill_secs(), func():
 		var r := world.mine_works.fill(p, cell, p.inv)
 		if r.result != "ok":
@@ -3196,6 +3205,7 @@ func _sample(c: Dictionary, cell: Vector2i) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Sampling", Prospecting.player_secs(), func():
 		var r := world.prospecting.take_sample(p, c, cell)
 		if r.result != "ok":
@@ -3215,6 +3225,7 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Digging a trial pit", Discovery.player_secs(), func():
 		var r := world.discovery.trial_dig(p, c, cell, tool)
 		if r.result != "ok":

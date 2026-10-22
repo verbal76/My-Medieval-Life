@@ -22,6 +22,8 @@ func _init() -> void:
 	GameData.ensure()
 	_test_split()
 	_test_harvest()
+	_test_seed_share()
+	_test_rate_share()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -155,3 +157,67 @@ func _test_harvest() -> void:
 	check(w4.brain.act(a4, "harvest", {"field": f4.id, "min": 90.0}), "the cutting completes with a hungry pen on the field")
 	var feed_step := a4.plan.filter(func(st): return st.k == "work" and str(st.get("act", "")) == "feed_pen")
 	check(feed_step.size() == 1 and int(feed_step[0].args.qty) == need, "the finisher carries %d feed to the pen first, as before" % need)
+
+
+func _grain(w: World, n: NPC) -> int:
+	return n.inv.count("wheat") + (w.households[n.household].pantry.count("wheat") if n.household >= 0 else 0)
+
+
+## FARM-CROP-SEED (owner, 2026-10-23): the seed kept back is split by work like the grain; nothing made or lost.
+func _test_seed_share() -> void:
+	# the earlier model: seed_keep (2) of the crop, equal work: one seed each
+	var w := _world()
+	var s := _setup(w, 90.0, 101)
+	var a: NPC = s[1]
+	var b: NPC = s[2]
+	b.work_left = 0.0
+	var before := _wheat(w, [a, b])
+	check(w.brain.act(a, "harvest", {"field": s[0].id, "min": 90.0}) and a.inv.count("wheat_seed") == 1 and b.inv.count("wheat_seed") == 1,
+		"equal work: the 2 seed kept back are shared one each, not both to the cutter who finishes")
+	check(_wheat(w, [a, b]) - before == 101, "seed and grain together are the whole crop: none made or lost")
+	# twice the work: the larger share first (largest remainder, ties to the smaller id)
+	var w2 := _world()
+	var s2 := _setup(w2, 45.0, 100)
+	var a2: NPC = s2[1]
+	var b2: NPC = s2[2]
+	w2.brain.act(a2, "harvest", {"field": s2[0].id, "min": 90.0})
+	var seeds2 := a2.inv.count("wheat_seed") + b2.inv.count("wheat_seed")
+	check(seeds2 == 2 and a2.inv.count("wheat_seed") == Farming.split_crop(2, {a2.id: 90.0, b2.id: 45.0})[a2.id], "twice the work, the seed follows the work: %d and %d" % [a2.inv.count("wheat_seed"), b2.inv.count("wheat_seed")])
+	# a cutter whose seed store is full keeps the whole share as grain (as the finisher always did)
+	var w3 := _world()
+	var s3 := _setup(w3, 90.0, 101)
+	var a3: NPC = s3[1]
+	var b3: NPC = s3[2]
+	b3.work_left = 0.0
+	a3.inv.add("wheat_seed", int(Farming.seed_cfg().seed_cap))
+	var before3 := _wheat(w3, [a3, b3])
+	w3.brain.act(a3, "harvest", {"field": s3[0].id, "min": 90.0})
+	check(a3.inv.count("wheat_seed") == int(Farming.seed_cfg().seed_cap) and _wheat(w3, [a3, b3]) - before3 == 101, "a full seed store keeps its share as grain; the total is unchanged")
+	# the shared-manor model: seeds_back a sown cell, split by work
+	GameData.balance["shared_manor_farming"] = 1
+	var w4 := _world()
+	var s4 := _setup(w4, 90.0, 101)
+	var a4: NPC = s4[1]
+	var b4: NPC = s4[2]
+	b4.work_left = 0.0
+	s4[0].sown = 7
+	w4.brain.act(a4, "harvest", {"field": s4[0].id, "min": 90.0})
+	check(a4.inv.count("wheat_seed") + b4.inv.count("wheat_seed") == 7 and absi(a4.inv.count("wheat_seed") - b4.inv.count("wheat_seed")) == 1,
+		"shared model: 7 seed back are split 4 and 3 by equal work (%d, %d)" % [a4.inv.count("wheat_seed"), b4.inv.count("wheat_seed")])
+	GameData.balance["shared_manor_farming"] = 0
+
+
+## Owner D7 (2026-10-23): shares are minutes x the cutter's own work rate (base-minute equivalents).
+func _test_rate_share() -> void:
+	var w := _world()
+	var s := _setup(w, 88.0, 100)
+	var a: NPC = s[1]
+	var b: NPC = s[2]
+	w.experience.credit(World.npc_ref(a.id), "farming", 18.0 * 480.0, 0.0)          # a: level 10, 10% faster
+	var rate := CapabilityHook.rate("farming", a)
+	check(absf(rate - 1.1) < 1e-6, "a, at farming level 10, works at rate 1.1")
+	b.inv.remove("wheat_seed", b.inv.count("wheat_seed"))
+	# a's cutting took 80 minutes at 1.1 = 88 base-minute equivalents; b has worked 88 of 90 at rate 1: equal ground cut
+	var sh: Dictionary = w.brain._cutting_shares(a, s[0], 80.0)
+	check(absf(float(sh[a.id]) - 88.0) < 1e-6 and absf(float(sh[b.id]) - 88.0 * CapabilityHook.rate("farming", b)) < 1e-6,
+		"a's 80 minutes at rate 1.1 count as 88; b's 88 minutes at their rate count as %.1f" % float(sh[b.id]))

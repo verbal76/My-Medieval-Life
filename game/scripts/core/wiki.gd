@@ -51,7 +51,7 @@ const JOB_TEXT := {
 	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
 	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
-	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them. The farmers of a field cut it together and share its grain by the work each put into the cutting, after the field's animals are fed.",
+	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them. The farmers of a field cut it together and share its grain, and the seed kept back for the next sowing, by the work each put into the cutting, after the field's animals are fed.",
 	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",
 	"tavernkeeper": "Keeps The Well House and sells food and ale.",
 	"hunter": "Hunts wild boar and rabbits for meat and hides.",

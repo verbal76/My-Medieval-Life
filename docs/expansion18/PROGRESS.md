@@ -268,3 +268,11 @@ credit), Q18-6 (may abstract regions meet "two settlements develop different pro
   SET-C's market prototyped in shadow with the owner's Q18-9/Q18-10 rules; SET-D (growth, migration, housing) not started:
   it needs population and housing change driven by the regional economy, which depends on live trade (SET-C integration,
   CON-01, Q18-12/13) and, for mining towns, MIN-D's live adoption, so it is held until those settle.
+
+## 2026-10-23: the capability hook is switched on (branch `wip/b18-capability`)
+
+The owner answered D2 to D9 (and FARM-CROP-SEED) on 2026-10-23. Implemented: effective level = experience (wear cap seam);
+bands novice/journeyman/master; the D4 attribution table; D5 interpolation; D6 wages fixed at acceptance (manor mend and
+quarry jobs, the harvest hand); D7 crop shares by minutes x work rate; seed split by work; D8 and D9 unchanged. The hook
+reads each worker's own level (`CapabilityHook.bind` from the World). Register ids: X18-D2..D9, X18-CAPCOMP, X18-CAPNUM.
+Interaction entries INT-216 to INT-219; decisions in `docs/DECISIONS.md` (2026-10-23, "X18 capability hook ON").

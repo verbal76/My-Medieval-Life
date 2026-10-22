@@ -972,6 +972,8 @@ func _plan_job(n: NPC) -> bool:
 			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor",
 				"tailor": "sewing at the pitch", "barber": "waiting at the barber's pitch"}[n.job]
 			n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
+			if n.job == "merchant":
+				n.plan[1]["industry"] = "trade"      # X18-D4: the hours a trader keeps the stall open are trade experience
 			return true
 		"manor_hand":
 			for f in w.fields:
@@ -1391,9 +1393,11 @@ func _cook(n: NPC) -> bool:
 
 ## FARM-08-Q-CROP: each cutter's work on field `f` when `n` finishes its cutting (`done` minutes): `n`'s whole cutting
 ## and, for every other farmer of the field cutting it now, the minutes already worked; those stop cutting (their step
-## ends with their share). A farmer not cutting at that moment did no cutting work and gets no share. id -> minutes.
+## ends with their share). A farmer not cutting at that moment did no cutting work and gets no share. Owner D7
+## (2026-10-23): work is minutes x the cutter's own work rate (CapabilityHook.rate: 1.0 with no experience effect), so a
+## faster cutter's share follows the ground cut, not the clock. id -> base-minute equivalents.
 func _cutting_shares(n: NPC, f: Dictionary, done: float) -> Dictionary:
-	var out := {n.id: maxf(done, 0.001)}
+	var out := {n.id: maxf(done, 0.001) * CapabilityHook.rate("farming", n)}
 	for o: NPC in w.field_workers(f):
 		if o == n or o.plan.is_empty() or o.plan[0].k != "work" or str(o.plan[0].get("act", "")) != "harvest" \
 				or str(o.plan[0].get("args", {}).get("field", "")) != str(f.id):
@@ -1401,7 +1405,7 @@ func _cutting_shares(n: NPC, f: Dictionary, done: float) -> Dictionary:
 		var worked := float(o.plan[0].min) - o.work_left
 		if worked <= 0.0:
 			continue
-		out[o.id] = worked
+		out[o.id] = worked * CapabilityHook.rate("farming", o)       # X18-D7: work done, in base-minute equivalents
 		o.plan.pop_front()
 		if not o.plan.is_empty() and o.plan[0].k == "work":
 			o.work_left = float(o.plan[0].min)
@@ -2447,12 +2451,25 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
 				return false                                       # (left to the player hired to cut it)
-			var crop := 0
-			if Farming.shared_manor():                    # FSE-12: the crop of the sown cells and their seed back
-				w.farm.seed_back(n, f)
-				crop = w.take_crop(f, 1 << 30)
-			else:
-				crop = w.farm.save_seed(n, w.take_crop(f, 1 << 30))   # whatever is left on the field, less the seed kept back
+			# FARM-08-Q-CROP + FARM-CROP-SEED (owner, 2026-10-22/23): the seed kept back and the rest of the crop belong to the
+			# farmers who cut it, by their work (minutes x their own work rate, X18-D7), whoever finishes first; the others
+			# stop cutting, their share in hand
+			var shares := _cutting_shares(n, f, float(a.get("min", 90.0)))
+			var taken := w.take_crop(f, 1 << 30)               # whatever is on the field (the shared model's cells' crop)
+			var sp := w.farm.seed_pool(f, taken)
+			var crop: int = int(sp.grain)
+			var shared := Farming.shared_manor()
+			var seed_split := Farming.split_crop(int(sp.pool), shares)
+			if seed_split.is_empty() and int(sp.pool) > 0:
+				seed_split[n.id] = int(sp.pool)
+			var sids := seed_split.keys()
+			sids.sort()
+			for id in sids:
+				var sc: NPC = n if int(id) == n.id else w.npc(int(id))
+				var back := int(seed_split[id])
+				var kept := w.farm.keep_seed(sc, back, shared)
+				if not shared:
+					crop += back - kept                        # seed that finds no room stays grain, as before
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
 			# who shares this field before anything is shared out; the cutter carries it there
 			var feed := 0
@@ -2466,9 +2483,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * days - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
 					n.plan.push_front(go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))))
 			n.inv.add("wheat", feed)
-			# FARM-08-Q-CROP (owner, 2026-10-22): the rest belongs to the farmers who cut it, by their share of the cutting
-			# work, whoever finishes first; the others stop cutting, their share in hand
-			var split := Farming.split_crop(crop - feed, _cutting_shares(n, f, float(a.get("min", 90.0))))
+			var split := Farming.split_crop(crop - feed, shares)
 			if split.is_empty() and crop - feed > 0:
 				split[n.id] = crop - feed
 			var ids := split.keys()
