@@ -2865,13 +2865,6 @@
    "sha256": "c0290c56a80127d17b1fd5f291417146059948357a7ee5aeaa1da4de2e093e48"
   },
   {
-   "file": "assets/trees/apple_orchard_stump.png",
-   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
-   "member": "PNG/Plants.png",
-   "transform": "the mature stage's lowest 10 rows, cropped to its pixels (the pack has no stump)",
-   "sha256": "401859657a35b0f285369e20c17c70e50c626c11fd16f8ee043531e7007608d4"
-  },
-  {
    "file": "assets/trees/apple_orchard_cut_left_1.png",
    "source": "",
    "member": "(drawn by tools/craftpix_plants.py)",
@@ -2918,7 +2911,7 @@
    "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
    "member": "(generated)",
    "transform": "tools/craftpix_plants.py: what each fruit-tree file is, its size, offset and pivot",
-   "sha256": "788b2ccf811fd9dac30a0194a8d31393e162786528a95f41ad8d2d974859c188"
+   "sha256": "453c758cc4581427021a002eddef7a4ed4d794bfd638aa4c5a35825e0be9385f"
   },
   {
    "file": "assets/icons/apple_sapling.png",
