@@ -133,6 +133,17 @@ live game, and every existing save (14-16) gives the default state. `SAVE_VERSIO
 versions; the section becomes part of the versioned save (with a migration fixture from Build 17's last version) at
 integration. An unknown section format is refused, never reinterpreted.
 
+**Maintained and saved in the live game (SET-A, SET-B; INT-350).** `SettlementProfile` (`settlement/profile.gd`) is called by
+`World._new_day` at dawn, when a world is made and when a save is loaded. It recomputes the village's level in every industry
+(`SettlementFacts` + `SettlementIndustries.evaluate`, the same as `SettlementReport`), its effective level (level within
+`WorkExperience.facility_cap`) and each industry's workforce level (`WorkExperience.workforce`), and keeps the level history with
+`SettlementIndustries.record`. World keeps the history in `settlement_caps` and the day's snapshot in `settlement_profile` (shown as
+`profile` in the settlement report). `World.to_dict` saves the history through `SettlementSave` under `x18_settlements` (no version
+bump); levels and workforce are derived from the world and the saved experience record, so an older save derives them on load with no
+invented history, and an unknown section format is kept and written back. It changes no pay, output or level: the hooks keep reading
+each worker's own effective level (INT-216) and a facility shortage lowers `effective` here and never the workforce experience
+(X18-CAPCOMP). Farming progression is not implemented (numbers not approved). Test: `game/tests/profile_test.gd`.
+
 ## 6. Hooks into existing code
 
 | Hook | Where | Why |

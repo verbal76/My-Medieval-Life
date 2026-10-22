@@ -129,6 +129,7 @@ jobs:
           $godot --headless --path game --script res://tests/courier_test.gd
           $godot --headless --path game --script res://tests/contract_sign_test.gd
           $godot --headless --path game --script res://tests/experience_test.gd
+          $godot --headless --path game --script res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
 
       - name: Short economy simulation (FR-07)
         run: |
