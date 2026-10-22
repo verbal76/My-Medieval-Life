@@ -4179,6 +4179,342 @@
    "umbrella": true
   },
   {
+   "id": "B18-DP-01",
+   "kind": "decision",
+   "title": "PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems?",
+   "description": "PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "PL1-10"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-02",
+   "kind": "decision",
+   "title": "PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)?",
+   "description": "PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "PL2-008"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-03",
+   "kind": "decision",
+   "title": "PL2-014: close with PL2-008 on playtest (module signs not in its text)?",
+   "description": "PL2-014: close with PL2-008 on playtest (module signs not in its text)?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "PL2-014"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-04",
+   "kind": "decision",
+   "title": "PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)?",
+   "description": "PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "PL2-015"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-05",
+   "kind": "decision",
+   "title": "SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run?",
+   "description": "SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "SET-D"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-06",
+   "kind": "decision",
+   "title": "WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic?",
+   "description": "WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "WDR-004-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-07",
+   "kind": "decision",
+   "title": "WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19?",
+   "description": "WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-08",
+   "kind": "decision",
+   "title": "WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls?",
+   "description": "WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "WDR-012-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-09",
+   "kind": "decision",
+   "title": "STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart?",
+   "description": "STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "STONE-D1"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-10",
+   "kind": "decision",
+   "title": "STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule?",
+   "description": "STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "STONE-D2"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-11",
+   "kind": "decision",
+   "title": "CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)?",
+   "description": "CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "CHAPEL-R5"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-12",
+   "kind": "decision",
+   "title": "CHAPEL-R1: let the player volunteer on the church field by the villagers' rule?",
+   "description": "CHAPEL-R1: let the player volunteer on the church field by the villagers' rule?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "CHAPEL-R1"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-13",
+   "kind": "decision",
+   "title": "X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values?",
+   "description": "X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "X18-FEES"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
+   "id": "B18-DP-14",
+   "kind": "decision",
+   "title": "Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)?",
+   "description": "Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)?",
+   "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "Q18-6"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    }
+   ]
+  },
+  {
    "id": "B18-SCOPE",
    "title": "Build 18 stays combined: tracks A, B and C; multiplayer excluded",
    "kind": "rule",

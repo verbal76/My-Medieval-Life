@@ -654,11 +654,25 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (163)
+## Owner decisions (177)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | owner decision | APPROVED |  |
+| B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | 18 | OPEN |  |
+| B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | 18 | OPEN |  |
+| B18-DP-03 | PL2-014: close with PL2-008 on playtest (module signs not in its text)? | 18 | OPEN |  |
+| B18-DP-04 | PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)? | 18 | OPEN |  |
+| B18-DP-05 | SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run? | 18 | OPEN |  |
+| B18-DP-06 | WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic? | 18 | OPEN |  |
+| B18-DP-07 | WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19? | 18 | OPEN |  |
+| B18-DP-08 | WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls? | 18 | OPEN |  |
+| B18-DP-09 | STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart? | 18 | OPEN |  |
+| B18-DP-10 | STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule? | 18 | OPEN |  |
+| B18-DP-11 | CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)? | 18 | OPEN |  |
+| B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | 18 | OPEN |  |
+| B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | 18 | OPEN |  |
+| B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | 18 | OPEN |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | 15 | SUPERSEDED |  |

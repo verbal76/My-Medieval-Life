@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 1 of 81 (1%) |
 | Open (release blockers) | 80 |
-| Open owner decisions (blocking) | 10 (2) |
+| Open owner decisions (blocking) | 24 (2) |
 
 ## In development (worker assigned) (4)
 
@@ -124,20 +124,34 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (10)
+## Open owner decisions (24)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | OPEN | no |  |
+| B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | OPEN | no |  |
+| B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | OPEN | no |  |
+| B18-DP-03 | PL2-014: close with PL2-008 on playtest (module signs not in its text)? | OPEN | no |  |
+| B18-DP-04 | PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)? | OPEN | no |  |
+| B18-DP-05 | SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run? | OPEN | no |  |
+| B18-DP-06 | WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic? | OPEN | no |  |
+| B18-DP-07 | WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19? | OPEN | no |  |
+| B18-DP-08 | WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls? | OPEN | no |  |
+| B18-DP-09 | STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart? | OPEN | no |  |
+| B18-DP-10 | STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule? | OPEN | no |  |
+| B18-DP-11 | CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)? | OPEN | no |  |
+| B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | OPEN | no |  |
+| B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | OPEN | no |  |
+| B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | OPEN | no |  |
+| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | OPEN | no | B18-DP-12 |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  |
-| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | OPEN | no |  |
+| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | OPEN | no | B18-DP-11 |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B |
-| Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | PROVISIONAL | no |  |
-| STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | OPEN | yes | STONE-02, STONE-03, STONE-04, X18-STONECUT |
-| STONE-D2 | Iron chisel wear and recipe (STONE-06) | OPEN | yes | STONE-02, STONE-06, X18-STONECUT |
-| X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | OPEN | no |  |
+| Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | PROVISIONAL | no | B18-DP-14 |
+| STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | OPEN | yes | B18-DP-09, STONE-02, STONE-03, STONE-04, X18-STONECUT |
+| STONE-D2 | Iron chisel wear and recipe (STONE-06) | OPEN | yes | B18-DP-10, STONE-02, STONE-06, X18-STONECUT |
+| X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | OPEN | no | B18-DP-13 |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (9)
 
