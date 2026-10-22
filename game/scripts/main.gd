@@ -12,6 +12,7 @@ var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
 var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
 var crop_view: CropView        # VIS-CROP-01: the plants drawn on the fields
+var door_view: DoorView        # VIS-DOOR-01: the doorways, open while someone passes
 var surface_works: WorksView   # MIN-F: track laid in the mine's yard (drawn from World.mine_works)
 var _pit_site := {}            # MIN-E: the last site looked at for staking a pit ({key, ok}: the cheap check, cached)
 var actors: Node2D
@@ -208,6 +209,8 @@ func _ready() -> void:
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
 			"farm_plot_mixed":
 				_plot_shot()                            # VIS-CROP-01: a household's plot part sown, part only tilled
+			"door", "door_deep":
+				_door_shot(shot_panel == "door_deep")   # VIS-DOOR-01: a villager stepping into a house's doorway
 			"open_pit", "open_pit_dug":
 				_pit_shot(shot_panel == "open_pit_dug")  # MIN-E: an open pit part dug (or dug out), its spoil heaps, people beside it
 			"small_room", "small_room_inside":
@@ -972,6 +975,9 @@ func _build_scene() -> void:
 	roofs = RoofFade.new()
 	above.add_child(roofs)
 	roofs.setup(view, map.data.get("roof_layers", []))
+	door_view = DoorView.new()                   # VIS-DOOR-01: doorways open dark while someone goes through
+	view.add_child(door_view)                    # the MapView's last child: over its ground layers, under the characters
+	door_view.setup(world, view, roofs)
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
 		s.setup(n.sprite)
@@ -1186,6 +1192,7 @@ func _on_building_added(b: Dictionary) -> void:
 	if fit_layer != null:
 		for e in world.fitting.list(b):
 			view.set_tile(fit_layer, world.fitting.cell_of(e), int(Fitting.ART[str(e.kind)]))
+	door_view.rescan()                               # its door: the copy over the doorway out, the doorway known
 
 
 # ---------------------------------------------------------------- frame ----------------------
@@ -1305,6 +1312,14 @@ func _sync_sprites() -> void:
 		s.play(look[0] if look[0] != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
+	# who could be in a doorway, with their sprite when drawn (VIS-DOOR-01); the player opens doors but never fades:
+	# the roof lifts as they step in, so their way in stays in view
+	var people := [[p.pos, null]]
+	for n: NPC in world.npcs:
+		if n.alive and n.pos.distance_to(cam) < 30.0:
+			var ns: ActorSprite = sprites.get(n.id)
+			people.append([n.pos, ns if ns != null and ns.visible else null])
+	door_view.update(people, get_process_delta_time())
 	_sync_player_pose()
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
@@ -4722,6 +4737,28 @@ func _works_shot(cave: bool) -> void:
 	_sync_levels(0.0)
 	follow_at = _in_view(world.player.pos * T)
 	camera.position = follow_at
+
+
+## VIS-DOOR-01 screenshot: one villager on the step of b_v1_house's door walking in (its head and body already in
+## the doorway; `deep`: nearly through), another standing beside the step, and the player a little way off.
+func _door_shot(deep: bool) -> void:
+	var step := world.building_door("b_v1_house")
+	var adults := world.npcs.filter(func(n: NPC): return n.alive and Life.stage_of(world.age_years(n.born)) == "adult")
+	var a: NPC = adults[0]
+	var b: NPC = adults[1]
+	for n: NPC in [a, b]:
+		n.plan.clear()
+		n.path = PackedVector2Array()
+	a.pos = Vector2(step) + Vector2(0.5, 0.05 if deep else 0.45)
+	a.facing = Vector2.UP
+	a.anim = "walk"
+	b.pos = Vector2(step) + Vector2(1.6, 0.8)
+	b.anim = "idle"
+	world.player.pos = Vector2(step) + Vector2(-1.5, 2.5)
+	follow_at = _in_view(Vector2(step) * T)
+	camera.position = follow_at
+	camera.zoom = Vector2(5, 5) * view_scale
+	paused = true                                # held still for the picture
 
 
 ## VIS-CROP-01 screenshot: the first household leases a 10 x 6 farm plot near its home (FarmPlots.claim, its own
