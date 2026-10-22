@@ -37,7 +37,7 @@
   {"id": "tiny_ranch", "name": "Tiny Ranch", "creator": "Gustavo Vituri", "sources": ["TinyRanch_Assets.zip"], "storage": "public", "licence": "free",
    "permissions": "Free.", "categories": ["livestock"], "status": "unused", "decision": "Drawn on an 8 px grid: half the world's scale and a different style; Cozy Farm covers the same animals."},
   {"id": "survival_icons", "name": "16x16 Survival RPG Icons", "creator": "Shade", "sources": ["16x16 Survival RPG Icons.zip"], "storage": "public", "licence": "paid",
-   "permissions": "Use in games (LICENSE.txt).", "categories": ["icons"], "status": "integrated", "used_for": "Most item icons, including the cart parts.", "scale": "16 px icons"},
+   "permissions": "Use in games (LICENSE.txt).", "categories": ["icons"], "status": "integrated", "used_for": "Most item icons, including the cart parts; the HUD food-bar drumstick (Food/Fowl-04, UI-HUNGER-01).", "scale": "16 px icons"},
   {"id": "jewelry_icons", "name": "16x16 Jewelry RPG Icons", "creator": "Shade", "sources": ["16x16 Jewelry RPG Icons.zip"], "storage": "public", "licence": "paid",
    "permissions": "Use in games (LICENSE.txt).", "categories": ["icons"], "status": "integrated", "used_for": "Rings and the amulet."},
   {"id": "armour_icons", "name": "16x16 Armor RPG Icons", "creator": "Shade", "sources": ["16x16 Armour RPG Icons.zip"], "storage": "public", "licence": "paid",

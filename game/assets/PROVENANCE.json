@@ -1689,6 +1689,13 @@
    "sha256": "5d50e5678aed025b80534c89cf15d6aa1e7b9119eb0ea8653562033db7fb362f"
   },
   {
+   "file": "assets/ui/hud_hunger.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Food/Fowl-04.png",
+   "transform": "copied unchanged (a HUD status icon)",
+   "sha256": "1d8aa9db1506e911346b975ba2ac7590974c1a46acefb4861f3a22ab11c1bf89"
+  },
+  {
    "file": "assets/markers/combat.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Tools/Sword-01.png",

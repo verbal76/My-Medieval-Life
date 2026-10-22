@@ -7950,7 +7950,7 @@
     "icons"
    ],
    "status": "integrated",
-   "used_for": "Most item icons, including the cart parts.",
+   "used_for": "Most item icons, including the cart parts; the HUD food-bar drumstick (Food/Fowl-04, UI-HUNGER-01).",
    "scale": "16 px icons",
    "scan": [
     {
@@ -8041,6 +8041,7 @@
     "assets/markers/skill.png",
     "assets/markers/tool.png",
     "assets/markers/wood.png",
+    "assets/ui/hud_hunger.png",
     "assets/ui/tab_journal.png"
    ]
   },

@@ -18,7 +18,8 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
     game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
-    game/assets/ui/inventory_*.png, tab_*.png        CozyFarm_full_version.zip (the pack window, its tabs and
+    game/assets/ui/hud_<name>.png                    16x16 Survival RPG Icons.zip (HUD status icons, HUD_ICONS)
+    game/assets/ui/inventory_*.png, tab_*.png       CozyFarm_full_version.zip (the pack window, its tabs and
                                                      bag icon) and tab icons from the Assorted and Survival packs
     game/assets/prompts/<name>.png                   kenney_input-prompts_1.5.zip (keys, pad buttons, touch)
     game/assets/trees/*, icons/oak_sapling.png, icons/pine_sapling.png
@@ -94,6 +95,11 @@ UI_SKILL_ICONS = {
     "skill_magic": ("icons_set_2.ai", 9, 3), "skill_trading": ("icons_set_2.ai", 6, 0),
     "skill_stealth": ("icons_set_2.ai", 4, 3), "journal": ("icons_set_2.ai", 9, 6),
 }
+# pixel-art status icons for the HUD from the survival pack, copied unchanged (16 px, the pack's own dark outline).
+# UI-HUNGER-01 (owner, B18-DIR Part 7): a roast drumstick for the food bar, in place of the bread item's butter-block
+# placeholder. The pack's "Chicken" icons are whole roast birds; its "Fowl" icons are the drumsticks, and Fowl-04
+# (golden roast) reads clearest on the dark status box.
+HUD_ICONS = {"hud_hunger": "Food/Fowl-04"}
 UI_GLYPH_BROWN = (111, 74, 44)    # the same wood brown as the buttons
 UI_GLYPH_EDGE = (246, 236, 214)   # the interface's cream text colour
 UI_TILE = 128          # icon tiles are saved at this size
@@ -629,6 +635,11 @@ def main():
     prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",
                  "transform": "generated: solid dark brown 432 px background for the Android adaptive icon", "sha256": sha(dest)})
     _import_ui(record)
+    for name, rel in sorted(HUD_ICONS.items()):
+        member = f"16x16 Survival RPG Icons/{rel}.png"
+        dest = OUT / "ui" / f"{name}.png"
+        dest.write_bytes(iz.read(member))
+        record(dest, ICON_ZIP, member, "copied unchanged (a HUD status icon)")
     _import_markers(record, iz)
     _import_inventory(record, iz)
     prompts = OUT / "prompts"

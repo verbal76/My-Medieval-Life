@@ -84,7 +84,7 @@ const PROMPT_MAX_W := 360.0    # the contextual prompt and the message toast wra
 const TOAST_MAX_W := 460.0
 const METERS := {
 	"hp": ["Health", "health", "Health: how much you can take. Rest at home, eat food that heals, or drink a tonic. At 0 you die."],
-	"hunger": ["Food", "bread", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
+	"hunger": ["Food", "hud_hunger", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
 	"stamina": ["Stamina", "stamina", "Stamina: spent by sprinting, tilling, clearing land and casting Fireball. It refills by itself."],
 }
 const GAIN_SECONDS := 1.5      # a gain line ("+2 red berries") stays this long, then fades
@@ -332,7 +332,7 @@ func _build_hud() -> void:
 	for key in ["hp", "hunger", "stamina"]:
 		var m: Array = METERS[key]
 		var h := HBoxContainer.new()
-		var ic := _ui_icon(m[1], 24) if key != "hunger" else _item_icon_rect("bread", 24)
+		var ic := _ui_icon(m[1], 24)                 # the food bar's is a 16 px roast drumstick (UI-HUNGER-01)
 		ic.tooltip_text = m[2]
 		ic.mouse_filter = Control.MOUSE_FILTER_PASS
 		h.add_child(ic)
