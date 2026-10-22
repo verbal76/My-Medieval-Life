@@ -2915,7 +2915,7 @@ func _use() -> void:
 				ui.message(str(fp.why))
 				return
 			player_sprite.face(Vector2(target.cell) + Vector2(0.5, 0.5) - p.pos)
-			next_industry = WorkExperience.industry_of_step("fp_work", {"task": str(target.get("act", ""))})   # till, sow, harvest: farming
+			next_industry = WorkExperience.industry_of_step("fp_work", {"task": str(target.get("task", target.get("act", "")))})   # till, sow, harvest: farming (B18-DP-12: a villager's fp_work experience on the church field too)
 			start_action(str(fp.label), float(fp.secs), func():
 				var r: Dictionary = fp.run.call()
 				for id in r.items:
@@ -5137,7 +5137,7 @@ func _plot_shot() -> void:
 		return
 	for j in r.size.y:                                 # the wild growth on it cleared first, by the family's own call
 		for i in r.size.x:
-			fp.clear(p, r.position + Vector2i(i, j), n)
+			fp.clear(p, r.position + Vector2i(i, j), n.inv, hh.pantry)
 	var cost: Dictionary = fp.fence_cost(p)
 	for id in cost:
 		n.inv.add(str(id), int(cost[id]))
@@ -5149,7 +5149,7 @@ func _plot_shot() -> void:
 	for j in r.size.y:
 		for i in r.size.x:
 			var c := r.position + Vector2i(i, j)
-			if fp.till(p, c, n) != "":
+			if fp.till(p, c, n.inv, hh.pantry) != "":
 				continue                                   # the fence line
 			x0 = mini(x0, c.x)
 			if c.x < r.position.x + r.size.x / 2:

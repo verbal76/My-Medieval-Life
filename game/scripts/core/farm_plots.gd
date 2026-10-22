@@ -322,14 +322,14 @@ func till_refusal(p: Dictionary, c: Vector2i) -> String:
 	return ""
 
 
-func till(p: Dictionary, c: Vector2i, n: NPC) -> String:
+func till(p: Dictionary, c: Vector2i, inv: Inventory, store: Inventory) -> String:
 	var no := till_refusal(p, c)
 	if no != "":
 		return no
-	for inv: Inventory in [n.inv, _store(n, p)]:
-		var pl := plough_in(inv)
+	for held: Inventory in [inv, store]:
+		var pl := plough_in(held)
 		if pl != "":
-			if inv.wear(pl, 1):
+			if held.wear(pl, 1):
 				w.stat("broke_" + pl)
 			break
 	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0, "plot": str(p.id)}
@@ -390,7 +390,7 @@ func harvest(c: Vector2i, into: Inventory) -> Dictionary:
 ## Clear what stands on a cell of the plot by the player's rules (Farming.clear_tree_refusal): a plant or a
 ## sapling or young tree by hand, a stump or a growing tree with an axe (the worker's or the household's); a
 ## grown tree or a boulder is not cleared here. "" when done.
-func clear(p: Dictionary, c: Vector2i, n: NPC) -> String:
+func clear(p: Dictionary, c: Vector2i, inv: Inventory, store: Inventory) -> String:
 	if not rect_of(p).has_point(c):
 		return "Not on the plot."
 	var o: Dictionary = w.farm.obstacle(c)
@@ -406,7 +406,7 @@ func clear(p: Dictionary, c: Vector2i, n: NPC) -> String:
 			var t: Dictionary = o.ref
 			if str(t.state) == "grown":
 				return "A grown tree is felled first."
-			if str(t.state) in ["stump", "growing"] and not (n.inv.has("axe") or _pantry(n).has("axe")):
+			if str(t.state) in ["stump", "growing"] and not (inv.has("axe") or store.has("axe")):
 				return "Digging out a stump needs an axe."
 			t.state = "cleared"
 			w.map.set_solid(c, false)
@@ -489,12 +489,7 @@ func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
 	for y in range(r.position.y, r.end.y):
 		for x in range(r.position.x, r.end.x):
 			var c := Vector2i(x, y)
-			var o: Dictionary = w.farm.obstacle(c)
-			if o.is_empty() or not _free(c):
-				continue
-			if o.kind == "plant" or (o.kind == "tree" and str(o.ref.state) in ["sapling", "young"]):
-				obst.append(c)
-			elif not light and o.kind == "tree" and str(o.ref.state) in ["stump", "growing"] and (n.inv.has("axe") or pantry.has("axe")):
+			if _free(c) and clearable(c, n.inv, pantry, light):
 				obst.append(c)
 	if not obst.is_empty():
 		return _batch(n, p, "clear", obst, false)
@@ -522,6 +517,17 @@ func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
 	if not open.is_empty():
 		return _batch(n, p, "till", open, plough_in(n.inv) != "" or plough_in(pantry) != "")
 	return false
+
+
+## Whether the worker may clear what stands on cell `c` (the one rule, villagers and the player volunteering alike): a plant, a
+## sapling or a young tree by hand; a stump or a growing tree with an axe (the worker's or the store's) unless the work is light.
+func clearable(c: Vector2i, inv: Inventory, store: Inventory, light: bool) -> bool:
+	var o: Dictionary = w.farm.obstacle(c)
+	if o.is_empty():
+		return false
+	if o.kind == "plant" or (o.kind == "tree" and str(o.ref.state) in ["sapling", "young"]):
+		return true
+	return not light and o.kind == "tree" and str(o.ref.state) in ["stump", "growing"] and (inv.has("axe") or store.has("axe"))
 
 
 ## Plan a work step on as many cells as BATCH_MINUTES allows (at least one), the cells kept for `n` meanwhile.
@@ -654,19 +660,154 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 	for e in a.get("cells", []):
 		var c := Vector2i(int(e[0]), int(e[1]))
 		busy.erase(c)
-		var res := "x"
-		match str(a.task):
-			"harvest":
-				res = "" if not harvest(c, pantry).is_empty() else "x"
-			"sow":
-				res = sow(c, str(a.crop), [n.inv, pantry])
-			"till":
-				res = till(p, c, n)
-			"clear":
-				res = clear(p, c, n)
-		if res == "":
+		if work_cell(p, c, str(a.task), str(a.get("crop", "")), n.inv, pantry) == "":
 			done += 1
 	return done > 0
+
+
+## One cell of the plot's work, the one rule for a villager's step (act) and the player volunteering on the church plot
+## (church_plan): `inv` is the worker's pack, `store` the household's pantry or the church's store (where the crop goes).
+## "" when done, else why not.
+func work_cell(p: Dictionary, c: Vector2i, task: String, crop: String, inv: Inventory, store: Inventory) -> String:
+	match task:
+		"harvest":
+			return "" if not harvest(c, store).is_empty() else "x"
+		"sow":
+			return sow(c, crop, [inv, store])
+		"till":
+			return till(p, c, inv, store)
+		"clear":
+			return clear(p, c, inv, store)
+	return "x"
+
+
+# ---------------------------------------------------------------- the player on the church plot (B18-DP-12) --
+## Owner (2026-10-23, DVW-B3-CHAPEL, B18-DP-12): the player may volunteer on the church field under the same rules as the
+## villagers who do. It is the same work: the plot's cells, work_cell, the church's store for seed and crop, the plot's
+## fence and till rules, clearable. Nothing is paid and nothing is made: the crop goes to the church's store (the relief
+## food), the player gets no coin and no share (only the farming experience the work trains, DVW-B8, as a villager's step does). The player's own cost is the time and stamina a cell takes
+## on their own field (Farming.till_cost, the seconds of Farming's config), as a villager's time is the same seconds.
+
+## Whether the player may work the church plot now: alive and not badly hurt (able's rule for a villager).
+func able_player(p: PlayerState) -> bool:
+	return p.alive and p.hp >= p.max_hp * float(GameData.b("rest").seek_below)
+
+
+func in_church_plot(c: Vector2i) -> bool:
+	return w.chapel != null and w.chapel.present and rect_of(w.chapel.plot).has_point(c)
+
+
+## The volunteering choices for the cell in front of the player: Farming.targets_at's farm targets (act "church"), or an info line.
+func church_targets(c: Vector2i, p: PlayerState) -> Array:
+	var plot: Dictionary = w.chapel.plot
+	var store: Inventory = w.chapel.store
+	var info := func(id: String, text: String) -> Array:
+		return [{"kind": "info", "id": "%s:%d,%d" % [id, c.x, c.y], "text": text, "label": text}]
+	if not able_player(p):
+		return info.call("church_hurt", "You are too hurt to work the church's field.")
+	var t := func(task: String, label: String, extra := {}) -> Dictionary:
+		var d := {"kind": "farm", "act": "church", "task": task, "cell": c, "label": label, "id": "church_%s:%d,%d" % [task, c.x, c.y]}
+		d.merge(extra)
+		return d
+	if cells.has(c) and str(cells[c].plot) == "church":
+		var cell: Dictionary = cells[c]
+		match str(cell.state):
+			"ripe":
+				var cr: Dictionary = Farming.crops()[cell.crop]
+				return [t.call("harvest", "Volunteer: harvest the church's %s (%d, to the church)" % [str(cr.name).to_lower(), w.farm.cell_yield(str(cell.crop), c)])]
+			"growing":
+				return info.call("church_growing", "The church's %s is growing." % str(Farming.crops()[cell.crop].name).to_lower())
+			"tilled":
+				var crop := _seed_crop([p.inv, store])
+				if crop == "":
+					return info.call("church_noseed", "The church's tilled soil: bring seed, or the church has none to sow.")
+				if not w.farm.can_sow_now():
+					return info.call("church_noseason", "Nothing sown now will grow.")
+				return [t.call("sow", "Volunteer: sow the church's field (%s)" % str(Farming.crops()[crop].name).to_lower(), {"crop": crop})]
+		return []
+	if clearable(c, p.inv, store, false):
+		var o: Dictionary = w.farm.obstacle(c)
+		return [t.call("clear", "Volunteer: clear %s from the church's field" % w.farm.obstacle_name(o), {"low": true})]
+	if w.farm.obstacle(c).is_empty() and till_refusal(plot, c) == "":
+		return [t.call("till", "Volunteer: till the church's field (%s, %.0f stamina)" % ["with the plough" if p.tool_of("plough") != "" else "by hand: slow", float(w.farm.till_cost(p).stamina)], {"low": true})]
+	return []
+
+
+## The volunteering as a timed action, as Farming.plan: {ok, why, label, secs, anim, tool, run -> {items, text}}.
+func church_plan(t: Dictionary, p: PlayerState) -> Dictionary:
+	var bad := func(text: String) -> Dictionary: return {"ok": false, "why": text}
+	var c: Vector2i = t.cell
+	if not in_church_plot(c):
+		return bad.call("That is not the church's field.")
+	if not able_player(p):
+		return bad.call("You are too hurt to work the church's field.")
+	var plot: Dictionary = w.chapel.plot
+	var store: Inventory = w.chapel.store
+	var task := str(t.task)
+	var secs := 0.0
+	var label := ""
+	var anim := "gather"
+	var tool := ""
+	match task:
+		"harvest":
+			if not cells.has(c) or str(cells[c].state) != "ripe":
+				return bad.call("Nothing is ripe there.")
+			if not store.can_add_all(harvest_goods(c)):
+				return bad.call("The church's store is full.")
+			secs = float(Farming.cfg().harvest_seconds)
+			label = "Harvesting for the church"
+		"sow":
+			if not w.farm.can_sow_now():
+				return bad.call("Nothing sown now will grow.")
+			if not cells.has(c) or str(cells[c].state) != "tilled" or have([p.inv, store], str(Farming.crops()[str(t.crop)].seed)) < 1:
+				return bad.call("There is no seed to sow.")
+			secs = float(Farming.cfg().sow_seconds)
+			label = "Sowing for the church"
+		"till":
+			var no := till_refusal(plot, c)
+			if no != "":
+				return bad.call(no)
+			if p.stamina < float(w.farm.till_cost(p).stamina):
+				return bad.call("You are too tired to dig: rest a moment.")
+			tool = p.tool_of("plough")
+			secs = float(w.farm.till_cost(p).seconds)
+			label = "Ploughing for the church" if tool != "" else "Digging for the church"
+			anim = "swing" if tool != "" else "gather"
+		"clear":
+			if not clearable(c, p.inv, store, false):
+				return bad.call("That cannot be cleared by hand.")
+			var o: Dictionary = w.farm.obstacle(c)
+			secs = w.farm.clear_seconds(o.ref) if o.kind == "tree" else float(Farming.cfg().clear.bush_seconds)
+			label = "Clearing for the church"
+		_:
+			return bad.call("Nothing to do.")
+	if task != "clear":
+		secs = CapabilityHook.time(secs, "farming", p)
+	return {"ok": true, "label": label, "secs": secs, "anim": anim, "tool": tool,
+			"run": func() -> Dictionary: return {"items": {}, "text": church_work(c, task, str(t.get("crop", "")), p)}}
+
+
+## Do the player's one cell of volunteering now (the timed action's end; the tests call it at once). Returns the line to show.
+func church_work(c: Vector2i, task: String, crop: String, p: PlayerState) -> String:
+	if not in_church_plot(c) or not able_player(p):
+		return "You cannot work the church's field."
+	var before: Dictionary = harvest_goods(c) if task == "harvest" else {}
+	var cost := float(w.farm.till_cost(p).stamina)
+	if task == "till":
+		if p.stamina < cost:
+			return "You are too tired to dig: rest a moment."
+	var res := work_cell(w.chapel.plot, c, task, crop, p.inv, w.chapel.store)
+	if res != "":
+		return res if res != "x" else "Nothing came of it."
+	if task == "till":
+		p.stamina -= cost
+	busy.erase(c)
+	w.stat("chapel_player_volunteered_" + task)
+	if task in ["till", "sow", "harvest"]:
+		w.player_xp("farming", Skills.action_xp(task))        # DVW-B8: farming is trained by the work, a villager's fp_work step trains it too
+	if task == "harvest":
+		return "You bring in %s for the church." % ", ".join(before.keys().map(func(id): return "%d %s" % [int(before[id]), GameData.item_name(str(id)).to_lower()]))
+	return ""
 
 
 # ---------------------------------------------------------------- the households' choice (FARM-05) --

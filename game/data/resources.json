@@ -775,7 +775,7 @@
       "action_cost": {"stamina": 0, "tool_wear": 0, "note": "Harvesting costs nothing. Tilling a cell costs farming.till stamina (the hand plough wears one a cell)."},
       "yields": {"wheat": "farming.crops.wheat.yield", "carrot": "farming.crops.carrot.yield", "potato": "farming.crops.potato.yield", "flower": "farming.crops.herb.yield",
                  "wheat_seed": "farming.crops.wheat.seeds_back", "carrot_seed": "farming.crops.carrot.seeds_back", "potato_seed": "farming.crops.potato.seeds_back", "herb_seed": "farming.crops.herb.seeds_back"},
-      "yield_notes": "Per ripe cell: its crop (the herb crop is the wild flower the sage buys) and seeds_back seed of the same crop (seed saving). Seed is also sold by the farmers and the food stall's merchant at farming.crops seed_price (a standing offer, taken from nobody's stock).",
+      "yield_notes": "Per ripe cell: its crop (the herb crop is the wild flower the sage buys) and seeds_back seed of the same crop (seed saving). Seed is also sold by the farmers and the food stall's merchant at farming.crops seed_price (taken from the seller's own stock: MERCH-01).",
       "total": "As many cells as the player clears and tills on ground they hold; each ripens again after it is sown again.",
       "depletion": "ripens",
       "regeneration": "A harvested cell is tilled soil again: sow it with a seed. Nothing grows or can be sown in winter.",
