@@ -12978,7 +12978,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "**Yes** | No row | `balance.json:390-398` still 12%/6%/0% at one threshold each | NOT-STARTED | ",
-   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-taxes",
    "commits": [
@@ -13026,6 +13026,11 @@
      "date": "2026-10-22",
      "change": "tests: On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
      "why": "Conservation runs on the combined merge 840e0ed finished clean"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: earlier evidence restored ahead of the conservation line",
+     "why": "the previous update replaced the field instead of adding to it"
     }
    ],
    "acceptance_derived": true,
@@ -36463,11 +36468,16 @@
      "date": "2026-10-22",
      "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
      "why": "Conservation runs on the combined merge 840e0ed finished clean"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: earlier evidence restored ahead of the conservation line",
+     "why": "the previous update replaced the field instead of adding to it"
     }
    ],
    "assigned_worker": "buying worker (Sonnet subagent, started 2026-10-23)",
    "branch": "wip/b18-buying",
-   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "test_commit": "840e0ed",
    "commits": [
     "150f0b7",
@@ -36559,9 +36569,14 @@
      "date": "2026-10-22",
      "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save) -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
      "why": "Conservation runs on the combined merge 840e0ed finished clean"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: earlier evidence restored ahead of the conservation line",
+     "why": "the previous update replaced the field instead of adding to it"
     }
    ],
-   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save); economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "test_commit": "840e0ed",
    "commits": [
     "150f0b7",
@@ -36648,12 +36663,17 @@
      "date": "2026-10-22",
      "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths) -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
      "why": "Conservation runs on the combined merge 840e0ed finished clean"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: earlier evidence restored ahead of the conservation line",
+     "why": "the previous update replaced the field instead of adding to it"
     }
    ],
    "remaining_work": "Completed under X18-Q12-BOOTH, X18-Q12-POST, X18-Q13 and LAW-SKILL; settlement carriage per Q18-10 (a willing carter, negotiated and paid) is approved, to be wired with them; 30-day conservation on 840e0ed running",
    "assigned_worker": "courier worker (Sonnet subagent, started 2026-10-23)",
    "branch": "wip/b18-couriers",
-   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths); economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "test_commit": "840e0ed",
    "commits": [
     "5da89d8",
