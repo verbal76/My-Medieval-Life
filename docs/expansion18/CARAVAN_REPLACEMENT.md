@@ -1,5 +1,13 @@
 # Caravan subsidy replacement plan (SET-C; CARAVAN-TMP)
 
+> **Status 2026-10-23: done by a different route than this plan's steps (a)-(e).** The owner decided (Q18-3, Q18-4, ECON-P1.3) that
+> the off-map settlements are five simulated economies of their own and that the caravan is their traders, carrying only what they
+> have and paying with their own coins; the daily allowance is gone. That is built (`OffMapSettlement`, `Regions`, DESIGN.md
+> section 12, `SETTLEMENTS.md`): steps (b) to (e) landed together, with `caravan_allowance`, `caravan_float`,
+> `caravan_ceiling_per_head`, `caravan_coins` and `World.caravan_purse` removed. This plan's `RegionalMarket` (any party buys from any
+> other, a carter's fee) is still the analysis tool and the shadow harness below; it is not what the live caravan runs. Sections 1
+> to 3 below describe the caravan as it was and the shadow measurements, kept as history.
+
 PROSPECTIVE (Expansion 18, PROS-18). The live caravan is unchanged on this branch. This plan and its harness
 (`game/tests/caravan_compare.gd`) measure what replacing the 30-coin daily allowance with genuine regional trade would
 do; they decide nothing. The spec's rule (s.1): "a caravan is not an automatic daily income source"; acceptance (s.11):

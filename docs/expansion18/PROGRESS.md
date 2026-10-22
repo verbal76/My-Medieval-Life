@@ -3,6 +3,11 @@
 Directive: `docs/directives/2026-10-21_parallel_prospective_development_18_19.md` (PROS-01, PROS-18). Reporting fields as
 the directive lists them. Updated 2026-10-21. Design: `DESIGN.md`; caravan plan: `CARAVAN_REPLACEMENT.md`.
 
+> **Update 2026-10-23 (SET-C-SIM, SET-C-FIVE, ECON-P1.3): part of this is now live in the game.** The five neighbouring
+> settlements (`OffMapSettlement`, `Regions`, `docs/expansion18/SETTLEMENTS.md`, DESIGN.md section 12) are simulated economies of
+> their own and their traders are the caravan; the daily allowance (CARAVAN-TMP) is gone. The rest below (capability model, the
+> `RegionalMarket` analysis, couriers) is as it was. See the last section for what was measured.
+
 **Nothing here is integrated gameplay.** The code is isolated on `wip/expansion18-preparation`, runs only in its own
 tests and the shadow harness, and waits for the reconciliation gate (after Build 17 is complete).
 
@@ -276,3 +281,60 @@ bands novice/journeyman/master; the D4 attribution table; D5 interpolation; D6 w
 quarry jobs, the harvest hand); D7 crop shares by minutes x work rate; seed split by work; D8 and D9 unchanged. The hook
 reads each worker's own level (`CapabilityHook.bind` from the World). Register ids: X18-D2..D9, X18-CAPCOMP, X18-CAPNUM.
 Interaction entries INT-216 to INT-219; decisions in `docs/DECISIONS.md` (2026-10-23, "X18 capability hook ON").
+
+
+## Round 6: the five neighbouring settlements and the traders' caravan (SET-C-SIM, SET-C-FIVE, ECON-P1.3; branch `wip/b18-regions`)
+
+Built on `wip/build18` at `83d3afc`. Design: DESIGN.md section 12. Lore choices, citations and labels: `SETTLEMENTS.md`. Decisions:
+`docs/DECISIONS.md` (2026-10-23, SET-C-SIM). Interactions: INT-230 to INT-233 (and INT-020, INT-035, INT-065, INT-213 revised).
+
+| Feature | Code | Tests |
+|---|---|---|
+| Five settlements of mixed kinds on lore places (market town, hamlet, village, abbey town, abbey village) | `game/data/settlements.json`, `offmap.gd` (`create`) | `regions_test.gd::test_founding` |
+| Each an economy of its own, stepped once a day: households (members, purses, pantries), businesses (tills, stocks, workers, the village's recipes), a treasury (the village's tax rule, tolls, officials, relief, day labour), one market with floating prices, hunger, weekly job moves | `offmap.gd` (`step_day`) | `regions_test.gd::test_daily_step`, `test_hunger_and_treasury` |
+| No coin or good from nowhere: audit of every settlement every day; whole-world coin conservation; economy_sim FATAL line on a broken settlement book | `OffMapSettlement.audit`, `Regions.audit`, `economy_sim.gd::_regions` | `regions_test.gd`, `conservation_test.gd`, economy_sim 30-day runs |
+| Deterministic from the seed; saved and loaded identically (optional key `regions`, no version bump); older save founds the settlements and keeps its caravan purse as the traders' coins | `regions.gd`, `world.gd` | `regions_test.gd::test_determinism_and_save`, `test_old_save` |
+| The caravan is their traders: carry only goods they hold, pay only coins in their tills, buy only what their settlement wants; allowance, float, ceiling, per-visit cap and `World.caravan_purse` removed | `npc_brain.gd::caravan`, `regions.gd` | `regions_test.gd::test_world_caravan`, `run_tests.gd::test_caravan_traders`, `od16_test.gd`, `housing_test.gd` |
+| Traders trade among themselves every six days | `regions.gd::road_trade` | `regions_test.gd::test_roads` |
+| The plough horse comes from a settlement that has one (Wulstead, Higham; farms keep and breed working horses) | `regions.gd::horse_dealer`, `farming.gd::buy_horse` | `horse_test.gd`, `regions_test.gd::test_horse` |
+| Wiki: "The neighbouring settlements" and the revised "The merchant caravan" | `wiki_topics.gd` | `wiki_test.gd` |
+
+### Measured (WDR-022: outcomes measured, not judged)
+
+Seeds 1 and 2, 30 days, `economy_sim.gd --every 5`, before (`83d3afc`) and after:
+
+| | seed 1 before | seed 1 after | seed 2 before | seed 2 after |
+|---|---|---|---|---|
+| alive at day 30 | 111 | 108 | 115 | 114 |
+| starvation deaths | 0 | 0 | 0 | 0 |
+| food days (village) | 6.0 | 6.5 | 6.7 | 7.2 |
+| treasury | 590 | 543 | 471 | 414 |
+| village coins in from the caravan / out to it | 2130 / 132 | 1681 / 145 | 2157 / 161 | 1132 / 108 |
+| net to the village (`coin_sources`) | +2044 | +1574 | +2050 | +1123 |
+| coins created by the allowance | up to 30 a day (tapering) | 0 | up to 30 a day | 0 |
+| goods the caravan took | 24 kinds (feathers, nails, rings, caps, mallets, bars, logs ...) | 7 kinds (axes, bars, leather, logs, meat, planks, ploughs) | similar | 7 kinds |
+| settlements' coins at day 30 | (none) | 7713 (from 9249) | (none) | 8541 (from 9249) |
+| ledger / currency / item leaks | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+Reading: the caravan now buys only what the five places use and can pay for, so the village earns about half as much from it
+(+1100 to +1600 against +2050 in 30 days) and the market's other surplus (feathers, nails, rings, caps) has no outlet; the village's
+food, deaths and ledger were not affected in 30 days. Imports (seed, cuttings, medicines) were the same; ore and coal were not
+needed in 30 days (the village's seams still held). The settlements' own books balanced at every checkpoint and every day of the
+isolated runs.
+
+Isolated (`regions_sim.gd`, no trade with the village): 200 days, seed 1: Wulstead, Netherton, Garton and Bourton Abbas keep every
+person; Higham-on-the-Way, the largest and with the thinnest margins, loses 10 of 99 after about day 150, its treasury empty
+(a legitimate outcome, not tuned away). Founding: 5 settlements, about 260 people (seed 2: 230), 9249 coins.
+
+### Cost
+
+`economy_sim --profile` (loaded machine): the settlements' step costs 0.3 s of a 30-day run (0.1%), 721 calls, 460 to 480 us a
+call on average (24 calls a day, five of which do a settlement's day). `regions_sim --profile`: about 9 to 10 ms a game day for all
+five (market 6.4, production 1.2, wages and tax 0.5, eating 0.9, prices 0.3), so about 2 ms per settlement, one settlement an hour
+(`Regions.step_hour`). Against 13 to 17 s a game day of the village itself in the same runs, that is under 0.1%.
+
+### Not done
+
+Barter and credit (TRADE-CREDIT), migration (MIGRATE-18), courier booths and visiting in person, births and old age in the
+settlements, the village buying food from them, tool shortage slowing work, newcomers decoupled from the caravan, a longer chain of
+trade among the five than the traders' wholesale round. Seams are named in DESIGN.md section 12.
