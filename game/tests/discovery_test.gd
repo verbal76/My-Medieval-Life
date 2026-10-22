@@ -415,9 +415,17 @@ func _test_commissioned() -> void:
 
 # ---------------------------------------------------------------- saves ----------------------
 func _test_saves() -> void:
-	var w := _world(2)
+	var w: World = null
+	var h := {}
+	for sv in [2, 1, 3, 4]:                # ORE-PLACE-01 left seed 2 one body: the first seed with a clue to hit and miss
+		w = _world(sv)
+		h = _hit_clue(w)
+		if not h.is_empty():
+			break
+	check(not h.is_empty(), "a seed with a clue to hit and to miss for the save test")
+	if h.is_empty():
+		return
 	var dv := w.discovery
-	var h := _hit_clue(w)
 	var n := _miner(w)
 	dv.trial_dig(n, h.clue, h.miss, "shovel")
 	var d: Dictionary = dv.trial_dig(n, h.clue, h.hit, "shovel").found

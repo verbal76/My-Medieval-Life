@@ -24,7 +24,7 @@ extends RefCounted
 ## Conservation: the sample's coins (the fee) move from the holder's purse to the assayer's; the sample and the fuel
 ## are used up and counted; nothing else is made or destroyed. Saved with the world ("prospecting"); absent: none.
 
-const GEN_VERSION := 1
+const GEN_VERSION := 2                  # 2 (Build 18, ORE-PLACE-01): nothing inside the settlement footprint
 const ITEM := "ore_sample"
 const KIT := "prospecting_kit"
 const JOB := "prospector"
@@ -66,7 +66,7 @@ static func create(world: World) -> Prospecting:
 ## Each clue's spots (the open cells of its area) are in a hashed order. Same seed, same clues, on every machine.
 static func generate(world_seed: int, m: VillageMap) -> Array:
 	var c := cfg()
-	var open := _open_cells(m)
+	var open := wild_cells(m)              # ORE-PLACE-01: natural evidence only on wild ground
 	var bs := int(c.block)
 	var r := int(c.radius)
 	var ores: Array = c.ores.keys()
@@ -98,11 +98,6 @@ static func generate(world_seed: int, m: VillageMap) -> Array:
 					break
 			var clue := {"id": "c%d_%d" % [cell.x, cell.y], "x": cell.x, "y": cell.y, "ore": ore, "r": r,
 					"samples": int(c.samples_per_clue), "body": {}, "spots": []}
-			if hb % 100 < int(c.true_percent):
-				var hg := Overworld.hash32(world_seed, SALT_BODY + 1, cell.x, cell.y)
-				var span := 2 * r - 1
-				clue.body = {"ore": ore, "grade": 1 + (hg >> 16) % 5,
-						"x": cell.x + hg % span - (r - 1), "y": cell.y + (hg >> 8) % span - (r - 1)}
 			var spots := []
 			for dy in range(-r, r + 1):
 				for dx in range(-r, r + 1):
@@ -111,6 +106,13 @@ static func generate(world_seed: int, m: VillageMap) -> Array:
 						spots.append([Overworld.hash32(world_seed, SALT_SPOT, sc.x, sc.y), sc.x, sc.y])
 			spots.sort()
 			clue.spots = spots.map(func(s): return Vector2i(int(s[1]), int(s[2])))
+			if hb % 100 < int(c.true_percent):
+				var hg := Overworld.hash32(world_seed, SALT_BODY + 1, cell.x, cell.y)
+				var span := 2 * r - 1
+				var at := Vector2i(cell.x + hg % span - (r - 1), cell.y + (hg >> 8) % span - (r - 1))
+				if not _is_open(open, m, at):
+					at = clue.spots[0]           # ORE-PLACE-01: a body never lies under the settlement; the first hashed spot
+				clue.body = {"ore": ore, "grade": 1 + (hg >> 16) % 5, "x": at.x, "y": at.y}
 			out.append(clue)
 	return out
 
@@ -144,6 +146,32 @@ static func _open_cells(m: VillageMap) -> PackedByteArray:
 		shut.call(int(st.at[0]), int(st.at[1]))
 	for t in m.decor_trees():
 		shut.call(int(t.x), int(t.y))
+	return b
+
+
+## The static layout's open ground (_open_cells) less the settlement's footprint (ORE-PLACE-01, owner 2026-10-22: natural deposits belong outside the developed
+## village): the wild ground where a stain, a sample spot, a mineral body or a trial pit may lie. The footprint is the
+## layout's buildings, plots, fields and pens with `settlement.structures` cells round them, its roads with `roads` and
+## the market (stalls) with `market`. Only natural evidence and the search for it are kept out: staking an open pit on
+## common ground (OpenPits) keeps the plain open ground, and the mine yard's seams are the village map's own.
+static func wild_cells(m: VillageMap) -> PackedByteArray:
+	var b := _open_cells(m)
+	var d: Dictionary = m.data
+	var shut := func(x: int, y: int) -> void:
+		if x >= 0 and y >= 0 and x < m.w and y < m.h:
+			b[y * m.w + x] = 0
+	var fp: Dictionary = cfg().get("settlement", {})
+	var ring := func(x0: int, y0: int, w: int, h: int, mg: int) -> void:
+		for y in range(y0 - mg, y0 + h + mg):
+			for x in range(x0 - mg, x0 + w + mg):
+				shut.call(x, y)
+	for key in ["buildings", "plots", "fields", "pens"]:
+		for e in d.get(key, []):
+			ring.call(int(e.x), int(e.y), int(e.w), int(e.h), int(fp.get("structures", 0)))
+	for c in d.road:
+		ring.call(int(c[0]), int(c[1]), 1, 1, int(fp.get("roads", 0)))
+	for e in d.get("stalls", []):
+		ring.call(int(e.x), int(e.y), 1, 1, int(fp.get("market", 0)))
 	return b
 
 
