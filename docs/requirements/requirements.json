@@ -2769,6 +2769,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "MIN-F/MIN-H merged; remaining: MIN-G"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "Owner authorized a private personal playtest release of Build 17 (docs/directives/2026-10-22_build17_personal_playtest_release.md): gameplay code frozen, private draft release, minimal smoke checks, no new simulations"
     }
    ],
    "target_build": "17"
