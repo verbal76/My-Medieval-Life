@@ -112,6 +112,32 @@ till. Between themselves the traders keep a wholesale round every six days so th
 forge. There is no allowance, no purse that fills by itself, no coin created: the settlements' coins are their own and change only by
 what the village and they pay each other.
 
+## 4a. The traders sell food (REG-BUY-01, REG-BUY-P1)
+
+Owner Q18-10 ("anyone may purchase goods from another settlement") and REG-BUY-D1 (a settlement may sell food; willingness and
+quantity account for household consumption, reserves, expected production and economic necessity; no absolute prohibition; the
+settlement keeps its agency and may decide unfavourably). The approved policy, and where each part lives (`offmap.gd`):
+
+1. **What a trader carries.** Besides ore, seed and medicine, food bought from its own settlement's food businesses (those whose
+   output or recipes make a food: farm, herd, cookshop), taken along when it goes on the road (`begin_visit` -> `stock_trader_food`).
+   Food it holds is sold to the village like any carried good; what it does not sell is offered to its settlement's households next
+   morning.
+2. **The local claim.** A settlement releases only food above `food_claim_pts()`: its households' need over the village's
+   `reserve_days` (per household, need less pantry, as `World.necessity` does), less what its businesses expect to produce over those
+   days (`expected_food_pts`, natural output at the workers they have; the cookshop's pottage is made of food already counted).
+   The households shopped that morning before the trader (the step runs at six, the visit is at noon): local buyers first, as
+   `NPCBrain._sale_stock` does. A business's recipe and tool inputs (`_keep`) and a farm's horses' feed over `reserve_days` are never offered.
+3. **A demonstrated cash shortfall.** A food business may sell into the protected food only up to its shortfall
+   (`cash_shortfall` = `_expense_due` less its till; `_expense_due` = the wage bill, `_wage_bill`, plus the cost of the inputs and
+   tools it lacks, `_inputs_short`, the same list `_business_buys` buys from). No new expense category and no number of ours.
+4. **Prices.** The settlement's own floating price (`price`/`food_price`); the trader pays the producer `trader_pays_share` of it
+   (as `_trader_collects`), from its own till above its trading capital. The village's buyers take the cheapest trader on the road
+   (`Regions.food_seller`).
+
+The village's side is `NPCBrain._caravan_food` (households with no food to be had in the village, the treasury's granary, the
+food merchant, cook and tavern); see `docs/SYSTEM_INTERACTION_MANIFEST.md` INT-290 and INT-291. Every coin and unit crosses the
+border as in any caravan trade (`coin_sources`, `imported_*`, `caravan_coins_out`).
+
 ## 5. The plough horse
 
 The horse comes from a horse-dealer among the traders on the road that day: Wulstead and Higham keep horses (3 and 2 at the start; they

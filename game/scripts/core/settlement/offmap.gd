@@ -916,10 +916,24 @@ func _upkeep() -> void:
 func _business_buys(b: Dictionary) -> void:
 	if b.type == "merchant":
 		return                                   # a trader buys leftovers (_trader_collects) and the village's goods; its horses' feed is bought there
+	var short := _inputs_short(b)
+	var items: Array = short.keys()
+	items.sort()
+	for item in items:
+		_purchase(b, "till", b.stock, item, int(short[item]), -1, b)
+
+
+## The inputs and tools a business will buy today and how many of each (item -> units short): what its workers' recipes and
+## tools take for `input_days_ahead` days that its stock does not hold. What _business_buys buys, and what the cash it needs
+## for them is reckoned from (_expense_due).
+func _inputs_short(b: Dictionary) -> Dictionary:
+	var out := {}
+	if b.type == "merchant":
+		return out
 	var T := btype(b.type)
 	var n := _workers(b)
 	if n == 0:
-		return
+		return out
 	var need := {}
 	for rid in T.get("runs", {}):
 		var r: Dictionary = GameData.recipes[rid]
@@ -938,7 +952,8 @@ func _business_buys(b: Dictionary) -> void:
 				made = true
 		var short := int(need[item]) - int(b.stock.get(item, 0))
 		if short > 0 and (not made or int(b.stock.get(item, 0)) < int(need[item]) / 2):
-			_purchase(b, "till", b.stock, item, short, -1, b)
+			out[item] = short
+	return out
 
 
 ## The trader buys what the producers have left over of the goods it carries (ore, stone, bars, seed, medicine), at the
@@ -1256,9 +1271,11 @@ func _stable() -> void:
 
 
 # ------------------------------------------------------------------ trade with the village ----------------
-## Open a visit: what the settlement wants from the village this time (begin_visit) and nothing else.
+## Open a visit: what the settlement wants from the village this time (begin_visit), and the food its trader takes along to sell
+## (stock_trader_food, REG-BUY-01).
 func begin_visit() -> void:
 	_want_left = wants()
+	stock_trader_food()
 
 
 func want_left(item: String) -> int:
@@ -1377,6 +1394,145 @@ func wants_item(item: String, n := 1) -> bool:
 	if _rules.foods.has(item):
 		return float(_want_left.get("_food_pts", 0.0)) >= _pts(item) * float(n) * 0.5
 	return int(_want_left.get(item, 0)) >= n
+
+
+# ------------------------------------------------------------------ food for the village (REG-BUY-01, REG-BUY-P1) ----------------
+## The foods a settlement's trader may carry: the settlement's foods (settlements.json rules.foods) and raw meat.
+func food_items() -> Array:
+	data()
+	var out: Array = _rules.foods.duplicate()
+	out.append("meat")
+	return out
+
+
+## Whether a business makes food: a food among its natural output or its recipes' products (farm, herd, cookshop).
+func _makes_food(b: Dictionary) -> bool:
+	var foods := food_items()
+	var T := btype(b.type)
+	for item in (T.get("out", {}) as Dictionary).keys() + b.out.keys():
+		if foods.has(item):
+			return true
+	for rid in T.get("runs", {}):
+		for o in GameData.recipes[rid].out:
+			if foods.has(o):
+				return true
+	return false
+
+
+## What the businesses expect to produce of food over `days` days, in food points: their natural output (a field's wheat, a
+## herd's meat) at the workers they have, as wants() reckons what they make; a deposit-limited output counts only while it lasts.
+## A cookshop's pottage and roast meat are made from food already counted, so they add nothing.
+func expected_food_pts(days: float) -> float:
+	var foods := food_items()
+	var p := 0.0
+	for t in biz:
+		var b: Dictionary = biz[t]
+		var n := float(_workers(b))
+		if n == 0.0:
+			continue
+		for item in b.out:
+			if foods.has(item) and (not b.reserves.has(item) or int(b.reserves[item]) > 0):
+				p += float(b.out[item]) * n * days * _pts(item)
+	return p
+
+
+## The settlement's local claim on its food, in food points (REG-BUY-P1 rule 2, the rule of the village's World.necessity and
+## NPCBrain._sale_stock): what its households foreseeably need over the village's reserve_days (balance.json), household by
+## household, less what each pantry holds, less what its businesses expect to produce over those days. Food above the claim
+## is what the settlement can spare.
+func food_claim_pts() -> float:
+	var days := float(GameData.b("reserve_days"))
+	var need := 0.0
+	for h in hh:
+		if h.alive:
+			need += maxf(0.0, _need_pts(h) * days - _pantry_pts(h))
+	return maxf(0.0, need - expected_food_pts(days))
+
+
+## The units of `item` business `b` holds that are its own to sell: its stock less what its recipes and tools keep (_keep) and,
+## for a farm's wheat, the feed its horses eat over reserve_days (the stable's rate).
+func _food_spare(b: Dictionary, item: String, keep: Dictionary) -> int:
+	var n := int(b.stock.get(item, 0)) - int(keep.get(item, 0))
+	if item == "wheat" and b.type == "farm" and int(b.horses) > 0:
+		n -= ceili(float(btype("farm").feed) * float(b.horses) * float(GameData.b("reserve_days")))
+	return maxi(0, n)
+
+
+## The cash a business needs for its essential operating expenses today (REG-BUY-P1 rule 3): the wage bill of its workers
+## (_wage_bill) and the cost, at today's prices, of the inputs and tools it lacks (_inputs_short, what _business_buys buys).
+func _expense_due(b: Dictionary) -> int:
+	var due := _wage_bill(b)
+	var short := _inputs_short(b)
+	for item in short:
+		due += int(short[item]) * price(item)
+	return due
+
+
+## The demonstrated cash shortfall of a business: what its essential operating expenses exceed its till by (0 when it can pay).
+func cash_shortfall(b: Dictionary) -> int:
+	return maxi(0, _expense_due(b) - int(b.till))
+
+
+## The trader takes along food bought from its settlement's food businesses (farms, herds, cookshop; REG-BUY-P1), to sell to the
+## village on this visit. Rules, in order:
+##  2. only food above the local claim (food_claim_pts) is released: the food the food businesses hold, net of their recipes'
+##     and tools' keep and the horses' feed, less the claim, a business at a time (types in order) and its items in the foods'
+##     order. The households shopped this morning before the trader, so local buyers have had first call (the step ran at
+##     six, the visit is at noon);
+##  3. a business with a demonstrated cash shortfall (cash_shortfall) also sells, out of the part the claim protects, food
+##     worth at most that shortfall at the price the trader pays: never a business without a shortfall, never beyond it;
+##  4. the trader pays the settlement's own floating price (price) less trader_pays_share (as _trader_collects), from its
+##     own till above its trading capital. Coins and goods change hands inside the settlement: nothing is made.
+func stock_trader_food() -> void:
+	var m := trader()
+	if m.is_empty():
+		return
+	var foods := food_items()
+	var srcs: Array = []                       # [business, keep]
+	var types := biz.keys()
+	types.sort()
+	var held := 0.0
+	for t in types:
+		var b: Dictionary = biz[t]
+		if b.type == "merchant" or _workers(b) == 0 or not _makes_food(b):
+			continue
+		var keep := _keep(b)
+		srcs.append([b, keep])
+		for item in foods:
+			held += float(_food_spare(b, item, keep)) * _pts(item)
+	var free := maxf(0.0, held - food_claim_pts())
+	var cash := int(m.till) - maxi(int(_rules.trader_reserve_floor), int(m.reserve))
+	var share := float(_rules.trader_pays_share)
+	for pass_no in 2:
+		for src in srcs:
+			var b: Dictionary = src[0]
+			var short := cash_shortfall(b) if pass_no == 1 else 0
+			if pass_no == 1 and short <= 0:
+				continue
+			for item in foods:
+				var spare := _food_spare(b, item, src[1])
+				var p := maxi(1, roundi(float(price(item)) * share))
+				var n := mini(spare, cash / p)
+				if pass_no == 0:
+					n = mini(n, floori(free / _pts(item)))
+				else:
+					n = mini(n, short / p)
+				if n <= 0:
+					continue
+				_take(b.stock, item, n)
+				_add(m.stock, item, n)
+				b.till += n * p
+				m.till -= n * p
+				cash -= n * p
+				if pass_no == 0:
+					free -= float(n) * _pts(item)
+				else:
+					short -= n * p
+
+
+## The village's price for a unit of `item` from this settlement's trader: the settlement's own floating price.
+func food_price(item: String) -> int:
+	return price(item)
 
 
 # ------------------------------------------------------------------ a report ----------------

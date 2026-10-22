@@ -3958,6 +3958,7 @@ func caravan() -> void:
 	var stone := _caravan_stone(on_road)
 	_caravan_apothecary(on_road)
 	_caravan_seeds(on_road)
+	var food_in := _caravan_food(on_road)             # REG-BUY-01: the traders' food, to the buyers that cannot find it in the village
 	var bought := 0
 	# merchants do not sell the village's food away when there is less than a few days of it (the
 	# village's need weighted by age, as everywhere)
@@ -4050,9 +4051,10 @@ func caravan() -> void:
 		w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
 		bought += price
 	Luxury.visit(w, on_road)                         # DVW-B3-LUX: spare coins buy the traders' costly goods, which they keep
-	w.note("Traders from %s pass through, buy %d coins' worth from the market%s%s." % [", ".join(on_road.map(func(r): return r.name)), bought,
+	w.note("Traders from %s pass through, buy %d coins' worth from the market%s%s%s." % [", ".join(on_road.map(func(r): return r.name)), bought,
 		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
-		(" and %d stone to the market" % stone) if stone > 0 else ""])
+		(" and %d stone to the market" % stone) if stone > 0 else "",
+		(" and sell %d coins' worth of food they can spare" % food_in) if food_in > 0 else ""])
 
 
 ## What the inputs a trader's trade buys (BUYS of its role) and it lacks would cost at their value: what it
@@ -4175,6 +4177,166 @@ func _caravan_seeds(on_road := []) -> int:
 			w.stat("caravan_coins_out", price)
 			w.stat("imported_" + pick)
 			spent += price
+	return spent
+
+
+## Food from the traders (REG-BUY-01, owner Q18-10 "anyone may purchase goods from another settlement"; REG-BUY-D1 and REG-BUY-P1
+## say what the settlements release, OffMapSettlement.stock_trader_food). Villagers' existing buyers buy what the village's own
+## sellers cannot supply, one unit at a time from the cheapest trader on the road (Regions.food_seller: a settlement's prices
+## float), each under the rule it already follows, and the coins and goods cross the border as every caravan trade does
+## (coin_sources, imported_*, caravan_coins_out):
+##  - households, in the order of their number: a household whose foreseeable food need over reserve_days (World.necessity's
+##    food, in points) is not covered by what it holds and that finds no grain seller or food vendor in the village
+##    (_grain_seller, _vendor_with_food, the paths _plan_provision and _plan_eat take) buys, with the coins its members hold
+##    (food is a necessity: can_afford's for_need);
+##  - the settlement's treasury: the granary's target (granary_target_days) less what it holds and what the farmers and food
+##    merchants can still spare it this evening (surplus_wheat), paid from money above treasury_reserve_days of obligations,
+##    the rule of the evening's procurement (reeve_day); in a famine, when that procurement does not buy, the farmers' surplus
+##    is not counted on;
+##  - food businesses (the food merchant, the cook, the tavern): the stock BUYS says they keep (wants), less what the village's
+##    sellers hold for sale (_local_food_for_sale), when they can afford it (World.can_afford).
+## Returns the coins paid.
+func _caravan_food(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
+	var spent := 0
+	spent += _caravan_food_households(on_road)
+	spent += _caravan_food_treasury(on_road)
+	spent += _caravan_food_businesses(on_road)
+	return spent
+
+
+## One unit of `item` from the cheapest trader on the road at its settlement's price; returns the price paid, 0 when none sells it
+## (the unit has left the trader's stock and its coins are in the till: the caller pays and keeps the goods).
+func _food_unit(item: String, on_road: Array, limit := 1 << 30) -> int:
+	var seller: OffMapSettlement = w.regions.food_seller(item, on_road)
+	if seller == null:
+		return 0
+	var price := seller.food_price(item)
+	if price > limit or not seller.sell_to_village(item, 1, price):
+		return 0
+	w.coin_sources -= price
+	w.stat("caravan_coins_out", price)
+	w.stat("imported_" + item)
+	w.stat("caravan_food_units")
+	w.stat("caravan_food_coins", price)
+	return price
+
+
+## The cheapest food per food point that a trader on the road sells (`allowed`: the foods the buyer can use), "" when none.
+func _cheapest_road_food(on_road: Array, allowed: Array) -> String:
+	var best := ""
+	var best_cost := INF
+	for f in allowed:
+		var s: OffMapSettlement = w.regions.food_seller(f, on_road)
+		if s == null or food_points(f) <= 0.0:
+			continue
+		var cost := float(s.food_price(f)) / food_points(f)
+		if cost < best_cost:
+			best_cost = cost
+			best = f
+	return best
+
+
+func _caravan_food_households(on_road: Array) -> int:
+	var spent := 0
+	var days := float(GameData.b("reserve_days"))
+	var allowed := ["wheat", "pottage", "roast_meat", "bread", "cheese"]          # eaten from the pantry as they are (raw meat needs logs to roast)
+	for h in w.households.size():
+		var mem := _members(h)
+		if mem.is_empty():
+			continue
+		var gap := people_day_food(mem) * days - store_points(household_stores(h))
+		if gap <= 0.0:
+			continue
+		var head := _richest_in_household(mem[0])
+		if head == null or _grain_seller(head) != null or _vendor_with_food(head) != null:
+			continue                                   # the village can still feed it: the villagers' own paths do
+		var pantry: Inventory = w.households[h].pantry
+		while gap > 0.0:
+			var item := _cheapest_road_food(on_road, allowed)
+			if item == "" or not pantry.can_add(item):
+				break
+			var seller: OffMapSettlement = w.regions.food_seller(item, on_road)
+			var price := seller.food_price(item)
+			var payer := _payer_for(head, price)
+			if payer == null or not w.can_afford(payer, price, true):
+				break
+			if _food_unit(item, on_road, price) == 0:
+				break
+			payer.coins -= price
+			payer.spent += price
+			pantry.add(item)
+			gap -= food_points(item)
+			spent += price
+			w.stat("caravan_food_households", price)
+	return spent
+
+
+func _caravan_food_treasury(on_road: Array) -> int:
+	var obligations := daily_obligations()
+	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
+	var target := int(village_day_food() * float(GameData.b("granary_target_days")) / food_points("wheat"))
+	var gap := target - w.granary.count("wheat") - w.manor_work.bound("granary", "wheat")
+	if not w.famine() and w.food_days >= float(GameData.b("relief_fill_days")):
+		for o: NPC in w.npcs:
+			if o.alive and (o.job == "farmer" or buy_role(o) == "merchant_food"):
+				gap -= surplus_wheat(o)                 # this evening's procurement buys these first
+	var spent := 0
+	while gap > 0:
+		var seller: OffMapSettlement = w.regions.food_seller("wheat", on_road)
+		if seller == null:
+			break
+		var price := seller.food_price("wheat")
+		if w.treasury - price < reserve or _food_unit("wheat", on_road, price) == 0:
+			break
+		w.treasury -= price
+		w.granary.add("wheat")
+		gap -= 1
+		spent += price
+		w.stat("caravan_food_treasury", price)
+		w.stat("gov_granary_in", 1)
+	return spent
+
+
+## What the village's sellers hold for sale of food `id` besides `buyer` (the sellers _relief_offers lists: farmers' grain beyond
+## what they keep, the food vendors' stock, farmers' eggs and milk, hunters' and farmers' meat).
+func _local_food_for_sale(id: String, buyer: NPC) -> int:
+	var n := 0
+	for o: NPC in w.npcs:
+		if not o.alive or o == buyer or o.role == "bandit":
+			continue
+		var vendor := o.job in ["tavernkeeper", "cook"] or buy_role(o) == "merchant_food"
+		if id == "wheat":
+			n += surplus_wheat(o) if o.job == "farmer" or vendor else 0
+		elif vendor or (o.job == "farmer" and id in ["egg", "milk", "meat"]) or (o.job == "hunter" and id == "meat"):
+			n += o.inv.count(id)
+	return n
+
+
+func _caravan_food_businesses(on_road: Array) -> int:
+	var spent := 0
+	for o: NPC in w.npcs:
+		if not o.alive or not (o.job in ["tavernkeeper", "cook"] or buy_role(o) == "merchant_food"):
+			continue
+		var caps: Dictionary = BUYS.get(buy_role(o), {})
+		for id in ["wheat", "meat", "pottage", "roast_meat", "bread", "cheese"]:
+			if not caps.has(id):
+				continue
+			var want := wants(o, id) - _local_food_for_sale(id, o)
+			while want > 0:
+				var seller: OffMapSettlement = w.regions.food_seller(id, on_road)
+				if seller == null:
+					break
+				var price := seller.food_price(id)
+				if not w.can_afford(o, price, false, id) or not o.inv.can_add(id) or _food_unit(id, on_road, price) == 0:
+					break
+				o.coins -= price
+				o.spent += price
+				o.inv.add(id)
+				want -= 1
+				spent += price
+				w.stat("caravan_food_businesses", price)
 	return spent
 
 
