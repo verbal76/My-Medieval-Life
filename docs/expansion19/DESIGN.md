@@ -584,8 +584,9 @@ determinism. Nothing else was merged in.
 - **Save time.** It rose in the harness (live 71 to 307 ms). The harness saves once, at day 40, so the save brings 40
   days of deferred decay up to date in one go. The game autosaves every hour (`main.gd`), so there the backlog is at
   most one day. That is the decay the dawn update used to do, now paid in the first save after dawn.
-- **Memory** rose 0.2 MB, from the eighth ledger slot. Stress was already above 16 MB before this round, with 17.2 MB at
-  `e91d903`.
+- **Memory** read 0.2 MB higher, within the old measure's noise. That measure also counted the harness's own arrays.
+  Section 15 measured the eighth ledger slot directly: it costs nothing, because a packed array of 8 values takes the
+  same allocation as one of 7. Stress was already above 16 MB before this round, with 17.2 MB at `e91d903`.
 
 ### What remains
 
@@ -593,4 +594,109 @@ determinism. Nothing else was merged in.
   scheduled option, owner decision X19-Q-TIMING, still pending and not enabled) bounds it further.
   - With the scheduled option: 8 to 12 ms worst, and 11 and 28 tellings a frame, against 107 and 188.
 - At stress, writes (observations) still force full flushes, since a write must see every earlier meeting.
-- Stress memory is 17.4 MB, above the 16 MB proposed budget, as it already was.
+- Stress memory is 17.4 MB, above the 16 MB proposed budget, as it already was. Section 15 brings it to 13.5 MB.
+
+## 15. Investigation round: timing, the worst frame, memory (owner-directed, 2026-10-22, on `05adc9d`)
+
+There were three questions:
+1. The X19-Q-TIMING proposal. It is written in `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md` and not implemented;
+   "hour" stays the default.
+2. Can the worst frame fall without changing when anyone learns anything?
+3. Where does the heavy-rate memory go?
+
+Every change is byte-identical:
+- the same `judgment_perf` hashes in all six configurations at 500 people: live 577419741 (spread and told at once),
+  live scheduled 1316774373, stress 1399701037 (spread and told at once), stress scheduled 1092040246;
+- the same counts and stats;
+- the 30-day seed-1 village: fingerprint `1c755f53d12c72bd470b7913fb5e52a6`, judgment state hash 1780545997, the same
+  tellings, and no leaks at any checkpoint.
+- Suites: `judgment_test` 168, `judgment_live_test` 53, `judgment_decay_demo` 24 and `judgment_perf` 9 checks, all with
+  0 failures.
+
+### 15.1 The worst frame
+
+**Where a telling's time goes.** The meeting time is split by part, from a temporary profile build (not committed), at
+500 people over 40 days:
+
+| Part | live | stress |
+|---|---|---|
+| all meetings | 3.13 s | 11.27 s |
+| the teller's scan of their memories for what to tell | 1.32 s (42%) | 3.27 s (29%) |
+| judging a story learned: interpretation | 0.49 s | 2.81 s |
+| judging a story learned: posting to the ledgers | 0.27 s | 1.84 s |
+| the memory capacity check (`_bound`) | 0.04 s | 3.41 s (30%) |
+| the gate (budget, opinion of the listener), catch-up, storing the memory | 0.56 s | 1.40 s |
+| finding the dependency chain, and what a read may skip | 0.08 s | 0.31 s |
+
+**Tried, and kept.**
+- `_bound` in one pass. When over capacity it scanned the memories, forgot the least salient, then scanned again only
+  to find one ordinary memory fewer. It now returns at once in that case: 3.41 s became 2.49 s at stress (−27%).
+
+**Tried, and taken out again.**
+- Computing credibility only after the cheap filters (an exact bound shows when it cannot matter). It saved nothing:
+  the live scan went from 1.32 to 1.29 s. At stress it cost more (3.27 to 3.71 s), since every memory then paid an
+  extra calculation.
+
+**Net result.**
+- The time per meeting changed within the machine's drift. In the A/B pair, the daily update, whose code did not
+  change, moved 11% between the two runs.
+- The heaviest frame still holds 107 tellings live and 188 heavy: worst about 6.6 ms and 23 ms here.
+
+**Why the flush cannot be split or cut further with identical results.**
+- **Splitting it across frames:** the decision needs its answer in that frame. Deferring the decision would change
+  behaviour.
+- **Telling only the meetings that carry stories about the subject read:** not exact. Each meeting passes at most 2
+  stories, by salience, and each teller at most 6 a day. Every telling therefore depends on every earlier telling in
+  the chain, whatever it was about.
+- **Caching or incremental structures inside a flush:** finding the chain and what a read may skip are already only
+  2.5% of the time. The rest is per-telling work that must be done for each telling: scanning, interpreting, posting.
+- **Telling ahead in idle frames:** the queue is already told in idle frames. The heavy flush comes in an hour's
+  first frames, right after its meetings are queued, so telling faster only makes that frame heavier.
+- **What would work, but needs the owner:**
+  - native code (a GDExtension in C++) for telling and judging, likely an order of magnitude faster a telling. It is a
+    second implementation language for one concern and a new build dependency (CLAUDE.md sections 2 and 11);
+  - a different timing (the proposal).
+
+### 15.2 Memory
+
+**The measure changed.** `judgment_perf` now measures the memory that releasing the store gives back. The old measure
+also counted the harness's own arrays: the frame times, and now the record of choices. `--breakdown` empties each
+structure in turn and records what that gives back.
+- In a reported run with the breakdown, the parts add up to the total.
+- Runs without it read about 1.7 MB lower for the same store. The reductions below are the same in both.
+
+**Stress, 500 people, 40 days** (KB; with the breakdown):
+
+| Structure | Before | After | Entries | Bytes an entry before -> after |
+|---|---|---|---|---|
+| opinions (ledgers) | 6,744 | **3,205** | 32,413 | 213 -> 101 |
+| memories | 3,561 | 3,561 | 13,646 | 267 |
+| contributions | 2,395 | 2,395 | 13,646 | 180 |
+| who has judged each event (knowers) | 2,247 | 2,247 | 8,052 events | 286 |
+| facts | 1,761 | 1,761 | 8,052 | 224 |
+| events by day, permanent references, the rest | 375 | 375 | | |
+| **total** | **16.9 MB** | **13.5 MB** | | |
+
+**Live rate, 500 people:** 5.7 MB became 3.6 MB; opinions went from 3,806 to 1,719 KB.
+
+**What changed: ledgers as packed arrays per observer.**
+- Before: each opinion was a dictionary slot holding its own packed array of 8 values. That is about 213 bytes: the
+  slot, the array object, and a 64-byte buffer.
+- Now: each observer has two packed arrays, the subjects (ascending) and 8 values for each.
+- The same values in the same order are saved. Iteration is ascending, as the save and `most_disliked` already sorted
+  it.
+- The trade adapter now asks the store for the subjects (`subjects()`).
+- Posting to a ledger is about 12% slower, about 2% of meeting time.
+- The eighth slot (the day an entry was decayed to) costs nothing: a packed array of 7 or 8 values takes the same
+  allocation.
+
+**Options not taken.**
+- **Memories, contributions and facts** could be packed the same way per observer. Estimate: 40-50% less each, about
+  3 to 4 MB more at stress. They are read in many more places (telling, learning, the capacity check, the daily
+  update, saving), so the change is larger, and inserts make each write slower.
+- **Knowers** grows with the 30-day memory horizon. A shorter horizon would change behaviour.
+- **Smaller fields** (32-bit) would cap ids and points, and that needs a guard.
+
+**The 16 MB target.** It is an agent proposal for 500 people at the heavy rate, which is about 80 times the events of
+the live village. Both rates are now within it (13.5 and 3.6 MB). A budget at the live rate (say 8 MB at 500 people)
+would track what the game actually produces. Phone memory is in gigabytes, so frame time remains the binding cost.

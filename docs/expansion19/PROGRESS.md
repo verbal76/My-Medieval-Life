@@ -4,7 +4,7 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-22 (the gossip frame round on `e91d903`, after the Build 17 synchronization at `cd7439c`).
+Updated 2026-10-22 (the investigation round on `05adc9d`: timing proposal, worst frame, memory).
 
 ## Branch and latest pushed commit
 
@@ -40,6 +40,29 @@ rate: frame p99 1.41 ms and p99.9 3.67 ms, unchanged from round 4.
 Outstanding from the sync: Build 17's contract breaches and acceptance (CON-01/02), and collapse deaths as remembered
 facts, are new event feeds and decision points. They are not wired (no new judgment behaviour); they go in at the Build
 18/19 reconciliation.
+
+## Investigation round (owner-directed, 2026-10-22, on `05adc9d`)
+
+Details are in DESIGN.md section 15 and `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`. Results are byte-identical:
+- the same `judgment_perf` hashes in all six configurations;
+- in the 30-day village on seed 1, the same world fingerprint `1c755f53d12c72bd470b7913fb5e52a6`, the same judgment
+  state hash 1780545997, and no leaks.
+
+- **X19-Q-TIMING:** written up, not implemented, and still pending. The paper covers the scheduled option in detail and
+  a third variant ("ordered": today's order of tellings, paced through the hour). The recommendation is to keep "hour"
+  until Gate E, and to prefer "ordered" if a bounded frame is wanted then.
+  - **Measured:** of 40,000 trade choices, none chose differently under "scheduled". The dispositions they read
+    differed by at most 0.4 points (live) and 1.5 points (heavy) of 100.
+- **Worst frame:** profiled.
+  - The capacity check now runs in one pass (−27% of its time at the heavy rate).
+  - The heaviest frame keeps its 107 and 188 tellings. Splitting or trimming the dependency flush cannot keep results
+    identical (DESIGN.md 15.1).
+  - Native code or a timing change would bound it; both are for the owner.
+- **Memory:** ledgers are now packed per observer. Heavy rate 16.9 to 13.5 MB, live 5.7 to 3.6 MB at 500 people, both
+  within the proposed 16 MB.
+
+Tests: `judgment_test` 168, `judgment_live_test` 53, `judgment_decay_demo` 24, `judgment_perf` 9 checks, all with 0
+failures.
 
 ## Gossip frame round (owner-directed, 2026-10-22)
 
@@ -191,7 +214,8 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 
 - **Answered 2026-10-21:** Q01, Q02, Q06, Q07, Q08, Q10, Q11, Q14 (see above).
 - **Still provisional:** Q03, Q04, Q05, Q09, Q12, Q13.
-- **Pending:** X19-Q-TIMING, with "spread" as the default; "scheduled" is not enabled.
+- **Pending:** X19-Q-TIMING, with "spread" (gossip.timing "hour") as the default; "scheduled" is not enabled. The
+  proposal and its variants are in `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`.
 - **Needed from the owner before live integration (Gate E):**
   - the Q02 decay rate;
   - the four conflicts in DESIGN.md section 10 (instant harm spread, CRT-12 thresholds, CRT-06 friendly guard, and
