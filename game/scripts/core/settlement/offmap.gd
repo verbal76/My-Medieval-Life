@@ -286,6 +286,11 @@ func _need_pts(h: Dictionary) -> float:
 	return (float(h.adults) + float(h.children) * float(GameData.b("child_food_factor"))) * 24.0 * float(GameData.b("hunger_per_hour"))
 
 
+## What a day's food costs a household at today's price of wheat, the cheapest staple.
+func _day_food_cost(h: Dictionary) -> int:
+	return ceili(_need_pts(h) / _pts("wheat")) * price("wheat")
+
+
 func _pantry_pts(h: Dictionary) -> float:
 	var p := 0.0
 	for f in _rules.foods:
@@ -718,6 +723,23 @@ func _pay_wages() -> void:
 		b.week = int(b.get("week", 0)) + total
 		for k in live.size():
 			hh[live[k]].inc = int(hh[live[k]].inc) + each + (rem if k == 0 else 0)
+		# PAR-02A (owner, OD-19): a reserve protects necessities, it never keeps them from being met. A worker household
+		# already hungry that cannot buy a day's food is paid its wage from the till even below the working reserve.
+		var need_paid := 0
+		for i in live:
+			var h: Dictionary = hh[i]
+			var paid_now: int = each + (rem if i == live[0] else 0)
+			var short := wage - paid_now
+			if short <= 0 or int(h.hungry) <= 0 or int(h.coins) >= _day_food_cost(h) or int(b.till) <= 0:
+				continue
+			var pay := mini(short, int(b.till))
+			b.till -= pay
+			h.coins += pay
+			h.inc = int(h.inc) + pay
+			need_paid += pay
+		total += need_paid
+		b.paid = int(b.paid) + need_paid
+		b.week = int(b.week) + need_paid
 		flows.wages_paid += total
 		flows.wage_short += maxi(0, due - total)
 

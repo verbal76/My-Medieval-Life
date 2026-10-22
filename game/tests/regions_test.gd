@@ -38,6 +38,7 @@ func _init() -> void:
 	test_old_save()
 	test_horse()
 	test_staggered_step()
+	test_necessity_wages()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -398,3 +399,29 @@ func test_staggered_step() -> void:
 	check(r.list.all(func(s): return s.day == 0), "a later hour of the same day steps nothing twice")
 	r.step_hour(1, 6)
 	check(r.list.filter(func(s): return s.day == 1).size() == 1, "the next morning starts again with the first")
+
+
+## REG-INV-01 / PAR-02A: a business's working reserve never keeps its own hungry worker household from a day's food; a
+## household that is not hungry, or can still buy a day's food, is paid only from the till above the reserve.
+func test_necessity_wages() -> void:
+	var r := Regions.create(1)
+	var s: OffMapSettlement = r.by_id["higham"]
+	var m: Dictionary = s.trader()
+	var i: int = m.workers[0]
+	var h: Dictionary = s.hh[i]
+	m.till = int(m.reserve) - 1          # below the working reserve: nothing above it to pay out (set by the test)
+	h.coins = 0
+	h.hungry = 1
+	var till0 := int(m.till)
+	var coins0 := s.coins()
+	s._pay_wages()
+	var wage := int(s.btype("merchant").get("wage", 8))
+	check(int(h.coins) == wage and int(m.till) == till0 - wage, "a hungry worker household with no coins is paid its wage below the reserve (%d coins)" % int(h.coins))
+	check(s.coins() == coins0, "the wage only moves coins from the till to the purse (%d before, %d after)" % [coins0, s.coins()])
+	var h2: Dictionary = s.hh[m.workers[1]] if m.workers.size() > 1 else {}
+	if not h2.is_empty():
+		h2.hungry = 0
+		h2.coins = 0
+		m.till = int(m.reserve) - 1
+		s._pay_wages()
+		check(int(h2.coins) == 0, "a worker household that is not hungry is not paid from below the reserve")
