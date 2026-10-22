@@ -8,20 +8,22 @@ Readiness: **NOT AUTHORIZED for implementation**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 7 |
-| Integrated | 0 of 7 (0%) |
-| Automated tests passed | 0 of 7 (0%) |
-| Integration verified | 0 of 7 (0%) |
-| Gameplay verified | 0 of 7 (0%) |
-| Owner playtested | 0 of 7 (0%) |
-| Complete | 0 of 7 (0%) |
-| Open (release blockers) | 7 |
+| Approved requirements in scope | 9 |
+| Integrated | 0 of 9 (0%) |
+| Automated tests passed | 0 of 9 (0%) |
+| Integration verified | 0 of 9 (0%) |
+| Gameplay verified | 0 of 9 (0%) |
+| Owner playtested | 0 of 9 (0%) |
+| Complete | 0 of 9 (0%) |
+| Open (release blockers) | 9 |
 | Open owner decisions (blocking) | 14 (14) |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (7)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Further service kinds proposed for Build 20 (Living Economy, OD-LE-03); goods and dig/survey contracts already work | design: UNKNOWN | UNKNOWN |
+| EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Proposed for Build 20 (Living Economy: wages, rents and service contracts, OD-LE-03); the Build 18 part is PL1-10 | PL1-10, design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

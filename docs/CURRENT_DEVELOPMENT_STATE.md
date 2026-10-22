@@ -38,6 +38,9 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
+| STONE-02, STONE-03, STONE-04, STONE-06, X18-STONECUT | stone worker (Sonnet subagent) | `wip/b18-stone` | `wip/build18` 027d742 | dressing 3->2+1 rubble, the iron chisel, the stonecutter trade (B18-DP-09/10) |
+| PL2-015 (audit), DVW-B3-CHAPEL (player volunteering) | farming worker (Sonnet subagent) | `wip/b18-farming` | `wip/build18` 027d742 | retained vs deferred farming features with later-build records; the player on the church field (B18-DP-04, DP-12) |
+| SET-D | settlement-development worker (Sonnet subagent) | `wip/b18-setd` | `wip/build18` 027d742 | trades open and close by existing rules (B18-DP-05) |
 | SET-A, SET-B | capability-wiring worker (Sonnet subagent) | `wip/b18-capwire` | `wip/build18` 027d742 | maintain the per-industry settlement capability profile daily and save it (X18-CAPCOMP) |
 | ECON-P3 | household-money worker (Sonnet subagent) | `wip/b18-econp3` | `wip/build18` a2ea741 | business and household money separate (shop tills) |
 | TRADE-CREDIT (parity) | credit-parity worker (Sonnet subagent) | `wip/b18-creditparity` | `wip/build18` a2ea741 | the player lends and barters as seller; the player's debts pass to the heir |
@@ -63,10 +66,15 @@ On their reports:
 
 ## Waiting on the owner
 
-Every open decision is in `docs/requirements/views/DECISIONS.md`. In this session:
+Every open decision is in `docs/requirements/views/DECISIONS.md`. The decision package B18-DP-01..14 was answered 2026-10-23 (`docs/directives/2026-10-23_build18_decision_package_answers.md`); B18-DP-15 (the sage) is open. In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
 - Build 18 target (owner 2026-10-23, `docs/directives/2026-10-23_reg_demo_d1_and_build18_target.md`): playable within five hours; punch list fixed; blockers to the owner promptly; REG-CIRC-D1 deferred until REG-EVAL-01;
 - Build 18 packaging gate (REL18-PACKAGE): no test package until every Build 18 punch-list item is closed or accepted as permanently blocked;
 - chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
 - Builds 20 and 21 authorization.
+
+## Waiting (sequenced)
+
+- PL1-10 completion (B18-DP-01) and WDR-012-C (B18-DP-08): after the ECON-P3 merge (same business and wage code).
+- REL18 release runs (365 days per seed, 100-day read), REG-EVAL-01, WDR-004-C and SET-C verification: on the final Build 18 code.

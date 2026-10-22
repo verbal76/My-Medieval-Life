@@ -8,14 +8,14 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 12 |
-| Integrated | 0 of 12 (0%) |
-| Automated tests passed | 4 of 12 (33%) |
-| Integration verified | 0 of 12 (0%) |
-| Gameplay verified | 0 of 12 (0%) |
-| Owner playtested | 0 of 12 (0%) |
-| Complete | 0 of 12 (0%) |
-| Open (release blockers) | 12 |
+| Approved requirements in scope | 13 |
+| Integrated | 0 of 13 (0%) |
+| Automated tests passed | 4 of 13 (31%) |
+| Integration verified | 0 of 13 (0%) |
+| Gameplay verified | 0 of 13 (0%) |
+| Owner playtested | 0 of 13 (0%) |
+| Complete | 0 of 13 (0%) |
+| Open (release blockers) | 13 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
@@ -24,7 +24,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (11)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (12)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -39,6 +39,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X19-DECAY, SJD-F | L |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-G | XS |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model | design: DESIGN WORK REQUIRED | L |
 
 ## Open owner decisions (1)
 

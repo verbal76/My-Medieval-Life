@@ -2,21 +2,28 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (9)
+## Workers and task branches (16)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | ECON-P3 | 18 | IN DEVELOPMENT | household-money worker (Sonnet subagent, started 2026-10-23) | wip/b18-econp3 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| PL2-015 | 18 | IN DEVELOPMENT | farming worker (Sonnet subagent, started 2026-10-23) | wip/b18-farming |
 | SET-A | 18 | IN DEVELOPMENT | capability-wiring worker (Sonnet subagent, started 2026-10-23) | wip/b18-capwire |
 | SET-B | 18 | IN DEVELOPMENT | capability-wiring worker (Sonnet subagent, started 2026-10-23) | wip/b18-capwire |
+| SET-D | 18 | IN DEVELOPMENT | settlement-development worker (Sonnet subagent, started 2026-10-23) | wip/b18-setd |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
+| STONE-02 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
+| STONE-03 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
+| STONE-04 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
+| STONE-06 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 | TRADE-CREDIT | 18 | IN DEVELOPMENT | credit-parity worker (Sonnet subagent, started 2026-10-23) | wip/b18-creditparity |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
+| X18-STONECUT | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 
-## Implemented but not tested (46)
+## Implemented but not tested (45)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -42,22 +49,21 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | OWN-28 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PERF-01 | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | PL1-07 | 20+ | PARTIALLY IMPLEMENTED |  |
-| PL1-10 | 18 | PARTIALLY IMPLEMENTED |  |
+| PL1-10 | 18 | PARTIALLY IMPLEMENTED | Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation |
 | PL1-11 | owner decision | PARTIALLY IMPLEMENTED | stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11) |
 | PL1-13 | 20+ | PARTIALLY IMPLEMENTED |  |
-| PL2-008 | 18 | PARTIALLY IMPLEMENTED |  |
+| PL2-008 | 18 | INTEGRATED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |
 | PL2-010 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-013 | 20+ | PARTIALLY IMPLEMENTED |  |
-| PL2-014 | 18 | PARTIALLY IMPLEMENTED |  |
-| PL2-015 | 18 | PARTIALLY IMPLEMENTED |  |
+| PL2-014 | 18 | INTEGRATED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-002-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 9 of 10 professions pass; the sage supplies no profession (owner decision B18-DP-15) |
-| WDR-004-C | 18 | PARTIALLY IMPLEMENTED |  |
+| WDR-004-C | 18 | PARTIALLY IMPLEMENTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |
 | WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
-| WDR-012-C | 18 | PARTIALLY IMPLEMENTED |  |
+| WDR-012-C | 18 | PARTIALLY IMPLEMENTED | Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08) |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-015-C | 20+ | PARTIALLY IMPLEMENTED |  |
 | WDR-018-C | unassigned | PARTIALLY IMPLEMENTED | compliance audit against the rule's verification scenario (human review) |

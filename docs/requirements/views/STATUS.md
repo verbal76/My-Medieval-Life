@@ -6,28 +6,28 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 
 | Measure | Build 18 | Build 19 | Build 20 | Build 21 |
 |---|---|---|---|---|
-| Approved requirements (in scope) | 81 | 12 | 7 | 1 |
-| Fully specified (design SPECIFIED) | 58 of 81 (72%) | 6 of 12 (50%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Waiting on an owner decision (design) | 5 | 0 | 0 | 0 |
-| Design work still required | 6 | 2 | 0 | 0 |
-| Design unknown | 12 | 4 | 7 | 1 |
-| Not started (incl. READY) | 17 | 6 | 7 | 1 |
-| In development (worker assigned) | 5 | 0 | 0 | 0 |
-| Partially implemented | 9 | 3 | 0 | 0 |
+| Approved requirements (in scope) | 80 | 13 | 9 | 1 |
+| Fully specified (design SPECIFIED) | 66 of 80 (82%) | 6 of 13 (46%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Waiting on an owner decision (design) | 0 | 0 | 0 | 0 |
+| Design work still required | 2 | 3 | 0 | 0 |
+| Design unknown | 12 | 4 | 9 | 1 |
+| Not started (incl. READY) | 10 | 7 | 9 | 1 |
+| In development (worker assigned) | 12 | 0 | 0 | 0 |
+| Partially implemented | 6 | 3 | 0 | 0 |
 | Implemented on a task branch | 0 | 3 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
-| Integrated | 50 of 81 (62%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Automated tests passed (targeted or better) | 51 of 81 (63%) | 4 of 12 (33%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Integration verified (suite on the integrated build) | 44 of 81 (54%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Gameplay verified | 0 of 81 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Owner playtested | 0 of 81 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Complete | 1 of 81 (1%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Release blockers (open in-scope requirements) | 80 | 12 | 7 | 1 |
-| Open owner decisions (of which blocking) | 25 (2) | 1 (0) | 14 (14) | 9 (9) |
+| Integrated | 52 of 80 (65%) | 0 of 13 (0%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Automated tests passed (targeted or better) | 51 of 80 (64%) | 4 of 13 (31%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Integration verified (suite on the integrated build) | 44 of 80 (55%) | 0 of 13 (0%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Gameplay verified | 0 of 80 (0%) | 0 of 13 (0%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Owner playtested | 0 of 80 (0%) | 0 of 13 (0%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Complete | 1 of 80 (1%) | 0 of 13 (0%) | 0 of 9 (0%) | 0 of 1 (0%) |
+| Release blockers (open in-scope requirements) | 79 | 13 | 9 | 1 |
+| Open owner decisions (of which blocking) | 5 (0) | 1 (0) | 14 (14) | 9 (9) |
 | Deferred with approval | 2 | 1 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 1 | 0 | 5 |
-| Integrated, awaiting gameplay or owner verification | 49 | 0 | 0 | 0 |
-| Remaining implementation by effort band (not yet integrated) | XS 1, S 10, M 9, L 3, XL 1, UNKNOWN 7 | XS 2, M 3, L 4, XL 1, UNKNOWN 2 | UNKNOWN 7 | UNKNOWN 1 |
+| Integrated, awaiting gameplay or owner verification | 51 | 0 | 0 | 0 |
+| Remaining implementation by effort band (not yet integrated) | XS 1, S 10, M 9, L 2, XL 1, UNKNOWN 5 | XS 2, M 3, L 5, XL 1, UNKNOWN 2 | UNKNOWN 9 | UNKNOWN 1 |
 | Readiness | IN DEVELOPMENT (not feature complete) | PROTOTYPE ONLY (isolated branch; not integrated) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
 
 Build authority:
@@ -37,5 +37,5 @@ Build authority:
 - **Build 20 (Living Economy):** implementation **NOT AUTHORIZED**. OD-30, OD-LE-01: numbering and placement only; implementation not authorized
 - **Build 21 (Village Politics):** implementation **NOT AUTHORIZED**. OD-30: numbering only; implementation not authorized
 
-Future backlog and unassigned: 102 open records (`BACKLOG.md`). Open owner decisions: 56 (`DECISIONS.md`).
+Future backlog and unassigned: 101 open records (`BACKLOG.md`). Open owner decisions: 35 (`DECISIONS.md`).
 

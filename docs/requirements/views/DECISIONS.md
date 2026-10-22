@@ -6,9 +6,9 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 53 |
-| APPROVED | 119 |
-| PROVISIONAL | 3 |
+| OPEN | 33 |
+| APPROVED | 140 |
+| PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
 | REOPENED | 0 |
 | DEFERRED | 1 |
@@ -19,35 +19,15 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | OPEN | no |  | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 
-## Build 18: combined release (tracks A, B, C): open, reopened or provisional (25)
+## Build 18: combined release (tracks A, B, C): open, reopened or provisional (5)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
-| B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-03 | PL2-014: close with PL2-008 on playtest (module signs not in its text)? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-04 | PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-05 | SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-06 | WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-07 | WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-08 | WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-09 | STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-10 | STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-11 | CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
 | B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
-| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | OPEN | no | B18-DP-12 | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
-| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | OPEN | no | B18-DP-11 | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
-| Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | PROVISIONAL | no | B18-DP-14 | expansion18/DECISIONS_PENDING.md on wip/build18; docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md |
-| STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | OPEN | yes | B18-DP-09, STONE-02, STONE-03, STONE-04, X18-STONECUT | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items) |
-| STONE-D2 | Iron chisel wear and recipe (STONE-06) | OPEN | yes | B18-DP-10, STONE-02, STONE-06, X18-STONECUT | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items) |
-| X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | OPEN | no | B18-DP-13 | expansion18/DESIGN.md on wip/build18 (owner questions: the fee coefficients and the small-agreement threshold need numbers) |
 
 ## Build 19: NPC Judgment System: open, reopened or provisional (1)
 
@@ -88,11 +68,10 @@ The decision register is the `decision` records of the register. A recommendatio
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
 
-## Waiting on an owner decision for its build: open, reopened or provisional (6)
+## Waiting on an owner decision for its build: open, reopened or provisional (5)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
-| CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | OPEN | yes |  | docs/directives/2026-10-21_build17_consolidated_14_decisions.md |
 | OD-02 | Owner decision: balance review of every provisional number | OPEN | no |  | docs/DECISIONS.md |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | OPEN | no |  | docs/DESIGN_GAP_ASSESSMENT.md |
 | OD-04 | Owner decisions: chest and lock questions | OPEN | no |  | docs/BUILD_DECISIONS.md |

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (556)
+## Approved requirement (558)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -189,6 +189,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner action | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | EQ-01 | Human civilization sustains itself without the player | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -402,14 +404,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | PL2-005 | Longer skill trees |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL2-006 | Harvest everywhere |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL2-007 | Fields grow, ripen, regrow |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
-| PL2-008 | Expandable property | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| PL2-008 | Expandable property | 18 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | PL2-009 | In-game wiki |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL2-010 | Recognisable sawhorse | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | PL2-011 | No interactions through walls |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL2-012 | Storage UI quantities, focus |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL2-013 | Usable furniture | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| PL2-014 | Modular house/workshop expansion | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| PL2-015 | Farming, livestock, hand plough | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| PL2-014 | Modular house/workshop expansion | 18 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| PL2-015 | Farming, livestock, hand plough | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | 19 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -484,7 +486,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | SET-E | Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SIM-B17 | SIM-01 in Build 17: one monitored longest run per seed, checkpoints for shorter milestones, stop at the first broken ledger | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -504,11 +506,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -540,7 +542,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | 19 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | 15 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -563,7 +565,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 
 ## Proposal awaiting an owner decision (not approved) (34)
 
@@ -659,30 +661,30 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | owner decision | APPROVED |  |
-| B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | 18 | OPEN |  |
-| B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | 18 | OPEN |  |
-| B18-DP-03 | PL2-014: close with PL2-008 on playtest (module signs not in its text)? | 18 | OPEN |  |
-| B18-DP-04 | PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)? | 18 | OPEN |  |
-| B18-DP-05 | SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run? | 18 | OPEN |  |
-| B18-DP-06 | WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic? | 18 | OPEN |  |
-| B18-DP-07 | WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19? | 18 | OPEN |  |
-| B18-DP-08 | WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls? | 18 | OPEN |  |
-| B18-DP-09 | STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart? | 18 | OPEN |  |
-| B18-DP-10 | STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule? | 18 | OPEN |  |
-| B18-DP-11 | CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)? | 18 | OPEN |  |
-| B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | 18 | OPEN |  |
-| B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | 18 | OPEN |  |
-| B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | 18 | OPEN |  |
+| B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | 18 | APPROVED |  |
+| B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | 18 | APPROVED |  |
+| B18-DP-03 | PL2-014: close with PL2-008 on playtest (module signs not in its text)? | 18 | APPROVED |  |
+| B18-DP-04 | PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)? | 18 | APPROVED |  |
+| B18-DP-05 | SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run? | 18 | APPROVED |  |
+| B18-DP-06 | WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic? | 18 | APPROVED |  |
+| B18-DP-07 | WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19? | 18 | APPROVED |  |
+| B18-DP-08 | WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls? | 18 | APPROVED |  |
+| B18-DP-09 | STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart? | 18 | APPROVED |  |
+| B18-DP-10 | STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule? | 18 | APPROVED |  |
+| B18-DP-11 | CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)? | 18 | APPROVED |  |
+| B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | 18 | APPROVED |  |
+| B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | 18 | APPROVED |  |
+| B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | 18 | APPROVED |  |
 | B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | 18 | OPEN |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | 15 | SUPERSEDED |  |
-| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | 18 | OPEN |  |
+| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | 18 | APPROVED |  |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | 18 | OPEN |  |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | 18 | OPEN |  |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | 18 | OPEN |  |
-| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | 18 | OPEN |  |
-| CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | owner decision | OPEN | yes |
+| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | 18 | APPROVED |  |
+| CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | owner decision | APPROVED | yes |
 | CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | owner decision | APPROVED |  |
 | CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | owner decision | APPROVED |  |
 | CON02-S-3 | Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule? | owner decision | APPROVED |  |
@@ -789,7 +791,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q18-3 | Q18-3: off-map settlements are simulated economies like this one (money from their villagers, government and companies), same rules at lighter detail |  | APPROVED |  |
 | Q18-4 | Q18-4: five off-map settlements of mixed kinds |  | APPROVED |  |
 | Q18-5 | Q18-5: barter and credit with trust |  | APPROVED |  |
-| Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | 18 | PROVISIONAL |  |
+| Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | 18 | APPROVED |  |
 | Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons |  | APPROVED |  |
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) |  | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | 18 | APPROVED |  |
@@ -812,8 +814,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SJD-Q12 | Judgment open decision: What makes an event important enough to score? | 19 | APPROVED |  |
 | SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | 19 | APPROVED |  |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | 19 | APPROVED |  |
-| STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | 18 | OPEN | yes |
-| STONE-D2 | Iron chisel wear and recipe (STONE-06) | 18 | OPEN | yes |
+| STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | 18 | APPROVED | yes |
+| STONE-D2 | Iron chisel wear and recipe (STONE-06) | 18 | APPROVED | yes |
 | STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | owner decision | APPROVED |  |
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) |  | APPROVED |  |
 | STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 |  | APPROVED |  |
@@ -828,7 +830,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X18-D7 | Expansion 18 D7: crop shares split by work done (minutes x the cutter's own work rate) |  | APPROVED |  |
 | X18-D8 | Expansion 18 D8: wages with skill modifiers round to the nearest whole coin |  | APPROVED |  |
 | X18-D9 | Expansion 18 D9: experience is dropped at the next dawn after death or departure |  | APPROVED |  |
-| X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | 18 | OPEN |  |
+| X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | 18 | APPROVED |  |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | 19 | APPROVED |  |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | 19 | APPROVED |  |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | 19 | PROVISIONAL |  |

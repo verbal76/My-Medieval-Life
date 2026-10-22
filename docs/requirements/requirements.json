@@ -4184,9 +4184,9 @@
    "title": "PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems?",
    "description": "PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-01 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "BOTH PERMANENT EMPLOYMENT AND CONTRACTED SERVICES MUST BE AVAILABLE. Build 18: attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stalls display goods with item icons; leased village houses operate as shops. No new universal contracting framework in Build 18; missing general employment/contract functionality documented with a later phase.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4199,6 +4199,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4208,9 +4213,9 @@
    "title": "PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)?",
    "description": "PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-02 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. ROOMS-18 resolves the design question; no NPC household expansion; verify in playtest.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4223,6 +4228,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4232,9 +4242,9 @@
    "title": "PL2-014: close with PL2-008 on playtest (module signs not in its text)?",
    "description": "PL2-014: close with PL2-008 on playtest (module signs not in its text)?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-03 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Close with DP-02 after checks and owner playtest; separate module signs not required.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4247,6 +4257,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4256,9 +4271,9 @@
    "title": "PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)?",
    "description": "PL2-015: build coops/shelters, trapping, watering, buying animals with existing systems; no rebalancing; Farming skill speeds but never gates; bought seed from sellers' stock; hired help stays later (not Build 18)?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "KEEP WHAT IS NECESSARY TO MAKE BUILD 18 FUNCTIONAL. DEFER THE REMAINDER (coops/shelters, expanded trapping, animal-purchasing interfaces, expanded watering, hired farmhands, other incomplete livestock features not needed for stability), after a dependency audit; deferred items stay open and traceable with a later build; no Farming skill gate; seed from real stock where supported.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4271,6 +4286,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4280,9 +4300,9 @@
    "title": "SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run?",
    "description": "SET-D: settlement development at lighter detail from existing rules (trade switching with lasting unmet demand, capacity follows workers, no off-map housing yet), closed by a 365-day multi-generation run?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-05 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation, with a verification clarification: run 100- and 365-day checks; a 365-day run is not a multi-generation run; multi-generation verification stays outstanding unless a sufficient horizon is shown.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4295,6 +4315,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4304,9 +4329,9 @@
    "title": "WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic?",
    "description": "WDR-004-C: close by the Build 18 long runs (100 and 365 days) and a scarcity-response audit, no new mechanic?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-06 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. No new mechanic; compare 100- and 365-day results; written scarcity-response audit; close WDR-004-C only when verification supports it.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4319,6 +4344,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4328,9 +4358,9 @@
    "title": "WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19?",
    "description": "WDR-011-C: a light Build 18 aspiration model over the five domains from villagers' real state, steering existing choices (Build 19 adds personality), or move it to Build 19?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-07 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "OPTION B: MOVE THIS SYSTEM TO BUILD 19. No temporary Build 18 model; the five domains and acceptance criteria preserved; explicit owner-approved deferral; does not block Build 18.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4343,6 +4373,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4352,9 +4387,9 @@
    "title": "WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls?",
    "description": "WDR-012-C: specialization by local prices, hiring competition by wage offers within existing rules, relocation of failing stalls?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-08 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Specialization by returns at local prices, hiring competition within the wage system, relocation to better stalls where existing mechanics support it, failure when uneconomic; no player preference; focused verification.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4367,6 +4402,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4376,9 +4416,9 @@
    "title": "STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart?",
    "description": "STONE-D1 recommendation: 3 raw stone -> 2 blocks + 1 rubble at Masonry 1, existing Masonry save/bonus tiers; today's building costs kept where maintenance and reconstruction cannot be told apart?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-09 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. 3 raw stone -> 2 blocks + 1 rubble/raw-stone fragments; existing Masonry tiers; blocks for new structural masonry, raw stone for repairs and hearths; existing behaviour where maintenance and reconstruction cannot be told apart.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4391,6 +4431,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4400,9 +4445,9 @@
    "title": "STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule?",
    "description": "STONE-D2 recommendation: forge_chisel 1 iron bar, 30 min, Smithing 1; durability 150 (the mallet's); one wear per dressing; value by the existing forged-tool rule?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-10 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. forge_chisel, anvil, 1 iron bar, 30 minutes, Smithing 1, durability 150, 1 wear per dressing, value by the forged-tool convention (about the hammer); no special Masonry wear saving.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4415,6 +4460,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4424,9 +4474,9 @@
    "title": "CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)?",
    "description": "CHAPEL-R5: chapel art not a release blocker (a sign or bell-cote from an owned pack if one fits)?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-11 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Chapel art not a release blocker; use an owned asset if practical; no art search or purchase; future visuals are polish.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4439,6 +4489,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4448,9 +4503,9 @@
    "title": "CHAPEL-R1: let the player volunteer on the church field by the villagers' rule?",
    "description": "CHAPEL-R1: let the player volunteer on the church field by the villagers' rule?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-12 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. The player volunteers on the church field under the villagers' rules (parity), reusing existing systems.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4463,6 +4518,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4472,9 +4532,9 @@
    "title": "X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values?",
    "description": "X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-13 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Provisional courier fee coefficients and the 50-coin formal-signing threshold retained for Build 18; revisit after gameplay evidence.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4487,6 +4547,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -4496,9 +4561,9 @@
    "title": "Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)?",
    "description": "Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-14 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Same rules everywhere; settlement profiles emerge from real differences; confirms Q18-6.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4511,6 +4576,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -8386,9 +8456,9 @@
    "title": "Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.)",
    "description": "Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.)",
    "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "APPROVED: Recommendation. The player volunteers on the church field under the villagers' rules (parity), reusing existing systems. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. The player volunteers on the church field under the villagers' rules (parity), reusing existing systems.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -8401,6 +8471,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -8482,9 +8557,9 @@
    "title": "Does the chapel need distinct artwork (steeple, sign) before the Build 18 release?",
    "description": "Does the chapel need distinct artwork (steeple, sign) before the Build 18 release?",
    "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "APPROVED: Recommendation. Chapel art not a release blocker; use an owned asset if practical; no art search or purchase; future visuals are polish. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Chapel art not a release blocker; use an owned asset if practical; no art search or purchase; future visuals are polish.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -8497,6 +8572,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -8966,7 +9046,7 @@
    "id": "CON-08-Q",
    "title": "Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default)",
    "kind": "decision",
-   "owner_wording": null,
+   "owner_wording": "APPROVED: Recommendation. Provisional courier fee coefficients and the 50-coin formal-signing threshold retained for Build 18; revisit after gameplay evidence. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
    "description": "Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default)",
    "source": "docs/directives/2026-10-21_build17_consolidated_14_decisions.md",
    "approval": "open numerical parameter, owner directive section 17",
@@ -9004,13 +9084,19 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ],
    "target_build": "owner decision",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "owner_answer": "APPROVED: Recommendation. Provisional courier fee coefficients and the 50-coin formal-signing threshold retained for Build 18; revisit after gameplay evidence."
   },
   {
    "id": "CON-UX-01",
@@ -12675,7 +12761,7 @@
    "implementation": "",
    "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge",
    "playtest": [],
-   "branch": "wip/b18-chapel",
+   "branch": "wip/b18-farming",
    "commits": [
     "1b1b2f5",
     "71b6285"
@@ -12746,6 +12832,16 @@
      "date": "2026-10-23",
      "change": "acceptance wrapped as a one-item list (text unchanged)",
      "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "CHAPEL-R1 (player volunteering) approved; CHAPEL-R5 (art) not a blocker",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "assigned_worker: chapel worker (Sonnet subagent, started 2026-10-23) -> farming worker (Sonnet subagent, started 2026-10-23); branch: wip/b18-chapel -> wip/b18-farming",
+     "why": "B18-DP-04 audit and B18-DP-12 player volunteering assigned"
     }
    ],
    "target_build": "18",
@@ -12759,7 +12855,7 @@
    "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "assigned_worker": "chapel worker (Sonnet subagent, started 2026-10-23)",
+   "assigned_worker": "farming worker (Sonnet subagent, started 2026-10-23)",
    "design": "SPECIFIED",
    "effort": "L",
    "test_commit": "71b6285",
@@ -12768,7 +12864,7 @@
     "Player cannot volunteer on the church plot",
     "Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed"
    ],
-   "remaining_work": "Gameplay and device check; owner review CHAPEL-R1..R5 (non-blocking); wage, piety, offering and seed numbers in balance.json \"chapel\" are provisional working values, not owner-approved balance"
+   "remaining_work": "Player volunteers on the church field by the villagers' rules (B18-DP-12); gameplay check; chapel numbers provisional"
   },
   {
    "id": "DVW-B3-FEAST",
@@ -13918,6 +14014,71 @@
    "design": "SPECIFIED",
    "effort": "M",
    "assigned_worker": "household-money worker (Sonnet subagent, started 2026-10-23)"
+  },
+  {
+   "id": "EMP-CONTRACT-01",
+   "kind": "approved",
+   "title": "Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only",
+   "target_build": "20",
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "owner_wording": "A player must also be able to negotiate a specific task or quantity of work without permanently employing the NPC. For example, I may contract a miner to produce or deliver 50 iron ore for an agreed payment.",
+   "source": "docs/directives/2026-10-23_build18_decision_package_answers.md",
+   "approval": "Owner B18-DP-01 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "acceptance": [
+    "Task or deliverable, quantity, payment and completion conditions by existing contract conventions; the NPC stays an independent contractor; no free materials, no bypassed travel or labour"
+   ],
+   "implementation": "Exists (Build 17, CON-01/CON-02, contracts.gd and contract_services.gd): goods contracts for any quantity, the seller judging whether it can mine, fell, make or buy them, paid per unit delivered (covers 50 iron ore); work contracts for digging in the buyer's pit and surveying. Missing: other kinds of contracted labour (e.g. smithing or carpentry work on the buyer's materials).",
+   "remaining_work": "Further service kinds proposed for Build 20 (Living Economy, OD-LE-03); goods and dig/survey contracts already work",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered from the owner's B18-DP-01 decision; existing capability audited",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md); later phase proposed, not silently dropped"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status -> NOT STARTED for the Build 20 remainder (existing pieces named in 'implementation')",
+     "why": "Build 20 is not authorized for implementation; the existing parts belong to earlier records (CON-01, CON-02, business attendants, PL1-10)"
+    }
+   ]
+  },
+  {
+   "id": "EMP-PERM-01",
+   "kind": "approved",
+   "title": "Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages",
+   "target_build": "20",
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "owner_wording": "BOTH PERMANENT EMPLOYMENT AND CONTRACTED SERVICES MUST BE AVAILABLE. ... A player must be able to offer an NPC ongoing employment through the existing job-offer and wage systems.",
+   "source": "docs/directives/2026-10-23_build18_decision_package_answers.md",
+   "approval": "Owner B18-DP-01 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "acceptance": [
+    "An ongoing employee is distinct from a contracted worker; job acceptance, wages, hours, availability, workplace access, production requirements and termination follow the existing employment framework; real production, payment and conservation demonstrated"
+   ],
+   "implementation": "Exists: shop/stall attendants (business.gd hire/dismiss, daily wage); building-site helpers (construction.gd hire); manor jobs. Build 18 adds attendants working the player's workshop stations (PL1-10). Missing: a hired miner working the player's mine or pit, and a general assigned production role.",
+   "remaining_work": "Proposed for Build 20 (Living Economy: wages, rents and service contracts, OD-LE-03); the Build 18 part is PL1-10",
+   "depends_on": [
+    "PL1-10"
+   ],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered from the owner's B18-DP-01 decision; existing capability audited",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md); later phase proposed, not silently dropped"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status -> NOT STARTED for the Build 20 remainder (existing pieces named in 'implementation')",
+     "why": "Build 20 is not authorized for implementation; the existing parts belong to earlier records (CON-01, CON-02, business attendants, PL1-10)"
+    }
+   ]
   },
   {
    "id": "ENV-RTK",
@@ -31823,6 +31984,11 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "scope fixed by B18-DP-01: complete attendants at workshop stations, stocking and selling produce, stall display with item icons, shops in leased village houses",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ],
    "acceptance_derived": true,
@@ -31837,7 +32003,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
-   "effort": "UNKNOWN"
+   "effort": "UNKNOWN",
+   "remaining_work": "Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation"
   },
   {
    "id": "PL1-11",
@@ -32388,7 +32555,10 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "4ca0063",
+    "f3eed8c"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -32415,6 +32585,16 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-02/03: existing implementation retained; ROOMS-18 answers the open question; closes after checks and owner playtest",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits 4ca0063, f3eed8c recorded as integration evidence (from the implementation note)",
+     "why": "evidence for INTEGRATED"
     }
    ],
    "acceptance_derived": true,
@@ -32424,12 +32604,13 @@
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
-   "effort": "UNKNOWN"
+   "effort": "UNKNOWN",
+   "remaining_work": "Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs"
   },
   {
    "id": "PL2-009",
@@ -32705,7 +32886,10 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "4ca0063",
+    "f3eed8c"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -32732,6 +32916,16 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-02/03: existing implementation retained; ROOMS-18 answers the open question; closes after checks and owner playtest",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits 4ca0063, f3eed8c recorded as integration evidence (from the implementation note)",
+     "why": "evidence for INTEGRATED"
     }
    ],
    "acceptance_derived": true,
@@ -32741,12 +32935,13 @@
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
-   "effort": "UNKNOWN"
+   "effort": "UNKNOWN",
+   "remaining_work": "Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs"
   },
   {
    "id": "PL2-015",
@@ -32762,7 +32957,7 @@
    "implementation": ":29 | PARTIALLY COMPLETED (:42) | PARTIAL | `1ba0c08`, `50219b7` | Deferred: coops, hired help, draught animals, trapping, water, per-crop art; open owner Qs BUILD_DECISIONS:709-710",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-farming",
    "commits": [],
    "parent": null,
    "depends_on": [],
@@ -32790,6 +32985,21 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-04: keep what Build 18 needs, defer the rest after a dependency audit",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "assigned_worker: None -> farming worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-farming",
+     "why": "B18-DP-04 audit and B18-DP-12 player volunteering assigned"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT",
+     "why": "Audit and minimum retained work in progress"
     }
    ],
    "acceptance_derived": true,
@@ -32799,12 +33009,14 @@
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
-   "effort": "UNKNOWN"
+   "effort": "UNKNOWN",
+   "remaining_work": "Audit dependencies; retain the minimum working farming and livestock behaviour; deferred items become open records with a later build (B18-DP-04)",
+   "assigned_worker": "farming worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "PROS-01",
@@ -35317,9 +35529,9 @@
    "title": "Q18-6: may abstract regions show 'two settlements develop different profiles'",
    "description": "Q18-6: may abstract regions show 'two settlements develop different profiles'",
    "source": "expansion18/DECISIONS_PENDING.md on wip/build18; docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
-   "owner_wording": null,
-   "owner_answer": "Agent reading, not an owner answer: settled by Q18-3 (each settlement a simulated economy under the same rules, so profiles diverge). Needs the owner's confirmation.",
-   "disposition": "PROVISIONAL",
+   "owner_wording": "APPROVED: Recommendation. Same rules everywhere; settlement profiles emerge from real differences; confirms Q18-6. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Same rules everywhere; settlement profiles emerge from real differences; confirms Q18-6.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -35333,6 +35545,16 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "named in the Expansion 18 documents but never registered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "confirmed by the owner (B18-DP-14)",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -39272,7 +39494,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-setd",
    "commits": [],
    "parent": "EXP-B",
    "depends_on": [
@@ -39312,6 +39534,16 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-05 approved: settlement development from existing rules",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> settlement-development worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-setd",
+     "why": "B18-DP-05 approved"
     }
    ],
    "target_build": "18",
@@ -39320,12 +39552,14 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "DESIGN WORK REQUIRED",
-   "effort": "XL"
+   "design": "SPECIFIED",
+   "effort": "XL",
+   "remaining_work": "Trades opening with sustained unmet demand and closing without workers, capacity following labour (existing rules); 100- and 365-day checks; multi-generation verification outstanding unless a sufficient horizon is shown (B18-DP-05)",
+   "assigned_worker": "settlement-development worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "SET-E",
@@ -41739,7 +41973,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-stone",
    "commits": [],
    "parent": null,
    "depends_on": [
@@ -41769,22 +42003,33 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "STONE-D1 and STONE-D2 answered (B18-DP-09/10): design settled",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
+     "why": "STONE-D1/D2 answered (B18-DP-09/10)"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "OWNER DECISION REQUIRED",
+   "design": "SPECIFIED",
    "effort": "S",
    "decisions": [
     "STONE-D1",
     "STONE-D2"
-   ]
+   ],
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "STONE-03",
@@ -41802,7 +42047,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-stone",
    "commits": [],
    "parent": null,
    "depends_on": [
@@ -41833,21 +42078,32 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "STONE-D1 and STONE-D2 answered (B18-DP-09/10): design settled",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
+     "why": "STONE-D1/D2 answered (B18-DP-09/10)"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "OWNER DECISION REQUIRED",
+   "design": "SPECIFIED",
    "effort": "S",
    "decisions": [
     "STONE-D1"
-   ]
+   ],
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "STONE-04",
@@ -41866,7 +42122,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-stone",
    "commits": [],
    "parent": null,
    "depends_on": [
@@ -41902,21 +42158,32 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "STONE-D1 and STONE-D2 answered (B18-DP-09/10): design settled",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
+     "why": "STONE-D1/D2 answered (B18-DP-09/10)"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "OWNER DECISION REQUIRED",
+   "design": "SPECIFIED",
    "effort": "S",
    "decisions": [
     "STONE-D1"
-   ]
+   ],
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "STONE-05",
@@ -42017,7 +42284,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-stone",
    "commits": [],
    "parent": null,
    "depends_on": [
@@ -42048,21 +42315,32 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "STONE-D1 and STONE-D2 answered (B18-DP-09/10): design settled",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
+     "why": "STONE-D1/D2 answered (B18-DP-09/10)"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "OWNER DECISION REQUIRED",
+   "design": "SPECIFIED",
    "effort": "S",
    "decisions": [
     "STONE-D2"
-   ]
+   ],
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "STONE-D1",
@@ -42070,9 +42348,9 @@
    "title": "Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers",
    "description": "Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers",
    "source": "docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items)",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "APPROVED: Recommendation. 3 raw stone -> 2 blocks + 1 rubble/raw-stone fragments; existing Masonry tiers; blocks for new structural masonry, raw stone for repairs and hearths; existing behaviour where maintenance and reconstruction cannot be told apart. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. 3 raw stone -> 2 blocks + 1 rubble/raw-stone fragments; existing Masonry tiers; blocks for new structural masonry, raw stone for repairs and hearths; existing behaviour where maintenance and reconstruction cannot be told apart.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "18",
    "related": [
@@ -42087,6 +42365,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "listed as an owner question in the documents, never registered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -42096,9 +42379,9 @@
    "title": "Iron chisel wear and recipe (STONE-06)",
    "description": "Iron chisel wear and recipe (STONE-06)",
    "source": "docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items)",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "APPROVED: Recommendation. forge_chisel, anvil, 1 iron bar, 30 minutes, Smithing 1, durability 150, 1 wear per dressing, value by the forged-tool convention (about the hammer); no special Masonry wear saving. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. forge_chisel, anvil, 1 iron bar, 30 minutes, Smithing 1, durability 150, 1 wear per dressing, value by the forged-tool convention (about the hammer); no special Masonry wear saving.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "18",
    "related": [
@@ -42113,6 +42396,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "listed as an owner question in the documents, never registered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -44706,6 +44994,11 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-06 approved: verification by 100- and 365-day comparison and a scarcity-response audit; no new mechanic",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ],
    "target_build": "18",
@@ -44718,8 +45011,9 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "DESIGN WORK REQUIRED",
-   "effort": "M"
+   "design": "SPECIFIED",
+   "effort": "M",
+   "remaining_work": "Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06)"
   },
   {
    "id": "WDR-005",
@@ -45515,9 +45809,14 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build 18 -> 19 (owner-approved deferral B18-DP-07); acceptance unchanged",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ],
-   "target_build": "18",
+   "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules",
    "integrated_in": [],
@@ -45528,7 +45827,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "DESIGN WORK REQUIRED",
-   "effort": "L"
+   "effort": "L",
+   "remaining_work": "Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model"
   },
   {
    "id": "WDR-012",
@@ -45628,6 +45928,11 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-08 approved: specialization, hiring competition, relocation, failure by existing rules",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ],
    "target_build": "18",
@@ -45640,8 +45945,9 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "DESIGN WORK REQUIRED",
-   "effort": "M"
+   "design": "SPECIFIED",
+   "effort": "M",
+   "remaining_work": "Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08)"
   },
   {
    "id": "WDR-013",
@@ -47611,9 +47917,9 @@
    "title": "Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13)",
    "description": "Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13)",
    "source": "expansion18/DESIGN.md on wip/build18 (owner questions: the fee coefficients and the small-agreement threshold need numbers)",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "APPROVED: Recommendation. Provisional courier fee coefficients and the 50-coin formal-signing threshold retained for Build 18; revisit after gameplay evidence. (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_answer": "APPROVED: Recommendation. Provisional courier fee coefficients and the 50-coin formal-signing threshold retained for Build 18; revisit after gameplay evidence.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -47628,6 +47934,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "listed in the Expansion 18 design, never registered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition -> APPROVED",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
     }
    ]
   },
@@ -48070,7 +48381,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-stone",
    "commits": [],
    "parent": "PROS-18",
    "depends_on": [
@@ -48111,22 +48422,33 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "STONE-D1 and STONE-D2 answered (B18-DP-09/10): design settled",
+     "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
+     "why": "STONE-D1/D2 answered (B18-DP-09/10)"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "design": "OWNER DECISION REQUIRED",
+   "design": "SPECIFIED",
    "effort": "M",
    "decisions": [
     "STONE-D1",
     "STONE-D2"
-   ]
+   ],
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "X19-ASSAULT",
