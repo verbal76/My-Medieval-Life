@@ -21056,7 +21056,8 @@
    "playtest": [],
    "branch": "wip/expansion18-preparation",
    "commits": [
-    "8eec56e"
+    "8eec56e",
+    "283ec55"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21084,6 +21085,11 @@
      "date": "2026-10-21",
      "change": "commit 8eec56e; tests; branch",
      "why": "Rounds 1-3 on wip/expansion18-preparation (8eec56e): capability and specialization (mining read-only from MIN-D through an adapter; one-evaluator merge plan in docs/expansion18/DESIGN.md section 8), settlement holdings and reports, regional supply and demand, routes and haulage, competition and cooperation, caravan comparison harness; Q18-9 (levels scale pay and output, factors 1.0) and Q18-10 (any party buys, fetches or pays a carter) applied; settlement_test 63, regional_test 67, caravan_compare 50 checks; regression suites pass. SET-D not started (Q18-6, Q18-7, Q18-12, Q18-13, live CON-01)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit 283ec55",
+     "why": "SYNC-17: Expansion 18 merged Build 17 cd7439c one way (merge 283ec55 from 842ca59). Conflicts kept both sides (census holders moved into SettlementHoldings, mining plan taken from Build 17 with the analysis switch moved into NPCBrain.seam_steps and contracts.gd, economy_sim FATAL/reached kept, tests.yml). PROS-18 correction done: the evaluator uses Discovery.practitioners and tool_stock live (skill + tool, no job title, shared tool once, resident player), snapshot parity tested (settlement_test test_rule_parity, 18 needs x 5 cases). Tests: settlement 83, capability 50, regional 71, courier 44, contract_sign 20, parity_mining 62, equip 51, discovery 65, job_board 28, contracts 138, services 51, quarry 39, conservation 8, wiki pass; 30-day seed 1 no FATAL, leaks 0. No Build 17 defect. Open note: under Build 17's rule a villager holding a tool for sale counts as a practitioner (not seen in seed 1; levels are report-only)"
     }
    ],
    "target_build": "18"
@@ -25948,7 +25954,7 @@
    "id": "SYNC-17",
    "title": "Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "I want Expansions 18 and 19 to refresh against the latest stable Build 17 code now ... Synchronization must be one-way: Build 17 → Expansion 18, Build 17 → Expansion 19.",
    "description": "Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c",
    "source": "docs/directives/2026-10-21_sync_expansions_with_build17.md",
@@ -25958,11 +25964,14 @@
     "PROS-18's evaluator follows Build 17's tool-based capability rule and counts the resident player",
     "Focused compatibility tests only (SIM-01); owner questions kept; baseline SHA recorded in each expansion's docs"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "wip/expansion18-preparation 283ec55; wip/expansion19-preparation e91d903; baselines recorded in docs/expansion18 and docs/expansion19",
+   "tests": "see PROS-18 and PROS-19",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "283ec55",
+    "e91d903"
+   ],
    "parent": "PROS-01",
    "depends_on": [
     "PROS-18",
@@ -25987,6 +25996,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; notes",
      "why": "Started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 283ec55; commit e91d903; tests; implementation",
+     "why": "Both expansions synced one way at cd7439c: Expansion 19 e91d903 (merge 93c107f), Expansion 18 283ec55; focused tests pass on both; nothing merged into Build 17; no Build 17 defects found"
     }
    ],
    "target_build": "18"
