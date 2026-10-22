@@ -305,6 +305,93 @@ static func _attendant_section(ui: GameUI, w: World, s: Dictionary, id: String) 
 		ui.panel_body.add_child(h)
 
 
+## B18-DP-01: what the attendant is to make at the player's own stations, and the workroom's materials. The rules are
+## BusinessWorks; this only asks.
+static func _production_section(ui: GameUI, w: World, s: Dictionary, id: String) -> void:
+	var biz: Business = w.business
+	var wk: BusinessWorks = biz.works
+	ui._label("Production:", 20, Color(1, 0.85, 0.5))
+	var recs := wk.recipes()
+	if recs.is_empty():
+		ui._label("An attendant can make goods at stations of your own (workbench, anvil, forge, stove, oven, sawhorse) in a room you hold. Fit one with Fit out the room.", 15)
+		return
+	var att := biz.attendant_of(s)
+	ui._label(("%s %s makes what you order at your stations, from the materials set aside in the workroom, between hours at the counter. Nothing sells while they are at the bench unless you are by." % [att.name, att.family]) if att != null
+			else "Hire an attendant above: they make what you order here, from the materials set aside in the workroom, between hours at the counter.", 15)
+	var os: Array = wk.orders(s)
+	for i in os.size():
+		var idx := i
+		var h := HBoxContainer.new()
+		var l := Label.new()
+		l.text = wk.order_text(s, os[i])
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		var cb := Button.new()
+		cb.text = "Cancel"
+		cb.custom_minimum_size = Vector2(104, 48)
+		cb.pressed.connect(func():
+			wk.cancel_order(s, idx)
+			show(ui, id))
+		h.add_child(cb)
+		ui.panel_body.add_child(h)
+	if str(s.get("works_note", "")) != "":
+		ui._label(str(s.works_note), 14, COLD)
+	ui._label("Order (one batch is one use of the recipe):", 16)
+	for r in recs:
+		var rid: String = r
+		var rec: Dictionary = GameData.recipes[rid]
+		var ins := []
+		for k in rec["in"]:
+			ins.append("%d %s" % [int(rec["in"][k]), GameData.item_name(k).to_lower()])
+		var outs := []
+		for k in rec.out:
+			outs.append("%d %s" % [int(rec.out[k]), GameData.item_name(k).to_lower()])
+		var h := HBoxContainer.new()
+		h.add_child(ui._icon(BusinessWorks.product(rid)))
+		var l := Label.new()
+		l.text = "%s: %s makes %s (%s %d)" % [rid.replace("_", " "), ", ".join(ins), ", ".join(outs), str(rec.skill), int(rec.level)]
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		for spec in [["Make 1", 1, 0], ["Make 5", 5, 0], ["Keep 5", 0, 5]]:
+			var bt := Button.new()
+			bt.text = spec[0]
+			bt.custom_minimum_size = Vector2(92, 48)
+			var batches: int = spec[1]
+			var keep: int = spec[2]
+			bt.disabled = wk.order_refusal(s, rid, batches, keep) != ""
+			bt.pressed.connect(func():
+				var why := wk.add_order(s, rid, batches, keep)
+				ui.message(why if why != "" else "Ordered.")
+				show(ui, id))
+			h.add_child(bt)
+		ui.panel_body.add_child(h)
+	ui._label("Workroom (%d pieces; materials for the orders, and goods that did not go up for sale):" % wk.work_total(s), 16)
+	var wids: Array = wk.work_of(s).keys()
+	wids.sort()
+	if wids.is_empty():
+		ui._label("Empty. Set aside materials from your pack below.", 15)
+	for item in wids:
+		var it: String = item
+		var row := ui._item_row(it, int(s.work[it]), "in the workroom", "Bring back", func(): show(ui, id, {"id": it, "mode": "wfetch"}))
+		if row != null and biz.can_list(it):
+			var sb := Button.new()
+			sb.text = "Put up"
+			sb.custom_minimum_size = Vector2(90, 48)
+			sb.pressed.connect(func(): show(ui, id, {"id": it, "mode": "shelve"}))
+			row.get_parent().add_child(sb)
+	var wanted := {}
+	for r in recs:
+		for k in GameData.recipes[r]["in"]:
+			wanted[k] = true
+	var pids := w.player.inv.ids()
+	pids.sort()
+	for item in pids:
+		var it: String = item
+		if wanted.has(it) and biz.listable(it) > 0:
+			ui._item_row(it, w.player.inv.count(it), "a material for your orders", "Set aside", func(): show(ui, id, {"id": it, "mode": "wput"}))
+
+
 ## OPEN STALL / CLOSE STALL and the session's settlement (STALL-03..05, owner 2026-10-21 Q8, Q13): what the open
 ## session has sold (held in the till, not to be taken until it is closed), what closing would pay the manor, the
 ## last settlement.
@@ -396,7 +483,7 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 			pe.focus_default.call_deferred()
 		return
 	var mode: String = pick.mode
-	var up := mode == "put" or mode == "store"
+	var up := mode == "put" or mode == "store" or mode == "wput" or mode == "shelve"
 	var mx := 0
 	var info := ""
 	match mode:
@@ -412,7 +499,7 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 		_:
 			mx = int(s.stock.get(id, 0))
 			info = "It holds %d. They come back to your pack." % mx
-	var verb := {"put": "Put up", "store": "Store", "fetch": "Bring out"}.get(mode, "Take back") as String
+	var verb := {"put": "Put up", "store": "Store", "fetch": "Bring out", "wput": "Set aside", "wfetch": "Bring back", "shelve": "Put up"}.get(mode, "Take back") as String
 	var qp := QuantityPicker.new().setup(verb + " " + nm, info, mx, verb, -1,
 		"Nothing to move." if up else w.player.inv.full_text(id) if not w.player.inv.can_add(id) else "Nothing to move.")
 	qp.cancelled.connect(func(): show(ui, sid))
@@ -427,7 +514,7 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 				why = biz.fetch(s, id, q)
 			_:
 				why = biz.unlist(s, id, q)
-		ui.message(why if why != "" else ("%d %s %s." % [q, nm.to_lower(), {"put": "put up for sale", "store": "stored in the back room"}.get(mode, "back in your pack")])))
+		ui.message(why if why != "" else ("%d %s %s." % [q, nm.to_lower(), {"put": "put up for sale", "store": "stored in the back room", "wput": "set aside in the workroom", "shelve": "put up for sale"}.get(mode, "back in your pack")])))
 	qp.confirmed.connect(func(_q: int): show(ui, sid))
 	ui.panel_body.add_child(qp)
 	ui.panel_body.move_child(qp, 0)

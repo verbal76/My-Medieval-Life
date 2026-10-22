@@ -23,6 +23,7 @@ func _init() -> void:
 	GameData.ensure()
 	_storefront()
 	_player()
+	_counters()
 	var a := _signature()
 	var b := _signature()
 	check(a == b, "the same seed gives the same tills and purses (%s)" % a)
@@ -166,6 +167,90 @@ func _player() -> void:
 	w.player.coins = reserve + rent + 3
 	check(w.business._charge(s, rent), "with coins above the reserve the purse covers the shortfall")
 	check(w.spendable(w.player) == maxi(0, int(w.player.coins) - w.reserve_of(w.player)), "World.spendable is the purse above the necessity reserve")
+
+
+## B18-DP-01 / ECON-P3: the tavern's counter and the skilled-trade counters keep their takings in the building's own till.
+func _counters() -> void:
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 1)
+	w.minutes = 1440.0 + 10.0 * 60.0
+	var k := w.tavern_keeper()
+	var st: String = k.workplace
+	var tav: Dictionary = w.buildings[str(w.stations[st].building)]
+	k.plan.clear()
+	k.target = -1
+	k.pos = w.shop_post(k)
+	k.inv.add("ale", 8)
+	check(w.at_post(k) and w.business.money.counter_building(k) == tav and w.business.money.keeping(k).is_empty(), "the tavernkeeper stands at the tavern's counter")
+	w.player.coins += 100
+	var all := w.total_coins()
+	var purse := k.coins
+	check(w.trade(w.player, k, "ale", 3, 5), "the player buys three ales at the counter")
+	check(k.coins == purse and BusinessMoney.counter_till_of(tav) == 15 and int(tav.counter.earned) == 15, "the 15 coins went to the tavern's till, not the keeper's purse")
+	check(w.total_coins() == all and w.business.tills() == 15, "the till counts in the village's coins; none made or lost")
+	# a sale away from the counter stays in the purse
+	k.pos = Vector2(5, 5)
+	var p1 := k.coins
+	check(w.trade(w.player, k, "ale", 1, 5) and k.coins == p1 + 5 and BusinessMoney.counter_till_of(tav) == 15, "a sale made away from the counter stays in the seller's purse")
+	k.pos = w.shop_post(k)
+	all = w.total_coins()
+	# necessity first, the owner's pay above the working reserve, the float
+	tav.counter.till = 40
+	var reserve := w.reserve_of(k)
+	k.coins = maxi(0, reserve - 15)
+	all = w.total_coins()
+	var short := maxi(0, reserve - k.coins)
+	var draw := mini(short, 40)
+	var pay := int(float(40 - draw - BusinessMoney.reserve_coins()) * BusinessMoney.payout_share())
+	var before := k.coins
+	w.business.money.daily()
+	check(k.coins == before + draw + maxi(0, pay) and BusinessMoney.counter_till_of(tav) == 40 - draw - maxi(0, pay), "the keeper drew their necessity (%d) and was paid %d from the counter's till; the rest stays" % [draw, maxi(0, pay)])
+	check(w.total_coins() == all, "moving money between the counter's till and the purse creates and loses nothing")
+	tav.counter.till = 3
+	k.coins = reserve + 4
+	w.business.money.daily()
+	check(BusinessMoney.counter_till_of(tav) == 3 + mini(BusinessMoney.reserve_coins() - 3, 4), "a till below its working reserve is topped up from coins above the necessity reserve only")
+	# a skilled-trade counter (the armoury) the same
+	var smith: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "smith":
+			smith = o
+	var ac: String = w.counters.all()[0]
+	var smithy: Dictionary = w.buildings[str(w.stations[ac].building)]
+	smith.plan.clear()
+	smith.target = -1
+	smith.pos = Vector2(w.station_use(ac)) + Vector2(0.5, 0.5)
+	w.counters.serving[ac] = smith.id
+	smith.plan = [w.brain.work(60, "serve_counter", {"counter": ac}, "idle")]
+	smith.inv.add("iron_bar", 4)
+	var sp := smith.coins
+	check(w.trade(w.player, smith, "iron_bar", 2, 9) and smith.coins == sp and BusinessMoney.counter_till_of(smithy) == 18, "the smith's sale at the armoury counter goes to the smithy's till")
+	# no keeper left: the till goes to the manor
+	tav.counter.till = 25
+	tav.counter.keeper = 99999
+	var owner_was: String = tav.get("owner", World.MANOR)
+	var tenant_was: String = tav.get("tenant", "")
+	tav.owner = "hh:99999"
+	tav.tenant = ""
+	var t0 := w.treasury
+	all = w.total_coins()
+	w.business.money.daily()
+	check(w.treasury == t0 + 25 and BusinessMoney.counter_till_of(tav) == 0 and w.total_coins() == all, "nobody left to be paid: the till goes to the manor, conserved")
+	tav.owner = owner_was
+	tav.tenant = tenant_was
+	# saves
+	tav.counter = {"till": 17, "keeper": k.id, "earned": 30, "paid": 0}
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(BusinessMoney.counter_till_of(w2.buildings[str(tav.id)]) == 17 and w2.total_coins() == w.total_coins(), "save and load keep the counter's till and every coin")
+	for b: Dictionary in d.buildings.values():
+		b.erase("counter")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), d)
+	var c0 := w3.total_coins()
+	w3.business.money.daily()
+	check(BusinessMoney.counter_till_of(w3.buildings[str(tav.id)]) == 0 and w3.total_coins() == c0, "a save made before counter tills reads as empty: nothing moves on load or the first morning")
 
 
 func _signature() -> String:

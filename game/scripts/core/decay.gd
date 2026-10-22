@@ -112,7 +112,7 @@ static func dawn(w: World) -> void:
 		if not shops.has(s):
 			shops.append(s)
 	for s: Dictionary in shops:
-		for part in ["stock", "store"]:
+		for part in ["stock", "store", "work"]:
 			if s.get(part) is Dictionary:
 				lost += spoil_dict(w, s[part], "%s:%s:%s" % [str(s.get("id", "")), part, str(s.get("x", ""))])
 	if lost > 0:

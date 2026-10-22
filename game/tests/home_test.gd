@@ -281,6 +281,17 @@ func test_cart_parts() -> void:
 	for id in s.inv.ids():
 		if id != "hammer":
 			s.inv.items.erase(id)
+	# WDR-012-C: a smith makes what a buyer wants first, then what pays best. This test of the cart parts holds the other
+	# wares at the smith's stock level and, for the two forgings, leaves nobody with coins to buy, so the parts are its choice
+	for id in ["pickaxe", "axe", "iron_sword", "copper_sword", "lockpick"]:
+		s.inv.items[id] = 3
+	for id in ["hammer", "iron_armor", "padlock"]:
+		s.inv.items[id] = 1
+	var purses := {}
+	for o: NPC in w.npcs:
+		if o != s:
+			purses[o] = o.coins
+			o.coins = 0
 	s.inv.items["iron_bar"] = 1
 	s.inv.items["plank"] = 1
 	s.plan.clear()
@@ -291,6 +302,8 @@ func test_cart_parts() -> void:
 	s.plan.clear()
 	check(w.brain._smith(s) and s.plan[-1].args.get("recipe", "") == "forge_cart_ironwork", "then the ironwork from a bar and coal: " + s.doing)
 	check(w.brain.act(s, "craft", s.plan[-1].args) and s.inv.count("cart_ironwork") == 1, "made")
+	for o: NPC in purses:
+		o.coins = purses[o]
 	# the carpenter, with wheels and planks, buys the smith's axle and ironwork and builds a handcart to sell
 	c.inv.items["cart_wheel"] = 2
 	c.inv.items["plank"] = 10

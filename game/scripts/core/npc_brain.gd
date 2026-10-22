@@ -2533,6 +2533,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return w.prospecting.report(n, int(a.id))
 		"craft":
 			release_station(n, a.get("station", ""))
+			if a.has("biz"):
+				return w.business.works.finish(n, a)       # B18-DP-01: the player's attendant at the player's own station
 			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
 		"harvest":
 			var f := _field(a.field)

@@ -11,6 +11,7 @@ var world: World
 var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
 var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
+var stall_display_view: StallDisplayView   # B18-DP-01: the goods shown on stall and shop counters
 var crop_view: CropView        # VIS-CROP-01: the plants drawn on the fields
 var door_view: DoorView        # VIS-DOOR-01: the doorways, open while someone passes
 var surface_works: WorksView   # MIN-F: track laid in the mine's yard (drawn from World.mine_works)
@@ -1096,6 +1097,10 @@ func _build_scene() -> void:
 	view.add_child(crop_view)
 	view.move_child(crop_view, view.layer("path1").get_index() + 1)
 	crop_view.setup(world)
+	stall_display_view = StallDisplayView.new()  # B18-DP-01: goods on the counters, over the awning and counters, under the characters
+	view.add_child(stall_display_view)
+	view.move_child(stall_display_view, view.layer("below1").get_index() + 1)
+	stall_display_view.setup(world)
 	_draw_village_exits()
 	_clear_legacy_lanes()
 	tree_view.setup(world)
