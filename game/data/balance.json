@@ -81,6 +81,14 @@
   "player_tiles_per_second": 4.5,
   "overworld_chunk_radius": 2,
   "_overworld_note": "Chunks (32 x 32 tiles) of the overworld drawn beyond the camera's chunk; chunks more than one beyond are freed. 2 covers a zoomed-out phone view with room to spare. Agent proposal for B8-011.",
+  "countryside": {
+    "_note": "WORLD-LIFE-01 (owner 2026-10-23: animals and travellers in the countryside; other towns stay off the map). Ambient life outside the village, drawn only: a pure function of the world seed and the game clock (Countryside), never saved, never in the village's animal, population, coin or item ledgers. Animals: each chunk of the overworld holds 0..open_max (0..forest_max where it has at least forest_trees trees) wild animals of the wild species listed for its kind (wolf and bear are left out: nothing in the countryside bites yet), each roaming within roam tiles of a home cell, a new leg every leg_minutes game minutes (walk, then rest). Travellers: each trail from a road node to a village gate has, every slot_minutes game minutes that start between from_hour and to_hour, a journey with probability chance (trails shorter than min_trail cells carry none, so nobody appears within sight of the gate); the traveller walks to the gate at speed (a share of walk_tiles_per_second), waits pause_minutes, walks back and is gone. The caravan's wagon and driver use the same trails on its visit days (farming.caravan_horse hours) at caravan_speed. Nothing is drawn beyond cull_radius tiles of the camera. Agent proposal, provisional.",
+    "cull_radius": 30,
+    "animals": {"open_max": 2, "forest_max": 3, "forest_trees": 60, "roam": 6, "leg_minutes": 20, "village_margin": 6, "rest_share": 0.5,
+      "open": ["rabbit", "bird", "deer", "fox"], "forest": ["deer", "boar", "fox", "rabbit", "bird"]},
+    "travellers": {"slot_minutes": 120, "chance": 0.35, "from_hour": 6, "to_hour": 16, "speed": 0.55, "pause_minutes": 20, "caravan_speed": 0.45, "min_trail": 50,
+      "kinds": {"pedlar": 40, "pilgrim": 35, "wayfarer": 25}}
+  },
   "hunger_per_hour": 3.0,
   "child_food_factor": 0.6,
   "_child_food_note": "A child gets hungry this much as fast as an adult, so eats this share of an adult's food; every household and village food reckoning weights children the same way (NPCBrain.food_factor). NPCs have no ages yet, so the role decides. Agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md).",

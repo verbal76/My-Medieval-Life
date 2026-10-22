@@ -26,6 +26,8 @@ var camera: Camera2D
 var ui: GameUI
 var sprites := {}              # npc id -> ActorSprite
 var animal_sprites := {}       # animal id -> AnimalSprite
+var countryside: Countryside   # WORLD-LIFE-01: ambient animals and travellers outside the village (drawn only; never saved)
+var country_sprites := {}      # "a<key>" / "t<key>" -> AnimalSprite / ActorSprite / wagon Sprite2D of the countryside
 var caravan_sprite: Sprite2D = null   # B14-11: the visiting caravan's wagon, while it is here
 var cart_sprites := {}         # cart id -> Sprite2D (B14: the mine cart stands in for the handcart)
 var player_sprite: ActorSprite
@@ -993,6 +995,7 @@ func _clear_world() -> void:
 			c.queue_free()
 	sprites.clear()
 	animal_sprites.clear()
+	country_sprites.clear()
 	bubbles.clear()
 	loot_nodes.clear()
 	projectiles.clear()
@@ -1079,6 +1082,7 @@ func _build_scene() -> void:
 	_replace_tree_tiles()
 	ow_view.setup(view, map.overworld, int(GameData.b("overworld_chunk_radius")))
 	ow_view.tree_sink = tree_view
+	countryside = Countryside.new(map.overworld)
 	bubble_layer = CanvasLayer.new()
 	bubble_layer.layer = 5               # over the map, under the interface (layer 20)
 	add_child(bubble_layer)
@@ -1480,6 +1484,7 @@ func _sync_sprites() -> void:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
+	_sync_countryside()
 	_sync_carts()
 	_sync_caravan()
 	_sync_loot()
@@ -1712,6 +1717,52 @@ func _sync_animals() -> void:
 			fading.erase(f)
 		else:
 			f[0].visible = int(f[1] * 12.0) % 2 == 0
+
+
+## WORLD-LIFE-01: the countryside's ambient animals and travellers within view of the camera, from Countryside (a function of
+## the seed and the clock). Sprites exist only while their subject is in view and are freed when it leaves (a few at a time).
+func _sync_countryside() -> void:
+	if countryside == null:
+		return
+	var cam := camera.get_screen_center_position() / T
+	var radius := float(Countryside.cfg().cull_radius)
+	var dt := get_process_delta_time()
+	var seen := {}
+	for a: Animal in countryside.animals_near(cam, radius, world.minutes):
+		var id := "a%d" % a.id
+		seen[id] = true
+		var s: AnimalSprite = country_sprites.get(id)
+		if s == null:
+			s = AnimalSprite.new()
+			s.setup(a, world.minutes)
+			actors.add_child(s)
+			country_sprites[id] = s
+		s.position = a.pos * T
+		s.show_state(a, world.minutes, dt)
+	for e: Dictionary in countryside.travellers_near(cam, radius, world.minutes):
+		var id := "t%d" % int(e.key)
+		seen[id] = true
+		var node: Node = country_sprites.get(id)
+		if node == null:
+			if str(e.kind) == "wagon":
+				var w := Sprite2D.new()
+				w.offset = Vector2(0, -T / 2.0 + 2.0)
+				w.texture = _tile_texture(MINECART_TILE)
+				node = w
+			else:
+				var s := ActorSprite.new()
+				s.setup("res://assets/characters/villager_%02d.png" % int(e.sheet))
+				node = s
+			actors.add_child(node)
+			country_sprites[id] = node
+		(node as Node2D).position = (e.pos as Vector2) * T
+		if node is ActorSprite:
+			(node as ActorSprite).face(e.facing)
+			(node as ActorSprite).play(("carry" if str(e.kind) == "pedlar" else "walk") if e.moving else "idle")
+	for id in country_sprites.keys():
+		if not seen.has(id):
+			country_sprites[id].queue_free()
+			country_sprites.erase(id)
 
 
 ## A pool of blood where someone or something was slain; it fades away over BLOOD_FADE seconds.
@@ -5473,6 +5524,7 @@ func _sync_levels(delta: float) -> void:
 	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
 	fade.append_array(view.sorted_of.values())
 	fade.append_array(animal_sprites.values())
+	fade.append_array(country_sprites.values())
 	fade.append_array(house_signs.values())
 	for node in fade:
 		if is_instance_valid(node):
