@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 192 still open, 39 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 261 (130 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **317** = 192 still open from the baseline + 130 added and open |
+| Entries added since | | 263 (131 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **318** = 192 still open from the baseline + 131 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (39)
@@ -69,7 +69,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (261)
+## Added since the baseline (263)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -94,7 +94,7 @@ None.
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |
-| CON-UX-01 | Contract window needs design work | approved | APPROVED — NOT STARTED | 18 |
+| CON-UX-01 | Contract window needs design work | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
@@ -260,6 +260,7 @@ None.
 | PVG-05 | Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | approved | APPROVED — NOT STARTED | 20+ |
+| Q18-1 | Q18-1: Carpentry, Masonry (stoneworking) and Tanning become skills of their own, seeded from existing Crafting experience | decision | COMPLETE AND VERIFIED |  |
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | decision | PARTIALLY IMPLEMENTED | 18 |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | decision | COMPLETE AND VERIFIED |  |
@@ -278,6 +279,7 @@ None.
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | APPROVED — NOT STARTED |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | APPROVED — NOT STARTED |  |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | APPROVED — NOT STARTED | 18 |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-03 | OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification | approved | COMPLETE AND VERIFIED | 16 |

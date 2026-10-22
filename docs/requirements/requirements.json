@@ -6091,19 +6091,19 @@
    "id": "CON-UX-01",
    "title": "Contract window needs design work",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "The contract setup really needs some design work",
    "description": "Contract window needs design work",
    "source": "docs/directives/2026-10-23_owner_answers_contract_window.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": [
-    "Scope agreed with the owner before any work (an idea, not approved work)"
-   ],
+   "acceptance": "Contract setup is a step-by-step form (goods, how many, price, days) ending in a plain-English summary to confirm; Back on every step; touch, pad and keyboard; contract rules unchanged",
    "implementation": "",
-   "tests": "",
+   "tests": "contracts_test 154/0, contract_sign 20/0, run_tests 3587/0, start 506/0, play 39/0, wiki passed; screenshots of every step looked at (1280x720); no phone or pad check yet",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "2482230"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -6135,6 +6135,11 @@
      "date": "2026-10-22",
      "change": "UNKNOWN — INVESTIGATION REQUIRED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build",
      "why": "owner chose the redesign direction (2026-10-23)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 2482230; tests; acceptance",
+     "why": "step-by-step form merged into wip/build18 (2482230)"
     }
    ],
    "target_build": "18",
@@ -23389,6 +23394,48 @@
    "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
+   "id": "Q18-1",
+   "title": "Q18-1: Carpentry, Masonry (stoneworking) and Tanning become skills of their own, seeded from existing Crafting experience",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Own skills for each",
+   "description": "Q18-1: Carpentry, Masonry (stoneworking) and Tanning become skills of their own, seeded from existing Crafting experience",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_1.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded; implementation tracked by SKILL-TRADES-18"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_1.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "Own skills for Carpentry, Masonry (stoneworking) and Tanning; existing Crafting experience carries over to start them"
+  },
+  {
    "id": "Q18-10",
    "title": "Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created",
    "kind": "decision",
@@ -27242,6 +27289,50 @@
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
    "owner_answer": "Judgment is a weighted influence on every applicable NPC decision where opinion of another character matters (trade, contracts, hiring, help, friendship, courtship, business, favours, trust), integrated in reviewable stages through shared interfaces; the existing decision authority still chooses; need, scarcity, money, stock, skills, time, obligations, safety and opportunity stay relevant; never overrides feasibility or conservation; unsupported domains documented."
+  },
+  {
+   "id": "SKILL-TRADES-18",
+   "title": "Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Own skills for each",
+   "description": "Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_1.md",
+   "approval": "owner, 2026-10-23 (Q18-1)",
+   "acceptance": [
+    "Three new skills for player and villagers; on load and in new worlds each starts from the person's Crafting level (no one loses progress); carpentry, stonework and leatherwork recipes train and use their own skill; Expansion 18 industries map to them; saves migrate; wiki updated"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "Q18-1"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_1.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "STALL-01",

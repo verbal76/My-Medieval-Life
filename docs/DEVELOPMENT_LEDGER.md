@@ -15,17 +15,17 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | ACTIVE DEVELOPMENT | 18 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 52 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 53 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **490** |
-| Outstanding (not complete, superseded or canceled) | 241 |
+| **Total approved** | **491** |
+| Outstanding (not complete, superseded or canceled) | 242 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 94 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 62 | 56 |
+| Build 18: Settlement Advancement & Regional Economy | 63 | 57 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **317** | **241** |
+| **Total open** | **318** | **242** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (62)
+### Build 18: Settlement Advancement & Regional Economy (63)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -190,7 +190,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| CON-UX-01 | Contract window needs design work | approved | APPROVED — NOT STARTED |  |  |
+| CON-UX-01 | Contract window needs design work | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | APPROVED — NOT STARTED |  |  |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | APPROVED — NOT STARTED |  |  |
@@ -217,6 +217,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | APPROVED — NOT STARTED |  |  |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -436,6 +437,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B8-018 | Roof flicker indoors | windows | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CON-UX-01 | Contract window needs design work | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -482,7 +484,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
-| CON-UX-01 | Contract window needs design work | docs/directives/2026-10-23_owner_answers_contract_window.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
@@ -540,6 +541,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-E |  |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | docs/directives/2026-10-23_owner_answers_q18_1.md |  | after Q18-1 |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III | branch wip/expansion21-preparation | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
@@ -651,7 +653,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (52)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (53)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -672,6 +674,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B8-018 | Roof flicker indoors | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 119) |  |  |  |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | docs/directives/2026-10-23_owner_answers_bandits.md | `fefa2cb`; outlaw_return_test 24/0, run_tests 3587/0, start 506/0, play 39/0, combat 41/0, conservation 8/0, wiki passed, horse 54/0, tailor_barber PASS, Python OK (merged tree) | after BANDIT-Q |  |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | docs/directives/2026-10-22_build18_master_integration.md | `534cf7c`; run_tests 3,586, play 39, start 506, inventory18 88, tailor_barber 24 ok, wiki, character_look, terrain 34: 0 failures, 0 script errors (isolated XDG dirs); branch wip/b18-tailor |  |  |
+| CON-UX-01 | Contract window needs design work | docs/directives/2026-10-23_owner_answers_contract_window.md | `2482230`; contracts_test 154/0, contract_sign 20/0, run_tests 3587/0, start 506/0, play 39/0, wiki passed; screenshots of every step looked at (1280x720); no phone or pad check yet |  |  |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | docs/directives/2026-10-19_sword_combat.md | `3e283b6`; combat_test (41) |  |  |
 | CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | docs/directives/2026-10-19_courtship_friendship.md | game/tests/relations_test.gd; aging_test | after DVW-B1 |  |
 | CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | docs/directives/2026-10-19_courtship_friendship.md | game/tests/relations_test.gd; aging_test | after DVW-B1 |  |
@@ -1014,7 +1017,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 34, status BLOCKED) (93)
+## Owner decisions, open and answered (open: 34, status BLOCKED) (94)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1073,6 +1076,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
 | PACK-Q | Pack capacity: how many kinds the player can carry | COMPLETE AND VERIFIED | owner message 2026-10-22 with photos of the pack |
+| Q18-1 | Q18-1: Carpentry, Masonry (stoneworking) and Tanning become skills of their own, seeded from existing Crafting experience | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_1.md |
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PARTIALLY IMPLEMENTED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_master_directive.md |
