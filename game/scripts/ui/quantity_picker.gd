@@ -149,6 +149,8 @@ func _enter_tree() -> void:
 
 func _show_whole() -> void:
 	for i in 2:
+		if not is_inside_tree():
+			return                        # closed or rebuilt before it was laid out: nothing to show
 		await get_tree().process_frame
 	if not is_inside_tree():
 		return
