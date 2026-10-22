@@ -39,6 +39,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
 | DVW-B3-FEAST | feast worker (Sonnet subagent) | `wip/b18-feast` | `wip/build18` 2e059fa (merge onto 3704bfe; the regions merge also changed `World.load_dict`) | wedding and seasonal feasts at the tavern (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`); stays out of the settlement scripts (the regions worker owns them) |
+| DVW-B3-LUX | luxury worker (Sonnet subagent) | `wip/b18-luxury` | `wip/build18` 36beb67 | luxury imports sold by the settlement traders (caravan); stays out of the tavern and feast code |
 
 On their reports:
 1. Review the work.

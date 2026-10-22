@@ -18,11 +18,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 72 |
 | Open owner decisions (blocking) | 10 (2) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) / wip/b18-feast | NOT TESTED |  |  | M |
+| DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | IN DEVELOPMENT | luxury worker (Sonnet subagent, started 2026-10-23) / wip/b18-luxury | NOT TESTED |  |  | S |
 
 ## Integrated, awaiting gameplay or owner verification (35)
 
@@ -64,11 +65,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | final percentages after X18-SIM (Q18-11); MIN-D mining stages mapped to 0-10 (reconciliation item); owner playtest |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (21)
+## Ready to proceed now (approved, specified, nothing open blocks it) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | TARGETED TESTS PASSED | courier-notary path not live; villagers do not take lessons; clergy teaching waits on DVW-B3-CHAPEL |  | S |
