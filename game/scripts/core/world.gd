@@ -81,6 +81,7 @@ var stats := {}                    # running ledger (food made, eaten, exported,
 var last_hour := -1
 var guard_posts: Array = []        # patrol points
 var bandit_camp := Vector2i.ZERO
+var outlaw_gone_day := -1            # BANDIT-RETURN: the day the last bandit died (-1 while one lives); saved only when set (Outlaws)
 var sage_id := -1
 var reeve_id := -1
 var detail_radius := 34.0          # tiles: NPCs nearer the player get every-frame updates
@@ -2076,6 +2077,7 @@ func kill(n: NPC, cause: String) -> void:
 	var who := "%s %s" % [n.name, n.family] if n.family != "" else n.name
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
+	Outlaws.on_death(self, n)              # BANDIT-RETURN: the last bandit's death starts the wait for newcomers
 	if n.household >= 0:
 		var hh: Dictionary = households[n.household]
 		for m in hh.members:
@@ -3982,7 +3984,7 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
-	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -4143,6 +4145,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	farm_plots.load_dict(d.get("farm_plots", {}))   # FARM-01..05: older saves have no farmland
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
+	outlaw_gone_day = int(d.get("outlaw_gone_day", -1))     # BANDIT-RETURN: absent in an older save
+	Outlaws.after_load(self)
 	_guard_posts()
 	# the tables' dishes are saved; a save from before containers gets its tables set from the
 	# keepers' stock (the crates, barrels and stalls are their owners' stock, so they need nothing)
