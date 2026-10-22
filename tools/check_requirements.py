@@ -311,6 +311,9 @@ def _requirement_errors(r, builds):
             e.append("%s: an approved requirement needs its approval evidence" % rid)
         if not r.get("acceptance"):
             e.append("%s: approved work needs acceptance criteria" % rid)
+    acc = r.get("acceptance")
+    if acc and (not isinstance(acc, list) or (len(acc) > 1 and all(len(str(a).strip()) <= 1 for a in acc))):
+        e.append("%s: acceptance must be a list of criteria, not a string or its single characters" % rid)
     if kind in ("proposal", "idea") and ap == "OWNER APPROVED":
         e.append("%s: a %s cannot be OWNER APPROVED (make it kind approved with the owner's approval)" % (rid, kind))
     # contradictions between the dimensions

@@ -8996,7 +8996,9 @@
    "description": "Contract window needs design work",
    "source": "docs/directives/2026-10-23_owner_answers_contract_window.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": "Contract setup is a step-by-step form (goods, how many, price, days) ending in a plain-English summary to confirm; Back on every step; touch, pad and keyboard; contract rules unchanged",
+   "acceptance": [
+    "Contract setup is a step-by-step form (goods, how many, price, days) ending in a plain-English summary to confirm; Back on every step; touch, pad and keyboard; contract rules unchanged"
+   ],
    "implementation": "",
    "tests": "contracts_test 154/0, contract_sign 20/0, run_tests 3587/0, start 506/0, play 39/0, wiki passed; screenshots of every step looked at (1280x720); no phone or pad check yet; all 66 Godot suites (exit 0, 0 SCRIPT ERROR, 0 FAIL) and the Python suite at wip/build18 83d3afc, run by the lead 2026-10-23",
    "playtest": [
@@ -9057,6 +9059,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance wrapped as a one-item list (text unchanged)",
+     "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
     }
    ],
    "target_build": "18",
@@ -12638,7 +12645,9 @@
    "description": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
    "source": "docs/directives/2026-10-23_chapel_donations_farm.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": "A chapel stands in the village with a preacher and an assistant (low-paid); villagers and the player give offerings; donations are spent first on food relief before any other relief source; the church has a small farm plot worked by volunteers or else the clergy, its crop going to relief; villagers in need ask at the church; coins and goods conserved; deterministic; wiki page",
+   "acceptance": [
+    "A chapel stands in the village with a preacher and an assistant (low-paid); villagers and the player give offerings; donations are spent first on food relief before any other relief source; the church has a small farm plot worked by volunteers or else the clergy, its crop going to relief; villagers in need ask at the church; coins and goods conserved; deterministic; wiki page"
+   ],
    "implementation": "",
    "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge",
    "playtest": [],
@@ -12708,6 +12717,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "Owner 2026-10-23 (docs/directives/2026-10-23_staging_ff_chapel_review.md): chapel matters flagged for later review; economic values provisional"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance wrapped as a one-item list (text unchanged)",
+     "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
     }
    ],
    "target_build": "18",
@@ -13159,7 +13173,9 @@
    "description": "Skills for farming, husbandry, hunting, healing",
    "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": "Farming, Husbandry, Hunting and Healing skills, trained by doing the work; Farming starts from recorded experience; conserving; deterministic; saves migrate; wiki updated",
+   "acceptance": [
+    "Farming, Husbandry, Hunting and Healing skills, trained by doing the work; Farming starts from recorded experience; conserving; deterministic; saves migrate; wiki updated"
+   ],
    "implementation": "No (\"Consider\") | — | — | PROPOSED | ",
    "tests": "trade_skills_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; all 66 Godot suites (exit 0, 0 SCRIPT ERROR, 0 FAIL) and the Python suite at wip/build18 83d3afc, run by the lead 2026-10-23",
    "playtest": [
@@ -13215,6 +13231,11 @@
      "date": "2026-10-22",
      "change": "known_defects + Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified); remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance wrapped as a one-item list (text unchanged)",
+     "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
     }
    ],
    "acceptance_derived": true,
@@ -13489,7 +13510,9 @@
    "description": "Caravan as finite regional market (:73)",
    "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": "The caravan is the traders of the five simulated settlements: it carries only goods they have and pays with their coins; the daily allowance (CARAVAN-TMP) is removed; conserving; deterministic; saves migrate; wiki updated",
+   "acceptance": [
+    "The caravan is the traders of the five simulated settlements: it carries only goods they have and pays with their coins; the daily allowance (CARAVAN-TMP) is removed; conserving; deterministic; saves migrate; wiki updated"
+   ],
    "implementation": "Awaiting | **A different finite caravan purse is implemented** (INT-020, `9c13794`): allowance, float, ceiling per head, no raw-ore export | AWAIT-OWNER (recorded) / implemented variant — contradiction",
    "tests": "regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0",
    "playtest": [],
@@ -13566,6 +13589,11 @@
      "date": "2026-10-22",
      "change": "known_defects + Courier booths still use SettlementLedger parties, not the new settlements; remaining_work",
      "why": "Measured economic effect recorded for the owner"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance wrapped as a one-item list (text unchanged)",
+     "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
     }
    ],
    "acceptance_derived": true,
@@ -13783,7 +13811,9 @@
    "description": "Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)",
    "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": "Business and household money separate: a shop has its own till, the owner pays themselves from it, and may choose to move money; conserving; deterministic; saves migrate; wiki updated",
+   "acceptance": [
+    "Business and household money separate: a shop has its own till, the owner pays themselves from it, and may choose to move money; conserving; deterministic; saves migrate; wiki updated"
+   ],
    "implementation": "Awaiting | Owner rule 1 (B13-06) covers part of P3.2's spirit | AWAIT-OWNER",
    "tests": "",
    "playtest": [],
@@ -13820,6 +13850,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance wrapped as a one-item list (text unchanged)",
+     "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
     }
    ],
    "acceptance_derived": true,
@@ -36387,8 +36422,8 @@
     "REG-BUY-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -36401,10 +36436,29 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> buying worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-buying",
      "why": "Dependencies met: REG-PARTY-01 integrated; REG-BUY-D1 and REG-BUY-P1 owner approved"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; test_commit: None -> 840e0ed; commits + 150f0b7; commits + 840e0ed; integrated_in + 18; known_defects + The player cannot buy food at the caravan wagon yet (parity with villagers, Q18-10); known_defects + Food flow is small: traders stock food only with coins above their trading capital (the existing trader rule); remaining_work",
+     "why": "Buying worker finished (150f0b7); merged at 840e0ed"
     }
    ],
    "assigned_worker": "buying worker (Sonnet subagent, started 2026-10-23)",
-   "branch": "wip/b18-buying"
+   "branch": "wip/b18-buying",
+   "tests": "regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks",
+   "test_commit": "840e0ed",
+   "commits": [
+    "150f0b7",
+    "840e0ed"
+   ],
+   "integrated_in": [
+    "18"
+   ],
+   "known_defects": [
+    "The player cannot buy food at the caravan wagon yet (parity with villagers, Q18-10)",
+    "Food flow is small: traders stock food only with coins above their trading capital (the existing trader rule)"
+   ],
+   "remaining_work": "Player food purchase at the wagon (parity); 30-day conservation on 840e0ed running; settlements cash shortfall counts wages and missing inputs/tools (seed and feed are not cash expenses in the settlement model)"
   },
   {
    "id": "REG-BUY-D1",
@@ -36454,8 +36508,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT APPLICABLE",
    "completion": "OPEN",
    "history": [
@@ -36473,7 +36527,21 @@
      "date": "2026-10-23",
      "change": "acceptance criteria and parent REG-BUY-01 set from the owner's approval",
      "why": "approved work needs acceptance criteria (docs/directives/2026-10-23_reg_buy_p1_approval.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save); test_commit: None -> 840e0ed; commits + 150f0b7; commits + 840e0ed; integrated_in + 18",
+     "why": "Implemented with REG-BUY-01 (offmap.gd food_claim_pts, cash_shortfall, stock_trader_food)"
     }
+   ],
+   "tests": "regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save)",
+   "test_commit": "840e0ed",
+   "commits": [
+    "150f0b7",
+    "840e0ed"
+   ],
+   "integrated_in": [
+    "18"
    ]
   },
   {
@@ -36524,8 +36592,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -36543,11 +36611,29 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> courier worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-couriers",
      "why": "Unblocked by REG-PARTY-01; approved X18-Q12 family; no open decision"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths); test_commit: None -> 840e0ed; commits + 5da89d8; commits + 840e0ed; integrated_in + 18; known_defects + Villagers never book a courier (no NPC decision path yet; X18-Q12-POST: same rules for NPCs); known_defects + Shop booths (Q18-15) and the courier-notary path (X18-Q13, LAW-SKILL) are not wired; courier window not yet looked at rendered; remaining_work",
+     "why": "Courier worker finished (5da89d8); merged at 840e0ed"
     }
    ],
-   "remaining_work": "Builds on SettlementParty (integrated 421525c): wire CourierService into the live World and saves; booths per settlement served by its trader; carts for hire by settlement parties (Q18-12 approved, not yet built); routes from Regions.route_table",
+   "remaining_work": "Completed under X18-Q12-BOOTH, X18-Q12-POST, X18-Q13 and LAW-SKILL; settlement carriage per Q18-10 (a willing carter, negotiated and paid) is approved, to be wired with them; 30-day conservation on 840e0ed running",
    "assigned_worker": "courier worker (Sonnet subagent, started 2026-10-23)",
-   "branch": "wip/b18-couriers"
+   "branch": "wip/b18-couriers",
+   "tests": "courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths)",
+   "test_commit": "840e0ed",
+   "commits": [
+    "5da89d8",
+    "840e0ed"
+   ],
+   "integrated_in": [
+    "18"
+   ],
+   "known_defects": [
+    "Villagers never book a courier (no NPC decision path yet; X18-Q12-POST: same rules for NPCs)",
+    "Shop booths (Q18-15) and the courier-notary path (X18-Q13, LAW-SKILL) are not wired; courier window not yet looked at rendered"
+   ]
   },
   {
    "id": "REG-DEMO-01",
@@ -46444,7 +46530,9 @@
    "description": "The countryside is empty of people and animals; its trails lead nowhere yet",
    "source": "docs/directives/2026-10-23_owner_answers_countryside.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": "Wild animals roam the overworld outside the village under the existing wildlife rules; travellers walk the trails between the map edge and the village; deterministic from the seed; no coins or goods created; screenshots looked at",
+   "acceptance": [
+    "Wild animals roam the overworld outside the village under the existing wildlife rules; travellers walk the trails between the map edge and the village; deterministic from the seed; no coins or goods created; screenshots looked at"
+   ],
    "implementation": "",
    "tests": "countryside_test 38/0, overworld 101/0, wildlife 61/0; screenshots looked at by the worker; ambient animals and travellers (cannot be hunted yet); merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0; all 66 Godot suites (exit 0, 0 SCRIPT ERROR, 0 FAIL) and the Python suite at wip/build18 83d3afc, run by the lead 2026-10-23",
    "playtest": [
@@ -46500,6 +46588,11 @@
      "date": "2026-10-22",
      "change": "known_defects + countryside animals are ambient only: they cannot be hunted; known_defects + travellers stop at the village gate; remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance wrapped as a one-item list (text unchanged)",
+     "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
     }
    ],
    "target_build": "18",

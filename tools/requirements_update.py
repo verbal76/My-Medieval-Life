@@ -113,7 +113,8 @@ def main():
                     change.append("%s + %s" % (key, v))
         for kv in args.field:
             k, v = kv.split("=", 1)
-            r[k] = v
+            r[k] = [v] if k == "acceptance" else v     # acceptance is a list of criteria, never a bare string
+
             change.append(k)
         r.setdefault("history", []).append({"date": args.date, "change": "; ".join(change) or "note", "why": args.why})
     d["requirements"].sort(key=lambda r: r["id"])
