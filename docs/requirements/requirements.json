@@ -9929,9 +9929,14 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Expansion 20 under OD-30; preparation started with LE-00 (docs/directives/2026-10-22_expansions_18_19_20_directive.md)"
     }
    ],
-   "target_build": "owner decision",
+   "target_build": "20+",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
   },
@@ -14538,7 +14543,7 @@
    "id": "LE-00",
    "title": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
    "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
@@ -14559,7 +14564,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/expansion20-preparation",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -14572,9 +14577,14 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
+     "why": "Owner 2026-10-22 (docs/directives/2026-10-22_expansions_18_19_20_directive.md): begin Expansion 20 preparation. Expansion 20 is the Living Economy (OD-30, EXP-D); its first approved stage LE-00 is a read-only architecture audit, started on an isolated branch"
     }
    ],
-   "target_build": "owner decision",
+   "target_build": "20+",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
   },
