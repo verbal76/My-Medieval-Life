@@ -99,7 +99,7 @@ func _data_tests() -> void:
 	check(meds.all(func(m): return w.pages["item:" + m].category == "items_medicine") and w.in_category("items_materials").all(func(pid): return not meds.has(str(pid).trim_prefix("item:"))), "medicines have their own category, not Materials (Build 12 audit)")
 	var pk: String = w.pages.get("sys:pack", {}).get("text", "")
 	check(pk.contains("eight tabs") and pk.contains("first row is open: 9") and pk.contains("take no place") and pk.contains("raw materials inventory full")
-		and "sys:pack" in w.search("inventory full") and w.pages.has("todo:pack_rows"), "INV-18: the pack page explains categories, places, locked rows and gear; opening rows is not in the game yet")
+		and "sys:pack" in w.search("inventory full") and w.pages.has("job:tailor") and not w.pages.has("todo:pack_rows"), "INV-18: the pack page explains categories, places, locked rows and gear; the tailor opens the rows (no longer a todo)")
 	check(w.pages["sys:trading"].text.contains("every unit is priced in turn") and w.pages["sys:theft"].text.contains("what it was worth"), "the trading and theft pages describe the Build 13 rules")
 	check(w.pages["item:iron_bar"].text.contains("pickaxe"), "an item page links to what it makes (iron bar -> pickaxe)")
 	check(w.chain_lines("pickaxe").size() >= 3, "the pickaxe has a production chain down to ore")

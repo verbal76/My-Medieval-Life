@@ -1341,6 +1341,76 @@ func show_creation(spec: Dictionary) -> void:
 	_label("Your looks only: everyone starts with the same clothes, tools and coins.", 15)
 
 
+## BARBER-18: the barber's chair: the creator's hair, beard and hair colour pickers with a preview from the live recipe;
+## confirming pays the visit (World.player_barber_visit). `draft` is the recipe being tried.
+func show_barber(n: NPC, draft: Dictionary) -> void:
+	var w: World = main.world
+	var recipe: Dictionary = CharacterLook.normalize(draft)
+	_open("barber", "%s %s, barber  ·  you have %d coins" % [n.name, n.family, w.player.coins], main.paused)
+	panel_back = func(): _talk_view(n, "Come again.")
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	panel_body.add_child(row)
+	var left := VBoxContainer.new()
+	row.add_child(left)
+	var sheet := CharacterLook.texture(recipe, [w.player.armor, w.player.head])
+	var preview := TextureRect.new()
+	preview.name = "Preview"
+	preview.custom_minimum_size = Vector2(160, 160)
+	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.texture = _sheet_frame(sheet, 0)
+	left.add_child(preview)
+	var grid := GridContainer.new()
+	grid.columns = 4
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(grid)
+	for f in World.BARBER_FEATURES:
+		var label: String = f[0]
+		var kind: String = f[1]
+		var key: String = f[2]
+		var opts: Array = CharacterLook.options(key) if kind == "pick" else CharacterLook.rows(key)
+		var now = recipe.picks.get(key, "") if kind == "pick" else int(recipe.swatches.get(key, opts[0]))
+		var at := maxi(opts.find(now), 0)
+		var name_l := Label.new()
+		name_l.text = label
+		name_l.add_theme_font_size_override("font_size", 16)
+		name_l.add_theme_color_override("font_color", Color8(246, 236, 214))
+		grid.add_child(name_l)
+		for step in [-1, 1]:
+			var nxt_v = opts[(at + step + opts.size()) % opts.size()]
+			var b := Button.new()
+			b.text = "<" if step < 0 else ">"
+			b.name = "%s %s" % [label, b.text]
+			b.custom_minimum_size = Vector2(48, 44)
+			b.pressed.connect(func():
+				var d: Dictionary = recipe.duplicate(true)
+				if kind == "pick":
+					d.picks[key] = nxt_v
+				else:
+					CharacterLook.set_swatch(d, key, int(nxt_v))
+				show_barber(n, d))
+			grid.add_child(b)
+			if step < 0:
+				grid.add_child(_creation_value(kind, key, now, at, opts.size()))
+	var why := w.barber_refusal(n, recipe)
+	var ok := _button("Pay %d coins" % int(GameData.b("barber").price), func():
+		var r: Dictionary = w.player_barber_visit(n, recipe)
+		if r.ok:
+			main.player_worn = "reset"           # redraw the player's sprite from the new recipe
+			message("%s trims and dresses your hair (%d coins paid)." % [n.name, int(r.paid)])
+			_talk_view(n, "There. A new man, or woman. Mind the wind.")
+		else:
+			message(str(r.why)), why == "" or why.begins_with("A visit costs"), left)
+	ok.name = "Pay"
+	ok.custom_minimum_size = Vector2(160, 52)
+	if why != "":
+		_label(why, 15)
+	_button("Leave as it is", func(): _talk_view(n, "Come again."), true, left).custom_minimum_size = Vector2(160, 52)
+
+
 ## A feature's current value in character creation: a colour swatch, or the option's name.
 func _creation_value(kind: String, key: String, now, at: int, count: int) -> Control:
 	if kind == "swatch":
@@ -2380,6 +2450,8 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 				hide_all()
 			else:
 				message(str(r.why)), row_price >= 0)
+	if w.is_barber(n):
+		_talk_choice(choices, "Hair, beard and colour (%d coins a visit)" % int(GameData.b("barber").price), func(): show_barber(n, w.player.appearance))
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)

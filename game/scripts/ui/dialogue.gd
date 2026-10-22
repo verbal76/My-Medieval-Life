@@ -11,6 +11,8 @@ const NUMBERS := ["no", "one", "two", "three", "four", "five", "six", "seven", "
 # what each job is, in the worker's words, from what npc_brain.gd has them do
 const JOB_WORDS := {
 	"miner": "I dig ore in the mine and sell it to the smiths and the merchants.",
+	"tailor": "I let out packs for a fee: ask, and I'll open another row of your pack.",
+	"barber": "I cut and dress hair and beards, and dye hair in the natural colours.",
 	"prospector": "I read the ground for signs of ore, take samples and have the smith assay them.",
 	"laborer": "I break stone and coal in the mine and sell it at the market.",
 	"woodcutter": "I fell trees and sell the logs to the carpenters and the cooks.",

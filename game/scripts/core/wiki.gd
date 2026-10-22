@@ -58,6 +58,8 @@ const JOB_TEXT := {
 	"merchant": "Runs a market stall or shop and trades goods.",
 	"guard": "Watches the village: stops thieves, returns stolen goods and fines the thief.",
 	"reeve": "Runs the manor's accounts and posts its jobs on the job board (talk to the reeve and ask for work).",
+	"tailor": "Opens the locked rows of your pack: the second row for %d coins, then the third for %d, each in all eight tabs at once. Works from the manor's pitch beside the market in the day, rent-free like the merchants' stalls, and earns only from these two sales. Talk to the tailor there (not asleep, not away) and choose Backpack. A world has one; if the tailor dies or an older game had none, the village's labour market opens the place for an adult who becomes free.",
+	"barber": "Changes your hair, beard and hair colour (the same choices as the character creator, with a preview) for %d coins a visit, paid to the barber. Works from the manor's pitch beside the market in the day. Talk to the barber there and choose Hair, beard and colour. Your clothes and armour are not touched. A world has one; if the barber dies or an older game had none, the labour market opens the place for an adult who becomes free.",
 	"sage": "The village lorekeeper; tells the story and keeps the Apothecary (medicine brewed from flowers, bandages from the tanner).",
 }
 
@@ -521,7 +523,15 @@ func _jobs() -> void:
 		add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", blocks, "", j)
 	for j in JOB_TEXT:
 		if not Population.JOBS.has(j):          # a trade nobody starts in, taken up later by the job rules (the prospector)
-			var extra := [p(JOB_TEXT[j]), stats([["In the village", "none at the start; taken up when the village has need of it"]])]
+			var text: String = JOB_TEXT[j]
+			var where := "none at the start; taken up when the village has need of it"
+			if j == "tailor":
+				text = text % [int(GameData.b("tailor").pack_rows[0]), int(GameData.b("tailor").pack_rows[1])]
+				where = "one in every new world, at the pitch beside the market"
+			elif j == "barber":
+				text = text % int(GameData.b("barber").price)
+				where = "one in every new world, at the pitch beside the market"
+			var extra := [p(text), stats([["In the village", where]])]
 			if tools_kept.has(j):
 				extra.append(links(tools_kept[j].map(func(i): return _item_link(i)), "Keeps for work"))
 			add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", extra, "", j)
@@ -603,11 +613,11 @@ func _systems() -> void:
 	# INV-18 (Build 18): the pack's categories, places, locked rows and gear (PlayerState.PACK_CAPS, GameData.CATEGORIES)
 	sys.call("pack", "Your pack and gear", [
 		p("Your pack (I on a keyboard; see Controls for touch and a pad) has eight tabs, one for each kind of thing: %s. Everything goes into its own tab by itself when you pick it up, buy it, make it, harvest it or take it out of a chest; you never sort it by hand. Each item belongs to exactly one tab: a sword is a weapon and a pickaxe a tool however they were made, bread is food, a tonic is medicine, and rings and amulets are crafted goods and valuables." % _category_list()),
-		p("Each tab is a grid of three rows of nine. At the start only the first row is open: %d kinds of thing in every tab. A kind is one place however many you carry of it: fifty logs take one place, as one log does. The second and third rows are shown locked; when they open, they open in every tab at once (%d, then %d kinds a tab). The top of the pack says how full the open tab is, such as \"Tools: 4 / %d\"." % [int(PlayerState.PACK_CAPS[0]), int(PlayerState.PACK_CAPS[1]), int(PlayerState.PACK_CAPS[2]), int(PlayerState.PACK_CAPS[0])]),
+		p("Each tab is a grid of three rows of nine. At the start only the first row is open: %d kinds of thing in every tab. A kind is one place however many you carry of it: fifty logs take one place, as one log does. The second and third rows are shown locked; when they open, they open in every tab at once (%d, then %d kinds a tab). The tailor, who works at the pitch beside the market, opens them: the second row for %d coins, then the third for %d (see the Tailor). The top of the pack says how full the open tab is, such as \"Tools: 4 / %d\"." % [int(PlayerState.PACK_CAPS[0]), int(PlayerState.PACK_CAPS[1]), int(PlayerState.PACK_CAPS[2]), int(GameData.b("tailor").pack_rows[0]), int(GameData.b("tailor").pack_rows[1]), int(PlayerState.PACK_CAPS[0])]),
 		p("When a tab is full you can still take more of anything you already carry in it, but not a new kind: the game says which tab is full (\"Raw materials inventory full: %d of %d slots.\"), and the other tabs keep their own room. Nothing is ever lost to a full tab: a purchase is not made and not paid, goods stay in the chest, stall or heap, and what you mine, fell or make with no room is set down at your feet." % [int(PlayerState.PACK_CAPS[0]), int(PlayerState.PACK_CAPS[0])]),
 		p("The six gear slots beside your figure (in hand, tool, body, head, amulet, ring) take no place in the tabs: what you wield or wear leaves its tab while it is on you, and a second one of the same kind in the pack takes a place as usual. Taking something off puts it back in its tab, and is refused (it stays on) when that tab is full; putting on something that would push the old one back into a full tab is refused too, so nothing is dropped."),
 		p("A pack from a game saved before Build 18 keeps everything it held. A tab holding more kinds than it now has room for shows it (\"Raw materials: 12 / %d\") and takes no new kind until you have sold, stored or used enough of them." % int(PlayerState.PACK_CAPS[0])),
-		links(["sys:trading", "sys:gather", "sys:decay", "todo:pack_rows", "controls:kbm"])])
+		links(["sys:trading", "sys:gather", "sys:decay", "job:tailor", "controls:kbm"])])
 	sys.call("trading", "Trading", [
 		p("Talk to a merchant or villager to buy and sell. Prices depend on each item's base value and on supply: a seller asks more as their stock runs low, and a buyer offers less as they fill up. A seller also asks less when other traders (or your own stall and shops) offer the same thing within %d tiles, and the most when nobody near sells it: so you can make a scarce thing yourself, pay the lone seller's price, or make and sell it to bring the price down. In a bulk deal every unit is priced in turn, so buying a seller's last few costs more each and selling a buyer a big stack fetches less each; the quantity control shows the real total. Merchants have limited coins and stock: they never buy what they cannot pay for, and a trade either completes or does not happen. Villagers buy what their work needs." % int(GameData.b("local_supply").radius)),
 		links(["guide:money", "job:merchant", "sys:caravan", "sys:theft"])])
@@ -696,9 +706,8 @@ func _medicine_list() -> String:
 func _not_yet() -> void:
 	var items := {
 		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built, fit it with equipment and hire an attendant (see the guides). Not built yet: attendants and hired workers who craft at the shop's stations from its stock, shops in houses you only rent from a neighbour, a stall display shown over the stall, and trading skill perks on your sales."],
-		"pack_rows": ["Opening the pack's locked rows", "The second and third rows of every pack tab are to be bought from a tailor, in order: the second row for %d coins, then the third for %d, each opening that row in all eight tabs at once. No tailor works in the village yet, so the rows stay locked." % [int(GameData.b("tailor").pack_rows[0]), int(GameData.b("tailor").pack_rows[1])]],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
-		"looks_more": ["A barber", "There is no barber to change your hair once you have begun. Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
+		"looks_more": ["Leather armour on your figure", "Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
 		"farm_more": ["Draught animals, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself (see the farming guides), but there are no horses or oxen to pull a plough, no roofed coops or shelters, no watering or weather, no traps for rabbits, no animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:

@@ -233,6 +233,11 @@
     "job": "tailor",
     "pack_rows": [150, 450]
   },
+  "barber": {
+    "note": "BARBER-18 (owner, 2026-10-23, BARBER-Q): a barber changes the player's hair, beard and hair colour (the character creator's own choices) for price coins a visit, paid from the player's purse into the barber's own. job: the villager's job that does it.",
+    "job": "barber",
+    "price": 5
+  },
   "fireball_price": 50,
   "fireball_cooldown": 6.0,
   "fireball_stamina": 30,

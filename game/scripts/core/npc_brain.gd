@@ -966,10 +966,11 @@ func _plan_job(n: NPC) -> bool:
 			return _farmer(n)
 		"hunter":
 			return _hunter(n)
-		"tavernkeeper", "merchant", "reeve":
+		"tavernkeeper", "merchant", "reeve", "tailor", "barber":
 			if n.job == "reeve" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.reeve_fallback(n):
 				return true          # LOG-01: an unclaimed delivery with no free manor hand
-			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor"}[n.job]
+			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor",
+				"tailor": "sewing at the pitch", "barber": "waiting at the barber's pitch"}[n.job]
 			n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
 			return true
 		"manor_hand":
@@ -3476,7 +3477,25 @@ func job_market() -> Dictionary:
 	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
 		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
 	market["prospector"] = w.discovery.prospector_place(avg.call("prospector", 0.0))     # MIN-D: adoption by the job rules
+	for sj in Population.SERVICE_JOBS:
+		market[sj] = service_place(sj)
 	return market
+
+
+## TAILOR-18, BARBER-18: the place of a service trade in the labour market. Open (one place) while nobody living holds the
+## trade and its manor pitch is free (a pitch whose tenant has died or left the trade is freed first): a new world has the
+## trade filled; a save made before it, or a trade whose holder has died, opens its place for an adult who becomes free.
+## No villager is made for it.
+func service_place(job: String) -> Dictionary:
+	var s := Business.service_pitch(w, job)
+	var open := 0
+	if not s.is_empty():
+		var t: NPC = w.party(w.tenant_of(s))
+		if w.tenant_of(s) != "" and (t == null or not t.alive or t.job != job):
+			w.set_tenant(s, "")
+		if w.tenant_of(s) == "" and not w.npcs.any(func(o): return o.alive and o.role == "adult" and o.job == job):
+			open = 1
+	return {"pay": float(GameData.b("manor_wage_per_day")), "open": open, "tool": "", "at": Vector2i(int(s.x), int(s.y) + 1) if not s.is_empty() else Vector2i.ZERO}
 
 
 func _field_workers(f: Dictionary) -> int:
@@ -3501,7 +3520,7 @@ func seek_work() -> void:
 		var members := _members(h)
 		members.sort_custom(func(x: NPC, y: NPC) -> bool: return x.id < y.id)
 		for n: NPC in members:
-			if n.role != "adult" or n.job in ["guard", "reeve", "sage"]:
+			if n.role != "adult" or n.job in ["guard", "reeve", "sage", "tailor", "barber"]:
 				continue
 			var unemployed := n.job == "" or tool_short(n) or (n.job == "hunter" and no_game)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
@@ -3515,7 +3534,7 @@ func seek_work() -> void:
 			var best := ""
 			var best_score := -1e9
 			var home := w.building_door(n.home)
-			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector"]:
+			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "tailor", "barber"]:
 				var opt: Dictionary = market[job]
 				if int(opt.open) <= 0 or job == n.job:
 					continue
@@ -3581,6 +3600,8 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 			w.set_tenant(w.stalls[place], World.npc_ref(n.id))
 		"smith", "carpenter", "tanner", "cook", "tavernkeeper":
 			n.workplace = place                      # the workstation of the trade (succession)
+		"tailor", "barber":
+			Business.let_service_pitch(w, n, job)
 		_:
 			n.workplace = ""
 	if job == "":

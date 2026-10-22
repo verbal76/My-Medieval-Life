@@ -328,6 +328,31 @@ func _ready() -> void:
 					player_worn = "reset"
 				camera.zoom = Vector2(12, 12) * view_scale
 				follow_at = _in_view(world.player.pos * T)
+			"tailor_pitch", "barber_pitch", "barber", "barber_result":
+				# TAILOR-18 / BARBER-18: the tailor or barber at the manor's pitch; the barber's chair, before and after a visit
+				var job := "tailor" if shot_panel == "tailor_pitch" else "barber"
+				var svc: NPC = world.npcs.filter(func(o): return o.alive and o.job == job)[0]
+				svc.pos = Vector2(brain_cell(svc)) + Vector2(0.5, 0.5)
+				world.player.pos = svc.pos + Vector2(0, 1.6)
+				svc.anim = "idle"
+				if shot_panel in ["barber", "barber_result"]:
+					world.player.appearance = CharacterLook.normalize(CharacterLook.random_recipe(_shot_rng(), "male"))
+					world.player.appearance.picks["facial-hair"] = ""
+					world.player.sprite = ""
+					player_worn = "reset"
+					world.player.coins = 12
+					var want: Dictionary = world.player.appearance.duplicate(true)
+					want.picks.hair = "f3"
+					want.picks["facial-hair"] = "beard2"
+					CharacterLook.set_swatch(want, "hair", 3)
+					if shot_panel == "barber_result":
+						world.player_barber_visit(svc, want)
+						camera.zoom = Vector2(12, 12) * view_scale
+					else:
+						ui.show_barber(svc, want)
+				else:
+					camera.zoom = Vector2(6, 6) * view_scale
+				follow_at = _in_view(world.player.pos * T)
 			"title":
 				ui.show_title(false)
 			"creation":
@@ -1286,6 +1311,10 @@ func _shot_rng() -> RandomNumberGenerator:
 	var r := RandomNumberGenerator.new()
 	r.seed = 7
 	return r
+
+
+func brain_cell(n: NPC) -> Vector2i:
+	return world.brain._workplace_cell(n)
 
 
 func _worn_key() -> String:
@@ -2357,6 +2386,9 @@ func _shop_target(post: Dictionary) -> Dictionary:
 			return _built_stall_target(s)
 		if Business.is_pitch(s):
 			var mine := world.tenant_of(s) == World.PLAYER
+			if str(s.get("service", "")) != "":                  # the tailor's or the barber's pitch (never the player's to rent)
+				var pk := world.party(world.tenant_of(s))
+				return {"kind": "info", "label": "The %s's pitch" % str(s.service), "text": ("%s %s keeps this pitch: talk to them there." % [pk.name, pk.family]) if pk != null else "Nobody keeps this pitch now."}
 			if not mine and world.tenant_of(s) != "":
 				return {"kind": "info", "label": "An open market pitch", "text": "Nobody keeps this pitch."}
 			return {"kind": "stall", "id": post.id, "label": "Manage your market stall" if mine else "Rent this market pitch (%d coins a day)" % Business.rent_day()}

@@ -3492,15 +3492,23 @@ func pack_row_price() -> int:
 	return int(rows[player.pack_level]) if player.pack_level < rows.size() and player.pack_level < PlayerState.PACK_CAPS.size() - 1 else -1
 
 
+## The service rule shared by the tailor and the barber: "" when `t` is awake and at their post (or has none), else why not.
+func service_absence(t: NPC) -> String:
+	if asleep(t):
+		return "%s is asleep." % t.name
+	if t.workplace != "" and t.pos.distance_to(Vector2(brain._workplace_cell(t)) + Vector2(0.5, 0.5)) > 3.0:
+		return "%s is not at work." % t.name
+	return ""
+
+
 ## TAILOR-18: why tailor `t` cannot open the player's next pack row now ("" if they can): a tailor, awake, at work
 ## when they have a workplace, the rows bought in order and never twice, the price in the player's own purse.
 func pack_row_refusal(t: NPC) -> String:
 	if not is_tailor(t):
 		return "Only a tailor can open more of your pack."
-	if asleep(t):
-		return "%s is asleep." % t.name
-	if t.workplace != "" and t.pos.distance_to(Vector2(brain._workplace_cell(t)) + Vector2(0.5, 0.5)) > 3.0:
-		return "%s is not at work." % t.name
+	var away := service_absence(t)
+	if away != "":
+		return away
 	var price := pack_row_price()
 	if price < 0:
 		return "Every row of your pack is open already."
@@ -3524,6 +3532,70 @@ func player_buy_pack_row(t: NPC) -> Dictionary:
 	stat("tailor_pack_rows")
 	stat("tailor_fees", float(price))
 	return {"ok": true, "why": "", "level": player.pack_level, "paid": price}
+
+
+## BARBER-18: whether `n` is a barber (balance.json barber.job), who changes the player's hair, beard and hair colour.
+func is_barber(n: NPC) -> bool:
+	return n != null and n.alive and n.role == "adult" and n.job == str(GameData.b("barber").job)
+
+
+## BARBER-18: the features a barber changes, as the creator's own pickers have them: [label, kind, key].
+const BARBER_FEATURES := [["Hair", "pick", "hair"], ["Beard", "pick", "facial-hair"], ["Hair colour", "swatch", "hair"]]
+
+
+## BARBER-18: the player's recipe with only the barber's features taken from `want` (a recipe), each checked against the
+## creator's options; {} when `want` offers something the creator does not.
+func barber_recipe(want: Dictionary) -> Dictionary:
+	var now: Dictionary = CharacterLook.normalize(player.appearance)
+	var out: Dictionary = now.duplicate(true)
+	var w2: Dictionary = CharacterLook.normalize(want)
+	if now.is_empty() or w2.is_empty():
+		return {}
+	for key in ["hair", "facial-hair"]:
+		if not CharacterLook.options(key).has(str(w2.picks.get(key, ""))):
+			return {}
+		out.picks[key] = str(w2.picks[key])
+	var row := int(w2.swatches.get("hair", -1))
+	if not CharacterLook.rows("hair").has(row):
+		return {}
+	CharacterLook.set_swatch(out, "hair", row)          # the beard takes the hair's colour, as in the creator
+	return out
+
+
+## BARBER-18: why barber `b` cannot change the player's looks to `want` now ("" if they can): a barber, awake, at the
+## pitch, a change worth paying for, and the price in the player's purse.
+func barber_refusal(b: NPC, want: Dictionary) -> String:
+	if not is_barber(b):
+		return "Only a barber can change your hair."
+	var away := service_absence(b)
+	if away != "":
+		return away
+	var recipe := barber_recipe(want)
+	if recipe.is_empty():
+		return "The barber cannot do that."
+	if recipe == CharacterLook.normalize(player.appearance):
+		return "Nothing would change."
+	var price := int(GameData.b("barber").price)
+	if player.coins < price:
+		return "A visit costs %d coins; you have %d." % [price, player.coins]
+	return ""
+
+
+## BARBER-18: the player pays barber `b` the visit and takes the new hair, beard and hair colour, all or nothing: the
+## price goes from the player's purse to the barber's own (no coin made or lost), only those features of the saved
+## recipe change (gear drawn over it is untouched). Returns {ok, why, paid}.
+func player_barber_visit(b: NPC, want: Dictionary) -> Dictionary:
+	var why := barber_refusal(b, want)
+	if why != "":
+		return {"ok": false, "why": why, "paid": 0}
+	var price := int(GameData.b("barber").price)
+	player.coins -= price
+	b.coins += price
+	b.earned += price
+	player.appearance = barber_recipe(want)
+	stat("barber_visits")
+	stat("barber_fees", float(price))
+	return {"ok": true, "why": "", "paid": price}
 
 
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
@@ -4177,7 +4249,7 @@ func _migrate_property(d: Dictionary) -> void:
 		if not s.has("tenant"):
 			var o := npc(int(s.get("owner", -1)))
 			s.owner = MANOR
-			s.tenant = npc_ref(o.id) if o and o.alive and o.job == "merchant" and o.workplace == id else ""
+			s.tenant = npc_ref(o.id) if o and o.alive and o.job in ["merchant", "tailor", "barber"] and o.workplace == id else ""
 	for id in buildings:
 		var b: Dictionary = buildings[id]
 		if b.type == "player_house" and not b.has("owner"):
