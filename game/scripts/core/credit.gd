@@ -18,15 +18,27 @@ extends RefCounted
 ## due day an unpaid debt is a default: regard falls (credit.default_regard; for the player's default it spreads to the
 ## creditor's kin and friends like any harm, Relations.harmed) and no further credit while it stands. A villager in
 ## need defaults legitimately; the debt stays on the record until repaid late or written off.
+## The player as seller or lender (PAR-02): a villager short of food and coins counts the player among the neighbours
+## within reach (cheapest food first, villagers before the player on a tie); when the player is the one, the villager asks
+## the player by barter (goods it can offer) or else on credit, by the same trust rule, and the player accepts or refuses
+## (answer_request; a refusal is remembered `refuse_days`, an unanswered ask lapses at the next dawn). The player may in turn
+## offer goods to a villager by barter or on credit from the trade window; the villager takes only what it can use. Trust
+## is the one tie's regard (Relations ties are mutual, so the villager's regard for the player is the player's standing
+## as a creditor); a default lowers it and the creditor's friends' regard like any creditor's.
 ## Death: a villager's debts pass to their heir (World._heir, the inheritance rule) as the heir takes the goods and
 ## coins; with no heir, or a slain debtor, the debt is written off (lost). A creditor's claims pass to their heir the
-## same way, else are forgiven. The player's death writes off every debt of theirs, as the heir starts with the kit
-## only. Coins are never made or destroyed here: a repayment moves coins from debtor to creditor. Saved: optional "credit".
+## same way, else are forgiven. The player's debts and claims pass the same way to the player's heir (the family line keeps
+## the name "player"), written off where a villager's would be: slain by a person (not hunger, bad food, old age, a beast or
+## a collapse), or owed to or by the very child who becomes the heir (on_player_died). Coins are never made or destroyed
+## here: a repayment moves coins from debtor to creditor. Saved: optional "credit".
 ## Provisional values in balance.json "credit" (agent proposals).
 
 var w
 var debts: Array = []          # {id, creditor, debtor (refs), item, qty, value, made, due, state, ended}
 var next_id := 1
+var requests: Array = []       # villagers' asks of the player today: {id, npc, item, qty, mode (barter|credit), give, value, day}
+var next_req := 1
+var refused := {}              # villager id -> the day until which they do not ask the player again (saved with the asks)
 var _hh_day := {}              # household -> the day it last made a deal (derived, not saved: one a day)
 
 const OPEN := "open"
@@ -57,7 +69,7 @@ func party(ref: String):
 
 func _alive(ref: String) -> bool:
 	var p = party(ref)
-	return p != null and (p is PlayerState or (p as NPC).alive)
+	return p != null and (p.alive if p is PlayerState else (p as NPC).alive)
 
 
 func _name(ref: String) -> String:
@@ -118,7 +130,7 @@ func ask_prices(seller: Object, buyer: Object, id: String, qty: int) -> Array:
 		return w.player_quote(seller, id, qty, true)
 	var out := []
 	var stock: int = seller.inv.count(id)
-	var nearby: int = w.local_supply(id, seller.pos, seller) if seller is NPC else 0
+	var nearby: int = w.local_supply(id, seller.pos, seller if seller is NPC else null)
 	for k in maxi(0, qty):
 		out.append(w.deal_price(World.sell_price_at(id, maxi(0, stock - k), nearby), buyer, seller))
 	return out
@@ -149,7 +161,8 @@ func available(seller: Object, id: String) -> int:
 		if not n.alive or n.role in ["child", "bandit"] or w.brain.keeps(n, id):
 			return 0
 		return maxi(0, n.inv.count(id) - w.brain.reserve(n, id))
-	return (seller as PlayerState).inv.count(id)
+	var pl: PlayerState = seller
+	return maxi(0, pl.inv.count(id) - pl.stolen_count(id))     # stolen goods are not for sale (as in spare)
 
 
 ## What `giver` can spare of `id` in a deal: its own, not what its trade keeps, owes or (a villager) must have for its
@@ -186,6 +199,8 @@ func barter_quote(seller: Object, buyer: Object, want: String, qty: int, give: S
 		return no.call("There is no room for %s." % item)
 	if not accepts(seller, give):
 		return no.call("%s has no use for %s." % [sname, GameData.item_name(give).to_lower()])
+	if seller is PlayerState and not accepts(buyer, want):      # a villager takes only what it can use
+		return no.call("%s has no use for %s." % [buyer.name, item])
 	var have := spare(buyer, give)
 	if have < 1:
 		return no.call("%s has no %s to spare." % [buyer.name, GameData.item_name(give).to_lower()])
@@ -234,6 +249,8 @@ func credit_refusal(seller: Object, buyer: Object, value: int) -> String:
 	var sname: String = seller.name
 	if seller is NPC and (not seller.alive or seller.role in ["child", "bandit"]):
 		return "%s does not lend." % sname
+	if buyer is NPC and (not buyer.alive or buyer.role in ["child", "bandit"]):
+		return "%s does not deal on credit." % buyer.name
 	if trust(c, b) < trust_needed():
 		return "%s does not know you well enough to sell on credit." % sname if buyer == w.player else "%s does not trust %s enough." % [sname, buyer.name]
 	for d in debts_of(c, b):
@@ -254,6 +271,8 @@ func sell_on_credit(seller: Object, buyer: Object, id: String, qty: int, value: 
 	if no == "":
 		if available(seller, id) < qty or qty < 1:
 			no = "%s has not that many to spare." % seller.name
+		elif seller is PlayerState and not accepts(buyer, id):       # a villager borrows only what it can use
+			no = "%s has no use for %s." % [buyer.name, GameData.item_name(id).to_lower()]
 		elif not buyer.inv.can_add(id):
 			no = "There is no room for it."
 	if no != "":
@@ -321,11 +340,10 @@ func _default(d: Dictionary) -> void:
 			w.relations.harmed(c, amount)               # the creditor's regard falls, and their kin's and friends' (CRT-12)
 	else:
 		w.relations._raise(w.relations.tie(_rid(cre), _rid(deb)), -amount, 0.0, false)
-		if cre != World.PLAYER:                          # and the creditor's friends think less of the debtor
-			var share := float(Relations.cfg().friend_harm_share)
-			for o: NPC in w.npcs:
-				if o.alive and o.id != _rid(deb) and o.id != _rid(cre) and w.relations.friends(o.id, _rid(cre)):
-					w.relations._raise(w.relations.tie(o.id, _rid(deb)), -amount * share, 0.0, false)
+		var share := float(Relations.cfg().friend_harm_share)      # and the creditor's friends think less of the debtor
+		for o: NPC in w.npcs:                                      # (the player's friends too: PAR-02)
+			if o.alive and o.id != _rid(deb) and o.id != _rid(cre) and w.relations.friends(o.id, _rid(cre)):
+				w.relations._raise(w.relations.tie(o.id, _rid(deb)), -amount * share, 0.0, false)
 	w.stat("credit_defaulted")
 	w.stat("credit_default_coins", float(d.value))
 	if deb == World.PLAYER or cre == World.PLAYER:
@@ -338,6 +356,10 @@ func _default(d: Dictionary) -> void:
 func dawn() -> void:
 	var d: int = w.day()
 	_hh_day.clear()
+	requests.clear()                                     # an ask unanswered by the next dawn lapses
+	for k in refused.keys():
+		if int(refused[k]) <= d:
+			refused.erase(k)
 	for x in debts.duplicate():
 		if str(x.state) != OPEN:
 			continue
@@ -368,20 +390,33 @@ func _villager_deals() -> void:
 		var best := _cheapest_food(b, reach)
 		if best.is_empty():
 			continue
-		var s: NPC = best.seller
+		var s: Object = best.seller
 		var id: String = best.id
 		var qty := clampi(ceili(w.brain.household_day_food(b.household) / maxf(1.0, NPCBrain.food_points(id))), 1, int(cfg().max_units))
 		qty = mini(qty, available(s, id))
 		var bill := _sum(ask_prices(s, b, id, qty))
 		if b.coins >= bill:
 			continue                                     # they can pay: the ordinary market serves them
+		if s == w.player:                                # the player is the neighbour to ask: the villager asks them
+			if _ask_player(b, id, qty, bill):
+				_hh_day[b.household] = w.day()
+				continue
+			best = _cheapest_food(b, reach, true)        # nothing the player could be asked: the other neighbours
+			if best.is_empty():
+				continue
+			s = best.seller
+			id = best.id
+			qty = mini(clampi(ceili(w.brain.household_day_food(b.household) / maxf(1.0, NPCBrain.food_points(id))), 1, int(cfg().max_units)), available(s, id))
+			bill = _sum(ask_prices(s, b, id, qty))
+			if b.coins >= bill:
+				continue
 		_hh_day[b.household] = w.day()
 		if _barter_for_food(s, b, id, qty):
 			continue
 		sell_on_credit(s, b, id, qty, bill)
 
 
-func _barter_for_food(s: NPC, b: NPC, want: String, qty: int) -> bool:
+func _barter_for_food(s: Object, b: NPC, want: String, qty: int) -> bool:
 	for give in b.inv.ids():
 		if NPCBrain.FOOD.has(give) or spare(b, give) < 1 or not accepts(s, give):
 			continue
@@ -390,8 +425,9 @@ func _barter_for_food(s: NPC, b: NPC, want: String, qty: int) -> bool:
 	return false
 
 
-## The seller within `reach` tiles of `buyer` (another household, adult) with the cheapest food per point to spare.
-func _cheapest_food(buyer: NPC, reach: float) -> Dictionary:
+## The seller within `reach` tiles of `buyer` (another household, adult; the player too, unless `no_player`, refused or
+## already asked) with the cheapest food per point to spare.
+func _cheapest_food(buyer: NPC, reach: float, no_player := false) -> Dictionary:
 	var best := {}
 	var per := INF
 	for s: NPC in w.npcs:
@@ -405,7 +441,80 @@ func _cheapest_food(buyer: NPC, reach: float) -> Dictionary:
 			if price < per:
 				per = price
 				best = {"seller": s, "id": id}
+	var p: PlayerState = w.player
+	if no_player or not p.alive or w.player_level != 0 or p.pos.distance_to(buyer.pos) > reach or refused.has(buyer.id) or request_for(buyer.id).size() > 0:
+		return best
+	for id in NPCBrain.FOOD:                              # the player is last: a villager wins a tie
+		var pts := NPCBrain.food_points(id)
+		if pts <= 0.0 or available(p, id) < 1 or not buyer.inv.can_add(id):
+			continue
+		var price := float(ask_prices(p, buyer, id, 1)[0]) / pts
+		if price < per:
+			per = price
+			best = {"seller": p, "id": id}
 	return best
+
+
+# ---------------------------------------------------------------- asks of the player ---------
+## The asks `npc_id` has put to the player (empty when none).
+func request_for(npc_id: int) -> Array:
+	return requests.filter(func(r): return int(r.npc) == npc_id)
+
+
+## The villager `b` asks the player for `qty` of `id` (bill `bill` at the player's ask): by barter if it has goods the
+## player is offered at a fair rate, else on credit if the one rule lets the player lend. False when neither is possible.
+func _ask_player(b: NPC, id: String, qty: int, bill: int) -> bool:
+	var p: PlayerState = w.player
+	qty = mini(qty, available(p, id))
+	if qty < 1:
+		return false
+	var r := {"id": next_req, "npc": b.id, "item": id, "qty": qty, "mode": "", "give": "", "give_qty": 0, "value": bill, "day": w.day()}
+	for give in b.inv.ids():
+		if NPCBrain.FOOD.has(give) or spare(b, give) < 1:
+			continue
+		var q := barter_quote(p, b, id, qty, give)
+		if bool(q.ok):
+			r.mode = "barter"
+			r.give = give
+			r.give_qty = int(q.give_qty)
+			break
+	if r.mode == "":
+		if credit_refusal(p, b, bill) != "":
+			return false
+		r.mode = "credit"
+	next_req += 1
+	requests.append(r)
+	w.stat("credit_asks_of_player")
+	var what := GameData.item_name(id).to_lower()
+	if r.mode == "barter":
+		w.note("%s asks you for %d %s, offering %d %s in barter. Talk to them to answer." % [b.name, qty, what, int(r.give_qty), GameData.item_name(str(r.give)).to_lower()])
+	else:
+		w.note("%s asks you for %d %s on credit: %d coins by day %d. Talk to them to answer." % [b.name, qty, what, bill, w.day() + int(cfg().days)])
+	return true
+
+
+## The player answers a villager's ask. Returns {result: "bartered"|"credited"|"refused"|"failed", text}. An accepted ask is
+## re-checked by the rules as they stand now; a refusal is remembered (refuse_days) and costs nothing.
+func answer_request(req_id: int, accept: bool) -> Dictionary:
+	var r := {}
+	for x in requests:
+		if int(x.id) == req_id:
+			r = x
+	if r.is_empty():
+		return {"result": "failed", "text": "That ask has lapsed."}
+	requests.erase(r)
+	var b: NPC = w.npc(int(r.npc))
+	if b == null or not b.alive:
+		return {"result": "failed", "text": "They are gone."}
+	if not accept:
+		refused[b.id] = w.day() + int(cfg().refuse_days)
+		return {"result": "refused", "text": "You turn %s down." % b.name}
+	if str(r.mode) == "barter":
+		var q := barter(w.player, b, str(r.item), int(r.qty), str(r.give))
+		return {"result": q.result, "text": q.text}
+	var bill := _sum(ask_prices(w.player, b, str(r.item), int(r.qty)))
+	var c := sell_on_credit(w.player, b, str(r.item), int(r.qty), bill)
+	return {"result": c.result, "text": c.text}
 
 
 # ---------------------------------------------------------------- death ----------------------
@@ -430,25 +539,64 @@ func on_death(n: NPC, heir: NPC) -> void:
 				_end(x, LOST)
 
 
-## The player died: debts of theirs and owed them are written off (the heir starts with the kit only, and strangers).
-func on_player_died() -> void:
+## Whether `cause` (PlayerState.death_cause) is a killing by a person, the villagers' "slain" (hunger, bad food, old age,
+## a beast and a mine collapse are not).
+static func slain_cause(cause: String) -> bool:
+	return not (cause in ["", "hunger", "spoiled food", "old age"] or cause.begins_with("a ") or cause.begins_with("crushed"))
+
+
+## The player died (World.continue_as_heir, before the heir): their debts and the claims on them pass to the player's heir by
+## the villagers' rule. The heir carries the name "player", so the records stay as they are; written off (lost) where a
+## villager's would be: the player was slain, or the other party is the child who now becomes the heir (`kid`, or null).
+func on_player_died(slain := false, kid: NPC = null) -> void:
+	var kid_ref := ref_of(kid) if kid != null else ""
 	for x in debts:
-		if standing(x) and (x.debtor == World.PLAYER or x.creditor == World.PLAYER):
+		if not standing(x) or not (x.debtor == World.PLAYER or x.creditor == World.PLAYER):
+			continue
+		var other: String = x.creditor if x.debtor == World.PLAYER else x.debtor
+		if slain or other == kid_ref:
 			_end(x, LOST)
 			w.stat("credit_lost")
+		else:
+			w.stat("credit_passed")
 
 
 # ---------------------------------------------------------------- saving ---------------------
+## Nothing to save: no debt, ask or remembered refusal.
+func is_empty() -> bool:
+	return debts.is_empty() and requests.is_empty() and refused.is_empty()
+
+
 func to_dict() -> Dictionary:
 	var out := []
 	for x in debts:
 		out.append((x as Dictionary).duplicate())
-	return {"next_id": next_id, "debts": out}
+	var d := {"next_id": next_id, "debts": out}
+	if not requests.is_empty() or not refused.is_empty():       # optional, like the key itself
+		var rs := []
+		for x in requests:
+			rs.append((x as Dictionary).duplicate())
+		var rf := {}
+		for k in refused:
+			rf[str(k)] = int(refused[k])
+		d["requests"] = rs
+		d["next_req"] = next_req
+		d["refused"] = rf
+	return d
 
 
 func load_dict(dd: Dictionary) -> void:
 	debts.clear()
+	requests.clear()
+	refused.clear()
 	next_id = int(dd.get("next_id", 1))
+	next_req = int(dd.get("next_req", 1))
+	for x in dd.get("requests", []):
+		requests.append({"id": int(x.id), "npc": int(x.npc), "item": str(x.item), "qty": int(x.qty), "mode": str(x.mode), "give": str(x.give),
+				"give_qty": int(x.give_qty), "value": int(x.value), "day": int(x.day)})
+	var rf: Dictionary = dd.get("refused", {})
+	for k in rf:
+		refused[int(k)] = int(rf[k])
 	for x in dd.get("debts", []):
 		debts.append({"id": int(x.id), "creditor": str(x.creditor), "debtor": str(x.debtor), "item": str(x.item), "qty": int(x.qty),
 				"value": int(x.value), "made": int(x.made), "due": int(x.due), "state": str(x.state), "ended": int(x.get("ended", -1))})

@@ -34,14 +34,15 @@
     "start_child_age": [1, 15]
   },
   "credit": {
-    "_note": "TRADE-CREDIT (owner Q18-5 'Barter + credit with trust'; agent proposals, provisional, docs/DECISIONS.md). Credit is extended only by a seller whose regard for the buyer is at least relations.befriend_at; days until a debt is due; limit coins owed to one creditor at a time; no interest. An unpaid debt a day past due is a default: the creditor's regard falls default_regard and no more credit while it stands; repaying raises regard repay_regard (half when late). reach tiles and max_units bound the villagers' dawn deals for a household short of food; keep_days keeps ended records.",
+    "_note": "TRADE-CREDIT (owner Q18-5 'Barter + credit with trust'; agent proposals, provisional, docs/DECISIONS.md). Credit is extended only by a seller whose regard for the buyer is at least relations.befriend_at; days until a debt is due; limit coins owed to one creditor at a time; no interest. An unpaid debt a day past due is a default: the creditor's regard falls default_regard and no more credit while it stands; repaying raises regard repay_regard (half when late). reach tiles and max_units bound the villagers' dawn deals for a household short of food; keep_days keeps ended records; refuse_days is how long a villager the player turned down does not ask again.",
     "days": 7,
     "limit": 30,
     "default_regard": 20,
     "repay_regard": 4,
     "reach": 40,
     "max_units": 3,
-    "keep_days": 30
+    "keep_days": 30,
+    "refuse_days": 3
   },
   "relations": {
     "_note": "CRT-01..07 (owner 2026-10-19; numbers are agent proposals, provisional). A gift adds gift_regard (half for a merely useful thing) and, between people who may court, gift_attraction by kind; a favourite (Relations.favourites: the receiver's trade, or food when hungry and medicine when hurt) counts favourite_factor times, a gift repeated from the last three repeat_factor; a second gift in a day counts nothing. Help adds help_regard. befriend_at regard lets the player befriend (no proposal). court_at attraction (and court_min_days days known) lets one ask to court; a proposal is accepted after propose_min_days of courting at propose_at with marry_min_days days known, else declined with too_soon_penalty attraction lost. Ties cool by decay_per_day (attraction; half for regard) on days without contact. Villagers take an interest at npc_court_chance a day in someone they have come to know and each dawn give a gift they hold; time together counts as it happens (shared, seek). Friends trade at friend_price better and back the player before a guard.",

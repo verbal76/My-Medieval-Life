@@ -3071,7 +3071,7 @@ func show_trade(n: NPC, pick := {}) -> void:
 		_label("Nothing you carry (they want: %s)." % ", ".join(buys.keys().map(func(k): return GameData.item_name(k))) if not buys.is_empty() else "They are not buying.", 15)
 	if n.role != "bandit":
 		var lender := n
-		_button("Credit and barter", func(): CreditWindow.show(self, lender))       # TRADE-CREDIT
+		_button("Credit and barter" + (" (%s asks you)" % n.name if main.world.credit.request_for(n.id).size() > 0 else ""), func(): CreditWindow.show(self, lender))       # TRADE-CREDIT
 		var talker := n
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
 

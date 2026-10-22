@@ -33,6 +33,8 @@ func _init() -> void:
 	test_player_debtor()
 	test_save()
 	test_death()
+	test_player_seller()
+	test_player_death()
 	test_villagers_in_need()
 	test_determinism()
 	test_parity()
@@ -313,8 +315,10 @@ func test_death() -> void:
 	trust(w4, p4[0].id, Life.PLAYER_ID, 30.0)
 	w4.credit.sell_on_credit(p4[0], w4.player, "bread", 1, 6)
 	w4.player.alive = false
+	w4.player.death_cause = "old age"
 	w4.continue_as_heir()
-	check(str(w4.credit.debts[0].state) == Credit.LOST, "the player's debts are written off at their death: the heir starts clean with the kit only")
+	check(str(w4.credit.debts[0].state) == Credit.OPEN and w4.credit.debts[0].debtor == World.PLAYER, "the player's debt passes to their heir (not slain), as a villager's does")
+	check(w4.credit.owed(Credit.ref_of(p4[0]), World.PLAYER) == 6 and w4.player.generation == 2, "the heir is the debtor now")
 
 
 ## A household with no food or coins, a neighbour with bread who trusts them: a dawn pass lends the food.
@@ -395,3 +399,205 @@ func test_parity() -> void:
 	check(bool(w.credit.barter_quote(s, b, "bread", 1, "coal").ok) == bool(w.credit.barter_quote(s, pl, "bread", 1, "coal").ok), "barter is open to both alike")
 	check(bool(w.credit.barter_quote(s, b, "bread", 1, "wool_cloth").ok) == bool(w.credit.barter_quote(s, pl, "bread", 1, "wool_cloth").ok), "and refused to both alike")
 	check(w.credit.owed(Credit.ref_of(s), World.PLAYER) == 0, "no debt unless taken")
+
+
+## The player in the seller's chair: a villager short of food asks them; they offer goods or credit to a villager.
+func hungry_pair(w: World) -> Array:
+	var p := pair(w)
+	var b: NPC = p[1]
+	for n: NPC in w.npcs:
+		if n.alive and n != b:
+			n.pos = Vector2(-500, -500)          # no villager within reach: only the player is near
+	for m: NPC in w.brain._members(b.household):
+		m.inv = Inventory.new()
+		m.coins = 0
+	w.households[b.household].pantry = Inventory.new()
+	var pl := w.player
+	pl.inv = Inventory.new()
+	pl.inv.add("bread", 6)
+	pl.pos = b.pos
+	return [p[0], b, pl]
+
+
+func test_player_seller() -> void:
+	# credit: asked by a villager who trusts the player; accepted
+	var w := new_world()
+	var h := hungry_pair(w)
+	var b: NPC = h[1]
+	var pl: PlayerState = h[2]
+	trust(w, b.id, Life.PLAYER_ID, 40.0)
+	var coins0 := w.total_coins()
+	var goods0 := world_goods(w)
+	w.credit.dawn()
+	check(w.credit.requests.size() == 1 and w.credit.requests[0].mode == "credit" and pl.inv.count("bread") == 6, "a hungry villager with no coins asks the player on credit; nothing moves until the answer")
+	var rid: int = w.credit.requests[0].id
+	var r := w.credit.answer_request(rid, true)
+	check(r.result == "credited" and pl.inv.count("bread") < 6 and w.credit.owed(World.PLAYER, Credit.ref_of(b)) > 0, "accepted: the goods go over and the villager owes the player")
+	check(w.total_coins() == coins0 and world_goods(w) == goods0, "no coin or good made or lost")
+	check(w.credit.request_for(b.id).is_empty(), "the ask is answered")
+	# repayment to the player
+	var owed: int = w.credit.owed(World.PLAYER, Credit.ref_of(b))
+	b.coins = owed + 500
+	b.pos = pl.pos
+	var pc := pl.coins
+	next_day(w, int(Credit.cfg().days))
+	w.credit.dawn()
+	check(pl.coins == pc + owed and w.credit.owed(World.PLAYER, Credit.ref_of(b)) == 0, "a villager repays the player at dawn from the due day (coins move, none made)")
+	# default with the player as creditor
+	var w2 := new_world()
+	var h2 := hungry_pair(w2)
+	var b2: NPC = h2[1]
+	trust(w2, b2.id, Life.PLAYER_ID, 40.0)
+	w2.credit.dawn()
+	w2.credit.answer_request(int(w2.credit.requests[0].id), true)
+	b2.coins = 0
+	next_day(w2, int(Credit.cfg().days) + 1)
+	w2.credit.dawn()
+	check(str(w2.credit.debts[0].state) == Credit.DEFAULTED, "unpaid, the villager's debt to the player defaults")
+	check(float(w2.relations.peek(b2.id, Life.PLAYER_ID).regard) <= 40.0 - float(Credit.cfg().default_regard) + 0.01, "and their standing with the player falls")
+	check(w2.credit.credit_refusal(w2.player, b2, 1) != "", "and the player lends them no more by the rule")
+	# refuse
+	var w3 := new_world()
+	var h3 := hungry_pair(w3)
+	var b3: NPC = h3[1]
+	trust(w3, b3.id, Life.PLAYER_ID, 40.0)
+	w3.credit.dawn()
+	var rr := w3.credit.answer_request(int(w3.credit.requests[0].id), false)
+	check(rr.result == "refused" and h3[2].inv.count("bread") == 6 and w3.credit.debts.is_empty(), "refused: nothing moves, no debt")
+	next_day(w3, 1)
+	w3.credit.dawn()
+	check(w3.credit.requests.is_empty(), "a villager the player turned down does not ask again at once")
+	next_day(w3, int(Credit.cfg().refuse_days))
+	w3.credit.dawn()
+	check(w3.credit.requests.size() == 1, "but asks again after refuse_days")
+	# no trust, no goods: no credit ask
+	var w4 := new_world()
+	hungry_pair(w4)
+	w4.credit.dawn()
+	check(w4.credit.requests.is_empty(), "a villager the player does not trust enough is not asked for credit (same threshold as a villager lender)")
+	# barter ask: the villager has goods the player can use
+	var w5 := new_world()
+	var h5 := hungry_pair(w5)
+	var b5: NPC = h5[1]
+	b5.inv.add("coal", 30)
+	var goods5 := world_goods(w5)
+	var coins5 := w5.total_coins()
+	w5.credit.dawn()
+	check(w5.credit.requests.size() == 1 and w5.credit.requests[0].mode == "barter", "with goods to offer, the villager asks by barter first")
+	var coal0: int = h5[2].inv.count("coal")
+	var rb := w5.credit.answer_request(int(w5.credit.requests[0].id), true)
+	check(rb.result == "bartered" and h5[2].inv.count("coal") > coal0 and b5.inv.count("bread") > 0, "accepted: goods move both ways")
+	check(w5.total_coins() == coins5 and world_goods(w5) == goods5, "barter makes and loses nothing, moves no coin")
+	# unanswered asks lapse
+	var w6 := new_world()
+	var h6 := hungry_pair(w6)
+	trust(w6, h6[1].id, Life.PLAYER_ID, 40.0)
+	w6.credit.dawn()
+	var saved := JSON.stringify(w6.to_dict())
+	var w6b := World.new()
+	w6b.load_dict(VillageMap.load_default(), JSON.parse_string(saved))
+	check(JSON.stringify(w6b.credit.to_dict()) == JSON.stringify(w6.credit.to_dict()) and w6b.credit.requests.size() == 1, "a pending ask saves and loads unchanged")
+	next_day(w6, 1)
+	w6.credit.dawn()
+	check(w6.credit.debts.is_empty() and w6.credit.requests.size() <= 1, "an unanswered ask lapses without a debt")
+	# the player offers a villager credit and barter
+	var w7 := new_world()
+	var p7 := pair(w7)
+	var s7: NPC = p7[0]
+	var b7: NPC = p7[1]
+	var pl7 := w7.player
+	pl7.inv = Inventory.new()
+	pl7.inv.add("coal", 6)
+	s7.job = "smith"
+	trust(w7, b7.id, Life.PLAYER_ID, 5.0)
+	b7.job = "smith"
+	check(w7.credit.credit_refusal(pl7, b7, 4) != "", "the player lends to a villager only where the trust rule allows")
+	trust(w7, b7.id, Life.PLAYER_ID, 30.0)
+	check(w7.credit.accepts(b7, "coal"), "a smith has use for coal")
+	var price: int = w7.credit.ask_prices(pl7, b7, "coal", 1)[0]
+	var rl := w7.credit.sell_on_credit(pl7, b7, "coal", 1, price)
+	check(rl.result == "credited" and b7.inv.count("coal") == 1 and pl7.inv.count("coal") == 5 and w7.credit.owed(World.PLAYER, Credit.ref_of(b7)) == price, "the player lends goods to a trusting villager who can use them")
+	check(w7.credit.sell_on_credit(pl7, b7, "wool_cloth", 1, 3).result == "failed" or not pl7.inv.has("wool_cloth"), "and not what the villager has no use for")
+	b7.inv.add("wool_cloth", 6)
+	var q := w7.credit.barter_quote(pl7, b7, "coal", 1, "wool_cloth")
+	check(bool(q.ok), "the player can offer coal for cloth: " + str(q.why))
+	if bool(q.ok):
+		var g0 := world_goods(w7)
+		var c0 := w7.total_coins()
+		w7.credit.barter(pl7, b7, "coal", 1, "wool_cloth")
+		check(world_goods(w7) == g0 and w7.total_coins() == c0 and pl7.inv.count("wool_cloth") == int(q.give_qty), "the player's barter offer moves goods both ways and no coin")
+	# determinism
+	check(_ask_run() == _ask_run(), "asks and answers are deterministic")
+
+
+func _ask_run() -> String:
+	var w := new_world(3)
+	var h := hungry_pair(w)
+	trust(w, h[1].id, Life.PLAYER_ID, 40.0)
+	w.credit.dawn()
+	if not w.credit.requests.is_empty():
+		w.credit.answer_request(int(w.credit.requests[0].id), true)
+	for i in 3:
+		next_day(w, 4)
+		w.credit.dawn()
+	return JSON.stringify([w.credit.to_dict(), w.stats])
+
+
+func test_player_death() -> void:
+	# slain: written off
+	var w := new_world()
+	var p := pair(w)
+	trust(w, p[0].id, Life.PLAYER_ID, 30.0)
+	w.credit.sell_on_credit(p[0], w.player, "bread", 1, 6)
+	w.player.alive = false
+	w.player.death_cause = "Rob the bandit"
+	w.continue_as_heir()
+	check(str(w.credit.debts[0].state) == Credit.LOST, "a player slain by a person leaves their debts written off, as a villager's are")
+	# claims pass to the heir, who is then repaid
+	var w2 := new_world()
+	var p2 := pair(w2)
+	var b2: NPC = p2[1]
+	trust(w2, b2.id, Life.PLAYER_ID, 40.0)
+	w2.player.inv.add("coal", 3)
+	b2.job = "smith"
+	w2.credit.sell_on_credit(w2.player, b2, "coal", 1, 5)
+	w2.player.alive = false
+	w2.player.death_cause = "hunger"
+	w2.continue_as_heir()
+	check(str(w2.credit.debts[0].state) == Credit.OPEN and w2.credit.owed(World.PLAYER, Credit.ref_of(b2)) == 5, "the player's claim on a villager passes to the heir")
+	b2.coins = 500
+	b2.pos = w2.player.pos
+	var coins0 := w2.total_coins()
+	var pc := w2.player.coins
+	next_day(w2, int(Credit.cfg().days))
+	w2.credit.dawn()
+	check(w2.player.coins == pc + 5 and w2.total_coins() == coins0, "and the heir is repaid in coins that already existed")
+	# an heir who is the player's own child: debts with that child are lost, others pass
+	var w3 := new_world()
+	var p3 := pair(w3)
+	var kid: NPC = null
+	for n: NPC in w3.npcs:
+		if n.alive and n.role == "adult" and n != p3[0] and n != p3[1]:
+			kid = n
+			break
+	kid.mother = Life.PLAYER_ID
+	w3.player.children = [kid.id]
+	trust(w3, p3[0].id, Life.PLAYER_ID, 30.0)
+	w3.credit.sell_on_credit(p3[0], w3.player, "bread", 1, 6)
+	trust(w3, kid.id, Life.PLAYER_ID, 30.0)
+	kid.inv.add("bread", 3)
+	w3.credit.sell_on_credit(kid, w3.player, "bread", 1, 4)
+	var heir := Life.player_heir_child(w3)
+	w3.player.alive = false
+	w3.player.death_cause = "old age"
+	w3.continue_as_heir()
+	if heir != null:
+		var kept := 0
+		var lost := 0
+		for d in w3.credit.debts:
+			if str(d.state) == Credit.OPEN:
+				kept += 1
+			elif str(d.state) == Credit.LOST:
+				lost += 1
+		check(kept == 1 and lost == 1, "the debt to the child who becomes the heir is lost (as when a villager's heir is the creditor); the other passes")
+	check(Credit.slain_cause("Wat the guard") and not Credit.slain_cause("old age") and not Credit.slain_cause("a wolf") and not Credit.slain_cause("hunger"), "only a killing by a person is 'slain'")
