@@ -1,6 +1,6 @@
 {
   "format": "mml-recipes/1",
-  "note": "Shared by NPCs and the player. minutes = game minutes of work. Simplifications are recorded in docs/BUILD_DECISIONS.md. tool (optional): an item the crafter must hold, worn by the work (STONE-01: the mallet for dressing stone). exact (optional): no practised-hand saving or bonus unit, so the output is never more than its input allows (STONE-01: no free building blocks).",
+  "note": "Shared by NPCs and the player. minutes = game minutes of work. Simplifications are recorded in docs/BUILD_DECISIONS.md. tool (optional): a tool kind, or a list of kinds, the crafter must hold one of each, every one worn a use by the work (STONE-01, STONE-06: the mallet and the iron chisel for dressing stone). exact (optional): no practised-hand saving or bonus unit. conserve (optional, {from, to}): the Masonry tiers inside conservation: a practised hand's saving or extra unit turns the batch's `from` by-product into more of `to` (dressing: the rubble into a third block), inputs always used.",
   "recipes": {
     "smelt_iron":    {"station": "forge",     "in": {"iron_ore": 2, "coal": 1},   "out": {"iron_bar": 1},  "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},
     "smelt_copper":  {"station": "forge",     "in": {"copper_ore": 2, "coal": 1}, "out": {"copper_bar": 1}, "minutes": 40, "skill": "smithing", "xp": 8, "level": 1},
@@ -22,9 +22,10 @@
     "forge_gold_ring":    {"station": "anvil", "in": {"gold_bar": 1},               "out": {"gold_ring": 1},   "minutes": 40, "skill": "smithing", "xp": 20, "level": 3},
     "forge_amulet":       {"station": "anvil", "in": {"copper_bar": 1, "leather": 1}, "out": {"amulet": 1},  "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},
     "forge_prospecting_kit": {"station": "anvil", "in": {"iron_bar": 1, "plank": 1, "leather": 1}, "out": {"prospecting_kit": 1}, "minutes": 50, "skill": "smithing", "xp": 12, "level": 1},
+    "forge_chisel": {"station": "anvil", "in": {"iron_bar": 1}, "out": {"chisel": 1}, "minutes": 30, "skill": "smithing", "xp": 8, "level": 1},
     "forge_nails": {"station": "anvil", "in": {"iron_bar": 1}, "out": {"nails": 12}, "minutes": 20, "skill": "smithing", "xp": 6, "level": 1},
     "make_mallet": {"station": "workbench", "in": {"log": 1, "plank": 1}, "out": {"mallet": 1}, "minutes": 25, "skill": "carpentry", "xp": 6, "level": 1},
-    "dress_stone": {"station": "workbench", "in": {"stone": 2}, "out": {"building_block": 2}, "minutes": 30, "skill": "masonry", "xp": 4, "level": 1, "tool": "mallet", "exact": true},
+    "dress_stone": {"station": "workbench", "in": {"stone": 3}, "out": {"building_block": 2, "rubble": 1}, "minutes": 30, "skill": "masonry", "xp": 4, "level": 1, "tool": ["mallet", "chisel"], "conserve": {"from": "rubble", "to": "building_block"}},
     "saw_planks":    {"station": "sawhorse",  "in": {"log": 1},                    "out": {"plank": 2},     "minutes": 20, "skill": "carpentry", "xp": 4, "level": 1},
     "cook_pottage":  {"station": "stove",     "in": {"wheat": 2},                  "out": {"pottage": 6},   "minutes": 30, "skill": "cooking", "xp": 5, "level": 1},
     "knead_flatbread": {"station": "prep",   "in": {"wheat": 3},                  "out": {"bread": 1},     "minutes": 25, "skill": "cooking", "xp": 3, "level": 1},

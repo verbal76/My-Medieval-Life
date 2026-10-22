@@ -194,7 +194,7 @@ func fence_cost(p: Dictionary) -> Dictionary:
 static func have(stores: Array, id: String) -> int:
 	var n := 0
 	for inv: Inventory in stores:
-		n += inv.count(id)
+		n += inv.count(id) + (inv.count("rubble") if id == "stone" else 0)     # STONE-04: rubble serves the gate as stone
 	return n
 
 
@@ -229,6 +229,13 @@ func build_fence(p: Dictionary, ref: String, stores: Array) -> String:
 	var cost := fence_cost(p)
 	for id in cost:
 		var left := int(cost[id])
+		if id == "stone":                      # rubble becomes the stone it stands in for, then used at once (STONE-04)
+			var short := left
+			for inv: Inventory in stores:
+				short -= inv.count("stone")
+			for inv: Inventory in stores:
+				if short > 0:
+					short -= w.rubble_cover(inv, short)
 		for inv: Inventory in stores:
 			var k := mini(left, inv.count(id))
 			inv.remove(id, k)

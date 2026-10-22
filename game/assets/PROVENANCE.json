@@ -849,6 +849,13 @@
    "sha256": "d1a6bf7a571a53b0b5a583150388b06ed49ac23d2a5aafd4fc7fe83f2264fd07"
   },
   {
+   "file": "assets/icons/chisel.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Knife-05.png",
+   "transform": "copied unchanged",
+   "sha256": "1f28c458b6ecaceaaae343b4bba42e0bb41f91d5de3c37b2444cd4edf4a3543d"
+  },
+  {
    "file": "assets/icons/coal.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Coal-01.png",
@@ -1141,6 +1148,13 @@
    "member": "16x16 Survival RPG Icons/Food/Steak-01.png",
    "transform": "copied unchanged",
    "sha256": "de18287ebf5a766d0a64872b6fe931340e979bcd42ec2bac4be383adb9abf98f"
+  },
+  {
+   "file": "assets/icons/rubble.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-05.png",
+   "transform": "copied unchanged",
+   "sha256": "15d7a8811e610701638e22a24c4b0a87a01022a8b9a3feadb7f014045a9654ff"
   },
   {
    "file": "assets/icons/shovel.png",
@@ -3187,13 +3201,6 @@
    "sha256": "eae23438c4138dd96f49de7717014a90c985975d47f1cdfb91d5ecf540fc72f2"
   },
   {
-   "file": "assets/terrain/steps.png",
-   "source": "ForgottenMemories.zip",
-   "member": "TileSet.png",
-   "transform": "the 32 x 32 piece of the laid-stone paving at (1472, 608), reduced 1/2 (box), a step line darkened to 0.62 every 4 rows",
-   "sha256": "f6915916f816a78d7b3ea05b5beb14c28caa1854f1a25a66b7a29d0fe28460d2"
-  },
-  {
    "file": "assets/terrain/walkway_ns.png",
    "source": "MiniWorldSprites.zip",
    "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
@@ -3262,6 +3269,13 @@
    "member": "16x16 Survival RPG Icons/Tools/Hammer-15.png",
    "transform": "copied unchanged",
    "sha256": "362ad7188cddd06fe1b6574efe47f59fb01c569a4b96689bae6d2592c397cc63"
+  },
+  {
+   "file": "assets/terrain/steps.png",
+   "source": "ForgottenMemories.zip",
+   "member": "TileSet.png",
+   "transform": "the 32 x 32 piece of the laid-stone paving at (1472, 608), reduced 1/2 (box), a step line darkened to 0.62 every 4 rows",
+   "sha256": "f6915916f816a78d7b3ea05b5beb14c28caa1854f1a25a66b7a29d0fe28460d2"
   }
  ]
 }

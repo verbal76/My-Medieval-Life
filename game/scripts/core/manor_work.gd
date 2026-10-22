@@ -47,7 +47,7 @@ extends RefCounted
 
 const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate", "tunnel", "backfill", "shore"]
 const ORDER := ["pantry", "granary", "yard"]        # hauling priority by destination: relief first
-const MATERIALS := ["plank", "stone", "log", "iron_bar"]
+const MATERIALS := ["plank", "stone", "rubble", "log", "iron_bar"]       # STONE-04: rubble mends as raw stone does
 
 var w: World
 var lots: Array = []          # {id, at: [x, y], inv: Inventory, to: {kind: yard|granary|pantry, hh}, why, src (where it lies, in words)}

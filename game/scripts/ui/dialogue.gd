@@ -15,6 +15,7 @@ const JOB_WORDS := {
 	"barber": "I cut and dress hair and beards, and dye hair in the natural colours.",
 	"prospector": "I read the ground for signs of ore, take samples and have the smith assay them.",
 	"laborer": "I break stone and coal in the mine and sell it at the market.",
+	"stonecutter": "I buy raw stone, dress it into building blocks with my mallet and chisel and sell them to the builders.",
 	"woodcutter": "I fell trees and sell the logs to the carpenters and the cooks.",
 	"carpenter": "I saw logs into planks for the smiths and the market.",
 	"smith": "I smelt ore into bars and forge tools, swords and armour.",

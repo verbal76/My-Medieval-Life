@@ -1004,6 +1004,9 @@
       {"use": "manor_job", "text": "Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).", "source": "game/scripts/core/manor_work.gd::post_quarry"},
       {"use": "building", "text": "The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.", "source": "game/scripts/core/farm_plots.gd::build_fence"}
     ],
+    "rubble": [
+      {"use": "manor_job", "text": "STONE-04: the rubble a dressing leaves, bought for repairs and public works like stone, carried to the works yard and used up mending; also taken as raw stone by fittings, the farmland gate and older building sites at the moment they use it (World.rubble_cover), never as an input to dressing.", "source": "game/scripts/core/npc_brain.gd::_public_works"}
+    ],
     "iron_bar": [
       {"use": "manor_job", "text": "Fittings and nails: bought for repairs and public works, carried to the works yard and used up mending.", "source": "game/scripts/core/npc_brain.gd::_public_works"}
     ],

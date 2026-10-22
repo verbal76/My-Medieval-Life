@@ -75,7 +75,7 @@ func _run() -> void:
 	check(seller != null and w.trade(p, seller, "axe", 1, w.sell_price(seller, "axe")), "bought an axe")
 
 	# 2. mine iron, coal and stone at real deposits
-	for want in [["iron_ore", 8], ["coal", 4], ["stone", 20]]:
+	for want in [["iron_ore", 8], ["coal", 4], ["stone", 30]]:
 		var got := 0
 		var tries := 0
 		while p.inv.count(want[0]) < want[1] and tries < 80:
@@ -172,12 +172,19 @@ func _run() -> void:
 	main.craft("make_mallet")
 	finish_action()
 	check(p.inv.has("mallet"), "made a mallet at the workbench")
+	# STONE-06: dressing also needs an iron chisel, forged from an iron bar at the anvil
+	p.inv.add("iron_bar")
+	p.pos = Vector2(w.station_use(w.stations_of("anvil")[0])) + Vector2(0.5, 0.5)
+	main.craft("forge_chisel")
+	finish_action()
+	check(p.inv.has("chisel"), "forged an iron chisel at the anvil")
+	p.pos = Vector2(w.station_use(w.stations_of("workbench")[0])) + Vector2(0.5, 0.5)
 	var dressings := 0
-	while p.inv.count("building_block") < 20 and p.inv.count("stone") >= 2 and dressings < 20:
+	while p.inv.count("building_block") < 20 and p.inv.count("stone") >= 3 and dressings < 20:
 		dressings += 1
 		main.craft("dress_stone")
 		finish_action()
-	check(p.inv.count("building_block") >= 20, "dressed %d stone into %d building blocks" % [dressings * 2, p.inv.count("building_block")])
+	check(p.inv.count("building_block") >= 20, "dressed stone in %d batches into %d building blocks" % [dressings, p.inv.count("building_block")])
 	# the market alone cannot cover a house: fell and saw the rest, as an NPC carpenter would
 	var saws := 0
 	while p.inv.count("plank") < 30 and saws < 30:
