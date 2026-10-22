@@ -30621,6 +30621,48 @@
    "owner_answer": "Option 2 with farming (a), 2026-10-22 (docs/directives/2026-10-22_x18_d1_starting_experience.md)"
   },
   {
+   "id": "X18-D3",
+   "title": "Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "No thresholds; names in reports",
+   "description": "Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports",
+   "source": "docs/directives/2026-10-23_owner_answers_tailor_barber_d2_d3.md",
+   "approval": "owner, 2026-10-23, chose 'No thresholds; names in reports (Recommended)'",
+   "acceptance": [
+    "No behaviour depends on a 0-10 level crossing; threshold steps stay descriptive; reports reaching the player may name level ranges novice, journeyman, master"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/expansion18/DECISIONS_PENDING.md (wip/build18), D3; owner answer in session 2026-10-23"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner D3 answer recorded"
+    }
+   ],
+   "owner_answer": "Option 1: no thresholds on the 0-10 levels (levels scale pay and output only, never a gate, Q18-9); option 2's band names (novice/journeyman/master) used when reports reach the player"
+  },
+  {
    "id": "X18-Q12",
    "title": "Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests",
    "kind": "approved",

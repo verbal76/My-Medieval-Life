@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **482** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 86 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 87 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -997,7 +997,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (86)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (87)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1080,6 +1080,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | TAILOR-Q | Where the tailor comes from | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) | COMPLETE AND VERIFIED | docs/directives/2026-10-22_x18_d1_starting_experience.md |
+| X18-D3 | Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_tailor_barber_d2_d3.md |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
