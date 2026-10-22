@@ -67,6 +67,7 @@ var farm: Farming                  # the player's field, pens and seeds (PL2-015
 var feast: Feast                  # DVW-B3-FEAST: wedding and seasonal feasts at the tavern (scripts/core/feast.gd; saved in "feast")
 var chapel: Chapel                # DVW-B3-CHAPEL: the village chapel, its clergy's fund, store and farm plot (scripts/core/chapel.gd; saved in "chapel")
 var farm_plots: FarmPlots          # family farmland of any size, leased or bought, for every household (FARM-01..05, scripts/core/farm_plots.gd)
+var tax_state := {}                # DVW-B5: the tax band and any announced change (TaxPolicy); empty until the first reeve evening
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
 var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
 var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
@@ -4026,7 +4027,7 @@ func to_dict() -> Dictionary:
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
 		"manor_work": manor_work.to_dict(),
-		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
+		"tax": tax_state.duplicate(true), "treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
@@ -4191,6 +4192,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if trades_new:
 		Skills.seed_farming(self)       # DVW-B8: Farming starts from the recorded (or just seeded) farming experience, once
 	_migrate_property(d)
+	tax_state = {}
+	if d.has("tax") and d.tax is Dictionary:
+		tax_state = d.tax.duplicate(true)   # DVW-B5 (optional key; absent: the band is read from the treasury at the next reeve evening)
 	if d.has("treasury"):
 		treasury = int(d.treasury)
 		granary = Inventory.from_dict(d.granary)

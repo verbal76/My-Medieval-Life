@@ -300,6 +300,7 @@ func test_government() -> void:
 	payer.coins = exempt + 1000
 	for case in [[ob * 5.0, 0.12], [ob * 20.0, 0.06], [ob * 40.0, 0.0]]:
 		w.treasury = int(case[0])
+		w.tax_state = {}                 # DVW-B5: each case is a settled band (a change otherwise waits for its announcement)
 		payer.coins = exempt + 1000
 		var t0 := w.treasury
 		w.last_reeve_day = -1
@@ -309,6 +310,7 @@ func test_government() -> void:
 		check(payer.coins == exempt + 1000 - int(1000 * float(case[1])), "tax rate %d%% when the treasury holds %d days (paid %d)" % [int(float(case[1]) * 100), int(float(case[0]) / ob), exempt + 1000 - payer.coins])
 	# no double business in one day
 	w.treasury = int(ob * 5.0)
+	w.tax_state = {}
 	payer.coins = exempt + 1000
 	w.minutes = floor(w.minutes / 1440.0) * 1440.0 + 16.9 * 60.0
 	w.last_hour = int(w.minutes / 60.0)
@@ -333,6 +335,7 @@ func test_government() -> void:
 	w.kill(reeve, "test")
 	check(w.treasury == tr, "the treasury is untouched when the reeve dies")
 	w.last_reeve_day = -1
+	w.tax_state = {}
 	payer.coins = exempt + 1000
 	b.reeve_day()
 	check(payer.coins < exempt + 1000, "taxes are still collected after the reeve's death")

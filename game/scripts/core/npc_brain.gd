@@ -2704,8 +2704,11 @@ func reeve_day() -> void:
 	var obligations := daily_obligations()
 	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
 	var taxed := 0
-	if w.treasury < obligations * float(GameData.b("treasury_tax_holiday_days")):
-		var rate := float(GameData.b("tax_rate_low_treasury")) if w.treasury < reserve else float(GameData.b("tax_rate_normal"))
+	var tax := TaxPolicy.step(w.tax_state, float(w.treasury), obligations, w.day())   # DVW-B5: banded, announced
+	for line: String in tax.notes:
+		w.note(line)
+	var rate := float(tax.rate)
+	if rate > 0.0:
 		for h in w.households.size():
 			var members := _members(h)
 			if members.is_empty():
