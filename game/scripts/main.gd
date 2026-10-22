@@ -554,6 +554,17 @@ func _ready() -> void:
 						await get_tree().process_frame
 						ui.show_contract(n, t, world.contracts.propose(World.PLAYER, n, "axe", 1, 45, 1))
 						break
+			"contract_item", "contract_qty", "contract_price", "contract_days", "contract_sum":
+				# CON-UX-01: each step of the contract form (the farmer; 10 axes)
+				for n: NPC in world.npcs:
+					if n.job == "farmer" and n.alive:
+						world.player.coins = 400
+						var st: String = shot_panel.trim_prefix("contract_")
+						if st == "item":
+							ui.show_contract(n, {})
+						else:
+							ui.show_contract(n, {"item": "axe", "all": true, "qty": 3, "price": 45, "days": 4, "step": st})
+						break
 			"contract_grids", "contract_work":
 				# the contract window's goods grid (top) and work grid (scrolled down) at the window width
 				for n: NPC in world.npcs:

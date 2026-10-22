@@ -2511,8 +2511,8 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 ## CON-01: the contract window with a villager. Open contracts and the villager's standing offers to the player, each
 ## with what can be done now (collect or deliver what is in hand, cancel; agree to or decline an offer); the villager's
 ## last answer (a counteroffer can be agreed to); and a new proposal: the goods (those the villager can come by first,
-## or all goods), then quantity, price per unit and days with - and + buttons (touch, pad and keyboard alike), the
-## total and Propose. The rules are Contracts'; this only shows them. `t`: the terms being drawn up; `reply`: the answer.
+## or all goods), then step by step the quantity, price per unit and days with - and + buttons (touch, pad and keyboard
+## alike), and a one-sentence summary to Propose (CON-UX-01). The rules are Contracts'; this only shows them. `t`: the terms being drawn up; `reply`: the answer.
 func show_contract(n: NPC, t := {}, reply := {}) -> void:
 	var w: World = main.world
 	var k: Contracts = w.contracts
@@ -2581,10 +2581,41 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 					show_contract(n, {}, r2)
 				else:
 					show_contract(n, ct, r2))
-	if t.has("counter"):
-		_counter_terms(n, t)
+	var step := _contract_step(t)
+	if step != "item":
+		_contract_term_step(n, t, step)
 		return
-	_label("Propose a contract: what you want from %s, how many, the price for each and how many days they have. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
+	_contract_item_step(n, t)
+
+
+## CON-UX-01: the steps of drawing up a contract, in order. A proposal of goods or work takes all five; a counter to a
+## villager's standing offer has the goods fixed, so it starts at the quantity.
+const CONTRACT_STEPS := ["item", "qty", "price", "days", "sum"]
+const CONTRACT_STEP_TITLES := {"item": "What do you want?", "qty": "How many?", "price": "What will you pay for each?", "days": "How many days do they have?",
+		"sum": "Is this right?"}
+
+
+## The step being shown: the one named in the terms, else the summary once goods or work are chosen, else the first.
+func _contract_step(t: Dictionary) -> String:
+	if t.has("step"):
+		return str(t.step)
+	if t.has("counter"):
+		return "qty"
+	return "sum" if (str(t.get("item", "")) != "" or t.has("svc")) else "item"
+
+
+func _contract_steps_for(t: Dictionary) -> Array:
+	return CONTRACT_STEPS.slice(1) if t.has("counter") else CONTRACT_STEPS
+
+
+## Step one: the goods (those the villager can come by first, or all goods) or work to hire them for. Choosing one
+## moves on to the quantity, with the terms the villager's pace allows already filled in.
+func _contract_item_step(n: NPC, t: Dictionary) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	_scroll_to_top()                      # the focused first button must not scroll the step's heading out of view
+	_label("Step 1 of 5: %s" % CONTRACT_STEP_TITLES.item, 20, Color(1, 0.85, 0.5))
+	_label("Propose a contract to %s: choose the goods you want. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
 	var all: bool = t.get("all", false)
 	var grid := GridContainer.new()
 	grid.add_theme_constant_override("h_separation", 8)
@@ -2602,7 +2633,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 	for id in shown:
 		var iid: String = id
 		var b := _button(("★ " if able.has(iid) else "") + GameData.item_name(iid), func():
-			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3}
+			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3, "step": "qty"}
 			var m3: Dictionary = k.means(n, iid, 3)
 			nt.qty = clampi(int(m3.stock) + int(m3.cap), 1, 10)
 			for d in range(1, int(Contracts.cfg().max_days) + 1):        # the deadline the seller's pace allows
@@ -2613,8 +2644,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			show_contract(n, nt), true, grid)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		if str(t.get("item", "")) == iid:
-			b.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+		b.custom_minimum_size = Vector2(0, 56)
 	_button(("Only what %s can supply" % n.name) if all else "All goods", func():
 		var nt: Dictionary = t.duplicate()
 		nt.all = not all
@@ -2632,80 +2662,136 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			var sb := _button(str(oo.label), func():
 				var svc := {"service": oo.service, "site": oo.site}
 				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
-				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3}), true, sgrid)
+				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3,
+						"step": "qty"}), true, sgrid)
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			sb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			if t.has("svc") and str(t.get("label", "")) == str(oo.label):
-				sb.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
-	if t.has("svc"):
-		_term_steppers(n, t)
-		var stotal := int(t.qty) * int(t.price)
-		_label("%s: %d units at %d each = %d coins, by the end of day %d." % [str(t.label), int(t.qty), int(t.price), stotal, w.day() + int(t.days)], 18)
-		_button("Propose", func():
-			var r := k.propose(World.PLAYER, n, "", int(t.qty), int(t.price), int(t.days), [], t.svc)
-			if r.has("contract"):
-				message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
-				show_contract(n, {}, r)
-			else:
-				show_contract(n, t, r), p.coins >= stotal)
-	if str(t.get("item", "")) != "":
-		_term_steppers(n, t)
-		var total := int(t.qty) * int(t.price)
-		_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), int(t.price), total,
-				w.day() + int(t.days)], 18)
-		_button("Propose", func():
-			var r := k.propose(World.PLAYER, n, str(t.item), int(t.qty), int(t.price), int(t.days))
-			if r.has("contract"):
-				message("Contract made: %d %s from %s." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), n.name])
-				show_contract(n, {}, r)
-			else:
-				show_contract(n, t, r), p.coins >= total)
+			sb.custom_minimum_size = Vector2(0, 56)
 	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
 
 
-## The quantity, price-each and days rows of the contract window, each with - and + buttons (touch, pad, keyboard).
-func _term_steppers(n: NPC, t: Dictionary) -> void:
-	var step := func(key: String, by: int, hi: int) -> void:
-		var nt: Dictionary = t.duplicate()
-		nt[key] = clampi(int(nt[key]) + by, 1, hi)
-		show_contract(n, nt)
-	for row in [["Quantity", "qty", 999, [-10, -1], [1, 10]], ["Price each", "price", 999, [-1], [1]], ["Days", "days", int(Contracts.cfg().max_days), [-1], [1]]]:
-		var h := HBoxContainer.new()
-		h.alignment = BoxContainer.ALIGNMENT_CENTER
-		panel_body.add_child(h)
-		var key: String = row[1]
-		var hi: int = row[2]
-		for by in row[3]:
-			var bb: int = by
-			_button(str(bb), func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
-		var l := Label.new()
-		l.text = "%s: %d" % [row[0], int(t[key])]
-		l.custom_minimum_size = Vector2(200, 0)
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		l.add_theme_font_size_override("font_size", 20)
-		h.add_child(l)
-		for by in row[4]:
-			var bb: int = by
-			_button("+%d" % bb, func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
-
-
-## CON-01: the player's counter to a villager's standing offer (the player supplies): the goods are the villager's to
-## name, the quantity, price and days the player's to put back. The villager answers by Contracts.counter_offer.
-func _counter_terms(n: NPC, t: Dictionary) -> void:
+## Steps two to four (quantity, price each, days) and the summary. Each step shows one question with large - and +
+## buttons, Next and Back; the summary says the whole agreement in a sentence and Propose (or, for a counter, Put
+## these terms) sends it. Back goes to the step before; on the first step it leaves the contract being drawn up.
+func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 	var w: World = main.world
 	var k: Contracts = w.contracts
-	var oc := k.get_contract(int(t.counter))
-	var item := GameData.item_name(str(t.item)).to_lower() if not Contracts.is_service(oc) else "units of work (%s)" % k.describe(oc)
-	_label("Your terms for supplying %s with %s: how many, the price for each and the days you need." % [n.name, item], 16)
-	_term_steppers(n, t)
-	_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), item, int(t.price), int(t.qty) * int(t.price), w.day() + int(t.days)], 18)
-	_button("Put these terms to %s" % n.name, func():
-		var r := k.counter_offer(k.get_contract(int(t.counter)), int(t.qty), int(t.price), int(t.days))
-		r.from_buyer = true
-		if r.has("contract"):
-			message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
-		show_contract(n, {}, r))
-	_button("Back", func(): show_contract(n))
+	var p := w.player
+	var counter := t.has("counter")
+	var steps := _contract_steps_for(t)
+	var at := steps.find(step)
+	var go := func(to: String) -> void:
+		var nt: Dictionary = t.duplicate()
+		nt.step = to
+		show_contract(n, nt)
+	var back := func() -> void:
+		if at > 0:
+			go.call(steps[at - 1])
+		elif counter:
+			show_contract(n)
+		else:
+			show_contract(n, {"all": t.get("all", false)})
+	_label("Step %d of %d: %s" % [at + 1, steps.size(), CONTRACT_STEP_TITLES[step] if not (counter and step == "price") else "What price do you ask for each?"], 20, Color(1, 0.85, 0.5))
+	var what := ""
+	if counter:
+		var oc := k.get_contract(int(t.counter))
+		what = GameData.item_name(str(t.item)).to_lower() if not Contracts.is_service(oc) else "units of work (%s)" % k.describe(oc)
+	elif t.has("svc"):
+		what = str(t.label)
+	else:
+		what = GameData.item_name(str(t.item)).to_lower()
+	var qty := int(t.qty)
+	var price := int(t.price)
+	var days := int(t.days)
+	var total := qty * price
+	var by_day := w.day() + days
+	var next_btn: Button = null
+	if step == "sum":
+		var sentence := ""
+		if counter:
+			sentence = "You deliver %d %s to %s by the end of day %d for %d coins (%d each)." % [qty, what, n.name, by_day, total, price]
+		elif t.has("svc"):
+			sentence = "%s does this work for you, %s: %d units by the end of day %d for %d coins (%d each)." % [n.name, what, qty, by_day, total, price]
+		else:
+			sentence = "%s delivers %d %s by the end of day %d for %d coins (%d each)." % [n.name, qty, what, by_day, total, price]
+		var sl := _label(sentence, 24)
+		sl.name = "Summary"
+		if not counter:
+			_label("Your coins for it are set aside when %s agrees, and paid as the goods come. You have %d coins." % [n.name, p.coins], 16)
+			if p.coins < total:
+				_label("You do not have %d coins for this: lower the quantity or the price." % total, 16, Color(1, 0.6, 0.5))
+		if counter:
+			next_btn = _button("Put these terms to %s" % n.name, func():
+				var r := k.counter_offer(k.get_contract(int(t.counter)), qty, price, days)
+				r.from_buyer = true
+				if r.has("contract"):
+					message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
+				show_contract(n, {}, r))
+		else:
+			next_btn = _button("Propose to %s" % n.name, func():
+				var r: Dictionary
+				if t.has("svc"):
+					r = k.propose(World.PLAYER, n, "", qty, price, days, [], t.svc)
+				else:
+					r = k.propose(World.PLAYER, n, str(t.item), qty, price, days)
+				if r.has("contract"):
+					message(("Contract made with %s: %s." % [n.name, k.describe(r.contract)]) if t.has("svc") else
+							"Contract made: %d %s from %s." % [qty, what, n.name])
+					show_contract(n, {}, r)
+				else:
+					var nt: Dictionary = t.duplicate()
+					nt.step = "sum"
+					show_contract(n, nt, r), p.coins >= total)
+	else:
+		var hint := ""
+		match step:
+			"qty":
+				hint = "How many do you want?" if not counter else "How many %s can you supply %s with?" % [what, n.name]
+			"price":
+				hint = "The price for each. %s" % ("" if counter or t.has("svc") else "Usual value: %d coins." % GameData.value(str(t.item)))
+			"days":
+				hint = "The days %s has to finish: the deadline is the end of day %d." % [n.name if not counter else "you have", by_day]
+		_label(hint, 16)
+		_term_stepper(n, t, step)
+		next_btn = _button("Next", func(): go.call(steps[at + 1]))
+		next_btn.custom_minimum_size = Vector2(280, 64)
+	next_btn.custom_minimum_size = Vector2(280, 64)
+	_focus_if_open.call_deferred(next_btn)      # pad and keyboard land on Next, not on a - button
+	_button("Back", back).custom_minimum_size = Vector2(280, 56)
+	inner_back = func() -> bool:        # Esc, X and the pad's B step back before they close the window
+		back.call()
+		return true
+
+
+func _focus_if_open(b: Control) -> void:
+	if is_instance_valid(b) and b.is_inside_tree() and b.is_visible_in_tree():
+		b.grab_focus()
+
+
+## One of the quantity, price-each or days rows of the contract window, with - and + buttons (touch, pad, keyboard).
+func _term_stepper(n: NPC, t: Dictionary, key: String) -> void:
+	var step := func(by: int) -> void:
+		var nt: Dictionary = t.duplicate()
+		var hi := int(Contracts.cfg().max_days) if key == "days" else 999
+		nt[key] = clampi(int(nt[key]) + by, 1, hi)
+		show_contract(n, nt)
+	var row: Array = {"qty": ["Quantity", [-10, -1], [1, 10]], "price": ["Price each", [-5, -1], [1, 5]], "days": ["Days", [-1], [1]]}[key]
+	var h := HBoxContainer.new()
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_theme_constant_override("separation", 8)
+	panel_body.add_child(h)
+	for by in row[1]:
+		var bb: int = by
+		_button(str(bb), func(): step.call(bb), true, h).custom_minimum_size = Vector2(72, 64)
+	var l := Label.new()
+	l.text = "%s: %d" % [row[0], int(t[key])]
+	l.custom_minimum_size = Vector2(220, 0)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", 24)
+	h.add_child(l)
+	for by in row[2]:
+		var bb: int = by
+		_button("+%d" % bb, func(): step.call(bb), true, h).custom_minimum_size = Vector2(72, 64)
 
 
 ## CON-02: a service contract's row in the contract window: a villager's offer to hire the player (Agree, Counter,
