@@ -6,28 +6,28 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 
 | Measure | Build 18 | Build 19 | Build 20 | Build 21 |
 |---|---|---|---|---|
-| Approved requirements (in scope) | 80 | 12 | 7 | 1 |
-| Fully specified (design SPECIFIED) | 58 of 80 (72%) | 6 of 12 (50%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Approved requirements (in scope) | 81 | 12 | 7 | 1 |
+| Fully specified (design SPECIFIED) | 58 of 81 (72%) | 6 of 12 (50%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Waiting on an owner decision (design) | 5 | 0 | 0 | 0 |
 | Design work still required | 6 | 2 | 0 | 0 |
-| Design unknown | 11 | 4 | 7 | 1 |
+| Design unknown | 12 | 4 | 7 | 1 |
 | Not started (incl. READY) | 22 | 6 | 7 | 1 |
-| In development (worker assigned) | 1 | 0 | 0 | 0 |
+| In development (worker assigned) | 2 | 0 | 0 | 0 |
 | Partially implemented | 16 | 3 | 0 | 0 |
 | Implemented on a task branch | 0 | 3 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
-| Integrated | 41 of 80 (51%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Automated tests passed (targeted or better) | 42 of 80 (52%) | 4 of 12 (33%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Integration verified (suite on the integrated build) | 40 of 80 (50%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Gameplay verified | 0 of 80 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Owner playtested | 0 of 80 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Complete | 1 of 80 (1%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Release blockers (open in-scope requirements) | 79 | 12 | 7 | 1 |
+| Integrated | 41 of 81 (51%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Automated tests passed (targeted or better) | 42 of 81 (52%) | 4 of 12 (33%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Integration verified (suite on the integrated build) | 40 of 81 (49%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Gameplay verified | 0 of 81 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Owner playtested | 0 of 81 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Complete | 1 of 81 (1%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Release blockers (open in-scope requirements) | 80 | 12 | 7 | 1 |
 | Open owner decisions (of which blocking) | 11 (2) | 1 (0) | 14 (14) | 9 (9) |
 | Deferred with approval | 2 | 1 | 0 | 0 |
-| Proposals and ideas (not counted) | 4 | 1 | 0 | 5 |
+| Proposals and ideas (not counted) | 3 | 1 | 0 | 5 |
 | Integrated, awaiting gameplay or owner verification | 40 | 0 | 0 | 0 |
-| Remaining implementation by effort band (not yet integrated) | XS 1, S 11, M 12, L 5, XL 1, UNKNOWN 9 | XS 2, M 3, L 4, XL 1, UNKNOWN 2 | UNKNOWN 7 | UNKNOWN 1 |
+| Remaining implementation by effort band (not yet integrated) | XS 1, S 11, M 12, L 5, XL 1, UNKNOWN 10 | XS 2, M 3, L 4, XL 1, UNKNOWN 2 | UNKNOWN 7 | UNKNOWN 1 |
 | Readiness | IN DEVELOPMENT (not feature complete) | PROTOTYPE ONLY (isolated branch; not integrated) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
 
 Build authority:

@@ -39,6 +39,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
 | REG-COURIER-01 | courier worker (Sonnet subagent) | `wip/b18-couriers` | `wip/build18` 421525c | couriers on the five settlements, wired into the live game and saves |
+| REG-BUY-01, REG-BUY-P1 | buying worker (Sonnet subagent) | `wip/b18-buying` | `wip/build18` 421525c | the village buys food and goods from the five; the approved selling policy; stays out of couriers.gd and the courier window |
 
 On their reports:
 1. Review the work.
@@ -49,7 +50,7 @@ On their reports:
 
 ## Next actions (lead)
 
-1. REG-BUY-01 once REG-BUY-P1 is decided, REG-COURIER-01, then REG-EVAL-01 against the preserved baseline (`docs/investigations/evidence_2026-10-23_regional/`).
+1. Merge the courier and buying workers when they report (targeted checks; one 30-day conservation run per seed on the combined result), then REG-EVAL-01 against the preserved baseline (`docs/investigations/evidence_2026-10-23_regional/`).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);
@@ -63,7 +64,7 @@ On their reports:
 Every open decision is in `docs/requirements/views/DECISIONS.md`. In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
-- regional economy: REG-BUY-P1 (the food-selling policy proposal under REG-BUY-D1), REG-DEMO-D1 (settlement population limit); REG-CIRC-D1 deferred until REG-EVAL-01;
+- regional economy: REG-DEMO-D1 (settlement population limit) (REG-BUY-P1 approved 2026-10-23); REG-CIRC-D1 deferred until REG-EVAL-01;
 - Build 18 packaging gate (REL18-PACKAGE): no test package until every Build 18 punch-list item is closed or accepted as permanently blocked;
 - chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
 - Builds 20 and 21 authorization.

@@ -2,11 +2,12 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (5)
+## Workers and task branches (6)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| REG-BUY-01 | 18 | IN DEVELOPMENT | buying worker (Sonnet subagent, started 2026-10-23) | wip/b18-buying |
 | REG-COURIER-01 | 18 | IN DEVELOPMENT | courier worker (Sonnet subagent, started 2026-10-23) | wip/b18-couriers |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |

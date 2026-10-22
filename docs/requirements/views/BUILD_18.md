@@ -8,20 +8,21 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 80 |
-| Integrated | 41 of 80 (51%) |
-| Automated tests passed | 42 of 80 (52%) |
-| Integration verified | 40 of 80 (50%) |
-| Gameplay verified | 0 of 80 (0%) |
-| Owner playtested | 0 of 80 (0%) |
-| Complete | 1 of 80 (1%) |
-| Open (release blockers) | 79 |
+| Approved requirements in scope | 81 |
+| Integrated | 41 of 81 (51%) |
+| Automated tests passed | 42 of 81 (52%) |
+| Integration verified | 40 of 81 (49%) |
+| Gameplay verified | 0 of 81 (0%) |
+| Owner playtested | 0 of 81 (0%) |
+| Complete | 1 of 81 (1%) |
+| Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 11 (2) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | OWNER APPROVED | IN DEVELOPMENT | buying worker (Sonnet subagent, started 2026-10-23) / wip/b18-buying | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | OWNER APPROVED | IN DEVELOPMENT | courier worker (Sonnet subagent, started 2026-10-23) / wip/b18-couriers | NOT TESTED | Builds on SettlementParty (integrated 421525c): wire CourierService into the live World and saves; booths per settlement served by its trader; carts for hire by settlement parties (Q18-12 approved, not yet built); routes from Regions.route_table | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (40)
@@ -102,7 +103,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | PL2-008 | Expandable property | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | PL2-014 | Modular house/workshop expansion | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | PL2-015 | Farming, livestock, hand plough | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REG-BUY-P1 | Settlement food-selling policy (REG-BUY-01), owner approved: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less their pantries and less the food its businesses expect to produce (World.necessity, NPCBrain._sale_stock: local buyers first); (3) a food-producing business with a demonstrated cash shortfall for essential operating expenses (wages, seeds, animal feed or other established necessities, from existing expense mechanisms) may sell into its necessity reserve, limited to that shortfall; (4) the settlement's own floating prices | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-BUY-01, REG-COURIER-01, design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria | SET-A | S |
@@ -139,7 +140,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | STONE-D2 | Iron chisel wear and recipe (STONE-06) | OPEN | yes | STONE-02, STONE-06, X18-STONECUT |
 | X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | OPEN | no |  |
 
-## Not counted: umbrellas, proposals, ideas, deferred (10)
+## Not counted: umbrellas, proposals, ideas, deferred (9)
 
 | ID | Item | Kind | Approval |
 |---|---|---|---|
@@ -152,5 +153,4 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | umbrella | OWNER APPROVED |
 | F-1 | NPC workshop construction | approved | DEFERRED |
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | umbrella | OWNER APPROVED |
-| REG-BUY-P1 | Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them | proposal | PROPOSED |
 

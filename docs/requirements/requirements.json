@@ -36029,7 +36029,7 @@
     "REG-BUY-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -36038,8 +36038,15 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> buying worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-buying",
+     "why": "Dependencies met: REG-PARTY-01 integrated; REG-BUY-D1 and REG-BUY-P1 owner approved"
     }
-   ]
+   ],
+   "assigned_worker": "buying worker (Sonnet subagent, started 2026-10-23)",
+   "branch": "wip/b18-buying"
   },
   {
    "id": "REG-BUY-D1",
@@ -36072,18 +36079,23 @@
   },
   {
    "id": "REG-BUY-P1",
-   "kind": "proposal",
-   "title": "Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them",
+   "kind": "approved",
+   "title": "Settlement food-selling policy (REG-BUY-01), owner approved: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less their pantries and less the food its businesses expect to produce (World.necessity, NPCBrain._sale_stock: local buyers first); (3) a food-producing business with a demonstrated cash shortfall for essential operating expenses (wages, seeds, animal feed or other established necessities, from existing expense mechanisms) may sell into its necessity reserve, limited to that shortfall; (4) the settlement's own floating prices",
    "description": "Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them",
    "source": "docs/directives/2026-10-23_regional_economy_decisions.md",
-   "owner_wording": null,
-   "approval": "Agent proposal for the owner's approval (REG-BUY-D1: 'Present any major new selling-policy rules for approval before implementing them')",
-   "acceptance": [],
+   "owner_wording": "REG-BUY-P1: APPROVED with one adjustment. ... A food-producing business may sell into its normal necessity reserve when it has a demonstrated cash shortfall for essential operating expenses, including wages, seeds, animal feed, or other established necessities. Limit those exceptional sales to the demonstrated shortfall. Do not permit unrestricted liquidation of protected food reserves. Use existing business expense and necessity mechanisms. Do not invent new expense categories or arbitrary balance numbers.",
+   "approval": "Owner 2026-10-23 (docs/directives/2026-10-23_reg_buy_p1_approval.md): APPROVED with one adjustment",
+   "acceptance": [
+    "A settlement offers food only above its households' foreseeable need over reserve_days less pantries and less expected production, computed by the same rule as World.necessity",
+    "A food-producing business sells into that reserve only with a demonstrated cash shortfall for essential operating expenses drawn from existing expense mechanisms (wages, seeds, feed or other established necessities), and no more than the shortfall",
+    "Prices are the settlement's own floating prices; no new balance numbers or expense categories",
+    "Settlements may still decide badly and suffer shortage or decline; nothing rescues them; coins and goods conserved; deterministic; tests"
+   ],
    "target_build": "18",
-   "parent": null,
+   "parent": "REG-BUY-01",
    "depends_on": [],
    "decisions": [],
-   "approval_status": "PROPOSED",
+   "approval_status": "OWNER APPROVED",
    "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT APPLICABLE",
@@ -36093,6 +36105,16 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_decisions.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "approval_status: PROPOSED -> OWNER APPROVED; kind; approval; owner_wording; title",
+     "why": "Owner approved with the rule-3 adjustment (docs/directives/2026-10-23_reg_buy_p1_approval.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance criteria and parent REG-BUY-01 set from the owner's approval",
+     "why": "approved work needs acceptance criteria (docs/directives/2026-10-23_reg_buy_p1_approval.md)"
     }
    ]
   },

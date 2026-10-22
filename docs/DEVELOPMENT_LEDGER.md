@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (555)
+## Approved requirement (556)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -442,7 +442,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REC-015 | NPC competition and economic rivalry (as a game system) |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REC-016 | NPC self-improvement and prosperity (as a game system) |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
-| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| REG-BUY-P1 | Settlement food-selling policy (REG-BUY-01), owner approved: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less their pantries and less the food its businesses expect to produce (World.necessity, NPCBrain._sale_stock: local buyers first); (3) a food-producing business with a demonstrated cash shortfall for essential operating expenses (wages, seeds, animal feed or other established necessities, from existing expense mechanisms) may sell into its necessity reserve, limited to that shortfall; (4) the settlement's own floating prices | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -564,7 +565,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 
-## Proposal awaiting an owner decision (not approved) (35)
+## Proposal awaiting an owner decision (not approved) (34)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -595,7 +596,6 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | Q-11 | Design gap assessment, phased sequence | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
-| REG-BUY-P1 | Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them | 18 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | 16 | PROPOSED | INTEGRATED | INTEGRATION VERIFIED | NOT APPLICABLE | COMPLETE |
 | VP-01A | Village politics stage: Audit of the reeve, guard pay and succession decision points | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
