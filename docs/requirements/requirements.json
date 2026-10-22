@@ -22098,9 +22098,20 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> PARTIALLY IMPLEMENTED",
+     "why": "Owner conditionally approved Option A (revised_bounded) for mining, forestry, trade, tanning, carpentry and smithing (2026-10-22, docs/directives/2026-10-22_q18_11a_conditional_decision.md); farming to be handled as labour-time efficiency with matching pay, numbers to be proposed; not implemented"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "PARTIALLY IMPLEMENTED -> BLOCKED; owner_answer",
+     "why": "Correction: six industries answered, farming still awaits the owner; stays open until the farming numbers are approved"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Partial (2026-10-22): Option A (revised_bounded) approved for mining, forestry, trade, tanning, carpentry and smithing; farming still open: a labour-time efficiency and pay progression 0-10 to be proposed and approved (docs/directives/2026-10-22_q18_11a_conditional_decision.md)"
   },
   {
    "id": "Q18-11B",
@@ -28506,6 +28517,53 @@
     {
      "date": "2026-10-22",
      "change": "target_build; next_action",
+     "why": "Placed in Expansion 18"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "X18-CAPNUM",
+   "title": "Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "I approve the bounded capability model in Option A for mining, forestry, trade, tanning, carpentry, and smithing, using the proposed output and pay modifiers. ... For farming: Keep crop yield determined by the land ... Allow experience to reduce the labor time required for farming activities ... Do not implement the farming progression until I approve its numbers.",
+   "description": "Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency",
+   "source": "docs/directives/2026-10-22_q18_11a_conditional_decision.md",
+   "approval": "Owner conditional approval of Q18-11A Option A, 2026-10-22",
+   "acceptance": [
+    "Mining and forestry +5% output / +2% pay at level 10 (front-loaded); trade and tanning +10% / +4% (intermediate); carpentry and smithing +15% / +6% (the owner's shape); output = less time per unit, full inputs each unit; read from the effective level",
+    "Farming: crop yield from the land only; experience shortens farm labour time and raises farm pay per approved numbers; nothing created",
+    "Expansion 18 only; Build 17 unchanged; minimum validation after the full profile is approved and implemented"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [
+    "Q18-11A",
+    "X18-CAPCOMP"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_q18_11a_conditional_decision.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
      "why": "Placed in Expansion 18"
     }
    ],
