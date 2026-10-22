@@ -11000,6 +11000,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Keeper diagnostic done (seed 3, both switches, yield 2, dbbb66a; reproduces the reference run): the keeper's coins hit 0 on day 7 (milk earns ~1/6 of the herd's grain cost); feed available and reachable but unaffordable (143 of 146 no-feed events: no coins); herd starved across a 6-day winter gap between cuttings. Two-day seasons are the owner's design (B8-029). No implementation defect established; balance concerns recorded; unresolved: crop allocation to the first farmer finishing a cutting, cheese stalling. Options listed, none applied; switches stay 0"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "Crop allocation established by code reading and the existing trace (no run): the first co-worker to finish a cutting takes the whole crop (after feeding the field's keeper's pen up to 4 days and topping up their pantry); others' labour yields nothing. Not in any decision or design; classed as an implementation defect (missing division rule), conserving, active with the switches off too. Owner decision FARM-08-Q-CROP; nothing changed"
     }
    ],
    "target_build": "16",
@@ -11007,6 +11012,48 @@
    "roadmap_reason": "owner decision 2026-10-21 (FSE-12/13)",
    "b16_class": "required",
    "complexity": "M"
+  },
+  {
+   "id": "FARM-08-Q-CROP",
+   "title": "How is a field's crop divided among the farmers who work it?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "Today the farmer whose cutting finishes first takes the whole crop and the co-workers' labour earns nothing; no decision sets this. Options: (a) equal division among the workers at the cutting; (b) in proportion to cutting time; (c) rotate the single taker; (d) confirm the present rule.",
+   "description": "How is a field's crop divided among the farmers who work it?",
+   "source": "docs/design/FARM08_YIELD_COMPARISON.md",
+   "approval": "Agent question, awaiting owner (FARM-08 crop-allocation investigation 2026-10-22)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/design/FARM08_YIELD_COMPARISON.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> BLOCKED; target_build",
+     "why": "Open owner question"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "FARM-08A",

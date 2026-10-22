@@ -413,3 +413,41 @@ scratchpad `farm08diag/`).
 seasonal fields; size the herd to the keeper's grain or raise milk's value; investigate the cheese outlet, then milk caps
 or another buyer; let feed purchases draw on the household purse as meals do, or granary sales to keepers; first log who
 cuts each field and, if the crop is meant to be shared, split it among the field's workers or reserve the keeper's share.
+
+## Crop allocation (owner request 2026-10-22: read-only, code inspection plus the existing keeper trace; no new run)
+
+**Confirmed from code (staging, the same rules as `dbbb66a`):**
+1. *Ownership and authority.* Every field is the manor's; "its crop the farmers' who work it" (`world.gd` comment above
+   `player_harvest`). The workers of a field are the living farmers whose `workplace` is it (`World.field_workers`), set
+   round-robin at world creation (`population.gd:183-184`) or when a manor hand takes over an untended field
+   (`npc_brain.gd:861`); fields have no lease or owner record of their own (OD-23 concerns rent, not division). Anyone else
+   taking crop is theft, except the player hired for the harvest (`Quests.hired_harvest`).
+2. *Who labours.* Every worker of a ripe field plans the same cutting (`npc_brain.gd:1252-1255`: `work(cut, "harvest")`), so
+   co-workers cut side by side for the whole cutting time.
+3. *Who receives.* The worker whose cutting action completes first takes the entire crop (`take_crop(f, 1 << 30)`,
+   `npc_brain.gd:2241-2243`) less seed kept back; the field becomes tilled, so the others' actions find nothing
+   (`field_cuttable` false, the action returns false) and they get no share. From the harvester's crop: the pen of any
+   keeper working the same field is fed up to 4 days (1 in famine) first (`npc_brain.gd:2246-2252`, comment "the farm's
+   livestock is fed from the farm's crop ... before anything is sold"), then the harvester's household pantry is topped up
+   to 10, and the rest stays with the harvester to sell.
+4. *Trace evidence (keeper diagnostic, seed 3):* the keeper (NPC 39) was "harvesting wheat" at the cuttings of days 4 and 10,
+   held no wheat after them, and his trough jumped (36 to 64 on day 4, 7 to 48 on day 10): the co-worker who finished first
+   took the crop and fed his pen; the keeper later bought wheat from Joan Oakley (farmer) on days 14 and 15.
+
+**Owner decisions and documents checked:** OD-23 (rent and crop share to the manor: the lease answer, nothing on division
+among co-workers), FSE-12/FSE-13 (one model, seasonal fields; nothing on division), the food-security audit ("farmers keep the
+whole crop", plural), the PAR and FSE directives (real labour, real accounting). **No decision or design text says the first
+farmer to finish takes everything**, and none sets a division rule.
+
+**Classification.** The "first to finish takes all" rule is not an approved design: it contradicts the stated collective
+ownership ("the farmers' who work it") and wastes the co-workers' completed labour (an action that does nothing). It is
+classed as an **implementation defect in an unspecified area** - a missing division rule - rather than a legitimate outcome.
+It conserves goods (nothing created or lost), it applies with both farming switches off (the same `take_crop` call), and the
+keeper's herd is not deprived by it at a cutting (the field's crop feeds the pen first, by design); its effect on the keeper
+is that his labour earns him no grain to sell or keep, only the 4 days of feed. How the crop should be divided is an owner
+decision; no change has been made.
+
+**Options (none applied):** (a) divide the crop among the field's workers present at the cutting, equally; (b) divide it in
+proportion to the cutting time each put in; (c) keep one taker but rotate it among the field's workers; (d) confirm the
+present rule as intended (then record it in the design). In every case the pen feeding stays first and the seed kept back
+stays with the field's seed rule.
