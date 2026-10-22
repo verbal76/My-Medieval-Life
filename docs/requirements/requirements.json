@@ -22064,7 +22064,7 @@
    "id": "Q18-11A",
    "title": "Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved)",
    "source": "docs/directives/2026-10-21_expansion18_master_directive.md",
@@ -22108,10 +22108,15 @@
      "date": "2026-10-22",
      "change": "PARTIALLY IMPLEMENTED -> BLOCKED; owner_answer",
      "why": "Correction: six industries answered, farming still awaits the owner; stays open until the farming numbers are approved"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; target_build",
+     "why": "Owner's final approval: F1 for farming completes Q18-11A"
     }
    ],
-   "target_build": "owner decision",
-   "owner_answer": "Partial (2026-10-22): Option A (revised_bounded) approved for mining, forestry, trade, tanning, carpentry and smithing; farming still open: a labour-time efficiency and pay progression 0-10 to be proposed and approved (docs/directives/2026-10-22_q18_11a_conditional_decision.md)"
+   "target_build": "",
+   "owner_answer": "Approved 2026-10-22: Option A (revised_bounded) for mining, forestry (+5% output, +2% pay at L10, front-loaded), trade, tanning (+10%/+4%, intermediate), carpentry, smithing (+15%/+6%, owner's shape); farming F1: +10% work rate and +4% pay at L10, intermediate shape, labour time only, never yield (docs/directives/2026-10-22_q18_11a_final_decision.md)"
   },
   {
    "id": "Q18-11B",
@@ -28526,7 +28531,7 @@
    "id": "X18-CAPNUM",
    "title": "Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "I approve the bounded capability model in Option A for mining, forestry, trade, tanning, carpentry, and smithing, using the proposed output and pay modifiers. ... For farming: Keep crop yield determined by the land ... Allow experience to reduce the labor time required for farming activities ... Do not implement the farming progression until I approve its numbers.",
    "description": "Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency",
    "source": "docs/directives/2026-10-22_q18_11a_conditional_decision.md",
@@ -28552,7 +28557,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/expansion18-preparation",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -28565,6 +28570,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Placed in Expansion 18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Farming F1 approved (docs/directives/2026-10-22_q18_11a_final_decision.md): work rate 0/2.5/4.4/5.9/7.0/7.8/8.5/9.1/9.5/9.8/10.0% and pay 0/1.0/1.8/2.4/2.8/3.1/3.4/3.6/3.8/3.9/4.0% at levels 0-10; mandatory rules: efficiency not yield; field productivity, growth, seed, animal production and conservation unchanged; durations from the effective level; pay only on paid farm labour, never crop prices; experience kept under facility limits; levels never block work; negotiated prices and contract terms never overridden, no mandatory wages. Implementation on the Expansion 18 branch by its worker"
     }
    ],
    "target_build": "18"
