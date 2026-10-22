@@ -27,6 +27,7 @@ func _init() -> void:
 	test_min_d_schema()
 	test_specialization()
 	test_history()
+	test_continuity()
 	test_live_village()
 	test_rule_parity()
 	test_save_section()
@@ -266,6 +267,30 @@ func test_specialization() -> void:
 	check(str(spec.hollow[0].industry) == "mining" and str(spec.wheatby[0].industry) in ["farming", "trade"],
 		"each settlement's specialization is its own (hollow: %s; wheatby: %s)" % [spec.hollow[0].industry, spec.wheatby[0].industry])
 	check(prof.hollow != prof.wheatby, "the two settlements have different industry profiles")
+
+
+## SET-B phase gate (spec s.10): loss of specialists and generational continuity, and the workshop a capability stands on.
+## Knowledge lives in the people (their Skills) and what they hold; nothing is stored in the settlement, so it passes on
+## only through a person who has learned it, and falls when the last one and their tool are gone.
+func test_continuity() -> void:
+	var f := smithy_facts()
+	f.practitioners.append({"job": "", "skills": {"smithing": 2}, "tools": {"hammer": 1}})      # the smith's apprentice, trained beside them
+	f.practitioners = f.practitioners.filter(func(p): return p.job != "smith")                  # the master dies
+	check(SettlementIndustries.levels(f).smithing == 1, "the master smith dies: the apprentice who learned the trade carries smithing on (knowledge continuity)")
+	var g := smithy_facts()
+	g.practitioners = g.practitioners.filter(func(p): return p.job != "smith")                  # the master dies untaught-after
+	g.practitioners.append({"job": "", "skills": {}, "tools": {}})                                  # a villager who never learned it, no tool
+	check(SettlementIndustries.levels(g).smithing == 0, "with no one trained, the knowledge is gone (a villager without the skill or the tool is no smith)")
+	var h := smithy_facts()
+	h.stations.erase("anvil")
+	check(SettlementIndustries.levels(h).smithing == 0, "the smith without an anvil: the workshop is infrastructure, the level falls with it")
+	h = smithy_facts()
+	h.stations.erase("forge")
+	check(SettlementIndustries.levels(h).smithing == 0, "and without a forge")
+	var st := {}
+	SettlementIndustries.record(st, SettlementIndustries.levels(smithy_facts()), 10)
+	SettlementIndustries.record(st, SettlementIndustries.levels(g), 40)
+	check(int(st.since.smithing) == 40 and st.history.size() >= 1 and int(st.levels.smithing) == 0, "the fall is recorded with its day (regression, not erased)")
 
 
 func test_history() -> void:

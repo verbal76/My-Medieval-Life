@@ -64,7 +64,7 @@ Data: `game/data/settlement_industries.json` (`mml-capabilities/1`), test fixtur
   rule or job privilege is added.
 - First industries (provisional, Q18-2): forestry (woodcutting + axe), carpentry (crafting; joinery with a hammer),
   smithing (smithing + hammer), farming (farmers; a plough for ploughland), tanning (crafting), trade (trading), plus
-  external mining. Carpentry and tanning have no skill of their own yet (Q18-1, DVW-B8), so crafting stands in.
+  external mining. Carpentry, masonry and tanning are skills of their own (Q18-1, `game/data/skills.json`, seeded from Crafting); the data file names them.
 
 ## 3. Regional economy (SET-C; spec s.5-s.7, s.9, s.11)
 
