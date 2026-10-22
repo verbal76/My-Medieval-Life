@@ -14959,6 +14959,132 @@
    "target_build": "15"
   },
   {
+   "id": "INV-18",
+   "title": "Categorized inventory: eight capacity pools, separate equipment, two upgrade stages",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Eight categories. Three rows of nine per category. Eighteen starting positions per category. Five more with the first upgrade. Four more with the second. Six separate equipment slots.",
+   "description": "Categorized inventory: eight capacity pools, separate equipment, two upgrade stages",
+   "source": "docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md",
+   "approval": "owner directive 2026-10-22 (answers PACK-Q)",
+   "acceptance": [
+    "All 13 acceptance criteria of the directive section 13"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-inventory",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-inventory",
+   "superseded_by": null,
+   "notes": "docs/build18/INV18_PLAN.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream; notes",
+     "why": "Phase A done (docs/build18/INV18_PLAN.md); implementation started on wip/b18-inventory; borderline classifications put to the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "INV-Q1",
+   "title": "INV-18 borderline item classifications",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "Provide the owner with any genuine ambiguous classifications rather than silently inventing new item semantics.",
+   "description": "INV-18 borderline item classifications",
+   "source": "docs/build18/INV18_PLAN.md",
+   "approval": "",
+   "acceptance": [
+    "Owner assigns jewellery, wheat, raw meat, seeds/saplings/cuttings, herbal tonic, lockpick/padlock"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "INV-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/INV18_PLAN.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "presented with recommendations"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "INV-Q2",
+   "title": "INV-18 upgrade acquisition and cost",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "Do not invent these rules.",
+   "description": "INV-18 upgrade acquisition and cost",
+   "source": "docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md",
+   "approval": "",
+   "acceptance": [
+    "Owner sets how the two upgrades are gained and their cost"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "INV-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "recorded; presented after INV-Q1"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "JUICE-00",
    "title": "Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only)",
    "kind": "approved",
@@ -19842,7 +19968,7 @@
    "id": "PACK-Q",
    "title": "Pack capacity: how many kinds the player can carry",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "How come my pack be full if the tabs up top? There's like four tabs that have one thing in them. I should have like 70 different places to put stuff",
    "description": "Pack capacity: how many kinds the player can carry",
    "source": "owner message 2026-10-22 with photos of the pack",
@@ -19876,9 +20002,15 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "presented: A keep 24 shared kinds (tabs filter), B one larger shared pack (owner sets the size), C room per tab; agent recommends B"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "owner answered with INV-18: eight categories with their own capacity (18/23/27 per category)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "INV-18 directive 2026-10-22: eight independent category pools of 18, 23 and 27 positions, six equipment slots apart"
   },
   {
    "id": "PAR-00",
