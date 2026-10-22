@@ -9,9 +9,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 80 |
-| Integrated | 40 of 80 (50%) |
-| Automated tests passed | 41 of 80 (51%) |
-| Integration verified | 38 of 80 (48%) |
+| Integrated | 41 of 80 (51%) |
+| Automated tests passed | 42 of 80 (52%) |
+| Integration verified | 39 of 80 (49%) |
 | Gameplay verified | 0 of 80 (0%) |
 | Owner playtested | 0 of 80 (0%) |
 | Complete | 1 of 80 (1%) |
@@ -22,9 +22,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | OWNER APPROVED | IN DEVELOPMENT | party worker (Sonnet subagent, started 2026-10-23) / wip/b18-party | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | OWNER APPROVED | IN DEVELOPMENT | courier worker (Sonnet subagent, started 2026-10-23) / wip/b18-couriers | NOT TESTED | Builds on SettlementParty (integrated 421525c): wire CourierService into the live World and saves; booths per settlement served by its trader; carts for hire by settlement parties (Q18-12 approved, not yet built); routes from Regions.route_table | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (39)
+## Integrated, awaiting gameplay or owner verification (40)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -46,6 +46,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; the determinism gate must be re-recorded on Build 18 (REL18-DET) because clue placement changed |  | verification only |
 | REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | OWNER APPROVED | INTEGRATED | 18 | TARGETED TESTS PASSED | Conservation runs on 0b2b638 (running); owner answer REG-DEMO-D1; provisional choices recorded in DECISIONS.md; known: No housing or land limit on settlement births (REG-DEMO-D1); marriage only within a settlement until MIGRATE-18 |  | verification only |
 | REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | OWNER APPROVED | INTEGRATED | staging | TARGETED TESTS PASSED | Owner review of the report (docs/investigations/2026-10-23_regional_economy.md) and decisions REG-WAGE-D1, REG-BUY-D1, REG-CIRC-D1 |  | verification only |
+| REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Per-holder need and sale-cap derivations in SettlementParty are provisional agent proposals (DESIGN.md 12a); the food-selling policy awaits REG-BUY-P1; known: Not called from the daily loop yet (RegionalMarket wiring is part of REG-BUY-01; couriers REG-COURIER-01); No settlement party hires out carts yet; treasuries and businesses cannot travel (carriage per Q18-12, approved: to be built under REG-COURIER-01) |  | verification only |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: no doorway on a house's east wall (furniture) or between rooms stacked north-south; the old-world (legacy plots) view is untested by screenshot |  | verification only |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; owner may review the lore choices in docs/expansion18/SETTLEMENTS.md; known: Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open) |  | verification only |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned); known: No births or old-age deaths in the settlements yet; Village cannot buy food from the settlements yet; no tool-shortage productivity penalty |  | verification only |
@@ -93,7 +94,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |  | L |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (18)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -101,9 +102,8 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | PL2-008 | Expandable property | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | PL2-014 | Modular house/workshop expansion | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | PL2-015 | Farming, livestock, hand plough | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-PARTY-01, design: UNKNOWN | UNKNOWN |
-| REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-PARTY-01, design: UNKNOWN | UNKNOWN |
-| REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-PARTY-01, REG-BUY-01, REG-COURIER-01, design: UNKNOWN | UNKNOWN |
+| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-BUY-01, REG-COURIER-01, design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria | SET-A | S |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | lands with SET-C-SIM and SET-C-FIVE | SET-B | UNKNOWN |

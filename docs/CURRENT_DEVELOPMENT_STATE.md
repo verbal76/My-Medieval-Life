@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `0b2b638` (2026-10-23) | Build 18 integration; chapel, settlements, feasts, luxuries, the necessity-wage correction (REG-WAGE-D1 approved) and settlement demographics merged; 30-day conservation on 0b2b638 running |
+| `wip/build18` | `421525c` (2026-10-23) | Build 18 integration; chapel, settlements, feasts, luxuries, the necessity-wage correction, settlement demographics and the trading-party interface merged |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -38,7 +38,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| REG-PARTY-01 | party worker (Sonnet subagent) | `wip/b18-party` | `wip/build18` 7fc4426 | one trading-party interface over the five settlements for RegionalMarket and couriers |
+| REG-COURIER-01 | courier worker (Sonnet subagent) | `wip/b18-couriers` | `wip/build18` 421525c | couriers on the five settlements, wired into the live game and saves |
 
 On their reports:
 1. Review the work.
@@ -49,7 +49,7 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Merge the party worker when it reports (targeted checks and one 30-day conservation run per seed); then REG-BUY-01 once REG-BUY-P1 is decided, REG-COURIER-01, then REG-EVAL-01 against the preserved baseline (`docs/investigations/evidence_2026-10-23_regional/`).
+1. REG-BUY-01 once REG-BUY-P1 is decided, REG-COURIER-01, then REG-EVAL-01 against the preserved baseline (`docs/investigations/evidence_2026-10-23_regional/`).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);

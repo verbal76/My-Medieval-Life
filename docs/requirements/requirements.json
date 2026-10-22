@@ -36144,7 +36144,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -36153,8 +36153,21 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "REG-PARTY-01 integrated"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> courier worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-couriers",
+     "why": "Unblocked by REG-PARTY-01; approved X18-Q12 family; no open decision"
     }
-   ]
+   ],
+   "remaining_work": "Builds on SettlementParty (integrated 421525c): wire CourierService into the live World and saves; booths per settlement served by its trader; carts for hire by settlement parties (Q18-12 approved, not yet built); routes from Regions.route_table",
+   "assigned_worker": "courier worker (Sonnet subagent, started 2026-10-23)",
+   "branch": "wip/b18-couriers"
   },
   {
    "id": "REG-DEMO-01",
@@ -36335,8 +36348,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -36349,10 +36362,30 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> party worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-party",
      "why": "Engineering prerequisite of REG-BUY-01 and REG-COURIER-01; no open decision"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> On merge 421525c: party_test 102, regional_test 71, courier_test 45, contract_sign_test 21, settlement_test 83, capability_test 72, regions_test 118, settlement_life_test 54, save_transfer_test 21, conservation_test 8, 0 failures; worker on 4b736c2: run_tests 3591, economy_sim 30 days seed 1 no leaks; test_commit: None -> 421525c; commits + 4b736c2; commits + 3b7476f; commits + 421525c; integrated_in + 18; known_defects + Not called from the daily loop yet (RegionalMarket wiring is part of REG-BUY-01; couriers REG-COURIER-01); known_defects + No settlement party hires out carts yet; treasuries and businesses cannot travel (carriage per Q18-12, approved: to be built under REG-COURIER-01); remaining_work",
+     "why": "Party worker finished (4b736c2, 3b7476f); merged into wip/build18 at 421525c"
     }
    ],
    "assigned_worker": "party worker (Sonnet subagent, started 2026-10-23)",
-   "branch": "wip/b18-party"
+   "branch": "wip/b18-party",
+   "tests": "On merge 421525c: party_test 102, regional_test 71, courier_test 45, contract_sign_test 21, settlement_test 83, capability_test 72, regions_test 118, settlement_life_test 54, save_transfer_test 21, conservation_test 8, 0 failures; worker on 4b736c2: run_tests 3591, economy_sim 30 days seed 1 no leaks",
+   "test_commit": "421525c",
+   "commits": [
+    "4b736c2",
+    "3b7476f",
+    "421525c"
+   ],
+   "integrated_in": [
+    "18"
+   ],
+   "known_defects": [
+    "Not called from the daily loop yet (RegionalMarket wiring is part of REG-BUY-01; couriers REG-COURIER-01)",
+    "No settlement party hires out carts yet; treasuries and businesses cannot travel (carriage per Q18-12, approved: to be built under REG-COURIER-01)"
+   ],
+   "remaining_work": "Per-holder need and sale-cap derivations in SettlementParty are provisional agent proposals (DESIGN.md 12a); the food-selling policy awaits REG-BUY-P1"
   },
   {
    "id": "REG-WAGE-D1",
