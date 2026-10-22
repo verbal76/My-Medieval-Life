@@ -18,10 +18,11 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 72 |
 | Open owner decisions (blocking) | 10 (2) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) / wip/b18-feast | NOT TESTED |  |  | M |
 | ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | M |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | M |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | XL |
@@ -63,11 +64,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | final percentages after X18-SIM (Q18-11); MIN-D mining stages mapped to 0-10 (reconciliation item); owner playtest |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (22)
+## Ready to proceed now (approved, specified, nothing open blocks it) (21)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |

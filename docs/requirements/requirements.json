@@ -12410,7 +12410,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-feast",
    "commits": [],
    "parent": "DVW-B3",
    "depends_on": [],
@@ -12438,18 +12438,24 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> feast worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-feast",
+     "why": "Next approved, unblocked Build 18 item that does not overlap the regions worker's settlement code"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "assigned_worker": "feast worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "DVW-B3-LUX",

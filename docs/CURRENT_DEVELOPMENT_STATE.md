@@ -38,12 +38,13 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| SET-C-SIM, SET-C-FIVE, ECON-P1.3 | regions worker (Sonnet subagent) | `wip/b18-regions` | `wip/build18` 83d3afc | uncommitted work at the reconciliation; settlements from the lore locations (`docs/directives/2026-10-23_lore_locations_basis.md`); merge onto `wip/build18` 71b6285 (chapel merged: watch `settlement/holdings.gd` "chapel" key and INT-225..227 numbering) |
+| SET-C-SIM, SET-C-FIVE, ECON-P1.3 | regions worker (Sonnet subagent) | `wip/b18-regions` | `wip/build18` 83d3afc | uncommitted work at the reconciliation; settlements from the lore locations (`docs/directives/2026-10-23_lore_locations_basis.md`); merge onto `wip/build18` 71b6285 (chapel merged: watch the "chapel" key in the settlement holdings script and INT-225..227 numbering) |
+| DVW-B3-FEAST | feast worker (Sonnet subagent) | `wip/b18-feast` | `wip/build18` 2e059fa | wedding and seasonal feasts at the tavern (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`); stays out of the settlement scripts (the regions worker owns them) |
 
 On their reports:
 1. Review the work.
 2. Merge it into `wip/build18`.
-3. Run targeted integration and conservation checks on the merge commit (the suites the change touches, conservation runs); not broad suites without a specific reason (owner 2026-10-23, MSW-01). For the regions merge: the chapel and settlements share `settlement/holdings.gd` and the economy ledger.
+3. Run targeted integration and conservation checks on the merge commit (the suites the change touches, conservation runs); not broad suites without a specific reason (owner 2026-10-23, MSW-01). For the regions merge: the chapel and settlements share the settlement holdings script and the economy ledger.
 4. Update the records: INTEGRATED, `test_commit`.
 5. Regenerate the views.
 
