@@ -255,7 +255,7 @@ func _test_saves() -> void:
 	check(int(g1.get("building_block", 0)) == int(g0.get("building_block", 0)) and int(g1.get("stone", 0)) == int(g0.get("stone", 0)),
 			"blocks (%d) and stone (%d) are all there after loading" % [int(g1.get("building_block", 0)), int(g1.get("stone", 0))])
 	check(w2.player.inv.count("building_block") == 7 and w2.npc(lab.id).inv.count("building_block") == 4, "in the same hands")
-	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION == 17, "no new save version (17)")
+	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 
 
 ## The same seed, the same course: two worlds with a labourer set to dress stone end alike.

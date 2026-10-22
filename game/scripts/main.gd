@@ -756,9 +756,12 @@ func new_game(spec := {}) -> void:
 		p.name = spec.name
 		p.family = spec.family
 		p.sex = spec.sex
-		p.look = spec.look
-		p.sprite = spec.sprite
-		p.heir_sprite = spec.sprite
+		# CC-01: the look is a recipe (CharacterLook); the heir who is not the player's child keeps it too
+		p.appearance = CharacterLook.normalize(spec.appearance)
+		p.heir_appearance = p.appearance.duplicate(true)
+		p.look = ""
+		p.sprite = ""
+		p.heir_sprite = ""
 	_build_scene()
 	_show_plants()                            # SEED-03: berry bushes out of season are bare from the start
 	if spec.is_empty():
@@ -973,7 +976,7 @@ func _build_scene() -> void:
 		actors.add_child(s)
 		sprites[n.id] = s
 	player_sprite = ActorSprite.new()
-	player_sprite.setup(world.player.sprite)
+	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
 	actors.add_child(player_sprite)
 	camera = Camera2D.new()
 	camera.zoom = Vector2(3, 3) * view_scale
@@ -4280,7 +4283,7 @@ func _notification(what: int) -> void:
 
 func continue_as_heir() -> void:
 	world.continue_as_heir()
-	player_sprite.setup(world.player.sprite)
+	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
 	player_sprite.play("idle")
 	ui.hide_all()
 	save_game(false)

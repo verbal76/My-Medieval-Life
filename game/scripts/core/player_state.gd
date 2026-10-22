@@ -23,7 +23,9 @@ var head := ""                # a cap or helmet
 var amulet := ""
 var ring := ""
 var sex := "male"             # chosen at character creation
-var look := "player_m0_basic" # appearance id (game/data/appearances.json)
+var look := "player_m0_basic" # appearance id of Builds 7-17 (game/data/appearances.json); "" since CC-01
+var appearance := {}          # CC-01: the look as a recipe {picks, swatches} (CharacterLook); {} = drawn from `sprite`
+var heir_appearance := {}     # the look a relative heir takes (as heir_sprite)
 var born := 0.0               # game minutes (B8-029); the player ages on the world calendar (Life.age_years)
 var mother := -1              # npc id of a parent still in the village, -1 none (an heir who was a villager's child)
 var father := -1
@@ -249,7 +251,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
-		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
+		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 	}
 
@@ -277,6 +279,15 @@ static func from_dict(d: Dictionary) -> PlayerState:
 		p.set(k, str(d.get(k, "")))
 	p.sex = str(d.get("sex", "male"))
 	p.look = str(d.get("look", ""))
+	# CC-01 (save 18): the look is a recipe; a save of 17 or before holds only the look's id and sheets, which
+	# migrate to the recipe the importer baked them from (game/data/appearances.json); any other sheet (a
+	# villager's child, the old default) has no recipe and stays drawn from that sheet
+	if d.has("appearance"):
+		p.appearance = CharacterLook.normalize(d.appearance)
+		p.heir_appearance = CharacterLook.normalize(d.get("heir_appearance", {}))
+	else:
+		p.appearance = CharacterLook.from_legacy(p.look, p.sprite)
+		p.heir_appearance = CharacterLook.from_legacy("", p.heir_sprite)
 	p.born = float(d.get("born", 0.0))
 	for k in ["mother", "father", "partner"]:
 		p.set(k, int(d.get(k, -1)))

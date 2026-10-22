@@ -10,7 +10,7 @@
    "used_for": "Overworld grass/cliff wangset (overworld_tiles.json).", "scale": "16 px, 1:1"},
   {"id": "puny_characters", "name": "Puny Characters (Editor + TDSM)", "creator": "Shade", "sources": ["PUNY_CHARACTERS_v2.1.zip", "PUNY_CHARACTERS_v2.1_tdsm-2026.zip"], "storage": "public", "licence": "paid",
    "permissions": "Use in the owner's games.", "categories": ["characters", "animations"], "status": "integrated",
-   "used_for": "Every villager, bandit and the player (generated layered sheets in game/assets/characters).", "scale": "32 px frames, about 14 x 16 px visible: the reference human"},
+   "used_for": "Every villager, bandit and guard (generated layered sheets in game/assets/characters); the player, drawn at run time from a recipe of the uncoloured layer sheets in game/assets/characters/layers (CC-01, CharacterLook, game/data/character_style.json).", "scale": "32 px frames, about 14 x 16 px visible: the reference human"},
   {"id": "puny_characters_free", "name": "Puny Characters (free)", "creator": "Shade", "sources": ["Puny-Characters.zip"], "storage": "public", "licence": "CC0",
    "permissions": "CC0.", "categories": ["characters"], "status": "reference", "decision": "Superseded by the paid editor edition; kept as reference."},
   {"id": "puny_monsters", "name": "Puny Monsters", "creator": "Shade", "sources": ["PunyMonsters.zip"], "storage": "public", "licence": "CC0",

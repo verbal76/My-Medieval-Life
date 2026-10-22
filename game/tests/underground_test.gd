@@ -213,7 +213,7 @@ func _test_save_load() -> void:
 	bag.add("coal", 2)
 	w.loot.append({"pos": p.pos, "inv": bag, "coins": 0, "from": "dropped by test", "level": -1})
 	var d := w.to_dict()
-	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION == 17 and d.underground.player_level == -1, "the save is version 17 and holds the player's level")
+	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17 and d.underground.player_level == -1, "the save is version 17 or later (18: CC-01) and holds the player's level")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	check(w2.player_level == -1 and w2.player.pos.is_equal_approx(p.pos), "a save made below loads below, at the same place")

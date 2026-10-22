@@ -334,7 +334,7 @@ func _test_saves() -> void:
 	pr.take_sample(w.player, c, c.spots[1])
 	pr.assay(w.player, s)
 	var d := w.to_dict()
-	check(int(d.save_version) == 17, "no new save version (17)")
+	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	var p2 := w2.prospecting

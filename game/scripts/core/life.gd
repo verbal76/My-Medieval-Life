@@ -648,6 +648,7 @@ static func make_heir(w: World, heir: PlayerState, kid: NPC, parent: PlayerState
 	heir.mother = kid.mother
 	heir.father = kid.father
 	heir.look = ""
+	heir.appearance = {}                   # CC-01: drawn from the child's own (baked) sheet
 	if kid.household >= 0:
 		(w.households[kid.household].members as Array).erase(kid.id)
 	var bag := Inventory.new()
