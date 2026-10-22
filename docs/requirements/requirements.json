@@ -12408,10 +12408,13 @@
     "Households (and the player) hold a wedding feast or a seasonal feast at the tavern, buying real food and ale from stock; coins conserved (paid to sellers); deterministic; wiki page"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "feast_test 37; run_tests 3591; regions 115, chapel 68, save_transfer 21, wiki_test passed on 7fc4426; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-feast",
-   "commits": [],
+   "commits": [
+    "ed8c815",
+    "7fc4426"
+   ],
    "parent": "DVW-B3",
    "depends_on": [],
    "blockers": [],
@@ -12443,19 +12446,32 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> feast worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-feast",
      "why": "Next approved, unblocked Build 18 item that does not overlap the regions worker's settlement code"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> feast_test 37; run_tests 3591; regions 115, chapel 68, save_transfer 21, wiki_test passed on 7fc4426; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0; test_commit: None -> 7fc4426; commits + ed8c815; commits + 7fc4426; integrated_in + 18; known_defects + A partnership is the wedding (no separate rite); guests only from the village; known_defects + Host and guests must be in the tavern yard at 20:00; about 4 feasts a month are called off; remaining_work",
+     "why": "Feast worker finished (ed8c815); merged into wip/build18 (conflicts in world.gd save dict, DECISIONS, manifest resolved keeping both sides)"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
-   "assigned_worker": "feast worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "feast worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "7fc4426",
+   "known_defects": [
+    "A partnership is the wedding (no separate rite); guests only from the village",
+    "Host and guests must be in the tavern yard at 20:00; about 4 feasts a month are called off"
+   ],
+   "remaining_work": "Gameplay and visual check; feast values in balance.json \"feast\" are provisional agent values; ale rarely bought (keeper stock thin)"
   },
   {
    "id": "DVW-B3-LUX",
@@ -12469,10 +12485,13 @@
     "The caravan sells costly goods (spices, fine cloth, jewellery); villagers and the player buy them from real coins that leave with the caravan; deterministic; wiki page"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "luxury_test 219; od16 33, caravan_compare 20, conservation_test 8, run_tests 3591 on 7fc4426; worker economy_sim 30 days: 832 and 450 coins on luxuries; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-luxury",
-   "commits": [],
+   "commits": [
+    "0dfd7b5",
+    "7fc4426"
+   ],
    "parent": "DVW-B3",
    "depends_on": [],
    "blockers": [],
@@ -12504,19 +12523,32 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> luxury worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-luxury",
      "why": "Unblocked by the settlements merge (caravan traders now have tills); no overlap with the feast worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> luxury_test 219; od16 33, caravan_compare 20, conservation_test 8, run_tests 3591 on 7fc4426; worker economy_sim 30 days: 832 and 450 coins on luxuries; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0; test_commit: None -> 7fc4426; commits + 0dfd7b5; commits + 7fc4426; integrated_in + 18; known_defects + No villager standing or prestige measure exists in Build 18, so owning luxuries has no status effect yet (Luxury.held_by is the reading point); known_defects + Luxury stock is finite (Wulstead and Higham opening stock only, about 2,200 coins' worth); older saves get none; remaining_work",
+     "why": "Luxury worker finished (0dfd7b5); merged into wip/build18 at 7fc4426"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "S",
-   "assigned_worker": "luxury worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "luxury worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "7fc4426",
+   "known_defects": [
+    "No villager standing or prestige measure exists in Build 18, so owning luxuries has no status effect yet (Luxury.held_by is the reading point)",
+    "Luxury stock is finite (Wulstead and Higham opening stock only, about 2,200 coins' worth); older saves get none"
+   ],
+   "remaining_work": "Gameplay and device check of the wagon choice and icons; values in balance.json \"luxury\" provisional; owner may decide whether settlements make or restock luxuries"
   },
   {
    "id": "DVW-B4",

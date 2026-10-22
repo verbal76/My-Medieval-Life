@@ -9,25 +9,23 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 78 |
-| Integrated | 37 of 78 (47%) |
-| Automated tests passed | 38 of 78 (49%) |
-| Integration verified | 36 of 78 (46%) |
+| Integrated | 39 of 78 (50%) |
+| Automated tests passed | 40 of 78 (51%) |
+| Integration verified | 38 of 78 (49%) |
 | Gameplay verified | 0 of 78 (0%) |
 | Owner playtested | 0 of 78 (0%) |
 | Complete | 1 of 78 (1%) |
 | Open (release blockers) | 77 |
 | Open owner decisions (blocking) | 13 (2) |
 
-## In development (worker assigned) (4)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) / wip/b18-feast | NOT TESTED |  |  | M |
-| DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | IN DEVELOPMENT | luxury worker (Sonnet subagent, started 2026-10-23) / wip/b18-luxury | NOT TESTED |  |  | S |
 | REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | OWNER APPROVED | IN DEVELOPMENT | demography worker (Sonnet subagent, started 2026-10-23) / wip/b18-demography | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | OWNER APPROVED | IN DEVELOPMENT | party worker (Sonnet subagent, started 2026-10-23) / wip/b18-party | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (36)
+## Integrated, awaiting gameplay or owner verification (38)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -38,6 +36,8 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; phone layout and cost of the runtime sprite not checked on a device; Build 18 release gate |  | verification only |
 | CON-UX-01 | Contract window needs design work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and device check; owner review CHAPEL-R1..R5 (non-blocking); wage, piety, offering and seed numbers in balance.json "chapel" are provisional working values, not owner-approved balance; known: Chapel uses the plain house art (no steeple or sign); Player cannot volunteer on the church plot; Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed |  | verification only |
+| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and visual check; feast values in balance.json "feast" are provisional agent values; ale rarely bought (keeper stock thin); known: A partnership is the wedding (no separate rite); guests only from the village; Host and guests must be in the tavern yard at 20:00; about 4 feasts a month are called off |  | verification only |
+| DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and device check of the wagon choice and icons; values in balance.json "luxury" provisional; owner may decide whether settlements make or restock luxuries; known: No villager standing or prestige measure exists in Build 18, so owning luxuries has no status effect yet (Luxury.held_by is the reading point); Luxury stock is finite (Wulstead and Higham opening stock only, about 2,200 coins' worth); older saves get none |  | verification only |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; Build 18 release gate; known: Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified) |  | verification only |
 | ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check. Measured effect over 30 days: the caravan buys 7-8 kinds of goods instead of about 20, and the village earns roughly a quarter to a half less from it (seed 1 +1540 vs +1996 coins, seed 2 +1070 vs +2178); population and food unaffected; known: Courier booths still use SettlementLedger parties, not the new settlements |  | verification only |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate |  | verification only |

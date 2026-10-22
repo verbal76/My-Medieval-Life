@@ -178,8 +178,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | DVW-B5 | Predictable taxes with hysteresis, announced | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B6 | Wildlife wandering in from the overworld | 18 | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
