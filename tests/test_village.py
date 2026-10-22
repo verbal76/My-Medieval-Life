@@ -87,6 +87,29 @@ class VillageTest(unittest.TestCase):
             self.assertIn(tuple(c), town)
             self.assertFalse(solid[c[1]][c[0]])
 
+    def test_plots_lie_on_open_ground_with_the_old_ones_remembered(self):
+        """Generator v8 (ROOMS-18): the two plots stand on open ground, off every road, building, field and
+        pen, with a lane to the road and the ring round them free of trees; the old sites stay in
+        legacy_plots (a saved world keeps its plots there), still clear of trees."""
+        roads = {tuple(c) for c in D["road"]}
+        trees = {(t["x"], t["y"]) for t in D["trees"]}
+        self.assertEqual([(p["x"], p["y"]) for p in D["legacy_plots"]], list(build_village.LEGACY_PLOTS))
+        self.assertEqual([(p["x"], p["y"]) for p in D["plots"]], list(build_village.PLOTS))
+        for p in D["plots"]:
+            cells = {(x, y) for y in range(p["y"], p["y"] + p["h"]) for x in range(p["x"], p["x"] + p["w"])}
+            self.assertFalse(cells & roads, p["id"])
+            self.assertFalse(cells & trees, p["id"])
+            for key in ("buildings", "fields", "pens"):
+                for e in D[key]:
+                    ecells = {(x, y) for y in range(e["y"], e["y"] + e["h"]) for x in range(e["x"], e["x"] + e["w"])}
+                    self.assertFalse(cells & ecells, (p["id"], e["id"]))
+            self.assertIn((p["door"][0], p["door"][1] + 1), roads, "a lane runs to its door step")
+        for p in D["legacy_plots"]:
+            cells = {(x, y) for y in range(p["y"], p["y"] + p["h"]) for x in range(p["x"], p["x"] + p["w"])}
+            self.assertFalse(cells & trees, "the old plots stay clear of trees")
+            lanes = {c for lane in build_village.PLOT_LANES for c in build_village.road_cells(*lane)}
+            self.assertFalse((cells & roads) - lanes, "and free of roads but the new plots' lanes (the view clears those)")
+
     def test_the_four_exits_run_to_the_edge(self):
         roads = {tuple(c) for c in D["road"]}
         self.assertEqual([c for c in roads if c[0] == 0], [(0, 57)])

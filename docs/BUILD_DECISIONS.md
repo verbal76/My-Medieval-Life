@@ -562,11 +562,15 @@ later; each module is built by the machinery every building already uses. Nothin
   site open on it; one room of each kind; the module's footprint (9x10) must touch a building of the
   property along at least 3 cells, must not cover any of its door steps, and its own door step must be
   clear and reachable (the existing check). No demolition: nothing earlier is changed.
-- **Connected = attached, not walk-through.** Rooms are separate buildings that stand against one
-  another (a party wall), each with its own street door, walls, roof (the one you are in fades) and
-  inside; navigation is the village A* through the doors. An interior doorway through the party wall is
-  not built: the stamps' furniture leaves no free cell on both sides, and cutting a wall needs new
-  art. Open question for the owner (see below).
+- **Connected = attached, with an inner doorway where the walls allow (ROOMS-18, owner OD-05).** Rooms are
+  separate buildings that stand against one another (a party wall), each with its own street door, walls,
+  roof (the one you are in fades) and inside. Where two rooms of the property stand side by side, a
+  doorway is cut through both walls (`Doorways`, derived from the buildings, never saved): the wall tile
+  goes and the room's own floor tile shows, so no new art is drawn. It needs the plain side wall and a free,
+  reachable floor cell just inside it on both sides, so it is made only where nothing is in the way, and
+  nothing earlier moves. A house's east wall is lined with furniture in every stamp (no doorway there; the
+  suggested slot for a room goes to the house's west side instead, `DOORWAY_PREFERENCE`), and rooms stacked
+  north and south have a yard between them and no shared wall.
 - **Costs, rent, footprint.** Materials: `workshop_cost` per kind (new kinds added, agent proposals).
   Ground: bought or leased per module at the land price by area (a 9x10 module is `plot_price`); a
   leased module pays its own weekly rent, `weekly_rent_share` of its worth (`module_price` per kind,
@@ -578,15 +582,16 @@ later; each module is built by the machinery every building already uses. Nothin
   them. Other modules have stations only.
 - **No profession lock-in.** No code ties a building kind to a job or skill; stations are used by
   type, so a house can hold a smithy, kitchen and bakehouse together.
+- **Survey plots (ROOMS-18, village generator v8).** The two plots the manor sells lie on open ground
+  north-east of the village in new worlds (plot0 at 73,11 and plot1 at 91,12, each with a lane to the road),
+  so rooms fit on all four sides (a treed side waits for the trees to be felled). A world saved before keeps
+  its plots at the old sites (`legacy_plots`), with everything on them; see `docs/DECISIONS.md`.
 - **Not done.** NPC households do not add modules (they split instead); modules are not drawn with
-  their own sign or name beyond the building's name. The two survey plots are boxed in by roads and
-  houses (plot 0 has room for one module to its west or north, plot 1 for none), so modules want open
-  ground: place the first house in the open. Moving the plots or widening the lanes belongs to village
-  polish (`tools/build_village.py`), not done here.
+  their own sign or name beyond the building's name.
 - **Saves.** `estate` is a new optional key on parcels; saves from before load with each parcel its own
   property, so `SAVE_VERSION` stays 14 (tested with an estate-less save).
-- **Open question for the owner:** interior doorways between rooms (needs a wall-opening art tile or a
-  redrawn stamp), and whether the survey plots should be relaid to leave room for rooms.
+- **Answered (owner 2026-10-23, OD-05):** inner doorways between joined rooms, built from the existing wall
+  art, and the two survey plots relaid onto open ground for new worlds (existing saves keep theirs).
 
 ## Player businesses: the market stall and real demand (PL1-10 stages 1 and 2)
 

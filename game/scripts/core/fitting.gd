@@ -125,6 +125,8 @@ func floor_set(b: Dictionary) -> Dictionary:
 	var out := {}
 	for c in w.interiors.get(str(b.id), {}).get("floor", []):
 		out[Vector2i(int(c[0]), int(c[1]))] = true
+	for c in w.interiors.get(str(b.id), {}).get("inner", []):
+		out.erase(Vector2i(int(c[0]), int(c[1])))   # ROOMS-18: the gap in a shared wall is no place for equipment (the floor before it is)
 	return out
 
 

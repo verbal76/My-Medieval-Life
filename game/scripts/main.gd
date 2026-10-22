@@ -682,7 +682,7 @@ func _ready() -> void:
 				for id in GameData.b("house_cost"):
 					world.player.inv.add(id, int(GameData.b("house_cost")[id]))
 				world.deliver(house, world.player.inv)
-				var spot := Rect2i(Vector2i(72, 15), c.footprint("smithy"))
+				var spot := c.find_ground("smithy", Vector2i(72, 15), World.PLAYER)      # open ground near the north-east wood (the plots lie there too)
 				for t in world.trees:
 					if t.state == "grown" and (spot.grow(1).has_point(Vector2i(int(t.x), int(t.y))) or Vector2i(int(t.x), int(t.y)) == c.door_step("smithy", spot)):
 						world.fell(t, 0)
@@ -720,7 +720,7 @@ func _ready() -> void:
 					follow_at = _in_view((Vector2(spot.position) + Vector2(spot.size) / 2.0) * T)
 					ui.toast_t = 0.01
 				shot_frames = -40                  # the roof needs a moment to fade
-			"property", "property_after", "property_in", "property_menu", "property_place":
+			"property", "property_after", "property_in", "property_menu", "property_place", "rooms", "rooms_in", "rooms_west":
 				# PL2-008/014: a leased plot with a house, then a carpenter's shop added beside it
 				var pc: Construction = world.construction
 				var pl: Dictionary = world.plots[0]
@@ -745,6 +745,12 @@ func _ready() -> void:
 				if shot_panel == "property_in":
 					world.player.pos = Vector2(world.station_use("ws_workshop_%s_workbench" % pl.id.replace("plot0", "parcel0"))) + Vector2(0.5, 0.5)
 				follow_at = _in_view(Vector2(int(pl.x) - 4, int(pl.y) + 5) * T)
+				if shot_panel in ["rooms", "rooms_in", "rooms_west"] and not world.doorways.is_empty():
+					# ROOMS-18: the doorway between the house and the room beside it, seen from outside the wall or from inside
+					var dw: Dictionary = world.doorways[0]
+					var at: Vector2i = dw.inside[1] if shot_panel == "rooms_in" else (dw.inside[0] if shot_panel == "rooms_west" else Vector2i(dw.cells[0].x, int(pl.y) + 12))
+					world.player.pos = Vector2(at) + Vector2(0.5, 0.5)
+					follow_at = _in_view(Vector2(dw.cells[0]) * T + Vector2(8, 24))
 				if shot_panel == "property_menu":
 					ui.show_build(pl)
 				else:
@@ -1078,6 +1084,7 @@ func _build_scene() -> void:
 	view.move_child(crop_view, view.layer("path1").get_index() + 1)
 	crop_view.setup(world)
 	_draw_village_exits()
+	_clear_legacy_lanes()
 	tree_view.setup(world)
 	_replace_tree_tiles()
 	ow_view.setup(view, map.overworld, int(GameData.b("overworld_chunk_radius")))
@@ -1261,6 +1268,26 @@ func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 		view.set_tile(layer, cell, value)
 
 
+## ROOMS-18: a world made with the plots at their old sites (village generator v7) has a new plot's lane running
+## across one of them. Nothing is built there for the lane (it is only drawn): the dirt path tiles on the cells of
+## the old plot are taken out of the view, so the old plot and its house look as they always did.
+func _clear_legacy_lanes() -> void:
+	var road := {}
+	for c in map.data.road:
+		road[Vector2i(int(c[0]), int(c[1]))] = true
+	for p in world.plots:
+		for lp in map.data.get("legacy_plots", []):
+			if str(lp.id) != str(p.id) or int(lp.x) != int(p.x) or int(lp.y) != int(p.y):
+				continue
+			for y in range(int(p.y), int(p.y) + int(p.h)):
+				for x in range(int(p.x), int(p.x) + int(p.w)):
+					if road.has(Vector2i(x, y)):
+						for lname in ["path0", "path1"]:
+							var lay := view.layer(lname)
+							if lay != null:
+								view.set_tile(lay, Vector2i(x, y), -1)
+
+
 ## Where the village's roads leave it, the dirt path continues over the grass to the map edge, where
 ## the overworld's road takes it up (VillageMap.exits). Only drawn: the grass is walkable already.
 ## The road cell's own tile is chosen again with the trail as a neighbour, so the two join.
@@ -1310,7 +1337,26 @@ func _on_building_added(b: Dictionary) -> void:
 	if fit_layer != null:
 		for e in world.fitting.list(b):
 			view.set_tile(fit_layer, world.fitting.cell_of(e), int(Fitting.ART[str(e.kind)]))
+	_draw_doorways()                                 # the gaps cut through the shared walls of joined rooms (ROOMS-18)
 	door_view.rescan()                               # its door: the copy over the doorway out, the doorway known
+
+
+## ROOMS-18: an inner doorway is the gap where the two rooms' side walls were: the wall tile of each side goes and
+## the room's own floor tile (the one just inside) shows in its place, so nothing is drawn that was not drawn before.
+func _draw_doorways() -> void:
+	var floors := view.layer("ground1")
+	for dw: Dictionary in world.doorways:
+		for k in 2:
+			var c: Vector2i = dw.cells[k]
+			for lname in view.layers:
+				if str(lname).begins_with("below"):
+					var lay: TileMapLayer = view.layers[lname]
+					if view.tile_value(lay, c) == Doorways.WALL:
+						view.set_tile(lay, c, -1)
+			if floors != null:
+				var v := view.tile_value(floors, dw.inside[k])
+				if v >= 0:
+					view.set_tile(floors, c, v)
 
 
 # ---------------------------------------------------------------- frame ----------------------
