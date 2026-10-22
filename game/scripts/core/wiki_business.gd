@@ -19,6 +19,7 @@ static func add_pages(w: Wiki) -> void:
 			"Sales are paid into the till and wait there while the stall is open. Close the stall to settle them: the manor takes %d%% of the sales, the rest is yours. Open it again whenever you like; it closes by itself when it sells out (see the market stall guide)." % pct,
 			"Stand at the stall (within %d tiles) for villagers to buy, or hire an attendant to stand there for you (see the attendant guide). With neither, nobody buys: nothing sells unattended." % range_t,
 			"Larger stall: pay %d coins to the manor once for %d kinds of goods instead of %d, a display for one item that draws buyers from further off, and %d coins a day rent instead of %d." % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_listings")), int(GameData.b("stall_max_listings")), int(GameData.b("stall_large_rent_day")), rent],
+			"Your goods are shown on the counter, drawn with their usual icons, the kinds you hold most of first; a kind that sells out leaves the counter.",
 			"The window keeps your revenue, expenses (rent, upgrade, wages) and profit.",
 			"The till is the business's money, apart from your purse. Put in and Take out move coins between them whenever you choose; Collect takes the lot. A failing stall never quietly spends your food money.",
 			"Rent is taken each morning from the till first (never the open sales), then from your purse, but only from coins above what you keep for food and fuel. If you cannot pay, sales stop; after %d unpaid days the manor takes the pitch back and your goods and coins return to you." % evict,
@@ -44,7 +45,7 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("An optional business: rent a pitch, stock it from your pack, set prices, and sell to villagers who need your goods. See the guide for the steps."),
 		Wiki.stats([["Rent", "%d coins a day" % rent], ["Listings", "up to %d kinds of goods" % int(GameData.b("stall_max_listings"))],
 			["Sales", "only while you stand within %d tiles" % range_t], ["Unpaid rent", "stopped, then reclaimed after %d days" % evict]]),
-		Wiki.note("Not yet: attendants who craft at the shop's stations from its stock (production chains)."),
+		Wiki.note("Not yet: more than one attendant at a counter, or a worker hired by contract to make goods for it."),
 		Wiki.links(["guide:stall", "guide:shop", "guide:attendant"])], "", "market stall business demand")
 	var licence := int(GameData.b("shop_licence_day"))
 	var wage := int(GameData.b("attendant_wage"))
@@ -68,5 +69,7 @@ static func add_pages(w: Wiki) -> void:
 			"Customers are the same as ever: only villagers with a real need and coins to pay for it, at your prices.",
 			"If neither the till nor your purse can pay the wage, the attendant leaves. Let go whenever you like; closing the stall or shop also lets them go.",
 			"One attendant for each stall or shop. Sales they make are marked in the record.",
+			"Production: if you hold stations of your own (a workbench, anvil, forge, stove, oven or sawhorse in a room you hold), the window's Production section lets you order goods: \"Make\" some batches, or \"Keep\" a stock. Set the materials aside in the workroom from your pack. In the working day the attendant walks to a free station, works the real recipe (they need its skill level, and its tool in their own pack, as any villager would), and the goods go up for sale at their market value; when the stock is full they wait in the workroom. After each craft they spend an hour at the counter. While they are at the bench nobody is minding the counter. If something is missing (materials, skill, tool, a free station) the window says what.",
+			"An attendant is your employee, paid the daily wage. A worker hired by contract for one job is different (see the Contracts page); the attendant is not one.",
 		]),
-		Wiki.links(["guide:stall", "guide:shop"])], "", "attendant hire wage employee shop stall away")
+		Wiki.links(["guide:stall", "guide:shop", "sys:contracts"])], "", "attendant hire wage employee shop stall away production make craft workroom")

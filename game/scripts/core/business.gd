@@ -30,6 +30,8 @@ extends RefCounted
 ## trade it is following its equipment (Fitting.trade). Revenue, expenses (rent or licence, wages) and profit
 ## are kept for both.
 ##
+## B18-DP-01: an attendant also works the player's own workshop stations on the player's production orders (BusinessWorks).
+##
 ## Stage 4: the player may hire an attendant for a stall or shop: an adult without a trade of their own (NPCBrain plans
 ## their day through plan_attendant, so they are a real villager walking to the counter in the working day and
 ## sleeping at night). The wage is paid every morning from the till, then the purse. A premises sells
@@ -50,12 +52,14 @@ var w: World
 var heading := {}                     # npc id -> game hour they set out for the stall (not saved)
 var stalls: Stalls                    # market stalls: building, sessions and the 5% settlement (STALL-01..06)
 var money: BusinessMoney              # villagers' storefront tills and the owner's pay (ECON-P3)
+var works: BusinessWorks              # the attendant's production at the player's own stations (B18-DP-01)
 
 
 func _init(world: World) -> void:
 	w = world
 	stalls = Stalls.new(world, self)
 	money = BusinessMoney.new(world)
+	works = BusinessWorks.new(world, self)
 
 
 # ---------------------------------------------------------------- pitches --------------------
@@ -346,6 +350,43 @@ func use_cell(s: Dictionary) -> Vector2:
 	return Vector2(int(s.use[0]) + 0.5, int(s.use[1]) + 0.5)
 
 
+## B18-DP-01 (stalls display goods with existing item icons): the goods shown over a counter, from its REAL stock: the
+## featured item of a larger stall first, then the kinds it holds most of (ties by id), at most `slots`. A sold-out kind is
+## gone from the stock and so from the display. Looks only (StallDisplayView draws it).
+static func display_goods(s: Dictionary, slots: int) -> Array:
+	var stock: Dictionary = s.get("stock", {})
+	var ids := []
+	for id in stock:
+		if int(stock[id]) > 0:
+			ids.append(str(id))
+	ids.sort_custom(func(a, b): return int(stock[a]) > int(stock[b]) or (int(stock[a]) == int(stock[b]) and a < b))
+	var feat := str(s.get("display", ""))
+	if feat != "" and ids.has(feat):
+		ids.erase(feat)
+		ids.push_front(feat)
+	return ids.slice(0, maxi(0, slots))
+
+
+## Every counter that shows goods: [{x, y, wide (tiles), goods}] for the player's premises, the built stalls and the
+## pitches let to anyone, in a fixed order; counters with nothing in stock show nothing.
+func displays() -> Array:
+	var out := []
+	var seen := {}
+	var recs := []
+	for id in sorted_ids():
+		recs.append(w.stalls[id])
+	recs.append_array(shops())
+	for s: Dictionary in recs:
+		if seen.has(str(s.get("id", ""))) or not s.has("stock") or not s.has("x"):
+			continue
+		seen[str(s.get("id", ""))] = true
+		var wide := 1 if (is_shop(s) and not bool(s.get("front", false))) else 2
+		var goods := display_goods(s, wide * 2)
+		if not goods.is_empty():
+			out.append({"x": int(s.x), "y": int(s.y), "wide": wide, "goods": goods})
+	return out
+
+
 func stock_of(s: Dictionary) -> Dictionary:
 	return s.get("stock", {})
 
@@ -486,6 +527,7 @@ func close(s: Dictionary, because := "You closed your stall.") -> String:
 				back += n
 			else:
 				bag.add(id, n)
+	back += works.clear_into(s, bag)      # the workroom's materials and goods come back too (B18-DP-01)
 	var coins := collect(s)
 	var left := bag.total()
 	if left > 0:
@@ -807,6 +849,8 @@ func plan_attendant(n: NPC) -> bool:
 	for s in premises():
 		if int(s.get("attendant", -1)) != n.id:
 			continue
+		if works.plan_work(s, n):         # orders to make at the player's own stations (B18-DP-01)
+			return true
 		n.doing = "minding the player's %s" % ("shop" if is_shop(s) else "stall")
 		n.plan = [w.brain.go(counter_cell(s)), w.brain.work(60, "", {}, "idle")]
 		n.plan[1]["industry"] = "trade"      # X18-D4: hours keeping the stall open are trade experience
@@ -1013,4 +1057,4 @@ func tills() -> int:
 		t += int(w.stalls[id].get("till", 0))
 	for s in shops():
 		t += int(s.get("till", 0))
-	return t + money.front_tills()
+	return t + money.front_tills() + money.counter_tills()
