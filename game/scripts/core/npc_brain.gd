@@ -1234,6 +1234,10 @@ const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "go
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
+	var fixed := _first_ready(n, recipes)
+	recipes = by_return(n, recipes)                 # WDR-012-C: the better return under local prices first
+	if fixed != "" and _first_ready(n, recipes) != fixed:
+		w.stat("spec_switches")
 	for r in recipes:
 		var rec: Dictionary = GameData.recipes[r]
 		if n.inv.has_all(rec.in) and _do_recipe(n, r):        # reserves the station, or tries the next recipe
@@ -1246,6 +1250,37 @@ func _crafter(n: NPC, recipes: Array) -> bool:
 	n.doing = "waiting for materials"
 	n.plan = [go(_workplace_cell(n)), work(30, "", {}, "idle")]
 	return true
+
+
+## WDR-012-C (owner B18-DP-08): what one batch of recipe `r` is expected to return `n` under the actual local prices: the
+## products at the price a seller in their position asks (World.sell_price: dearer as their stock runs low, cheaper among
+## many local sellers) less the inputs at what they would cost to replace at the local asking price. Nothing is invented:
+## the same prices the player meets (World.sell_price_at).
+func recipe_return(n: NPC, r: String) -> float:
+	var rec: Dictionary = GameData.recipes[r]
+	var got := 0.0
+	for id in rec.out:
+		got += float(rec.out[id]) * float(w.sell_price(n, id))
+	var cost := 0.0
+	for id in rec["in"]:
+		cost += float(rec["in"][id]) * float(World.sell_price_at(id, 0, w.local_supply(id, n.pos, n)))
+	return got - cost
+
+
+## `recipes` ordered by expected return, best first; equal returns keep the order given (deterministic).
+func by_return(n: NPC, recipes: Array) -> Array:
+	var keyed := []
+	for i in recipes.size():
+		keyed.append([recipe_return(n, recipes[i]), i, recipes[i]])
+	keyed.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
+	return keyed.map(func(k: Array) -> String: return k[2])
+
+
+func _first_ready(n: NPC, recipes: Array) -> String:
+	for r in recipes:
+		if n.inv.has_all(GameData.recipes[r]["in"]):
+			return r
+	return ""
 
 
 ## The tanner (Build 13): hides and pelts to leather, wool to cloth, and cloth to bandages for the
@@ -1302,6 +1337,7 @@ func _smith(n: NPC) -> bool:
 	# forge whatever is scarcest (not with the iron an open order of the manor's is waiting for)
 	var ordered := w.manor_orders.any(func(x): return int(x.smith) == n.id and inv.count(str(x.tool)) == 0)
 	var wants := []
+	var for_buyer := []                           # the recipes a buyer wants made (WDR-012-C: they come before goods for stock)
 	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock", "forge_cart_axle", "forge_cart_ironwork"]:
 		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
 			continue
@@ -1316,9 +1352,16 @@ func _smith(n: NPC) -> bool:
 		var out: String = GameData.recipes[r].out.keys()[0]
 		if inv.count(out) < 1 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and _buyer_for(n, out) != null:
 			wants.append([inv.count(out), r])
+			for_buyer.append(r)
 	wants.sort()
 	if not wants.is_empty():
-		return _do_recipe(n, wants[0][1])
+		var rs: Array = wants.map(func(x: Array) -> String: return x[1])
+		if not for_buyer.is_empty():
+			rs = rs.filter(func(r: String) -> bool: return for_buyer.has(r))       # a buyer's want is demand: it goes before stock
+		var best: String = by_return(n, rs)[0]         # WDR-012-C: what pays best under local prices, not the scarcest first
+		if best != wants[0][1]:
+			w.stat("spec_switches")
+		return _do_recipe(n, best)
 	# with nothing to forge, the forge's inputs from the raw-goods merchant once the mine no longer brings them (EQ-07): the
 	# caravan's ore and coal (B7-007) sat unsold at the merchant while the axes wore out, the woodcutters
 	# stopped felling and the carpenter, and every house site, ran out of planks
@@ -3310,7 +3353,7 @@ func daily_obligations() -> float:
 		if o.alive and o.job == "guard":
 			n += float(GameData.b("guard_wage_per_day"))
 		elif o.alive and o.job == "manor_hand":
-			n += float(GameData.b("manor_wage_per_day"))
+			n += float(manor_hand_wage())
 	return n
 
 
@@ -3402,7 +3445,7 @@ func pay_guards() -> void:
 				w.stat("gov_wages", wage)
 			else:
 				once("unpaid_%d" % w.day(), "The manor cannot pay the guards today.")
-	var hand_wage := int(GameData.b("manor_wage_per_day"))
+	var hand_wage := manor_hand_wage()
 	if w.treasury < 2.0 * daily_obligations():
 		# the manor cannot keep everyone on: the most recently hired hand is let go
 		var last: NPC = null
@@ -3486,7 +3529,7 @@ func job_market() -> Dictionary:
 	var avg := func(job: String, fallback: float) -> float:
 		return float(earn[job]) / int(heads[job]) if heads.has(job) else fallback
 	var market := {}
-	var wage := float(GameData.b("manor_wage_per_day"))
+	var wage := float(manor_hand_wage())
 	var reserve := daily_obligations() * float(GameData.b("treasury_reserve_days"))
 	market["manor_hand"] = {"pay": wage, "open": maxi(0, int((w.treasury - reserve) / (wage * float(GameData.b("manor_hire_runway_days"))))),
 		"tool": "", "at": w.building_door(_manor_id())}
@@ -3516,6 +3559,85 @@ func job_market() -> Dictionary:
 	for cj in Population.CLERGY:
 		market[cj] = w.chapel.place(cj)             # DVW-B3-CHAPEL: the clergy's places, open when nobody holds them
 	return market
+
+
+## WDR-012-C hiring competition (owner B18-DP-08). The manor's day wage for a hand: the established wage plus the raise it
+## has had to offer to fill its places (World.wage_offers). Every hand is paid the same, the treasury pays it, and the
+## manor takes on only as many as its treasury can pay at that wage (job_market), so a raise never breaks the books.
+func manor_hand_wage() -> int:
+	return int(GameData.b("manor_wage_per_day")) + int((w.wage_offers.get("manor_hand", {}) as Dictionary).get("raise", 0))
+
+
+## Called at the end of each morning's seek_work with the places the manor still has open and how many villagers looked for
+## work that morning and did not take them. Places that stay open `unfilled_days` mornings with seekers about raise the
+## offer one step (up to `raise_max`); places that are filled `unfilled_days` mornings in a row ease it one step. The
+## seekers choose by the ordinary job-switch rule, now with the better pay in the score.
+func _hiring_competition(open_left: int, seekers: int) -> void:
+	var cfg: Dictionary = GameData.b("hiring_competition")
+	var o: Dictionary = (w.wage_offers.get("manor_hand", {"raise": 0, "short": 0, "met": 0}) as Dictionary).duplicate()
+	if open_left > 0 and seekers > 0:
+		o.short = int(o.short) + 1
+		o.met = 0
+		if int(o.short) >= int(cfg.unfilled_days) and int(o.raise) < int(cfg.raise_max):
+			o.raise = int(o.raise) + int(cfg.raise_step)
+			o.short = 0
+			w.stat("wage_offers_raised")
+			w.note("The manor cannot fill its places and offers its hands %d coins a day." % (int(GameData.b("manor_wage_per_day")) + int(o.raise)))
+	elif open_left <= 0 and int(o.raise) > 0:
+		o.met = int(o.met) + 1
+		o.short = 0
+		if int(o.met) >= int(cfg.unfilled_days):
+			o.raise = maxi(0, int(o.raise) - int(cfg.raise_step))
+			o.met = 0
+			w.stat("wage_offers_eased")
+	if int(o.raise) > 0 or int(o.short) > 0 or int(o.met) > 0 or w.wage_offers.has("manor_hand"):
+		w.wage_offers["manor_hand"] = o
+
+
+## WDR-012-C relocation (owner B18-DP-08): a merchant whose household is not living on the stall (the same test that sends
+## a villager looking for other work) moves to a vacant stall of the manor's market, of the same kind (their stock suits it),
+## where what they hold would fetch clearly more under the local supply there (World.local_supply: fewer rivals within the
+## radius, a dearer price) by the job-switch margin. Their old stall is let again as any vacant one (Property.relet_stalls).
+## NPC villagers only: the player decides for themselves where to trade, under the same prices.
+func _relocate_stall(n: NPC) -> bool:
+	if not w.stalls.has(n.workplace) or w.tenant_of(w.stalls[n.workplace]) != World.npc_ref(n.id):
+		return false
+	var cur: Dictionary = w.stalls[n.workplace]
+	var best := ""
+	var best_value := stall_value(n, cur) * float(GameData.b("job_switch_margin"))
+	var ids: Array = w.stalls.keys()
+	ids.sort()
+	for sid in ids:
+		var s: Dictionary = w.stalls[sid]
+		if Business.is_pitch(s) or s.get("built", false) or str(s.get("kind", "")) != str(cur.kind) or w.tenant_of(s) != "":
+			continue
+		var v := stall_value(n, s)
+		if v > best_value:
+			best_value = v
+			best = sid
+	if best == "":
+		return false
+	var old := n.workplace
+	w.set_tenant(cur, "")
+	w.set_tenant(w.stalls[best], World.npc_ref(n.id))
+	n.workplace = best
+	n.left_job = "merchant"                    # just changed place: time to settle, as after a job change
+	n.job_since = w.day()
+	n.plan.clear()
+	w.stat("stall_relocations")
+	w.note("%s %s moves the trade from %s to %s, where it should sell better." % [n.name, n.family, old, best])
+	return true
+
+
+## What `n`'s goods in hand would fetch, at the asking prices there, if sold from stall `s`.
+func stall_value(n: NPC, s: Dictionary) -> float:
+	var at := Vector2(int(s.use[0]), int(s.use[1]))
+	var v := 0.0
+	for id in n.inv.items:
+		var q := n.inv.count(id)
+		if q > 0 and GameData.value(id) > 0 and not keeps(n, id):
+			v += float(q) * float(World.sell_price_at(id, q, w.local_supply(id, at, n)))
+	return v
 
 
 ## TAILOR-18, BARBER-18: the place of a service trade in the labour market. Open (one place) while nobody living holds the
@@ -3549,6 +3671,7 @@ func seek_work() -> void:
 	# EQ-03: a hunter in woods with no game left above its floors (Fauna.takeable_game: the keep and the hunters' spare,
 	# by real counts) has no work to do, and looks for other work as an adult out of work does
 	var no_game: bool = w.fauna.takeable_game() == 0
+	var seekers := 0               # WDR-012-C: villagers looking for work this morning
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
 		if econ.is_empty():
@@ -3566,6 +3689,9 @@ func seek_work() -> void:
 					continue
 				if n.income_days.size() < 5 or n.avg_income(5) >= share:
 					continue
+				if n.job == "merchant" and _relocate_stall(n):         # WDR-012-C: first to a better stall
+					continue
+			seekers += 1
 			var current := 0.0 if unemployed else n.avg_income(5)
 			var best := ""
 			var best_score := -1e9
@@ -3598,6 +3724,7 @@ func seek_work() -> void:
 			var left_place := n.workplace
 			_change_job(n, best, why)
 			_post_left(n, left, left_place)
+	_hiring_competition(int(market.manor_hand.open), seekers)
 
 
 ## A merchant's stall falls vacant when they die or change work.

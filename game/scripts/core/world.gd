@@ -44,6 +44,7 @@ var trees: Array = []              # the village's trees (Trees: the one tree mo
                                    # drawn by TreeView and the characters walk behind its canopy. Trees the player planted
                                    # have planted: true. trunk/top/bottom are the old tile ids (map data), kept for the tests
 var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
+var wage_offers := {}              # WDR-012-C: the manor's raise on its hands' wage to fill its places {job: {raise, short, met}}. Saved (older saves have none)
 var manor_orders: Array = []       # tools the manor paid a smith for in advance (EQ-19, OD-16 b): {smith, tool, for, paid, day}. Saved (older saves have none)
 var vacancies: Array = []          # essential posts open after a death (B8-016, NPCBrain succession): {job, workplace, home, household, day, who}. Saved (older saves have none)
 var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
@@ -4063,7 +4064,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
+		"vacancies": vacancies, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
@@ -4164,6 +4165,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 					"state": str(sp.state), "regrow": float(sp.regrow), "planted": true})
 	vacancies = d.get("vacancies", [])
 	manor_orders = d.get("manor_orders", [])
+	wage_offers = (d.get("wage_offers", {}) as Dictionary).duplicate(true)
 	deposits = d.deposits
 	# a seam the map gained after the save was made (the gold seam, Build 13; the gallery's seams, Build 17) starts
 	# full; seams are matched by (level, x, y) (MIN-A: a level seam may share (x, y) with one above it)

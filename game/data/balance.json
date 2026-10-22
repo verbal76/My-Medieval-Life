@@ -598,6 +598,7 @@
   "newcomer_coins": 60,
   "job_switch_margin": 1.25,
   "job_switch_min_gain": 2,
+  "hiring_competition": {"_note": "WDR-012-C (owner B18-DP-08): an employer that cannot fill a place raises its offer within the wage system. The manor's places that stay open unfilled_days mornings while villagers look for work raise the hands' wage by raise_step coins a day, up to raise_max above manor_wage_per_day (no ceiling existed; agent proposal, provisional); filled for unfilled_days mornings, it eases a step.", "unfilled_days": 3, "raise_step": 1, "raise_max": 3},
   "field_workers_max": 2,
   "manor_hire_runway_days": 20,
   "trees_per_woodcutter": 30,
