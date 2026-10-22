@@ -11,7 +11,7 @@ extends RefCounted
 ##   public   the manor's granary, its work (lots, yard, job loads), troughs and building sites
 ##   player   the player's pack, chest and premises (the player's, not the settlement's)
 ##   loot     goods lying where someone fell (nobody's yet)
-## Coins: SettlementHoldings.coins (equal to World.total_coins); the caravan's purse and the coins that came from
+## Coins: SettlementHoldings.coins (equal to World.total_coins); the coins the five neighbouring settlements hold and the coins that came from
 ## outside are reported apart, as "outside".
 
 const GROUPS := {"markets": "market", "stalls": "market", "carts": "market", "npcs": "private", "households": "private",
@@ -39,7 +39,7 @@ static func village(w: World, mining: MiningCapabilityAdapter = null) -> Diction
 		"id": facts.id, "day": int(w.minutes / World.DAY), "population": facts.population,
 		"goods": groups, "goods_total": all,
 		"coins": coins, "coins_total": SettlementHoldings.coin_sum(coins),
-		"outside": {"caravan_purse": w.caravan_purse, "coin_sources": w.coin_sources},
+		"outside": {"settlement_coins": w.regions.coins(), "coin_sources": w.coin_sources},
 		"food_points": food, "food_days": food / maxf(1.0, day_need),
 		"capabilities": cap.levels, "blocked": cap.blocked, "mining_source": str(facts.external.mining.source),
 		"transport": facts.transport, "structures": facts.structures,

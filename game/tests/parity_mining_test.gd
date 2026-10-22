@@ -49,7 +49,7 @@ func _st(w: World, k: String) -> int:
 
 
 func _coins(w: World) -> int:
-	return w.total_coins() - w.coin_sources + w.caravan_purse
+	return w.total_coins() - w.coin_sources + w.regions.coins()
 
 
 func _cheb(a: Vector2i, b: Vector2i) -> int:

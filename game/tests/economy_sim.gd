@@ -85,7 +85,7 @@ func _init() -> void:
 	if cap_on:
 		CapMetrics.post_setup(cap_info, w)
 	var cap0 := CapMetrics.snapshot(w) if cap_on else {}
-	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
+	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources, "regions_coins": w.regions.coins(), "regions_goods": w.regions.goods(),
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "fill_out": w.mine_works.fill_out, "fill_in": w.mine_works.fill_in(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
 	var samples: Array = [_sample(start)]
@@ -127,6 +127,11 @@ func _init() -> void:
 			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
 			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
 			var bad: Dictionary = samples[-1]
+			if str(bad.regions.audit) != "" or int(bad.regions.coins_mismatch) != 0 or int(bad.regions.goods_mismatch) != 0:
+				reached = d + 1
+				print("FATAL day %d seed %d: the neighbouring settlements' books: %s (coins mismatch %d, goods mismatch %d)" % [reached, seed,
+					str(bad.regions.audit), int(bad.regions.coins_mismatch), int(bad.regions.goods_mismatch)])
+				break
 			if int(bad.currency.leak) != 0 or not (bad.ledger.items as Dictionary).is_empty():
 				reached = d + 1
 				print("FATAL day %d seed %d: currency leak %d; items %s; deposits %s; animals %s" % [reached, seed, int(bad.currency.leak),
@@ -187,7 +192,7 @@ func _on_event(t: String) -> void:
 		events.seams_worked_out += 1
 	elif "had no firewood last night" in t:
 		events.no_firewood_nights += int(t.substr(t.find("] ") + 2).split(" ")[0])
-	elif "merchant caravan passes through" in t:
+	elif "merchant caravan passes through" in t or ("Traders from" in t and "pass through" in t):
 		events.caravans += 1
 	elif t.ends_with(" broke."):
 		events.tools_broke += 1
@@ -670,10 +675,50 @@ func _sample(start: Dictionary) -> Dictionary:
 		"coin_sources_delta": src_delta, "coin_sources_mismatch": src_delta - (c_in - c_out),
 		"holders_mismatch": int(c.total) - w.total_coins()}
 	s.ledger = _ledger(start)
+	s.regions = _regions(start)
 	s.player = {"alive": w.player.alive, "hp": snappedf(w.player.hp, 0.1), "min_hp": snappedf(player_min_hp, 0.1), "hours_hurt": player_attacked}
 	s.events = events.duplicate()
 	s.farm = _farm()
 	return s
+
+
+## SET-C-SIM: the five neighbouring settlements. Their coins changed by exactly what the village paid them less what they
+## paid it (the village's coin_sources moved the other way), and their goods by what crossed the boundary, their own
+## production and their own use; each settlement's books balance (OffMapSettlement.audit). Mismatches are printed, never hidden.
+func _regions(start: Dictionary) -> Dictionary:
+	var r: Regions = w.regions
+	var coins_now := r.coins()
+	var net := r.net_paid_by_village()
+	var made := {}
+	var used := {}
+	var in_v := {}
+	var out_v := {}
+	for st in r.list:
+		for k in st.flows.produced:
+			made[k] = int(made.get(k, 0)) + int(st.flows.produced[k])
+		for k in st.flows.used:
+			used[k] = int(used.get(k, 0)) + int(st.flows.used[k])
+		for k in st.flows.from_village:
+			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.from_village[k])
+		for k in st.flows.to_village:
+			out_v[k] = int(out_v.get(k, 0)) + int(st.flows.to_village[k])
+	var now_goods := r.goods()
+	var bad_goods := {}
+	var ids := {}
+	for k in start.regions_goods:
+		ids[k] = true
+	for k in now_goods:
+		ids[k] = true
+	for k in ids:
+		# the settlements' goods now = at the start + made - used + bought from the village - sold to it (the run starts at day 0)
+		var d := int(now_goods.get(k, 0)) - int(start.regions_goods.get(k, 0))
+		var f := int(made.get(k, 0)) - int(used.get(k, 0)) + int(in_v.get(k, 0)) - int(out_v.get(k, 0))
+		if d != f:
+			bad_goods[k] = d - f
+	return {"audit": r.audit(), "coins": coins_now, "coins_start": int(start.regions_coins), "coins_delta": coins_now - int(start.regions_coins),
+		"village_paid_net": net, "coins_mismatch": (coins_now - int(start.regions_coins)) - net,
+		"goods_mismatch": bad_goods.size(), "goods_mismatch_items": bad_goods, "population": r.population(),
+		"settlements": r.summary(), "made": made, "used": used, "bought_from_village": in_v, "sold_to_village": out_v}
 
 
 ## FARM-08 (owner, 2026-10-21): the farming economy for the shared-yield comparison: the fields, the pens and their
@@ -940,6 +985,12 @@ func _print_sample(s: Dictionary) -> void:
 		s.materials.deposit_left, sum.call("log"), sum.call("plank"), int(s.materials.trees.get("grown", 0)), wild, penned,
 		s.building.sites_finished, s.building.sites_started, s.building.houses_built, s.building.households, s.currency.total, s.currency.leak, (s.ledger.items as Dictionary).size()])
 	print("  growth: %s" % JSON.stringify(s.growth))
+	var rg: Dictionary = s.regions
+	var per := []
+	for st in rg.settlements:
+		per.append("%s %d people %dc (treasury %d, trader %d, %d hungry, %d died)" % [st.id, st.population, st.coins, st.treasury, st.trader, st.hungry, st.deaths])
+	print("  neighbours: %d people, %d coins (village paid net %d); %s%s" % [rg.population, rg.coins, rg.village_paid_net, "; ".join(per),
+		("  AUDIT " + str(rg.audit)) if str(rg.audit) != "" else ""])
 
 
 ## What holds back births, partnering and new households (EQ-07; read only): beds against people, couples

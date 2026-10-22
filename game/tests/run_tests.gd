@@ -1133,6 +1133,7 @@ func test_child_food() -> void:
 	for c in w.containers:
 		if c.kind == "table":
 			c.inv.items.clear()
+	_starve_neighbours(w)                  # the traders buy food only for settlements that lack it
 	var reserve_days := float(GameData.b("caravan_food_reserve_days"))
 	var people := w.alive_count() - w.alive_count("bandit")
 	var between := (b.village_day_food() * reserve_days + people * 72.0 * reserve_days) / 2.0
@@ -1147,6 +1148,21 @@ func test_child_food() -> void:
 	b.caravan()
 	check(int(w.stats.get("exported_pottage", 0)) == 0, "and holds the food back below it")
 	w.dispose()
+
+
+## The neighbouring settlements without a crumb of food, their books reopened: their traders then want food (a test of the
+## village's own food-reserve rule needs a buyer).
+func _starve_neighbours(w: World) -> void:
+	for s: OffMapSettlement in w.regions.list:
+		for h in s.hh:
+			for f in OffMapSettlement.rules().foods:
+				h.pantry.erase(f)
+		for k in s.biz:
+			for f in OffMapSettlement.rules().foods:
+				s.biz[k].stock.erase(f)
+		for f in OffMapSettlement.rules().foods:
+			s.gov.granary.erase(f)
+		s.reopen_books()
 
 
 ## Paid work for the player: a villager with work and the wage offers it when asked; the player
@@ -3075,24 +3091,26 @@ func test_long_run_economy() -> void:
 	var step: Dictionary = wc.plan.filter(func(s): return s.k == "do")[0]
 	check(int(step.args.vendor) == gm.id and wc.doing == "buying a new axe", "B7-016: a woodcutter without an axe buys it from the goods merchant first")
 	w.dispose()
-	test_caravan_purse()
+	test_caravan_traders()
 
 
-## B7-014: the caravan is a finite regional market. It holds a purse (`caravan_float` at the start, plus
-## `caravan_allowance` a day up to the float, plus what the village pays it for ore and stone) and never
-## pays out a coin it does not hold.
-func test_caravan_purse() -> void:
+## B7-014 (ECON-P1.3, owner 2026-10-23): the caravan is the neighbouring settlements' traders. They hold coins in their own
+## tills (no purse of the caravan's, no allowance, no float, no ceiling) and never pay out a coin they do not hold.
+func test_caravan_traders() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
 	w.player.pos = FAR_GUARDS
-	var float_coins := int(GameData.b("caravan_float"))
-	# what one visit adds to the purse: the allowance for the days between visits, less as the village's coins near the ceiling
-	var visit := func() -> int:
-		var ceiling := float(GameData.b("caravan_ceiling_per_head")) * float(w.alive_count() - w.alive_count("bandit"))
-		return roundi(float(GameData.b("caravan_allowance")) * int(GameData.b("caravan_every_days")) * clampf(1.0 - float(w.total_coins()) / ceiling, 0.0, 1.0))
+	var all := func() -> int: return w.total_coins() + w.regions.coins() - (w.coin_sources + w.regions.net_paid_by_village())       # the world's coins less what came from outside it
+	var tills := func() -> int:
+		var n := 0
+		for s: OffMapSettlement in w.regions.list:
+			n += int(s.trader().till)
+		return n
 	var smiths: Array = w.npcs.filter(func(o): return o.alive and o.job == "smith")
-	var base := w.total_coins() - w.coin_sources
-	check(w.caravan_purse == float_coins, "B7-014: a new world's caravan holds its float (%d)" % float_coins)
+	var base: int = all.call()
+	var tills0: int = tills.call()
+	check(tills0 > 0 and w.get("caravan_purse") == null, "B7-014: a new world's caravan is the traders, with %d coins in their tills and no purse of its own" % tills0)
+	check(not GameData.balance.has("caravan_allowance") and not GameData.balance.has("caravan_coins"), "B7-014: no allowance and no per-visit cap in the data")
 	# surplus to sell: every smith holds 12 iron bars (cap 8, so 8 for sale at 11 coins each)
 	var stock := func() -> void:
 		for s: NPC in smiths:
@@ -3105,83 +3123,65 @@ func test_caravan_purse() -> void:
 	var coins0 := w.total_coins()
 	b.caravan()
 	var paid := w.total_coins() - coins0
-	check(paid > 0 and paid <= int(GameData.b("caravan_coins")) and w.caravan_purse == float_coins - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins) out of its purse" % paid)
-	check(w.total_coins() - w.coin_sources == base, "B7-014: coins are conserved")
+	check(paid > 0 and paid <= tills0 and int(tills.call()) == tills0 - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins) out of the traders' tills" % paid)
+	check(all.call() == base, "B7-014: coins are conserved, the settlements' included")
 	# B7-007: the mine's raw output is not carried away, whatever the merchants hold above half their caps
 	var raws: Array = w.npcs.filter(func(o): return o.alive and b.buy_role(o) == "merchant_raw")
 	for o: NPC in raws:
 		for id in NPCBrain.NOT_EXPORTED:
 			o.inv.add(id, 20)
 		o.inv.add("plank", 20)
-	w.caravan_purse = float_coins
+	w.regions.fund_only("higham", 400)
+	base = all.call() + 0
 	var raw0 := NPCBrain.NOT_EXPORTED.map(func(id): return int(w.stats.get("exported_" + id, 0)))
 	var plank0 := int(w.stats.get("exported_plank", 0))
 	b.caravan()
 	var raw1 := NPCBrain.NOT_EXPORTED.map(func(id): return int(w.stats.get("exported_" + id, 0)))
 	check(raw0 == raw1 and int(w.stats.get("exported_plank", 0)) > plank0, "B7-007: the caravan buys the merchants' planks but none of the mine's ore, coal or stone")
-	w.caravan_purse = float_coins - paid
-	# an empty purse buys nothing; the allowance refills it a little each visit
-	w.caravan_purse = 0
+	# an empty till buys nothing
+	w.regions.fund_only("higham", 0)
 	stock.call()
 	var exp0 := int(w.stats.get("exported_iron_bar", 0))
 	var src0 := w.coin_sources
-	var added: int = visit.call()
 	b.caravan()
+	check(int(w.stats.get("exported_iron_bar", 0)) == exp0 and w.coin_sources == src0, "B7-014: traders with nothing in their tills buy nothing (no allowance refills them)")
+	# a till for two bars is shared by two smiths, not given to the first
 	var each := maxi(1, roundi(GameData.value("iron_bar") * 0.8))
-	var bought := int(w.stats.get("exported_iron_bar", 0)) - exp0
-	check(added > 0 and bought == added / each and w.coin_sources - src0 == bought * each and w.caravan_purse == added - bought * each, "B7-014: with an empty purse it buys only what one visit's allowance (%d) pays for (%d bars)" % [added, bought])
-	# at the ceiling the region adds nothing: the village's coins cannot pass it
-	w.caravan_purse = 0
-	w.treasury += int(GameData.b("caravan_ceiling_per_head")) * 100
-	stock.call()
-	exp0 = int(w.stats.get("exported_iron_bar", 0))
-	b.caravan()
-	check(int(visit.call()) == 0 and w.caravan_purse == 0 and int(w.stats.get("exported_iron_bar", 0)) == exp0, "B7-014: at the ceiling the caravan adds nothing to its purse and buys nothing")
-	w.treasury -= int(GameData.b("caravan_ceiling_per_head")) * 100
-	# the allowance fills the purse no higher than the float
-	w.caravan_purse = float_coins - 1
+	w.regions.fund_only("higham", 2 * each)
 	for s: NPC in smiths:
 		s.inv.remove("iron_bar", s.inv.count("iron_bar"))
-	b.caravan()
-	check(w.caravan_purse == float_coins, "B7-014: the purse never fills past the float")
-	# a purse for two bars is shared by two smiths, not given to the first
-	added = visit.call()
-	w.caravan_purse = 2 * each - added
 	stock.call()
 	b.caravan()
 	var sold := smiths.map(func(s): return 12 - s.inv.count("iron_bar"))
-	check(smiths.size() >= 2 and sold.all(func(n): return n <= 1) and sold.reduce(func(a, c): return a + c, 0) == 2, "B7-014: a purse for two bars is shared by two smiths (%s)" % str(sold))
-	# what it sells the village comes back to its purse first
+	check(smiths.size() >= 2 and sold.all(func(n): return n <= 1) and sold.reduce(func(a, c): return a + c, 0) == 2, "B7-014: a till for two bars is shared by two smiths (%s)" % str(sold))
+	# what it sells the village comes back to the traders' tills
 	for d in w.deposits:
 		d.amount = 0
 	for s: NPC in smiths:
 		s.inv.remove("iron_ore", s.inv.count("iron_ore"))
 		s.coins = 120
-	w.caravan_purse = 0
-	stock.call()
+	w.regions.fund_only("higham", 0)
+	var all1: int = all.call()
 	var cs0 := w.coin_sources
-	var all1 := w.total_coins() - w.coin_sources
 	var out0 := int(w.stats.get("caravan_coins_out", 0))
 	var in0 := int(w.stats.get("caravan_coins_in", 0))
-	added = visit.call()
 	b.caravan()
 	var spent: int = int(w.stats.get("caravan_coins_out", 0)) - out0
 	var got: int = int(w.stats.get("caravan_coins_in", 0)) - in0
-	check(spent > 0 and got <= spent + added and w.coin_sources - cs0 == got - spent and w.total_coins() - w.coin_sources == all1, "B7-014: imports (%d coins) refill the purse and pay for the smiths' bars first (%d); conserved" % [spent, got])
-	check(w.caravan_purse == spent + added - got, "B7-014: the purse is what it took in and was allowed, less what it paid")
-	# saving: the purse is kept, and an older save's caravan arrives with its float
-	w.caravan_purse = 321
+	check(spent > 0 and w.coin_sources - cs0 == got - spent and all.call() == all1, "B7-014: imports (%d coins) go into the traders' tills before they pay for the bars (%d); conserved" % [spent, got])
+	# saving: the settlements are kept, and an older save's caravan purse becomes the traders' coins
 	var saved: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
-	check(int(saved.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 9 and int(saved.caravan_purse) == 321, "B7-014: the purse is saved (save_version %d)" % World.SAVE_VERSION)
+	check(int(saved.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 9 and saved.has("regions") and not saved.has("caravan_purse"), "B7-014: the traders' tills are saved with the settlements (save_version %d)" % World.SAVE_VERSION)
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), saved)
-	check(w2.caravan_purse == 321 and w2.total_coins() == w.total_coins(), "B7-014: and loaded, no coin changed")
+	check(w2.regions.coins() == w.regions.coins() and w2.total_coins() == w.total_coins(), "B7-014: and loaded, no coin changed")
 	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 	old.save_version = 8
-	old.erase("caravan_purse")
+	old.erase("regions")
+	old["caravan_purse"] = 1500
 	var w8 := World.new()
 	w8.load_dict(VillageMap.load_default(), old)
-	check(w8.caravan_purse == float_coins and w8.total_coins() == w.total_coins(), "B7-014: a version 8 save's caravan arrives with its float; every village coin kept")
+	check(w8.regions.migrated_coins == 1500 and w8.total_coins() == w.total_coins(), "B7-014: a version 8 save's caravan purse becomes the traders' own; every village coin kept")
 	w2.dispose()
 	w8.dispose()
 	w.dispose()

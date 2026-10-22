@@ -25,6 +25,8 @@ the trade record for couriers).
 | `regional.gd` | `RegionalMarket` | C (E rules) | Supply, demand, willingness to pay, purchasing power; `plan()` (any buyer; carriage by the buyer's own trip or a paid carter; competition, cooperation, capacity, unmet reasons, lost sales), `execute()` (atomic, matched, carriage fees apart), `matched()`, `to_contract_offer()` (CON-01 shape). |
 | `routes.gd` | `TradeRoutes` | C/E | Grid routes (Dijkstra over road/open/rough/solid; overworld classifier), abstract routes, carriage cost, carrying capacity (handcarts, packs). |
 | `settlement_save.gd` | `SettlementSave` | A | Provisional save section `x18_settlements` (`mml-settlements/0`). |
+| `offmap.gd` | `OffMapSettlement` | C (SET-C-SIM) | ONE off-map settlement as a small economy of its own: households, businesses, treasury, a market; stepped once a day (section 12). In the live game |
+| `regions.gd` | `Regions` | C (SET-C-FIVE) | The five settlements, their traders' visits to the village, the traders' wholesale round, saving (section 12). In the live game |
 
 Data: `game/data/settlement_industries.json` (`mml-capabilities/1`), test fixture `game/tests/fixtures/x18_regions.json`
 (`mml-regions/0`).
@@ -444,3 +446,86 @@ Reconciliation with Build 17:
 - The booths' stores and held coins join the census (`SettlementHoldings`) and `World.total_coins`.
 - The CourierService and FormalAgreements state goes into the versioned save.
 - The courier window gets its menu entry.
+
+## 12. The five neighbouring settlements and their traders (SET-C-SIM, SET-C-FIVE, ECON-P1.3; owner 2026-10-23)
+
+Live, not prospective: this section is in the game. `OffMapSettlement` and `Regions` (`game/scripts/core/settlement/offmap.gd`,
+`regions.gd`; data `game/data/settlements.json`, format `mml-offmap-settlements/1`) replace the daily caravan allowance. The earlier
+`SettlementLedger` and `RegionalMarket` remain the analysis tools of sections 3 to 4 (and the courier module's regional parties).
+
+Owner answers this implements (verbatim in `docs/directives/2026-10-23_*.md`): Q18-3 "Those settlements have simulated economies
+just like this one, it comes from their villagers, or village political structure or companies"; "Same rules, lighter detail";
+Q18-4 "5 of mixed kinds"; "Their traders": the caravan is merchants from those settlements, carrying only what they actually have
+and paying with their actual coins, and the daily allowance goes away; and base the places on the lore locations document.
+
+**The places** are Wulstead (market town), Netherton (hamlet), Garton (village), Higham-on-the-Way (abbey town) and Bourton
+Abbas (abbey village): `docs/expansion18/SETTLEMENTS.md` gives the gazetteer's words, paragraph ids and labels (CANON,
+CANON-INFERRED, GAME EXPANSION) and why these five.
+
+### The settlement (one step a day)
+
+State (plain dictionaries, saved as they are): households `{id, trade, adults, children, coins, pantry, credit, hungry, acc, inc,
+stay, alive}`; businesses `{type, workers, till, stock, reserves, out, acc, reserve, horses, ...}`; the treasury
+`{coins, granary, officials, acc}`; prices; flow lines; the opening books. A day, in order:
+
+1. **Market.** Offers: each business's stock above what it keeps for its own recipes and tools; the trader's carried goods above
+   `carry_keep`. Buyers in turn: households on their market days (every other day), then the treasury's relief and upkeep, then
+   businesses, then the trader collects what is left of the goods it carries. One price a good, whole coins, `price_min` to
+   `price_max` of value (the village's own band), moved by yesterday's paying demand against offers (`price_step`). A sale moves
+   goods and coins as one line; a toll (6% of sales, a tithe at the abbeys and the canons') goes to the treasury.
+2. **Production.** Natural output (fields, herds, woods, herbs; the Garton diggings and the Bourton quarry draw down finite
+   `reserves`) and the village's real recipes (`recipes.json`) from inputs held, to a stock target. Tools wear (a plough, an axe,
+   a pickaxe, a mallet, a hammer) and are bought like inputs; nothing slows for want of one (a limitation).
+3. **Wages and profit.** A business keeps its working `reserve` and pays out, of what is above it, at least the day wages and up to
+   half the surplus, equally among its worker households.
+4. **Tax and the treasury.** The village's rule (`tax_rate_*`, `tax_exemption_*`, `treasury_reserve_days`) on households and on tills
+   above their reserve; officials paid (`official_wage`); day labour (`day_labour_wage`) to a household nearly out of coins while the
+   treasury keeps three days of wages.
+5. **Eating.** Foods by points as the village counts them (`NPCBrain.food_points`); a household under 60% fed for six days loses
+   a member (children first); an empty one is dissolved and its coins and food go to the treasury.
+6. **Horses.** The farms' working horses eat their own wheat; a fed pair breeds every 45 days up to six.
+7. **Prices** move; **jobs** move once a week: a household whose trade paid it next to nothing joins the business that paid most,
+   never emptying a trade.
+
+Founding draws the households' makeup and purses from `(world seed, settlement index)` once; the step then uses no random numbers.
+
+### Money and goods (WDR-022)
+
+There is no income line and no closed purse that refills: a settlement's coins change only by trade with the village or with the
+other settlements' traders. Goods change only by natural output, use, and trade. `audit()` checks every settlement every day; the
+whole world's coins are `village + settlements`, changing only by what is created outside (outlaws, heirs, newcomers). A village that
+fails is an outcome: a settlement can starve and shrink, and nothing rescues it. Isolated, four of the five hold for 200 days; the
+largest, Higham-on-the-Way, has the thinnest margins and starts to lose its poorest households after about day 150 (measured in
+`PROGRESS.md`).
+
+### The traders are the caravan
+
+The merchants are the settlement's trader. On a visit day (`caravan_every_days`) the traders whose turn it is come
+(`Regions.visiting`: every `ceil(miles / 20)` visits, all on the first). Imports (ore, coal, copper, stone, medicine, seed,
+cuttings) come out of a trader's stock; exports (EQ-22's allocation by need, 0.8 x value, the village's food and tool keeps all
+unchanged) go to a trader whose settlement still `wants` the good (its few days of use, less what its own workers make; food only
+under three days of it) and whose till pays above its floor. The old stand-ins are gone: `caravan_allowance`, `caravan_float`,
+`caravan_ceiling_per_head`, `caravan_coins`, `World.caravan_purse`. Every `road_trade_every_days` the traders sell one another what
+their settlements do not need, at base value. The plough horse is led by the dealer-trader of Wulstead or Higham (nearest with a
+horse); none on the road means none for sale.
+
+### Saves
+
+`regions` is an optional key of the save dictionary (`mml-regions-world/1`); no save-version bump. A save without it founds the
+settlements from its seed, steps them to the saved day with no trade with the village, and gives the old `caravan_purse` to the
+traders' tills. Accumulators and prices are rounded to a millionth, so a saved and reloaded settlement is identical.
+
+### Seams left for the other registers
+
+- TRADE-CREDIT (barter and debt, Q18-5): `OffMapSettlement.sell_to_village` and `buy_from_village` are the two places a swap or a
+  debt would replace coins; a debt would need a ledger line type the audit knows.
+- MIGRATE-18 (Q18-7): households are the unit (`hh`, with `adults` and `children` and `trade`); a household arriving or leaving
+  is a new `flows` line and a change of `population`; births and deaths of age are not played in the settlements yet.
+- Couriers (Q18-12, Q18-13): `Regions.list` and `OffMapSettlement.trader()` give a courier a party with a till and a stock;
+  `couriers.gd` still reads `SettlementLedger` parties.
+- Not done: the village buying food from the settlements, longer trade chains among them, a productivity penalty for missing
+  tools, newcomers decoupled from the caravan.
+
+### Cost
+
+One settlement steps each game hour from six, so a frame carries a fifth of the work; measured costs are in `PROGRESS.md`.
