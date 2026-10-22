@@ -16353,6 +16353,50 @@
    "complexity": "M"
   },
   {
+   "id": "MIGRATE-18",
+   "title": "Migration both ways between the village and the off-map settlements for work, land, marriage or hunger",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Both ways, for reasons",
+   "description": "Migration both ways between the village and the off-map settlements for work, land, marriage or hunger",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23 (Q18-7)",
+   "acceptance": [
+    "Villagers leave and outsiders arrive for stated reasons (work, land, marriage, hunger); people, purses and goods move with them; conserved; deterministic; saved"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SET-C",
+   "depends_on": [
+    "Q18-7"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "MILE-01",
    "title": "Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner",
    "kind": "rule",
@@ -23823,6 +23867,174 @@
    "owner_answer": "No closed purse or invented income: each off-map settlement is a simulated economy whose coins come from its villagers, its political structure and its companies; same rules as the village, updated in daily steps without walking people; full detail only where the player is"
   },
   {
+   "id": "Q18-4",
+   "title": "Q18-4: five off-map settlements of mixed kinds",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "5 of mixed kinds",
+   "description": "Q18-4: five off-map settlements of mixed kinds",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "Five off-map settlements of mixed kinds (agent picks the mix, e.g. market town, villages, mining and forest hamlets)"
+  },
+  {
+   "id": "Q18-5",
+   "title": "Q18-5: barter and credit with trust",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Barter + credit with trust",
+   "description": "Q18-5: barter and credit with trust",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "Barter allowed; credit given by those who trust the buyer, as a recorded debt that must be repaid; unpaid debts hurt standing"
+  },
+  {
+   "id": "Q18-7",
+   "title": "Q18-7: migration both ways between the village and the other settlements, for reasons",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Both ways, for reasons",
+   "description": "Q18-7: migration both ways between the village and the other settlements, for reasons",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "People leave for work, land, marriage or to escape hunger, and arrive the same way; villages grow or shrink from it"
+  },
+  {
+   "id": "Q18-8",
+   "title": "Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Keep it for 20+",
+   "description": "Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E)",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "SET-E stays 20+; Build 18 has trade, couriers and migration with off-map settlements"
+  },
+  {
    "id": "Q18-9",
    "title": "Settlement capability levels affect pay scales and production output only; never a permission gate",
    "kind": "decision",
@@ -25962,6 +26174,50 @@
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "the Settlement Advancement & Regional Economy expansion"
+  },
+  {
+   "id": "SET-C-FIVE",
+   "title": "Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "5 of mixed kinds",
+   "description": "Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM)",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23 (Q18-4)",
+   "acceptance": [
+    "Five settlements generated deterministically from the seed with different characters; each reachable by a trail; saved"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SET-C",
+   "depends_on": [
+    "Q18-4"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "SET-C-SIM",
@@ -28366,6 +28622,50 @@
      "date": "2026-10-22",
      "change": "commit c7df646",
      "why": "follow-up c7df646: the quantity box's scroll wait no longer runs outside the tree (removed 14 script errors in start_test); start 506, run_tests 3584 with 0 script errors"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "TRADE-CREDIT",
+   "title": "Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Barter + credit with trust",
+   "description": "Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md",
+   "approval": "owner, 2026-10-23 (Q18-5)",
+   "acceptance": [
+    "Barter deals conserve goods both ways; credit only from parties who trust the buyer; debts recorded, saved, repaid; default lowers standing; no coins created"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SET-C",
+   "depends_on": [
+    "Q18-5"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
     }
    ],
    "target_build": "18"

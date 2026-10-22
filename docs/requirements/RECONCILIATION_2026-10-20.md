@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 192 still open, 39 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 266 (132 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **319** = 192 still open from the baseline + 132 added and open |
+| Entries added since | | 273 (135 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **322** = 192 still open from the baseline + 135 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (39)
@@ -69,7 +69,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (266)
+## Added since the baseline (273)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -190,6 +190,7 @@ None.
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | approved | APPROVED — NOT STARTED | 18 |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | rule | COMPLETE AND VERIFIED | 16 |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | 17 |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | rule | APPROVED — NOT STARTED |  |
@@ -269,6 +270,10 @@ None.
 | Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-2 | Q18-2: first industries are forestry, carpentry, masonry, smithing, farming, tanning, trade and mining | decision | COMPLETE AND VERIFIED |  |
 | Q18-3 | Q18-3: off-map settlements are simulated economies like this one (money from their villagers, government and companies), same rules at lighter detail | decision | COMPLETE AND VERIFIED |  |
+| Q18-4 | Q18-4: five off-map settlements of mixed kinds | decision | COMPLETE AND VERIFIED |  |
+| Q18-5 | Q18-5: barter and credit with trust | decision | COMPLETE AND VERIFIED |  |
+| Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons | decision | COMPLETE AND VERIFIED |  |
+| Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) | decision | COMPLETE AND VERIFIED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | COMPLETE AND VERIFIED | 18 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | COMPLETE AND VERIFIED |  |
@@ -278,6 +283,7 @@ None.
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SEED-04 | Households save planting material from their own harvests | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | APPROVED — NOT STARTED | 18 |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | APPROVED — NOT STARTED | 18 |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | APPROVED — NOT STARTED |  |
@@ -298,6 +304,7 @@ None.
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | COMPLETE AND VERIFIED | 16 |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
+| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | approved | APPROVED — NOT STARTED | 18 |
 | TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | TREAS-01 | The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock | approved | COMPLETE AND VERIFIED | 16 |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
