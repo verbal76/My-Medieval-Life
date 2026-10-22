@@ -11103,9 +11103,15 @@
      "date": "2026-10-22",
      "change": "BLOCKED -> COMPLETE AND VERIFIED; target_build",
      "why": "Owner answered 2026-10-22: Option B, proportional harvest sharing (docs/directives/2026-10-22_farm08_q_crop_decision.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "Owner's answer recorded in its own field"
     }
    ],
-   "target_build": ""
+   "target_build": "",
+   "owner_answer": "Option B approved (2026-10-22): proportional harvest sharing by actual cutting labour, after the seed reservation and cattle feed; deterministic remainder; conserving; independent of who finishes first (docs/directives/2026-10-22_farm08_q_crop_decision.md)"
   },
   {
    "id": "FARM-08A",
@@ -22139,9 +22145,15 @@
      "date": "2026-10-22",
      "change": "BLOCKED -> COMPLETE AND VERIFIED; target_build",
      "why": "Owner approved option 2 on 2026-10-22: people's experience, capped by facilities; separate workforce and effective capability per industry (0-10); facility shortages never erase experience; pay and output modifiers use the effective level; levels never permit or forbid work. Numbers (experience formula, facility caps, tenure rules, thresholds) to be proposed separately. Expansion 18 only (docs/directives/2026-10-22_q18_11b_decision.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "Owner's answer recorded"
     }
    ],
-   "target_build": ""
+   "target_build": "",
+   "owner_answer": "Option 2 approved (2026-10-22): people's experience, capped by facilities; separate workforce and effective capability per industry on 0-10; facility shortages never erase experience; pay and output modifiers use the effective level; levels never permit or forbid work; numbers to be approved separately (docs/directives/2026-10-22_q18_11b_decision.md)"
   },
   {
    "id": "Q18-12",

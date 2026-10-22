@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 63 |
+| APPROVED — NOT STARTED | 64 |
 | ACTIVE DEVELOPMENT | 18 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 23 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **459** |
-| Outstanding (not complete, superseded or canceled) | 212 |
+| **Total approved** | **460** |
+| Outstanding (not complete, superseded or canceled) | 213 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 77 owner decision (open or answered), 30 world design rule, 2 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 77 owner decision (open or answered), 30 world design rule, 2 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 32 | 25 |
+| Build 18: Settlement Advancement & Regional Economy | 33 | 26 |
 | Build 19: NPC Judgment System | 21 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 69 | 18 |
+| Waiting on an owner decision | 68 | 18 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **287** | **212** |
+| **Total open** | **287** | **213** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (32)
+### Build 18: Settlement Advancement & Regional Economy (33)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -207,6 +207,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | APPROVED — NOT STARTED |  |  |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | ACTIVE DEVELOPMENT |  |  |
@@ -297,7 +298,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (69)
+### Waiting on an owner decision (68)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -359,7 +360,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Q-08 | Resource depletion and wildlife sustainability | approved | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | Q-11 | Design gap assessment, phased sequence | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | decision | BLOCKED |  |  |
-| Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | decision | BLOCKED |  |  |
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | APPROVED — NOT STARTED | Owner designation | Numbering 20+ needs the owner |
@@ -436,7 +436,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (63)
+## APPROVED — NOT STARTED (64)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -502,6 +502,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md |  | after Q18-11B; after PROS-18 | Expansion 18: design proposal for the experience measure (tenure record), facility caps and thresholds, for owner approval; implementation after its dependencies |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
 ## ACTIVE DEVELOPMENT (18)
@@ -511,7 +512,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | B16-READY | Build 16 development audit and release-readiness report | docs/directives/2026-10-21_build16_audit_release_readiness.md |  |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
-| FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Owner decision on FARM-08 (switches, yield) and on the balance options; optional check of crop allocation |
+| FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Owner decision on the FARM-08 yield and switches and on the remaining balance options (herd cost vs milk income, 4-day trough vs harvest gaps, household feed purse or granary sales, unsold milk and cheese); crop sharing decided (FARM-08-Q-CROP, option B) and implemented on wip/farm-cropshare (FARM-CROP-01) |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
@@ -945,7 +946,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (77)
+## Owner decisions, open and answered (open: 38, status BLOCKED) (77)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1000,7 +1001,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PARTIALLY IMPLEMENTED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | BLOCKED | docs/directives/2026-10-21_expansion18_master_directive.md |
-| Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | BLOCKED | docs/directives/2026-10-21_expansion18_master_directive.md |
+| Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_master_directive.md |
 | Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |

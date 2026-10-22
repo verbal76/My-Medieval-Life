@@ -10,7 +10,7 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 207 (96 of them still open) |
+| Entries added since | | 208 (96 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **287** = 195 still open from the baseline + 96 added and open |
 | Open entries moved to another build | | 2 |
 
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (207)
+## Added since the baseline (208)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -232,7 +232,7 @@ None.
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | decision | PARTIALLY IMPLEMENTED | 18 |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | decision | BLOCKED | owner decision |
-| Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | decision | BLOCKED | owner decision |
+| Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | decision | COMPLETE AND VERIFIED |  |
 | Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | COMPLETE AND VERIFIED | 18 |
@@ -264,6 +264,7 @@ None.
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT | 15 |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | rule | COMPLETE AND VERIFIED | 17 |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | APPROVED — NOT STARTED | 18 |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | ACTIVE DEVELOPMENT | 18 |
