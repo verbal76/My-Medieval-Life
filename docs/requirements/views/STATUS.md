@@ -11,9 +11,9 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Waiting on an owner decision (design) | 5 | 0 | 0 | 0 |
 | Design work still required | 6 | 2 | 0 | 0 |
 | Design unknown | 4 | 4 | 7 | 1 |
-| Not started (incl. READY) | 22 | 6 | 7 | 1 |
+| Not started (incl. READY) | 21 | 6 | 7 | 1 |
 | In development (worker assigned) | 4 | 0 | 0 | 0 |
-| Partially implemented | 15 | 3 | 0 | 0 |
+| Partially implemented | 16 | 3 | 0 | 0 |
 | Implemented on a task branch | 0 | 3 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
 | Integrated | 32 of 73 (44%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
@@ -37,5 +37,5 @@ Build authority:
 - **Build 20 (Living Economy):** implementation **NOT AUTHORIZED**. OD-30, OD-LE-01: numbering and placement only; implementation not authorized
 - **Build 21 (Village Politics):** implementation **NOT AUTHORIZED**. OD-30: numbering only; implementation not authorized
 
-Future backlog and unassigned: 101 open records (`BACKLOG.md`). Open owner decisions: 36 (`DECISIONS.md`).
+Future backlog and unassigned: 102 open records (`BACKLOG.md`). Open owner decisions: 36 (`DECISIONS.md`).
 

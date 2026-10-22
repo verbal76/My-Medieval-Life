@@ -55,11 +55,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 
-## Approved, no build assigned (6)
+## Approved, no build assigned (7)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
+| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | OWNER APPROVED | NOT STARTED |
 | WDR-018-C | Comply with World Design Rule 18: Protected Ecological Continuity | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | OWNER APPROVED | NOT STARTED |
@@ -107,7 +108,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | proposal | PROPOSED | NOT STARTED |
 | PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | approved | OWNER APPROVED | NOT STARTED |
-| PL1-11 | Google Drive cloud saves (staged) | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
+| PL1-11 | Google Drive cloud saves (staged) | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | Q-08 | Resource depletion and wildlife sustainability | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-11 | Design gap assessment, phased sequence | proposal | PROPOSED | NOT STARTED |
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | OWNER DECISION REQUIRED | NOT STARTED |

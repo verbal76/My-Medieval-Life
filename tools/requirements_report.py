@@ -158,20 +158,46 @@ def build_view(d, b):
               "| Complete | %s |" % pct(m["complete"], m["total"]),
               "| Open (release blockers) | %d |" % len(m["open"]),
               "| Open owner decisions (blocking) | %d (%d) |" % (len(m["decisions"]), len(m["blocking_decisions"])), ""]
-    order = ["IN DEVELOPMENT", "PARTIALLY IMPLEMENTED", "IMPLEMENTED ON TASK BRANCH", "READY", "NOT STARTED", "IMPLEMENTATION BLOCKED", "INTEGRATED"]
     rs = scoped(d, b)
-    for st in order:
-        rows = sorted([r for r in rs if r.get("implementation_status") == st and r.get("completion") == "OPEN"], key=lambda r: r["id"])
+    by = {r["id"]: r for r in d["requirements"]}
+    open_dec = {x["id"] for x in d["requirements"] if x["kind"] == "decision" and x.get("disposition") in OPEN_DISP}
+
+    def blockers(r):
+        if r.get("implementation_status") == "INTEGRATED":
+            return []
+        out = [x for x in (r.get("decisions") or []) if x in open_dec]
+        out += [x for x in (r.get("depends_on") or []) if x in by and cr.is_open(by[x]) and by[x].get("implementation_status") != "INTEGRATED"]
+        if r.get("design") in ("OWNER DECISION REQUIRED", "DESIGN WORK REQUIRED", "UNKNOWN", None) and r.get("implementation_status") != "INTEGRATED":
+            out.append("design: %s" % (r.get("design") or "UNKNOWN"))
+        return out
+
+    def code(r):
+        if r.get("integrated_in"):
+            return "; ".join(r["integrated_in"])
+        if r.get("branch"):
+            return r["branch"] + (" @ " + ", ".join(r.get("commits") or []) if r.get("commits") else "")
+        return ", ".join(r.get("commits") or []) or "none"
+
+    groups = [("In development (worker assigned)", lambda r: r.get("implementation_status") == "IN DEVELOPMENT"),
+              ("Integrated, awaiting gameplay or owner verification", lambda r: r.get("implementation_status") == "INTEGRATED"),
+              ("Ready to proceed now (approved, specified, nothing open blocks it)", lambda r: not blockers(r)),
+              ("Blocked (open owner decision, unfinished dependency or unsettled design)", lambda r: bool(blockers(r)))]
+    left = sorted([r for r in rs if r.get("completion") == "OPEN"], key=lambda r: r["id"])
+    for title, test in groups:
+        rows = [r for r in left if test(r)]
+        left = [r for r in left if r not in rows]
         if not rows:
             continue
-        lines += ["## Open, %s (%d)" % (st.lower(), len(rows)), "",
-                  "| ID | Requirement | Design | Effort | Verification | Worker / branch | Remaining work | Decisions / depends on |",
-                  "|---|---|---|---|---|---|---|---|"]
+        lines += ["## %s (%d)" % (title, len(rows)), "",
+                  "| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |",
+                  "|---|---|---|---|---|---|---|---|---|"]
         for r in rows:
             wb = " / ".join(x for x in (r.get("assigned_worker"), r.get("branch")) if x)
-            dep = ", ".join((r.get("decisions") or []) + ["after " + x for x in r.get("depends_on") or []])
-            lines.append("| %s | %s | %s | %s | %s | %s | %s | %s |" % (r["id"], _c(r["title"]), r.get("design") or "UNKNOWN",
-                         r.get("effort") or "UNKNOWN", r.get("verification_status"), _c(wb), _c(r.get("remaining_work") or r.get("next_action") or ""), _c(dep)))
+            lines.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
+                r["id"], _c(r["title"]), r.get("approval_status"), r.get("implementation_status"),
+                _c(code(r) if (r.get("integrated_in") or not wb) else wb), r.get("verification_status"),
+                _c("; ".join(x for x in [r.get("remaining_work") or r.get("next_action") or "", ("known: " + "; ".join(r["known_defects"])) if r.get("known_defects") else ""] if x)),
+                _c(", ".join(blockers(r))), "verification only" if r.get("implementation_status") == "INTEGRATED" else (r.get("effort") or "UNKNOWN")))
         lines.append("")
     done = sorted([r for r in rs if r.get("completion") == "COMPLETE"], key=lambda r: r["id"])
     if done:

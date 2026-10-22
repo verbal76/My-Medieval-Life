@@ -39,6 +39,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
 | DVW-B3-CHAPEL | chapel worker (Sonnet subagent) | `wip/b18-chapel` | `wip/build18` 83d3afc | uncommitted work at the 2026-10-23 reconciliation; owner's clergy and relief rules in `docs/directives/2026-10-23_chapel_*.md` |
+| REQ-CTRL-02 | lead | `wip/requirements-control` | staging 7f45de4 | the recovery audit; not merged until the owner has the report |
 | SET-C-SIM, SET-C-FIVE, ECON-P1.3 | regions worker (Sonnet subagent) | `wip/b18-regions` | `wip/build18` 83d3afc | uncommitted work at the reconciliation; settlements from the lore locations (`docs/directives/2026-10-23_lore_locations_basis.md`) |
 
 On their reports:

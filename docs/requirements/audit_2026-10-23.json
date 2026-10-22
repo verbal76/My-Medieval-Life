@@ -1,0 +1,1224 @@
+{
+ "sources": {
+  "branch_copies": 76,
+  "distinct_copies": 28,
+  "records_in_branch_copies": 45424,
+  "records_in_distinct_copies": 15760,
+  "distinct_record_versions": 1080,
+  "unique_ids": 742,
+  "ids_identical_everywhere": 518
+ },
+ "dry_run": {
+  "rebuilt": 775,
+  "canonical": 776,
+  "only_rebuilt": [],
+  "only_canonical": [
+   "REQ-CTRL-02"
+  ],
+  "identical": 738,
+  "changed_after_migration": [
+   "ARMOR-01",
+   "B14-11",
+   "B7-016",
+   "BANDIT-RETURN",
+   "BARBER-01",
+   "CC-01",
+   "CON-UX-01",
+   "DVW-B8",
+   "ECON-P1.3",
+   "FARM-CROP-01",
+   "FARM-CROP-SEED",
+   "INV-18",
+   "MAP-01",
+   "ORE-PLACE-01",
+   "PL1-11",
+   "REC-003",
+   "REQ-CTRL-01",
+   "ROOMS-18",
+   "SKILL-TRADES-18",
+   "STONE-05",
+   "TAILOR-18",
+   "TRADE-AXE-01",
+   "TRADE-UI-02",
+   "UI-HUD-01",
+   "UI-HUNGER-01",
+   "UI-PROGRESS-01",
+   "UI-WIKI-01",
+   "VIS-ANIMAL-01",
+   "VIS-AXE-01",
+   "VIS-CROP-01",
+   "VIS-DOOR-01",
+   "VIS-STEPS-01",
+   "VIS-TREE-02",
+   "WORLD-LIFE-01",
+   "X18-CAPCOMP",
+   "X18-CAPNUM",
+   "X18-SIM"
+  ],
+  "differs": [],
+  "duplicate_ids_in_rebuild": []
+ },
+ "conflicts": [
+  {
+   "id": "ECON-P1.3",
+   "field": "kind",
+   "values": 2
+  }
+ ],
+ "evolutions": [
+  {
+   "id": "DVW-B8",
+   "field": "kind",
+   "values": 2
+  },
+  {
+   "id": "ECON-P3",
+   "field": "kind",
+   "values": 2
+  },
+  {
+   "id": "EQ-22",
+   "field": "kind",
+   "values": 2
+  },
+  {
+   "id": "FAM-07",
+   "field": "owner_wording",
+   "values": 2
+  }
+ ],
+ "reactivated": [],
+ "promoted": [],
+ "moved": [
+  [
+   "EXP-D",
+   "20+",
+   "20"
+  ],
+  [
+   "LE-01",
+   "owner decision",
+   "20"
+  ],
+  [
+   "LE-02",
+   "owner decision",
+   "20"
+  ],
+  [
+   "LE-03",
+   "owner decision",
+   "20"
+  ],
+  [
+   "LE-04",
+   "owner decision",
+   "20"
+  ],
+  [
+   "LE-05",
+   "owner decision",
+   "20"
+  ],
+  [
+   "LE-06",
+   "owner decision",
+   "20"
+  ],
+  [
+   "LE-07",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-02",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-03",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-04",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-05",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-06",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-07",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-08",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-09",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-10",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-11",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-12",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-13",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-14",
+   "owner decision",
+   "20"
+  ],
+  [
+   "OD-LE-15",
+   "owner decision",
+   "20"
+  ],
+  [
+   "VP-01",
+   "20+",
+   "21"
+  ],
+  [
+   "X19-ASSAULT",
+   "owner decision",
+   "19"
+  ],
+  [
+   "X19-CRT12",
+   "owner decision",
+   "19"
+  ],
+  [
+   "X19-DECAY",
+   "owner decision",
+   "19"
+  ],
+  [
+   "X19-GUARD",
+   "owner decision",
+   "19"
+  ],
+  [
+   "X19-HARMED",
+   "owner decision",
+   "19"
+  ],
+  [
+   "X19-Q-TIMING",
+   "owner decision",
+   "19"
+  ],
+  [
+   "X19-REGARD",
+   "owner decision",
+   "19"
+  ]
+ ],
+ "gaps": {
+  "none": {
+   "no commit recorded": [
+    "AR-P0-1",
+    "AR-P0-2",
+    "B12A-01",
+    "B12A-02",
+    "B12A-03",
+    "B13-01",
+    "B13-02",
+    "B13-03",
+    "B13-04",
+    "B13-05",
+    "B13-06",
+    "B13-07",
+    "B13-08",
+    "B13-09",
+    "B13-10",
+    "B13-11",
+    "B13-14",
+    "B14R-02",
+    "B14R-03",
+    "B14R-04",
+    "B14R-07",
+    "B14R-08",
+    "B14R-09",
+    "B14R-11",
+    "B7-002",
+    "B7-003",
+    "B7-004",
+    "B8-001",
+    "B8-002",
+    "B8-003",
+    "B8-004",
+    "B8-005",
+    "B8-006",
+    "B8-008",
+    "B8-009",
+    "B8-010",
+    "B8-011",
+    "B8-012",
+    "B8-013",
+    "B8-014",
+    "B8-015",
+    "B8-016",
+    "B8-017",
+    "B8-019",
+    "B8-020",
+    "B8-025",
+    "B8-026",
+    "B8-027",
+    "B8-028",
+    "B8-029",
+    "B8R-001",
+    "B8R-002",
+    "B8R-003",
+    "B8R-004",
+    "B8R-007",
+    "B8R-008",
+    "B8R-009",
+    "B8R-010",
+    "B8R-011",
+    "B8R-012",
+    "B8R-013",
+    "B8R-014",
+    "B8R-015",
+    "B8R-016",
+    "B8R-017",
+    "B8R-018",
+    "B8R-019",
+    "B8R-020",
+    "DVW-A1",
+    "DVW-A11",
+    "K-1",
+    "K-2",
+    "OPS-01",
+    "OWN-01",
+    "OWN-03",
+    "OWN-04",
+    "OWN-05",
+    "OWN-06",
+    "OWN-07",
+    "OWN-10",
+    "OWN-11",
+    "OWN-13",
+    "OWN-14",
+    "OWN-15",
+    "OWN-16",
+    "OWN-18",
+    "OWN-20",
+    "OWN-23",
+    "OWN-25",
+    "OWN-26",
+    "OWN-27",
+    "PL1-01",
+    "PL1-02",
+    "PL1-04",
+    "PL1-06",
+    "PL1-08",
+    "PL1-09",
+    "PL2-001",
+    "PL2-002",
+    "PL2-003",
+    "PL2-004",
+    "PL2-005",
+    "PL2-006",
+    "PL2-007",
+    "PL2-009",
+    "PL2-011",
+    "PL2-012",
+    "Q-03",
+    "Q-05",
+    "Q-06",
+    "REC-005",
+    "SAVE-01",
+    "WDR-006-C"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "AR-P0-1",
+    "AR-P0-2",
+    "B12A-01",
+    "B12A-02",
+    "B12A-03",
+    "B13-01",
+    "B13-02",
+    "B13-03",
+    "B13-04",
+    "B13-05",
+    "B13-06",
+    "B13-07",
+    "B13-08",
+    "B13-09",
+    "B13-10",
+    "B13-11",
+    "B13-14",
+    "B14R-02",
+    "B14R-03",
+    "B14R-04",
+    "B14R-07",
+    "B14R-08",
+    "B14R-09",
+    "B14R-11",
+    "B7-002",
+    "B7-003",
+    "B7-004",
+    "B8-001",
+    "B8-002",
+    "B8-003",
+    "B8-004",
+    "B8-005",
+    "B8-006",
+    "B8-008",
+    "B8-009",
+    "B8-010",
+    "B8-011",
+    "B8-012",
+    "B8-013",
+    "B8-014",
+    "B8-015",
+    "B8-016",
+    "B8-017",
+    "B8-019",
+    "B8-020",
+    "B8-025",
+    "B8-026",
+    "B8-027",
+    "B8-028",
+    "B8-029",
+    "B8R-001",
+    "B8R-002",
+    "B8R-003",
+    "B8R-004",
+    "B8R-007",
+    "B8R-008",
+    "B8R-009",
+    "B8R-010",
+    "B8R-011",
+    "B8R-012",
+    "B8R-013",
+    "B8R-014",
+    "B8R-015",
+    "B8R-016",
+    "B8R-017",
+    "B8R-018",
+    "B8R-019",
+    "B8R-020",
+    "DVW-A1",
+    "DVW-A11",
+    "K-1",
+    "K-2",
+    "OPS-01",
+    "OWN-01",
+    "OWN-03",
+    "OWN-04",
+    "OWN-05",
+    "OWN-06",
+    "OWN-07",
+    "OWN-10",
+    "OWN-11",
+    "OWN-13",
+    "OWN-14",
+    "OWN-15",
+    "OWN-16",
+    "OWN-18",
+    "OWN-20",
+    "OWN-23",
+    "OWN-25",
+    "OWN-26",
+    "OWN-27",
+    "PL1-01",
+    "PL1-02",
+    "PL1-04",
+    "PL1-06",
+    "PL1-08",
+    "PL1-09",
+    "PL2-001",
+    "PL2-002",
+    "PL2-003",
+    "PL2-004",
+    "PL2-005",
+    "PL2-006",
+    "PL2-007",
+    "PL2-009",
+    "PL2-011",
+    "PL2-012",
+    "Q-03",
+    "Q-05",
+    "Q-06",
+    "REC-005",
+    "SAVE-01",
+    "WDR-006-C"
+   ]
+  },
+  "owner action": {
+   "no commit recorded": [
+    "AR-P1-2",
+    "B12A-10"
+   ],
+   "no test evidence": [
+    "AR-P1-2"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "B12A-10"
+   ]
+  },
+  "15": {
+   "no commit recorded": [
+    "B13-12",
+    "B13-13",
+    "B14-12",
+    "B7-001",
+    "B7-005",
+    "B7-008",
+    "B7-009",
+    "B7-010",
+    "B7-011",
+    "B7-012",
+    "B7-013",
+    "B7-014",
+    "B8-018",
+    "CRT-01",
+    "CRT-02",
+    "CRT-04",
+    "CRT-05",
+    "CRT-07",
+    "CRT-08",
+    "CRT-09",
+    "CRT-10",
+    "CRT-11",
+    "CRT-12",
+    "DVW-A14",
+    "DVW-A2",
+    "DVW-A4",
+    "DVW-A6",
+    "EQ-07",
+    "EQ-10",
+    "EQ-17",
+    "EQ-18",
+    "EQ-19",
+    "EQ-20",
+    "EQ-21",
+    "FAM-01",
+    "FR-04",
+    "FR-06",
+    "FR-07",
+    "HOUSE-06",
+    "HOUSE-07",
+    "HOUSE-09",
+    "HOUSE-10",
+    "HOUSE-12",
+    "PERF-01",
+    "PERF-02",
+    "PERF-03",
+    "PERF-04",
+    "PERF-05",
+    "PERF-06",
+    "PL1-03",
+    "PL1-05",
+    "Q-04",
+    "REC-003",
+    "REC-004",
+    "REC-017",
+    "SAVE-00",
+    "SAVE-02",
+    "SAVE-03",
+    "SAVE-04",
+    "SAVE-05",
+    "SAVE-06",
+    "SAVE-07",
+    "SAVE-08",
+    "SAVE-09",
+    "WDR-008-C",
+    "WDR-010-C",
+    "WDR-022-C"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "B13-12",
+    "B13-13",
+    "B14-12",
+    "B7-001",
+    "B7-005",
+    "B7-008",
+    "B7-009",
+    "B7-010",
+    "B7-011",
+    "B7-012",
+    "B7-013",
+    "B7-014",
+    "B8-018",
+    "CRT-01",
+    "CRT-02",
+    "CRT-04",
+    "CRT-05",
+    "CRT-07",
+    "CRT-08",
+    "CRT-09",
+    "CRT-10",
+    "CRT-11",
+    "CRT-12",
+    "DVW-A14",
+    "DVW-A2",
+    "DVW-A4",
+    "DVW-A6",
+    "EQ-07",
+    "EQ-10",
+    "EQ-17",
+    "EQ-18",
+    "EQ-19",
+    "EQ-20",
+    "EQ-21",
+    "FAM-01",
+    "FR-04",
+    "FR-06",
+    "FR-07",
+    "HOUSE-06",
+    "HOUSE-07",
+    "HOUSE-09",
+    "HOUSE-10",
+    "HOUSE-12",
+    "INFRA-02",
+    "PERF-02",
+    "PERF-03",
+    "PERF-04",
+    "PERF-05",
+    "PERF-06",
+    "PL1-03",
+    "PL1-05",
+    "Q-04",
+    "REC-004",
+    "REC-017",
+    "SAVE-00",
+    "SAVE-02",
+    "SAVE-03",
+    "SAVE-04",
+    "SAVE-05",
+    "SAVE-06",
+    "SAVE-07",
+    "SAVE-08",
+    "SAVE-09",
+    "WDR-008-C"
+   ],
+   "no test evidence": [
+    "B7-009",
+    "B7-014",
+    "DVW-A14",
+    "PERF-01",
+    "REC-003",
+    "WDR-010-C",
+    "WDR-022-C"
+   ]
+  },
+  "20+": {
+   "no test evidence": [
+    "B14-10",
+    "B8-007",
+    "DVW-A13",
+    "OWN-19",
+    "OWN-28",
+    "PL1-07",
+    "PL1-13",
+    "PL2-010",
+    "PL2-013",
+    "WDR-015-C"
+   ],
+   "no commit recorded": [
+    "B8-007",
+    "CRT-06",
+    "DVW-A13",
+    "OWN-19",
+    "OWN-28",
+    "PL1-07",
+    "PL1-13",
+    "PL2-010",
+    "PL2-013",
+    "WDR-015-C"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "JUICE-00",
+    "LE-00"
+   ]
+  },
+  "16": {
+   "no commit recorded": [
+    "B16-AUDIT",
+    "B16-READY",
+    "DVW-A3",
+    "DVW-A7",
+    "DVW-A8",
+    "EQ-01",
+    "EQ-05",
+    "EQ-06",
+    "EQ-09",
+    "EQ-16",
+    "FAM-02",
+    "FAM-03",
+    "FAM-04",
+    "FAM-05",
+    "FAM-06",
+    "FAM-07",
+    "FARM-08",
+    "FSE-00",
+    "FSE-17",
+    "FSE-18",
+    "PAR-00",
+    "PAR-01",
+    "PAR-01A",
+    "PAR-01B",
+    "PAR-01C",
+    "PAR-02",
+    "PAR-02A",
+    "PAR-03",
+    "PAR-04",
+    "PAR-05",
+    "WDR-005-C",
+    "WR-02"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "B16-AUDIT",
+    "B16-READY",
+    "DVW-A7",
+    "DVW-A8",
+    "EQ-01",
+    "EQ-06",
+    "EQ-09",
+    "EQ-16",
+    "FAM-02",
+    "FAM-03",
+    "FAM-04",
+    "FAM-05",
+    "FAM-06",
+    "FAM-07",
+    "FSE-00",
+    "FSE-17",
+    "FSE-18",
+    "PAR-00",
+    "PAR-01",
+    "PAR-01A",
+    "PAR-01B",
+    "PAR-01C",
+    "PAR-02",
+    "PAR-02A",
+    "PAR-03",
+    "PAR-04",
+    "PAR-05",
+    "WDR-005-C",
+    "WR-02"
+   ],
+   "no test evidence": [
+    "B16-AUDIT",
+    "B16-READY",
+    "DVW-A3",
+    "EQ-05",
+    "FARM-08",
+    "FSE-00"
+   ]
+  },
+  "17": {
+   "no commit recorded": [
+    "B7-006",
+    "JOB-01",
+    "MIN-G",
+    "REC-013",
+    "SIM-B17",
+    "WDR-001-C",
+    "WDR-013-C"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "B7-006",
+    "JOB-01",
+    "MIN-C",
+    "MIN-G",
+    "REC-013",
+    "SIM-B17"
+   ],
+   "no test evidence": [
+    "MIN-G",
+    "WDR-001-C",
+    "WDR-013-C",
+    "WIKI-B17"
+   ]
+  },
+  "19": {
+   "no commit recorded": [
+    "DVW-B1",
+    "WDR-009-C"
+   ],
+   "no test evidence": [
+    "DVW-B1",
+    "WDR-009-C"
+   ]
+  },
+  "owner decision": {
+   "no commit recorded": [
+    "LOG-01",
+    "OWN-08",
+    "OWN-22"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "LOG-01"
+   ],
+   "no test evidence": [
+    "OWN-08",
+    "OWN-22",
+    "PL1-11"
+   ]
+  },
+  "multiplayer": {
+   "no test evidence": [
+    "MP-01"
+   ]
+  },
+  "18": {
+   "no commit recorded": [
+    "PL1-10",
+    "PL2-008",
+    "PL2-014",
+    "PL2-015",
+    "WDR-002-C",
+    "WDR-004-C",
+    "WDR-012-C"
+   ],
+   "no test evidence": [
+    "PL1-10",
+    "PL2-008",
+    "PL2-014",
+    "PL2-015",
+    "SET-A",
+    "SET-B",
+    "SET-C",
+    "WDR-002-C",
+    "WDR-004-C",
+    "WDR-012-C",
+    "X18-Q12",
+    "X18-Q12-BOOTH",
+    "X18-Q12-POST",
+    "X18-Q13",
+    "X18-SIM"
+   ],
+   "integration shown only by legacy (v1) evidence": [
+    "SYNC-17"
+   ]
+  },
+  "unassigned": {
+   "no commit recorded": [
+    "REQ-CTRL-02",
+    "WDR-018-C",
+    "WDR-020-C",
+    "WDR-021-C"
+   ],
+   "no test evidence": [
+    "WDR-018-C",
+    "WDR-020-C",
+    "WDR-021-C"
+   ]
+  }
+ },
+ "untracked_code": [
+  {
+   "id": "B7-016",
+   "build": "16",
+   "commits": [
+    "9c13794"
+   ],
+   "subjects": [
+    "Integrate the economy agent's work in progress (B7-014 to B7-016)"
+   ]
+  },
+  {
+   "id": "FR-08",
+   "build": "20+",
+   "commits": [
+    "a2574d9"
+   ],
+   "subjects": [
+    "Record the Game Juice assessment (JUICE-00) and the FR-08 audio note"
+   ]
+  },
+  {
+   "id": "X18-STONECUT",
+   "build": "18",
+   "commits": [
+    "75d9fd2"
+   ],
+   "subjects": [
+    "Record the professional stonecutter trade for Expansion 18 (X18-STONECUT)"
+   ]
+  }
+ ],
+ "recovered": [
+  "B17-DIR",
+  "CON-02",
+  "CON-03",
+  "CON-04",
+  "CON-05",
+  "CON-06",
+  "CON-07",
+  "CON-08",
+  "CON-08-Q",
+  "CON02-S-1",
+  "CON02-S-2",
+  "CON02-S-3",
+  "CON02-S-4",
+  "CON02-S-5",
+  "CON02-S-6",
+  "EARTH-01",
+  "HEALTH-01",
+  "INFO-01",
+  "JOB-01",
+  "JOB-02",
+  "LOG-01",
+  "MAINT-01",
+  "MIN-C-Q1",
+  "MIN-C-Q2",
+  "MIN-C-Q3",
+  "MIN-COLLAPSE",
+  "MIN-D-Q1",
+  "MIN-D-Q2",
+  "MIN-D-Q3",
+  "MIN-D2",
+  "MIN-D3",
+  "MIN-E-Q1",
+  "MIN-E-Q2",
+  "MIN-E-Q3",
+  "MIN-E-Q4",
+  "MIN-E-Q5",
+  "MIN-EQUIP",
+  "MIN-F-Q1",
+  "MIN-F-Q2",
+  "MIN-F-Q3",
+  "MIN-F-Q4",
+  "MIN-F-Q5",
+  "MIN-F2",
+  "MIN-F2-Q1",
+  "MIN-F2-Q2",
+  "MIN-RIGHTS",
+  "MIN-SHOVEL",
+  "MIN-SKILLCAP",
+  "MIN-STONE-Q",
+  "OD01-QUEST",
+  "PIT-02",
+  "Q-C1",
+  "Q-C2",
+  "Q-C3",
+  "Q-C4",
+  "Q-C5",
+  "Q-C6",
+  "Q-C7",
+  "Q-C8",
+  "Q-C9",
+  "SIM-B17",
+  "STONE-01",
+  "STONE-02",
+  "STONE-03",
+  "STONE-04",
+  "STONE-05",
+  "STONE-06",
+  "STONE-Q",
+  "STONE-Q1",
+  "STONE-Q2",
+  "STONE-Q3",
+  "WIKI-B17"
+ ],
+ "added": [
+  "Q-POL-1",
+  "Q-POL-2",
+  "Q-POL-3",
+  "Q-POL-4",
+  "Q-POL-5",
+  "Q-POL-6",
+  "Q-POL-7",
+  "Q-POL-8",
+  "Q-POL-9",
+  "Q18-6",
+  "REL18-DET",
+  "REL18-DEVICE",
+  "REL18-EXPORT",
+  "REL18-LONGRUN",
+  "REL18-OWNER",
+  "REL18-SAVE",
+  "REL18-SUITES",
+  "REL18-WIKI",
+  "REQ-CTRL-01",
+  "STONE-D1",
+  "STONE-D2",
+  "VP-01A",
+  "VP-01B",
+  "VP-01C",
+  "VP-01D",
+  "VP-01E",
+  "WDR-017-C",
+  "WDR-018-C",
+  "WDR-019-C",
+  "WDR-020-C",
+  "WDR-021-C",
+  "X18-D2",
+  "X18-FEES"
+ ],
+ "corrected": [
+  "B16-AUDIT",
+  "B16-READY",
+  "B18-DIR",
+  "CARAVAN-TMP",
+  "DVW-A3",
+  "DVW-B3",
+  "DVW-B3-CHAPEL",
+  "ECON-P1.3",
+  "EXP-A",
+  "EXP-B",
+  "EXP-C",
+  "EXP-D",
+  "FARM-08",
+  "FSE-00",
+  "LE-01",
+  "LE-02",
+  "LE-03",
+  "LE-04",
+  "LE-05",
+  "LE-06",
+  "LE-07",
+  "MP-01",
+  "OD-LE-02",
+  "OD-LE-03",
+  "OD-LE-04",
+  "OD-LE-05",
+  "OD-LE-06",
+  "OD-LE-07",
+  "OD-LE-08",
+  "OD-LE-09",
+  "OD-LE-10",
+  "OD-LE-11",
+  "OD-LE-12",
+  "OD-LE-13",
+  "OD-LE-14",
+  "OD-LE-15",
+  "OVN-01",
+  "OVN-02",
+  "PERF-01",
+  "PROS-18",
+  "PROS-19",
+  "Q18-11",
+  "REL-15-18",
+  "SET-A",
+  "SET-B",
+  "SET-C",
+  "SET-C-FIVE",
+  "SET-C-SIM",
+  "SJD-B",
+  "SJD-C",
+  "SJD-D",
+  "SJD-E",
+  "STONE-05",
+  "VP-01",
+  "WDR-022-C",
+  "WIKI-B17",
+  "X18-Q12",
+  "X18-Q12-BOOTH",
+  "X18-Q12-POST",
+  "X18-Q13",
+  "X18-SIM",
+  "X19-ASSAULT",
+  "X19-CRT12",
+  "X19-DECAY",
+  "X19-GUARD",
+  "X19-HARMED",
+  "X19-Q-TIMING",
+  "X19-REGARD"
+ ],
+ "aliases": [
+  [
+   "BARBER-18",
+   "BARBER-01"
+  ],
+  [
+   "F-4",
+   "K-3"
+  ],
+  [
+   "MIN-E-Q6",
+   "MIN-E-Q4"
+  ],
+  [
+   "MIN-E-Q7",
+   "MIN-E-Q5"
+  ],
+  [
+   "WORLD-ORE-01",
+   "ORE-PLACE-01"
+  ]
+ ],
+ "classification": {
+  "recovered (absent from staging)|17": {
+   "already completed": 4,
+   "implemented (integrated), verification outstanding": 10,
+   "partially implemented": 2,
+   "owner decision already answered": 9
+  },
+  "recovered (absent from staging)|owner decision": {
+   "approved and still outstanding": 12,
+   "awaiting an owner decision": 1,
+   "owner decision already answered": 24,
+   "implemented (integrated), verification outstanding": 1
+  },
+  "recovered (absent from staging)|none": {
+   "already completed": 1,
+   "owner decision already answered": 3
+  },
+  "recovered (absent from staging)|18": {
+   "awaiting an owner decision": 4,
+   "implemented (integrated), verification outstanding": 1
+  },
+  "added from documents|21": {
+   "awaiting an owner decision": 9,
+   "unapproved proposal": 5
+  },
+  "added from documents|18": {
+   "awaiting an owner decision": 4,
+   "approved and still outstanding": 8,
+   "owner decision already answered": 1
+  },
+  "added from documents|unassigned": {
+   "implemented (integrated), verification outstanding": 1,
+   "approved and still outstanding": 2,
+   "partially implemented": 3
+  },
+  "status corrected|16": {
+   "implemented (integrated), verification outstanding": 3,
+   "partially implemented": 2
+  },
+  "status corrected|18": {
+   "umbrella (children counted)": 4,
+   "approved and still outstanding": 4,
+   "awaiting an owner decision": 1,
+   "partially implemented": 8,
+   "implemented (integrated), verification outstanding": 1
+  },
+  "status corrected|15": {
+   "superseded or canceled": 1,
+   "umbrella (children counted)": 3,
+   "partially implemented": 2
+  },
+  "status corrected|17": {
+   "umbrella (children counted)": 1,
+   "partially implemented": 1
+  },
+  "status corrected|19": {
+   "umbrella (children counted)": 2,
+   "partially implemented": 4,
+   "owner decision already answered": 6,
+   "awaiting an owner decision": 1
+  },
+  "status corrected|20": {
+   "umbrella (children counted)": 1,
+   "approved and still outstanding": 7,
+   "awaiting an owner decision": 14
+  },
+  "status corrected|multiplayer": {
+   "partially implemented": 1
+  },
+  "status corrected|21": {
+   "approved and still outstanding": 1
+  },
+  "alias (duplicate numbering)|18": {
+   "duplicate of an existing requirement": 2
+  },
+  "alias (duplicate numbering)|none": {
+   "duplicate of an existing requirement": 1
+  },
+  "alias (duplicate numbering)|owner decision": {
+   "duplicate of an existing requirement": 2
+  }
+ },
+ "open_decisions": [
+  "CON-08-Q",
+  "OD-02",
+  "OD-03",
+  "OD-04",
+  "OD-07",
+  "OD-09",
+  "OD-17",
+  "OD-LE-02",
+  "OD-LE-03",
+  "OD-LE-04",
+  "OD-LE-05",
+  "OD-LE-06",
+  "OD-LE-07",
+  "OD-LE-08",
+  "OD-LE-09",
+  "OD-LE-10",
+  "OD-LE-11",
+  "OD-LE-12",
+  "OD-LE-13",
+  "OD-LE-14",
+  "OD-LE-15",
+  "Q-POL-1",
+  "Q-POL-2",
+  "Q-POL-3",
+  "Q-POL-4",
+  "Q-POL-5",
+  "Q-POL-6",
+  "Q-POL-7",
+  "Q-POL-8",
+  "Q-POL-9",
+  "Q18-11",
+  "Q18-6",
+  "STONE-D1",
+  "STONE-D2",
+  "X18-FEES",
+  "X19-DECAY"
+ ],
+ "open_proposals": [
+  "DGA-D1",
+  "DGA-D10",
+  "DGA-D11",
+  "DGA-D12",
+  "DGA-D2",
+  "DGA-D3",
+  "DGA-D4",
+  "DGA-D5",
+  "DGA-D6",
+  "DGA-D7",
+  "DGA-D8",
+  "DGA-D9",
+  "DGA-R",
+  "DGA-S",
+  "DVW-B10",
+  "DVW-B11",
+  "DVW-B12",
+  "DVW-B13",
+  "ECON-P2",
+  "MIN-L5",
+  "OWN-02",
+  "OWN-29",
+  "Q-11",
+  "ROAD-02",
+  "VP-01A",
+  "VP-01B",
+  "VP-01C",
+  "VP-01D",
+  "VP-01E"
+ ]
+}

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (547)
+## Approved requirement (548)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -392,7 +392,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | PL1-08 | Consumable effects shown everywhere |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL1-09 | Gold star over employer |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL1-10 | Player businesses, staged (1-4) | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| PL1-11 | Google Drive cloud saves (staged) | owner decision | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
+| PL1-11 | Google Drive cloud saves (staged) | owner decision | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | PL1-12 | Red flowering plant not pickable | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | PL1-13 | Recognisable stove | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | PL2-001 | Forge occupancy wrongly blocks |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -427,7 +427,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q-10 | Hot Attic Games read-only registry | owner action | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | 20+ | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
-| REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | 15 | OWNER DECISION REQUIRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | 15 | OWNER DECISION REQUIRED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | REC-005 | Working title 'The Well'; repository, package and identifiers stay My Medieval Life |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | REC-006 | Castles, dungeons and caves in the world | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
@@ -454,6 +454,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | unassigned | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT APPLICABLE | OPEN |
+| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -553,7 +554,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | 18 | OWNER APPROVED | READY | NOT TESTED | NOT READY | OPEN |
+| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 
 ## Proposal awaiting an owner decision (not approved) (34)

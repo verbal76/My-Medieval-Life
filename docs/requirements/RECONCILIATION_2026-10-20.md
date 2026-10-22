@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 382 (188 of them still open) |
-| **Open entries now** (rules excluded) | | **365** |
+| Entries added since | | 383 (189 of them still open) |
+| **Open entries now** (rules excluded) | | **366** |
 | Open entries moved to another build | | 4 |
 
 ## Closed since the baseline (54)
@@ -86,7 +86,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (382)
+## Added since the baseline (383)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -377,6 +377,7 @@ None.
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
+| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
@@ -463,7 +464,7 @@ None.
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
-| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | READY / NOT TESTED / OPEN | 18 |
+| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | APPROVED | 19 |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | APPROVED | 19 |
