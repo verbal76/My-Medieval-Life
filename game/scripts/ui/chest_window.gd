@@ -115,7 +115,7 @@ func _picker(u: Dictionary, pick: Dictionary) -> void:
 	var mx := have if dst.can_add(id) else 0
 	var qp := QuantityPicker.new().setup(("Take " if taking else "Store ") + GameData.item_name(id),
 		"%d in the %s  ·  %d in the %s" % [have, "chest" if taking else "pack", dst.count(id), "pack" if taking else "chest"],
-		mx, "Take" if taking else "Store", -1, "Your pack is full." if taking else "The chest is full.")
+		mx, "Take" if taking else "Store", -1, p.inv.full_text(id) if taking else "The chest is full.")
 	var key := ("chest:" if taking else "pack:") + id
 	qp.cancelled.connect(func(): show(u.id, {}, {"key": key, "idx": src.ids().find(id)}))
 	qp.confirmed.connect(func(q: int):

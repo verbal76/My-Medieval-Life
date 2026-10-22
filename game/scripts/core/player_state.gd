@@ -9,7 +9,17 @@ var generation := 1
 var sprite := "res://assets/characters/player_00.png"
 var heir_sprite := "res://assets/characters/player_01.png"
 var pos := Vector2.ZERO
-var inv := Inventory.new()
+var inv := Inventory.new():
+	set(v):
+		inv = v
+		_hook_pack()
+## INV-18: the pack's upgrade stage, 0 to 2 (PACK_CAPS: 9, 18, 27 positions in each of the eight categories: one
+## row of the 3 x 9 grid, then the second, then the third; owner INV-Q2). Saved. Raised only by buying the next row
+## from the tailor (TAILOR-18), or directly by tests and the screenshot path.
+var pack_level := 0:
+	set(v):
+		pack_level = clampi(v, 0, PACK_CAPS.size() - 1)
+		_hook_pack()
 var coins := 0
 var hp := 40.0
 var max_hp := 40.0
@@ -48,13 +58,57 @@ var last_damage := ""        # the source of the last damage taken ("hunger", an
 var death_cause := ""        # the source that took hp to 0 (the death screen says it)
 
 ## The gear slots, in the order the pack window lists them. An item goes in the slot named by its
-## type (items.json); the item stays in the pack while it is worn.
+## type (items.json). The worn unit stays in the one store (`inv`) but takes no backpack position (INV-18).
 const GEAR := ["weapon", "tool", "armor", "head", "amulet", "ring"]
 const BASE_STAMINA := 100.0
+## INV-18: positions per category at each pack_level (a 3 x 9 grid, one more row each upgrade; owner INV-Q2).
+const PACK_CAPS := [9, 18, 27]
+const PACK_COLUMNS := 9
+const PACK_ROWS := 3
 
 
 func _init() -> void:
-	inv.max_stacks = 24
+	_hook_pack()
+
+
+## The player's pack has a capacity per category and no overall kind limit (the 24 kinds of Builds 7-17 are gone).
+func _hook_pack() -> void:
+	if inv == null:
+		return
+	inv.max_stacks = 0
+	inv.category_cap = PACK_CAPS[pack_level]
+	inv.worn_fn = worn_counts
+
+
+func pack_cap() -> int:
+	return PACK_CAPS[pack_level]
+
+
+## {item id: units worn}: what the gear slots hold (each item has one slot, so at most 1).
+func worn_counts() -> Dictionary:
+	var d := {}
+	for slot in GEAR:
+		var id := str(get(slot))
+		if id != "":
+			d[id] = int(d.get(id, 0)) + 1
+	return d
+
+
+## INV-18: "" when `slot` can come to hold `id` ("" = take off what is there); otherwise why not, naming the
+## category the displaced item would go back to ("Armour inventory full: 18 of 18 slots."). It is refused only
+## when the displaced item needs a new position and its category has none: the change is all or nothing.
+func gear_refusal(slot: String, id: String) -> String:
+	var old := str(get(slot))
+	if old == "" or old == id or not inv.has(old) or inv.category_cap <= 0:
+		return ""
+	var cat := GameData.category(old)
+	var before := inv.used(cat)
+	set(slot, id)
+	var after := inv.used(cat)
+	set(slot, old)
+	if after > before and after > inv.category_cap:
+		return inv.full_text(old)
+	return ""
 
 
 func level(skill: String) -> int:
@@ -253,6 +307,7 @@ func to_dict() -> Dictionary:
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
 		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
+		"pack_level": pack_level,
 	}
 
 
@@ -265,6 +320,10 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	for k in ["hp", "max_hp", "hunger", "stamina"]:
 		p.set(k, float(d[k]))
 	p.pos = Vector2(float(d.pos[0]), float(d.pos[1]))
+	# INV-18 (save 19): a save of 18 or before had one pack of 24 kinds; every item, count and wear loads as saved
+	# and the pack takes the category rule (pack_level 0 when absent). A category holding more kinds than its
+	# capacity keeps them all and takes no new kind until under it (nothing is dropped)
+	p.pack_level = int(d.get("pack_level", 0))
 	p.inv = Inventory.from_dict(d.inv)
 	p.chest = Inventory.from_dict(d.chest)
 	for k in d.skills:

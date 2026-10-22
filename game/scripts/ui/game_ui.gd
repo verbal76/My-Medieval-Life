@@ -2456,8 +2456,10 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			var held := mini(n.inv.count(cc.item), Contracts.left(cc))
 			_button("Collect %d" % held, func():
 				var got := k.deliver(cc, held)
-				done.call(("%s hands over %d %s; %d coins paid." % [n.name, got, item, got * int(cc.price_each)]) if got > 0 else "You have no room for it."),
+				done.call(("%s hands over %d %s; %d coins paid." % [n.name, got, item, got * int(cc.price_each)]) if got > 0 else p.inv.full_text(cc.item)),
 					held > 0 and p.inv.can_add(cc.item), h)
+			if held > 0 and not p.inv.can_add(cc.item):
+				l.text += "  " + p.inv.full_text(cc.item)         # INV-18: why Collect is off, the category named
 			_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
 		else:
 			l.text = "You supply %d %s at %d each: %d delivered, due by the end of day %d." % [int(cc.qty), item, int(cc.price_each),
@@ -2770,15 +2772,20 @@ func show_trade(n: NPC, pick := {}) -> void:
 	_label("They sell:", 20, Color(1, 0.85, 0.5))
 	if sale.is_empty():
 		_label("Nothing right now.", 15)
-	var full := sale.any(func(i): return not p.inv.can_add(i))      # TRADE-AXE-01: the pack's kinds are all taken
-	if full:
-		_label("Your pack is full: %d of %d kinds. You can buy more of what you already carry; to buy anything else, sell, drop or store something first." % [p.inv.items.size(), p.inv.max_stacks], 17, Color(1, 0.7, 0.55))
+	# TRADE-AXE-01, INV-18: each category of the pack full for something on sale is named, with its places
+	var full_cats := []
+	for i in sale:
+		var cat := GameData.category(i)
+		if not p.inv.can_add(i) and not full_cats.has(cat):
+			full_cats.append(cat)
+	for cat in full_cats:
+		_label("%s inventory full: %d of %d slots. You can buy more of what you already carry there; for another kind, sell, drop or store one of them first. Other categories have their own room." % [GameData.category_name(cat), p.inv.used(cat), p.pack_cap()], 17, Color(1, 0.7, 0.55))
 	for id in sale:
 		var price := w.deal_price(w.sell_price(n, id), w.player, n)
 		var nn := n
 		var bid: String = id
 		var room := p.inv.can_add(id)
-		_item_row(id, n.inv.count(id), "%d coins each%s%s" % [price, effect_suffix(id), "" if room else "  ·  no room in your pack"], "Buy", func():
+		_item_row(id, n.inv.count(id), "%d coins each%s%s" % [price, effect_suffix(id), "" if room else "  ·  %s full" % GameData.category_name(GameData.category(id)).to_lower()], "Buy", func():
 			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price and room)
 	var seeds: Array = w.farm.seed_offers(n)               # PL2-015: a farmer or the food merchant sells seed for your own field
 	if not seeds.is_empty():
@@ -2861,7 +2868,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		var stock := n.inv.count(id)
 		mx = QuantityPicker.buy_max_priced(prices, p.coins, p.inv.can_add(id))
 		info = "%s  ·  %d in stock  ·  you have %d coins%s" % [each, stock, p.coins, effect_suffix(id)]
-		why = "Your pack is full." if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
+		why = p.inv.full_text(id) if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
 	else:
 		var owned := p.inv.count(id)
 		mx = w.purchase_qty(n, p, id, owned)        # TRADE-01: the villagers' rule, need and reserve (OD-19)
@@ -2934,7 +2941,7 @@ func toggle_inventory() -> void:
 
 ## The pack window (scripts/ui/inventory_window.gd): Cozy Farm's inventory panel with the tabs, the
 ## character and gear slots and the bag grid, over the darkened game. `tab` is the tab to open.
-func show_inventory(tab := "all") -> void:
+func show_inventory(tab := "general") -> void:
 	_open("inventory", "Pack")
 	top_row.visible = false
 	hud.visible = false               # the pack window shows the coins itself
@@ -3442,7 +3449,7 @@ func _home_picker(pick: Dictionary) -> void:
 	var nm := GameData.item_name(id)
 	var qp := QuantityPicker.new().setup(("Take " if from_chest else "Store ") + nm,
 		"%d in the %s  ·  %d in the %s" % [have, "chest" if from_chest else "pack", dst.count(id), "pack" if from_chest else "chest"],
-		mx, "Take" if from_chest else "Store", -1, "Your pack is full." if from_chest else "The chest is full.")
+		mx, "Take" if from_chest else "Store", -1, p.inv.full_text(id) if from_chest else "The chest is full.")
 	qp.cancelled.connect(func(): show_home({}, {"key": ("chest:" if from_chest else "pack:") + id, "idx": src.ids().find(id)}))
 	qp.confirmed.connect(func(q: int):
 		var list := src.ids()

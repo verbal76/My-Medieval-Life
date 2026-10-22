@@ -267,9 +267,8 @@ func harvest(c: Vector2i, p: PlayerState) -> Dictionary:
 	var out := harvest_goods(c)
 	if out.is_empty():
 		return {}
-	for id in out:
-		if not p.inv.can_add(id):
-			return {}
+	if not p.inv.can_add_all(out):
+		return {}
 	for id in out:
 		p.inv.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))
@@ -787,7 +786,7 @@ func buy_seed_item(n: NPC, item: String, qty: int, buyer) -> String:
 	if int(buyer.coins) < price * qty:
 		return "You need %d coins." % (price * qty)
 	if not buyer.inv.can_add(item):
-		return "Your pack is full."
+		return buyer.inv.full_text(item)
 	if not w.trade(buyer, n, item, qty, price):
 		return "The trade fell through."
 	w.stat("farm_seed_bought", float(qty))
@@ -869,9 +868,8 @@ func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 			return {"ok": true, "label": "Sowing", "secs": float(cfg().sow_seconds), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": {}, "text": sow(c, str(t.crop), p)}}
 		"harvest":
-			for id in harvest_goods(c):
-				if not p.inv.can_add(id):
-					return bad.call("Your pack is full.")
+			if not p.inv.can_add_all(harvest_goods(c)):             # INV-18: crop and seed together, or neither
+				return bad.call(p.inv.full_text_all(harvest_goods(c)))
 			return {"ok": true, "label": "Harvesting", "secs": float(cfg().harvest_seconds), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": harvest(c, p), "text": ""}}
 		"clear_tree":

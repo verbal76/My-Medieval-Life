@@ -283,9 +283,8 @@ func remove(b: Dictionary, kind: String) -> String:
 	if STATIONS.has(kind) and not (w.stations.get(station_id(b, kind), {}).get("users", {}) as Dictionary).is_empty():
 		return "Someone is working at it."
 	var c := cost(kind)
-	for id in c:
-		if not w.player.inv.can_add(id):
-			return "Your pack is full."
+	if not w.player.inv.can_add_all(c):               # INV-18: every material back, or the piece stays
+		return w.player.inv.full_text_all(c)
 	var s: Dictionary = b.get("shop", {})
 	if kind == "counter" and not s.is_empty():
 		w.note(w.business.close(s, "You took up the counter."))

@@ -940,8 +940,10 @@ func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	var bill := 0
 	for c in prices:
 		bill += int(c)
-	if qty < 1 or not vendor.inv.has(id, qty) or not player.inv.can_add(id):
-		return {"result": "failed", "text": "They do not have that many, or your pack is full.", "bought": 0, "paid": 0}
+	if qty < 1 or not vendor.inv.has(id, qty):
+		return {"result": "failed", "text": "They do not have that many.", "bought": 0, "paid": 0}
+	if not player.inv.can_add(id):
+		return {"result": "failed", "text": player.inv.full_text(id), "bought": 0, "paid": 0}
 	if player.coins < bill:
 		return {"result": "failed", "text": "You cannot afford that (%d coins)." % bill, "bought": 0, "paid": 0}
 	if not trade(player, vendor, id, qty, 0, bill):
@@ -1911,9 +1913,10 @@ func player_loot(i: int) -> Dictionary:
 	player.coins += coins
 	l.coins = 0
 	var left: int = l.inv.total()
+	var why := pack_full_text(l.inv.ids()) if left > 0 else ""     # INV-18: the category with no place, named
 	if left == 0:
 		loot.remove_at(i)
-	return {"items": items, "coins": coins, "left": left, "far": ""}
+	return {"items": items, "coins": coins, "left": left, "far": "", "why": why}
 
 
 ## DVW-A12 R4: the player plants the sapling `item` from the pack at `cell`: refused ({}) without one in the pack or
@@ -3354,20 +3357,49 @@ func player_use_medicine(id: String) -> bool:
 	return true
 
 
+## INV-18: why the player's pack takes none of `ids`: the first one without a place, naming its category ("Raw
+## materials inventory full: 18 of 18 slots."); "Your pack is full." when every one fits (or `ids` is empty).
+func pack_full_text(ids: Array) -> String:
+	for id in ids:
+		if not player.inv.can_add(str(id)):
+			return player.inv.full_text(str(id))
+	return "Your pack is full."
+
+
 ## Hold a weapon, wear armour, a cap or helmet, an amulet or a ring, or take a tool in hand: the
-## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there.
+## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there. INV-18: the worn
+## unit leaves its backpack position; what it replaces goes back to its category, and the swap is refused,
+## nothing moved, when that category is full (equip_refusal says why). The one store never gains or loses a unit.
 func player_equip(id: String) -> bool:
+	return equip_refusal(id) == ""
+
+
+## "" when equipping `id` worked (it is then worn); otherwise why not.
+func equip_refusal(id: String) -> String:
 	var slot: String = GameData.item(id).get("type", "")
 	if not player.inv.has(id) or not slot in PlayerState.GEAR:
-		return false
+		return "You cannot wear or hold that."
+	var why := player.gear_refusal(slot, id)
+	if why != "":
+		return why
 	player.set(slot, id)
 	player.fit_caps()
-	return true
+	return ""
 
 
-func player_unequip(slot: String) -> void:
+## Take off what `slot` holds: it goes back to its category, or stays worn when that category is full
+## (unequip_refusal says so). True when the slot is empty after.
+func player_unequip(slot: String) -> bool:
+	return unequip_refusal(slot) == ""
+
+
+func unequip_refusal(slot: String) -> String:
+	var why := player.gear_refusal(slot, "")
+	if why != "":
+		return why
 	player.set(slot, "")
 	player.fit_caps()
+	return ""
 
 
 ## Drop items on the ground where the player stands: they can be picked up again by anyone looking.
@@ -3443,7 +3475,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 18          # 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 19          # 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
