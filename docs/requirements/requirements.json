@@ -11059,7 +11059,7 @@
    "id": "FARM-08-Q-CROP",
    "title": "How is a field's crop divided among the farmers who work it?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Today the farmer whose cutting finishes first takes the whole crop and the co-workers' labour earns nothing; no decision sets this. Options: (a) equal division among the workers at the cutting; (b) in proportion to cutting time; (c) rotate the single taker; (d) confirm the present rule.",
    "description": "How is a field's crop divided among the farmers who work it?",
    "source": "docs/design/FARM08_YIELD_COMPARISON.md",
@@ -11093,9 +11093,14 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> BLOCKED; target_build",
      "why": "Open owner question"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; target_build",
+     "why": "Owner answered 2026-10-22: Option B, proportional harvest sharing (docs/directives/2026-10-22_farm08_q_crop_decision.md)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": ""
   },
   {
    "id": "FARM-08A",
@@ -11336,6 +11341,54 @@
    "roadmap_reason": "Owner master directive 2026-10-21",
    "b16_class": "required",
    "complexity": "M"
+  },
+  {
+   "id": "FARM-CROP-01",
+   "title": "Share a field's crop among its cutters in proportion to their cutting work",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "The harvest belongs to the farmers who contribute labor to harvesting the field.",
+   "description": "Share a field's crop among its cutters in proportion to their cutting work",
+   "source": "docs/directives/2026-10-22_farm08_q_crop_decision.md",
+   "approval": "Owner decision FARM-08-Q-CROP, option B, 2026-10-22",
+   "acceptance": [
+    "Contribution tracked per cutter; distributable crop divided in proportion; equal work equal shares; no work no share",
+    "Seed reservation and cattle-feeding priority first; indivisible units deterministic; nothing created, duplicated or lost; ownership, permissions and theft rules unchanged",
+    "Independent of which cutter finishes first; focused tests; no 365-day run for it; not merged into Build 17 without the owner's authorization"
+   ],
+   "implementation": "wip/farm-cropshare 132960a (from Build 17 019dddd): Farming.split_crop, NPCBrain._cutting_shares and the harvest action; INT-009 updated; farmer job text in the wiki",
+   "tests": "crop_share_test 19, farming_test 217, world_test 339, run_tests 3544, farm_plots_test 104, conservation_test 8, start_test 499, reserve_test 43, wiki_test; economy_sim 30 days seed 1 leaks 0",
+   "playtest": [],
+   "branch": "wip/farm-cropshare",
+   "commits": [
+    "132960a"
+   ],
+   "parent": null,
+   "depends_on": [
+    "FARM-08-Q-CROP"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Owner: authorize merging into Build 17 now, or carry it to the next build",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_farm08_q_crop_decision.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 132960a; tests; target_build; branch; implementation; next_action",
+     "why": "Implemented on an isolated branch; focused tests pass"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "FR-01",

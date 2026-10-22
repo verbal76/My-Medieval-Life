@@ -10,7 +10,7 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 206 (96 of them still open) |
+| Entries added since | | 207 (96 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **287** = 195 still open from the baseline + 96 added and open |
 | Open entries moved to another build | | 2 |
 
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (206)
+## Added since the baseline (207)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -103,11 +103,12 @@ None.
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | COMPLETE AND VERIFIED | 16 |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | approved | ACTIVE DEVELOPMENT | 16 |
-| FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | decision | BLOCKED | owner decision |
+| FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | decision | COMPLETE AND VERIFIED |  |
 | FARM-08A | No script error when a homeless household's couple or founder looks for a building site | approved | COMPLETE AND VERIFIED | 16 |
 | FARM-08B | Cattle decline under the shared and seasonal farming model: investigation | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FARM-08C | Wheat price floor: record as an economic finding | approved | COMPLETE AND VERIFIED | 16 |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
+| FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED | owner decision |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | COMPLETE AND VERIFIED | 16 |
