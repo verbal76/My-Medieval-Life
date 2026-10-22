@@ -9039,17 +9039,19 @@
    "id": "DVW-B8",
    "title": "Skills for farming, husbandry, hunting, healing",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Skills for farming, husbandry, hunting, healing",
    "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
    "approval": "owner, 2026-10-23",
    "acceptance": "Farming, Husbandry, Hunting and Healing skills, trained by doing the work; Farming starts from recorded experience; conserving; deterministic; saves migrate; wiki updated",
    "implementation": "No (\"Consider\") | — | — | PROPOSED | ",
-   "tests": "",
+   "tests": "trade_skills_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "72e6c3e"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -9076,6 +9078,11 @@
      "date": "2026-10-22",
      "change": "BLOCKED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build; acceptance",
      "why": "owner approved (2026-10-23)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 72e6c3e; tests",
+     "why": "Farming (from recorded experience), Husbandry, Hunting, Healing (from Cooking) skills trained by the work; no new perks"
     }
    ],
    "acceptance_derived": true,
@@ -15774,7 +15781,7 @@
    "id": "LAW-SKILL",
    "title": "Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "New Law skill",
    "description": "Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise",
    "source": "docs/directives/2026-10-23_owner_answers_q18_14_16.md",
@@ -15783,10 +15790,12 @@
     "A Law skill for player and villagers, saved and migrated (start 0); raised by witnessing and carrying documents and by teaching from the clergy or reeve; couriers.json notary check uses it; wiki updated"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "72e6c3e"
+   ],
    "parent": "X18-Q13",
    "depends_on": [
     "Q18-14"
@@ -15810,6 +15819,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Build 18 scope"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 72e6c3e; tests",
+     "why": "Law skill, reeve lessons, notary check on Law 2 (provisional); the courier-notary path is not live in the game yet, and villagers do not take lessons"
     }
    ],
    "target_build": "18"
@@ -25423,7 +25437,7 @@
    "id": "ROOMS-18",
    "title": "Inner doorways between joined house rooms, and the two survey plots relaid onto open ground",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Both: doorways + relay plots",
    "description": "Inner doorways between joined house rooms, and the two survey plots relaid onto open ground",
    "source": "docs/directives/2026-10-23_owner_answers_farming_rooms.md",
@@ -25432,10 +25446,12 @@
     "Adjoining rooms of one property get a walkable doorway in the shared wall drawn from existing wall art; new worlds place both survey plots on open ground with room for modules on several sides; older saves keep their plots and load unchanged; screenshots looked at"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "property_test 95/0, test_village.py; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; screenshots looked at by the worker",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "17facbc"
+   ],
    "parent": null,
    "depends_on": [
     "OD-05"
@@ -25459,6 +25475,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Build 18 scope (owner answer during Build 18)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 17facbc; tests",
+     "why": "doorways between side-by-side rooms and plots relaid (village generator v8, old saves keep theirs); merged into wip/build18 (83d3afc). Limits: no doorway on a house's east wall or between stacked rooms"
     }
    ],
    "target_build": "18"
@@ -27901,7 +27922,7 @@
    "id": "SKILL-TRADES-18",
    "title": "Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Own skills for each",
    "description": "Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them",
    "source": "docs/directives/2026-10-23_owner_answers_q18_1.md",
@@ -27910,10 +27931,12 @@
     "Three new skills for player and villagers; on load and in new worlds each starts from the person's Crafting level (no one loses progress); carpentry, stonework and leatherwork recipes train and use their own skill; Expansion 18 industries map to them; saves migrate; wiki updated"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "trade_skills_test 96/0; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "72e6c3e"
+   ],
    "parent": null,
    "depends_on": [
     "Q18-1"
@@ -27937,6 +27960,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Build 18 scope"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 72e6c3e; tests",
+     "why": "Carpentry, Masonry, Tanning seeded from Crafting; recipes moved; 8 industries; merged into wip/build18"
     }
    ],
    "target_build": "18"

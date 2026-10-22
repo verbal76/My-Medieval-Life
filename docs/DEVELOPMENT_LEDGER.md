@@ -11,11 +11,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 75 |
+| APPROVED — NOT STARTED | 71 |
 | ACTIVE DEVELOPMENT | 18 |
-| PARTIALLY IMPLEMENTED | 32 |
+| PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 53 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 56 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
@@ -197,7 +197,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | APPROVED — NOT STARTED |  |  |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | DEFERRED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
-| DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | APPROVED — NOT STARTED | owner decision first | waiting on an owner decision, not development work |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | ECON-P1.3 | Caravan as finite regional market (:73) | approved | APPROVED — NOT STARTED |  | caravan as a finite regional market; household versus business money |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | approved | APPROVED — NOT STARTED |  | caravan as a finite regional market; household versus business money |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
@@ -205,7 +205,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | APPROVED — NOT STARTED |  |  |
+| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | PARTIALLY IMPLEMENTED |  |  |
 | MAP-01 | Map shows where you are beyond the village | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | approved | APPROVED — NOT STARTED |  |  |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -215,14 +215,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PL2-015 | Farming, livestock, hand plough | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | approved | ACTIVE DEVELOPMENT |  |  |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | decision | PARTIALLY IMPLEMENTED |  |  |
-| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | APPROVED — NOT STARTED |  |  |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | approved | APPROVED — NOT STARTED | needed during 17 | the expansion's design phase; its capability schema should be designed during Build 17 so MIN-D can use it |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | APPROVED — NOT STARTED |  |  |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | APPROVED — NOT STARTED |  |  |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
-| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | APPROVED — NOT STARTED |  |  |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | approved | APPROVED — NOT STARTED |  |  |
@@ -445,6 +445,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | Touch drag on an Android phone, Physical gamepad | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | a controller: D-pad up opens the Journal, left stick press opens Build | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -452,6 +453,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | PL1-05 | current/max inside bars | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | Q-04 | Resources & Gathering journal page | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-02 | A stable save identity independent of build numbers (requirement 2) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-03 | Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -461,6 +463,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | VIS-STEPS-01 | Steps cut through rock need real step art | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -469,7 +472,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (75)
+## APPROVED — NOT STARTED (71)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -488,7 +491,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276) |  |  |  |
 | DVW-B5 | Predictable taxes with hysteresis, announced | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 277) |  |  |  |
 | DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
-| DVW-B8 | Skills for farming, husbandry, hunting, healing | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md |  |  |  |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
 | ECON-P1.3 | Caravan as finite regional market (:73) | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md |  |  |  |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md |  |  |  |
@@ -501,7 +503,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
-| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | docs/directives/2026-10-23_owner_answers_q18_14_16.md |  | after Q18-14 |  |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
@@ -525,7 +526,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PVG-05 | Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
-| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | docs/directives/2026-10-23_owner_answers_farming_rooms.md |  | after OD-05 |  |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  |  |  |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A |  |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-B |  |
@@ -541,7 +541,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-E |  |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
-| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | docs/directives/2026-10-23_owner_answers_q18_1.md |  | after Q18-1 |  |
 | TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md |  | after Q18-5 |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III | branch wip/expansion21-preparation | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
@@ -572,7 +571,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md | contract_sign_test |  |  |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (32)
+## PARTIALLY IMPLEMENTED (33)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -587,6 +586,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `68a3611`; world_test::_fse12_shared_fields |  | Activated with FSE-12 after the owner's review |
 | FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md | `68a3611`; world_test::_fse12_shared_fields | after FSE-16 | Owner's choice: (a) the player's yield as is, (b) one lower per-cell yield for everyone, (c) fewer cells sown; decided with FSE-13 |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md | `01a83f0`; world_test::_fse13_seasonal_fields | after FSE-12 | Owner's review of docs/design/FSE13_COMPARISON.md; recommendation: pair with farm plots and FSE-12 and compare again |
+| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | docs/directives/2026-10-23_owner_answers_q18_14_16.md | `72e6c3e`; trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems | after Q18-14 |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
@@ -654,7 +654,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (53)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (56)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -690,12 +690,14 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters |  | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters | after CTR-01 | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters | after CTR-02 | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md | `72e6c3e`; trade_skills_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems |  |  |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | docs/directives/2026-10-21_build16_master_completion_directive.md | `a36a0ab`; farm_place_test (25 checks; mouse, touch, keys/pad); xvfb screenshots |  |  |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | docs/directives/2026-10-23_owner_answers_seed_share.md | `60e8318`; crop_share_test 26/0 (seed split by work), farming 224/0; merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0 |  |  |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md | start_test.gd (498 steps); screenshot of the gamepad controls list |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | docs/directives/2026-10-23_owner_answers_farming_rooms.md | `17facbc`; property_test 95/0, test_village.py; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; screenshots looked at by the worker | after OD-05 |  |
 | SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | docs/directives/2026-10-20_two_decisions_three_expansions.md |  | after SAVE-01; after SAVE-02; after SAVE-03; after SAVE-04; after SAVE-05; after SAVE-06; after SAVE-07; after SAVE-08; after SAVE-09 |  |
 | SAVE-02 | A stable save identity independent of build numbers (requirement 2) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | SAVE-03 | Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
@@ -705,6 +707,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | docs/directives/2026-10-23_owner_answers_q18_1.md | `72e6c3e`; trade_skills_test 96/0; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems | after Q18-1 |  |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md | `ba1369e`, `534cf7c`; run_tests 3,586, play 39, start 506, inventory18 88, tailor_barber 24 ok, wiki, character_look, terrain 34: 0 failures, 0 script errors (isolated XDG dirs); branch wip/b18-tailor |  |  |
 | VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps | `8366315`, `c160de1`; terrain_test 34/0, start_test 506/0, check_assets 0 problems; screenshots of all four climb directions looked at; branch wip/b18-polish |  |  |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device check of wiki navigation on touch and controller |

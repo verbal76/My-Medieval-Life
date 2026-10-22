@@ -70,7 +70,7 @@ entry leaves the register or changes without a history entry.
 |---|---|---|---|---|---|---|---|
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 17 | 2026-10-21: Owner approved the refactor direction |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 18 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
-| DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | BLOCKED | owner decision | APPROVED — NOT STARTED | 18 | 2026-10-22: owner approved (2026-10-23) |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | BLOCKED | owner decision | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 | 2026-10-22: Farming (from recorded experience), Husbandry, Hunting, Healing (from Cooking) skills trained by the work; no new perks |
 
 ## Reopened since the baseline (0)
 
@@ -185,7 +185,7 @@ None.
 | INV-Q1 | INV-18 borderline item classifications | decision | COMPLETE AND VERIFIED | owner decision |
 | INV-Q2 | INV-18 upgrade acquisition and cost | decision | COMPLETE AND VERIFIED | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | COMPLETE AND VERIFIED | 20+ |
-| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | APPROVED — NOT STARTED | 18 |
+| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | PARTIALLY IMPLEMENTED | 18 |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | COMPLETE AND VERIFIED | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | APPROVED — NOT STARTED | owner decision |
@@ -289,7 +289,7 @@ None.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | COMPLETE AND VERIFIED |  |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | APPROVED — NOT STARTED | owner decision |
-| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | APPROVED — NOT STARTED | 18 |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | COMPLETE AND VERIFIED | 16 |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
@@ -299,7 +299,7 @@ None.
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | APPROVED — NOT STARTED |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | APPROVED — NOT STARTED |  |
-| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | APPROVED — NOT STARTED | 18 |
+| SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-03 | OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification | approved | COMPLETE AND VERIFIED | 16 |
