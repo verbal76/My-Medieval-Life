@@ -8024,6 +8024,7 @@
     "assets/icons/copper_sword.png",
     "assets/icons/dirt.png",
     "assets/icons/feather.png",
+    "assets/icons/fine_cloth.png",
     "assets/icons/fireball.png",
     "assets/icons/flower.png",
     "assets/icons/gold_bar.png",
@@ -8065,6 +8066,7 @@
     "assets/icons/shovel.png",
     "assets/icons/shovel_blade.png",
     "assets/icons/shovel_haft.png",
+    "assets/icons/spice.png",
     "assets/icons/spoil.png",
     "assets/icons/stone.png",
     "assets/icons/strong_healing_tonic.png",
@@ -8133,7 +8135,8 @@
    "imported": [
     "assets/icons/amulet.png",
     "assets/icons/copper_ring.png",
-    "assets/icons/gold_ring.png"
+    "assets/icons/gold_ring.png",
+    "assets/icons/jewellery.png"
    ]
   },
   {

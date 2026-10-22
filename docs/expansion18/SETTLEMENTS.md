@@ -113,6 +113,17 @@ The horse comes from a horse-dealer among the traders on the road that day: Wuls
 feed them, and breed from a pair every 45 days up to six, GAME EXPANSION). The nearest dealer with a horse sells it. If none of
 today's traders has one, the horse is not for sale that day. (Decision recorded in `docs/DECISIONS.md`.)
 
+## 5a. Luxuries (DVW-B3-LUX)
+
+Owner answer 2026-10-23 (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`): "luxury imports, costly caravan goods (spices, fine cloth, jewellery)
+bought for status, the coins leaving with the caravan". The two richest markets hold them in their traders' stock: Wulstead (a market town) and
+Higham-on-the-Way (the abbey town with "no better market betwixt this and Babylon", CANON, `BONE-C3-P031`). CANON basis for the goods: the chapman's
+booth "full within of many wares and far-fetched and dear-bought things; as pieces of good and fine cloth plumbed with the seal of the greatest of the
+cities; and silk of Babylon, and spices of the hot burning islands, and wonders of the silversmith's and the goldsmith's fashioning" (`BTWO-C14-P002`).
+**GAME EXPANSION**: that these two places hold them, the quantities (Wulstead 12 spices, 8 fine cloth, 3 jewellery; Higham 20, 12, 8), that they come from
+beyond the map and are neither made nor restocked (a finite supply, WDR-022), and every price and rule. The mechanics (who buys, from what money, where
+the coins go) are in `docs/DECISIONS.md` and INT-250 to INT-252.
+
 ## 6. Not chosen, and why
 
 - **Upmeads**: a petty kingdom with no city, castle or abbey (`BONE-C3-P003` "none who were not friends to King Peter and his sons"); its villages are unnamed (a gap, `D_POLITICAL_ATLAS.md` 3.1). Our village is, in effect, in that country.

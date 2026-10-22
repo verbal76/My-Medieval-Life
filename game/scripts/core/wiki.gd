@@ -363,7 +363,10 @@ func _items() -> void:
 		if not uses.is_empty():
 			blocks.append(h("Other uses"))
 			blocks.append(bullets(uses))
-		if from_nodes.is_empty() and making.is_empty():
+		if Luxury.is_luxury(id):                   # DVW-B3-LUX
+			blocks.append(p("A costly good from beyond the neighbouring settlements. You cannot gather or make it: the caravan's traders sell it from the stock they hold, for %d coins, when the caravan is in the village (see The merchant caravan). Villagers buy it too, for show, when they have money to spare. Nothing uses it up; it is kept." % Luxury.price(id)))
+			blocks.append(links(["sys:caravan"]))
+		elif from_nodes.is_empty() and making.is_empty():
 			blocks.append(p("It is not gathered or made by the player; buy it from a merchant or find it in the world, or it is part of your starting kit."))
 		add_page(_item_link(id), it.name, ITEM_GROUPS.get(it.type, "items_materials"), blocks, icon_path(id), id.replace("_", " "))
 
@@ -717,6 +720,7 @@ func _not_yet() -> void:
 	var items := {
 		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built, fit it with equipment and hire an attendant (see the guides). Not built yet: attendants and hired workers who craft at the shop's stations from its stock, shops in houses you only rent from a neighbour, a stall display shown over the stall, and trading skill perks on your sales."],
 		"other_towns": ["Visiting the other towns and villages", "Five neighbouring settlements exist and their traders are the caravan (see The neighbouring settlements), but none is on the map yet: you cannot walk to one, trade there, or meet its people in person. The countryside has only animals and passers-by (see the countryside)."],
+		"luxury_status": ["Standing from owning luxuries", "Villagers buy spices, fine cloth and jewellery from the caravan to show they can, and keep them, but the village has no measure of a person's standing yet, so owning them changes nothing about how anyone is treated, you included. They are kept in a pack and go to an heir; they are not worn."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"looks_more": ["Leather armour on your figure", "Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
 		"farm_more": ["Oxen, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself, and a plough horse from the caravan speeds the plough (see the farming guides), but there are no oxen, no riding or carts drawn by horses, no roofed coops or shelters, no watering or weather, no traps for rabbits, no other animals from the caravan and no hired farmhands yet."],

@@ -253,6 +253,17 @@
   "public_works_seller_keeps": {"plank": 6, "iron_bar": 4, "stone": 6},
   "caravan_import_stock": {"iron_ore": 12, "coal": 8, "copper_ore": 6},
   "caravan_import_when_left": 10,
+  "luxury": {
+    "_note": "DVW-B3-LUX (owner, 2026-10-23, docs/directives/2026-10-23_owner_answers_coin_sinks.md: 'luxury imports, costly caravan goods (spices, fine cloth, jewellery) bought for status, the coins leaving with the caravan'). Every number is an agent proposal, provisional. items: the luxuries, dearest first (value in items.json). The caravan sells one only from a trader's own stock on the road that day (settlements.json start: Wulstead and Higham-on-the-Way), at value x markup; the price goes into that trader's till and the coins leave the village (coin_sources falls). A villager buys on a visit day (NPCBrain.caravan) when they are an adult with a taste (a fixed 0 to 1 from the world seed and their id, at or above min_taste), hold more than their OD-19 reserve (World.reserve_of) plus keep_coins, their household has at least min_food_days of food, the price is no more than spend_share of what they hold above that, and they own fewer than own_max of it; each takes the dearest luxury that passes, and at most buyers_per_visit do so a visit, the most spare coin first (then the lower id). Luxuries are kept, never eaten or used up (spices are not an ingredient of any recipe). The player buys the same goods at the same price from the caravan's wagon while it stands in the village; their only limits are their pack and their coins.",
+    "items": ["jewellery", "fine_cloth", "spice"],
+    "markup": 1.25,
+    "min_taste": 0.4,
+    "keep_coins": 40,
+    "min_food_days": 4.0,
+    "spend_share": 0.5,
+    "buyers_per_visit": 3,
+    "own_max": {"jewellery": 1, "fine_cloth": 2, "spice": 3}
+  },
   "caravan_apothecary_stock": {"linen_bandage": 8, "herbal_poultice": 6, "healing_tonic": 4, "strong_healing_tonic": 2},
   "caravan_apothecary_per_visit": 4,
   "_apothecary_note": "PL1-04 (agent proposal, provisional): the sage keeps the village apothecary. Starting stock, flowers the sage buys (BUYS sage) and brews into poultices and tonics at the stove, and the caravan's finite resupply: on each visit it sells the sage up to caravan_apothecary_per_visit pieces towards caravan_apothecary_stock, at the item's base value, paid from the sage's own coins above the trader cash floor (coins leave the village, like the ore imports).",

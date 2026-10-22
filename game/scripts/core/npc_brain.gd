@@ -4046,6 +4046,7 @@ func caravan() -> void:
 		w.stat("caravan_coins_in", price)
 		w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
 		bought += price
+	Luxury.visit(w, on_road)                         # DVW-B3-LUX: spare coins buy the traders' costly goods, which they keep
 	w.note("Traders from %s pass through, buy %d coins' worth from the market%s%s." % [", ".join(on_road.map(func(r): return r.name)), bought,
 		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
 		(" and %d stone to the market" % stone) if stone > 0 else ""])

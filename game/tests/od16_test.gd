@@ -189,6 +189,10 @@ func test_caravan_buys_by_need() -> void:
 				o.inv.remove(id, o.inv.count(id))
 		if o.alive and (o.job == "merchant" or o.id == w.sage_id):
 			o.coins = 0                              # and nobody buys seed or medicine from it, so its purse is what we set
+	for s: OffMapSettlement in w.regions.list:   # DVW-B3-LUX: and no luxuries on the carts, so no purse here is spent on one (luxury_test covers them)
+		for id: String in Luxury.items():
+			s.trader().stock.erase(id)
+		s.reopen_books()
 	var smith: NPC = b._first_with_job("smith")
 	var tanner: NPC = b._first_with_job("tanner")
 	for id in NPCBrain.BUYS.smith:
