@@ -1385,6 +1385,25 @@ func _cook(n: NPC) -> bool:
 	return true
 
 
+## FARM-08-Q-CROP: each cutter's work on field `f` when `n` finishes its cutting (`done` minutes): `n`'s whole cutting
+## and, for every other farmer of the field cutting it now, the minutes already worked; those stop cutting (their step
+## ends with their share). A farmer not cutting at that moment did no cutting work and gets no share. id -> minutes.
+func _cutting_shares(n: NPC, f: Dictionary, done: float) -> Dictionary:
+	var out := {n.id: maxf(done, 0.001)}
+	for o: NPC in w.field_workers(f):
+		if o == n or o.plan.is_empty() or o.plan[0].k != "work" or str(o.plan[0].get("act", "")) != "harvest" \
+				or str(o.plan[0].get("args", {}).get("field", "")) != str(f.id):
+			continue
+		var worked := float(o.plan[0].min) - o.work_left
+		if worked <= 0.0:
+			continue
+		out[o.id] = worked
+		o.plan.pop_front()
+		if not o.plan.is_empty() and o.plan[0].k == "work":
+			o.work_left = float(o.plan[0].min)
+	return out
+
+
 func _farmer(n: NPC) -> bool:
 	if _keeper(n):
 		return true
@@ -1402,7 +1421,7 @@ func _farmer(n: NPC) -> bool:
 		"ripe":
 			n.doing = "harvesting wheat"
 			var cut := w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0
-			n.plan = [go(spot), work(cut, "harvest", {"field": f.id}, "work")]
+			n.plan = [go(spot), work(cut, "harvest", {"field": f.id, "min": cut}, "work")]   # min: this cutter's share of the work (FARM-08-Q-CROP)
 		"tilled":
 			if Farming.seasonal_fields() and not w.farm.can_sow_now():
 				n.doing = "waiting for the sowing season"     # FSE-13: no sowing in winter, as for the player
@@ -2422,24 +2441,39 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
 				return false                                       # (left to the player hired to cut it)
+			var crop := 0
 			if Farming.shared_manor():                    # FSE-12: the crop of the sown cells and their seed back
 				w.farm.seed_back(n, f)
-				n.inv.add("wheat", w.take_crop(f, 1 << 30))
+				crop = w.take_crop(f, 1 << 30)
 			else:
-				n.inv.add("wheat", w.farm.save_seed(n, w.take_crop(f, 1 << 30)))   # whatever is left on the field, less the seed kept back
+				crop = w.farm.save_seed(n, w.take_crop(f, 1 << 30))   # whatever is left on the field, less the seed kept back
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
-			# who shares this field before anything is sold
+			# who shares this field before anything is shared out; the cutter carries it there
+			var feed := 0
 			for pid in w.fauna.pens:
 				var pen: Dictionary = w.fauna.pens[pid]
 				var need := w.fauna.daily_need(pen)
 				var days := 1 if w.famine() else 4
 				var keeper := w.pen_keeper(pen)
 				if keeper and keeper.workplace == f.id and int(pen.trough) < need * days and need > 0:
+					feed += mini(need * days - int(pen.trough), crop - feed)
 					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * days - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
 					n.plan.push_front(go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))))
-			var pantry: Inventory = w.households[n.household].pantry
-			var keep := maxi(0, 10 - pantry.count("wheat"))
-			w.transfer(n.inv, pantry, "wheat", mini(keep, n.inv.count("wheat")))
+			n.inv.add("wheat", feed)
+			# FARM-08-Q-CROP (owner, 2026-10-22): the rest belongs to the farmers who cut it, by their share of the cutting
+			# work, whoever finishes first; the others stop cutting, their share in hand
+			var split := Farming.split_crop(crop - feed, _cutting_shares(n, f, float(a.get("min", 90.0))))
+			if split.is_empty() and crop - feed > 0:
+				split[n.id] = crop - feed
+			var ids := split.keys()
+			ids.sort()
+			for id in ids:
+				var c: NPC = n if int(id) == n.id else w.npc(int(id))
+				c.inv.add("wheat", int(split[id]))
+				if c.household >= 0:
+					var pantry: Inventory = w.households[c.household].pantry
+					var keep := maxi(0, 10 - pantry.count("wheat"))
+					w.transfer(c.inv, pantry, "wheat", mini(keep, int(split[id])))
 			w.set_field(f, "tilled")
 			return true
 		"sow":

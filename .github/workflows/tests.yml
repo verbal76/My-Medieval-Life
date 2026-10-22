@@ -79,6 +79,7 @@ jobs:
           $godot --headless --path game --script res://tests/early_game_test.gd
           $godot --headless --path game --script res://tests/parity_mining_test.gd
           $godot --headless --path game --script res://tests/equip_test.gd
+          $godot --headless --path game --script res://tests/crop_share_test.gd
           $godot --headless --path game --script res://tests/skills_test.gd
           $godot --headless --path game --script res://tests/chests_test.gd
           $godot --headless --path game --script res://tests/property_test.gd
