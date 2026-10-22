@@ -3453,6 +3453,51 @@ func player_learn_fireball(teacher: NPC) -> Dictionary:
 	return {"ok": true, "why": "", "thanks": thanks}
 
 
+## TAILOR-18: whether `n` is a tailor (balance.json tailor.job), who sells the pack's upgrades.
+func is_tailor(n: NPC) -> bool:
+	return n != null and n.alive and n.role == "adult" and n.job == str(GameData.b("tailor").job)
+
+
+## TAILOR-18: the price of the player's next pack row (the second, then the third), -1 when every row is open.
+func pack_row_price() -> int:
+	var rows: Array = GameData.b("tailor").pack_rows
+	return int(rows[player.pack_level]) if player.pack_level < rows.size() and player.pack_level < PlayerState.PACK_CAPS.size() - 1 else -1
+
+
+## TAILOR-18: why tailor `t` cannot open the player's next pack row now ("" if they can): a tailor, awake, at work
+## when they have a workplace, the rows bought in order and never twice, the price in the player's own purse.
+func pack_row_refusal(t: NPC) -> String:
+	if not is_tailor(t):
+		return "Only a tailor can open more of your pack."
+	if asleep(t):
+		return "%s is asleep." % t.name
+	if t.workplace != "" and t.pos.distance_to(Vector2(brain._workplace_cell(t)) + Vector2(0.5, 0.5)) > 3.0:
+		return "%s is not at work." % t.name
+	var price := pack_row_price()
+	if price < 0:
+		return "Every row of your pack is open already."
+	if player.coins < price:
+		return "The %s row costs %d coins; you have %d." % ["second" if player.pack_level == 0 else "third", price, player.coins]
+	return ""
+
+
+## TAILOR-18: the player pays tailor `t` for the next pack row, all or nothing: the price goes from the player's purse to
+## the tailor's own (theirs to spend by their usual rules; no coin made or lost) and pack_level rises by one, opening
+## that row in all eight categories. Returns {ok, why, level, paid}.
+func player_buy_pack_row(t: NPC) -> Dictionary:
+	var why := pack_row_refusal(t)
+	if why != "":
+		return {"ok": false, "why": why, "level": player.pack_level, "paid": 0}
+	var price := pack_row_price()
+	player.coins -= price
+	t.coins += price
+	t.earned += price
+	player.pack_level += 1
+	stat("tailor_pack_rows")
+	stat("tailor_fees", float(price))
+	return {"ok": true, "why": "", "level": player.pack_level, "paid": price}
+
+
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
 func buy_plot(p: Dictionary) -> bool:
 	return property.buy(p, PLAYER) == ""

@@ -2356,6 +2356,17 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 					hide_all()
 			else:
 				message(str(learned.why)), not known)
+	if w.is_tailor(n):
+		# TAILOR-18: the pack's rows, sold as a service in order (World.player_buy_pack_row); future clothing services go here
+		var row_price: int = w.pack_row_price()
+		var row_text := ("Backpack: unlock the %s row (%d coins)" % ["second" if w.player.pack_level == 0 else "third", row_price]) if row_price >= 0 else "Backpack: every row is open"
+		_talk_choice(choices, row_text, func():
+			var r: Dictionary = w.player_buy_pack_row(n)
+			if r.ok:
+				message("%s lets out your pack: every tab now holds %d kinds (%d coins paid)." % [n.name, w.player.pack_cap(), int(r.paid)])
+				hide_all()
+			else:
+				message(str(r.why)), row_price >= 0)
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)

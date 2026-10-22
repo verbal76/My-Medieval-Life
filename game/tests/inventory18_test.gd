@@ -1,5 +1,5 @@
 extends SceneTree
-## INV-18 (Build 18; owner directive docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md, decisions INV-Q1 and
+## INV-18 and TAILOR-18 (Build 18; owner directive docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md, decisions INV-Q1 and
 ## INV-Q2 in docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md; plan docs/build18/INV18_PLAN.md):
 ## every item has exactly one of eight categories; the player's pack holds 9, 18 or 27 kinds in each category by its
 ## upgrade level; worn gear takes no place; equip, unequip and swap are all or nothing; buying, transfers, gathering and
@@ -31,6 +31,7 @@ func _init() -> void:
 	_test_trade_and_transfer()
 	_test_gain_and_messages()
 	_test_save_and_migration()
+	_test_tailor()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -330,4 +331,48 @@ func _test_save_and_migration() -> void:
 		if name == "all six slots worn":
 			check(GameData.CATEGORIES.all(func(cat): return q.inv.used(cat) == (1 if cat == "crafted" else 0)), "the six worn items take no place (only the planks do)")
 		w3.dispose()
+	w.dispose()
+
+
+# ---------------------------------------------------------------- tailor (TAILOR-18) ---------
+func _test_tailor() -> void:
+	var map := VillageMap.load_default()
+	var w := _world()
+	var p := w.player
+	var cfg: Dictionary = GameData.b("tailor")
+	check((cfg.pack_rows as Array).map(func(x): return int(x)) == [150, 450], "the rows cost 150 and 450 coins (balance.json, owner provisional)")
+	var t: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.job == "merchant":
+			t = n
+			break
+	check(not w.is_tailor(t) and w.pack_row_refusal(t) == "Only a tailor can open more of your pack.", "a villager who is not a tailor sells no rows")
+	check(not w.npcs.any(func(n): return w.is_tailor(n)), "no villager is a tailor in a new world yet (placement awaits the owner)")
+	# the test makes one (the job only; where a tailor works is not settled)
+	t.job = str(cfg.job)
+	t.workplace = ""
+	t.anim = "idle"
+	var coins0 := w.total_coins()
+	p.coins = 100
+	var r := w.player_buy_pack_row(t)
+	check(not r.ok and r.why == "The second row costs 150 coins; you have 100." and p.pack_level == 0 and p.coins == 100, "too few coins: refused, nothing paid (\"%s\")" % r.why)
+	t.anim = "sleep"
+	p.coins = 700
+	check(not w.player_buy_pack_row(t).ok and p.pack_level == 0 and p.coins == 700, "a tailor asleep sells nothing")
+	t.anim = "idle"
+	var tc := t.coins
+	r = w.player_buy_pack_row(t)
+	check(r.ok and int(r.paid) == 150 and p.pack_level == 1 and p.pack_cap() == 18 and p.coins == 550 and t.coins == tc + 150,
+		"the second row: 150 coins from the player to the tailor's own purse; every category now 18")
+	check(GameData.CATEGORIES.all(func(c): return p.inv.category_cap == 18), "the upgrade is global (one level, all eight categories)")
+	r = w.player_buy_pack_row(t)
+	check(r.ok and int(r.paid) == 450 and p.pack_level == 2 and p.pack_cap() == 27 and p.coins == 100 and t.coins == tc + 600, "the third row: 450 coins; 27 in every category")
+	r = w.player_buy_pack_row(t)
+	check(not r.ok and r.why == "Every row of your pack is open already." and p.pack_level == 2 and p.coins == 100 and t.coins == tc + 600, "no third purchase; nothing paid")
+	check(w.total_coins() - coins0 == 700 - 20, "coins conserved: only the test's own grant to the player changed the total")
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(map, d)
+	check(w2.player.pack_level == 2 and w2.player.inv.category_cap == 27, "the upgrades are saved and loaded")
+	w2.dispose()
 	w.dispose()
