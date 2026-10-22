@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 192 still open, 39 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 257 (126 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **313** = 192 still open from the baseline + 126 added and open |
+| Entries added since | | 258 (127 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **314** = 192 still open from the baseline + 127 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (39)
@@ -69,7 +69,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (257)
+## Added since the baseline (258)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -128,6 +128,7 @@ None.
 | FARM-08C | Wheat price floor: record as an economic finding | approved | COMPLETE AND VERIFIED | 16 |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
+| FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | APPROVED — NOT STARTED | 18 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | COMPLETE AND VERIFIED | 16 |

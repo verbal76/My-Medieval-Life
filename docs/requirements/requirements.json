@@ -12166,6 +12166,48 @@
    "target_build": "18"
   },
   {
+   "id": "FARM-CROP-SEED",
+   "title": "Seed kept back from a shared field is split among its cutters by work, as the grain is",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Share seed by work too",
+   "description": "Seed kept back from a shared field is split among its cutters by work, as the grain is",
+   "source": "docs/directives/2026-10-23_owner_answers_seed_share.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "The kept-back seed of a field cut by several workers is divided by work done (D7: minutes x own work rate), largest remainder, ties to the smaller id; conserving; crop_share_test covers it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FARM-CROP-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_seed_share.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",
