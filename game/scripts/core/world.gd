@@ -4142,6 +4142,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		for b in boulders:
 			if b.x == int(sb[0]) and b.y == int(sb[1]):
 				b.amount = int(sb[2])
+	for b in boulders:                 # a boulder quarried away leaves its cell open: before the load unsticks anyone standing there
+		if int(b.amount) <= 0 and not b.get("ow", false):
+			map.set_solid(Vector2i(int(b.x), int(b.y)), false)
 	fields = d.fields
 	plots = d.plots
 	coin_sources = int(d.coin_sources)

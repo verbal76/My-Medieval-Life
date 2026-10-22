@@ -301,26 +301,31 @@ Built on `wip/build18` at `83d3afc`. Design: DESIGN.md section 12. Lore choices,
 
 ### Measured (WDR-022: outcomes measured, not judged)
 
-Seeds 1 and 2, 30 days, `economy_sim.gd --every 5`, before (`83d3afc`) and after:
+Seeds 1 and 2, 30 days, `economy_sim.gd --every 5`, one run each (SIM-01). "Before" is the base the task named (`83d3afc`) and
+the base this branch now sits on (`71b6285`, which added the village chapel); "after" is this branch on `71b6285`.
 
-| | seed 1 before | seed 1 after | seed 2 before | seed 2 after |
-|---|---|---|---|---|
-| alive at day 30 | 111 | 108 | 115 | 114 |
-| starvation deaths | 0 | 0 | 0 | 0 |
-| food days (village) | 6.0 | 6.5 | 6.7 | 7.2 |
-| treasury | 590 | 543 | 471 | 414 |
-| village coins in from the caravan / out to it | 2130 / 132 | 1681 / 145 | 2157 / 161 | 1132 / 108 |
-| net to the village (`coin_sources`) | +2044 | +1574 | +2050 | +1123 |
-| coins created by the allowance | up to 30 a day (tapering) | 0 | up to 30 a day | 0 |
-| goods the caravan took | 24 kinds (feathers, nails, rings, caps, mallets, bars, logs ...) | 7 kinds (axes, bars, leather, logs, meat, planks, ploughs) | similar | 7 kinds |
-| settlements' coins at day 30 | (none) | 7713 (from 9249) | (none) | 8541 (from 9249) |
-| ledger / currency / item leaks | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+| | seed 1: 83d3afc | 71b6285 | after | seed 2: 83d3afc | 71b6285 | after |
+|---|---|---|---|---|---|---|
+| alive at day 30 | 111 | 115 | 115 | 115 | 121 | 121 |
+| starvation deaths | 0 | 0 | 0 | 0 | 0 | 0 |
+| food days (village) | 6.0 | 7.3 | 7.2 | 6.7 | 7.7 | 8.5 |
+| treasury | 590 | 21 | 109 | 471 | 466 | 158 |
+| median household cash | 175 | 131 | 100 | 157 | 148 | 122 |
+| caravan: coins paid to the village | 2130 | 2123 | 1654 | 2157 | 2108 | 1029 |
+| caravan: coins the village paid | 132 | 127 | 131 | 161 | 101 | 85 |
+| net to the village (`coin_sources`) | +2044 | +1996 | +1540 | +2050 | +2178 | +1070 |
+| goods the caravan took (units / kinds) | 379 / 22 | 304 / 18 | 299 / 7 | 386 / 21 | 412 / 18 | 183 / 8 |
+| goods the caravan sold the village (units) | 108 | 102 | 108 | 112 | 91 | 72 |
+| coins created by the daily allowance | up to 30 a day | up to 30 a day | 0 | same | same | 0 |
+| ledger / currency / item leaks | 0 | 0 | 0 | 0 | 0 | 0 |
+| the five settlements' coins at day 30 (of 9249 founded) | none | none | 7726 | none | none | 8621 |
 
-Reading: the caravan now buys only what the five places use and can pay for, so the village earns about half as much from it
-(+1100 to +1600 against +2050 in 30 days) and the market's other surplus (feathers, nails, rings, caps) has no outlet; the village's
-food, deaths and ledger were not affected in 30 days. Imports (seed, cuttings, medicines) were the same; ore and coal were not
-needed in 30 days (the village's seams still held). The settlements' own books balanced at every checkpoint and every day of the
-isolated runs.
+Reading: the caravan now buys only what the five places use and can pay for, so it buys 7 or 8 kinds of goods where it bought about
+20 (axes, bars, leather, logs, meat, planks, ploughs; no more feathers, nails, rings, caps, mallets) and the village earns about a
+quarter to a half less from it (+1100 to +1500 against +2000 in 30 days). The village's food, population and deaths were not
+affected in 30 days. Imports (seed, cuttings, medicines) were the same; ore and coal were not needed (the village's seams still
+held). The settlements paid the village 1523 and 944 coins in the two runs, from the 9249 they were founded with, and nothing was
+made for them. The settlements' own books balanced at every checkpoint (no FATAL line).
 
 Isolated (`regions_sim.gd`, no trade with the village): 200 days, seed 1: Wulstead, Netherton, Garton and Bourton Abbas keep every
 person; Higham-on-the-Way, the largest and with the thinnest margins, loses 10 of 99 after about day 150, its treasury empty
