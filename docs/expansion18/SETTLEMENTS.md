@@ -97,6 +97,11 @@ rule, pays its officials, buys upkeep goods, hires day labour for the hard-up, r
 only by matched lines; the book of each settlement balances every day (`OffMapSettlement.audit`). The details, rules and numbers
 are in `docs/expansion18/DESIGN.md` section 10, `docs/DECISIONS.md` and `docs/SYSTEM_INTERACTION_MANIFEST.md` (INT-230 to INT-233).
 
+**The people live a life too** (REG-DEMO-01): every member has an age on the village's 8-day year; they are born to couples, die of old age
+by the village's own mortality curve, grow up at 16, marry at 18 and older into households of their own that work for a business, and
+a household that loses its last adult passes its coins and food to kin (else the treasury). Same rules, household level; the rules and
+what is provisional are in `DESIGN.md` section 12 ("The people") and INT-260.
+
 ## 4. The traders are the caravan
 
 The merchants of each settlement are its **trader**: the only party that meets the village's caravan, with its own till and stock. On a
@@ -132,6 +137,10 @@ the coins go) are in `docs/DECISIONS.md` and INT-250 to INT-252.
 - **Apthorp**: debateable ground between the Burg and the Dry Tree.
 
 ## 7. What is not done yet
+
+Migration is separate (MIGRATE-18): nobody moves in or out of a settlement by marriage here, so marriages are within one settlement,
+and a settlement with few young people (Netherton) can shrink. Houses, partners from the village and elders at founding are not
+modelled.
 
 Barter and credit between the village and these settlements (TRADE-CREDIT), people moving between them (MIGRATE-18), courier booths
 (COURIER) and visiting a settlement in person (Build 20 or later, Q18-8) are separate registers; the seams for them are named in

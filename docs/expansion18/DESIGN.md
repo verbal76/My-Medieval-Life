@@ -482,12 +482,52 @@ stay, alive}`; businesses `{type, workers, till, stock, reserves, out, acc, rese
    above their reserve; officials paid (`official_wage`); day labour (`day_labour_wage`) to a household nearly out of coins while the
    treasury keeps three days of wages.
 5. **Eating.** Foods by points as the village counts them (`NPCBrain.food_points`); a household under 60% fed for six days loses
-   a member (children first); an empty one is dissolved and its coins and food go to the treasury.
+   a member (the youngest child first, else the oldest); a household with no one left passes its coins and food by the inheritance
+   rule of item 8 (to kin, else the treasury).
 6. **Horses.** The farms' working horses eat their own wheat; a fed pair breeds every 45 days up to six.
 7. **Prices** move; **jobs** move once a week: a household whose trade paid it next to nothing joins the business that paid most,
    never emptying a trade.
 
-Founding draws the households' makeup and purses from `(world seed, settlement index)` once; the step then uses no random numbers.
+8. **People** (REG-DEMO-01; `_life`, run after eating). The village's life rules (`balance.json` "life" and "relations") at household
+   level; see "The people" below.
+
+Founding draws the households' makeup and purses from `(world seed, settlement index)` once; the step then uses no random numbers
+(the daily rolls of item 8 are a reproducible function of the settlement, the day and the person, so nothing needs saving).
+
+### The people (REG-DEMO-01; approved by SET-C-SIM "same rules, lighter detail", B8-029 and OD-21)
+
+Every household carries its members: `mem`, a list of `[born, sex, partnered, unwilling]`. `born` is a settlement day number (negative
+before the first step), so age in years is `(day - born) / Life.year_days()` and nothing is updated daily; the 8-day year (OD-21) is
+read through `Life`, never written here. `adults` and `children` stay as they were (what food, tax and the market read) and are
+recounted from the ages: a child is under `life.adolescent_until` (16); elders count as adults, as they always did here.
+Each household also records `parents` (the households its couple came from) and `kids` (households founded by its members).
+
+- **Founding** (own random stream, so no founding number changes): ages as `Life.seed_population` draws them from `start_adult_age`
+  and `start_child_age`: a household of two adults is a woman and a man (partnered; his age follows hers), a single adult is a woman
+  or a man by a coin, the mother of children is 28 to 42, children are 16 or more years younger than their mother. No elders at
+  founding (the village's elders come from household makeup, which the off-map households do not have); they arrive by growing old.
+- **Old age:** each day each member of 60 or more rolls `Life.death_chance(age)` (the village's curve, 0.8 a year at the top, certain at 80).
+- **Births:** a partnered woman of 18 to 42 whose household has no one under `birth_min_gap_years`, with `birth_min_food_days` of
+  food in the pantry, gives birth with chance `1 / (birth_interval_years * year_days)` a day; sex by a coin; `unwilling_percent`
+  of the children will never marry.
+- **Children become workers:** at 16 a child counts as an adult. At 18 (`partner_min_age`) and after `marry_min_days`, an unwilling-free
+  person up to `partner_max_age` marries an unrelated person of the opposite sex from another household, within `partner_max_gap` years of
+  age; at most one marriage a day in a settlement. The couple founds a household that takes the man's trade (an official's household, or
+  a trade the settlement lacks, takes the farm) and joins that business as a worker household, which is how a grown child adds to the
+  settlement's work. Each leaver takes an equal share of their household's coins and pantry (all of it when they are its last member);
+  the only adult of a household with children does not leave, and a one-person household of an official or of the last worker of a
+  business does not leave. The off-map has no houses, so a new household needs none (lighter detail, provisional).
+- **Inheritance:** a household with no adult left closes. Its coins, pantry and any children pass to the nearest living kin household: the
+  households its members founded (eldest first), then those its couple came from, then their other offspring (the order of `Life.heir_of`:
+  child, parent, sibling). With no kin and children left, the children and goods go to the smallest living household (the village's
+  Guardianship); with no kin and no children the coins and food go to the treasury, as before. Counted in `inheritances` and
+  `orphans_fostered`. These are transfers between holders: no coin or good is made or lost, and `audit()` is unchanged.
+- **Saves:** `mem`, `parents` and `kids` are saved with the household; a save without them (made before REG-DEMO-01) gets ages on load
+  from the households' adults and children, drawn from the settlement's own id and saved day with the founding rule (deterministic).
+  No `save_version` change: the optional key is absent-means-assign.
+- **Cost:** about 2 ms a day for all five (of 14 to 16), measured over 365 days.
+Outcomes are recorded, not tuned (WDR-022): a settlement with no one of marrying age shrinks (Netherton), one that breeds faster than its
+harvests feeds loses people to hunger (Higham, Wulstead); nothing rescues either.
 
 ### Money and goods (WDR-022)
 
