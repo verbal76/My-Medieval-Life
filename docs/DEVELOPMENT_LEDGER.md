@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **458** |
 | Outstanding (not complete, superseded or canceled) | 211 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 77 owner decision (open or answered), 29 world design rule, 1 unapproved idea; of the owner decisions, 40 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 77 owner decision (open or answered), 30 world design rule, 2 unapproved idea; of the owner decisions, 40 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 31 | 25 |
+| Build 18: Settlement Advancement & Regional Economy | 32 | 25 |
 | Build 19: NPC Judgment System | 21 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 69 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **286** | **211** |
+| **Total open** | **287** | **211** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,11 +177,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (31)
+### Build 18: Settlement Advancement & Regional Economy (32)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B14-11 | Animal Farm pack: the horse and farm animals | approved | APPROVED — NOT STARTED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
+| CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | DEFERRED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
@@ -1025,12 +1026,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | BLOCKED | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
 | X19-REGARD | Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 
-## World design rule (29)
+## World design rule (30)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
+| MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | APPROVED — NOT STARTED | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md |
 | PROS-01 | Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates | ACTIVE DEVELOPMENT | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | COMPLETE AND VERIFIED | docs/directives/2026-10-21_standing_continuous_release_directive.md |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | APPROVED — NOT STARTED | docs/directives/2026-10-21_continuous_long_run_simulation.md |
@@ -1096,9 +1098,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | APPROVED — NOT STARTED | docs/directives/2026-10-21_master_expansion_roadmap.md (the pack's other documents on wip/roadmap-docs, docs/roadmap/) |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | COMPLETE AND VERIFIED | docs/directives/2026-10-20_od21_time_model.md |
 
-## Unapproved idea (1)
+## Unapproved idea (2)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | APPROVED — NOT STARTED | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 355) |
+| CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | APPROVED — NOT STARTED | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md |
 

@@ -262,6 +262,12 @@ corresponding documentation.** Every agent and worker, on every task:
 - **Testing philosophy (owner, 2026-10-20, WDR-022):** mechanical correctness and simulation integrity are mandatory;
   economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
   rerun year-long simulations in pursuit of favourable statistics.
+- **MSW-01, Minimum Sufficient Work (owner, 2026-10-22, `docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md`;
+  permanent core principle).** Correctness is mandatory; redundancy must be justified. Before work, weigh the objective,
+  the existing evidence, the work actually required, the minimum sufficient validation, the stop and escalation
+  conditions and the non-goals, in proportion to the task (no planning overhead for small ones). Reuse valid evidence; do
+  not rerun tests for reassurance, create work to occupy workers or interrupt successful work; documentation-only changes
+  need no tests.
 - **Continuous long-run simulation (owner, 2026-10-21, SIM-01, `docs/directives/2026-10-21_continuous_long_run_simulation.md`;
   permanent).** Run the longest required duration once per required seed and configuration, monitored throughout, and read
   shorter milestones (days 30, 90, 100, ...) from its checkpoints (`economy_sim.gd --every`); never restart the same world

@@ -5238,6 +5238,48 @@
    "acceptance_derived": true
   },
   {
+   "id": "CAP-TOOLHOLDER",
+   "title": "Design review: a villager holding a tool only for sale counts as a capability practitioner",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Keep the existing implementation unchanged. Record the edge case for later design review. Do not modify Build 17 or create a separate Expansion 18 rule. Only elevate the issue if it becomes an actual gameplay problem or affects an owner decision.",
+   "description": "Design review: a villager holding a tool only for sale counts as a capability practitioner",
+   "source": "docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md",
+   "approval": "Owner 2026-10-22: record for later design review; keep the implementation unchanged",
+   "acceptance": [
+    "Reviewed at the Expansion 18 reconciliation or when it causes a gameplay problem"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Build 17 Discovery.practitioner counts anyone with the tool kind and the floor skill level; capability levels are report-only (Q18-9). Not seen in seed 1 (Expansion 18 SYNC-17 report).",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed for review with Expansion 18"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "CARAVAN-TMP",
    "title": "The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day)",
    "kind": "decision",
@@ -15531,6 +15573,42 @@
    "target_build": "multiplayer",
    "roadmap_gate": "",
    "roadmap_reason": "the multiplayer track stays isolated on its own branch until the owner authorizes integration"
+  },
+  {
+   "id": "MSW-01",
+   "title": "Minimum Sufficient Work: correctness mandatory, redundancy justified",
+   "kind": "rule",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Follow our core engineering principle, MSW-01: Minimum Sufficient Work. Correctness is mandatory. Redundancy must be justified.",
+   "description": "Minimum Sufficient Work: correctness mandatory, redundancy justified",
+   "source": "docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md",
+   "approval": "Owner permanent core principle, 2026-10-22",
+   "acceptance": [
+    "Applied to every task (CLAUDE.md section 5)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md"
+    }
+   ]
   },
   {
    "id": "OD-01",
