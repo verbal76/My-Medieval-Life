@@ -13827,7 +13827,7 @@
    "implementation": "Awaiting | Owner rule 1 (B13-06) covers part of P3.2's spirit | AWAIT-OWNER",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-econp3",
    "commits": [],
    "parent": null,
    "depends_on": [],
@@ -13865,6 +13865,11 @@
      "date": "2026-10-23",
      "change": "acceptance wrapped as a one-item list (text unchanged)",
      "why": "it had been stored as a bare string by requirements_update.py --field; the tool and validator now enforce a list"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> household-money worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-econp3",
+     "why": "Approved, specified; unblocked after the buying and credit merges"
     }
    ],
    "acceptance_derived": true,
@@ -13875,12 +13880,13 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "assigned_worker": "household-money worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "ENV-RTK",
@@ -42928,7 +42934,7 @@
    "implementation": "",
    "tests": "On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins)",
    "playtest": [],
-   "branch": "wip/b18-credit",
+   "branch": "wip/b18-creditparity",
    "commits": [
     "d765440",
     "a2ea741"
@@ -42971,6 +42977,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); test_commit: None -> a2ea741; commits + d765440; commits + a2ea741; integrated_in + 18; known_defects + Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; known_defects + Settlement traders do not barter or lend; remaining_work",
      "why": "Credit worker finished (d765440); merged into wip/build18 at a2ea741"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT; assigned_worker: credit worker (Sonnet subagent, started 2026-10-23) -> credit-parity worker (Sonnet subagent, started 2026-10-23); branch: wip/b18-credit -> wip/b18-creditparity",
+     "why": "Parity fixes within the approved requirement (player as lender/seller; player debts to the heir)"
     }
    ],
    "target_build": "18",
@@ -42979,13 +42990,13 @@
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "INTEGRATED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "L",
-   "assigned_worker": "credit worker (Sonnet subagent, started 2026-10-23)",
+   "assigned_worker": "credit-parity worker (Sonnet subagent, started 2026-10-23)",
    "test_commit": "a2ea741",
    "known_defects": [
     "Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir",

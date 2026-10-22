@@ -38,6 +38,8 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
+| ECON-P3 | household-money worker (Sonnet subagent) | `wip/b18-econp3` | `wip/build18` a2ea741 | business and household money separate (shop tills) |
+| TRADE-CREDIT (parity) | credit-parity worker (Sonnet subagent) | `wip/b18-creditparity` | `wip/build18` a2ea741 | the player lends and barters as seller; the player's debts pass to the heir |
 | MIGRATE-18 (+ DVW-B5 settlement taxes) | migration worker (Sonnet subagent) | `wip/b18-migration` | `wip/build18` 840e0ed | people move between the village and the five; the settlements use TaxPolicy; owns offmap.gd |
 | X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 

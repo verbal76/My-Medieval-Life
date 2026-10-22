@@ -9,7 +9,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 81 |
-| Integrated | 50 of 81 (62%) |
+| Integrated | 49 of 81 (60%) |
 | Automated tests passed | 50 of 81 (62%) |
 | Integration verified | 44 of 81 (54%) |
 | Gameplay verified | 0 of 81 (0%) |
@@ -18,14 +18,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 24 (2) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | IN DEVELOPMENT | household-money worker (Sonnet subagent, started 2026-10-23) / wip/b18-econp3 | NOT TESTED |  |  | M |
 | MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | OWNER APPROVED | IN DEVELOPMENT | migration worker (Sonnet subagent, started 2026-10-23) / wip/b18-migration | NOT TESTED | Needs settlement members with ages (REG-DEMO-01) so people who move carry an age, skills and a household |  | L |
+| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | OWNER APPROVED | IN DEVELOPMENT | 18 | TARGETED TESTS PASSED | Parity fixes (player as lender/seller; player debts to the heir like villagers); values in balance.json credit provisional; gameplay check; known: Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; Settlement traders do not barter or lend |  | L |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |  | M |
 
-## Integrated, awaiting gameplay or owner verification (49)
+## Integrated, awaiting gameplay or owner verification (48)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -60,7 +62,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
-| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | OWNER APPROVED | INTEGRATED | 18 | TARGETED TESTS PASSED | Parity fixes (player as lender/seller; player debts to the heir like villagers); values in balance.json credit provisional; gameplay check; known: Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; Settlement traders do not barter or lend |  | verification only |
 | TRADE-UI-02 | Contract proposal's answer shown in view | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
@@ -79,11 +80,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | TARGETED TESTS PASSED | Gameplay and device check of the courier window (rendered with xvfb and looked at: scratchpad courier2_review.png, courier2_form.png); known: Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet |  | verification only |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | TARGETED TESTS PASSED | Gameplay check; houses, land and manor sales stay in person only (not every remote path traced) |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (12)
+## Ready to proceed now (approved, specified, nothing open blocks it) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Owner-approved sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md): all implementation items closed or accepted as permanently blocked, pre-package verification done, then final candidate packages (Android, Windows, Linux) for the owner's device playtest; pass closes REL18-DEVICE, fail means fixes and corrected candidates |  | M |
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
