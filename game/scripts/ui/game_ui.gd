@@ -32,6 +32,7 @@ var toast: Label
 var toast_t := 0.0
 var toast_bottom := -160.0     # where the toast's bottom edge sits (above the prompt and the placing bar)
 var action_bar: ProgressBar
+var action_label: Label        # the work's name inside the action bar ("Mining")
 var panel: PanelContainer
 var panel_kind := ""
 var panel_back := Callable()   # what X, Esc and the pad's B do in the open window (PL1-01); empty: close it
@@ -81,6 +82,12 @@ const LOG_SECONDS := 3.0       # how long each stays before fading
 const HUNGER_MAX := 100.0       # the food meter's top (PlayerState caps hunger at 100)
 const DANGER_AT := 0.25        # a meter below this fraction of its cap turns red and blinks
 const DANGER_COLOUR := Color8(228, 52, 36)
+# progress bars over the map (the player's work, building frames): one pixel-art look (UI-PROGRESS-01)
+const PROGRESS_TRACK := Color(0.17, 0.11, 0.07, 0.92)    # dark wood, so the bar reads on pale sand and floors
+const PROGRESS_FILL := Color(0.47, 0.72, 0.29)            # the green of a filling bar
+const PROGRESS_EDGE := Color8(16, 10, 6)                   # a thin near-black outline, so it reads on dark ground too
+const ACTION_BAR_W := 96.0
+const ACTION_BAR_RISE := 22.0  # world pixels above the player's feet: just over the head
 const PROMPT_MAX_W := 360.0    # the contextual prompt and the message toast wrap at this width
 const TOAST_MAX_W := 460.0
 const METERS := {
@@ -292,6 +299,19 @@ func _theme() -> Theme:
 	return t
 
 
+## The pixel-art progress bar (UI-PROGRESS-01): a dark track and a solid fill, each inside a one-pixel
+## near-black outline, square corners and no smoothing, so it reads on light and dark ground alike. The
+## player's action bar and the building frames' bars both use it; `edge` is the outline's width.
+static func style_progress(bar: ProgressBar, fill_colour: Color, edge := 1) -> void:
+	for part in ["background", "fill"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = PROGRESS_TRACK if part == "background" else fill_colour
+		sb.border_color = PROGRESS_EDGE
+		sb.set_border_width_all(edge)
+		sb.anti_aliasing = false
+		bar.add_theme_stylebox_override(part, sb)
+
+
 func _style(color: Color, border := SLATE) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = color
@@ -432,12 +452,25 @@ func _build_hud() -> void:
 	toast.add_theme_constant_override("outline_size", 6)
 	hud.add_child(toast)
 
+	# the player's own timed work (mining, felling, harvesting, crafting...): a small dark bar over the
+	# player's head (placed each frame in update_hud), naming the work (UI-PROGRESS-01)
 	action_bar = ProgressBar.new()
-	action_bar.set_anchors_preset(Control.PRESET_CENTER)
-	action_bar.position = Vector2(-90, -70)       # above the player's head, clear of the prompt
-	action_bar.custom_minimum_size = Vector2(180, 18)
+	action_bar.custom_minimum_size = Vector2(ACTION_BAR_W, 14)
+	action_bar.size = action_bar.custom_minimum_size
 	action_bar.show_percentage = false
 	action_bar.visible = false
+	action_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	style_progress(action_bar, PROGRESS_FILL)
+	action_label = Label.new()
+	action_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	action_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	action_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	action_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	action_label.add_theme_font_size_override("font_size", 11)
+	action_label.add_theme_color_override("font_color", Color.WHITE)
+	action_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	action_label.add_theme_constant_override("outline_size", 4)
+	action_bar.add_child(action_label)
 	hud.add_child(action_bar)
 
 	touch_bar = HBoxContainer.new()
@@ -798,6 +831,14 @@ func update_hud() -> void:
 	if not a.is_empty():
 		action_bar.max_value = a.total
 		action_bar.value = a.total - a.left
+		action_label.text = str(a.get("label", ""))
+		var f := action_label.get_theme_font("font")
+		var tw := f.get_string_size(action_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x + 12.0
+		action_bar.size = Vector2(maxf(ACTION_BAR_W, tw), action_bar.custom_minimum_size.y)
+		# over the player's head wherever the camera is (at the map's edges the player is not centred)
+		var at: Transform2D = main.player_sprite.get_global_transform_with_canvas()
+		var head: Vector2 = at * Vector2(0, -ACTION_BAR_RISE)
+		action_bar.global_position = head - Vector2(action_bar.size.x / 2.0, action_bar.size.y)
 	if toast_t > 0.0:
 		toast_t -= get_process_delta_time()
 		if toast_t <= 0.0:

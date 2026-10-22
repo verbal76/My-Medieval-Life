@@ -1410,12 +1410,7 @@ func _sync_sites() -> void:
 			bar.show_percentage = false
 			bar.size = Vector2(28, 5)
 			bar.z_index = MARKER_Z
-			var back := StyleBoxFlat.new()
-			back.bg_color = Color(0.17, 0.11, 0.07, 0.9)
-			var fill := StyleBoxFlat.new()
-			fill.bg_color = Color(0.47, 0.72, 0.29)
-			bar.add_theme_stylebox_override("background", back)
-			bar.add_theme_stylebox_override("fill", fill)
+			GameUI.style_progress(bar, GameUI.PROGRESS_FILL)     # the same look as the player's action bar
 			above.add_child(bar)
 			site_bars[pl.id] = bar
 		if bar:
