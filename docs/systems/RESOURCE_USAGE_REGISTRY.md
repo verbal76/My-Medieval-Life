@@ -15,7 +15,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 | Implemented harvestable node types | 29 (22 player-harvestable) |
 | Materials the nodes produce | 31: apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool |
 | Production chains documented (node product to finished item) | 89 (89 workable, 0 blocked by gold ore) |
-| Materials with no current use | 3: feather, handcart, minecart |
+| Materials with no current use | 6: feather, fine_cloth, handcart, jewellery, minecart, spice |
 | Recipes with a missing raw-material source | 0 |
 | Finite node types with no replacement | 5: gold_seam, horse_pen, open_pit, prospect_clue, tunnel_rock |
 | Nodes not Gather-compatible | 7: chicken_pen, cow_pen, horse_pen, pig_pen, player_field, player_pen, sheep_pen |
@@ -568,6 +568,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `dirt` Dirt | resource | node `open_pit` ×1 | backfill `dirt`; storage `dirt` |
 | `egg` Egg | food | node `player_pen` ×1 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `egg`; recipe `bake_egg_bread` ×1 |
 | `feather` Feathers | resource | node `chicken_pen` ×2; node `wild_bird` ×1 | buyer `merchant_goods` ×20; export `caravan` |
+| `fine_cloth` Fine cloth | resource | import `caravan` | **none** |
 | `flower` Wild flower | resource | node `flower_patch` ×1; node `player_field` ×2 | buyer `sage` ×20; recipe `brew_healing_tonic` ×5; recipe `brew_poultice` ×2; recipe `brew_tonic` ×3 |
 | `flower_seed` Wild flower seed | resource | import `caravan` | buyer `merchant_food` ×4; export `caravan`; plant `flower_seed` |
 | `gold_bar` Gold bar | resource | recipe `smelt_gold` ×1 | buyer `merchant_goods` ×4; export `caravan`; recipe `forge_gold_ring` ×1 |
@@ -585,6 +586,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `iron_helmet` Iron helmet | head | recipe `forge_iron_helmet` ×1 | buyer `merchant_goods` ×2; equip `head`; export `caravan` |
 | `iron_ore` Iron ore | resource | import `caravan`; node `iron_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; quest `ore_for_the_forge` ×6; quest `work_the_mine` ×6; recipe `smelt_iron` ×2 |
 | `iron_sword` Iron sword | weapon | recipe `forge_iron_sword` ×1; start_stock `start_0` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
+| `jewellery` Jewellery | resource | import `caravan` | **none** |
 | `ladder` Ladder | resource | recipe `make_ladder` ×1 | building `ladder` |
 | `leather` Leather | resource | recipe `tan_leather` ×1; recipe `tan_pelts` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `smith` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_iron_armor` ×2; recipe `forge_iron_helmet` ×1; recipe `forge_iron_sword` ×1; recipe `forge_prospecting_kit` ×1; recipe `leather_armor` ×4; recipe `leather_cap` ×2 |
 | `leather_armor` Leather armour | armor | recipe `leather_armor` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
@@ -619,6 +621,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `shovel` Shovel | tool | recipe `assemble_shovel` ×1 | buyer `merchant_goods` ×2; equip `tool`; export `caravan` |
 | `shovel_blade` Shovel blade | resource | recipe `forge_shovel_blade` ×1 | buyer `carpenter` ×1; recipe `assemble_shovel` ×1 |
 | `shovel_haft` Shovel haft | resource | recipe `make_shovel_haft` ×1 | recipe `assemble_shovel` ×1 |
+| `spice` Spices | resource | import `caravan` | **none** |
 | `spoil` Spoil | resource | node `open_pit` ×1; node `tunnel_rock` ×1 | backfill `spoil`; backfill `spoil`; storage `spoil` |
 | `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `open_pit` ×1; node `stone_seam` ×1; node `tunnel_rock` ×1; start_stock `start_0` | building `stone`; buyer `merchant_raw` ×40; manor_job `stone`; recipe `dress_stone` ×2 |
 | `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
@@ -687,6 +690,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `coal`, `copper_ore`, `iron_ore` | import (source) | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. | `game/scripts/core/npc_brain.gd::_caravan_imports` |
 | `stone` | import (source) | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. | `game/scripts/core/npc_brain.gd::_caravan_stone` |
 | `blue_berry_cutting`, `carrot_seed`, `flower_seed`, `herb_seed`, `potato_seed`, `red_berry_cutting`, `wheat_seed` | import (source) | Each caravan visit sells the seed sellers (the food stall) up to caravan_seed_per_visit seed, cuttings and flower seed, the scarcest first, towards this stock, from the merchant's own coins (Build 13 rule 3, MERCH-01). | `game/scripts/core/npc_brain.gd::_caravan_seeds` |
+| `fine_cloth`, `jewellery`, `spice` | import (source) | DVW-B3-LUX: costly goods the traders of Wulstead and Higham-on-the-Way hold in their stock (settlements.json start; GAME EXPANSION, from beyond the map). On a visit day villagers with a taste for them and spare coin beyond their reserve buy some, and the player buys at the wagon, at value x luxury.markup, the coins going into the trader's till and leaving the village. Kept, never used up. | `game/scripts/core/luxury.gd::visit` |
 | `ale`, `amulet`, `apple`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `carrot`, `cheese`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `flower_seed`, `gold_bar`, `gold_ring`, `hammer`, `herbal_poultice`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `mallet`, `meat`, `milk`, `nails`, `pickaxe`, `plank`, `plough`, `potato`, `pottage`, `rabbit_pelt`, `red_berries`, `red_berry_cutting`, `roast_meat`, `shovel`, `wheat`, `wool`, `wool_cloth` | export | Every second day (the nearer settlements' traders more often) the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. The caravan is the traders of the five neighbouring settlements: each buys only what its settlement still wants and pays only from the coins in its own trader's till, so a surplus nobody wants or can be paid for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
 
 ## Findings
@@ -695,7 +699,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `ladder`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `shovel`, `spoil`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
+`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `fine_cloth`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `jewellery`, `ladder`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `shovel`, `spice`, `spoil`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
 
 ### Orphaned items
 
@@ -713,7 +717,7 @@ None.
 
 Items whose only lasting source, once the finite seams are worked out, is the caravan:
 
-`amulet`, `axe`, `blue_berry_cutting`, `building_block`, `cart_axle`, `cart_ironwork`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `dirt`, `flower_seed`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `handcart`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `ladder`, `lockpick`, `minecart`, `nails`, `ore_sample`, `padlock`, `pickaxe`, `plough`, `prospecting_kit`, `red_berry_cutting`, `shovel`, `shovel_blade`, `spoil`, `stone`, `topsoil`, `track_section`
+`amulet`, `axe`, `blue_berry_cutting`, `building_block`, `cart_axle`, `cart_ironwork`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `dirt`, `fine_cloth`, `flower_seed`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `handcart`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `jewellery`, `ladder`, `lockpick`, `minecart`, `nails`, `ore_sample`, `padlock`, `pickaxe`, `plough`, `prospecting_kit`, `red_berry_cutting`, `shovel`, `shovel_blade`, `spice`, `spoil`, `stone`, `topsoil`, `track_section`
 
 Every building needs stone (house, workshops), and the smithy needs iron bars, so all building depends
 on caravan stone after the stone seams are gone.
@@ -748,3 +752,6 @@ finding not recorded here.
 | `gold_ore` | import | implemented | The mine's one gold seam (8 units, Mining 3) is the only source; the caravan does not bring gold, so once the seam is worked out gold ore, gold bars and gold rings come only from what villagers already hold. Scarce by design (Build 13). |
 | `copper_ore` | import | implemented | After the copper seams are worked out, the smiths' copper comes only by caravan. |
 | `stone` | import | implemented | After the stone seams are worked out, stone comes only by caravan, to the raw-goods merchants. |
+| `spice` | no_consumer | implemented | DVW-B3-LUX: bought for show and kept, not eaten: no recipe takes it (a villager's food is the village's own); the traders' stock of it is finite and nothing makes more (WDR-022). |
+| `fine_cloth` | no_consumer | implemented | DVW-B3-LUX: a luxury bought for show and kept; nothing makes or uses it up. |
+| `jewellery` | no_consumer | implemented | DVW-B3-LUX: a luxury bought for show and kept; it is not worn (no slot takes it) and nothing makes or uses it up. |

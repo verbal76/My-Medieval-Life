@@ -2310,6 +2310,10 @@ func _find_target() -> void:
 	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # B14-11: the visiting caravan sells a plough horse
 		var no_horse := world.farm.buy_horse_refusal(p)
 		here.append({"kind": "caravan_horse", "label": ("Buy a plough horse from the caravan (%d coins)" if no_horse == "" else "The caravan's plough horse (%d coins): " + no_horse) % int(Farming.cfg().caravan_horse.price)})
+	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # DVW-B3-LUX: ... and costly goods from its traders' stock
+		for o in Luxury.offers(world):
+			var no_lux := Luxury.refusal(world, p, str(o.id))
+			here.append({"kind": "caravan_luxury", "item": str(o.id), "id": str(o.id), "label": ("Buy %s from the caravan (%d coins, %d left)" if no_lux == "" else "The caravan's %s (%d coins, %d left): " + no_lux) % [GameData.item_name(str(o.id)).to_lower(), int(o.price), int(o.left)]})
 	# a house the family holds but does not live in, or one the manor offers: its door
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -2910,6 +2914,13 @@ func _use() -> void:
 		"caravan_horse":
 			var why_not: String = world.farm.buy_horse(p)
 			ui.message(why_not if why_not != "" else "You pay the caravan and walk the horse into your pen. With it, the hand plough does a cell in %.0f second." % float(Farming.cfg().till.horse.seconds))
+		"caravan_luxury":
+			var why_lux: String = Luxury.buy(world, p, str(target.item))
+			if why_lux != "":
+				ui.message(why_lux)
+			else:
+				_gain("+1 %s" % GameData.item_name(str(target.item)), str(target.item))
+				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
 		"pen_buy":
 			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
 			ui.message(no if no != "" else "You buy it and walk it into your pen.")

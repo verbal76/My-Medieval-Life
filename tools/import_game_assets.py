@@ -197,6 +197,9 @@ ICONS = {
     # MIN-SHOVEL: the grey iron-headed shovel as the shovel; the plain wooden shovel as the carpenter's haft (a
     # medieval shovel was a wooden blade and handle shod with iron); a grey iron slab as the smith's blade (its iron shoe)
     "shovel": "Tools/Shovel-05", "shovel_haft": "Tools/Shovel-15", "shovel_blade": "Blocks/Metal-Slab-05",
+    # DVW-B3-LUX luxury imports: the orange-red dried herb bundle as the spices (the pack has no spice jar), a crimson silk
+    # fabric as the fine cloth (the white one is the bandage)
+    "spice": "Plants & Alchemy/Herb-Bundle-04", "fine_cloth": "Textile/Silk-Fabric-16",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).
@@ -224,7 +227,8 @@ CROP_ORDER = ["wheat", "carrot", "potato", "herb"]      # the rows of game/asset
 STUBBLE_FROM = 11      # a cut wheat field's stubble: the ripe wheat's pixels from this row down (the stalks' feet)
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
-JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05"}
+JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05",
+           "jewellery": "Necklaces/Necklace-28"}      # DVW-B3-LUX: the gold chain with a blue stone
 # Cozy Farm's inventory window (full version/ui/inventory.png, 848 x 1360): the panel with flat tabs
 # and the 9 x 3 bag grid is at INV_PANEL; below it, 8 copies with tab 0..7 raised start at INV_RAISED
 # rows, INV_RAISED_STEP apart. A raised tab stands INV_HEAD px higher than the flat strip.

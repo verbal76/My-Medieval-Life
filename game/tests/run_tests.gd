@@ -3123,7 +3123,8 @@ func test_caravan_traders() -> void:
 	var coins0 := w.total_coins()
 	b.caravan()
 	var paid := w.total_coins() - coins0
-	check(paid > 0 and paid <= tills0 and int(tills.call()) == tills0 - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins) out of the traders' tills" % paid)
+	var lux := int(w.stats.get("luxury_coins", 0))          # DVW-B3-LUX: what villagers paid the traders for luxuries on the same visit
+	check(paid + lux > 0 and paid <= tills0 and int(tills.call()) == tills0 - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins, %d of them taken back for luxuries) out of the traders' tills" % [paid + lux, lux])
 	check(all.call() == base, "B7-014: coins are conserved, the settlements' included")
 	# B7-007: the mine's raw output is not carried away, whatever the merchants hold above half their caps
 	var raws: Array = w.npcs.filter(func(o): return o.alive and b.buy_role(o) == "merchant_raw")
@@ -3143,8 +3144,10 @@ func test_caravan_traders() -> void:
 	stock.call()
 	var exp0 := int(w.stats.get("exported_iron_bar", 0))
 	var src0 := w.coin_sources
+	var lux0 := int(w.stats.get("luxury_coins", 0))
 	b.caravan()
-	check(int(w.stats.get("exported_iron_bar", 0)) == exp0 and w.coin_sources == src0, "B7-014: traders with nothing in their tills buy nothing (no allowance refills them)")
+	var lux1 := int(w.stats.get("luxury_coins", 0)) - lux0         # DVW-B3-LUX: villagers' luxury purchases are the only coins that moved
+	check(int(w.stats.get("exported_iron_bar", 0)) == exp0 and w.coin_sources == src0 - lux1, "B7-014: traders with nothing in their tills buy nothing (no allowance refills them)")
 	# a till for two bars is shared by two smiths, not given to the first
 	var each := maxi(1, roundi(GameData.value("iron_bar") * 0.8))
 	w.regions.fund_only("higham", 2 * each)

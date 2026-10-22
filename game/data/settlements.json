@@ -1,5 +1,6 @@
 {
  "format": "mml-offmap-settlements/1",
+ "_luxury_note": "DVW-B3-LUX (owner 2026-10-23, 'luxury imports, costly caravan goods (spices, fine cloth, jewellery) bought for status, the coins leaving with the caravan'): the market town Wulstead and the rich abbey town Higham-on-the-Way hold luxuries in their traders' stock from the start (GAME EXPANSION and provisional; lore basis BTWO-C14-P002, the chapman's booth of 'fine cloth plumbed with the seal of the greatest of the cities; and silk of Babylon, and spices of the hot burning islands, and wonders of the silversmith's and the goldsmith's fashioning', and BONE-C3-P031, Higham's 'no better market betwixt this and Babylon'). They come from beyond the map, are part of the settlement's opening books like any stock and are not made, restocked or wanted by the settlement: what the village buys leaves the trader's stock for good, its coins stay in the trader's till.",
  "_note": "Expansion 18 SET-C-SIM / SET-C-FIVE (owner 2026-10-23, Q18-3, Q18-4, ECON-P1.3): the five off-map settlements, each a simulated economy 'just like this one' at lighter detail (real households with members, purses and pantries; a manor or council treasury; businesses with their own tills, stocks and workers), stepped once a day by Regions/OffMapSettlement without walking anyone. The PLACES are lore (docs/world/B_GAZETTEER.md; docs/expansion18/SETTLEMENTS.md cites paragraph ids and labels each claim); the trades, deposits, sizes and every number below are GAME EXPANSION and agent proposals (provisional). Money enters a settlement only through trade with the village or another settlement and leaves the same way; nothing is created.",
  "tiles_per_mile": 12,
  "rules": {
@@ -59,7 +60,7 @@
    "id": "wulstead", "name": "Wulstead", "kind": "market town", "miles": 20, "x": 18,
    "government": {"name": "the mayor and council", "officials": 3, "coins": 320},
    "trades": {"farmer": 5, "herder": 2, "forester": 2, "sawyer": 2, "tanner": 2, "cook": 3, "weaver": 1, "healer": 1, "merchant": 2, "official": 3},
-   "start": {"merchant": {"wheat_seed": 8, "carrot_seed": 8, "potato_seed": 4, "herb_seed": 4, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2, "linen_bandage": 4, "herbal_poultice": 3}},
+   "start": {"merchant": {"wheat_seed": 8, "carrot_seed": 8, "potato_seed": 4, "herb_seed": 4, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2, "linen_bandage": 4, "herbal_poultice": 3, "spice": 12, "fine_cloth": 8, "jewellery": 3}},
    "tills": {"merchant": 300},
    "horses": 3,
    "industries": ["trade", "carpentry", "tanning", "farming", "forestry"]
@@ -86,7 +87,7 @@
    "id": "higham", "name": "Higham-on-the-Way", "kind": "abbey town", "miles": 60, "x": 6,
    "government": {"name": "the Abbot's reeve and the burgesses", "officials": 3, "coins": 520},
    "trades": {"farmer": 8, "herder": 3, "forester": 2, "sawyer": 2, "mason": 2, "smith": 1, "tanner": 2, "cook": 3, "weaver": 2, "healer": 1, "merchant": 3, "official": 3},
-   "start": {"mason": {"stone": 40}, "smith": {"iron_ore": 30, "coal": 20, "plank": 8}, "merchant": {"wheat_seed": 8, "carrot_seed": 8, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2, "linen_bandage": 4, "healing_tonic": 3}},
+   "start": {"mason": {"stone": 40}, "smith": {"iron_ore": 30, "coal": 20, "plank": 8}, "merchant": {"wheat_seed": 8, "carrot_seed": 8, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2, "linen_bandage": 4, "healing_tonic": 3, "spice": 20, "fine_cloth": 12, "jewellery": 8}},
    "tills": {"merchant": 360},
    "horses": 2,
    "industries": ["trade", "masonry", "smithing", "tanning", "carpentry", "farming", "forestry"]

@@ -472,6 +472,24 @@
       "value": 9,
       "category": "crafted"
     },
+    "spice": {
+      "name": "Spices",
+      "type": "resource",
+      "value": 14,
+      "category": "raw"
+    },
+    "fine_cloth": {
+      "name": "Fine cloth",
+      "type": "resource",
+      "value": 30,
+      "category": "crafted"
+    },
+    "jewellery": {
+      "name": "Jewellery",
+      "type": "resource",
+      "value": 60,
+      "category": "crafted"
+    },
     "cart_wheel": {
       "name": "Cart wheel",
       "type": "resource",

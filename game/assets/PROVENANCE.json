@@ -898,6 +898,13 @@
    "sha256": "e56e0c4a01e30e5f3c7e35afc3a7aab7bde4f95de4d23ad76aa16ac9da89bdcf"
   },
   {
+   "file": "assets/icons/fine_cloth.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Textile/Silk-Fabric-16.png",
+   "transform": "copied unchanged",
+   "sha256": "60bd2f513c2a95b0e88b200c2fb430f3b2f0cc2c90fd2ff587649e34146eb8c8"
+  },
+  {
    "file": "assets/icons/fireball.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Tools/Magic-Staff-05.png",
@@ -1157,6 +1164,13 @@
    "sha256": "16b91b174215899643714488cd2b8951dae8be62d1200889871cd0767f4e4e86"
   },
   {
+   "file": "assets/icons/spice.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herb-Bundle-04.png",
+   "transform": "copied unchanged",
+   "sha256": "31c214e2c5e6d8946d775905578e32daf41fe96c80c2eb501d0795f9d7d8b49c"
+  },
+  {
    "file": "assets/icons/spoil.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Rocks-02.png",
@@ -1323,6 +1337,13 @@
    "member": "16x16 Jewelry RPG Icons/Rings/Ring-16.png",
    "transform": "copied unchanged",
    "sha256": "3c8d9b32670b936946127003e8dc54e4eff218610784fc157fd92295b7bf8c0a"
+  },
+  {
+   "file": "assets/icons/jewellery.png",
+   "source": "16x16 Jewelry RPG Icons.zip",
+   "member": "16x16 Jewelry RPG Icons/Necklaces/Necklace-28.png",
+   "transform": "copied unchanged",
+   "sha256": "b3304b3c2d832898b3a60e96499ab7bbe78202542081c6b596d3b5c575f46b04"
   },
   {
    "file": "assets/tiles/cozyfarm-tiles.png",
