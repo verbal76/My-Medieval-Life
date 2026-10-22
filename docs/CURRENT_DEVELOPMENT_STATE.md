@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `027d742` (2026-10-23) | Build 18 integration; + migration, settlement taxes and the SET-A/B/C/WDR-002 close-out audit; 30-day conservation on 1daa61f running |
+| `wip/build18` | `84bf5f0` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -38,11 +38,11 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
+| PL1-10 (+ ECON-P3 trade-counter tills) | business worker (Sonnet subagent) | `wip/b18-business` | `wip/build18` 84bf5f0 | attendants at workshop stations, produce stocked and sold, stall display, shops in leased houses (B18-DP-01) |
+| WDR-012-C | competition worker (Sonnet subagent) | `wip/b18-competition` | `wip/build18` 84bf5f0 | specialization, hiring competition, relocation (B18-DP-08) |
 | STONE-02, STONE-03, STONE-04, STONE-06, X18-STONECUT | stone worker (Sonnet subagent) | `wip/b18-stone` | `wip/build18` 027d742 | dressing 3->2+1 rubble, the iron chisel, the stonecutter trade (B18-DP-09/10) |
 | PL2-015 (audit), DVW-B3-CHAPEL (player volunteering) | farming worker (Sonnet subagent) | `wip/b18-farming` | `wip/build18` 027d742 | retained vs deferred farming features with later-build records; the player on the church field (B18-DP-04, DP-12) |
 | SET-D | settlement-development worker (Sonnet subagent) | `wip/b18-setd` | `wip/build18` 027d742 | trades open and close by existing rules (B18-DP-05) |
-| SET-A, SET-B | capability-wiring worker (Sonnet subagent) | `wip/b18-capwire` | `wip/build18` 027d742 | maintain the per-industry settlement capability profile daily and save it (X18-CAPCOMP) |
-| ECON-P3 | household-money worker (Sonnet subagent) | `wip/b18-econp3` | `wip/build18` a2ea741 | business and household money separate (shop tills) |
 | X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 
 On their reports:
@@ -75,5 +75,4 @@ Every open decision is in `docs/requirements/views/DECISIONS.md`. The decision p
 
 ## Waiting (sequenced)
 
-- PL1-10 completion (B18-DP-01) and WDR-012-C (B18-DP-08): after the ECON-P3 merge (same business and wage code).
 - REL18 release runs (365 days per seed, 100-day read), REG-EVAL-01, WDR-004-C and SET-C verification: on the final Build 18 code.

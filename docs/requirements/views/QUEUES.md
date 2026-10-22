@@ -2,15 +2,13 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (15)
+## Workers and task branches (14)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| ECON-P3 | 18 | IN DEVELOPMENT | household-money worker (Sonnet subagent, started 2026-10-23) | wip/b18-econp3 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| PL1-10 | 18 | IN DEVELOPMENT | business worker (Sonnet subagent, started 2026-10-23) | wip/b18-business |
 | PL2-015 | 18 | IN DEVELOPMENT | farming worker (Sonnet subagent, started 2026-10-23) | wip/b18-farming |
-| SET-A | 18 | IN DEVELOPMENT | capability-wiring worker (Sonnet subagent, started 2026-10-23) | wip/b18-capwire |
-| SET-B | 18 | IN DEVELOPMENT | capability-wiring worker (Sonnet subagent, started 2026-10-23) | wip/b18-capwire |
 | SET-D | 18 | IN DEVELOPMENT | settlement-development worker (Sonnet subagent, started 2026-10-23) | wip/b18-setd |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
@@ -19,10 +17,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | STONE-03 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 | STONE-04 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 | STONE-06 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
+| WDR-012-C | 18 | IN DEVELOPMENT | competition worker (Sonnet subagent, started 2026-10-23) | wip/b18-competition |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 | X18-STONECUT | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 
-## Implemented but not tested (45)
+## Implemented but not tested (43)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -48,7 +47,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | OWN-28 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PERF-01 | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | PL1-07 | 20+ | PARTIALLY IMPLEMENTED |  |
-| PL1-10 | 18 | PARTIALLY IMPLEMENTED | Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation |
 | PL1-11 | owner decision | PARTIALLY IMPLEMENTED | stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11) |
 | PL1-13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-008 | 18 | INTEGRATED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |
@@ -62,7 +60,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WDR-004-C | 18 | PARTIALLY IMPLEMENTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |
 | WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
-| WDR-012-C | 18 | PARTIALLY IMPLEMENTED | Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08) |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-015-C | 20+ | PARTIALLY IMPLEMENTED |  |
 | WDR-018-C | unassigned | PARTIALLY IMPLEMENTED | compliance audit against the rule's verification scenario (human review) |

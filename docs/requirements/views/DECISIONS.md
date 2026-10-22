@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 33 |
+| OPEN | 34 |
 | APPROVED | 140 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -19,11 +19,12 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | OPEN | no |  | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 
-## Build 18: combined release (tracks A, B, C): open, reopened or provisional (5)
+## Build 18: combined release (tracks A, B, C): open, reopened or provisional (6)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
+| B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |

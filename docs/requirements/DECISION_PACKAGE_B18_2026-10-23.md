@@ -158,6 +158,13 @@ Answer in any form, e.g. "DP-01 recommended, DP-05 alternative B, DP-07 recommen
 4. **Alternatives:** (A) the tavernkeeper or cook buys herbs or tonics from the sage; (B) record the sage as a deliberate exception in `docs/systems/material_exceptions.json` (healers serve people, not trades).
 5. **Unblocks:** WDR-002-C.
 
+### B18-DP-16 · ECON-P3 scope: "quotes follow money, stock days, market hire wages" (added 2026-10-23)
+1. **Intent:** the owner's answer (`docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md`): "Business and household money separate: a shop has its own till, the owner pays themselves from it, and may choose to move money". Built and merged (749c7df).
+2. **Issue:** the ECON-P3 record's title also carries P3.2-P3.4 from an agent proposal (`docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` lines 183-187): prices quoted from the buyer's money, stock targets in days of sales, and hire wages from market quotes (an employer share of 0.35). The owner's answer did not mention them.
+3. **Recommendation:** treat them as unapproved proposals: split them out of ECON-P3 into proposal records (Build 20 living economy, where wages and market behaviour are your open decisions OD-LE-02/03), and close ECON-P3 on the separation of money.
+4. **Alternative:** (A) approve them for Build 18 (larger market and balance changes; M-L, and a fresh round of economic runs).
+5. **Unblocks:** ECON-P3's closure.
+
 ## C. Other owner-level items for Build 18
 
 ### B18-DP-11 · CHAPEL-R5 Chapel artwork before release
