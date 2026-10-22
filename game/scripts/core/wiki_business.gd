@@ -29,6 +29,7 @@ static func add_pages(w: Wiki) -> void:
 	var cost_text := ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))
 	w.add_page("guide:market_stall", "How do I build and run a market stall?", "guides", [
 		Wiki.p("Anyone can build a market stall of their own: you, and the village's households too. It costs %s from your pack and no rent; instead the manor takes %d%% of what it sells." % [cost_text, pct]),
+		Wiki.p("The village's own merchants face the same prices you do: a stall that sells more cheaply among many rivals earns less. A merchant whose household cannot live on the stall may move to an empty stall of the same kind where its goods should fetch clearly more, and one that still cannot get by gives up the trade and leaves the stall empty for the manor to let again."),
 		Wiki.bullets([
 			"Build: carry %s, stand outdoors on clear ground facing up and press Use: \"Build a market stall here\". The ground must be open (no road, tree, plant, field, pen or someone else's land) and at least 3 tiles from another stall; the cell you stand on is where buyers come." % cost_text,
 			"Stock: press Use at the stall (\"Manage your market stall\") and Put up goods from your pack. They are in the stall now, not in your pack; Take back returns them.",

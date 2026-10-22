@@ -561,7 +561,8 @@ func _sample(start: Dictionary) -> Dictionary:
 			if n.doing == "lost":
 				lost += 1
 	s.work = {"adults": adults, "with_job": with_job, "with_workplace": with_place, "unemployed": adults - with_job,
-		"lost": lost, "job_changes": int(_st("job_changes"))}
+		"lost": lost, "job_changes": int(_st("job_changes")),
+		"spec_switches": int(_st("spec_switches")), "wage_offers_raised": int(_st("wage_offers_raised")), "wage_offers_eased": int(_st("wage_offers_eased")), "stall_relocations": int(_st("stall_relocations"))}
 	# money
 	var cash := []
 	for h in w.households.size():
