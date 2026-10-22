@@ -95,6 +95,9 @@ var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
 var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP part 1): hours worked by industry, a record only; optional save key
+var settlement_caps := {}     # SET-A/B: the village's maintained capability history (SettlementProfile; saved under SettlementSave.KEY, optional)
+var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
+var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
@@ -214,6 +217,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	discovery = Discovery.create(self)  # MIN-D: the mining capability the settlers start with (derived, no rng draw)
 	couriers = CourierService.create_live(self)     # REG-COURIER-01: a booth for each of the five settlements; the village's opens at the first dawn
 	couriers.daily()
+	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
 	note("Day 1 begins in the village.")
 
 
@@ -432,6 +436,7 @@ func _new_day() -> void:
 		t = _prof("daily: life (ages, deaths, partners, births)", t)
 	mine_works.dawn()                  # MIN-F2: supports and ladders wear; excavations too weakly held may cave in
 	discovery.dawn()                   # MIN-D: the settlement's mining capability, from what the village has this morning
+	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the capability profile, maintained daily
 	brain.dawn()
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
@@ -4062,7 +4067,16 @@ func to_dict() -> Dictionary:
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.debts.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.debts.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+
+
+func _settlement_section() -> Dictionary:
+	var out := {}
+	if settlement_foreign != null:
+		out[SettlementSave.KEY] = settlement_foreign
+	else:
+		SettlementProfile.attach(out, settlement_caps, day())
+	return out
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -4273,6 +4287,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	pits.load_dict(d.get("pits", {}))                # MIN-E: saves before it have no pits
 	discovery = Discovery.create(self)
 	discovery.load_dict(d.get("discovery", {}))      # MIN-D: saves before it have nothing dug; levels from the world
+	var sp := SettlementProfile.extract(d)           # SET-A: optional section; absent, the history starts at the first dawn
+	settlement_caps = sp.state
+	settlement_foreign = sp.foreign
 	if int(d.get("save_version", 1)) == 7:
 		quests.drop_manor_quarry()                   # version 7's single manor job gives way to the job board
 	_move_plots_to_map(m)
@@ -4293,6 +4310,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
+	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: an old save derives its profile here; a saved history carries on
 	_unstick()
 
 

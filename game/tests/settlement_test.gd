@@ -440,6 +440,8 @@ func _fresh(s: int) -> World:
 func test_save_section() -> void:
 	var w := _fresh(2)
 	var save := w.to_dict()
+	check(save.has(SettlementSave.KEY), "the live world saves the section (SET-A: SettlementProfile)")
+	save.erase(SettlementSave.KEY)
 	var st := SettlementSave.extract(save)
 	check(st.capabilities.is_empty() and st.regions.is_empty() and str(st.format) == SettlementSave.FORMAT,
 		"a save without the section (every save before Expansion 18) gives the default settlement state")

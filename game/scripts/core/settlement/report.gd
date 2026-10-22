@@ -44,6 +44,7 @@ static func village(w: World, mining: MiningCapabilityAdapter = null) -> Diction
 		"capabilities": cap.levels, "blocked": cap.blocked, "mining_source": str(facts.external.mining.source),
 		"transport": facts.transport, "structures": facts.structures,
 		"workforce": workforce(w),
+		"profile": w.settlement_profile,       # SET-B: the profile World maintains each dawn (SettlementProfile), with effective values
 	}
 
 
