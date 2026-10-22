@@ -44,6 +44,13 @@
    "sha256": "57584df85ad2020ebfda7810ace8130de8021a6a198435581cb0b9b871f3cc5b"
   },
   {
+   "file": "assets/characters/layers/clothes/metal-armour.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/clothes/metal-armour.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "c119efb120231bc99fcef8f10445dfd8d29edb03abdf01663379fc47507f6cec"
+  },
+  {
    "file": "assets/characters/layers/hair/f1.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/hair/f1.png",
@@ -217,6 +224,13 @@
    "member": "assets/eyelashes/n3.png",
    "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
    "sha256": "b2adc0f4f670ff8eb3696203d10fa29cf619ea131889b0516c63b0ba15fd0025"
+  },
+  {
+   "file": "assets/characters/layers/headwear/novice-helm.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/headwear/novice-helm.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "215256052e6edcf20d190ebb70b4bc75b792c588194a766bbc2824528befdc32"
   },
   {
    "file": "assets/characters/layers/weapon-overlay/weapon-overlay.png",

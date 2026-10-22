@@ -668,7 +668,7 @@ func _systems() -> void:
 		links(["sys:death_causes", "sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
 	sys.call("appearance", "Your appearance", [
 		p("When you start a new game you choose how you look: your skin, hair style and hair colour, a beard or none, eye colour, eyelashes, plain clothes or a tunic and their colour, and leather boots or bare feet. Randomize picks a whole new look; the arrows beside each feature step through its choices, and the figure beside them shows you from the front and three sides."),
-		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. Your look is kept in your save."),
+		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. Iron armour and the iron helmet show on your figure while you wear them (the armour over your clothes, the helmet over your hair) and your own look returns when you take them off; leather armour and the leather cap have no picture and change nothing you see. Your look itself is kept in your save."),
 		links(["sys:inheritance", "sys:saving"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
@@ -698,7 +698,7 @@ func _not_yet() -> void:
 		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built, fit it with equipment and hire an attendant (see the guides). Not built yet: attendants and hired workers who craft at the shop's stations from its stock, shops in houses you only rent from a neighbour, a stall display shown over the stall, and trading skill perks on your sales."],
 		"pack_rows": ["Opening the pack's locked rows", "The second and third rows of every pack tab are to be bought from a tailor, in order: the second row for %d coins, then the third for %d, each opening that row in all eight tabs at once. No tailor works in the village yet, so the rows stay locked." % [int(GameData.b("tailor").pack_rows[0]), int(GameData.b("tailor").pack_rows[1])]],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
-		"looks_more": ["Armour you can see, and a barber", "Armour and helmets protect you but do not yet show on your figure, and there is no barber to change your hair once you have begun."],
+		"looks_more": ["A barber", "There is no barber to change your hair once you have begun. Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
 		"farm_more": ["Draught animals, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself (see the farming guides), but there are no horses or oxen to pull a plough, no roofed coops or shelters, no watering or weather, no traps for rabbits, no animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:
