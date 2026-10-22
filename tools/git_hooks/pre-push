@@ -1,16 +1,34 @@
 #!/bin/sh
 # Refuse to delete or force-push the staging branch (owner rule: never force-push or delete
 # staging/my-medieval-life). Installed by: git config core.hooksPath tools/git_hooks
+# REQ-CTRL-01 (owner, 2026-10-23): the requirements register is edited on staging only; on any other branch a push may
+# not change it to a version that staging has never had (sync from staging instead).
 zero=0000000000000000000000000000000000000000
+reg=docs/requirements/requirements.json
 while read local_ref local_sha remote_ref remote_sha; do
-  [ "$remote_ref" = "refs/heads/staging/my-medieval-life" ] || continue
+  if [ "$remote_ref" != "refs/heads/staging/my-medieval-life" ]; then
+    [ "$local_sha" = "$zero" ] && continue
+    new=$(git rev-parse -q --verify "$local_sha:$reg" 2>/dev/null) || continue
+    old=""
+    [ "$remote_sha" != "$zero" ] && old=$(git rev-parse -q --verify "$remote_sha:$reg" 2>/dev/null)
+    [ "$new" = "$old" ] && continue
+    git fetch -q origin staging/my-medieval-life 2>/dev/null
+    found=$(git log --format=%H origin/staging/my-medieval-life -- "$reg" | while read c; do
+         [ "$(git rev-parse -q --verify "$c:$reg" 2>/dev/null)" = "$new" ] && { echo yes; break; }; done)
+    if [ "$found" != "yes" ]; then
+      echo "pre-push: $remote_ref changes the requirements register to a version staging never had." >&2
+      echo "pre-push: edit the register on staging/my-medieval-life only, then copy staging's file here (docs/requirements/SCHEMA.md)." >&2
+      exit 1
+    fi
+    continue
+  fi
   if [ "$local_sha" = "$zero" ]; then
     echo "pre-push: refusing to delete staging/my-medieval-life" >&2; exit 1
   fi
   if [ "$remote_sha" != "$zero" ] && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
     echo "pre-push: refusing a non-fast-forward (force) push to staging/my-medieval-life" >&2; exit 1
   fi
-  # no approved requirement may disappear or close without a record (owner, 2026-10-19)
+  # no approved requirement or decision may disappear or change without a record (owner, 2026-10-19 and 2026-10-23)
   if [ -f tools/check_requirements.py ]; then
     against=$remote_sha
     [ "$remote_sha" = "$zero" ] && against=$local_sha

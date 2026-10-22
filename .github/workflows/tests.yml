@@ -9,7 +9,8 @@ name: Tests
 on:
   push:
     branches: [staging/my-medieval-life]
-    paths: ["game/**", "tools/**", "tests/**", "data/**", "docs/SYSTEM_INTERACTION_MANIFEST.md", ".github/workflows/tests.yml"]
+    paths: ["game/**", "tools/**", "tests/**", "data/**", "docs/SYSTEM_INTERACTION_MANIFEST.md", ".github/workflows/tests.yml",
+            "!tools/check_requirements.py", "!tools/requirements_*.py", "!tests/test_requirements.py", "!tools/git_hooks/**"]   # register-only changes: requirements.yml
   workflow_dispatch:
 
 permissions:
