@@ -1956,8 +1956,10 @@ func nearest_deposit(from: Vector2i, ores: Array, level := 0) -> Dictionary:
 	return best
 
 
+## A field's ground: the tilled-soil edge set whatever its state; its plants are drawn over it by CropView
+## (VIS-CROP-01), so every field reads the same way and only the crop on it shows how far it has grown.
 func _field_tiles(f: Dictionary) -> void:
-	var base: int = map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[f.state]]
+	var base: int = map.data.tiles.field.tilled
 	var cols := int(map.data.atlases[0].columns)
 	for j in int(f.h):
 		for i in int(f.w):

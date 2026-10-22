@@ -7664,7 +7664,7 @@
     "tiles"
    ],
    "status": "integrated",
-   "used_for": "Cows, pigs, sheep, chickens, rabbits (with baby sheets), farm produce icons, the inventory window, farm tiles; seed packets as the crop seed icons and (SEED-02) the wild flower seed (yellow-flower packet) and, standing in for the red and blue berry cuttings, the red and blue berry-cluster packets (no pack has a cutting or sprig).",
+   "used_for": "Cows, pigs, sheep, chickens, rabbits (with baby sheets), farm produce icons, the inventory window, farm tiles; seed packets as the crop seed icons and (SEED-02) the wild flower seed (yellow-flower packet) and, standing in for the red and blue berry cuttings, the red and blue berry-cluster packets (no pack has a cutting or sprig); the field plants by growth stage for wheat, carrots, potatoes and herbs, and wheat stubble cut from the ripe wheat (farming/crops.png, VIS-CROP-01); the animal sheets are imported with a 1 px gutter round each frame (VIS-ANIMAL-01).",
    "scale": "16-24 px animals, 1:1",
    "scan": [
     {
@@ -7768,6 +7768,7 @@
     "assets/icons/wool.png",
     "assets/icons/wool_cloth.png",
     "assets/tiles/cozyfarm-tiles.png",
+    "assets/tiles/crops.png",
     "assets/ui/inventory_panel.png",
     "assets/ui/inventory_tabs.png",
     "assets/ui/tab_all.png"
@@ -7980,7 +7981,7 @@
     "icons"
    ],
    "status": "integrated",
-   "used_for": "Most item icons, including the cart parts.",
+   "used_for": "Most item icons, including the cart parts; the HUD food-bar drumstick (Food/Fowl-04, UI-HUNGER-01).",
    "scale": "16 px icons",
    "scan": [
     {
@@ -8071,6 +8072,7 @@
     "assets/markers/skill.png",
     "assets/markers/tool.png",
     "assets/markers/wood.png",
+    "assets/ui/hud_hunger.png",
     "assets/ui/tab_journal.png"
    ]
   },

@@ -11,6 +11,7 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/characters/guard_NN.png
     game/assets/icons/<item>.png                     16x16 Survival RPG Icons.zip, one icon per item
     game/assets/tiles/cozyfarm-tiles.png             CozyFarm_full_version.zip (fences, gates)
+    game/assets/tiles/crops.png                      CozyFarm_full_version.zip (field plants by stage, CROP_ROWS)
     game/assets/animals/<species>.png                CozyFarm_full_version.zip (livestock, bunnies) and
                                                      PunyMonsters.zip (boars)
     game/assets/characters/player_<s><n>_<outfit>.png the Build 7-17 player looks (game/data/appearances.json,
@@ -22,7 +23,8 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
     game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
-    game/assets/ui/inventory_*.png, tab_*.png        CozyFarm_full_version.zip (the pack window, its tabs and
+    game/assets/ui/hud_<name>.png                    16x16 Survival RPG Icons.zip (HUD status icons, HUD_ICONS)
+    game/assets/ui/inventory_*.png, tab_*.png       CozyFarm_full_version.zip (the pack window, its tabs and
                                                      bag icon) and tab icons from the Assorted and Survival packs
     game/assets/prompts/<name>.png                   kenney_input-prompts_1.5.zip (keys, pad buttons, touch)
     game/assets/trees/*, icons/oak_sapling.png, icons/pine_sapling.png
@@ -39,7 +41,7 @@ Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E
 SW), columns as listed in tools/puny_chargen.py ANIMS.
 
 Cozy Farm animal sheets are 4 frames x 5 rows (down, up, left, right, sleep), square frames of the size
-in the pack's info.txt; Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
+in the pack's info.txt, each given a 1 px transparent gutter (cells 2 px larger, VIS-ANIMAL-01); Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
 
 The flat UI pack is Illustrator files; they are rasterised with pdftoppm (poppler-utils), which
 must be installed.
@@ -98,6 +100,11 @@ UI_SKILL_ICONS = {
     "skill_magic": ("icons_set_2.ai", 9, 3), "skill_trading": ("icons_set_2.ai", 6, 0),
     "skill_stealth": ("icons_set_2.ai", 4, 3), "journal": ("icons_set_2.ai", 9, 6),
 }
+# pixel-art status icons for the HUD from the survival pack, copied unchanged (16 px, the pack's own dark outline).
+# UI-HUNGER-01 (owner, B18-DIR Part 7): a roast drumstick for the food bar, in place of the bread item's butter-block
+# placeholder. The pack's "Chicken" icons are whole roast birds; its "Fowl" icons are the drumsticks, and Fowl-04
+# (golden roast) reads clearest on the dark status box.
+HUD_ICONS = {"hud_hunger": "Food/Fowl-04"}
 UI_GLYPH_BROWN = (111, 74, 44)    # the same wood brown as the buttons
 UI_GLYPH_EDGE = (246, 236, 214)   # the interface's cream text colour
 UI_TILE = 128          # icon tiles are saved at this size
@@ -115,6 +122,7 @@ PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
 PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
                                                                 "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"
+COZY_GUTTER = 1   # transparent px around each Cozy Farm animal frame (VIS-ANIMAL-01; see _gutter)
 # MiniFolks forest animals (B14, LYASeeK; a loose folder, the owner's .7z extracted byte for byte): skin -> the
 # outlined side-view sheet (32 px frames, the bird's 16 px; one row per animation, facing right)
 FOREST_DIR = "MiniFolks Forest Animals"
@@ -204,6 +212,16 @@ COZY_ITEMS = {
     "flower_seed": ("full version/farming/seeds.png", 1, 5),
     "red_berry_cutting": ("full version/farming/seeds.png", 0, 3), "blue_berry_cutting": ("full version/farming/seeds.png", 5, 3),
 }
+# VIS-CROP-01 (owner, B18-DIR Part 9): the plants drawn over every field cell, one 16 px plant per cell, from Cozy
+# Farm's crop sheet (farming/crops.png: one crop a row, seeds then the growth stages left to right; the rows match the
+# seed packets used as the seed icons). game crop -> (sheet row, columns for the four growing quarters, the ripe column).
+# The herb (it yields wild flowers) is the small yellow flower, the crop the herb seed packet's colour; its row has one
+# stage fewer.
+CROP_SHEET = "full version/farming/crops.png"
+CROP_ROWS = {"wheat": (9, [1, 2, 3, 4], 5), "carrot": (0, [1, 2, 3, 4], 5), "potato": (5, [1, 2, 3, 4], 5),
+             "herb": (36, [1, 1, 2, 3], 4)}
+CROP_ORDER = ["wheat", "carrot", "potato", "herb"]      # the rows of game/assets/tiles/crops.png (CropView.ROWS)
+STUBBLE_FROM = 11      # a cut wheat field's stubble: the ripe wheat's pixels from this row down (the stalks' feet)
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
 JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05"}
@@ -302,6 +320,24 @@ def _import_character_layers(record, style, zip_name):
         "worn_layers": {},
     }
     (REPO / "game" / "data" / "character_style.json").write_text(json.dumps(data, indent=1) + "\n")
+
+
+def _gutter(sheet, cols, rows, gutter):
+    """A copy of an unpadded frame grid with every frame centred in a cell 2 x `gutter` px larger. VIS-ANIMAL-01:
+    Cozy Farm's animal frames touch their cells' edges (feet on the bottom edge, noses and tails at the sides), so a
+    frame drawn at a fractional zoom or a snapped sub-pixel position could sample its neighbour's edge row: the
+    stray strips seen over pigs, sheep and chickens. With transparent gutters nothing of a neighbour is in reach.
+    The frames' pixels and their centres are unchanged, so AnimalSprite's grid counts and feet offset still hold."""
+    from PIL import Image
+    fw, fh = sheet.width // cols, sheet.height // rows
+    assert fw * cols == sheet.width and fh * rows == sheet.height, f"{sheet.size} is not a {cols} x {rows} grid"
+    sheet = sheet.convert("RGBA")
+    out = Image.new("RGBA", ((fw + 2 * gutter) * cols, (fh + 2 * gutter) * rows))
+    for r in range(rows):
+        for c in range(cols):
+            frame = sheet.crop((c * fw, r * fh, (c + 1) * fw, (r + 1) * fh))
+            out.paste(frame, (c * (fw + 2 * gutter) + gutter, r * (fh + 2 * gutter) + gutter))
+    return out
 
 
 def sha(path):
@@ -503,6 +539,31 @@ def _seal(img):
     return img
 
 
+def _import_crops(record):
+    """The field plants sheet (CropView): a row per crop of CROP_ORDER, 16 px cells: columns 0-3 the plant a quarter,
+    half, three quarters and nearly grown, column 4 ripe, and on the wheat row column 5 the stubble of a cut field
+    (the ripe wheat cut to its lowest rows: no pack has stubble)."""
+    from PIL import Image
+    sheet = AssetZip(COZY_ZIP).image(CROP_SHEET)
+    out = Image.new("RGBA", (6 * 16, len(CROP_ORDER) * 16))
+
+    def cell(row, col):
+        return sheet.crop((col * 16, row * 16, col * 16 + 16, row * 16 + 16))
+    parts = []
+    for r, crop in enumerate(CROP_ORDER):
+        row, growing, ripe = CROP_ROWS[crop]
+        for k, col in enumerate(growing + [ripe]):
+            out.paste(cell(row, col), (k * 16, r * 16))
+        parts.append(f"{crop}: row {row}, columns {growing} growing, {ripe} ripe")
+    stubble = cell(CROP_ROWS["wheat"][0], CROP_ROWS["wheat"][2])
+    stubble.paste(Image.new("RGBA", (16, STUBBLE_FROM)), (0, 0))
+    out.paste(stubble, (5 * 16, 0))
+    dest = OUT / "tiles" / "crops.png"
+    out.save(dest)
+    record(dest, COZY_ZIP, CROP_SHEET, "16 px cells rearranged, a row per crop (" + "; ".join(parts) + "); the wheat "
+           f"row's column 5 is its ripe plant with the rows above {STUBBLE_FROM} cleared (stubble)")
+
+
 def _import_inventory(record, survival):
     """The pack window from Cozy Farm's inventory sheet: the panel with flat tabs (8 px of empty
     headroom on top, where a raised tab reaches), a strip of the 8 tab rows with each tab raised in
@@ -633,10 +694,17 @@ def main():
     member = "full version/tiles/tiles.png"
     (tiles / "cozyfarm-tiles.png").write_bytes(AssetZip(COZY_ZIP).read(member))
     record(tiles / "cozyfarm-tiles.png", COZY_ZIP, member, "copied unchanged")
+    _import_crops(record)
     animals = OUT / "animals"
     animals.mkdir(parents=True, exist_ok=True)
     for species, (zname, member) in sorted(ANIMALS.items()):
         dest = animals / f"{species}.png"
+        if zname == COZY_ZIP:
+            sheet = _gutter(AssetZip(zname).image(member), 4, 5, COZY_GUTTER)
+            sheet.save(dest)
+            record(dest, zname, member, f"each frame of the 4 x 5 grid moved into a cell {2 * COZY_GUTTER} px larger, centred "
+                   f"({COZY_GUTTER} px of transparent gutter on every side), pixels unchanged")
+            continue
         dest.write_bytes(AssetZip(zname).read(member))
         record(dest, zname, member, "copied unchanged")
     for skin, name in sorted(FOREST.items()):
@@ -714,6 +782,11 @@ def main():
     prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",
                  "transform": "generated: solid dark brown 432 px background for the Android adaptive icon", "sha256": sha(dest)})
     _import_ui(record)
+    for name, rel in sorted(HUD_ICONS.items()):
+        member = f"16x16 Survival RPG Icons/{rel}.png"
+        dest = OUT / "ui" / f"{name}.png"
+        dest.write_bytes(iz.read(member))
+        record(dest, ICON_ZIP, member, "copied unchanged (a HUD status icon)")
     _import_markers(record, iz)
     _import_inventory(record, iz)
     prompts = OUT / "prompts"

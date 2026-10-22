@@ -59,6 +59,7 @@ func _init() -> void:
 	test_polish_work_looks()
 	test_polish_game_leftovers()
 	test_field_edges()
+	test_door_view()
 	test_work_has_purpose()
 	test_no_child_pickpocket()
 	test_credits()
@@ -3634,10 +3635,66 @@ func test_doorways() -> void:
 	check(cut_st.is_empty(), "every workstation can be reached %s" % [cut_st])
 
 
+## VIS-DOOR-01: nobody walks under a closed door. Every wooden doorway is found with the cell outside it; no tile
+## of the layers drawn over the characters is left on a doorway; a door opens (dark) while someone steps through it,
+## stays open while several pass and for a moment after, then shows closed again; someone going into a building
+## whose inside is hidden darkens more the further in, and is back to normal outside; and all of it only reads the
+## world: nobody's position, path or the map's walkable cells change.
+func test_door_view() -> void:
+	var w := new_world()
+	var view := MapView.new()
+	var above := Node2D.new()
+	view.build(w.map, above, null)
+	var dv := DoorView.new()
+	view.add_child(dv)
+	dv.setup(w, view, null)
+	check(dv.doors.size() >= 20, "the wooden doorways are found (%d)" % dv.doors.size())
+	var left := []
+	for d in dv.doors:
+		for layer in view.above_layers:
+			if view.tile_value(layer, d.cell) >= 0:
+				left.append(d.cell)
+		check(not w.map.is_solid(d.step) and not w.map.is_solid(d.cell) and w.place_of(Vector2(d.step) + Vector2(0.5, 0.5)) != d.building,
+			"%s's doorway %s opens onto %s, outside and walkable" % [d.building, d.cell, d.step])
+	check(left.is_empty(), "no door is drawn over the people in its doorway (%s)" % [left])
+	var d: Dictionary = dv.doors[0]
+	var outer: Vector2 = Vector2(d.step) + Vector2(0.5, 0.5) + (d.out as Vector2) * 0.5
+	var at := func(depth: float) -> Vector2: return outer - (d.out as Vector2) * depth
+	check(is_equal_approx(DoorView.depth(d, at.call(1.0)), 1.0) and DoorView.depth(d, at.call(1.0) + Vector2(d.out.y, d.out.x) * 2.0) < 0.0, "depth: 1 on the threshold; off to the side is not in the doorway")
+	var npc_pos := []
+	for n: NPC in w.npcs:
+		npc_pos.append(n.pos)
+	var solid0 := w.map.is_solid(d.cell)
+	var s := Sprite2D.new()
+	dv.update([[at.call(0.3), s]], 0.1)
+	check(not dv.is_open(d.cell) and s.self_modulate == Color.WHITE, "someone only on the step: the door stays closed, they look as ever")
+	dv.update([[at.call(0.8), s]], 0.1)
+	var half: Color = s.self_modulate
+	dv.update([[at.call(0.95), s]], 0.1)
+	check(dv.is_open(d.cell) and half.v < 1.0 and s.self_modulate.v < half.v and s.self_modulate.a < half.a, "stepping in: the door opens dark and they darken and fade the further in")
+	var s2 := Sprite2D.new()
+	dv.update([[at.call(1.5), null], [at.call(0.7), s2]], 0.1)
+	check(dv.is_open(d.cell), "one inside, another following: the door stays open")
+	dv.update([[at.call(-1.0), s], [at.call(-1.0), s2]], 0.1)
+	check(dv.is_open(d.cell) and s.self_modulate == Color.WHITE and s2.self_modulate == Color.WHITE, "both back outside: they look normal, the door is not shut on them at once")
+	for k in 5:
+		dv.update([], 0.1)
+	check(not dv.is_open(d.cell), "nobody there for %.1f s: the door shows closed again" % DoorView.HOLD)
+	var same := w.map.is_solid(d.cell) == solid0
+	for i in w.npcs.size():
+		same = same and w.npcs[i].pos == npc_pos[i]
+	check(same, "the doorways change nothing in the world: positions and walkable cells as they were")
+	s.free()
+	s2.free()
+	view.free()
+	above.free()
+
+
 ## Crops end cleanly inside every field (B8-017: the right and bottom edges showed half plants because
 ## one left-edge tile was drawn on every cell). No field art lies outside a field rectangle, each
-## field cell draws from its state's 4x4 edge set, and the edge cells use the edge tiles: for the
-## village's fields and for fields of other sizes, in every state.
+## field cell draws its ground from the tilled-soil 4x4 edge set whatever its state (VIS-CROP-01: the
+## plants are drawn over it by CropView), and the edge cells use the edge tiles: for the village's
+## fields and for fields of other sizes, in every state.
 func test_field_edges() -> void:
 	var w := new_world()
 	var m: VillageMap = w.map
@@ -3661,8 +3718,12 @@ func test_field_edges() -> void:
 			if not rects.any(func(r: Rect2i): return r.has_point(cell)):
 				stray += 1
 	check(stray == 0 and painted == rects.reduce(func(a, r: Rect2i): return a + r.size.x * r.size.y, 0), "generated field art lies exactly on the field rectangles (%d stray of %d)" % [stray, painted])
+	var ground := {}                    # tile id -> true: the tilled-soil set every field cell's ground is drawn from
+	for row in 4:
+		for col in 4:
+			ground[int(m.data.tiles.field.tilled) + row * cols + col] = true
 	for state in ["tilled", "growing", "ripe"]:
-		var base := int(m.data.tiles.field[state])
+		var base := int(m.data.tiles.field.tilled)
 		var cells := {}
 		var on_tile := func(cell: Vector2i, kind: String, value: int):
 			if kind == "field":
@@ -3678,7 +3739,7 @@ func test_field_edges() -> void:
 					var got := int(cells.get(cell, -1))
 					var col := (got - base) % cols
 					var row := (got - base) / cols
-					check(sets.get(got, "") == state, "%s %s cell %s draws from the %s set" % [state, f.id, cell, state])
+					check(ground.has(got), "%s %s cell %s draws its ground from the tilled-soil set" % [state, f.id, cell])
 					check((i == 0) == (col == 1) and (i == int(f.w) - 1) == (col == 3) and (j == 0) == (row == 0) and (j == int(f.h) - 1) == (row == 2), "%s %s cell %s: edge tiles exactly on the edges" % [state, f.id, cell])
 	# any size: one cell, a strip, a block
 	for size in [Vector2i(1, 1), Vector2i(1, 5), Vector2i(7, 1), Vector2i(2, 2), Vector2i(3, 3), Vector2i(11, 6)]:

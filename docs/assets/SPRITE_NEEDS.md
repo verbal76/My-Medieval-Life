@@ -127,9 +127,9 @@ Every item icon is 16 × 16, one frame. Icons appear in:
 
 | # | id | What it is | Where the game uses it | Drawn with now | Why it is missing or weak | Size needed | Frames |
 |---|---|---|---|---|---|---|---|
-| 42 | `crop_carrot` | A carrot field, growing and ripe | `farming.gd` `tile_for`; `village.json` `tiles.field` | **The wheat field tiles**: growing 1747 (olive) and ripe 2627 (yellow), as 4 × 4 edge sets | **Missing:** every crop looks like wheat. Craftpix crop stages are an open opportunity (`packs.json`). | Two 4 × 4 edge sets of 16 px tiles (growing, ripe): 128 × 64. A single 16 × 16 plant per state, laid over the tilled-soil set, would also work. | 1 per state |
-| 43 | `crop_potato` | A potato field | as above | the wheat tiles | as above | as above | as above |
-| 44 | `crop_herb` | A herb bed (it yields wild flowers) | as above | the wheat tiles | as above | as above | as above |
+| 42 | `crop_carrot` | A carrot field, growing and ripe | `CropView` (`game/scripts/view/crop_view.gd`); `game/assets/tiles/crops.png` | **Resolved (VIS-CROP-01, Build 18):** each sown cell draws its crop's own 16 px plant by stage (Cozy Farm `farming/crops.png`) over the shared tilled-soil set | Was: every crop looked like wheat (the wheat field tiles growing 1747, ripe 2627). | None now | - |
+| 43 | `crop_potato` | A potato field | as above | **Resolved (VIS-CROP-01)**, as above | as above | None now | - |
+| 44 | `crop_herb` | A herb bed (it yields wild flowers) | as above | **Resolved (VIS-CROP-01)**: Cozy Farm's small yellow flower, four stages | as above | None now | - |
 | 45 | `loot_pile` | A dropped pile or a carcass's meat | `main.gd` `_sync_loot`, `_loot_icon` | The first item's 16 px icon (raw meat for a kill), or coins | **Weak:** an inventory icon stands on the ground. There is no carcass or pile picture. | 16 × 16 | 1 |
 | 46 | `small_boulder` | A small boulder (stone) | `map_view.gd` `_add_small_boulder` | The boulder tile 1964 shrunk 16 → 10 px with nearest-neighbour filtering | **Weak:** a non-integer reduction, so pixels drop unevenly (scaling standard section 1). | 16 × 16 cell, boulder about 10 px, on the cell's bottom | 1 |
 

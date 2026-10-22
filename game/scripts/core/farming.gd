@@ -313,11 +313,11 @@ func building_refusal(p: Dictionary) -> String:
 
 
 # ---------------------------------------------------------------- drawing --------------------
-## The tile of a field cell: the pack's tilled, growing or ripe tile, closed at the edges of the field's
-## shape (a cell with no field cell beside it on a side gets that side's edge tile).
+## The ground tile of a field cell: the tilled-soil set whatever the cell's state, closed at the edges of the
+## field's shape (a cell with no field cell beside it on a side gets that side's edge tile). The crop is drawn over
+## it by CropView (VIS-CROP-01): one ground for every state, so sown and unsown cells join cleanly.
 func tile_for(c: Vector2i) -> int:
-	var cell: Dictionary = cells[c]
-	var base: int = w.map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[cell.state]]
+	var base: int = w.map.data.tiles.field.tilled
 	var cols := int(w.map.data.atlases[0].columns)
 	var l := cells.has(c + Vector2i.LEFT)
 	var r := cells.has(c + Vector2i.RIGHT)

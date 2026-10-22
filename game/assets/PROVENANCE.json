@@ -1318,6 +1318,13 @@
    "sha256": "cd3c0a91c3466ea54061f5fb008bb77aa8dc257e0d027f3d0505dc4e35b8f49e"
   },
   {
+   "file": "assets/tiles/crops.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/crops.png",
+   "transform": "16 px cells rearranged, a row per crop (wheat: row 9, columns [1, 2, 3, 4] growing, 5 ripe; carrot: row 0, columns [1, 2, 3, 4] growing, 5 ripe; potato: row 5, columns [1, 2, 3, 4] growing, 5 ripe; herb: row 36, columns [1, 1, 2, 3] growing, 4 ripe); the wheat row's column 5 is its ripe plant with the rows above 11 cleared (stubble)",
+   "sha256": "9c6163688d245958bb2c062ea8f80a45de86c9c53ae7baab080b8c3af5fbc5ea"
+  },
+  {
    "file": "assets/animals/boar.png",
    "source": "PunyMonsters.zip",
    "member": "PunyMonsters/Brown-Boar-32x32.png",
@@ -1335,113 +1342,113 @@
    "file": "assets/animals/chicken.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken animation.png",
-   "transform": "copied unchanged",
-   "sha256": "b7d2b1ea354375cc539942d502ae1969d58be2af51e63c57db94c7fee76dc65a"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "890c88fee1a92d5b323b0f8f08738565aa500bb7176205157998e7e388f7d0b5"
   },
   {
    "file": "assets/animals/chicken_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "9112cf5bfc68cf2943af8cc6ce130b8d9bc31fd1b180f8d81639e488593aab88"
   },
   {
    "file": "assets/animals/chicken_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_brown animation.png",
-   "transform": "copied unchanged",
-   "sha256": "b9555dff39a77435af43e9f2b23fb504d89a687230f6bb2edaf9258098fc89f8"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "10054fb6fbca289174b43cf7aee8d051277878634a8e9cb2d4ebb0131ad891ff"
   },
   {
    "file": "assets/animals/chicken_brown_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "9112cf5bfc68cf2943af8cc6ce130b8d9bc31fd1b180f8d81639e488593aab88"
   },
   {
    "file": "assets/animals/cow.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow animation.png",
-   "transform": "copied unchanged",
-   "sha256": "f1100c1f866d0fefdeac466c506b7addeec5c50fecfc96d78e05c79bf9a01692"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "b5fe72467e4edbdd66c6636904519ea59922cb4d584b80e0864a8c7bb88f3ad5"
   },
   {
    "file": "assets/animals/cow_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "b88b52d37f053ed7b0e9cf00191d87be14659d14182a643ba20466b9978f0e75"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "d405a0537580343705c1f95c5cc32a4275763ef90269324511e9cebe83f74dc6"
   },
   {
    "file": "assets/animals/cow_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_brown animation.png",
-   "transform": "copied unchanged",
-   "sha256": "7897a910749e63d8bb82238a4c903b60eb3798dfdc096034f9110b29e31e3bbb"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "377c0edee7b02024c2f3c3a198c1bd4e1a305926135301e5200388368bd35e0a"
   },
   {
    "file": "assets/animals/cow_brown_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_baby_brown animation.png",
-   "transform": "copied unchanged",
-   "sha256": "6fdfd0608932b28b68170d3c6e9d0a24ff5caf6375d9171620f4a581b35ad41d"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "0b1aa9094bbe4e5ed5351284442a1ed0680c455525f8eda73d5cde987af47d38"
   },
   {
    "file": "assets/animals/pig.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/pig animation.png",
-   "transform": "copied unchanged",
-   "sha256": "dc6df6749d46ef78224ef56f129af3e6a50fdb3f91a56cefb44f1ccab1345851"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "af81bbf16d5ef358f8c33f5bbd6b8c32a224aa99b3271afc47e9f5ee0880f16f"
   },
   {
    "file": "assets/animals/pig_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/pig_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "459c910e7d1d8a8e3f855efb51d7a700b00d4ec5bf68ce935f41017e0c31acc0"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "14258a4f4b2b81a6730ed572985bd397ef4427e3faf901f16a188f294e56f7bc"
   },
   {
    "file": "assets/animals/rabbit.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_animations.png",
-   "transform": "copied unchanged",
-   "sha256": "d0cf0b0dc7ed9c0fcf6e43b0278a4c1da49612bcceb9f5d89472c137430eab71"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "947000a8e3828022b60514fcd22876a25976f12d637c27fc0ee34d92e211103a"
   },
   {
    "file": "assets/animals/rabbit_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "f2daf1d0fd386171377b0585c8495d7dc03cb5c9f7c9ae281b2e4e8098e37120"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "352f77f04df28400332c47bb017b3252d9c8322ea1c9d3d172bb33c5aa0b7aee"
   },
   {
    "file": "assets/animals/rabbit_grey.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_grey animation.png",
-   "transform": "copied unchanged",
-   "sha256": "9d147c615ec0feb4497c09d84f360fff3a764a4116a3919fccdb0ae4232b5b91"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "f286c6fff23cf4030719bb208c006f2fe27362c45b81e59ef28161d7bfac3018"
   },
   {
    "file": "assets/animals/rabbit_grey_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_baby_grey animation.png",
-   "transform": "copied unchanged",
-   "sha256": "9d20fce6eddb7e42ea0455e48a8144583691e4bf7877734e8aabafbc13fb7043"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "bca3c77ce7b312031eec17d8b3d4685d0577a5ee7df5c1d8ce67ee5245e409f0"
   },
   {
    "file": "assets/animals/sheep.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/sheep animation.png",
-   "transform": "copied unchanged",
-   "sha256": "aa423f2e063ba97e7c526ff0d269ccf7c0ba3eb2a9cce7ea7212e7707c365b0c"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "79ba80272e6e3892f768fe61d5c186b026e013b0697df009ac77829fa01091c9"
   },
   {
    "file": "assets/animals/sheep_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/sheep_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "970740a455db94f22e3d32381c3ea69ea181c97235277840afb63253ca43e092"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "38a98830165006d9e131217f445918420f5f18643d1e612b01dae5b7c85b4458"
   },
   {
    "file": "assets/animals/mini_bear.png",
@@ -1897,6 +1904,13 @@
    "member": "Flat_game_UI_set_3.ai",
    "transform": "rasterised at 100 dpi with pdftoppm; a 40 px square from a blank tile of the dark LEVELS window (the pack's button colour), recoloured to wood brown (111, 74, 44)",
    "sha256": "5d50e5678aed025b80534c89cf15d6aa1e7b9119eb0ea8653562033db7fb362f"
+  },
+  {
+   "file": "assets/ui/hud_hunger.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Food/Fowl-04.png",
+   "transform": "copied unchanged (a HUD status icon)",
+   "sha256": "1d8aa9db1506e911346b975ba2ac7590974c1a46acefb4861f3a22ab11c1bf89"
   },
   {
    "file": "assets/markers/combat.png",
