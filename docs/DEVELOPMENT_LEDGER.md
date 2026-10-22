@@ -11,11 +11,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 68 |
+| APPROVED — NOT STARTED | 67 |
 | ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 47 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 48 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
@@ -182,7 +182,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| B14-11 | Animal Farm pack: the horse and farm animals | approved | APPROVED — NOT STARTED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
+| B14-11 | Animal Farm pack: the horse and farm animals | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED |  |  |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED |  |  |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED |  |  |
@@ -422,6 +422,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B13-13 | Touch sprint | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B14-11 | Animal Farm pack: the horse and farm animals | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B7-001 | Starting coins | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B7-005 | Earning money discoverable; "Trade with" | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -466,13 +467,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (68)
+## APPROVED — NOT STARTED (67)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
-| B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | docs/directives/2026-10-23_owner_answers_bandits.md |  | after BANDIT-Q |  |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
@@ -645,7 +645,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (47)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (48)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -655,6 +655,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B13-13 | Touch sprint | docs/DEVELOPMENT_LEDGER.md (audit inventory row 188) |  |  |  |
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | docs/DECISIONS.md (owner, Build 13 playtest) | `60a365b`; start_test |  |  |
 | B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | docs/DECISIONS.md (owner, Build 14) | `512f1bc`, `f9fb853`, `8ae29c2`; home_test::test_carts_in_play |  |  |
+| B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853`, `449cf73`; horse_test 54/0, run_tests 3587/0, start 506/0, play 39/0, farming 224/0, farm_plots 104/0, farm_place 25/0, wildlife 61/0, inventory18 88/0, conservation 8/0, wiki passed, Python 105 OK; screenshots looked at |  | implement the caravan's plough horse |
 | B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | docs/directives/2026-10-19_android_controller.md | `1458da8`, `c984b4f`; start_test |  |  |
 | B7-001 | Starting coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 42) |  |  |  |
 | B7-005 | Earning money discoverable; "Trade with" | docs/release/BUILD_7_ISSUES.md (audit inventory row 46) |  |  |  |

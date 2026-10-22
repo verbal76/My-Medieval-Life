@@ -2009,7 +2009,7 @@
    "id": "B14-11",
    "title": "Animal Farm pack: the horse and farm animals",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "A plough horse available for purchase from the visiting caravan.",
    "description": "Animal Farm pack: the horse and farm animals",
    "source": "owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan",
@@ -2018,12 +2018,13 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "horse_test 54/0, run_tests 3587/0, start 506/0, play 39/0, farming 224/0, farm_plots 104/0, farm_place 25/0, wildlife 61/0, inventory18 88/0, conservation 8/0, wiki passed, Python 105 OK; screenshots looked at",
    "playtest": [],
    "branch": "",
    "commits": [
     "a91b8f1",
-    "f9fb853"
+    "f9fb853",
+    "449cf73"
    ],
    "parent": null,
    "depends_on": [],
@@ -2051,6 +2052,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 18",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 449cf73; tests",
+     "why": "plough horse from the caravan for 120 coins, 1 s / 10 stamina tilling with the hand plough, eats 2 wheat a meal in its own pen (HORSE-Q); merged into wip/build18; the caravan's wagon is a stand-in sprite"
     }
    ],
    "acceptance_derived": true,
