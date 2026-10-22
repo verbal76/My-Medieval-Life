@@ -28763,7 +28763,7 @@
    "id": "X18-CAPCOMP",
    "title": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "Maintain separate workforce capability and effective settlement capability values for each industry, on the established 0–10 scale. ... Facility shortages must not erase accumulated worker experience. Pay and output modifiers use the effective capability level.",
    "description": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
    "source": "docs/directives/2026-10-22_q18_11b_decision.md",
@@ -28794,7 +28794,7 @@
    "wiki": [],
    "next_action": "Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/expansion18-preparation",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -28822,6 +28822,11 @@
      "date": "2026-10-22",
      "change": "commit 4115b48; commit da4d610; tests",
      "why": "Compatibility with production and CON-01/02 verified (contracts call the hook for felling time only; wages, prices, quantities, deadlines untouched); effective level = experience level within a facility limit, computed never stored (no limits approved, so effective = experience); workforce report lists all seven industries. Pending owner decisions D1-D9 in docs/expansion18/DECISIONS_PENDING.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "PARTIALLY IMPLEMENTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "D1 approved (docs/directives/2026-10-22_x18_d1_starting_experience.md): implementing one-time seeding from recorded skills, farming from PAR-01A history, on the Expansion 18 branch; hook stays off"
     }
    ],
    "target_build": "18"
@@ -28889,6 +28894,48 @@
     }
    ],
    "target_build": "18"
+  },
+  {
+   "id": "X18-D1",
+   "title": "Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Starting experience days = industry experience cap × recorded skill level ÷ 10. For farming, derive the starting level consistently from the existing PAR-01A working-history mechanism rather than introducing an unrelated random system.",
+   "description": "Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history)",
+   "source": "docs/directives/2026-10-22_x18_d1_starting_experience.md",
+   "approval": "Owner decision 2026-10-22: Option 2, farming sub-option (a)",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_x18_d1_starting_experience.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "Answer recorded"
+    }
+   ],
+   "owner_answer": "Option 2 with farming (a), 2026-10-22 (docs/directives/2026-10-22_x18_d1_starting_experience.md)"
   },
   {
    "id": "X18-Q12",
