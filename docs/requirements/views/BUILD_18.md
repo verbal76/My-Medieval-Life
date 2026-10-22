@@ -9,7 +9,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 80 |
-| Integrated | 52 of 80 (65%) |
+| Integrated | 53 of 80 (66%) |
 | Automated tests passed | 51 of 80 (64%) |
 | Integration verified | 49 of 80 (61%) |
 | Gameplay verified | 0 of 80 (0%) |
@@ -18,7 +18,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 79 |
 | Open owner decisions (blocking) | 5 (0) |
 
-## In development (worker assigned) (12)
+## In development (worker assigned) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -31,11 +31,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
 | STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
 | STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
-| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | OWNER APPROVED | IN DEVELOPMENT | 18 | TARGETED TESTS PASSED | Parity fixes (player as lender/seller; player debts to the heir like villagers); values in balance.json credit provisional; gameplay check; known: Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; Settlement traders do not barter or lend |  | L |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |  | M |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | M |
 
-## Integrated, awaiting gameplay or owner verification (51)
+## Integrated, awaiting gameplay or owner verification (52)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -73,6 +72,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
+| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | OWNER APPROVED | INTEGRATED | 18 | TARGETED TESTS PASSED | Gameplay check; provisional values in balance.json credit (refuse_days 3 new); an heir inherits debts exactly as a villager heir does (record, never seized); known: Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; Settlement traders do not barter or lend |  | verification only |
 | TRADE-UI-02 | Contract proposal's answer shown in view | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |

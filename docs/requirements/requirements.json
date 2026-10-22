@@ -43309,12 +43309,14 @@
     "Barter deals conserve goods both ways; credit only from parties who trust the buyer; debts recorded, saved, repaid; default lowers standing; no coins created"
    ],
    "implementation": "",
-   "tests": "On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0; Parity merge f44171f: credit_test 98 (player asked, player lends and barters, player creditor repay/default, player debts to the heir), relations 79, contracts 154, migration 92, save_transfer 21, conservation_test 8, run_tests 3591, 0 failures",
    "playtest": [],
-   "branch": "wip/b18-creditparity",
+   "branch": "",
    "commits": [
     "d765440",
-    "a2ea741"
+    "a2ea741",
+    "4c01181",
+    "f44171f"
    ],
    "parent": "SET-C",
    "depends_on": [
@@ -43369,6 +43371,11 @@
      "date": "2026-10-22",
      "change": "verification_status: INTEGRATION VERIFIED -> TARGETED TESTS PASSED",
      "why": "In development for the parity fixes; integration verification waits for that merge"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; assigned_worker: credit-parity worker (Sonnet subagent, started 2026-10-23) -> ; branch: wip/b18-creditparity -> ; tests: On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0 -> On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0; Parity merge f44171f: credit_test 98 (player asked, player lends and barters, player creditor repay/default, player debts to the heir), relations 79, contracts 154, migration 92, save_transfer 21, conservation_test 8, run_tests 3591, 0 failures; test_commit: a2ea741 -> f44171f; commits + 4c01181; commits + f44171f; remaining_work",
+     "why": "Parity fixes merged (f44171f)"
     }
    ],
    "target_build": "18",
@@ -43377,19 +43384,19 @@
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "L",
-   "assigned_worker": "credit-parity worker (Sonnet subagent, started 2026-10-23)",
-   "test_commit": "a2ea741",
+   "assigned_worker": "",
+   "test_commit": "f44171f",
    "known_defects": [
     "Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir",
     "Settlement traders do not barter or lend"
    ],
-   "remaining_work": "Parity fixes (player as lender/seller; player debts to the heir like villagers); values in balance.json credit provisional; gameplay check"
+   "remaining_work": "Gameplay check; provisional values in balance.json credit (refuse_days 3 new); an heir inherits debts exactly as a villager heir does (record, never seized)"
   },
   {
    "id": "TRADE-UI-02",

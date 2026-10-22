@@ -518,7 +518,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | 18 | OWNER APPROVED | IN DEVELOPMENT | TARGETED TESTS PASSED | NOT READY | OPEN |
+| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | TRADE-UI-02 | Contract proposal's answer shown in view | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | TREAS-01 | The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |

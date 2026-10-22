@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (16)
+## Workers and task branches (15)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -19,7 +19,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | STONE-03 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 | STONE-04 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 | STONE-06 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
-| TRADE-CREDIT | 18 | IN DEVELOPMENT | credit-parity worker (Sonnet subagent, started 2026-10-23) | wip/b18-creditparity |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 | X18-STONECUT | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 

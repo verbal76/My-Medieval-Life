@@ -453,7 +453,7 @@ None.
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | approved | IN DEVELOPMENT / TARGETED TESTS PASSED / OPEN | 18 |
+| TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | TRADE-UI-02 | Contract proposal's answer shown in view | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | TREAS-01 | The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

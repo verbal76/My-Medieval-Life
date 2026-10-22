@@ -43,7 +43,6 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | SET-D | settlement-development worker (Sonnet subagent) | `wip/b18-setd` | `wip/build18` 027d742 | trades open and close by existing rules (B18-DP-05) |
 | SET-A, SET-B | capability-wiring worker (Sonnet subagent) | `wip/b18-capwire` | `wip/build18` 027d742 | maintain the per-industry settlement capability profile daily and save it (X18-CAPCOMP) |
 | ECON-P3 | household-money worker (Sonnet subagent) | `wip/b18-econp3` | `wip/build18` a2ea741 | business and household money separate (shop tills) |
-| TRADE-CREDIT (parity) | credit-parity worker (Sonnet subagent) | `wip/b18-creditparity` | `wip/build18` a2ea741 | the player lends and barters as seller; the player's debts pass to the heir |
 | X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 
 On their reports:
