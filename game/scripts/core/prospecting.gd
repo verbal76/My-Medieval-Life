@@ -133,7 +133,7 @@ static func _open_cells(m: VillageMap) -> PackedByteArray:
 		shut.call(c.x, c.y)
 	for c in d.road:
 		shut.call(int(c[0]), int(c[1]))
-	for key in ["buildings", "plots", "fields", "pens"]:
+	for key in ["buildings", "plots", "legacy_plots", "fields", "pens"]:
 		for e in d.get(key, []):
 			for y in range(int(e.y) - 1, int(e.y) + int(e.h) + 1):
 				for x in range(int(e.x) - 1, int(e.x) + int(e.w) + 1):
@@ -165,7 +165,7 @@ static func wild_cells(m: VillageMap) -> PackedByteArray:
 		for y in range(y0 - mg, y0 + h + mg):
 			for x in range(x0 - mg, x0 + w + mg):
 				shut.call(x, y)
-	for key in ["buildings", "plots", "fields", "pens"]:
+	for key in ["buildings", "plots", "legacy_plots", "fields", "pens"]:
 		for e in d.get(key, []):
 			ring.call(int(e.x), int(e.y), int(e.w), int(e.h), int(fp.get("structures", 0)))
 	for c in d.road:

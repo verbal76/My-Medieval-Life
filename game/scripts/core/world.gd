@@ -2237,6 +2237,7 @@ var interiors := {}                # building id -> interior
 var place_ids: Array = []          # building ids, indexed by place_idx / roof_idx
 var place_idx := PackedInt32Array()  # cell -> index of the building whose area holds it, -1 outdoors
 var roof_idx := PackedInt32Array()   # cell -> index of the building whose roof covers it, -1 none
+var doorways: Array = []           # ROOMS-18: the inner doorways between rooms of one property (Doorways.find), derived, never saved
 
 
 ## The interior a building has: its own from the map, or a built building's from its stamp (a
@@ -2320,8 +2321,12 @@ func index_interiors() -> void:
 	roof_idx.fill(-1)
 	var ids := buildings.keys()
 	ids.sort()
+	doorways = Doorways.find(self)
+	for dw: Dictionary in doorways:
+		for c: Vector2i in dw.cells:
+			map.set_solid(c, false)            # the gap in the shared wall is open ground (the wall's collision came with each room's stamp)
 	for id in ids:
-		var it := _with_loft(buildings[id], _with_chairs(buildings[id], interior_for(buildings[id])))
+		var it := Doorways.add_to(_with_loft(buildings[id], _with_chairs(buildings[id], interior_for(buildings[id]))), str(id), doorways)
 		if it.is_empty() or it.area.is_empty():
 			continue
 		interiors[id] = it
@@ -2357,6 +2362,11 @@ func reaches(from: Vector2, to: Vector2) -> bool:
 	var b := place_of(to)
 	if a != b:
 		var door_ok := false
+		for dw: Dictionary in doorways:      # an inner doorway joins two rooms: from its gap, or beside it, the other room is in reach
+			if [a, b].has(str(dw.a)) and [a, b].has(str(dw.b)):
+				for c: Vector2i in dw.cells:
+					if Vector2(c).distance_to(from) <= 1.8 or Vector2(c).distance_to(to) <= 1.8:
+						door_ok = true
 		for id in [a, b]:
 			if id != "" and buildings.has(id):
 				var dc := Vector2(building_door(id)) + Vector2(0.5, 0.5)
@@ -2481,6 +2491,8 @@ func stations_of(kind: String) -> Array:
 
 
 # ---------------------------------------------------------------- building -------------------
+## ROOMS-18 (village generator v8): a world made with the plots where v7 and older put them
+## (`legacy_plots`) keeps them there, owner, site, house and all; the new map's plots are for new worlds.
 ## Saves made before the village generator moved the building plots (they lay over houses b20-b22)
 ## keep the plots where they were. Move each plot to its place on the map, with its owner, its
 ## building site and the house built on it, and the player with them if they stood on it; the trees
@@ -2489,9 +2501,16 @@ func _move_plots_to_map(m: VillageMap) -> void:
 	var placed := {}
 	for mp in m.data.plots:
 		placed[mp.id] = mp
+	var legacy := {}                   # ROOMS-18 (generator v8): the plots v7 and older worlds were made with stay put
+	for lp in m.data.get("legacy_plots", []):
+		legacy[str(lp.id)] = lp
+	var moved := false
 	for p in plots:
 		var mp: Dictionary = placed.get(p.id, {})
 		if mp.is_empty() or (int(p.x) == int(mp.x) and int(p.y) == int(mp.y)):
+			continue
+		var lp: Dictionary = legacy.get(str(p.id), {})
+		if not lp.is_empty() and int(p.x) == int(lp.x) and int(p.y) == int(lp.y):
 			continue
 		var old := Rect2(float(p.x), float(p.y), float(p.w), float(p.h))
 		var shift := Vector2(int(mp.x) - int(p.x), int(mp.y) - int(p.y))
@@ -2506,6 +2525,9 @@ func _move_plots_to_map(m: VillageMap) -> void:
 		if old.has_point(player.pos):
 			player.pos += shift
 		note("The manor's surveyor marked %s out anew, at the forest edge north of the east houses." % p.id)
+		moved = true
+	if not moved:
+		return                         # nothing moved: every tree of the save stays (ROOMS-18: v7 worlds keep their plots and their woods)
 	var on_map := {}
 	for t in m.data.trees:
 		on_map[Vector2i(int(t.x), int(t.y))] = true

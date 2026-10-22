@@ -28,8 +28,19 @@ func _init() -> void:
 	test_modules()
 	test_rules()
 	test_save()
+	test_doorways()
+	test_plots()
+	test_old_plots()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## The floor of a room less the cells of its inner doorways (ROOMS-18: the one change a joined room makes to it).
+func _without_gaps(w: World, id: String) -> Array:
+	var gaps := {}
+	for c in w.interiors[id].get("inner", []):
+		gaps[Vector2i(int(c[0]), int(c[1]))] = true
+	return (w.interiors[id].floor as Array).filter(func(c): return not gaps.has(Vector2i(int(c[0]), int(c[1]))))
 
 
 ## Finish a site at once with the materials it needs.
@@ -106,7 +117,7 @@ func test_modules() -> void:
 	check(w.map.is_solid(Vector2i(int(m1.x), int(m1.y) + 4)) or w.map.is_solid(Vector2i(int(m1.x) + 1, int(m1.y) + 4)), "the shop has solid walls")
 	check(w.interiors.has(str(shop.id)) and w.place_of(Vector2(int(m1.x) + 4.5, int(m1.y) + 4.5)) == str(shop.id) and w.roof_over(Vector2(int(m1.x) + 4.5, int(m1.y) + 4.5)) == str(shop.id), "it has its own inside and its own roof")
 	# earlier investment is untouched
-	check(w.buildings.has("house_plot0") and w.buildings["house_plot0"] == house and w.map.is_solid(Vector2i(int(pl.x), int(pl.y) + 4)) == wall0 and w.interiors["house_plot0"].floor == floor0, "the house, its walls and its rooms are as they were")
+	check(w.buildings.has("house_plot0") and w.buildings["house_plot0"] == house and w.map.is_solid(Vector2i(int(pl.x), int(pl.y) + 4)) == wall0 and _without_gaps(w, "house_plot0") == floor0, "the house, its walls and its rooms are as they were (but for a doorway)")
 	check(w.property.rent_of(pl) == rent0 and w.tenant_of(pl) == World.PLAYER and w.tenant_of(m1) == "", "the house keeps its lease; the bought shop ground has none")
 	# the same on open ground (the survey plots are boxed in by roads and houses): a house on leased
 	# ground, then a kitchen (leased), living quarters and a storeroom
@@ -200,3 +211,138 @@ func test_save() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), old)
 	check(w3.property.estate_parcels(w3.plot(str(pl.id))).size() == 1 and w3.buildings.has(hid), "an older save without estates still loads, each parcel on its own")
+
+
+## ROOMS-18 (owner OD-05): a doorway is cut through the shared wall of two joined rooms, where nothing is in the way.
+func test_doorways() -> void:
+	var w := house_world()
+	var c: Construction = w.construction
+	var pl: Dictionary = w.plots[0]
+	check(w.doorways.is_empty(), "a lone house has no inner doorway")
+	var slot := c.find_module_slot("carpentry", pl, World.PLAYER)
+	check(slot.end.x == int(pl.x), "the room goes against the house's west wall, where a doorway can be cut (%s)" % str(slot))
+	var m1 := c.place("carpentry", slot, World.PLAYER, false, pl)
+	finish(w, m1)
+	check(w.doorways.size() == 1, "two joined rooms have one doorway (%d)" % w.doorways.size())
+	var dw: Dictionary = w.doorways[0]
+	var shop := "workshop_" + str(m1.id)
+	check(str(dw.a) == shop and str(dw.b) == "house_plot0", "it joins the shop and the house")
+	var ca: Vector2i = dw.cells[0]
+	var cb: Vector2i = dw.cells[1]
+	check(cb.x == ca.x + 1 and cb.y == ca.y and not w.map.is_solid(ca) and not w.map.is_solid(cb), "the gap is two open wall cells in a row, walkable")
+	check(w.map.is_solid(Vector2i(ca.x, ca.y + 1)) and w.map.is_solid(Vector2i(cb.x, cb.y - 1)), "the wall each side of the gap stays solid")
+	var inside_a: Vector2i = dw.inside[0]
+	var inside_b: Vector2i = dw.inside[1]
+	var path: Array = w.map.find_path(inside_a, inside_b)
+	check(not path.is_empty() and path.size() <= 5 and path.has(Vector2(ca)) and path.has(Vector2(cb)), "a person walks from one room into the other through the gap (%d steps)" % path.size())
+	check(w.place_of(Vector2(ca) + Vector2(0.5, 0.5)) == shop and w.place_of(Vector2(cb) + Vector2(0.5, 0.5)) == "house_plot0", "each wall cell is inside its own room, under its roof")
+	check(w.reaches(Vector2(inside_a) + Vector2(0.5, 0.5), Vector2(inside_b) + Vector2(0.5, 0.5)), "from the gap the other room is within reach")
+	check(w.interiors[shop].inner.size() == 1 and w.interiors["house_plot0"].inner.size() == 1, "each room lists its gap")
+	var seen := 0
+	for sp in w.interiors[shop].spots:
+		for k in ["at", "use"]:
+			seen += 1 if Vector2i(int(sp[k][0]), int(sp[k][1])) in [ca, inside_a] else 0
+	check(seen == 0, "no bed, chest or workbench stands in the gap or in front of it")
+	# nothing is drawn that is not in the stamps: the gap shows floor tiles the room already has
+	check(Doorways.WALL == 278 and (w.stamp_of(w.buildings[shop]).layers.below0 as Array).any(func(v): return int(v) == Doorways.WALL), "the wall tile it removes is the stamps' own side wall")
+	# the same on load: derived, never saved
+	var w2 := World.new()
+	var m := VillageMap.load_default()
+	w2.load_dict(m, JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.doorways.size() == 1 and not m.is_solid(ca) and not m.is_solid(cb) and not w2.map.find_path(inside_a, inside_b).is_empty(), "the doorway is there again after loading")
+	check(not JSON.stringify(w.to_dict()).contains("doorway"), "nothing about it is saved")
+	# a room against the house's east wall (its furniture lines it) gets no doorway; nothing earlier changes
+	var w3 := house_world()
+	var h3: Dictionary = w3.plots[0]
+	var east := Rect2i(int(h3.x) + 9, int(h3.y), 9, 10)
+	var m3 := w3.construction.place("smithy", east, World.PLAYER, false, h3)
+	if not m3.is_empty():
+		finish(w3, m3)
+		check(w3.doorways.is_empty() and w3.map.is_solid(Vector2i(int(h3.x) + 8, int(h3.y) + 5)), "a house's east wall is lined with furniture: no doorway there, the wall stands")
+	else:
+		check(true, "(no ground east of the house in this layout)")
+
+
+## ROOMS-18: the two survey plots lie on open ground with room for rooms on several sides.
+func test_plots() -> void:
+	var m := VillageMap.load_default()
+	var legacy: Array = m.data.legacy_plots
+	check(legacy.size() == 2 and int(legacy[0].x) == 90 and int(legacy[1].x) == 107, "the old plots are remembered (generator v7)")
+	var road := {}
+	for r in m.data.road:
+		road[Vector2i(int(r[0]), int(r[1]))] = true
+	for i in 2:
+		var w := new_world()
+		var pl: Dictionary = w.plots[i]
+		var rect := Rect2i(int(pl.x), int(pl.y), int(pl.w), int(pl.h))
+		var clear := true
+		for key in ["buildings", "fields", "pens"]:
+			for e in w.map.data[key]:
+				clear = clear and not Rect2i(int(e.x), int(e.y), int(e.w), int(e.h)).intersects(rect)
+		for y in range(rect.position.y, rect.end.y):
+			for x in range(rect.position.x, rect.end.x):
+				clear = clear and not road.has(Vector2i(x, y)) and not w.map.is_solid(Vector2i(x, y))
+		check(clear and rect.position.y >= 5, "plot%d lies on open ground (%s)" % [i, str(rect)])
+		check(not w.map.find_path(Vector2i(int(pl.door[0]), int(pl.door[1]) + 1), Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])).is_empty(), "its door step is reachable from the village")
+		w.player.coins = 3000
+		w.property.lease(pl, World.PLAYER)
+		w.start_site(pl, "house", World.PLAYER)
+		finish(w, pl)
+		var sides := {}
+		var size: Vector2i = w.construction.footprint("carpentry")
+		for dy in range(-size.y, int(pl.h) + 1):
+			for dx in [-size.x, int(pl.w)]:
+				var no := w.construction.can_place("carpentry", Rect2i(rect.position + Vector2i(dx, dy), size), World.PLAYER, pl)
+				if no == "" or no.begins_with("a tree"):
+					sides["w" if dx < 0 else "e"] = true
+		for dx in range(-size.x, int(pl.w) + 1):
+			for dy in [-size.y, int(pl.h)]:
+				var no := w.construction.can_place("carpentry", Rect2i(rect.position + Vector2i(dx, dy), size), World.PLAYER, pl)
+				if no == "" or no.begins_with("a tree"):
+					sides["n" if dy < 0 else "s"] = true
+		check(sides.size() >= 3, "plot%d: rooms can be added on %d sides (%s)" % [i, sides.size(), str(sides.keys())])
+
+
+## ROOMS-18: a world made with the plots where v7 put them keeps them (owner, house, site, trees and all).
+func test_old_plots() -> void:
+	var w := new_world()
+	var m0 := VillageMap.load_default()
+	var lp: Dictionary = m0.data.legacy_plots[0]
+	var trees0: int = w.trees.size()
+	w.player.coins = 3000
+	var pl: Dictionary = w.plots[0]
+	w.property.lease(pl, World.PLAYER)
+	w.start_site(pl, "house", World.PLAYER)
+	finish(w, pl)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	# an old save: its plot lies at v7's place, with the house built on it, the player inside, and a tree beside it
+	d.plots[0].x = int(lp.x)
+	d.plots[0].y = int(lp.y)
+	d.plots[0].door = [int(lp.door[0]), int(lp.door[1])]
+	d.buildings["house_plot0"].x = int(lp.x)
+	d.buildings["house_plot0"].y = int(lp.y)
+	d.buildings["house_plot0"].door = [int(lp.door[0]), int(lp.door[1])]
+	d.plots[1].x = int(m0.data.legacy_plots[1].x)
+	d.plots[1].y = int(m0.data.legacy_plots[1].y)
+	d.plots[1].door = [int(m0.data.legacy_plots[1].door[0]), int(m0.data.legacy_plots[1].door[1])]
+	d.player.pos = [float(lp.x) + 4.5, float(lp.y) + 5.5]
+	var near := {"x": int(m0.data.plots[0].x) + 2, "y": int(m0.data.plots[0].y) + 2, "trunk": 459, "top": 1562, "bottom": 1782, "state": "grown", "regrow": 0.0}
+	d.trees.append(near)
+	var n_trees: int = d.trees.size()
+	d = JSON.parse_string(JSON.stringify(d))          # as a file is read: numbers are floats
+	var w2 := World.new()
+	var m := VillageMap.load_default()
+	w2.load_dict(m, d)
+	var p2 := w2.plot("plot0")
+	check(int(p2.x) == int(lp.x) and int(p2.y) == int(lp.y) and w2.owner_of(p2) == World.MANOR and w2.tenant_of(p2) == World.PLAYER, "an old world's plot0 stays where it was, leased to the player")
+	check(w2.buildings["house_plot0"].x == int(lp.x) and w2.buildings["house_plot0"].door[1] == int(lp.door[1]) and w2.player.home == "house_plot0", "its house stays, and stays the player's home")
+	check(m.is_solid(Vector2i(int(lp.x), int(lp.y) + 4)) and w2.place_of(w2.player.pos) == "house_plot0", "its walls are solid and the player is still inside")
+	check(int(w2.plot("plot1").x) == int(m0.data.legacy_plots[1].x) and w2.property.for_sale(w2.plot("plot1")), "the unsold plot1 stays at its old place, for sale")
+	check(w2.trees.size() == n_trees and w2.trees.any(func(t): return int(t.x) == int(near.x) and int(t.y) == int(near.y)), "no tree of the old world is taken away (%d)" % w2.trees.size())
+	check(trees0 < n_trees, "(a new world has fewer trees round the new plots)")
+	check(not w2.log_lines.any(func(l): return str(l).contains("surveyor")), "nothing is said about a moved plot: none moved")
+	var saved := JSON.stringify(w2.to_dict())
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(saved))
+	var d3 := JSON.stringify(w3.to_dict())
+	check(d3 == saved, "and the old world's save is stable from then on")

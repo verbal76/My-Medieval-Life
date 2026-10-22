@@ -77,6 +77,14 @@ PLANTS = {2656: "flower", 2658: "flower", 2657: "flower", 2659: "flower", 2660: 
 PEOPLE_MIN = 126 * 220                       # rows 126+ hold the tiny people Shade drew into maps
 ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1964, "gold_ore": 1965}
 DEPLETED_ROCK = 1964
+# generator v8 (ROOMS-18): the two survey plots the manor sells. LEGACY_PLOTS are where v7 and older put them
+# (boxed in by the east connector and the south-east houses; a saved world keeps them); PLOTS are the open ground
+# of the north-east, each with a lane from its door step to the road. MODULE_ROOM is the ring of ground cleared of
+# trees round a plot: a module is 9 wide and 10 deep, so a room fits on every side.
+LEGACY_PLOTS = ((90, 20), (107, 20))
+PLOTS = ((73, 11), (91, 12))
+PLOT_LANES = (((77, 21), (77, 30), (68, 30)), ((95, 22), (95, 30)))
+MODULE_ROOM = 1
 STUMP = 459
 SAPLING = 4304
 # Field art is a 4x4 edge set per state, named by its top-left tile: columns are narrow / left / middle
@@ -629,13 +637,14 @@ class Village:
             for i in range(2):
                 self.field(64 + i * 13, 61 + j * 9, 11, 6)
         self.camp(104, 13)
-        self.plots(((90, 20), (107, 20)))
+        self.plots(LEGACY_PLOTS)         # laid first so every tree, boulder and plant stands as before (relay_plots moves them)
         E["woods"] = [{"id": "woods_w", "x": 1, "y": 1, "w": 28, "h": 22},
                       {"id": "woods_e", "x": 66, "y": 1, "w": 24, "h": 17}]
         E["spawns"]["player"] = [44, 53]
         self.place_trees()
         self.place_boulders()
         self.place_plants()
+        self.relay_plots()
         self.draw_roads()
         self.containers()
         self.interiors()
@@ -661,7 +670,6 @@ class Village:
             ((2, 71), (33, 71)), ((2, 85), (118, 85)),   # the west lane, the south lane
             ((88, 30), (88, 85)),                        # the east connector
             ((88, 30), (118, 30)), ((88, 43), (118, 43)), ((88, 71), (118, 71)),
-            ((94, 29), (94, 30)), ((111, 29), (111, 30)),   # the building plots' door steps
             ((31, 75), (62, 75)),                        # the pens' lane
             ((75, 57), (75, 85)),                        # between the fields
             ((62, 68), (88, 68)), ((62, 77), (88, 77)),
@@ -876,6 +884,34 @@ class Village:
         for i, (x, y) in enumerate(corners):
             self.ents["plots"].append({"id": f"plot{i}", "x": x, "y": y, "w": 9, "h": 10,
                                        "door": [x + 4, y + 9], "price": 60})
+
+    def relay_plots(self):
+        """Generator v8 (ROOMS-18, owner OD-05, 2026-10-23): the two survey plots lie on open ground (PLOTS) so
+        rooms can be added on several sides. Everything was generated with the old plots, so the trees,
+        boulders and wild plants of a world made before are exactly as they were; only what stands on the
+        new plots, their lanes and the MODULE_ROOM ring round them is taken away. The old plots stay in
+        `legacy_plots`: a saved world keeps its plots where they were (World._move_plots_to_map) and their
+        ground stays clear."""
+        E = self.ents
+        E["legacy_plots"] = [dict(p) for p in E["plots"]]
+        E["plots"] = []
+        self.plots(PLOTS)
+        room = set()
+        for p in E["plots"]:
+            room |= self.rect_cells(p["x"], p["y"], p["w"], p["h"], MODULE_ROOM)
+        for lane in PLOT_LANES:
+            for c in road_cells(*lane):
+                self.road.add(c)
+                room |= self.rect_cells(c[0], c[1], 1, 1, 1)
+        E["trees"] = [t for t in E["trees"] if (t["x"], t["y"]) not in room]
+        for (x, y) in sorted(room):
+            if 0 <= x < W and 0 <= y < H and self.get("below", 0, x, y) == tile_val(0, DEPLETED_ROCK):
+                self.put("below", 0, x, y, -1)               # a boulder
+        for (x, y, t) in self.plant_cells():
+            if (x, y) in room:
+                for i in range(6):
+                    if self.get("below", i, x, y) == t:
+                        self.put("below", i, x, y, -1)
 
     # ---- trees and plants --------------------------------------------------------------------------
     def rect_cells(self, x, y, w, h, grow=0):

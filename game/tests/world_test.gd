@@ -579,11 +579,17 @@ func _pl2_004() -> void:
 	check(pile.inv.count("meat") >= 1 and pile.inv.count("hide") >= 1 and int(pile.coins) == 0, "PL2-004: a boar leaves meat and a hide, no coins")
 	check(main._loot_at(spot) == pile.pos and main._loot_at(spot + Vector2(3, 0)) == Vector2.INF, "PL2-004: a tap on the pile finds it")
 	p.pos = spot + Vector2(0, 0.6)
+	var herd := []                     # the prompt is about the pile: any herd-mate standing beside it is set aside for the check
+	for o: Animal in w.fauna.animals.duplicate():
+		if o != boar and o.pos.distance_to(spot) < 4.0:
+			herd.append(o)
+			w.fauna.animals.erase(o)
 	main._find_target()
 	check(main.target.get("kind", "") == "loot" and str(main.target.label).contains("meat") and str(main.target.label).contains("hide"), "PL2-004: the prompt names what is there: \"%s\"" % main.target.get("label", ""))
 	var meat0 := p.inv.count("meat")
 	main.interact()
 	check(p.inv.count("meat") > meat0 and p.inv.has("hide") and not w.loot.has(pile), "PL2-004: taking it fills the pack and removes the pile")
+	w.fauna.animals.append_array(herd)
 	check(int(GameData.recipes.tan_leather.in.hide) == 1 and int(GameData.recipes.tan_leather.out.leather) == 1, "PL2-004: a hide is tanned to leather at the workbench")
 	w.loot.append({"pos": Vector2(5.5, 5.5), "inv": Inventory.from_dict({"items": {"meat": 2}}), "coins": 0, "from": "the wild boar", "t": w.minutes - 4.0 * 1440.0})
 	w.loot.append({"pos": Vector2(6.5, 5.5), "inv": Inventory.from_dict({"meat": 1}), "coins": 0, "from": "Somebody", "t": w.minutes - 4.0 * 1440.0})

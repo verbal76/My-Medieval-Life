@@ -160,7 +160,7 @@ func places() -> Array:
 	out.append(["Market", _centre(map.data.stalls) + Vector2(0, -1.5)])
 	out.append(["Fields", _centre(map.data.fields)])
 	out.append(["Animal pens", _centre(map.data.pens)])
-	out.append(["Plots for sale", _centre(map.data.plots) + Vector2(0, -6)])
+	out.append(["Plots for sale", _centre(main.world.plots.filter(func(q): return map.data.plots.any(func(mp): return str(mp.id) == str(q.id)))) + Vector2(0, -6)])   # the world's own plots: a saved world keeps its old ones (ROOMS-18)
 	return out
 
 

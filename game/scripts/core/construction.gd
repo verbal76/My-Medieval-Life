@@ -31,6 +31,7 @@ const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench an
 	"kitchen": "a stove for cooking and brewing", "apothecary": "a stove for tonics and poultices",
 	"storage": "a room that opens the family chest from here", "quarters": "more beds for the household",
 	"room": "two beds on a small piece of ground"}
+const DOORWAY_PREFERENCE := 6   # find_module_slot: ground where a doorway can be cut (Doorways) counts this much nearer (3 rows)
 const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
@@ -206,9 +207,17 @@ func find_module_slot(kind: String, anchor: Dictionary, ref: String) -> Rect2i:
 	var treed_d := 1 << 30
 	for q in w.property.estate_parcels(head):
 		var cands := []
+		var room := w.property.building_on(q)
+		var mine: Dictionary = w.map.data.stamps.get(stamp_name(kind), {})
 		for dy in range(-size.y, int(q.h) + 1, 1):
 			for dx in [-size.x, int(q.w)]:
-				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), absi(dy) * 2 + absi(dx) / 4])
+				var cost := absi(dy) * 2 + absi(dx) / 4
+				if World.is_built(room):        # ROOMS-18: ground where a doorway can be cut between the two rooms comes first
+					var y := Doorways.row_between(mine, int(q.y) + dy, w.stamp_of(room), int(room.y)) if dx < 0 \
+							else Doorways.row_between(w.stamp_of(room), int(room.y), mine, int(q.y) + dy)
+					if y >= 0:
+						cost -= DOORWAY_PREFERENCE
+				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), cost])
 		for dx in range(-size.x, int(q.w) + 1, 1):
 			for dy in [-size.y, int(q.h)]:
 				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), absi(dx) * 2 + absi(dy) / 4 + 3])

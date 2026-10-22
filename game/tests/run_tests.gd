@@ -1965,7 +1965,7 @@ func test_helpers() -> void:
 	var house := _player_house(w)
 	p.home = str(house.id)
 	p.coins = 400
-	var rect := _cleared(w, "smithy", Vector2i(80, 15))
+	var rect := _cleared(w, "smithy", _wood_spot(w, "smithy"))   # ground clear of the plots, wherever the layout puts it
 	var site := c.place("smithy", rect, World.PLAYER)
 	var cost: Dictionary = site.site.cost
 	for id in cost:
@@ -2627,7 +2627,7 @@ func test_save_round_trip() -> void:
 	lay.player.home = "house_plot0"
 	lay.player.plots = ["plot0"]
 	lay.player.pos = [98.5, 80.5]
-	lay.trees.append({"x": 91, "y": 23, "trunk": 459, "top": 1562, "bottom": 1782, "state": "grown", "regrow": 0.0})
+	lay.trees.append({"x": 75, "y": 13, "trunk": 459, "top": 1562, "bottom": 1782, "state": "grown", "regrow": 0.0})
 	var w8 := World.new()
 	var m8 := VillageMap.load_default()
 	w8.load_dict(m8, lay)
@@ -2638,7 +2638,7 @@ func test_save_round_trip() -> void:
 	check(int(h0.x) == int(mp0.x) and int(h0.y) == int(mp0.y) and int(h0.door[1]) == int(mp0.door[1]) and w8.player.home == "house_plot0", "the house built on it moves with it and stays the player's home")
 	check(Rect2(float(p0.x), float(p0.y), 9.0, 10.0).has_point(w8.player.pos), "the player standing in it moves with it")
 	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.property.for_sale(w8.plot("plot1")), "an unsold plot moves too (the manor's, for sale)")
-	check(not w8.trees.any(func(t): return int(t.x) == 91 and int(t.y) == 23), "trees the generator cleared from the new plots are gone from the old save")
+	check(not w8.trees.any(func(t): return int(t.x) == 75 and int(t.y) == 13), "trees the generator cleared from the new plots are gone from the old save")
 	check(m8.is_solid(Vector2i(91, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
 	var w9 := World.new()
 	w9.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w8.to_dict())))
