@@ -24,6 +24,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	test_counted_wording()
 	test_accept_and_reserve()
 	test_reject_by_real_signals()
 	test_counteroffers()
@@ -96,6 +97,14 @@ func _shows(text: String) -> bool:
 
 ## The player proposes through the talk window: "Propose a contract", the goods, the terms with - and +, Propose; a
 ## too-low price is countered and the counter agreed to; the open contract is listed and its goods collected.
+func test_counted_wording() -> void:
+	check(Contracts.counted(3, "axe") == "3 axes", "three axes are counted in the plural")
+	check(Contracts.counted(1, "axe") == "1 axe", "one axe stays singular")
+	check(Contracts.counted(10, "coal") == "10 coal", "mass goods stand bare")
+	check(Contracts.counted(4, "iron bar") == "4 iron bars", "a two-word name takes the plural on its noun")
+	check(Contracts.counted(2, "red berries") == "2 red berries", "plural goods stand bare")
+
+
 func test_window() -> void:
 	main.new_game()
 	var w: World = main.world

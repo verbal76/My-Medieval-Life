@@ -548,6 +548,18 @@ static func _phrase(name: String) -> String:
 	return ("an " if name.substr(0, 1) in ["a", "e", "i", "o", "u"] else "a ") + name
 
 
+## `qty` of an item name, counted ("3 axes", "1 axe", "10 coal"): mass and plural goods stand bare as in _phrase.
+## Wording only.
+static func counted(qty: int, name: String) -> String:
+	if qty == 1 or _phrase(name) == name:
+		return "%d %s" % [qty, name]
+	if name.ends_with("s") or name.ends_with("x") or name.ends_with("ch") or name.ends_with("sh"):
+		return "%d %ses" % [qty, name]
+	if name.ends_with("y") and not name.substr(name.length() - 2, 1) in ["a", "e", "i", "o", "u"]:
+		return "%d %sies" % [qty, name.substr(0, name.length() - 1)]
+	return "%d %ss" % [qty, name]
+
+
 # ---------------------------------------------------------------- making a contract ----------
 ## Why `buyer_ref` cannot set `total` coins aside now ("" when it can): the player from their purse; a villager only
 ## from what is left above its OD-19 reserve (a purchase for its trade, World.can_afford's rule); the manor from the

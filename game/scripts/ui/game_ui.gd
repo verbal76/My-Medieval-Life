@@ -2709,11 +2709,11 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 	if step == "sum":
 		var sentence := ""
 		if counter:
-			sentence = "You deliver %d %s to %s by the end of day %d for %d coins (%d each)." % [qty, what, n.name, by_day, total, price]
+			sentence = "You deliver %s to %s by the end of day %d for %d coins (%d each)." % [Contracts.counted(qty, what), n.name, by_day, total, price]
 		elif t.has("svc"):
 			sentence = "%s does this work for you, %s: %d units by the end of day %d for %d coins (%d each)." % [n.name, what, qty, by_day, total, price]
 		else:
-			sentence = "%s delivers %d %s by the end of day %d for %d coins (%d each)." % [n.name, qty, what, by_day, total, price]
+			sentence = "%s delivers %s by the end of day %d for %d coins (%d each)." % [n.name, Contracts.counted(qty, what), by_day, total, price]
 		var sl := _label(sentence, 24)
 		sl.name = "Summary"
 		if not counter:
