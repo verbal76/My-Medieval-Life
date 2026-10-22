@@ -27239,7 +27239,8 @@
    "playtest": [],
    "branch": "",
    "commits": [
-    "9cc1db5"
+    "9cc1db5",
+    "bc90e81"
    ],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -27277,6 +27278,11 @@
      "date": "2026-10-22",
      "change": "UNKNOWN — INVESTIGATION REQUIRED -> IMPLEMENTED — TESTING REQUIRED; commit 9cc1db5; tests",
      "why": "cause found from the owner's pack photo: the pack held its 24 kinds (PlayerState inv.max_stacks 24; tabs are filters over the same slots). The lead's earlier 'no kind limit' was wrong (a test fill that included the axe). Fix 9cc1db5 merged 8283a21: trade window states the full pack, marks goods without room, disables their Buy; screenshot looked at; start_test passes"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit bc90e81",
+     "why": "second cause, from the owner's photo with room in the pack: the quantity box opened above a scrolled list (focus scrolled only to its Buy button; none on touch). Reproduced in engine; fixed bc90e81 (box scrolls itself into view), merged 403ade5; checked kbm, pad and touch; start_test passes"
     }
    ],
    "target_build": "18"
