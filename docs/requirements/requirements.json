@@ -19797,6 +19797,48 @@
    "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
+   "id": "PACK-Q",
+   "title": "Pack capacity: how many kinds the player can carry",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "How come my pack be full if the tabs up top? There's like four tabs that have one thing in them. I should have like 70 different places to put stuff",
+   "description": "Pack capacity: how many kinds the player can carry",
+   "source": "owner message 2026-10-22 with photos of the pack",
+   "approval": "",
+   "acceptance": [
+    "Owner chooses the pack's capacity model and size"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with photos of the pack"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "presented: A keep 24 shared kinds (tabs filter), B one larger shared pack (owner sets the size), C room per tab; agent recommends B"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "PAR-00",
    "title": "The player is a villager: one set of world rules for player and villagers",
    "kind": "approved",
@@ -27184,7 +27226,7 @@
    "id": "TRADE-AXE-01",
    "title": "Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins",
    "kind": "approved",
-   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "I have the 45 coins but Clement won't let me buy the ax",
    "description": "Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins",
    "source": "owner message 2026-10-22 with photos of the trade window and HUD",
@@ -27193,10 +27235,12 @@
     "Cause found; buying works or the refusal is shown and explained in view"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "start_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9cc1db5"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27228,6 +27272,11 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "owner: Emma Stone also would not sell (44 coins, owner holding 85). Ruled out: price (list = quote), a full pack (the player's pack has no kind limit), a hidden buy box (in view with the list scrolled, and with a crowded pack). A fresh world sells. Need the owner's exact steps/message"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "UNKNOWN — INVESTIGATION REQUIRED -> IMPLEMENTED — TESTING REQUIRED; commit 9cc1db5; tests",
+     "why": "cause found from the owner's pack photo: the pack held its 24 kinds (PlayerState inv.max_stacks 24; tabs are filters over the same slots). The lead's earlier 'no kind limit' was wrong (a test fill that included the axe). Fix 9cc1db5 merged 8283a21: trade window states the full pack, marks goods without room, disables their Buy; screenshot looked at; start_test passes"
     }
    ],
    "target_build": "18"

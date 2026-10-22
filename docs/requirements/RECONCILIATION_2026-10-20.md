@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 237 (121 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **312** = 195 still open from the baseline + 121 added and open |
+| Entries added since | | 238 (122 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **313** = 195 still open from the baseline + 122 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (237)
+## Added since the baseline (238)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -216,6 +216,7 @@ None.
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
+| PACK-Q | Pack capacity: how many kinds the player can carry | decision | BLOCKED | owner decision |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | approved | COMPLETE AND VERIFIED | 16 |
@@ -272,7 +273,7 @@ None.
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | COMPLETE AND VERIFIED | 16 |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | UNKNOWN — INVESTIGATION REQUIRED | 18 |
+| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | TREAS-01 | The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock | approved | COMPLETE AND VERIFIED | 16 |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT | 18 |

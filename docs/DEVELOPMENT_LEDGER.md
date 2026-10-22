@@ -14,18 +14,18 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 66 |
 | ACTIVE DEVELOPMENT | 26 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 29 |
+| IMPLEMENTED — TESTING REQUIRED | 30 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
-| UNKNOWN — INVESTIGATION REQUIRED | 8 |
+| UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **480** |
 | Outstanding (not complete, superseded or canceled) | 231 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 78 owner decision (open or answered), 30 world design rule, 10 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 79 owner decision (open or answered), 30 world design rule, 10 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 65 | 15 |
+| Waiting on an owner decision | 66 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **312** | **231** |
+| **Total open** | **313** | **231** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -213,7 +213,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
-| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | UNKNOWN — INVESTIGATION REQUIRED |  |  |
+| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT |  |  |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | ACTIVE DEVELOPMENT |  |  |
@@ -326,7 +326,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (65)
+### Waiting on an owner decision (66)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -381,6 +381,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| PACK-Q | Pack capacity: how many kinds the player can carry | decision | BLOCKED |  |  |
 | PL1-11 | Google Drive cloud saves (staged) | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | Q-08 | Resource depletion and wildlife sustainability | approved | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | Q-11 | Design gap assessment, phased sequence | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -601,7 +602,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (29)
+## IMPLEMENTED — TESTING REQUIRED (30)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -629,6 +630,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need |  | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; stalls_test |  |  |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need | after SHOP-01 | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
+| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | owner message 2026-10-22 with photos of the trade window and HUD | `9cc1db5`; start_test |  |  |
 | TRADE-UI-02 | Contract proposal's answer shown in view | owner message 2026-10-22 with a photo of the contract window | `1bbf0ab`; start_test |  |  |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | docs/directives/2026-10-22_build18_master_integration.md | `63f96c6`; wiki_test, start_test; branch wip/b18-wiki |  |  |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `3829098`; furniture_test, start_test; branch wip/b18-axe |  |  |
@@ -978,7 +980,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | owner: World Design Rule 16 topic; directive 2026-10-19 (requirements preservation) s.26 |  | superseded by WDR-016-C |  |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy | owner: World Design Rule 14 topic; directive 2026-10-19 (requirements preservation) s.26 |  | after GM-01; superseded by WDR-014-C |  |
 
-## UNKNOWN — INVESTIGATION REQUIRED (8)
+## UNKNOWN — INVESTIGATION REQUIRED (7)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -988,10 +990,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | Game Designer spec Part A s.A2 (bob/CLAUDE.md line 119); agent merge proposal planned a DECISIONS entry 'combat style' that was never written |  |  |  |
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 77, 91, 101); agent merge proposal conflict C2 ('Unresolved; your call') never answered |  |  |  |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
-| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | owner message 2026-10-22 with photos of the trade window and HUD |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 37, status BLOCKED) (78)
+## Owner decisions, open and answered (open: 38, status BLOCKED) (79)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1043,6 +1044,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
+| PACK-Q | Pack capacity: how many kinds the player can carry | BLOCKED | owner message 2026-10-22 with photos of the pack |
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PARTIALLY IMPLEMENTED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_master_directive.md |
