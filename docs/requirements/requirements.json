@@ -386,7 +386,7 @@
    "id": "ARMOR-01",
    "title": "Armour is acquired in play, physical, and visible when worn",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "Equipping armor changes the visible appearance of the character.",
    "description": "Armour is acquired in play, physical, and visible when worn",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -398,7 +398,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-armour",
    "commits": [],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -408,7 +408,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "b18-armour",
    "superseded_by": null,
    "notes": "docs/build18/PHASE_A_INVENTORY.md",
    "history": [
@@ -421,6 +421,11 @@
      "date": "2026-10-22",
      "change": "target_build; notes",
      "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Option A approved; implementation on wip/b18-armour"
     }
    ],
    "target_build": "18"
@@ -429,7 +434,7 @@
    "id": "ARMOR-Q",
    "title": "Armour scope: Option A (exact text to be presented)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Present the precise wording and implications of Option A before implementing any additional armor mechanics requiring owner approval.",
    "description": "Armour scope: Option A (exact text to be presented)",
    "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
@@ -463,9 +468,15 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Option A restated with implications in the lead's report 2026-10-22"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "owner approved Option A (docs/directives/2026-10-22_build18_master_overnight_execution.md part 5)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Option A: the five wearables keep their provisional values; iron armour drawn as the Puny Characters metal breastplate, iron helmet as the best-fitting European metal helm (agent's choice); leather armour and cap functional, not drawn; plain clothes the creator's clothing layer; character redraws on gear change. B and C not approved."
   },
   {
    "id": "B12A-01",
@@ -3088,6 +3099,48 @@
      "date": "2026-10-22",
      "change": "target_build; notes",
      "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "B18-SCOPE",
+   "title": "Build 18 stays combined: tracks A, B and C; multiplayer excluded",
+   "kind": "rule",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Build 18 remains the full combined release.",
+   "description": "Build 18 stays combined: tracks A, B and C; multiplayer excluded",
+   "source": "docs/directives/2026-10-22_build18_master_overnight_execution.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "No approved Build 18 requirement moved to a later build without the owner; multiplayer not merged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_overnight_execution.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "recorded"
     }
    ],
    "target_build": "18"

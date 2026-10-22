@@ -11,8 +11,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 66 |
-| ACTIVE DEVELOPMENT | 21 |
+| APPROVED — NOT STARTED | 65 |
+| ACTIVE DEVELOPMENT | 22 |
 | PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 37 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **482** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 83 owner decision (open or answered), 30 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 83 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 67 | 15 |
+| Waiting on an owner decision | 66 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **316** | **233** |
+| **Total open** | **315** | **233** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -181,7 +181,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | APPROVED — NOT STARTED |  |  |
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | ACTIVE DEVELOPMENT |  |  |
 | B14-11 | Animal Farm pack: the horse and farm animals | approved | APPROVED — NOT STARTED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED |  |  |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED |  |  |
@@ -328,11 +328,10 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (67)
+### Waiting on an owner decision (66)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
-| ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | BLOCKED |  |  |
 | B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED |  |  |
 | DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -465,11 +464,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (66)
+## APPROVED — NOT STARTED (65)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
@@ -536,10 +534,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (21)
+## ACTIVE DEVELOPMENT (22)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-armour |  |  |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | B16-READY | Build 16 development audit and release-readiness report | docs/directives/2026-10-21_build16_audit_release_readiness.md |  |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
@@ -997,11 +996,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (83)
+## Owner decisions, open and answered (open: 38, status BLOCKED) (83)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
-| ARMOR-Q | Armour scope: Option A (exact text to be presented) | BLOCKED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
+| ARMOR-Q | Armour scope: Option A (exact text to be presented) | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | BLOCKED | owner message 2026-10-22 with a photo after the band was killed |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | COMPLETE AND VERIFIED | docs/design/FARM08_YIELD_COMPARISON.md |
@@ -1085,11 +1084,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | BLOCKED | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
 | X19-REGARD | Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 
-## World design rule (30)
+## World design rule (31)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
+| B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | APPROVED — NOT STARTED | docs/directives/2026-10-22_build18_master_overnight_execution.md |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | APPROVED — NOT STARTED | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md |
 | PROS-01 | Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates | ACTIVE DEVELOPMENT | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |

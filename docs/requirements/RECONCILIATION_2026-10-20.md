@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 244 (125 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **316** = 195 still open from the baseline + 125 added and open |
+| Entries added since | | 245 (125 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **315** = 195 still open from the baseline + 125 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,14 +66,14 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (244)
+## Added since the baseline (245)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | COMPLETE AND VERIFIED | 16 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | APPROVED — NOT STARTED | 18 |
-| ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | BLOCKED | owner decision |
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | ACTIVE DEVELOPMENT | 18 |
+| ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | COMPLETE AND VERIFIED | owner decision |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
 | B16-READY | Build 16 development audit and release-readiness report | approved | ACTIVE DEVELOPMENT | 16 |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED | 18 |
@@ -83,6 +83,7 @@ None.
 | B17F-PERF | Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93) | idea | APPROVED — NOT STARTED | 19 |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED | 18 |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED | 18 |
+| B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | APPROVED — NOT STARTED | 18 |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED | owner decision |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED | 18 |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
