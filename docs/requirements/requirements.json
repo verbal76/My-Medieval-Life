@@ -383,6 +383,49 @@
    "complexity": "M"
   },
   {
+   "id": "ARMOR-01",
+   "title": "Armour is acquired in play, physical, and visible when worn",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Equipping armor changes the visible appearance of the character.",
+   "description": "Armour is acquired in play, physical, and visible when worn",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22 (also docs/directives/2026-10-22_character_creation_armor_correction.md)",
+   "acceptance": [
+    "Armour bought or made as real goods; worn armour draws on the character in every direction; removing restores",
+    "Classification framework and values presented to and approved by the owner before assignment"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "B12A-01",
    "title": "1-11 fixed (B13-01..10); 12 → B13-14",
    "kind": "approved",
@@ -2966,6 +3009,48 @@
    "target_build": "18"
   },
   {
+   "id": "B18-DIR",
+   "title": "Build 18 master integration directive (visual polish, character customization, armour, crop sharing)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Protect Build 17. Integrate deliberately into Build 18. Deliver a playable, coherent improvement.",
+   "description": "Build 18 master integration directive (visual polish, character customization, armour, crop sharing)",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Every Part 14 acceptance criterion met; nothing built or published without owner authorization"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -5490,6 +5575,48 @@
    "acceptance_derived": true
   },
   {
+   "id": "BARBER-01",
+   "title": "Barber service: change hairstyle in the village through the economy",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Add a barber shop service that allows the player to change their hairstyle after character creation.",
+   "description": "Barber service: change hairstyle in the village through the economy",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "A real barber, preview and confirm, persists; prices, wages and resource rules only as the owner approves"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "CAP-TOOLHOLDER",
    "title": "Design review: a villager holding a tool only for sale counts as a capability practitioner",
    "kind": "idea",
@@ -5581,6 +5708,55 @@
    "target_build": "15",
    "roadmap_gate": "",
    "roadmap_reason": "economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in)"
+  },
+  {
+   "id": "CC-01",
+   "title": "Character creator replaces the eight preset looks (appearance only, civilian)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The existing eight-character selection system must be replaced with the character creator.",
+   "description": "Character creator replaces the eight preset looks (appearance only, civilian)",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22 (also docs/directives/2026-10-22_character_creation_armor_correction.md)",
+   "acceptance": [
+    "Random and per-feature appearance from the Puny Characters creator, preview, confirm",
+    "No armour, weapons, wealth or bonuses; start inventory unchanged",
+    "Appearance persists through save/load, directions, equipment and hairstyle changes"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-character",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-character",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 character worker started (no armour values or barber economy)"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "CON-01",
@@ -11625,11 +11801,12 @@
     "Independent of which cutter finishes first; focused tests; no 365-day run for it; not merged into Build 17 without the owner's authorization"
    ],
    "implementation": "wip/farm-cropshare 132960a (from Build 17 019dddd): Farming.split_crop, NPCBrain._cutting_shares and the harvest action; INT-009 updated; farmer job text in the wiki",
-   "tests": "crop_share_test 19, farming_test 217, world_test 339, run_tests 3544, farm_plots_test 104, conservation_test 8, start_test 499, reserve_test 43, wiki_test; economy_sim 30 days seed 1 leaks 0",
+   "tests": "crop_share_test",
    "playtest": [],
-   "branch": "wip/farm-cropshare",
+   "branch": "wip/build18",
    "commits": [
-    "132960a"
+    "132960a",
+    "9cb011d"
    ],
    "parent": null,
    "depends_on": [
@@ -11654,9 +11831,19 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 132960a; tests; target_build; branch; implementation; next_action",
      "why": "Implemented on an isolated branch; focused tests pass"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "owner B18-DIR Part 11: approved for Build 18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit 9cb011d; tests; branch",
+     "why": "merged into wip/build18 at 9cb011d; crop_share_test 19/19 after merge"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "18"
   },
   {
    "id": "FR-01",
@@ -26911,6 +27098,335 @@
    "roadmap_reason": "Owner master directive 2026-10-21",
    "b16_class": "required",
    "complexity": "M"
+  },
+  {
+   "id": "UI-HUD-01",
+   "title": "HUD status panel too large: shrink and move the date line",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "We can shrink the text on the bottom line a little bit and move it over, but that brown box got really big. It's covering a lot of real estate",
+   "description": "HUD status panel too large: shrink and move the date line",
+   "source": "owner message 2026-10-22 with a photo of the HUD",
+   "approval": "owner playtest feedback 2026-10-22",
+   "acceptance": [
+    "The panel no wider than its bars need; date and time smaller and moved; values unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-visual",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-visual",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with a photo of the HUD"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "UI-HUNGER-01",
+   "title": "Hunger icon becomes a drumstick",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Preferred design: a chicken drumstick.",
+   "description": "Hunger icon becomes a drumstick",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Recognizable food icon at the HUD's size; bars unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-visual",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-visual",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "UI-PROGRESS-01",
+   "title": "Progress bar visible on light and dark ground",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Make the indicator clearly visible against both light and dark backgrounds.",
+   "description": "Progress bar visible on light and dark ground",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Dark track, distinct fill, outline; timing unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-visual",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-visual",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "UI-WIKI-01",
+   "title": "Village Encyclopedia: navigable, searchable wiki window",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Replace the button wall with a usable encyclopedia",
+   "description": "Village Encyclopedia: navigable, searchable wiki window",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Category panel, search, readable articles, controller focus, correct title; generated content unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-wiki",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-wiki",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 wiki worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "VIS-ANIMAL-01",
+   "title": "Stray fragments above animals removed at the source",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Remove the stray fragments at their source.",
+   "description": "Stray fragments above animals removed at the source",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Cause confirmed; every animal sharing the path checked visually"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-visual",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-visual",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "VIS-CROP-01",
+   "title": "Ripe wheat recognizable; planted, growing, mature, harvested look distinct",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Mature: Dense golden wheat with recognizable heads of grain.",
+   "description": "Ripe wheat recognizable; planted, growing, mature, harvested look distinct",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Four distinct looks from existing states; no farming mechanic changed"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-visual",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-visual",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "VIS-DOOR-01",
+   "title": "Doorway transition: characters no longer pass under a closed door",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Do not allow characters to visibly pass underneath a closed door.",
+   "description": "Doorway transition: characters no longer pass under a closed door",
+   "source": "docs/directives/2026-10-22_build18_master_integration.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Dark opening while someone crosses, fade at the threshold, no flicker with several users, pathing unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-visual",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-visual",
+   "superseded_by": null,
+   "notes": "docs/build18/PHASE_A_INVENTORY.md",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_integration.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "VP-01",

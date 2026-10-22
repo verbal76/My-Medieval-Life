@@ -29,6 +29,13 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
+**Build 18 (owner B18-DIR, 2026-10-22, `docs/directives/2026-10-22_build18_master_integration.md`).** Integration branch
+`wip/build18`, cut from Build 17's frozen head `dfec7ec` (Build 17 is untouched). FARM-CROP-01 merged there (`9cb011d`,
+crop_share_test 19/19). Phase A inventory: `docs/build18/PHASE_A_INVENTORY.md`. Active: UI-HUNGER-01, UI-HUD-01,
+UI-PROGRESS-01, VIS-ANIMAL-01, VIS-CROP-01, VIS-DOOR-01 (visual worker, `wip/b18-visual`); UI-WIKI-01 (`wip/b18-wiki`);
+CC-01 (character worker, `wip/b18-character`: runtime layered sprites, recipe saves, creator UI; no armour values, no barber
+economy). ARMOR-01 and BARBER-01 wait on owner decisions (armour scope first). Nothing is built or published without the owner.
+
 The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 in the evening (UTC).
 
 - **EQ-18 (Build 15):** tool recovery fixed and verified; what remained was OD-16.

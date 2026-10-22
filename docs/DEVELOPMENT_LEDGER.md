@@ -11,8 +11,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 62 |
-| ACTIVE DEVELOPMENT | 19 |
+| APPROVED — NOT STARTED | 65 |
+| ACTIVE DEVELOPMENT | 27 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 24 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -22,8 +22,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **462** |
-| Outstanding (not complete, superseded or canceled) | 213 |
+| **Total approved** | **473** |
+| Outstanding (not complete, superseded or canceled) | 224 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 78 owner decision (open or answered), 30 world design rule, 8 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 36 | 27 |
+| Build 18: Settlement Advancement & Regional Economy | 48 | 39 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 65 | 16 |
+| Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **292** | **213** |
+| **Total open** | **303** | **224** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,14 +177,18 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (36)
+### Build 18: Settlement Advancement & Regional Economy (48)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | APPROVED — NOT STARTED |  |  |
 | B14-11 | Animal Farm pack: the horse and farm animals | approved | APPROVED — NOT STARTED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED |  |  |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED |  |  |
+| B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED |  |  |
+| BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
+| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | ACTIVE DEVELOPMENT |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | DEFERRED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
@@ -192,6 +196,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | proposal | BLOCKED |  | caravan as a finite regional market; household versus business money |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | F-1 | NPC workshop construction | approved | DEFERRED |  | NPCs building workshops is settlement development |
+| FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | OD-05 | Owner decisions: inner doorways, relaying survey plots | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | OD-08 | Owner decision: is honest arbitrage intended? | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
@@ -205,6 +210,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
+| UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT |  |  |
+| UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | ACTIVE DEVELOPMENT |  |  |
+| UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | ACTIVE DEVELOPMENT |  |  |
+| UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -306,7 +318,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (65)
+### Waiting on an owner decision (64)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -330,7 +342,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B13 | Story kept as sparks; audit `story: true` quests | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
-| FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision first | part of the standalone Living Economy build EXP-D, whose number and placement the owner decides (OD-LE-01) |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
@@ -441,13 +452,16 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (62)
+## APPROVED — NOT STARTED (65)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
+| B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
+| BARBER-01 | Barber service: change hairstyle in the village through the economy | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
@@ -508,12 +522,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (19)
+## ACTIVE DEVELOPMENT (27)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | B16-READY | Build 16 development audit and release-readiness report | docs/directives/2026-10-21_build16_audit_release_readiness.md |  |  |  |
+| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-character |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Owner decision on the FARM-08 yield and switches and on the remaining balance options (herd cost vs milk income, 4-day trough vs harvest gaps, household feed purse or granary sales, unsold milk and cheese); crop sharing decided (FARM-08-Q-CROP, option B) and implemented on wip/farm-cropshare (FARM-CROP-01) |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
@@ -524,6 +539,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `8eec56e`, `283ec55`; settlement_test 63, regional_test 67, caravan_compare 20/50; run_tests, world_test, start_test, parity_test, conservation_test, business_test; branch wip/expansion18-preparation |  |  |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`, `693e0c3`, `6615da4`, `1b05da0`, `e91d903`, `05adc9d`, `c4b10e4`; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
+| UI-HUD-01 | HUD status panel too large: shrink and move the date line | owner message 2026-10-22 with a photo of the HUD | branch wip/b18-visual |  |  |
+| UI-HUNGER-01 | Hunger icon becomes a drumstick | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
+| UI-PROGRESS-01 | Progress bar visible on light and dark ground | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
+| UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-wiki |  |  |
+| VIS-ANIMAL-01 | Stray fragments above animals removed at the source | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
+| VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
+| VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md | `4ce9927`, `4115b48`, `da4d610`, `3de7a8f`; experience 61 (17 new for D1), settlement 83, capability 72, world 339, conservation 8, run_tests 3544, start 499; 30-day seed 1 fingerprint 1c755f53 unchanged, no leaks | after Q18-11B; after PROS-18 | Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md |  |  |  |
@@ -585,7 +607,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 | game/tests/family_test.gd; game/tests/housing_test.gd | after FAM-02 |  |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | suites; then COMPLETE once a long run has exercised it or tests suffice |
 | FARM-08B | Cattle decline under the shared and seasonal farming model: investigation | docs/directives/2026-10-21_farm08_cattle_investigation.md | `463861a`; herd_test (19 checks, 10 fail on the old code); 40/120-day local runs |  |  |
-| FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | docs/directives/2026-10-22_farm08_q_crop_decision.md | `132960a`; crop_share_test 19, farming_test 217, world_test 339, run_tests 3544, farm_plots_test 104, conservation_test 8, start_test 499, reserve_test 43, wiki_test; economy_sim 30 days seed 1 leaks 0; branch wip/farm-cropshare | after FARM-08-Q-CROP | Owner: authorize merging into Build 17 now, or carry it to the next build |
+| FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | docs/directives/2026-10-22_farm08_q_crop_decision.md | `132960a`, `9cb011d`; crop_share_test; branch wip/build18 | after FARM-08-Q-CROP | Owner: authorize merging into Build 17 now, or carry it to the next build |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `fd2f9de`; farming_test (test_propagation, test_perennials, test_household_seed, test_seed_seller) | after SEED-02 | Measure in the four-seed runs; owner to confirm the readings |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | docs/directives/2026-10-21_build16_owner_decision_resolution.md | `b018185`; world_test::_pick01_reports | after OD-20 | Owner to confirm two readings: the Stealth guard_radius perk now narrows who sees a caught try; a told guard fines a thief in sight |
