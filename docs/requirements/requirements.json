@@ -28828,13 +28828,14 @@
     "Experience formula, facility caps, tenure rules and thresholds are presented to the owner before any is fixed; Build 17 unchanged"
    ],
    "implementation": "wip/expansion18-preparation 4ce9927: settlement/experience.gd (hours to experience days, caps, straight-line level, hours-weighted active-worker average as a report, no-active-workers), per-worker hook path prepared and off, optional save key x18_experience; tracking starts empty",
-   "tests": "experience 44 (13 new: production per-worker path, contract compatibility, effective level within facility limit computed not stored), settlement 83, capability 72, regional 71, courier 44",
+   "tests": "experience 61 (17 new for D1), settlement 83, capability 72, world 339, conservation 8, run_tests 3544, start 499; 30-day seed 1 fingerprint 1c755f53 unchanged, no leaks",
    "playtest": [],
    "branch": "",
    "commits": [
     "4ce9927",
     "4115b48",
-    "da4d610"
+    "da4d610",
+    "3de7a8f"
    ],
    "parent": "PROS-18",
    "depends_on": [
@@ -28847,7 +28848,7 @@
    "wiki": [],
    "next_action": "Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration",
    "priority": "",
-   "workstream": "wip/expansion18-preparation",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -28880,6 +28881,11 @@
      "date": "2026-10-22",
      "change": "PARTIALLY IMPLEMENTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "D1 approved (docs/directives/2026-10-22_x18_d1_starting_experience.md): implementing one-time seeding from recorded skills, farming from PAR-01A history, on the Expansion 18 branch; hook stays off"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit 3de7a8f; tests; workstream",
+     "why": "D1 implemented (3de7a8f): seeded once from recorded skills only where the person holds xp in the skill (unpractised level-1 skills give nothing - worker's reading of requirement 4, owner to confirm), farming by PAR-01A's tenure formula for farmers only, player none (PAR-01A), on new worlds and saves lacking the section, never overwriting (format mml-x18-experience/1 with seeded/start); seed 1: smiths 19.2 and 14.4 days, farmers levels 3-8. Next: owner D2 (facility limitations)"
     }
    ],
    "target_build": "18"
