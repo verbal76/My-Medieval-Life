@@ -1108,6 +1108,13 @@
    "sha256": "cd3c0a91c3466ea54061f5fb008bb77aa8dc257e0d027f3d0505dc4e35b8f49e"
   },
   {
+   "file": "assets/tiles/crops.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/crops.png",
+   "transform": "16 px cells rearranged, a row per crop (wheat: row 9, columns [1, 2, 3, 4] growing, 5 ripe; carrot: row 0, columns [1, 2, 3, 4] growing, 5 ripe; potato: row 5, columns [1, 2, 3, 4] growing, 5 ripe; herb: row 36, columns [1, 1, 2, 3] growing, 4 ripe); the wheat row's column 5 is its ripe plant with the rows above 11 cleared (stubble)",
+   "sha256": "9c6163688d245958bb2c062ea8f80a45de86c9c53ae7baab080b8c3af5fbc5ea"
+  },
+  {
    "file": "assets/animals/boar.png",
    "source": "PunyMonsters.zip",
    "member": "PunyMonsters/Brown-Boar-32x32.png",

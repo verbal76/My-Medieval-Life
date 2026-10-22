@@ -827,10 +827,10 @@ func _follow_holders() -> void:
 
 
 # ---------------------------------------------------------------- drawing --------------------
-## The tile of a household field cell: Farming's tilled, growing or ripe tile, edged where the field ends.
+## The ground tile of a household field cell: Farming's tilled-soil set whatever the cell's state, edged where the
+## field ends; the crop is drawn over it by CropView (VIS-CROP-01), so a plot part sown reads as one field.
 func tile_for(c: Vector2i) -> int:
-	var cell: Dictionary = cells[c]
-	var base: int = w.map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[cell.state]]
+	var base: int = w.map.data.tiles.field.tilled
 	var cols := int(w.map.data.atlases[0].columns)
 	var l := cells.has(c + Vector2i.LEFT)
 	var r := cells.has(c + Vector2i.RIGHT)

@@ -11,6 +11,7 @@ var world: World
 var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
 var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
+var crop_view: CropView        # VIS-CROP-01: the plants drawn on the fields
 var surface_works: WorksView   # MIN-F: track laid in the mine's yard (drawn from World.mine_works)
 var _pit_site := {}            # MIN-E: the last site looked at for staking a pit ({key, ok}: the cheap check, cached)
 var actors: Node2D
@@ -205,6 +206,8 @@ func _ready() -> void:
 				ui.show_trade(sage)
 			"farm_tilled", "farm_growing", "farm_pen":
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
+			"farm_plot_mixed":
+				_plot_shot()                            # VIS-CROP-01: a household's plot part sown, part only tilled
 			"open_pit", "open_pit_dug":
 				_pit_shot(shot_panel == "open_pit_dug")  # MIN-E: an open pit part dug (or dug out), its spoil heaps, people beside it
 			"small_room", "small_room_inside":
@@ -951,6 +954,10 @@ func _build_scene() -> void:
 	view.add_child(pit_view)
 	view.move_child(pit_view, view.layer("below0").get_index())
 	pit_view.setup(view, world.pits)
+	crop_view = CropView.new()                   # VIS-CROP-01: the plants on the fields, over their ground, under the characters
+	view.add_child(crop_view)
+	view.move_child(crop_view, view.layer("path1").get_index() + 1)
+	crop_view.setup(world)
 	_draw_village_exits()
 	tree_view.setup(world)
 	_replace_tree_tiles()
@@ -4713,6 +4720,51 @@ func _works_shot(cave: bool) -> void:
 			world.player.pos = Vector2(side) + Vector2(0.5, 0.5)
 	_sync_carts()
 	_sync_levels(0.0)
+	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
+
+
+## VIS-CROP-01 screenshot: the first household leases a 10 x 6 farm plot near its home (FarmPlots.claim, its own
+## coins) and fences it, one of the family tills it with the household's own calls and sows its left half with wheat (the leftmost
+## column shown ripe, the next part grown); the rest is left tilled, so cells of every state lie side by side.
+func _plot_shot() -> void:
+	var fp: FarmPlots = world.farm_plots
+	var hh: Dictionary = world.households[0]
+	var ref := World.hh_ref(int(hh.id))
+	var n: NPC = world.npc(int(hh.members[0]))
+	n.coins += 500
+	var r: Rect2i = fp.find_ground(Vector2i(10, 6), world.building_door(str(hh.home)), int(hh.id))
+	var p: Dictionary = fp.claim(r, ref, true)
+	if p.is_empty():
+		print("plot shot: no farm plot (%s)" % fp.why)
+		return
+	for j in r.size.y:                                 # the wild growth on it cleared first, by the family's own call
+		for i in r.size.x:
+			fp.clear(p, r.position + Vector2i(i, j), n)
+	var cost: Dictionary = fp.fence_cost(p)
+	for id in cost:
+		n.inv.add(str(id), int(cost[id]))
+	var no := fp.build_fence(p, ref, [n.inv])
+	if no != "":
+		print("plot shot: no fence (%s)" % no)
+	n.inv.add("wheat_seed", 200)
+	var x0 := r.end.x
+	for j in r.size.y:
+		for i in r.size.x:
+			var c := r.position + Vector2i(i, j)
+			if fp.till(p, c, n) != "":
+				continue                                   # the fence line
+			x0 = mini(x0, c.x)
+			if c.x < r.position.x + r.size.x / 2:
+				fp.sow(c, "wheat", [n.inv])
+	for c: Vector2i in fp.cells:
+		if fp.cells[c].state == "growing" and c.x == x0:
+			fp.cells[c].state = "ripe"
+			fp.cells[c].progress = 1.0
+		elif fp.cells[c].state == "growing" and c.x == x0 + 1:
+			fp.cells[c].progress = 0.6
+	fp.show_all()
+	world.player.pos = Vector2(r.position) + Vector2(r.size.x / 2.0, r.size.y + 1.5)
 	follow_at = _in_view(world.player.pos * T)
 	camera.position = follow_at
 

@@ -11,6 +11,7 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/characters/guard_NN.png
     game/assets/icons/<item>.png                     16x16 Survival RPG Icons.zip, one icon per item
     game/assets/tiles/cozyfarm-tiles.png             CozyFarm_full_version.zip (fences, gates)
+    game/assets/tiles/crops.png                      CozyFarm_full_version.zip (field plants by stage, CROP_ROWS)
     game/assets/animals/<species>.png                CozyFarm_full_version.zip (livestock, bunnies) and
                                                      PunyMonsters.zip (boars)
     game/assets/characters/player_<s><n>_<outfit>.png player looks for character creation (listed in
@@ -207,6 +208,16 @@ COZY_ITEMS = {
     "flower_seed": ("full version/farming/seeds.png", 1, 5),
     "red_berry_cutting": ("full version/farming/seeds.png", 0, 3), "blue_berry_cutting": ("full version/farming/seeds.png", 5, 3),
 }
+# VIS-CROP-01 (owner, B18-DIR Part 9): the plants drawn over every field cell, one 16 px plant per cell, from Cozy
+# Farm's crop sheet (farming/crops.png: one crop a row, seeds then the growth stages left to right; the rows match the
+# seed packets used as the seed icons). game crop -> (sheet row, columns for the four growing quarters, the ripe column).
+# The herb (it yields wild flowers) is the small yellow flower, the crop the herb seed packet's colour; its row has one
+# stage fewer.
+CROP_SHEET = "full version/farming/crops.png"
+CROP_ROWS = {"wheat": (9, [1, 2, 3, 4], 5), "carrot": (0, [1, 2, 3, 4], 5), "potato": (5, [1, 2, 3, 4], 5),
+             "herb": (36, [1, 1, 2, 3], 4)}
+CROP_ORDER = ["wheat", "carrot", "potato", "herb"]      # the rows of game/assets/tiles/crops.png (CropView.ROWS)
+STUBBLE_FROM = 11      # a cut wheat field's stubble: the ripe wheat's pixels from this row down (the stalks' feet)
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
 JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05"}
@@ -447,6 +458,31 @@ def _seal(img):
     return img
 
 
+def _import_crops(record):
+    """The field plants sheet (CropView): a row per crop of CROP_ORDER, 16 px cells: columns 0-3 the plant a quarter,
+    half, three quarters and nearly grown, column 4 ripe, and on the wheat row column 5 the stubble of a cut field
+    (the ripe wheat cut to its lowest rows: no pack has stubble)."""
+    from PIL import Image
+    sheet = AssetZip(COZY_ZIP).image(CROP_SHEET)
+    out = Image.new("RGBA", (6 * 16, len(CROP_ORDER) * 16))
+
+    def cell(row, col):
+        return sheet.crop((col * 16, row * 16, col * 16 + 16, row * 16 + 16))
+    parts = []
+    for r, crop in enumerate(CROP_ORDER):
+        row, growing, ripe = CROP_ROWS[crop]
+        for k, col in enumerate(growing + [ripe]):
+            out.paste(cell(row, col), (k * 16, r * 16))
+        parts.append(f"{crop}: row {row}, columns {growing} growing, {ripe} ripe")
+    stubble = cell(CROP_ROWS["wheat"][0], CROP_ROWS["wheat"][2])
+    stubble.paste(Image.new("RGBA", (16, STUBBLE_FROM)), (0, 0))
+    out.paste(stubble, (5 * 16, 0))
+    dest = OUT / "tiles" / "crops.png"
+    out.save(dest)
+    record(dest, COZY_ZIP, CROP_SHEET, "16 px cells rearranged, a row per crop (" + "; ".join(parts) + "); the wheat "
+           f"row's column 5 is its ripe plant with the rows above {STUBBLE_FROM} cleared (stubble)")
+
+
 def _import_inventory(record, survival):
     """The pack window from Cozy Farm's inventory sheet: the panel with flat tabs (8 px of empty
     headroom on top, where a raised tab reaches), a strip of the 8 tab rows with each tab raised in
@@ -573,6 +609,7 @@ def main():
     member = "full version/tiles/tiles.png"
     (tiles / "cozyfarm-tiles.png").write_bytes(AssetZip(COZY_ZIP).read(member))
     record(tiles / "cozyfarm-tiles.png", COZY_ZIP, member, "copied unchanged")
+    _import_crops(record)
     animals = OUT / "animals"
     animals.mkdir(parents=True, exist_ok=True)
     for species, (zname, member) in sorted(ANIMALS.items()):

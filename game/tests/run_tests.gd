@@ -3636,8 +3636,9 @@ func test_doorways() -> void:
 
 ## Crops end cleanly inside every field (B8-017: the right and bottom edges showed half plants because
 ## one left-edge tile was drawn on every cell). No field art lies outside a field rectangle, each
-## field cell draws from its state's 4x4 edge set, and the edge cells use the edge tiles: for the
-## village's fields and for fields of other sizes, in every state.
+## field cell draws its ground from the tilled-soil 4x4 edge set whatever its state (VIS-CROP-01: the
+## plants are drawn over it by CropView), and the edge cells use the edge tiles: for the village's
+## fields and for fields of other sizes, in every state.
 func test_field_edges() -> void:
 	var w := new_world()
 	var m: VillageMap = w.map
@@ -3661,8 +3662,12 @@ func test_field_edges() -> void:
 			if not rects.any(func(r: Rect2i): return r.has_point(cell)):
 				stray += 1
 	check(stray == 0 and painted == rects.reduce(func(a, r: Rect2i): return a + r.size.x * r.size.y, 0), "generated field art lies exactly on the field rectangles (%d stray of %d)" % [stray, painted])
+	var ground := {}                    # tile id -> true: the tilled-soil set every field cell's ground is drawn from
+	for row in 4:
+		for col in 4:
+			ground[int(m.data.tiles.field.tilled) + row * cols + col] = true
 	for state in ["tilled", "growing", "ripe"]:
-		var base := int(m.data.tiles.field[state])
+		var base := int(m.data.tiles.field.tilled)
 		var cells := {}
 		var on_tile := func(cell: Vector2i, kind: String, value: int):
 			if kind == "field":
@@ -3678,7 +3683,7 @@ func test_field_edges() -> void:
 					var got := int(cells.get(cell, -1))
 					var col := (got - base) % cols
 					var row := (got - base) / cols
-					check(sets.get(got, "") == state, "%s %s cell %s draws from the %s set" % [state, f.id, cell, state])
+					check(ground.has(got), "%s %s cell %s draws its ground from the tilled-soil set" % [state, f.id, cell])
 					check((i == 0) == (col == 1) and (i == int(f.w) - 1) == (col == 3) and (j == 0) == (row == 0) and (j == int(f.h) - 1) == (row == 2), "%s %s cell %s: edge tiles exactly on the edges" % [state, f.id, cell])
 	# any size: one cell, a strip, a block
 	for size in [Vector2i(1, 1), Vector2i(1, 5), Vector2i(7, 1), Vector2i(2, 2), Vector2i(3, 3), Vector2i(11, 6)]:
