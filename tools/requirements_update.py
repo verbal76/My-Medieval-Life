@@ -103,6 +103,8 @@ def main():
                          ("disposition", args.disposition), ("target_build", args.build), ("assigned_worker", args.worker),
                          ("branch", args.branch), ("tests", args.tests), ("test_commit", args.test_commit),
                          ("superseded_by", args.superseded_by), ("playtest_done", args.playtest_done)):
+            if key == "tests" and val is not None and r.get("tests") and val not in str(r["tests"]):
+                val = "%s; %s" % (r["tests"], val)        # evidence accumulates; a new run never erases an earlier one
             if val is not None and val != r.get(key):
                 change.append("%s: %s -> %s" % (key, r.get(key), val))
                 r[key] = val
