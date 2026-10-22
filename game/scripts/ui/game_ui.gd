@@ -2420,6 +2420,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
+		_scroll_to_top()                  # TRADE-UI-02: the answer is drawn first; a window scrolled down to Propose would hide it
 		if str(reply.answer) == "counter" and not reply.get("from_buyer", false):     # a buyer's counter is its standing offer, above
 			var ct: Dictionary = t.duplicate()
 			ct.qty = int(reply.qty)

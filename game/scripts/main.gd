@@ -450,6 +450,18 @@ func _ready() -> void:
 					if n.job == "smith":
 						ui.show_trade(n)
 						break
+			"contract_reply":
+				# TRADE-UI-02: a proposal made from a contract window scrolled down to Propose; the answer must be in view
+				for n: NPC in world.npcs:
+					if n.job == "farmer" and n.alive:
+						world.player.coins = 85
+						var t := {"item": "axe", "all": true, "qty": 1, "price": 45, "days": 1}
+						ui.show_contract(n, t)
+						await get_tree().process_frame
+						ui.body_scroll.scroll_vertical = 100000
+						await get_tree().process_frame
+						ui.show_contract(n, t, world.contracts.propose(World.PLAYER, n, "axe", 1, 45, 1))
+						break
 			"trade_qty":
 				# PL1-03: the quantity control, buying 3 of 8 affordable
 				var tk := world.tavern_keeper()
