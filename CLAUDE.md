@@ -13,11 +13,11 @@ are. No file is read automatically because it exists: do these steps, in order, 
    development branch `staging/my-medieval-life`. Run `git fetch origin staging/my-medieval-life`, check out or
    update that branch, and note `git log origin/staging/my-medieval-life -1`.
 2. **Read `docs/PROJECT_MEMORY.md`**, the index of where every authoritative record lives.
-3. **Read `docs/CURRENT_DEVELOPMENT_STATE.md`**, the handoff: active build, work in progress, latest results,
-   defects, hardware checks, blockers, next approved tasks, interrupted processes.
-4. **Review the register, roadmap and unresolved decisions:** the Counts and Roadmap sections of
-   `docs/DEVELOPMENT_LEDGER.md` (generated from `docs/requirements/requirements.json`), the owner-decisions
-   section, `docs/EXPANSION_ROADMAP.md` and `docs/WORLD_DESIGN_RULES.md`.
+3. **Read `docs/CURRENT_DEVELOPMENT_STATE.md`**, the handoff: branches, workers in flight, next actions,
+   interrupted processes (session state only; it never restates a requirement's status).
+4. **Review the register and unresolved decisions:** the generated views in `docs/requirements/views/` (STATUS,
+   BUILD_18..21, DECISIONS, QUEUES, BACKLOG; all generated from `docs/requirements/requirements.json`, the one register
+   and decision register), `docs/EXPANSION_ROADMAP.md` and `docs/WORLD_DESIGN_RULES.md`.
 5. **Review the design specifications for the current work:** the documents the active entries cite in their
    `source` (owner directives in `docs/directives/`, the specs the index names).
 6. **Check Git status and recent commits:** `git status`, `git log --oneline -15`, `git worktree list`, and run
@@ -35,9 +35,9 @@ are. No file is read automatically because it exists: do these steps, in order, 
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- The directive in force and its authority are named at the top of `docs/CURRENT_DEVELOPMENT_STATE.md` (now OVN-02, the final mandate, with OVN-01: Builds 15 → 16 → 17 → 18 in order, autonomous engineering, private releases as builds qualify; design principle WDR-022, "a village is allowed to fail, the simulation is not").
+- Build authority is the register's `builds` map and `docs/requirements/views/STATUS.md` (Build 18 combined, authorized; Build 19 prospective and isolated; Builds 20 and 21 not authorized); the standing mandate is OVN-02 with OVN-01 (autonomous engineering of approved work; design principle WDR-022, "a village is allowed to fail, the simulation is not"). Recovery steps: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint at about 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
-- Do not repeat completed work, and never restart a simulation or test before checking whether it is still running ("Interrupted or fragile processes" in the state file: GitHub Actions runs, local processes).
+- Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
 
 At each meaningful checkpoint, and before a session ends, a context handoff or a build: update
@@ -375,25 +375,42 @@ corresponding documentation.** Every agent and worker, on every task:
 ## 9a. Requirements register (owner, 2026-10-19; standing, do not remove or weaken without the owner's approval)
 
 The repository remembers what the owner asked for, not the agent. `docs/requirements/requirements.json` is the one
-register (`docs/DEVELOPMENT_LEDGER.md` is generated from it; `docs/CURRENT_DEVELOPMENT_STATE.md` orders the next tasks; `docs/DEVELOPMENT_QUEUE.md` is historical).
+manually maintained register of requirements and owner decisions (owner directive 2026-10-23, REQ-CTRL-01,
+`docs/directives/2026-10-23_master_requirements_reconciliation.md`; schema, status dimensions and procedure in
+`docs/requirements/SCHEMA.md`). Everything else is generated (`docs/DEVELOPMENT_LEDGER.md`, `docs/requirements/views/`)
+or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, archived handoffs).
+
+- **One copy, edited on staging only.** The lead edits the register on `staging/my-medieval-life` with
+  `tools/requirements_update.py`; build and task branches carry a synchronized copy and never edit it (the pre-push
+  hook refuses it). Workers report to the lead; they do not edit the register.
+- **Separate dimensions.** Approval, implementation, verification and release status are separate fields (SCHEMA.md);
+  owner decisions carry a disposition (OPEN, APPROVED, PROVISIONAL, SUPERSEDED, REOPENED, DEFERRED). A commit, a merge
+  or a passing local test never promotes a record by itself; COMPLETE needs integrated code, integration-level tests and
+  every playtest need done. A recommendation is never an approval; PROVISIONAL is not final.
+- **Progress comes from the views.** Every progress or completion figure reported to the owner is read from
+  `docs/requirements/views/` (regenerated first), never estimated by hand; requirement counts and effort bands are
+  reported separately.
+- **Change control.** Approved decisions state design intent; when evidence shows a problem, record the intent, the
+  problem, the affected records and the smallest fix, and ask the owner only when gameplay behaviour meaningfully
+  changes (SCHEMA.md). Engineering corrections that keep the intent go ahead.
 
 - **Capture at once.** Whenever the owner authorizes a feature, fix, system, rule or design change (a directive, a
   message, an answer to a question), before working on it: search the register for existing coverage; add or update the
   entry (stable id, title, the owner's wording, source, approval evidence, acceptance criteria, dependencies, related
   systems and rules, status, a history line); save a long directive verbatim in `docs/directives/`; run
   `python3 tools/check_requirements.py --write`; commit. Capture comes before compaction can lose it.
-- **Nothing disappears.** An approved entry stays until it is COMPLETE AND VERIFIED against its acceptance criteria,
-  SUPERSEDED by a named entry, or CANCELED BY OWNER with the owner's words cited. Ids are never deleted or reused; every
+- **Nothing disappears.** An approved entry stays until it is COMPLETE against its acceptance criteria,
+  SUPERSEDED by a named entry, or REJECTED with the owner's words cited. Ids are never deleted or reused; every
   status change gets a history line (who, when, what, why). A broad feature is not closed because one part works:
   give it child entries (`parent`) and close the parent only when its criteria are met.
 - **Ideas are not approvals.** Agent proposals, ideas, open owner decisions and rules have their own kinds and are never
-  counted as, or promoted to, approved work without the owner. Uncertain approval is UNKNOWN — INVESTIGATION REQUIRED.
+  counted as, or promoted to, approved work without the owner. Uncertain approval is OWNER DECISION REQUIRED.
 - **Automated is not device.** Items needing a phone, controller, Windows PC or two devices keep `playtest` until a
-  real device check is recorded; they cannot be COMPLETE AND VERIFIED before.
+  real device check is recorded; they cannot be COMPLETE before.
 - **Enforced.** `tools/check_requirements.py --against <ref>` fails if an entry disappears or changes status without a
   history line; it runs in CI (against the previous commit), in the pre-push hook (against the remote branch) and in
   the pre-push checks below. `tests/test_requirements.py` proves it with a simulated deletion.
-- **Session start.** Follow section 0: the register's open entries (the ledger's counts and Roadmap), the next tasks in
+- **Session start.** Follow section 0: the views (STATUS, BUILD_18..21, DECISIONS, QUEUES), the next actions in
   `docs/CURRENT_DEVELOPMENT_STATE.md`, blocked and deferred items, the current build target, branches and worktrees
   (`git worktree list`), regressions, pending owner decisions, `docs/WORLD_DESIGN_RULES.md` and the system interaction
   manifest (`docs/SYSTEM_INTERACTION_MANIFEST.md`). Conversation memory is never the record.
@@ -412,9 +429,12 @@ register (`docs/DEVELOPMENT_LEDGER.md` is generated from it; `docs/CURRENT_DEVEL
 - Do not edit files another open PR owns. Coordinate through the PR or ask the owner.
 - Generated data (`data/`, the manifest) is regenerated after rebasing or merging, never merged by
   hand. If two branches change a generator, the later one regenerates on top of the earlier.
-- The requirements register (section 9a) is the shared task record: set an entry's `workstream` and status to
-  ACTIVE DEVELOPMENT before starting it, so two agents never take the same item. `docs/DEVELOPMENT_PLAN.md` is the
-  historical milestone plan.
+- The requirements register (section 9a) is the shared task record: before a worker starts, the lead sets the record
+  to IN DEVELOPMENT with `assigned_worker` and `branch` and names it in the state file, so two agents never take the
+  same item (`docs/requirements/views/QUEUES.md`). Every worker brief includes the checklist in
+  `docs/requirements/SCHEMA.md` ("Workers"): read the record, confirm approval, build, dependencies and acceptance
+  criteria; stay in scope; report commits, tests and what still needs gameplay verification; never declare a record
+  complete from local tests. `docs/DEVELOPMENT_PLAN.md` is the historical milestone plan.
 
 ## 11. Needs owner authorization
 
