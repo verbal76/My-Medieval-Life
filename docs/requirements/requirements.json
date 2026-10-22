@@ -28511,11 +28511,13 @@
     "Experience formula, facility caps, tenure rules and thresholds are presented to the owner before any is fixed; Build 17 unchanged"
    ],
    "implementation": "wip/expansion18-preparation 4ce9927: settlement/experience.gd (hours to experience days, caps, straight-line level, hours-weighted active-worker average as a report, no-active-workers), per-worker hook path prepared and off, optional save key x18_experience; tracking starts empty",
-   "tests": "experience_test 31 (new), capability 72, settlement 83, regional 71, courier 44, contract_sign 20, farming 217, farm_plots 104, contracts 138, world 339, conservation 8, run_tests 3544, start 499; economy_sim 30 days seed 1 fingerprint 1c755f53 unchanged, no leaks",
+   "tests": "experience 44 (13 new: production per-worker path, contract compatibility, effective level within facility limit computed not stored), settlement 83, capability 72, regional 71, courier 44",
    "playtest": [],
    "branch": "",
    "commits": [
-    "4ce9927"
+    "4ce9927",
+    "4115b48",
+    "da4d610"
    ],
    "parent": "PROS-18",
    "depends_on": [
@@ -28551,6 +28553,11 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit 4ce9927; tests; implementation; workstream; next_action",
      "why": "Part 1 (experience tracking) implemented as a record only; game unchanged"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit 4115b48; commit da4d610; tests",
+     "why": "Compatibility with production and CON-01/02 verified (contracts call the hook for felling time only; wages, prices, quantities, deadlines untouched); effective level = experience level within a facility limit, computed never stored (no limits approved, so effective = experience); workforce report lists all seven industries. Pending owner decisions D1-D9 in docs/expansion18/DECISIONS_PENDING.md"
     }
    ],
    "target_build": "18"
