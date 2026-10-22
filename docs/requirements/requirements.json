@@ -30403,15 +30403,13 @@
   {
    "id": "WORLD-LIFE-01",
    "title": "The countryside is empty of people and animals; its trails lead nowhere yet",
-   "kind": "idea",
-   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": "once you go off where the map can see it seems to be devoid of all life whether it's animals or humans which is weird cuz these trails. So you think they'd go to another city",
    "description": "The countryside is empty of people and animals; its trails lead nowhere yet",
-   "source": "owner message 2026-10-22 with a photo of the countryside",
-   "approval": "",
-   "acceptance": [
-    "Scope agreed with the owner before any work (an idea, not approved work)"
-   ],
+   "source": "docs/directives/2026-10-23_owner_answers_countryside.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": "Wild animals roam the overworld outside the village under the existing wildlife rules; travellers walk the trails between the map edge and the village; deterministic from the seed; no coins or goods created; screenshots looked at",
    "implementation": "",
    "tests": "",
    "playtest": [],
@@ -30438,9 +30436,15 @@
      "date": "2026-10-22",
      "change": "target_build; acceptance",
      "why": "owner remark; other settlements are Expansion 18 (Settlement Advancement & Regional Economy), the full network SET-E needs the larger map; wildlife lives only in the village's woods today"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "UNKNOWN — INVESTIGATION REQUIRED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build; acceptance",
+     "why": "owner approved the scope (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "18",
+   "owner_answer": "Animals + travellers: wildlife roams the countryside as in the village woods; travellers (pedlars, pilgrims, the caravan) walk the trails to and from the map edge; other towns stay off-map"
   },
   {
    "id": "WR-01",

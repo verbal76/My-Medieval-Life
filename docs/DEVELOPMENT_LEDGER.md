@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 65 |
+| APPROVED — NOT STARTED | 66 |
 | ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **484** |
-| Outstanding (not complete, superseded or canceled) | 235 |
+| **Total approved** | **485** |
+| Outstanding (not complete, superseded or canceled) | 236 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 9 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 57 | 50 |
+| Build 18: Settlement Advancement & Regional Economy | 58 | 51 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 65 | 15 |
+| Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **313** | **235** |
+| **Total open** | **313** | **236** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (57)
+### Build 18: Settlement Advancement & Regional Economy (58)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -230,6 +230,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
+| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | approved | APPROVED — NOT STARTED |  |  |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT |  |  |
@@ -327,7 +328,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (65)
+### Waiting on an owner decision (64)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -388,7 +389,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | APPROVED — NOT STARTED | Owner designation | Numbering 20+ needs the owner |
-| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | idea | UNKNOWN — INVESTIGATION REQUIRED |  |  |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | BLOCKED |  |  |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | BLOCKED |  |  |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | decision | BLOCKED |  |  |
@@ -465,7 +465,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (65)
+## APPROVED — NOT STARTED (66)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -533,6 +533,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
+| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | docs/directives/2026-10-23_owner_answers_countryside.md |  |  |  |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
 ## ACTIVE DEVELOPMENT (19)
@@ -1170,7 +1171,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | APPROVED — NOT STARTED | docs/directives/2026-10-21_master_expansion_roadmap.md (the pack's other documents on wip/roadmap-docs, docs/roadmap/) |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | COMPLETE AND VERIFIED | docs/directives/2026-10-20_od21_time_model.md |
 
-## Unapproved idea (10)
+## Unapproved idea (9)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1183,5 +1184,4 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | APPROVED — NOT STARTED | docs/directives/2026-10-22_build17_personal_playtest_release.md |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | APPROVED — NOT STARTED | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md |
 | CON-UX-01 | Contract window needs design work | UNKNOWN — INVESTIGATION REQUIRED | owner message 2026-10-22 with a photo of the contract window |
-| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | UNKNOWN — INVESTIGATION REQUIRED | owner message 2026-10-22 with a photo of the countryside |
 
