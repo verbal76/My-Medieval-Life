@@ -2259,6 +2259,12 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	# the manor's work (owner, 2026-10-18): the reeve offers its list of real jobs
 	if n.job == "reeve":
 		_talk_choice(choices, "Any work for me?", func(): show_manor_jobs(n))
+	if Law.teaches(n):
+		_talk_choice(choices, "Teach me about the law", func():       # LAW-SKILL: the reeve's lesson (the clergy's, later)
+			var r := Law.teach(w, World.PLAYER, n)
+			if r.ok:
+				message(r.text)
+			_talk_view(n, r.text))
 	# paid work (owner: the player can work and earn money): asked for, never marked
 	if w.quests.hires(n):
 		_talk_choice(choices, "Any work for me?", func():

@@ -58,8 +58,8 @@ func _test_data() -> void:
 	check(not it.is_empty() and str(it.name) == "Building block" and GameData.item("stone").name == "Stone", "a building block is its own item, apart from raw stone")
 	var r: Dictionary = GameData.recipes.get("dress_stone", {})
 	check(not r.is_empty() and r["in"].size() == 1 and int(r["in"].stone) == 2 and r.out.size() == 1 and int(r.out.building_block) == 2 and str(r.station) == "workbench"
-			and str(r.tool) == "mallet" and int(r.minutes) == 30 and str(r.skill) == "crafting" and bool(r.exact),
-			"dress_stone: two raw stone to two blocks at a workbench, with a mallet, half an hour, Crafting")
+			and str(r.tool) == "mallet" and int(r.minutes) == 30 and str(r.skill) == "masonry" and bool(r.exact),
+			"dress_stone: two raw stone to two blocks at a workbench, with a mallet, half an hour, Masonry")
 	var ok := (GameData.b("house_cost") as Dictionary).has("building_block") and not (GameData.b("house_cost") as Dictionary).has("stone")
 	for k in GameData.b("workshop_cost"):
 		var c: Dictionary = GameData.b("workshop_cost")[k]
@@ -90,7 +90,7 @@ func _test_recipe_parity() -> void:
 	check(not bool(begin.ok) or float(begin.secs) > 0.0, "the work takes time (%s)" % str(begin))
 	var r := w.work_craft(p, "dress_stone", p.inv)
 	check(r.result == "ok" and p.inv.count("stone") == 0 and p.inv.count("building_block") == 2, "two stone became two blocks")
-	check(int(p.skills.get("crafting", 0)) >= 4, "and earned Crafting experience")
+	check(int(p.skills.get("masonry", 0)) >= 4, "and earned Masonry experience")
 	check(int(p.inv.durability.get("mallet", full)) == dur0 - 1, "the mallet wore (%d of %d left)" % [int(p.inv.durability.get("mallet", full)), full])
 	var v := _first(w, func(n: NPC) -> bool: return n.role == "adult" and n.job == "laborer")
 	check(v != null, "the village has a labourer")
@@ -103,9 +103,9 @@ func _test_recipe_parity() -> void:
 	check(w.brain._can_make(v, "dress_stone"), "with a mallet they can")
 	var r2 := w.work_craft(v, "dress_stone", v.inv)
 	check(r2.result == "ok" and v.inv.count("stone") == 0 and v.inv.count("building_block") == 2, "the villager's two stone became two blocks, the same rule")
-	v.skills["crafting"] = 0
-	var low := {"skill": "crafting", "level": 1}
-	check(Skills.level(v, str(low.skill)) >= int(low.level), "Crafting 1 is every adult's (the recipe's level)")
+	v.skills["masonry"] = 0
+	var low := {"skill": "masonry", "level": 1}
+	check(Skills.level(v, str(low.skill)) >= int(low.level), "Masonry 1 is every adult's (the recipe's level)")
 
 
 ## Blocks come only out of stone: one stone, no block; a master's practised hand saves nothing and adds nothing.
@@ -116,7 +116,7 @@ func _test_no_free_blocks() -> void:
 	p.inv.add("stone", 1)
 	check(w.work_craft(p, "dress_stone", p.inv).result == "materials" and p.inv.count("building_block") == 0 and p.inv.count("stone") == 1,
 			"one stone makes no block")
-	p.skills["crafting"] = Skills.xp_for_level(10)              # save_chance 0.25, bonus_chance 0.2 for other recipes
+	p.skills["masonry"] = Skills.xp_for_level(10)              # save_chance 0.25, bonus_chance 0.2 for other recipes
 	p.inv.add("stone", 199)
 	var made0 := int(w.stats.get("made_building_block", 0))
 	var used0 := int(w.stats.get("used_stone", 0))

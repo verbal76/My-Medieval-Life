@@ -8,7 +8,7 @@ extends RefCounted
 ## - Experience: 1 experience day per 8 game hours of work in an industry (`experience.minutes_per_day`, 480). It never
 ##   decays and is never reduced by facilities, other workers or time away; it leaves with the person (`forget`, at
 ##   death or departure: World prunes it at dawn).
-## - Caps (experience days): mining, forestry 12; farming, trade, tanning 18; carpentry, smithing 24 (`caps_days`).
+## - Caps (experience days): mining, forestry 12; farming, trade, tanning 18; carpentry, masonry, smithing 24 (`caps_days`).
 ## - Individual level = 10 x min(days, cap) / cap: straight-line, 0-10, real-valued. Each worker's own; nobody inherits
 ##   another's (a master beside an apprentice changes neither).
 ## - Workforce level of an industry: the hours-weighted average of the individual levels of the workers active in it in
@@ -32,8 +32,8 @@ const KEY := "x18_experience"              # optional save key: a save without i
 const FORMAT := "mml-x18-experience/1"     # 1: D1 starting experience (seeded, start); 0: records only (read, never seeded)
 const FORMAT_0 := "mml-x18-experience/0"
 ## The skill whose recorded level gives an industry's starting experience (owner D1; farming has none: farming_start_days).
-const SKILL_OF := {"mining": "mining", "forestry": "woodcutting", "smithing": "smithing", "carpentry": "crafting",
-	"tanning": "crafting", "trade": "trading"}
+const SKILL_OF := {"mining": "mining", "forestry": "woodcutting", "smithing": "smithing", "carpentry": "carpentry",
+	"masonry": "masonry", "tanning": "tanning", "trade": "trading"}
 const PLAYER := "player"
 
 var minutes := {}      # person key -> {industry: minutes worked, ever, in this settlement}

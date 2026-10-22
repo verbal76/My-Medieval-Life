@@ -1571,7 +1571,7 @@ func _dvw_a12_crafting() -> void:
 	var cp := w.player_craft_begin("saw_planks")
 	check(not cp.ok and str(cp.why) == "You do not have the materials." and not w.player_at_station(sid), "DVW-A12 R3: a refused craft does not hold the station")
 	p.inv.add("leather", 4)
-	check(w.player_craft_refusal("leather_armor") == "Needs Crafting level 2.", "DVW-A12 R3: a recipe above the player's level is refused (%s)" % w.player_craft_refusal("leather_armor"))
+	check(w.player_craft_refusal("leather_armor") == "Needs Tanning level 2.", "DVW-A12 R3: a recipe above the player's level is refused (%s)" % w.player_craft_refusal("leather_armor"))
 	p.inv.add("log", 2)
 	cp = w.player_craft_begin("saw_planks")
 	var want := float(rec.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
@@ -1596,7 +1596,7 @@ func _dvw_a12_crafting() -> void:
 	var used0 := float(w.stats.get("used_log", 0.0))
 	var res := w.player_craft("saw_planks")
 	check(res.result == "ok" and p.inv.count("log") == 1 and p.inv.count("plank") == 2, "DVW-A12 R3: a log in, two planks out")
-	check(float(w.stats.get("made_plank", 0.0)) - made0 == 2.0 and float(w.stats.get("used_log", 0.0)) - used0 == 1.0 and int(p.skills.get("crafting", 0)) == int(rec.xp), "DVW-A12 R3: counted (made_plank, used_log) and the recipe's xp")
+	check(float(w.stats.get("made_plank", 0.0)) - made0 == 2.0 and float(w.stats.get("used_log", 0.0)) - used0 == 1.0 and int(p.skills.get("carpentry", 0)) == int(rec.xp), "DVW-A12 R3: counted (made_plank, used_log) and the recipe's xp")
 	# the craft window's Make button follows core's refusal
 	main.ui.show_craft(sid)
 	var make_on := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
@@ -1620,7 +1620,7 @@ func _dvw_a12_crafting() -> void:
 	check(p.inv.count("plank") == 4 and not p.inv.has("log") and not w.player_at_station(sid), "DVW-A12 R3: the work makes the planks and frees the station")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
-	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("crafting", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
+	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("carpentry", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
 	_restore_pack(keep)
 
 

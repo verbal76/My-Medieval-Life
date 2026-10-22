@@ -29,7 +29,7 @@ extends RefCounted
 const SETTLEMENT_EFFECTS := ["unit_time", "pay"]
 const SKILL_QUANTITY_EFFECTS := ["ore_extra_chance", "save_chance", "bonus_chance", "log_bonus", "sapling_bonus"]
 const SKILL_TIME_EFFECTS := {"mining": "mine_time", "forestry": "chop_time", "smithing": "craft_time", "carpentry": "craft_time",
-	"tanning": "craft_time"}
+	"masonry": "craft_time", "tanning": "craft_time"}
 
 
 ## Minutes one unit takes: the base time, shortened by the worker's own skill (skill_time, the Skills time factor, 1.0 =

@@ -112,6 +112,9 @@ func test_notary() -> void:
 	fa.tick(float(ag.back) + 0.01)
 	check(fa.binding(ag) and str(ag.holder) == ref(a) and notary.coins - n0 == int(ag.fee), "back with both signatures: the contract is complete; the notary is paid its fee (%d)" % int(ag.fee))
 	check(coins() == before, "every coin accounted for")
+	var lw: Dictionary = CourierService.cfg().law
+	check(int(notary.skills.law) == Skills.xp_for_level(int(c.min_level)) + 2 * int(lw.witness_xp) + int(lw.carry_xp),
+		"LAW-SKILL: the notary learned from it: two signatures witnessed and a document carried home (Law %d xp)" % int(notary.skills.law))
 	# rejected
 	var rj := fa.draft("ownership", [ref(a), "region:eastmarch"], 80)
 	rj.refuse = true

@@ -81,6 +81,7 @@ var stats := {}                    # running ledger (food made, eaten, exported,
 var last_hour := -1
 var guard_posts: Array = []        # patrol points
 var bandit_camp := Vector2i.ZERO
+var law_lessons := {}              # LAW-SKILL: pupil ref -> [day, lessons that day] (Law.teach); saved only when set
 var outlaw_gone_day := -1            # BANDIT-RETURN: the day the last bandit died (-1 while one lives); saved only when set (Outlaws)
 var sage_id := -1
 var reeve_id := -1
@@ -188,7 +189,9 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	give_start_kit(player)
 	Life.init_player(self)             # B8-029
 	Skills.seed_villagers(self)        # PAR-01A: the settlers' history at their trades (only here and in an old save's migration)
+	Skills.seed_trades(self)           # SKILL-TRADES-18: Carpentry, Masonry and Tanning start from each person's Crafting
 	experience.seed_once(self)              # X18 HOOK (owner D1): the settlers' starting industry experience, once, from their recorded skills
+	Skills.seed_farming(self)               # DVW-B8: Farming starts from the recorded farming experience
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	index_interiors()
@@ -569,6 +572,9 @@ func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
 		var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
 		ind = WorkExperience.industry_of_step(act, args, kind)
 	experience.credit(World.npc_ref(n.id), ind, mins, minutes)
+	var sx := Skills.step_xp(act)         # DVW-B8: Farming and Husbandry are trained by the work, the villager's as the player's
+	if not sx.is_empty() and n.role in ["adult", "elder"]:
+		Skills.gain(n, str(sx.skill), int(sx.xp))
 
 
 ## X18 HOOK (X18-CAPCOMP part 1): credit the player's finished work (`secs` real seconds of an action in `industry`).
@@ -1615,6 +1621,7 @@ func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
 		fauna.provoke(a, "player")
 		return {"killed": false, "guard": ""}
 	player_xp("combat", Skills.kill_xp(a.species, player.damage()))
+	player_xp("hunting" if a.wild() else "husbandry", Skills.action_xp("hunt" if a.wild() else "slaughter"))    # DVW-B8
 	var keeper: NPC = null
 	if not a.wild():
 		keeper = pen_keeper(fauna.pens[a.area])
@@ -2723,6 +2730,7 @@ func player_harvest(f: Dictionary) -> int:
 	if n <= 0:
 		return 0
 	player.inv.add("wheat", n)
+	player_xp("farming", Skills.action_xp("harvest"))        # DVW-B8
 	var taken := n - quests.hired_harvest(f, n)
 	var victim := field_owner(f)
 	if victim != null and taken > 0:
@@ -3387,6 +3395,7 @@ func player_use_medicine(id: String) -> bool:
 	if not player.inv.remove(id):
 		return false
 	player.hp = minf(player.hp_cap(), player.hp + float(it.heal))
+	player_xp("healing", Skills.action_xp("treat"))          # DVW-B8: dressing a wound trains Healing
 	stat("used_medicine")
 	stat("used_" + id)
 	return true
@@ -3989,7 +3998,8 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
-	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
+	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -4121,8 +4131,13 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
 	if int(d.get("save_version", 0)) < 15:
 		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills
+	var trades_new := not d.has("trade_skills")
+	if trades_new:
+		Skills.seed_trades(self)       # SKILL-TRADES-18: a save from before the trade skills: each starts from the person's Crafting, once
 	if not d.has(WorkExperience.KEY):
 		experience.seed_once(self)          # X18 HOOK (owner D1): a save with no experience section is given its starting experience once
+	if trades_new:
+		Skills.seed_farming(self)       # DVW-B8: Farming starts from the recorded (or just seeded) farming experience, once
 	_migrate_property(d)
 	if d.has("treasury"):
 		treasury = int(d.treasury)
@@ -4151,6 +4166,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	farm_plots.load_dict(d.get("farm_plots", {}))   # FARM-01..05: older saves have no farmland
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
+	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
 	outlaw_gone_day = int(d.get("outlaw_gone_day", -1))     # BANDIT-RETURN: absent in an older save
 	Outlaws.after_load(self)
 	_guard_posts()

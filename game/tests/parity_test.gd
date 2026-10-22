@@ -303,16 +303,16 @@ func test_eleven_recipes() -> void:
 			o.inv.items.erase("bread")
 	free_stations.call()
 	check(w.brain._cook(cook) and str(cook.plan[-1].get("args", {}).get("recipe", "")) == "knead_flatbread", "with no egg, the cook kneads flatbread for the tavern")
-	# the sage: the herbal tonic, and the strong tonic at Cooking 3
+	# the sage: the herbal tonic, and the strong tonic at Healing 3
 	var sage := w.npc(w.sage_id)
 	sage.inv.items.clear()
 	sage.plan.clear()
 	sage.inv.add("herbal_poultice", 8)
 	sage.inv.add("healing_tonic", 6)
 	sage.inv.add("ale", 1)
-	sage.skills = {"cooking": Skills.xp_for_level(3)}
+	sage.skills = {"cooking": Skills.xp_for_level(3), "healing": Skills.xp_for_level(3)}
 	free_stations.call()
-	check(w.brain._plan_job(sage) and str(sage.plan[-1].get("args", {}).get("recipe", "")) == "brew_strong_tonic", "at Cooking 3 the sage brews the strong tonic")
+	check(w.brain._plan_job(sage) and str(sage.plan[-1].get("args", {}).get("recipe", "")) == "brew_strong_tonic", "at Healing 3 the sage brews the strong tonic")
 	sage.plan.clear()
 	sage.inv.items.erase("ale")
 	sage.inv.add("flower", 3)

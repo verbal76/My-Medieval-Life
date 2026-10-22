@@ -70,7 +70,7 @@
           "needs": [
             {
               "kind": "practitioners",
-              "skill": "crafting",
+              "skill": "carpentry",
               "min_level": 1,
               "count": 1,
               "as": "carpenter"
@@ -93,7 +93,7 @@
           "needs": [
             {
               "kind": "practitioners",
-              "skill": "crafting",
+              "skill": "carpentry",
               "min_level": 3,
               "tool": "hammer",
               "count": 1,
@@ -103,6 +103,49 @@
               "kind": "station",
               "type": "workbench",
               "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    "masonry": {
+      "name": "Masonry",
+      "levels": [
+        {
+          "level": 1,
+          "name": "Dressing",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "masonry",
+              "min_level": 1,
+              "tool": "mallet",
+              "count": 1,
+              "as": "mason"
+            },
+            {
+              "kind": "station",
+              "type": "workbench",
+              "count": 1
+            },
+            {
+              "kind": "stock",
+              "item": "stone",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "name": "Building stone",
+          "needs": [
+            {
+              "kind": "practitioners",
+              "skill": "masonry",
+              "min_level": 3,
+              "tool": "mallet",
+              "count": 1,
+              "as": "master mason"
             }
           ]
         }
@@ -246,7 +289,7 @@
           "needs": [
             {
               "kind": "practitioners",
-              "skill": "crafting",
+              "skill": "tanning",
               "min_level": 1,
               "count": 1,
               "as": "tanner"
@@ -368,6 +411,7 @@
           "mining": 0.2,
           "forestry": 0.2,
           "carpentry": 0.2,
+          "masonry": 0.2,
           "smithing": 0.2,
           "farming": 0.2,
           "tanning": 0.2,
@@ -382,6 +426,7 @@
           "mining": 0.2,
           "forestry": 0.2,
           "carpentry": 0.2,
+          "masonry": 0.2,
           "smithing": 0.2,
           "farming": 0.2,
           "tanning": 0.2,
@@ -396,6 +441,7 @@
           "mining": 0.2,
           "forestry": 0.2,
           "carpentry": 0.2,
+          "masonry": 0.2,
           "smithing": 0.2,
           "farming": 0.2,
           "tanning": 0.2,
@@ -412,6 +458,7 @@
           "trade": "intermediate",
           "tanning": "intermediate",
           "carpentry": "owner_candidate",
+          "masonry": "owner_candidate",
           "smithing": "owner_candidate"
         },
         "output_max": {
@@ -421,6 +468,7 @@
           "trade": 0.16,
           "tanning": 0.2,
           "carpentry": 0.25,
+          "masonry": 0.25,
           "smithing": 0.28
         },
         "pay_ratio": 0.4
@@ -432,6 +480,7 @@
           "mining": 0.1,
           "forestry": 0.1,
           "carpentry": 0.1,
+          "masonry": 0.1,
           "smithing": 0.1,
           "farming": 0.1,
           "tanning": 0.1,
@@ -446,6 +495,7 @@
           "mining": 0.2,
           "forestry": 0.2,
           "carpentry": 0.2,
+          "masonry": 0.2,
           "smithing": 0.2,
           "farming": 0.2,
           "tanning": 0.2,
@@ -460,6 +510,7 @@
           "mining": 0.35,
           "forestry": 0.35,
           "carpentry": 0.35,
+          "masonry": 0.35,
           "smithing": 0.35,
           "farming": 0.35,
           "tanning": 0.35,
@@ -476,6 +527,7 @@
           "trade": "intermediate",
           "tanning": "intermediate",
           "carpentry": "owner_candidate",
+          "masonry": "owner_candidate",
           "smithing": "owner_candidate"
         },
         "output_max": {
@@ -485,6 +537,7 @@
           "trade": 0.1,
           "tanning": 0.1,
           "carpentry": 0.15,
+          "masonry": 0.15,
           "smithing": 0.15
         },
         "pay_ratio": 0.4
@@ -498,6 +551,7 @@
           "trade": "intermediate",
           "tanning": "intermediate",
           "carpentry": "owner_candidate",
+          "masonry": "owner_candidate",
           "smithing": "owner_candidate"
         },
         "output_max": {
@@ -507,6 +561,7 @@
           "trade": 0.1,
           "tanning": 0.1,
           "carpentry": 0.15,
+          "masonry": 0.15,
           "smithing": 0.15
         },
         "pay_ratio": 0.4
@@ -528,6 +583,9 @@
         "plank",
         "cart_wheel",
         "handcart"
+      ],
+      "masonry": [
+        "building_block"
       ],
       "smithing": [
         "iron_bar",
@@ -593,6 +651,8 @@
       "trade": 18,
       "tanning": 18,
       "carpentry": 24,
+      "masonry": 24,
+      "masonry": 24,
       "smithing": 24
     },
     "window_game_days": 2,

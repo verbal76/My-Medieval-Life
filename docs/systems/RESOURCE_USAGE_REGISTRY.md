@@ -659,7 +659,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `ore_sample` | assay | Read by a smith at the forge for a fee, with a coal (Prospecting.assay, MIN-C): the sample is used up and its reading becomes a record its holder and the smith know. | `game/scripts/core/prospecting.gd::assay` |
 | `padlock` | tool | Fitted to the player's own chest (used up once): the chest is then locked or unlocked with the player's key. | `game/scripts/core/chests.gd::set_own_lock` |
 | `pine_sapling` | plant | Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature pine by the game clock. | `game/scripts/core/world.gd::plant_tree` |
-| `plank` | building | B14-07: wooden stairs (3 a rim cell) and walkways (2 a rim cell) built through a mountain's cliff rim in the world outside (with nails, a mallet and Crafting 2). | `game/scripts/core/terrain.gd::build` |
+| `plank` | building | B14-07: wooden stairs (3 a rim cell) and walkways (2 a rim cell) built through a mountain's cliff rim in the world outside (with nails, a mallet and Carpentry 2). | `game/scripts/core/terrain.gd::build` |
 | `plank` | manor_job | Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend). | `game/scripts/core/npc_brain.gd::_public_works` |
 | `plank` | building | Fence round family farmland (FARM-02, owner Q9): one plank per 3 fence cells of the plot's perimeter, the gate cell free (the player pen's rule), used up. | `game/scripts/core/farm_plots.gd::build_fence` |
 | `potato_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |

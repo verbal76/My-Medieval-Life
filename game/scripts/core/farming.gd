@@ -203,6 +203,7 @@ func till(c: Vector2i, p: PlayerState) -> String:
 			p.tool = ""
 	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0}
 	w.stat("farm_tilled")
+	w.player_xp("farming", Skills.action_xp("till"))      # DVW-B8
 	_show_around(c)
 	return ""
 
@@ -234,6 +235,7 @@ func sow(c: Vector2i, crop: String, p: PlayerState) -> String:
 	w.stat("used_" + str(crops()[crop].seed))          # the seed is used up (SEED-02: the ledger counts it)
 	cells[c] = {"crop": crop, "state": "growing", "progress": 0.0}
 	w.stat("farm_sown_" + crop)
+	w.player_xp("farming", Skills.action_xp("sow"))       # DVW-B8
 	_show_around(c)
 	return ""
 
@@ -277,6 +279,7 @@ func harvest(c: Vector2i, p: PlayerState) -> Dictionary:
 	for id in out:
 		p.inv.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))
+	w.player_xp("farming", Skills.action_xp("harvest"))   # DVW-B8
 	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0}
 	_show(c)
 	return out
@@ -630,6 +633,8 @@ func collect(pen: Dictionary, p: PlayerState) -> Dictionary:
 			pen.products[id] = int(pen.products[id]) - n
 			got[id] = n
 			w.stat("made_" + id, float(n))           # a pen's products become goods when collected
+	if not got.is_empty():
+		w.player_xp("husbandry", Skills.action_xp("collect_pen"))      # DVW-B8
 	return got
 
 

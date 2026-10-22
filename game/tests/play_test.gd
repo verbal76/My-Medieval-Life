@@ -141,7 +141,7 @@ func _run() -> void:
 				src = n
 		if src:
 			w.trade(p, src, "leather", 1, w.sell_price(src, "leather"))
-	p.skills["crafting"] = maxi(int(p.skills.get("crafting", 0)), 100)
+	p.skills["tanning"] = maxi(int(p.skills.get("tanning", 0)), 100)
 	p.pos = Vector2(w.station_use(w.stations_of("workbench")[0])) + Vector2(0.5, 0.5)
 	main.craft("leather_armor")
 	finish_action()

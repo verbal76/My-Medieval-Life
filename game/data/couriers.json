@@ -22,9 +22,17 @@
     "counter_steps": 3
   },
   "notary": {
-    "_note": "Owner Q18-13: a courier with legal skill may act as a notary. The game has no 'law' skill; PROVISIONAL check: an existing skill at a level, until the owner decides which skill counts (owner question Q18-14).",
-    "skill": "trading",
-    "min_level": 5
+    "_note": "Owner Q18-13 and Q18-14 (2026-10-23, docs/directives/2026-10-23_owner_answers_q18_14_16.md): a courier with some Law may act as a notary. The Law skill (skills.json, LAW-SKILL) is the qualification; the level is a PROVISIONAL agent proposal (the owner has not named one): Law 2, which the reeve's lessons alone can reach.",
+    "skill": "law",
+    "min_level": 2
+  },
+  "law": {
+    "_note": "LAW-SKILL (owner Q18-14): Law starts at 0 for everyone, is raised by witnessing and carrying formal documents and is taught by the clergy or the reeve. UNAPPROVED provisional numbers (agent proposals). witness_xp: a signature given before a notary courier, to the notary who witnesses it; carry_xp: a notarised document brought home, to the courier who carried it (whatever the answer: they did the carrying). teachers: who teaches, as {role: highest Law level they teach}; the reeve exists today, the clergy do not yet (the chapel is not built), so that entry only waits: a clergy teacher is any villager whose job is listed and who is alive, nothing else changes. lesson_xp and lessons_per_day: one lesson of this many experience points, at most this many a game day for a pupil, from one teacher.",
+    "witness_xp": 10,
+    "carry_xp": 20,
+    "lesson_xp": 50,
+    "lessons_per_day": 1,
+    "teachers": {"reeve": 3, "clergy": 6}
   },
   "contracts": {
     "_note": "Owner Q18-13: ordinary small agreements need no signatures; formal commercial contracts and ownership transfers need every party's signature, given face to face or before a travelling notary. small_value: the most an agreement may be worth to count as small (UNAPPROVED provisional). face_to_face_tiles: how near two parties must stand to sign together.",

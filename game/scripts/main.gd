@@ -2835,6 +2835,8 @@ func _use() -> void:
 					_gain("+%d %s" % [int(got[k]), GameData.item_name(k)], k))
 		"pen":
 			var put := world.fauna.feed(target.pen, p.inv, 5)
+			if put > 0:
+				world.player_xp("husbandry", Skills.action_xp("feed_pen"))    # DVW-B8
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
 		"animal":
 			var own: bool = not target.animal.wild() and world.fauna.pens.has(target.animal.area) and world.fauna.pens[target.animal.area].get("player", false)

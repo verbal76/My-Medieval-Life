@@ -900,7 +900,7 @@ func _run() -> void:
 	check(int(held_q.get("reserved", 0)) == 6 and _press("Here you are") and p.coins == wage0 + 6 and farmer_h.coins == purse_h and w.total_coins() == coins_all,
 			"handing in the wheat pays the wage the farmer set aside from their purse")
 	ui.hide_all()
-	# a skill quest: the tanner teaches Crafting for two hides, under the scroll marker
+	# a skill quest: the tanner teaches Tanning for two hides, under the scroll marker
 	var tanner: NPC = null
 	for n: NPC in w.npcs:
 		if n.alive and n.job == "tanner":
@@ -921,7 +921,7 @@ func _run() -> void:
 	var note: Label = null
 	check(_press("Here you are"), "handing in the hides")
 	note = ui.panel_body.find_child("Note", true, false)
-	check(p.level("crafting") == 2 and note != null and note.text.contains("Crafting is now level 2") and note.text.contains("leather armour"), "the talk window says what was learned: %s" % (note.text if note else "no note"))
+	check(p.level("tanning") == 2 and note != null and note.text.contains("Tanning is now level 2") and note.text.contains("leather armour"), "the talk window says what was learned: %s" % (note.text if note else "no note"))
 	ui.hide_all()
 
 	# 19-20. save, reload, and the state is the same

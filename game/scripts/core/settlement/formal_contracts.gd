@@ -7,8 +7,8 @@ extends RefCounted
 ##   - parties meeting face to face may sign without a notary (both present, within face_to_face_tiles, the same place);
 ##   - when they cannot meet, a courier with legal skill acts as notary: it carries the document physically from one party
 ##     to the other for signing and brings it back; nothing is signed remotely or instantly.
-## The game has no "law" skill: the notary's qualification is a provisional data check (couriers.json notary: an
-## existing skill at a level) until the owner says which skill counts (owner question Q18-14).
+## The notary's qualification is the Law skill (owner Q18-14, LAW-SKILL; Law.qualified; couriers.json notary: law at a
+## provisional level). A notary gains Law by witnessing the signatures and carrying the document home (Law.witnessed, carried).
 ## An agreement records who holds the document; a signature needs the signer where the document is. Not wired into the
 ## live game: tests drive it. Reconciles with CON-01 (Build 17) at the gate: a formal goods contract is a CON-01 contract
 ## whose acceptance waits for these signatures.
@@ -101,11 +101,7 @@ func sign(a: Dictionary, who: String) -> String:
 
 
 func notary_qualified(ref: String) -> bool:
-	var n = couriers._npc(ref)
-	if n == null or not n.alive:
-		return false
-	var c: Dictionary = CourierService.cfg().notary
-	return Skills.level(n, str(c.skill)) >= int(c.min_level)
+	return Law.qualified(w, ref)
 
 
 ## Send the document with a notary courier from `from` (who signs before the notary as it leaves) to `to` in another
@@ -115,7 +111,7 @@ func send_with_notary(a: Dictionary, notary: String, from: String, to: String) -
 	if str(a.class) == "small":
 		return "A small agreement needs no notary."
 	if not notary_qualified(notary):
-		return "That courier has no legal standing to notarise (provisional: %s %d)." % [str(CourierService.cfg().notary.skill), int(CourierService.cfg().notary.min_level)]
+		return "That courier does not know enough law to notarise (Law %d)." % int(CourierService.cfg().notary.min_level)
 	if str(a.holder) != from:
 		return "You do not hold the document."
 	if not couriers.alive(to):
@@ -126,6 +122,7 @@ func send_with_notary(a: Dictionary, notary: String, from: String, to: String) -
 		return "You cannot pay the notary's fee (%d coins) at a booth." % fee
 	if not a.signatures.has(from):
 		a.signatures[from] = _day()                 # signed before the notary as it leaves
+		Law.witnessed(w, notary)
 	couriers.add_coins(from, -fee)
 	b.escrow = int(b.escrow) + fee
 	a.fee = fee
@@ -161,6 +158,7 @@ func tick(day: float) -> void:
 				a.history.append([day, "%s would not sign" % str(a.to)])
 			else:
 				a.signatures[str(a.to)] = day
+				Law.witnessed(w, str(a.notary))
 				a.history.append([day, "%s signed before the notary" % str(a.to)])
 		if bool(a.get("arrived", false)) and day >= float(a.back):
 			_return(a, day)
@@ -170,6 +168,7 @@ func _return(a: Dictionary, day: float) -> void:
 	var hb := couriers.booth(str(a.held_at))
 	hb.escrow = int(hb.escrow) - int(a.fee)
 	couriers.add_coins(str(a.notary), int(a.fee))   # the notary did the work: paid, whatever the answer
+	Law.carried(w, str(a.notary))
 	a.holder = str(a.home)
 	a.at = couriers.place_of(str(a.home))
 	if str(a.state) == "rejected_returning":

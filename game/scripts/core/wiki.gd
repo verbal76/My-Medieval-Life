@@ -444,6 +444,8 @@ func _skills() -> void:
 		for l in Skills.shown_levels(id):
 			rows.append(["Level " + str(l), Skills.tier_text(id, l)])
 		var blocks := [p("Levels 1 to %d. You gain experience by doing the work; see Skills and levels for the curve." % Skills.max_level()), stats(rows)]
+		if str(s.get("about", "")) != "":
+			blocks.insert(0, p(str(s.about)))
 		var rl := []
 		for r in GameData.recipes:
 			if GameData.recipes[r].skill == id:

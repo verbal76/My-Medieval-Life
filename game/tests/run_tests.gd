@@ -1248,7 +1248,7 @@ func test_hiring() -> void:
 	w2.dispose()
 
 
-## A side quest that teaches a skill: the tanner shows the scroll, and two hides raise Crafting to
+## A side quest that teaches a skill: the tanner shows the scroll, and two hides raise Tanning to
 ## level 2, which unlocks leather armour.
 func test_skill_quest() -> void:
 	var w := new_world()
@@ -1260,21 +1260,21 @@ func test_skill_quest() -> void:
 	check(w.quests.offer_of(tanner).get("id", "") == "the_tanners_craft", "a tanner short of hides offers to teach")
 	check(w.quests.marker(tanner) == "skill", "the teacher shows the skill scroll")
 	var rec: Dictionary = GameData.recipes["leather_armor"]
-	check(p.level("crafting") < int(rec.level), "leather armour is out of reach before")
+	check(p.level("tanning") < int(rec.level), "leather armour is out of reach before")
 	var q: Dictionary = w.quests.accept(tanner)
 	p.inv.add("hide", 2)
 	var coins0 := w.total_coins()
 	var hides0 := tanner.inv.count("hide")
 	check(w.quests.complete(q) == 0 and tanner.inv.count("hide") == hides0 + 2 and not p.inv.has("hide"), "the hides go to the tanner")
-	check(p.level("crafting") == 2 and p.level("crafting") >= int(rec.level), "the player's Crafting is now level 2: leather armour can be made")
-	check(w.quests.last_learned.contains("Crafting is now level 2") and w.quests.last_learned.contains("leather armour"), "what was learned is said: %s" % w.quests.last_learned)
+	check(p.level("tanning") == 2 and p.level("tanning") >= int(rec.level), "the player's Tanning is now level 2: leather armour can be made")
+	check(w.quests.last_learned.contains("Tanning is now level 2") and w.quests.last_learned.contains("leather armour"), "what was learned is said: %s" % w.quests.last_learned)
 	check(w.total_coins() == coins0, "teaching makes no coins")
 	# a player who already knows it is not offered it
 	w.quests.offers.clear()
 	tanner.inv.remove("hide", tanner.inv.count("hide"))
 	w.quests.refresh()
 	check(w.quests.offer_of(tanner).is_empty(), "a player at level 2 is not offered the lesson")
-	check(not p.raise_to("crafting", 2) and p.raise_to("smithing", 3) and p.level("smithing") == 3 and p.xp_into_level("smithing").x == 0, "teaching raises a skill to the start of a level, never down")
+	check(not p.raise_to("tanning", 2) and p.raise_to("smithing", 3) and p.level("smithing") == 3 and p.xp_into_level("smithing").x == 0, "teaching raises a skill to the start of a level, never down")
 	w.dispose()
 
 

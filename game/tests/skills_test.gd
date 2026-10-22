@@ -168,7 +168,7 @@ func test_text_and_wiki() -> void:
 	var line := Skills.tier_text("mining", 3)
 	check(line.contains("Mine gold ore"), "tier text names the unlock: %s" % line)
 	check(Skills.tier_text("mining", 2).contains("25%"), "tier text prints the number from the data: %s" % Skills.tier_text("mining", 2))
-	check(Skills.tier_text("crafting", 2).contains("leather armour") or Skills.tier_text("crafting", 2).contains("leather armor"), "recipe unlocks are listed by level: %s" % Skills.tier_text("crafting", 2))
+	check(Skills.tier_text("tanning", 2).contains("leather armour") or Skills.tier_text("tanning", 2).contains("leather armor"), "recipe unlocks are listed by level: %s" % Skills.tier_text("tanning", 2))
 	check(Skills.tier_text("stealth", 2).contains("%"), "stealth prints the resulting chance: %s" % Skills.tier_text("stealth", 2))
 	var w := Wiki.build()
 	check(w.pages.has("sys:skills") and w.pages.has("skill:mining"), "the wiki has the skills page and each skill's page")

@@ -29,7 +29,7 @@ static func _cliff_ways(sys: Callable) -> void:
 		Wiki.p("Nails are forged from an iron bar at the anvil, a dozen at a time; a mallet is made from a log and a plank at the workbench. The smith forges nails and the carpenter makes mallets when the goods merchant wants them, so you can buy them at the goods stall."),
 		Wiki.h("Always a way back"),
 		Wiki.p("A way runs both ways and is never undone, so whoever goes up can come down the same way. No way is cut from the ground through to the ground on the other side: a mountain range is never tunnelled. Nothing grows back to close a top: a tree felled on a top never grows again, and nothing can be planted there. In the village too, there is no corner you can walk into and not out of."),
-		Wiki.links(["item:nails", "item:mallet", "item:pickaxe", "recipe:forge_nails", "recipe:make_mallet", "skill:mining", "skill:crafting"])],
+		Wiki.links(["item:nails", "item:mallet", "item:pickaxe", "recipe:forge_nails", "recipe:make_mallet", "skill:mining", "skill:carpentry"])],
 		"cliff steps stairs walkway mountain plateau climb rim nails mallet carpentry")
 
 

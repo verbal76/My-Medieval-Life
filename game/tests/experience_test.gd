@@ -322,8 +322,8 @@ func test_report() -> void:
 	var w := _run(1, 1.0)
 	var r := SettlementReport.village(w)
 	var wf: Dictionary = r.workforce
-	check(wf.size() == 7 and wf.has("trade") and str(wf.trade.status) == "ok" and float(wf.trade.hours) > 0.0,
-		"the settlement report lists the seven industries' workforce; trade now has hours (the merchants keep the stall open, owner D4): %s" % str(wf.trade))
+	check(wf.size() == 8 and wf.has("trade") and str(wf.trade.status) == "ok" and float(wf.trade.hours) > 0.0,
+		"the settlement report lists the eight industries' workforce (masonry joined the seven, Q18-2); trade now has hours (the merchants keep the stall open, owner D4): %s" % str(wf.trade))
 	check(str(wf.mining.status) == "ok" and near(float(wf.mining.level), float(wf.mining.effective)),
 		"mining reports its workforce level %.3f, the effective average equal while no facility rule exists" % float(wf.mining.level))
 
@@ -354,8 +354,8 @@ func test_d1_formula() -> void:
 		and near(w.experience.days(World.npc_ref(s8.id), "smithing"), 19.2) and near(w.experience.days(World.npc_ref(s6.id), "smithing"), 14.4)
 		and near(w.experience.level(World.npc_ref(s8.id), "smithing"), 8.0) and near(w.experience.level(World.npc_ref(s6.id), "smithing"), 6.0),
 		"the seed-1 smiths (Skills 8 and 6) start with 19.2 and 14.4 smithing days: experience levels 8 and 6")
-	check(near(w.experience.days(World.npc_ref(s8.id), "carpentry"), 0.0 if int(s8.skills.get("crafting", 0)) <= 0 else WorkExperience.cap_days("carpentry") * Skills.level(s8, "crafting") / 10.0),
-		"industries are independent: a smith's carpentry start comes from their crafting record only")
+	check(near(w.experience.days(World.npc_ref(s8.id), "carpentry"), 0.0 if int(s8.skills.get("carpentry", 0)) <= 0 else WorkExperience.cap_days("carpentry") * Skills.level(s8, "carpentry") / 10.0),
+		"industries are independent: a smith's carpentry start comes from their carpentry record only")
 	check(not w.experience.minutes.has(WorkExperience.PLAYER), "the player gets no starting experience (PAR-01A: the player gets none)")
 	check(w.experience.recent.is_empty(), "the starting experience is not recent work: nobody is active in the season's report until they work")
 	var no_xp := true

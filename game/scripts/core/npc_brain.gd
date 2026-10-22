@@ -640,7 +640,7 @@ func _carpenter_shovel(n: NPC) -> bool:
 ## STONE-01 (owner decision 2026-10-21: "Quarry extraction → Raw stone → Stoneworking → Finished building blocks →
 ## Construction"): the labourer is the village's stoneworker. While building blocks are wanted (the raw-goods merchant
 ## buys them for builders, or open sites need more than anyone has on sale) a labourer with a mallet dresses the raw
-## stone they hold into blocks at a workbench (dress_stone, the player's recipe: two stone, half an hour, Crafting 1)
+## stone they hold into blocks at a workbench (dress_stone, the player's recipe: two stone, half an hour, Masonry 1)
 ## and sells them on; without a mallet they buy one (the goods merchant's, made by the carpenter); without stone in
 ## hand they quarry it as before (false: _miner), or, when no stone is left to quarry or the merchant has all the stone
 ## it will take, buy the merchant's (quarried stone, or the caravan's). Nothing is dressed for nobody: with no demand, false and the day goes on as before.
@@ -753,7 +753,7 @@ func _plan_cart(n: NPC, house: Dictionary) -> bool:
 	if bench != "" and (parts < whole or maker == null):
 		w.stations[bench].users[n.id] = w.minutes + w.map.data.w * 3 + float(rec.minutes) + 120.0
 		n.doing = "gathering parts for a handcart"
-		n.plan = parts_plan + [go(w.station_use(bench)), work(CapabilityHook.work_time(float(rec.minutes), "carpentry", Skills.value(n, "crafting", "craft_time", 1.0), n), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
+		n.plan = parts_plan + [go(w.station_use(bench)), work(CapabilityHook.work_time(float(rec.minutes), "carpentry", Skills.value(n, "carpentry", "craft_time", 1.0), n), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
 		return true
 	if maker != null and n.coins >= whole:
 		n.doing = "buying a handcart"
@@ -2266,6 +2266,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					from.remove(m)
 					n.hp = minf(n.max_hp, n.hp + float(GameData.item(m).heal))
 					w.stat("npc_used_" + m)
+					Skills.gain(n, "healing", Skills.action_xp("treat"))     # DVW-B8
 					w.stat("used_" + m)                   # consumed, as when the player uses one (EQ-10)
 					return true
 			return false
@@ -2511,6 +2512,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if prey == null or prey.pos.distance_to(n.pos) > 3.0:
 				return true            # it got away; the hunter picks another
 			w.stat("hunted_" + prey.species)
+			Skills.gain(n, "hunting", Skills.action_xp("hunt"))     # DVW-B8: the hunt trains Hunting, as the player's
 			Skills.gain(n, "combat", Skills.kill_xp(prey.species, n.damage * Skills.value(n, "combat", "damage_mult", 1.0)))     # per kill, the player's rule (FSE-B12)
 			var bag: Inventory = w.fauna.kill(prey)
 			for id in bag.ids():

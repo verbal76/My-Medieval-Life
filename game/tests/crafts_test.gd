@@ -162,5 +162,5 @@ func test_old_overworld_save() -> void:
 func test_wiki() -> void:
 	var wk := Wiki.build()
 	var t: String = wk.pages.get("sys:cliff_ways", {}).get("text", "")
-	check(t.contains("pickaxe and mining level 2") and t.contains("mallet and crafting level 2") and t.contains("both ways") and t.contains("never grows again")
+	check(t.contains("pickaxe and mining level 2") and t.contains("mallet and carpentry level 2") and t.contains("both ways") and t.contains("never grows again")
 			and "sys:cliff_ways" in wk.search("stairs"), "the wiki explains cliff steps, stairs and walkways")
