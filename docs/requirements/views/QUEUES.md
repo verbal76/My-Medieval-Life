@@ -2,20 +2,15 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (6)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| LAW-SKILL | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
 | MIGRATE-18 | 18 | IN DEVELOPMENT | migration worker (Sonnet subagent, started 2026-10-23) | wip/b18-migration |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| TRADE-CREDIT | 18 | IN DEVELOPMENT | credit worker (Sonnet subagent, started 2026-10-23) | wip/b18-credit |
-| X18-Q12-BOOTH | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
-| X18-Q12-POST | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
-| X18-Q13 | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 
 ## Implemented but not tested (48)

@@ -21944,11 +21944,13 @@
     "A Law skill for player and villagers, saved and migrated (start 0); raised by witnessing and carrying documents and by teaching from the clergy or reeve; couriers.json notary check uses it; wiki updated"
    ],
    "implementation": "",
-   "tests": "trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems",
+   "tests": "trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
-    "72e6c3e"
+    "72e6c3e",
+    "4692d05",
+    "a2ea741"
    ],
    "parent": "X18-Q13",
    "depends_on": [
@@ -21988,22 +21990,37 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
      "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems -> trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; test_commit: None -> a2ea741; commits + 4692d05; commits + a2ea741; integrated_in + 18",
+     "why": "Courier-completion worker finished (4692d05); merged into wip/build18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + The player has no courier job, so cannot gain Law by carrying documents; remaining_work",
+     "why": "Known limits from the worker"
     }
    ],
    "target_build": "18",
    "integrated_in": [
-    "Build 18 wip/build18"
+    "Build 18 wip/build18",
+    "18"
    ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "remaining_work": "courier-notary path not live; villagers do not take lessons; clergy teaching waits on DVW-B3-CHAPEL",
+   "remaining_work": "Gameplay check; keeper lessons are free and abstract (provisional)",
    "design": "SPECIFIED",
    "effort": "S",
-   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "a2ea741",
+   "known_defects": [
+    "The player has no courier job, so cannot gain Law by carrying documents"
+   ]
   },
   {
    "id": "LE-00",
@@ -36473,11 +36490,16 @@
      "date": "2026-10-23",
      "change": "tests: earlier evidence restored ahead of the conservation line",
      "why": "the previous update replaced the field instead of adding to it"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests: regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0 -> regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0; Player food purchase at the wagon added (caravan_food.gd, luxury_test 233); remaining_work",
+     "why": "Player parity done by the courier-completion worker (4692d05)"
     }
    ],
    "assigned_worker": "buying worker (Sonnet subagent, started 2026-10-23)",
    "branch": "wip/b18-buying",
-   "tests": "regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0; Player food purchase at the wagon added (caravan_food.gd, luxury_test 233)",
    "test_commit": "840e0ed",
    "commits": [
     "150f0b7",
@@ -36490,7 +36512,7 @@
     "The player cannot buy food at the caravan wagon yet (parity with villagers, Q18-10)",
     "Food flow is small: traders stock food only with coins above their trading capital (the existing trader rule)"
    ],
-   "remaining_work": "Player food purchase at the wagon (parity); 30-day conservation on 840e0ed running; settlements cash shortfall counts wages and missing inputs/tools (seed and feed are not cash expenses in the settlement model)"
+   "remaining_work": "Gameplay check; food flow small under the existing trader capital rule (observed for REG-EVAL-01)"
   },
   {
    "id": "REG-BUY-D1",
@@ -42904,10 +42926,13 @@
     "Barter deals conserve goods both ways; credit only from parties who trust the buyer; debts recorded, saved, repaid; default lowers standing; no coins created"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins)",
    "playtest": [],
    "branch": "wip/b18-credit",
-   "commits": [],
+   "commits": [
+    "d765440",
+    "a2ea741"
+   ],
    "parent": "SET-C",
    "depends_on": [
     "Q18-5"
@@ -42941,19 +42966,32 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> credit worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-credit",
      "why": "Approved (Q18-5), specified, unblocked"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); test_commit: None -> a2ea741; commits + d765440; commits + a2ea741; integrated_in + 18; known_defects + Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; known_defects + Settlement traders do not barter or lend; remaining_work",
+     "why": "Credit worker finished (d765440); merged into wip/build18 at a2ea741"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "L",
-   "assigned_worker": "credit worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "credit worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "a2ea741",
+   "known_defects": [
+    "Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir",
+    "Settlement traders do not barter or lend"
+   ],
+   "remaining_work": "Parity fixes (player as lender/seller; player debts to the heir like villagers); values in balance.json credit provisional; gameplay check"
   },
   {
    "id": "TRADE-UI-02",
@@ -47581,11 +47619,13 @@
     "Goods and fees move atomically; nothing delivered free; no coins created"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
-    "d63d8d7"
+    "d63d8d7",
+    "4692d05",
+    "a2ea741"
    ],
    "parent": "X18-Q12",
    "depends_on": [],
@@ -47623,22 +47663,29 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
      "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; test_commit: None -> a2ea741; commits + 4692d05; commits + a2ea741; integrated_in + 18",
+     "why": "Courier-completion worker finished (4692d05); merged into wip/build18"
     }
    ],
    "target_build": "18",
    "integrated_in": [
-    "Build 18 wip/build18"
+    "Build 18 wip/build18",
+    "18"
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
    "design": "SPECIFIED",
    "effort": "M",
-   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "a2ea741"
   },
   {
    "id": "X18-Q12-POST",
@@ -47656,11 +47703,13 @@
     "Tests: known and business contacts, location resolution, item availability, capacity, fee, payment collection, deposits, rejected, unavailable recipient, interrupted journey; fulfilled only when done"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
-    "d63d8d7"
+    "d63d8d7",
+    "4692d05",
+    "a2ea741"
    ],
    "parent": "X18-Q12-BOOTH",
    "depends_on": [],
@@ -47698,22 +47747,37 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
      "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; test_commit: None -> a2ea741; commits + 4692d05; commits + a2ea741; integrated_in + 18",
+     "why": "Courier-completion worker finished (4692d05); merged into wip/build18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet; remaining_work",
+     "why": "Known limits from the worker"
     }
    ],
    "target_build": "18",
    "integrated_in": [
-    "Build 18 wip/build18"
+    "Build 18 wip/build18",
+    "18"
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
+   "remaining_work": "Gameplay and device check of the courier window (rendered with xvfb and looked at: scratchpad courier2_review.png, courier2_form.png)",
    "design": "SPECIFIED",
    "effort": "M",
-   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "a2ea741",
+   "known_defects": [
+    "Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet"
+   ]
   },
   {
    "id": "X18-Q13",
@@ -47727,11 +47791,13 @@
     "Smoke tests pass or the missing feature is named; no remote instant signing anywhere"
    ],
    "implementation": "",
-   "tests": "contract_sign_test",
+   "tests": "contract_sign_test; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
-    "d63d8d7"
+    "d63d8d7",
+    "4692d05",
+    "a2ea741"
    ],
    "parent": "PROS-18",
    "depends_on": [],
@@ -47779,22 +47845,34 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
      "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: contract_sign_test -> contract_sign_test; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; test_commit: None -> a2ea741; commits + 4692d05; commits + a2ea741; integrated_in + 18",
+     "why": "Courier-completion worker finished (4692d05); merged into wip/build18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "Known limits from the worker"
     }
    ],
    "target_build": "18",
    "integrated_in": [
-    "Build 18 wip/build18"
+    "Build 18 wip/build18",
+    "18"
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
+   "remaining_work": "Gameplay check; houses, land and manor sales stay in person only (not every remote path traced)",
    "design": "PARTIAL",
    "effort": "L",
-   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "a2ea741"
   },
   {
    "id": "X18-SIM",
