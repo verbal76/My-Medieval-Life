@@ -12,7 +12,7 @@ CLAUDE.md (rules MSW-01, SIM-01, SIM-02, WIKI-01 in sections 3 and 5). **V** = v
 | `wip/build17` (worktree `scratchpad/b17wt`) | `dfec7ec` | **Build 17, FROZEN.** Released as a private playtest draft (release run 39706003658, commit `80e6b99`, packet `docs/release/BUILD_17_PACKET.md`); no gameplay change allowed |
 | `wip/farm-cropshare` (worktree `scratchpad/cropwt`) | `132960a` | FARM-CROP-01 (owner FARM-08-Q-CROP option B) implemented and tested; NOT merged; merge decision carried until after Build 17 (owner) |
 | `wip/expansion18-preparation` (worker `a5803847a53d8a4ff`) | `da4d610` (+ snapshot `wip/expansion18-snapshot` `d6b9254`) | Primary development; D1 implemented (`3de7a8f`); D2 presented to the owner |
-| `wip/expansion19-preparation` (worker `a6cffdef98c095994`) | `05adc9d` (+ snapshot `wip/expansion19-snapshot` `239aa50`) | Worker on the gossip-timing proposal, worst-frame and memory investigation |
+| `wip/expansion19-preparation` (worker `a6cffdef98c095994`) | `05adc9d` (+ snapshot `wip/expansion19-snapshot` `239aa50`) | Investigation done (`c4b10e4`): memory 13.5 MB heavy; timing proposal written; decisions with the owner |
 | `wip/expansion20-preparation` (worktree `scratchpad/x20wt`) | `d82f173` | LE-00 audit done; hold (no implementation without authorization) |
 | `wip/expansion21-preparation` (worktree `scratchpad/x21wt`; worker `a4ecc05968f664a95`, idle) | `0eeb3df` | Preliminary plan done; planning only |
 | `wip/juice-assessment` (worktree `scratchpad/juicewt`; worker `a4ecc05968f664a95`) | from `dfec7ec` | JUICE-00 assessment done (`bebf1f3`); top ten and decisions JD1-JD6 with the owner; nothing implemented |

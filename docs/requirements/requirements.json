@@ -21634,7 +21634,8 @@
     "6615da4",
     "1b05da0",
     "e91d903",
-    "05adc9d"
+    "05adc9d",
+    "c4b10e4"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21687,6 +21688,11 @@
      "date": "2026-10-22",
      "change": "commit 05adc9d",
      "why": "Gossip performance round (b2eb3f9 code, 05adc9d docs): reads skip flushes that cannot change them (cached by a version counter), lazy ledger decay, no idle interpretation dictionary, direct tie reads. 500 people: live p99 1.27->1.05 ms, p99.9 3.35->1.81 ms, update 11.6->4.0 ms/day, flushes 391->29; heavy p99 8.19->6.20 ms, p99.9 15.77->13.82, update 38.4->11.3. Worst single frame unchanged (live ~6 ms desktop, ~25 ms phone estimate; heavy ~26 ms, ~105 ms phone) - an identical-result dependency flush; only the scheduled timing (owner X19-Q-TIMING, pending) bounds it. Heavy memory 17.4 MB over the proposed 16 MB budget (17.2 before). Determinism: judgment state hashes and 30-day seed-1 fingerprint 1c755f53 identical; no leaks; judgment suites pass"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit c4b10e4",
+     "why": "Investigation round (3039436 harness, c47f497 code, c4b10e4 docs): heavy-rate memory 16.9 -> 13.5 MB (opinions packed into two arrays per villager), live 5.7 -> 3.6 MB; worst frame not reducible byte-identically (107/188 tellings, ~6.6/23 ms desktop, ~25/90 ms phone); X19-Q-TIMING proposal written (docs/expansion19/GOSSIP_TIMING_PROPOSAL.md on the branch): variants A hour (today), B scheduled (prototype; save hazard), C ordered (not built); recommendation keep hour until Gate E, then build and measure C. Determinism: judgment state hashes and 30-day seed-1 fingerprint identical; suites pass. Owner decisions: X19-Q-TIMING, native code for the flush, memory budgets (16 MB heavy, proposed ~8 MB live)"
     }
    ],
    "target_build": "19"
