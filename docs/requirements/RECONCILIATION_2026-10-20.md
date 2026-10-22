@@ -7,14 +7,14 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
+| Open entries (rules excluded) | 231 | 192 still open, 39 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 256 (125 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **315** = 195 still open from the baseline + 125 added and open |
+| Entries added since | | 257 (126 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **313** = 192 still open from the baseline + 126 added and open |
 | Open entries moved to another build | | 2 |
 
-## Closed since the baseline (36)
+## Closed since the baseline (39)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
@@ -40,6 +40,9 @@ entry leaves the register or changes without a history entry.
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Every child EQ-01..EQ-07 complete and verified |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: six pages added (game/scripts/core/wiki_topics.gd): Magic: the Fireball; the gold star over an employer; the Journal and the village map; causes of death; the merchant caravan; bandits. Every fact cites code, numbers come from balance data where the code reads them, links from the related pages; wiki_test passes (every link resolves) |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: CI run 39368652711 on 0ee0218 passed the new step: a 10-day seed-1 simulation with no leak and no script error |
+| OD-05 | Owner decisions: inner doorways, relaying survey plots | decision | BLOCKED | 18 | COMPLETE AND VERIFIED | 18 | 2026-10-22: owner answered (2026-10-23) |
+| OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | decision | BLOCKED | 18 | COMPLETE AND VERIFIED | 18 | 2026-10-22: owner answered (2026-10-23) |
+| OD-08 | Owner decision: is honest arbitrage intended? | decision | BLOCKED | 18 | COMPLETE AND VERIFIED | 18 | 2026-10-22: owner answered (2026-10-23); confirms the agent decision of 2026-10-21 in docs/DECISIONS.md |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Implemented and tested; the four-seed year runs of the integrated build pass |
 | REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | approved | UNKNOWN — INVESTIGATION REQUIRED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: the three files stored byte for byte in docs/game-designer/ (sha256 checked; Bob's CLAUDE.md as THE_WELL_SPEC_v1.md so it is not loaded as agent instructions), SPEC_RECONCILIATION.md classifies 98 points (54 agree, 19 differ, 14 not in project, 11 obsolete) and lists the open owner calls, and a DECISIONS entry records the merge; no existing document or feature was changed |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: brought up to date: HANDOFF.md and DEVELOPMENT_PLAN.md were already marked historical (MEM-01); GAME_DESIGN.md U1 moved to Confirmed item 13 with the owner's 2026-10-18 platform decision; BUILD_DECISIONS.md Known gaps rewritten from the code (births, ages, apprentices, player livestock, eggs/milk/wool exist; adoption is FAM-03/07, Build 16); CLAUDE.md release history lists draft Builds 9-11 (GitHub releases checked) and OVN-01's authority; resources.json's handcart exception is implemented (B14-06) |
@@ -66,7 +69,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (256)
+## Added since the baseline (257)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -263,6 +266,7 @@ None.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | COMPLETE AND VERIFIED |  |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | APPROVED — NOT STARTED | owner decision |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | APPROVED — NOT STARTED | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | COMPLETE AND VERIFIED | 16 |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | IMPLEMENTED — TESTING REQUIRED | 16 |

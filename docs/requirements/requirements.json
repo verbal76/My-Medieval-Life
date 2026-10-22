@@ -16948,10 +16948,10 @@
    "id": "OD-05",
    "title": "Owner decisions: inner doorways, relaying survey plots",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decisions: inner doorways, relaying survey plots",
-   "source": "docs/BUILD_DECISIONS.md",
+   "source": "docs/directives/2026-10-23_owner_answers_farming_rooms.md",
    "approval": "open owner question",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -16984,21 +16984,27 @@
      "date": "2026-10-20",
      "change": "roadmap: 18 (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered"
+   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered",
+   "owner_answer": "Both: inner doorways between joined rooms from the existing wall art, and relay the two survey plots onto open ground (new worlds only; saves keep theirs)"
   },
   {
    "id": "OD-06",
    "title": "Owner decisions: farming (Farming skill, wheat versus wages)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decisions: farming (Farming skill, wheat versus wages)",
-   "source": "docs/BUILD_DECISIONS.md",
+   "source": "docs/directives/2026-10-23_owner_answers_farming_rooms.md",
    "approval": "open owner question",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -17019,7 +17025,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "",
    "notes": "",
    "history": [
     {
@@ -17031,12 +17037,23 @@
      "date": "2026-10-20",
      "change": "roadmap: 18 (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> SUPERSEDED; superseded_by",
+     "why": "Its questions are answered by later owner decisions: farming experience acts as labour efficiency (X18-CAPNUM, owner-approved; levels never gate, D3 2026-10-23); seed is taken from sellers' stock (B13 economy rules); wheat against wages is an economic outcome measured, not balanced to a target (WDR-022)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "SUPERSEDED -> COMPLETE AND VERIFIED; superseded_by; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered"
+   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered",
+   "owner_answer": "Closed as answered by later decisions: farming experience speeds farm work and never gates (X18-CAPNUM, D3); seed from sellers' stock; farm income against wages measured, not tuned (WDR-022)"
   },
   {
    "id": "OD-07",
@@ -17089,10 +17106,10 @@
    "id": "OD-08",
    "title": "Owner decision: is honest arbitrage intended?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision: is honest arbitrage intended?",
-   "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md A5",
+   "source": "docs/directives/2026-10-23_owner_answers_arbitrage.md",
    "approval": "open owner question",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -17125,12 +17142,18 @@
      "date": "2026-10-20",
      "change": "roadmap: 18 (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23); confirms the agent decision of 2026-10-21 in docs/DECISIONS.md"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered"
+   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered",
+   "owner_answer": "Yes: honest arbitrage at high Trading is the skill's reward; keep it as built (DVW-A5 measurements)"
   },
   {
    "id": "OD-09",
@@ -24662,6 +24685,50 @@
    "target_build": "owner decision",
    "roadmap_gate": "Owner designation",
    "roadmap_reason": "Numbering 20+ needs the owner"
+  },
+  {
+   "id": "ROOMS-18",
+   "title": "Inner doorways between joined house rooms, and the two survey plots relaid onto open ground",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Both: doorways + relay plots",
+   "description": "Inner doorways between joined house rooms, and the two survey plots relaid onto open ground",
+   "source": "docs/directives/2026-10-23_owner_answers_farming_rooms.md",
+   "approval": "owner, 2026-10-23 (OD-05)",
+   "acceptance": [
+    "Adjoining rooms of one property get a walkable doorway in the shared wall drawn from existing wall art; new worlds place both survey plots on open ground with room for modules on several sides; older saves keep their plots and load unchanged; screenshots looked at"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "OD-05"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_farming_rooms.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope (owner answer during Build 18)"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "SAVE-00",

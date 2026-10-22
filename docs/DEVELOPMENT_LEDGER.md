@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 64 |
+| APPROVED — NOT STARTED | 65 |
 | ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **483** |
-| Outstanding (not complete, superseded or canceled) | 234 |
+| **Total approved** | **484** |
+| Outstanding (not complete, superseded or canceled) | 235 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 59 | 49 |
+| Build 18: Settlement Advancement & Regional Economy | 57 | 50 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 65 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **315** | **234** |
+| **Total open** | **313** | **235** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (59)
+### Build 18: Settlement Advancement & Regional Economy (57)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -201,9 +201,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MAP-01 | Map shows where you are beyond the village | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| OD-05 | Owner decisions: inner doorways, relaying survey plots | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
-| OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
-| OD-08 | Owner decision: is honest arbitrage intended? | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | PL1-10 | Player businesses, staged (1-4) | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
 | PL2-008 | Expandable property | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
@@ -211,6 +208,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PL2-015 | Farming, livestock, hand plough | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | approved | ACTIVE DEVELOPMENT |  |  |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | decision | PARTIALLY IMPLEMENTED |  |  |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | APPROVED — NOT STARTED |  |  |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | approved | APPROVED — NOT STARTED | needed during 17 | the expansion's design phase; its capability schema should be designed during Build 17 so MIN-D can use it |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
@@ -467,7 +465,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (64)
+## APPROVED — NOT STARTED (65)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -517,6 +515,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PVG-05 | Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | docs/directives/2026-10-23_owner_answers_farming_rooms.md |  | after OD-05 |  |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  |  |  |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A |  |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-B |  |
@@ -1000,7 +999,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 37, status BLOCKED) (93)
+## Owner decisions, open and answered (open: 34, status BLOCKED) (93)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1016,10 +1015,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-02 | Owner decision: balance review of every provisional number | BLOCKED | docs/DECISIONS.md |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md |
 | OD-04 | Owner decisions: chest and lock questions | BLOCKED | docs/BUILD_DECISIONS.md |
-| OD-05 | Owner decisions: inner doorways, relaying survey plots | BLOCKED | docs/BUILD_DECISIONS.md |
-| OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | BLOCKED | docs/BUILD_DECISIONS.md |
+| OD-05 | Owner decisions: inner doorways, relaying survey plots | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_farming_rooms.md |
+| OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_farming_rooms.md |
 | OD-07 | Owner decision: hunting in Gather mode | BLOCKED | docs/HANDOFF.md |
-| OD-08 | Owner decision: is honest arbitrage intended? | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md A5 |
+| OD-08 | Owner decision: is honest arbitrage intended? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_arbitrage.md |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | BLOCKED | docs/GAME_DESIGN.md |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | SUPERSEDED | docs/release/LONG_RUN_SIMULATION.md (Build 15 interim 365-day runs); docs/EXPANSION_ROADMAP.md (EQ-09 dependency) |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5 |
