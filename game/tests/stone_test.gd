@@ -345,7 +345,11 @@ func _test_stonecutter() -> void:
 	sc.plan.clear()
 	check(w.brain._stonecutter(sc) and sc.plan.any(func(s): return str(s.get("act", "")) == "buy_from" and str(s.args.item) == "stone" and int(s.args.qty) == 3),
 			"with them it buys a batch of stone from the raw-goods merchant (%s)" % sc.doing)
-	# a day-by-day run: stone bought, dressed, blocks sold; coins and goods conserved, and the trade earns
+	# a day-by-day run: stone bought, dressed, blocks sold; coins and goods conserved, and the trade earns. This world has one
+	# workbench, which its two tanners and carpenter keep busy since they choose their best-paying work (WDR-012-C); it holds
+	# two here so the run tests the stonecutter's trade, not who wins the bench (in the 30-day runs it dresses as before)
+	for id in w.stations_of("workbench"):
+		w.stations[id]["capacity"] = 2
 	var blocks0 := _blocks_everywhere(w)
 	var made0 := int(w.stats.get("made_building_block", 0))
 	var built0 := int(w.stats.get("used_building_building_block", 0))
