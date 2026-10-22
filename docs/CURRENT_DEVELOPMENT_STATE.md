@@ -25,10 +25,11 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `3704bfe` (2026-10-23) | Build 18 integration; chapel and the five settlements merged; targeted checks on the merge (chapel, regions, save transfer) |
+| `wip/build18` | `7fc4426` (2026-10-23) | Build 18 integration; chapel, settlements, feasts and luxuries merged; targeted suites and 30-day conservation (seeds 1, 2) clean on 7fc4426 |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
+| `wip/b18-wagefix` | `cf76ed2` | necessity-wage correction for off-map businesses (REG-INV-01); held for the owner (REG-WAGE-D1), not merged |
 | `wip/multiplayer` | `d18d7d1` | MP-01, excluded from Build 18; never merge without the owner |
 | `main` | | changes only when the owner merges |
 
@@ -38,7 +39,8 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| DVW-B3-FEAST | feast worker (Sonnet subagent) | `wip/b18-feast` | `wip/build18` 2e059fa (merge onto 3704bfe; the regions merge also changed `World.load_dict`) | wedding and seasonal feasts at the tavern (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`); stays out of the settlement scripts (the regions worker owns them) |
+| REG-DEMO-01 | demography worker (Sonnet subagent) | `wip/b18-demography` | `wip/build18` 7fc4426 | ages, births, age deaths, growing up, households, inheritance in the off-map settlements |
+| REG-PARTY-01 | party worker (Sonnet subagent) | `wip/b18-party` | `wip/build18` 7fc4426 | one trading-party interface over the five settlements for RegionalMarket and couriers |
 
 On their reports:
 1. Review the work.
@@ -49,7 +51,7 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Merge the feast worker when it reports (chapel and regions are merged).
+1. Merge the demography and party workers when they report (targeted checks and one 30-day conservation run per seed on the combined result).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);
@@ -63,5 +65,6 @@ On their reports:
 Every open decision is in `docs/requirements/views/DECISIONS.md`. In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
+- regional economy (REG-INV-01 report `docs/investigations/2026-10-23_regional_economy.md`): REG-WAGE-D1 (merge the wage correction), REG-BUY-D1, REG-CIRC-D1;
 - chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
 - Builds 20 and 21 authorization.

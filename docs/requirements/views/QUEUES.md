@@ -2,12 +2,13 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (5)
+## Workers and task branches (6)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| DVW-B3-FEAST | 18 | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) | wip/b18-feast |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| REG-DEMO-01 | 18 | IN DEVELOPMENT | demography worker (Sonnet subagent, started 2026-10-23) | wip/b18-demography |
+| REG-PARTY-01 | 18 | IN DEVELOPMENT | party worker (Sonnet subagent, started 2026-10-23) | wip/b18-party |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |

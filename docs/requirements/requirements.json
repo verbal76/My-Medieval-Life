@@ -12408,10 +12408,13 @@
     "Households (and the player) hold a wedding feast or a seasonal feast at the tavern, buying real food and ale from stock; coins conserved (paid to sellers); deterministic; wiki page"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "feast_test 37; run_tests 3591; regions 115, chapel 68, save_transfer 21, wiki_test passed on 7fc4426; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-feast",
-   "commits": [],
+   "commits": [
+    "ed8c815",
+    "7fc4426"
+   ],
    "parent": "DVW-B3",
    "depends_on": [],
    "blockers": [],
@@ -12443,19 +12446,32 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> feast worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-feast",
      "why": "Next approved, unblocked Build 18 item that does not overlap the regions worker's settlement code"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> feast_test 37; run_tests 3591; regions 115, chapel 68, save_transfer 21, wiki_test passed on 7fc4426; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0; test_commit: None -> 7fc4426; commits + ed8c815; commits + 7fc4426; integrated_in + 18; known_defects + A partnership is the wedding (no separate rite); guests only from the village; known_defects + Host and guests must be in the tavern yard at 20:00; about 4 feasts a month are called off; remaining_work",
+     "why": "Feast worker finished (ed8c815); merged into wip/build18 (conflicts in world.gd save dict, DECISIONS, manifest resolved keeping both sides)"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
-   "assigned_worker": "feast worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "feast worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "7fc4426",
+   "known_defects": [
+    "A partnership is the wedding (no separate rite); guests only from the village",
+    "Host and guests must be in the tavern yard at 20:00; about 4 feasts a month are called off"
+   ],
+   "remaining_work": "Gameplay and visual check; feast values in balance.json \"feast\" are provisional agent values; ale rarely bought (keeper stock thin)"
   },
   {
    "id": "DVW-B3-LUX",
@@ -12469,10 +12485,13 @@
     "The caravan sells costly goods (spices, fine cloth, jewellery); villagers and the player buy them from real coins that leave with the caravan; deterministic; wiki page"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "luxury_test 219; od16 33, caravan_compare 20, conservation_test 8, run_tests 3591 on 7fc4426; worker economy_sim 30 days: 832 and 450 coins on luxuries; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/b18-luxury",
+   "commits": [
+    "0dfd7b5",
+    "7fc4426"
+   ],
    "parent": "DVW-B3",
    "depends_on": [],
    "blockers": [],
@@ -12499,18 +12518,37 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> luxury worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-luxury",
+     "why": "Unblocked by the settlements merge (caravan traders now have tills); no overlap with the feast worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> luxury_test 219; od16 33, caravan_compare 20, conservation_test 8, run_tests 3591 on 7fc4426; worker economy_sim 30 days: 832 and 450 coins on luxuries; economy_sim 30 days on merge 7fc4426: seed 1 115 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0; test_commit: None -> 7fc4426; commits + 0dfd7b5; commits + 7fc4426; integrated_in + 18; known_defects + No villager standing or prestige measure exists in Build 18, so owning luxuries has no status effect yet (Luxury.held_by is the reading point); known_defects + Luxury stock is finite (Wulstead and Higham opening stock only, about 2,200 coins' worth); older saves get none; remaining_work",
+     "why": "Luxury worker finished (0dfd7b5); merged into wip/build18 at 7fc4426"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "S"
+   "effort": "S",
+   "assigned_worker": "luxury worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "7fc4426",
+   "known_defects": [
+    "No villager standing or prestige measure exists in Build 18, so owning luxuries has no status effect yet (Luxury.held_by is the reading point)",
+    "Luxury stock is finite (Wulstead and Higham opening stock only, about 2,200 coins' worth); older saves get none"
+   ],
+   "remaining_work": "Gameplay and device check of the wagon choice and icons; values in balance.json \"luxury\" provisional; owner may decide whether settlements make or restock luxuries"
   },
   {
    "id": "DVW-B4",
@@ -22518,6 +22556,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "REG-INV-01: migration depends on settlement demographics"
     }
    ],
    "target_build": "18",
@@ -22529,7 +22572,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "L"
+   "effort": "L",
+   "remaining_work": "Needs settlement members with ages (REG-DEMO-01) so people who move carry an age, skills and a household"
   },
   {
    "id": "MILE-01",
@@ -35964,6 +36008,265 @@
    "verification_status": "INTEGRATION VERIFIED",
    "release_status": "RELEASED",
    "completion": "COMPLETE"
+  },
+  {
+   "id": "REG-BUY-01",
+   "kind": "approved",
+   "title": "The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits",
+   "description": "The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "approval": "Owner directive 2026-10-23 (docs/directives/2026-10-23_regional_economy_investigation.md): record the findings, dependencies and actionable requirements; Q18-10 (owner): 'Anyone may purchase goods from another settlement, including individual villagers, households, merchants, businesses, and settlement treasuries.'",
+   "acceptance": [
+    "Village buyers can buy a settlement's goods, food included, from what its sellers hold; coins go to the selling business or household; the settlement's own food rule decides what it releases (REG-BUY-D1); conserved; deterministic; wiki"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [
+    "REG-PARTY-01"
+   ],
+   "decisions": [
+    "REG-BUY-D1"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    }
+   ]
+  },
+  {
+   "id": "REG-BUY-D1",
+   "kind": "decision",
+   "title": "When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs?",
+   "description": "When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs?",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "REG-BUY-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    }
+   ]
+  },
+  {
+   "id": "REG-CIRC-D1",
+   "kind": "decision",
+   "title": "Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome?",
+   "description": "Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome?",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "SET-C-SIM",
+    "ECON-P1.3"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    }
+   ]
+  },
+  {
+   "id": "REG-COURIER-01",
+   "kind": "approved",
+   "title": "Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves",
+   "description": "Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "approval": "Owner directive 2026-10-23 (docs/directives/2026-10-23_regional_economy_investigation.md): record the findings, dependencies and actionable requirements; X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13 (owner approved)",
+   "acceptance": [
+    "Each of the five has a booth served by its own party; route lengths from settlements.json miles; known recipients from real trade with them; couriers step in the live World and are saved; conserved; tests"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [
+    "REG-PARTY-01"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    }
+   ]
+  },
+  {
+   "id": "REG-DEMO-01",
+   "kind": "approved",
+   "title": "Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance",
+   "description": "Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "approval": "Owner directive 2026-10-23 (docs/directives/2026-10-23_regional_economy_investigation.md): record the findings, dependencies and actionable requirements; SET-C-SIM (owner): 'Same rules, lighter detail'; the village's life rules (B8-029, balance.json life) on the approved 8-day year (OD-21)",
+   "acceptance": [
+    "Settlement members carry ages (individually or by cohort) and follow the village's birth, mortality and stage rules at lighter detail; children become workers; a household that loses its last member passes its coins and goods by a recorded rule; saves migrate older settlement data; deterministic; conserved; tests"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [
+    "SET-C-SIM"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> demography worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-demography",
+     "why": "Approved under SET-C-SIM; no open decision"
+    }
+   ],
+   "assigned_worker": "demography worker (Sonnet subagent, started 2026-10-23)",
+   "branch": "wip/b18-demography"
+  },
+  {
+   "id": "REG-INV-01",
+   "kind": "approved",
+   "title": "Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics",
+   "description": "Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": "Please perform a focused, evidence-based investigation ... Report the root causes, missing functionality, and recommended implementation order.",
+   "approval": "Owner directive 2026-10-23 (docs/directives/2026-10-23_regional_economy_investigation.md)",
+   "acceptance": [
+    "Root cause of Higham's decline classified as legitimate economics or a broken/missing circulation mechanism, with evidence",
+    "Village sustainability assessed from existing runs plus only focused experiments",
+    "Dependencies and actionable requirements for village buying from settlements, courier booths on the five settlements and settlement demographics recorded in the register; gameplay-design choices queued as owner decisions",
+    "No balance values changed to improve results"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/build18",
+     "why": "Started by the lead"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> regions_sim 200 days seed 1 (baseline and with the wage correction); four throwaway counterfactual probes; economy_sim 90 days seed 1 on 36beb67 (no leaks); report docs/investigations/2026-10-23_regional_economy.md; integrated_in + staging; remaining_work",
+     "why": "Investigation done; findings and requirements recorded (REG-PARTY-01, REG-BUY-01, REG-COURIER-01, REG-DEMO-01)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/build18",
+   "tests": "regions_sim 200 days seed 1 (baseline and with the wage correction); four throwaway counterfactual probes; economy_sim 90 days seed 1 on 36beb67 (no leaks); report docs/investigations/2026-10-23_regional_economy.md",
+   "integrated_in": [
+    "staging"
+   ],
+   "remaining_work": "Owner review of the report (docs/investigations/2026-10-23_regional_economy.md) and decisions REG-WAGE-D1, REG-BUY-D1, REG-CIRC-D1"
+  },
+  {
+   "id": "REG-PARTY-01",
+   "kind": "approved",
+   "title": "One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers",
+   "description": "One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "approval": "Owner directive 2026-10-23 (docs/directives/2026-10-23_regional_economy_investigation.md): record the findings, dependencies and actionable requirements; implements Q18-10 (approved) and X18-Q12 on the canonical five-settlement model (SET-C-FIVE)",
+   "acceptance": [
+    "RegionalMarket and Couriers read and change only OffMapSettlement holders (stock, tills, treasury, purses) through one interface; SettlementLedger no longer used by live code; every transfer is a matched flow line the settlement audit checks; deterministic; tests"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [
+    "SET-C-SIM",
+    "SET-C-FIVE"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> party worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-party",
+     "why": "Engineering prerequisite of REG-BUY-01 and REG-COURIER-01; no open decision"
+    }
+   ],
+   "assigned_worker": "party worker (Sonnet subagent, started 2026-10-23)",
+   "branch": "wip/b18-party"
+  },
+  {
+   "id": "REG-WAGE-D1",
+   "kind": "decision",
+   "title": "Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes.",
+   "description": "Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes.",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "SET-C-SIM",
+    "REG-INV-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    }
+   ]
   },
   {
    "id": "REL-14-16",
