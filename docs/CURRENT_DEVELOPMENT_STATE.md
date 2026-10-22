@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23 (SET-D, the farming audit and the capability simulations merged into `wip/build18` 9f44bbd).
+**Updated:** 2026-10-23 (all Build 18 workers merged into `wip/build18` 9a86f5c; 30-day conservation runs on 99dc3be clean).
 
 ## Read first (after a compaction or in a new session)
 
@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `9f44bbd` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering |
+| `wip/build18` | `9a86f5c` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -36,11 +36,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 
 Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
-| Record | Worker | Branch | Started from | Notes |
-|---|---|---|---|---|
-| PL1-10 (+ ECON-P3 trade-counter tills) | business worker (Sonnet subagent) | `wip/b18-business` | `wip/build18` 84bf5f0 | attendants at workshop stations, produce stocked and sold, stall display, shops in leased houses (B18-DP-01) |
-| WDR-012-C | competition worker (Sonnet subagent) | `wip/b18-competition` | `wip/build18` 84bf5f0 | specialization, hiring competition, relocation (B18-DP-08) |
-| STONE-02, STONE-03, STONE-04, STONE-06, X18-STONECUT | stone worker (Sonnet subagent) | `wip/b18-stone` | `wip/build18` 027d742 | dressing 3->2+1 rubble, the iron chisel, the stonecutter trade (B18-DP-09/10) |
+None: the stone, competition and business workers reported and are merged.
 
 On their reports:
 1. Review the work.
@@ -51,7 +47,7 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Merge the stone, business and competition workers when they report (targeted checks); then one 30-day conservation run per seed on the combined Build 18 code (none yet since credit parity, ECON-P3 and the capability wiring).
+1. Check the Build 18 punch list in `docs/requirements/views/BUILD_18.md` for open approved items still unbuilt.
    Then the release verification on the final code: 365-day runs per seed (100-day read from the same runs), determinism,
    Build 17 save into Build 18, full suites, wiki gate, three-platform export, WDR-004-C, REG-EVAL-01 against the preserved
    baseline (`docs/investigations/evidence_2026-10-23_regional/`), SET-C long runs, VER-CON-50ORE; SET-D's multi-generation

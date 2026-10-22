@@ -22,7 +22,7 @@ Readiness: **NOT AUTHORIZED for implementation**
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | PL1-10, design: UNKNOWN | UNKNOWN |
+| EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 428 (206 of them still open) |
-| **Open entries now** (rules excluded) | | **383** |
+| Entries added since | | 429 (207 of them still open) |
+| **Open entries now** (rules excluded) | | **384** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (428)
+## Added since the baseline (429)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -133,6 +133,7 @@ None.
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | decision | OPEN | 18 |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | decision | OPEN | 18 |
 | CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | decision | APPROVED | 18 |
+| COMP-R1 | Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review | decision | OPEN | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
@@ -443,11 +444,11 @@ None.
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
-| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
-| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
-| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
+| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
+| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | decision | APPROVED | 18 |
 | STONE-D2 | Iron chisel wear and recipe (STONE-06) | decision | APPROVED | 18 |
 | STONE-Q | STONE-01 follow-up questions: fittings/mending on blocks, dressing waste, a mason trade | decision | APPROVED | owner decision |
@@ -511,7 +512,7 @@ None.
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
-| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | APPROVED | 19 |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | APPROVED | 19 |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | decision | PROVISIONAL | 19 |

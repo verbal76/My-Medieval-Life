@@ -4209,7 +4209,15 @@
      "date": "2026-10-23",
      "change": "disposition OPEN -> APPROVED",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commits + 4f3774e",
+     "why": "implemented, merged into Build 18"
     }
+   ],
+   "commits": [
+    "4f3774e"
    ]
   },
   {
@@ -4412,7 +4420,15 @@
      "date": "2026-10-23",
      "change": "disposition OPEN -> APPROVED",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commits + f6c1e9e",
+     "why": "implemented, merged into Build 18"
     }
+   ],
+   "commits": [
+    "f6c1e9e"
    ]
   },
   {
@@ -4441,7 +4457,15 @@
      "date": "2026-10-23",
      "change": "disposition OPEN -> APPROVED",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commits + 6853c24",
+     "why": "implemented, merged into Build 18"
     }
+   ],
+   "commits": [
+    "6853c24"
    ]
   },
   {
@@ -4470,7 +4494,15 @@
      "date": "2026-10-23",
      "change": "disposition OPEN -> APPROVED",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commits + 6853c24",
+     "why": "implemented, merged into Build 18"
     }
+   ],
+   "commits": [
+    "6853c24"
    ]
   },
   {
@@ -8632,6 +8664,31 @@
      "date": "2026-10-23",
      "change": "disposition -> APPROVED",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
+  },
+  {
+   "id": "COMP-R1",
+   "kind": "decision",
+   "title": "Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review",
+   "description": "Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review",
+   "source": "wip/build18 692eecc; docs/DECISIONS.md (WDR-012-C row)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "WDR-012-C",
+    "B18-DP-08"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "wip/build18 692eecc; docs/DECISIONS.md (WDR-012-C row)"
     }
    ]
   },
@@ -14048,12 +14105,13 @@
     "Business and household money separate: a shop has its own till, the owner pays themselves from it, and may choose to move money; conserving; deterministic; saves migrate; wiki updated"
    ],
    "implementation": "Awaiting | Owner rule 1 (B13-06) covers part of P3.2's spirit | AWAIT-OWNER",
-   "tests": "On merges (ECON-P3, then capability wiring) up to 84bf5f0: business_money_test 25, business_test 160, home_test 113, stalls_test 104, credit_test 98, luxury_test 233, regional_food_test 47, courier_live_test 138, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; worker economy_sim 30 days seeds 1, 2 no leaks",
+   "tests": "On merges (ECON-P3, then capability wiring) up to 84bf5f0: business_money_test 25, business_test 160, home_test 113, stalls_test 104, credit_test 98, luxury_test 233, regional_food_test 47, courier_live_test 138, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; worker economy_sim 30 days seeds 1, 2 no leaks; business_money_test 37 on 99dc3be",
    "playtest": [],
    "branch": "",
    "commits": [
     "749c7df",
-    "84bf5f0"
+    "84bf5f0",
+    "4f3774e"
    ],
    "parent": null,
    "depends_on": [],
@@ -14106,6 +14164,11 @@
      "date": "2026-10-23",
      "change": "title narrowed from \"Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)\": P3.2-P3.4 removed from the approved scope (B18-DP-16)",
      "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests: On merges (ECON-P3, then capability wiring) up to 84bf5f0: business_money_test 25, business_test 160, home_test 113, stalls_test 104, credit_test 98, luxury_test 233, regional_food_test 47, courier_live_test 138, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; worker economy_sim 30 days seeds 1, 2 no leaks -> On merges (ECON-P3, then capability wiring) up to 84bf5f0: business_money_test 25, business_test 160, home_test 113, stalls_test 104, credit_test 98, luxury_test 233, regional_food_test 47, courier_live_test 138, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; worker economy_sim 30 days seeds 1, 2 no leaks; business_money_test 37 on 99dc3be; commits + 4f3774e",
+     "why": "trade-counter tills (tavern, armoury) settle by the storefront rule (4f3774e, merged 99dc3be)"
     }
    ],
    "acceptance_derived": true,
@@ -32148,10 +32211,13 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": ":25 | PARTIALLY COMPLETED, stages 1-4 VERIFIED (:43) | PARTIAL | `88faad3`, `38ca5d0`, `22fdbf3`, `61b0489` | Deferred: production chains, display sprite, shops in rented village houses | ",
-   "tests": "",
+   "tests": "on 99dc3be: business_works 61, business_money 37, business 160, stalls 104, home 113, credit 98, save_transfer 21, conservation 8, wiki passed, run_tests 3591; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0; stall display screenshot looked at",
    "playtest": [],
    "branch": "wip/b18-business",
-   "commits": [],
+   "commits": [
+    "4f3774e",
+    "99dc3be"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -32188,23 +32254,31 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> business worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-business",
      "why": "B18-DP-01 Build 18 part; ECON-P3 merged"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 99dc3be: business_works 61, business_money 37, business 160, stalls 104, home 113, credit 98, save_transfer 21, conservation 8, wiki passed, run_tests 3591; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0; stall display screenshot looked at; test_commit: None -> 99dc3be; commits + 4f3774e; commits + 99dc3be; integrated_in + Build 18 wip/build18 99dc3be",
+     "why": "B18-DP-01 scope done (4f3774e, merged 99dc3be): attendants work the player's stations, produced goods stocked and sold, stall display, leased-house shops, trade-counter tills. Device playtest outstanding"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 99dc3be"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
    "effort": "UNKNOWN",
    "remaining_work": "Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation",
-   "assigned_worker": "business worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "business worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "99dc3be"
   },
   {
    "id": "PL1-11",
@@ -42392,10 +42466,13 @@
     "No job title required and none bypasses the recipe's requirements; conservation and tool wear as STONE-01"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed)",
    "playtest": [],
    "branch": "wip/b18-stone",
-   "commits": [],
+   "commits": [
+    "6853c24",
+    "9932b1d"
+   ],
    "parent": null,
    "depends_on": [
     "STONE-01"
@@ -42434,14 +42511,21 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
      "why": "STONE-D1/D2 answered (B18-DP-09/10)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed); test_commit: None -> 9a86f5c; commits + 6853c24; commits + 9932b1d; integrated_in + Build 18 wip/build18 9932b1d",
+     "why": "stone worker corrections (rubble item, conserved Masonry tiers, stonecutter contract; B18-DP-09/10) merged 9932b1d; stone_test isolated from workbench contention 9a86f5c"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 9932b1d"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -42450,7 +42534,8 @@
     "STONE-D1",
     "STONE-D2"
    ],
-   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "9a86f5c"
   },
   {
    "id": "STONE-03",
@@ -42466,10 +42551,13 @@
     "Conservation and determinism hold; fittings and sites refund what was actually consumed; no stone-to-block conversion through saves"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed)",
    "playtest": [],
    "branch": "wip/b18-stone",
-   "commits": [],
+   "commits": [
+    "6853c24",
+    "9932b1d"
+   ],
    "parent": null,
    "depends_on": [
     "STONE-01",
@@ -42509,14 +42597,21 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
      "why": "STONE-D1/D2 answered (B18-DP-09/10)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed); test_commit: None -> 9a86f5c; commits + 6853c24; commits + 9932b1d; integrated_in + Build 18 wip/build18 9932b1d",
+     "why": "stone worker corrections (rubble item, conserved Masonry tiers, stonecutter contract; B18-DP-09/10) merged 9932b1d; stone_test isolated from workbench contention 9a86f5c"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 9932b1d"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -42524,7 +42619,8 @@
    "decisions": [
     "STONE-D1"
    ],
-   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "9a86f5c"
   },
   {
    "id": "STONE-04",
@@ -42541,10 +42637,13 @@
     "Tests on implementation: conservation, determinism, parity, economic consequences"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed)",
    "playtest": [],
    "branch": "wip/b18-stone",
-   "commits": [],
+   "commits": [
+    "6853c24",
+    "9932b1d"
+   ],
    "parent": null,
    "depends_on": [
     "STONE-01",
@@ -42589,14 +42688,21 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
      "why": "STONE-D1/D2 answered (B18-DP-09/10)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed); test_commit: None -> 9a86f5c; commits + 6853c24; commits + 9932b1d; integrated_in + Build 18 wip/build18 9932b1d",
+     "why": "stone worker corrections (rubble item, conserved Masonry tiers, stonecutter contract; B18-DP-09/10) merged 9932b1d; stone_test isolated from workbench contention 9a86f5c"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 9932b1d"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -42604,7 +42710,8 @@
    "decisions": [
     "STONE-D1"
    ],
-   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "9a86f5c"
   },
   {
    "id": "STONE-05",
@@ -42703,10 +42810,13 @@
     "Focused tests: production, wear, missing-tool behaviour, conservation"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed)",
    "playtest": [],
    "branch": "wip/b18-stone",
-   "commits": [],
+   "commits": [
+    "6853c24",
+    "9932b1d"
+   ],
    "parent": null,
    "depends_on": [
     "STONE-01",
@@ -42746,14 +42856,21 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
      "why": "STONE-D1/D2 answered (B18-DP-09/10)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed); test_commit: None -> 9a86f5c; commits + 6853c24; commits + 9932b1d; integrated_in + Build 18 wip/build18 9932b1d",
+     "why": "stone worker corrections (rubble item, conserved Masonry tiers, stonecutter contract; B18-DP-09/10) merged 9932b1d; stone_test isolated from workbench contention 9a86f5c"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 9932b1d"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -42761,7 +42878,8 @@
    "decisions": [
     "STONE-D2"
    ],
-   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "9a86f5c"
   },
   {
    "id": "STONE-D1",
@@ -46375,10 +46493,13 @@
     "Rule 012's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Local pricing, dearer stall loses the sale, merchants can fail (REC-015); no specialization, relocation or hiring competition",
-   "tests": "",
+   "tests": "on 99dc3be: competition_test 33, business 160, stalls 104, parity 55, home 113 (cart-parts case aligned with the approved specialization), run_tests 3591; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (spec_switches 61 and 58)",
    "playtest": [],
    "branch": "wip/b18-competition",
-   "commits": [],
+   "commits": [
+    "f6c1e9e",
+    "692eecc"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -46417,22 +46538,33 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> competition worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-competition",
      "why": "B18-DP-08 approved; ECON-P3 merged"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 99dc3be: competition_test 33, business 160, stalls 104, parity 55, home 113 (cart-parts case aligned with the approved specialization), run_tests 3591; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (spec_switches 61 and 58); test_commit: None -> 99dc3be; commits + f6c1e9e; commits + 692eecc; integrated_in + Build 18 wip/build18 692eecc; known_defects + hiring competition covers manor hands only; construction helpers and business attendants have no unfilled-place signal",
+     "why": "competition worker (f6c1e9e) merged 692eecc: specialization by return, manor hiring competition by a bounded wage raise, relocation to same-kind manor stalls, failure confirmed. Raise ceiling +3 is a provisional working value (COMP-R1)"
     }
    ],
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 692eecc"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
    "remaining_work": "Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08)",
-   "assigned_worker": "competition worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "competition worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "99dc3be",
+   "known_defects": [
+    "hiring competition covers manor hands only; construction helpers and business attendants have no unfilled-place signal"
+   ]
   },
   {
    "id": "WDR-013",
@@ -48891,10 +49023,13 @@
     "Expansion 19 adds no second stonecutting profession; its judgment may influence stonecutters through shared NPC decision logic"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed)",
    "playtest": [],
    "branch": "wip/b18-stone",
-   "commits": [],
+   "commits": [
+    "6853c24",
+    "9932b1d"
+   ],
    "parent": "PROS-18",
    "depends_on": [
     "PROS-18",
@@ -48944,14 +49079,21 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> stone worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-stone",
      "why": "STONE-D1/D2 answered (B18-DP-09/10)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 9a86f5c: stone_test 105, contracts 154, parity 55, housing 115, trade_skills 96, play_test 40, conservation 8, save_transfer 21, run_tests 3591, wiki passed; economy_sim 30 days on 99dc3be: seeds 1 and 2 no FATAL, currency leaks 0, item leaks 0 (about 42 and 40 blocks dressed); test_commit: None -> 9a86f5c; commits + 6853c24; commits + 9932b1d; integrated_in + Build 18 wip/build18 9932b1d",
+     "why": "stone worker corrections (rubble item, conserved Masonry tiers, stonecutter contract; B18-DP-09/10) merged 9932b1d; stone_test isolated from workbench contention 9a86f5c"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 9932b1d"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -48960,7 +49102,8 @@
     "STONE-D1",
     "STONE-D2"
    ],
-   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "stone worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "9a86f5c"
   },
   {
    "id": "X19-ASSAULT",

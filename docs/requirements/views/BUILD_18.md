@@ -9,28 +9,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 81 |
-| Integrated | 59 of 81 (73%) |
-| Automated tests passed | 57 of 81 (70%) |
+| Integrated | 66 of 81 (81%) |
+| Automated tests passed | 64 of 81 (79%) |
 | Integration verified | 49 of 81 (60%) |
 | Gameplay verified | 0 of 81 (0%) |
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 1 of 81 (1%) |
 | Open (release blockers) | 80 |
-| Open owner decisions (blocking) | 4 (0) |
+| Open owner decisions (blocking) | 5 (0) |
 
-## In development (worker assigned) (7)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
-| PL1-10 | Player businesses, staged (1-4) | OWNER APPROVED | IN DEVELOPMENT | business worker (Sonnet subagent, started 2026-10-23) / wip/b18-business | NOT TESTED | Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation | design: UNKNOWN | UNKNOWN |
-| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
-| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
-| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
-| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | S |
-| WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | OWNER APPROVED | IN DEVELOPMENT | competition worker (Sonnet subagent, started 2026-10-23) / wip/b18-competition | NOT TESTED | Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08) |  | M |
-| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) / wip/b18-stone | NOT TESTED |  |  | M |
-
-## Integrated, awaiting gameplay or owner verification (58)
+## Integrated, awaiting gameplay or owner verification (65)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -54,6 +42,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | MAP-01 | Map shows where you are beyond the village | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; 30-day conservation on 1daa61f running; settlements have no housing model, so land-driven arrivals follow settlement marriages only (REG-DEMO-D1: housing as systems become available); known: In 30 days only marriage moves occurred; hunger, work and land moves are covered by tests only; A leaver's open contract is cancelled with the text 'died'; experience hours do not travel (skills do) |  | verification only |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; the determinism gate must be re-recorded on Build 18 (REL18-DET) because clue placement changed |  | verification only |
+| PL1-10 | Player businesses, staged (1-4) | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 99dc3be | TARGETED TESTS PASSED | Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation |  | verification only |
 | PL2-008 | Expandable property | OWNER APPROVED | INTEGRATED | 4ca0063, f3eed8c | NOT TESTED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |  | verification only |
 | PL2-014 | Modular house/workshop expansion | OWNER APPROVED | INTEGRATED | 4ca0063, f3eed8c | NOT TESTED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |  | verification only |
 | PL2-015 | Farming, livestock, hand plough | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9f44bbd | TARGETED TESTS PASSED | Audit dependencies; retain the minimum working farming and livestock behaviour; deferred items become open records with a later build (B18-DP-04) |  | verification only |
@@ -70,7 +59,11 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned); known: No births or old-age deaths in the settlements yet; Village cannot buy food from the settlements yet; no tool-shortage productivity penalty |  | verification only |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 66a5d4c | TARGETED TESTS PASSED | Trades opening with sustained unmet demand and closing without workers, capacity following labour (existing rules); 100- and 365-day checks; multi-generation verification outstanding unless a sufficient horizon is shown (B18-DP-05); known: multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only |  | verification only |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
+| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
+| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
+| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | OWNER APPROVED | INTEGRATED | 18 | TARGETED TESTS PASSED | Gameplay check; provisional values in balance.json credit (refuse_days 3 new); an heir inherits debts exactly as a villager heir does (record, never seized); known: Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; Settlement traders do not barter or lend |  | verification only |
@@ -85,6 +78,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | VIS-STEPS-01 | Steps cut through rock need real step art | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: a thin seam at one join between two step cells (north-south, ground to the north) |  | verification only |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
+| WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 692eecc | TARGETED TESTS PASSED | Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08); known: hiring competition covers manor hands only; construction helpers and business attendants have no unfilled-place signal |  | verification only |
 | WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device (performance on a phone); Build 18 release gate; known: countryside animals are ambient only: they cannot be hunted; travellers stop at the village gate |  | verification only |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | final percentages after X18-SIM (Q18-11); MIN-D mining stages mapped to 0-10 (reconciliation item); owner playtest |  | verification only |
@@ -92,6 +86,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | INTEGRATION VERIFIED | Gameplay and device check of the courier window (rendered with xvfb and looked at: scratchpad courier2_review.png, courier2_form.png); known: Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet |  | verification only |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | INTEGRATION VERIFIED | Gameplay check; houses, land and manor sales stay in person only (not every remote path traced) |  | verification only |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 18 wip/build18 b196303 | TARGETED TESTS PASSED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11); known: covers 9 of about 46 planned runs; no capability constants adopted |  | verification only |
+| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (12)
 
@@ -124,13 +119,14 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (4)
+## Open owner decisions (5)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  |
+| COMP-R1 | Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review | OPEN | no |  |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (9)

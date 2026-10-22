@@ -2,21 +2,14 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (4)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
-| PL1-10 | 18 | IN DEVELOPMENT | business worker (Sonnet subagent, started 2026-10-23) | wip/b18-business |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| STONE-02 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
-| STONE-03 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
-| STONE-04 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
-| STONE-06 | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
-| WDR-012-C | 18 | IN DEVELOPMENT | competition worker (Sonnet subagent, started 2026-10-23) | wip/b18-competition |
-| X18-STONECUT | 18 | IN DEVELOPMENT | stone worker (Sonnet subagent, started 2026-10-23) | wip/b18-stone |
 
 ## Implemented but not tested (43)
 

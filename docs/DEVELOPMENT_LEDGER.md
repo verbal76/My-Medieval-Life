@@ -394,7 +394,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | PL1-07 | NPCs sunk into beds/chairs | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | PL1-08 | Consumable effects shown everywhere |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | PL1-09 | Gold star over employer |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
-| PL1-10 | Player businesses, staged (1-4) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| PL1-10 | Player businesses, staged (1-4) | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | PL1-11 | Google Drive cloud saves (staged) | owner decision | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | PL1-12 | Red flowering plant not pickable | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | PL1-13 | Recognisable stove | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
@@ -513,11 +513,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | STONE-01 | Raw quarry stone and finished building blocks as separate items: stoneworkers process raw stone into blocks with real labour, tools and time; construction uses blocks; no automatic conversion or free blocks | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| STONE-04 | Skill-based stone dressing efficiency with conserved waste (one rule for player and villagers) | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -551,7 +551,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | 19 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | 15 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
@@ -573,7 +573,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 
 ## Proposal awaiting an owner decision (not approved) (36)
 
@@ -666,7 +666,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (179)
+## Owner decisions (180)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -695,6 +695,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | 18 | OPEN |  |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | 18 | OPEN |  |
 | CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | 18 | APPROVED |  |
+| COMP-R1 | Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review | 18 | OPEN |  |
 | CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | owner decision | APPROVED | yes |
 | CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | owner decision | APPROVED |  |
 | CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | owner decision | APPROVED |  |
