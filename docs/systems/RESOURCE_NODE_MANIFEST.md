@@ -13,11 +13,11 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 28 (22 the player may harvest, 6 the keeper's livestock).
+- Implemented node types: 29 (22 the player may harvest, 7 the keeper's livestock).
 - Materials they produce: 31 (apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool).
-- Finite node types: 9 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, open_pit, prospect_clue, stone_seam, tunnel_rock); with no replacement once worked out: 4 (gold_seam, open_pit, prospect_clue, tunnel_rock).
+- Finite node types: 10 (boulder, coal_seam, copper_seam, gold_seam, horse_pen, iron_seam, open_pit, prospect_clue, stone_seam, tunnel_rock); with no replacement once worked out: 5 (gold_seam, horse_pen, open_pit, prospect_clue, tunnel_rock).
 - At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
-- Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
+- Not Gather-compatible: 7 (chicken_pen, cow_pen, horse_pen, pig_pen, player_field, player_pen, sheep_pen).
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -30,6 +30,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `cow_pen` Cows | livestock | bred | none | none | 1 hide, 6 meat | breeds | no | yes | no | implemented |
 | `flower_patch` Wild flower | forage | natural | none | none | 1 flower | regrows | yes | yes | yes | implemented |
 | `gold_seam` Gold seam | mineral | natural | pickaxe | mining | 1 gold_ore | finite | yes | yes | yes | implemented |
+| `horse_pen` Horses | livestock | bred | none | none | 1 hide, 6 meat | finite | no | no | no | implemented |
 | `iron_seam` Iron seam | mineral | natural | pickaxe | mining | 1 iron_ore | finite | yes | yes | yes | implemented |
 | `open_pit` Open pit | mineral | natural | pickaxe | mining | 1 dirt, 1 spoil, 1 stone, 1 topsoil | finite | yes | yes | yes | implemented |
 | `pig_pen` Pigs | livestock | bred | none | none | 1 hide, 4 meat | breeds | no | yes | no | implemented |
@@ -213,6 +214,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Gather mode:** yes. **Icon:** `gold_ore`.
 - **Risk:** Scarce by design: 8 units in the whole village, so gold bars and rings stay rare.
 - **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_miner`
+
+### `horse_pen` · Horses
+
+- **Status:** implemented. **Category:** livestock, bred. **Found by:** `{"kind": "animal", "species": "horse"}`.
+- **Where:** The player's own horse pen (bought from the visiting caravan). **In the world:** 0 at the start (0 male, 0 female) in 0 pen, at most 1; the keeper keeps 1.
+- **Action:** Slaughtering (attack): "Your horse". **Range (tiles):** 1.1. As for any animal.
+- **Tool:** none. Only your own horse stands in a horse pen. Where to get it: none.
+- **Skill:** none.
+- **Time:** 30 game minutes. As for any pen animal: 30 game minutes.
+- **Cost:** stamina 0, tool wear 0. The player feeds the horse animals.horse.feed wheat a meal at the pen's gate.
+- **Yields a cycle:** 1 hide, 6 meat. A young animal gives half the meat and no hide.
+- **Total:** One horse, bought: animals.horse.pen_cap.
+- **Depletion:** finite. None: a horse is bought again from the caravan; it never breeds (pen_cap 1). It dies unfed.
+- **Owner:** The player's own pen. **Theft:** None: it is the player's own animal.
+- **Harvested by:** the player no; villagers no. Villagers neither keep nor slaughter it.
+- **Gather mode:** no. **Icon:** `meat`.
+- **Risk:** Not at risk: one animal, bought.
+- **Code:** `game/scripts/core/farming.gd::buy_horse`, `game/scripts/core/fauna.gd::kill`, `game/scripts/main.gd::_hit_animal`
 
 ### `iron_seam` · Iron seam
 
@@ -579,6 +598,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 | `coal_seam` | 200 coal in 4 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `copper_seam` | 60 copper_ore in 2 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `gold_seam` | 8 gold_ore in 1 seams | **none** |
+| `horse_pen` | 0 at the start (0 male, 0 female) in 0 pen, at most 1; the keeper keeps 1 | **none** |
 | `iron_seam` | 300 iron_ore in 5 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `open_pit` | staked in play (MIN-E): each 5 x 5 cells over the layers 2 topsoil, 3 dirt, 3 spoil, 8 stone | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `prospect_clue` | generated from the world seed (MIN-C): a clue in about 35% of the village's 15-cell blocks, 4 samples each; 55% lie over a mineral body | **none** |
@@ -605,6 +625,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `cow_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `flower_patch` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `gold_seam` | Scarce by design: 8 units in the whole village, so gold bars and rings stay rare. |
+| `horse_pen` | Not at risk: one animal, bought. |
 | `iron_seam` | Overharvested: the iron seams were worked out on day 10 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `open_pit` | Space: the village's dense ground holds few pit sites (66 on the static layout), so the manor stakes a pit only where a known find lies near one; a pit dug for a find may expose nothing (WDR-022). Whether topsoil, dirt, spoil, quarry stone and building blocks are different goods, and what earth is used for beyond backfill, are the owner's open questions (MIN_E_OPEN_PIT.md). |
 | `pig_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |

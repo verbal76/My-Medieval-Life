@@ -3332,7 +3332,7 @@ func _farm_options(pl: Dictionary) -> void:
 		var planks: int = w.farm.pen_planks(rect)
 		_button("Fence a %s pen in front of you (%d planks)%s" % [kind, planks, "" if no == "" else ": " + no], func():
 			var pen: Dictionary = w.farm.build_pen(k, rect, p)
-			message("The pen is fenced. Buy %s from the keeper at their pen's gate." % GameData.b("animals")[k].name.to_lower() if not pen.is_empty() else w.farm.pen_why)
+			message(("The pen is fenced. " + ("Buy a plough horse from the caravan when it visits." if k == "horse" else "Buy %s from the keeper at their pen's gate." % GameData.b("animals")[k].name.to_lower())) if not pen.is_empty() else w.farm.pen_why)
 			if not pen.is_empty():
 				hide_all(), no == "")
 

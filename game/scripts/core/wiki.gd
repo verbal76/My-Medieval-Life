@@ -477,7 +477,8 @@ func _animals() -> void:
 		var dd: Array = Animal.death_days(a) if (a.get("death_years", []) as Array).size() == 2 else []
 		if dd.size() == 2:
 			rows.append(["Dies of old age", "between %d and %d days old" % [int(dd[0]), int(dd[1])]])
-		rows.append(["Young per litter", str(int(a.get("litter", 1)))])
+		if id != "horse":                          # B14-11: the plough horse is bought, one to a pen, and never breeds
+			rows.append(["Young per litter", str(int(a.get("litter", 1)))])
 		var blocks := [stats(rows)]
 		var node: String = "node:wild_" + id if wild else "node:" + id + "_pen"
 		var ls := [node, "item:meat"]
@@ -491,7 +492,11 @@ func _animals() -> void:
 			diet += " At night a hungry one takes %s from the pens." % str(an[a.raids].name).to_lower()
 		if bool(a.get("people", false)):
 			diet += " Struck, it fights back (%d a bite), and a starving one goes for a person alone in its wood." % int(a.bite)
-		blocks.append(p("Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown." if not wild
+		var kept := "Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown."
+		if id == "horse":                          # B14-11
+			kept = "The plough horse is bought from the visiting caravan (%d coins) into your own horse pen, one at a time. It gets hungry and dies unfed like the other pen animals; it does not breed. With it and the hand plough in your pack, you till a cell in %.1f second for %.0f stamina." % [
+					int(Farming.cfg().caravan_horse.price), float(Farming.cfg().till.horse.seconds), float(Farming.cfg().till.horse.stamina)]
+		blocks.append(p(kept if not wild
 				else "Wild animals feed and breed in the woods. " + diet + " Hunting them takes a weapon."))
 		var rs := Refuges.spec(id)
 		if wild and not rs.is_empty():             # WR-01: the breeding refuges, as Refuges implements them
@@ -668,7 +673,7 @@ func _systems() -> void:
 		links(["sys:death", "sys:saving", "sys:family", "sys:orphans", "sys:posts"])])
 	sys.call("animal_life", "Animals through life", [
 		p("Animals are newborn, juvenile, adult and elderly by their age in game days. Only adults breed, and breeding slows as an area fills up. The elderly move slower and die of old age somewhere in their last stage. Young animals are drawn with the baby art. Each animal's page lists its stage lengths."),
-		links(["animal:cow", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "animal:deer", "animal:wolf", "animal:fox", "animal:bear", "animal:bird", "sys:calendar"])])
+		links(["animal:cow", "animal:horse", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "animal:deer", "animal:wolf", "animal:fox", "animal:bear", "animal:bird", "sys:calendar"])])
 	sys.call("saving", "Saving and your heir", [
 		p("Saves are versioned and keep your world. Resting at home and the pause menu's Save write the save; Continue loads it. If you die, an heir takes over: see Inheritance."),
 		p("Your save lives inside the game, and uninstalling the game deletes it, as can installing a test build that cannot update the old one. To keep your world, open Settings, Saves: Copy my save to a file puts a copy wherever you choose (Documents, Downloads, a cloud folder), and Keep a copy up to date rewrites that copy every time the game saves. After reinstalling, choose Import a save file and pick your copy: the game checks it, keeps a backup of it and of any save it replaces, brings it up to this version and continues your world. A file it cannot use (damaged, from a newer version, or from before the village was rebuilt) is refused and nothing changes. On Android you pick the file again after each reinstall. Inside the game, each save keeps the one before it as a backup, and the first save of each day keeps the previous save under that day's date, the last three days; if a save and its backup cannot be read, Continue loads the newest of those."),
@@ -708,7 +713,7 @@ func _not_yet() -> void:
 		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built, fit it with equipment and hire an attendant (see the guides). Not built yet: attendants and hired workers who craft at the shop's stations from its stock, shops in houses you only rent from a neighbour, a stall display shown over the stall, and trading skill perks on your sales."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"looks_more": ["Leather armour on your figure", "Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
-		"farm_more": ["Draught animals, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself (see the farming guides), but there are no horses or oxen to pull a plough, no roofed coops or shelters, no watering or weather, no traps for rabbits, no animals from the caravan and no hired farmhands yet."],
+		"farm_more": ["Oxen, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself, and a plough horse from the caravan speeds the plough (see the farming guides), but there are no oxen, no riding or carts drawn by horses, no roofed coops or shelters, no watering or weather, no traps for rabbits, no other animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:
 		add_page("todo:" + id, items[id][0], "notyet", [note("Not in the game yet. " + items[id][1])], "", "not implemented planned")

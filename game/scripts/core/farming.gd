@@ -15,6 +15,8 @@ extends RefCounted
 ## Animals: the player fences a pen of one species on their ground (planks), buys stock from a keeper (real
 ## animals out of the manor's pen, paid to the keeper), feeds it from the trough like the village's pens, and
 ## collects eggs, milk and wool, which the well-fed adults make (see daily_products).
+## The plough horse (B14-11): bought from the visiting caravan (farming.caravan_horse) into the player's own horse
+## pen, fed from the trough like any pen animal; with it and the hand plough tilling is faster (till.horse).
 ## The manor's own fields (World.fields) and their farmers are untouched: nothing here is theirs to cut.
 
 const COZY := 200000                  # atlas offset of the Cozy Farm tiles (as tools/build_village.py)
@@ -163,9 +165,12 @@ func clear_seconds(t: Dictionary) -> float:
 
 
 # ---------------------------------------------------------------- tilling --------------------
-## {seconds, stamina} one cell costs: by hand, or with the hand plough when the player carries one.
+## {seconds, stamina} one cell costs: by hand, with the hand plough when the player carries one, and with the plough
+## drawn by a plough horse of the player's own (B14-11) faster again.
 func till_cost(p: PlayerState) -> Dictionary:
-	return cfg().till.plough if p.tool_of("plough") != "" else cfg().till.hand
+	if p.tool_of("plough") == "":
+		return cfg().till.hand
+	return cfg().till.horse if plough_horse() != null else cfg().till.plough
 
 
 func till_refusal(c: Vector2i, p: PlayerState) -> String:
@@ -454,6 +459,61 @@ func pen_with_room(kind: String) -> Dictionary:
 func animal_price(a: Animal) -> int:
 	var base := int(cfg().animal_price[a.species])
 	return base if a.adult(w.minutes) else maxi(1, roundi(base * float(cfg().young_price_share)))
+
+
+## The player's living plough horse (in one of their pens), or null.
+func plough_horse() -> Animal:
+	for a: Animal in w.fauna.animals:
+		if a.alive and a.species == "horse" and w.fauna.pens.has(a.area) and w.fauna.pens[a.area].get("player", false):
+			return a
+	return null
+
+
+## B14-11: the caravan is at its stop (its visit day, from_hour for `hours` game hours; the day rule is World.update's).
+func caravan_here() -> bool:
+	var c: Dictionary = cfg().caravan_horse
+	var h: float = w.hour()
+	return w.day() % int(GameData.b("caravan_every_days")) == 1 and h >= float(c.from_hour) and h < float(c.from_hour) + float(c.hours)
+
+
+func caravan_stop() -> Vector2:
+	var s: Array = cfg().caravan_horse.stop
+	return Vector2(float(s[0]) + 0.5, float(s[1]) + 0.5)
+
+
+func buy_horse_refusal(p: PlayerState) -> String:
+	var c: Dictionary = cfg().caravan_horse
+	if not caravan_here():
+		return "The caravan is not here."
+	if plough_horse() != null:
+		return "You already have a plough horse."
+	if pen_with_room("horse").is_empty():
+		return "You need a horse pen with room: fence one on your ground."
+	if p.coins < int(c.price):
+		return "You need %d coins." % int(c.price)
+	return ""
+
+
+## Buy the plough horse from the visiting caravan into your horse pen. The coins go to the caravan's purse and leave
+## the village (coin_sources falls, as for any coin the village pays the caravan); the horse comes from outside.
+## "" when done.
+func buy_horse(p: PlayerState) -> String:
+	var no := buy_horse_refusal(p)
+	if no != "":
+		return no
+	var price := int(cfg().caravan_horse.price)
+	var dst := pen_with_room("horse")
+	p.coins -= price
+	w.coin_sources -= price
+	w.caravan_purse += price
+	var a: Animal = w.fauna.spawn(dst.id, "horse", "m", null)
+	a.born = w.minutes - (Animal.stage_days(a.spec(), "grow") + 1.0) * 1440.0       # a grown horse
+	a.next_birth = w.minutes + Animal.stage_days(a.spec(), "breed") * 1440.0
+	a.goal = Vector2.INF
+	w.stat("farm_bought_horse")
+	w.stat("caravan_sold_horse")
+	w.note("%s %s bought a plough horse from the caravan for %d coins." % [p.name, p.family, price])
+	return ""
 
 
 ## The animal of this sex a keeper can spare from a manor pen: not a newborn, and the pen keeps more than its
@@ -836,7 +896,7 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 		return out
 	if exact:
 		var cost := till_cost(p)
-		out.append(_t("till", c, "Till the ground (%s, %.0f stamina)" % ["with the plough" if p.tool_of("plough") != "" else "by hand: slow", float(cost.stamina)], {"low": true}))
+		out.append(_t("till", c, "Till the ground (%s, %.0f stamina)" % ["with the plough and horse" if p.tool_of("plough") != "" and plough_horse() != null else ("with the plough" if p.tool_of("plough") != "" else "by hand: slow"), float(cost.stamina)], {"low": true}))
 	return out
 
 

@@ -26,6 +26,7 @@ var camera: Camera2D
 var ui: GameUI
 var sprites := {}              # npc id -> ActorSprite
 var animal_sprites := {}       # animal id -> AnimalSprite
+var caravan_sprite: Sprite2D = null   # B14-11: the visiting caravan's wagon, while it is here
 var cart_sprites := {}         # cart id -> Sprite2D (B14: the mine cart stands in for the handcart)
 var player_sprite: ActorSprite
 var player_worn := ""          # ARMOR-01: the worn armour and head item the player's sheet was drawn with
@@ -238,6 +239,8 @@ func _ready() -> void:
 				# PL1-04: the sage's shop (the normal trade window)
 				var sage := world.npc(world.sage_id)
 				ui.show_trade(sage)
+			"horse", "caravan":
+				_horse_shot(shot_panel == "caravan")    # B14-11: the plough horse in its pen beside the player; the caravan's wagon at its stop
 			"farm_tilled", "farm_growing", "farm_pen":
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
 			"farm_plot_mixed":
@@ -1478,6 +1481,7 @@ func _sync_sprites() -> void:
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
 	_sync_carts()
+	_sync_caravan()
 	_sync_loot()
 	_sync_bubbles()
 	_sync_diamonds()
@@ -1650,6 +1654,21 @@ func _sync_carts() -> void:
 		if not seen.has(id):
 			cart_sprites[id].queue_free()
 			cart_sprites.erase(id)
+
+
+## B14-11: the caravan's wagon stands at its stop while it is in the village (the paid atlas's mine cart, a stand-in like the
+## handcart's, until the owner's own art).
+func _sync_caravan() -> void:
+	var here: bool = world.farm.caravan_here()
+	if here and caravan_sprite == null:
+		caravan_sprite = Sprite2D.new()
+		caravan_sprite.offset = Vector2(0, -T / 2.0 + 2.0)
+		caravan_sprite.texture = _tile_texture(MINECART_TILE)
+		caravan_sprite.position = (world.farm.caravan_stop() + Vector2(0.0, 0.5)) * T
+		actors.add_child(caravan_sprite)
+	elif not here and caravan_sprite != null:
+		caravan_sprite.queue_free()
+		caravan_sprite = null
 
 
 const CART_TILE := 3009          # the mine cart on its rail (tools/build_village.py MINE_CART, atlas 0)
@@ -2177,6 +2196,9 @@ func _find_target() -> void:
 					if spare != null:
 						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
 					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
+	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # B14-11: the visiting caravan sells a plough horse
+		var no_horse := world.farm.buy_horse_refusal(p)
+		here.append({"kind": "caravan_horse", "label": ("Buy a plough horse from the caravan (%d coins)" if no_horse == "" else "The caravan's plough horse (%d coins): " + no_horse) % int(Farming.cfg().caravan_horse.price)})
 	# a house the family holds but does not live in, or one the manor offers: its door
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -2772,6 +2794,9 @@ func _use() -> void:
 				ui.message(world.pack_full_text(world.farm.products_in(target.pen).keys()))
 			for id in got:
 				_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
+		"caravan_horse":
+			var why_not: String = world.farm.buy_horse(p)
+			ui.message(why_not if why_not != "" else "You pay the caravan and walk the horse into your pen. With it, the hand plough does a cell in %.0f second." % float(Farming.cfg().till.horse.seconds))
 		"pen_buy":
 			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
 			ui.message(no if no != "" else "You buy it and walk it into your pen.")
@@ -4974,6 +4999,33 @@ func _plot_shot() -> void:
 	fp.show_all()
 	world.player.pos = Vector2(r.position) + Vector2(r.size.x / 2.0, r.size.y + 1.5)
 	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
+
+
+func _horse_shot(at_caravan: bool) -> void:
+	var p := world.player
+	p.coins = 3000
+	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), World.PLAYER)
+	var pl: Dictionary = world.property.claim(rect, World.PLAYER, false)
+	if pl.is_empty():
+		print("horse shot: no ground (%s)" % world.property.why)
+		return
+	p.inv.add("plank", 60)
+	p.inv.add("plough")
+	world.minutes = (int(GameData.b("caravan_every_days")) * 3 + 1) * 1440.0 + 13.0 * 60.0       # the caravan's afternoon
+	var pr: Rect2i = world.farm.pen_rect_ahead("horse", Vector2(float(pl.x) + 4.5, float(pl.y) + 8.5), Vector2.UP)
+	var pen: Dictionary = world.farm.build_pen("horse", pr, p)
+	var why: String = world.farm.buy_horse(p)
+	if pen.is_empty() or why != "":
+		print("horse shot: %s %s" % [world.farm.pen_why, why])
+		return
+	pen.trough = 4
+	if at_caravan:
+		p.pos = world.farm.caravan_stop() + Vector2(1.5, 0.5)
+		follow_at = _in_view(world.farm.caravan_stop() * T)
+	else:
+		p.pos = Vector2(float(pen.x) + float(pen.w) / 2.0 + 0.5, float(pen.y) - 0.5)
+		follow_at = _in_view(Vector2(float(pen.x) + float(pen.w) / 2.0, float(pen.y) + float(pen.h) / 2.0) * T)
 	camera.position = follow_at
 
 
