@@ -451,3 +451,7 @@ decision; no change has been made.
 proportion to the cutting time each put in; (c) keep one taker but rotate it among the field's workers; (d) confirm the
 present rule as intended (then record it in the design). In every case the pen feeding stays first and the seed kept back
 stays with the field's seed rule.
+
+**Answered (owner, 2026-10-22, `docs/directives/2026-10-22_farm08_q_crop_decision.md`): FARM-08-Q-CROP option B,
+proportional harvest sharing.** The crop goes to the farmers who cut it in proportion to their cutting work, after the
+seed kept back and the pen's feed. Implemented on `wip/farm-cropshare` (FARM-CROP-01, `132960a`), not merged into Build 17.

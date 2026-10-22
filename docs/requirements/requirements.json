@@ -11007,7 +11007,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Owner decision on FARM-08 (switches, yield) and on the balance options; optional check of crop allocation",
+   "next_action": "Owner decision on the FARM-08 yield and switches and on the remaining balance options (herd cost vs milk income, 4-day trough vs harvest gaps, household feed purse or granary sales, unsold milk and cheese); crop sharing decided (FARM-08-Q-CROP, option B) and implemented on wip/farm-cropshare (FARM-CROP-01)",
    "priority": "",
    "workstream": "lead",
    "superseded_by": null,
@@ -11047,6 +11047,11 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "Crop allocation established by code reading and the existing trace (no run): the first co-worker to finish a cutting takes the whole crop (after feeding the field's keeper's pen up to 4 days and topping up their pantry); others' labour yields nothing. Not in any decision or design; classed as an implementation defect (missing division rule), conserving, active with the switches off too. Owner decision FARM-08-Q-CROP; nothing changed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "next_action",
+     "why": "Crop allocation answered by the owner; next action updated"
     }
    ],
    "target_build": "16",
@@ -22095,7 +22100,7 @@
    "id": "Q18-11B",
    "title": "How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval)",
    "source": "docs/directives/2026-10-21_expansion18_master_directive.md",
@@ -22129,9 +22134,14 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; target_build",
+     "why": "Owner approved option 2 on 2026-10-22: people's experience, capped by facilities; separate workforce and effective capability per industry (0-10); facility shortages never erase experience; pay and output modifiers use the effective level; levels never permit or forbid work. Numbers (experience formula, facility caps, tenure rules, thresholds) to be proposed separately. Expansion 18 only (docs/directives/2026-10-22_q18_11b_decision.md)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": ""
   },
   {
    "id": "Q18-12",
@@ -28440,6 +28450,54 @@
    "roadmap_reason": "nature sustainability (EQ-02)",
    "b16_class": "verify",
    "complexity": "S"
+  },
+  {
+   "id": "X18-CAPCOMP",
+   "title": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Maintain separate workforce capability and effective settlement capability values for each industry, on the established 0–10 scale. ... Facility shortages must not erase accumulated worker experience. Pay and output modifiers use the effective capability level.",
+   "description": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
+   "source": "docs/directives/2026-10-22_q18_11b_decision.md",
+   "approval": "Owner decision Q18-11B, option 2, 2026-10-22",
+   "acceptance": [
+    "Per industry, a workforce level (people's relevant experience in the settlement) and an effective level (workforce level within the limits of available, operational facilities), both 0-10",
+    "A facility shortage lowers the effective level only; the workforce level and the experience behind it are kept",
+    "Pay and output modifiers read the effective level (Q18-9, Q18-11); no level permits or forbids anyone's work",
+    "Experience formula, facility caps, tenure rules and thresholds are presented to the owner before any is fixed; Build 17 unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [
+    "Q18-11B",
+    "PROS-18"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Expansion 18: design proposal for the experience measure (tenure record), facility caps and thresholds, for owner approval; implementation after its dependencies",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_q18_11b_decision.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; next_action",
+     "why": "Placed in Expansion 18"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "X18-Q12",
