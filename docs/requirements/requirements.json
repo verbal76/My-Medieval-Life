@@ -2730,7 +2730,7 @@
    "id": "B17-DIR",
    "title": "Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval",
    "kind": "rule",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Do not publish a new APK, Windows, or Linux distributable without explicit owner approval.",
    "description": "Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval",
    "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
@@ -2774,6 +2774,11 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "Owner authorized a private personal playtest release of Build 17 (docs/directives/2026-10-22_build17_personal_playtest_release.md): gameplay code frozen, private draft release, minimal smoke checks, no new simulations"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED",
+     "why": "Build 17 released as a private playtest draft (release run 39706003658 on 80e6b99; APK, Windows and Linux; packet docs/release/BUILD_17_PACKET.md), as the owner authorized on 2026-10-22"
     }
    ],
    "target_build": "17"

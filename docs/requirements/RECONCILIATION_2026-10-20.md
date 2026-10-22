@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 196 still open, 35 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 256 (110 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 196 still open from the baseline + 110 added and open |
+| Entries added since | | 256 (109 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 196 still open from the baseline + 109 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (35)
@@ -73,7 +73,7 @@ None.
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
 | B16-READY | Build 16 development audit and release-readiness report | approved | ACTIVE DEVELOPMENT | 16 |
-| B17-DIR | Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval | rule | ACTIVE DEVELOPMENT | 17 |
+| B17-DIR | Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval | rule | COMPLETE AND VERIFIED | 17 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | IMPLEMENTED — TESTING REQUIRED | 17 |
 | CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | APPROVED — NOT STARTED | owner decision |
