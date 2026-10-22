@@ -2720,12 +2720,16 @@ func show_trade(n: NPC, pick := {}) -> void:
 	_label("They sell:", 20, Color(1, 0.85, 0.5))
 	if sale.is_empty():
 		_label("Nothing right now.", 15)
+	var full := sale.any(func(i): return not p.inv.can_add(i))      # TRADE-AXE-01: the pack's kinds are all taken
+	if full:
+		_label("Your pack is full: %d of %d kinds. You can buy more of what you already carry; to buy anything else, sell, drop or store something first." % [p.inv.items.size(), p.inv.max_stacks], 17, Color(1, 0.7, 0.55))
 	for id in sale:
 		var price := w.deal_price(w.sell_price(n, id), w.player, n)
 		var nn := n
 		var bid: String = id
-		_item_row(id, n.inv.count(id), "%d coins each%s" % [price, effect_suffix(id)], "Buy", func():
-			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price)
+		var room := p.inv.can_add(id)
+		_item_row(id, n.inv.count(id), "%d coins each%s%s" % [price, effect_suffix(id), "" if room else "  ·  no room in your pack"], "Buy", func():
+			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price and room)
 	var seeds: Array = w.farm.seed_offers(n)               # PL2-015: a farmer or the food merchant sells seed for your own field
 	if not seeds.is_empty():
 		_label("Seed for your own field:", 20, Color(1, 0.85, 0.5))
