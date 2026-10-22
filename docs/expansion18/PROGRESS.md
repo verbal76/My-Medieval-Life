@@ -68,6 +68,46 @@ profile, held until after the SYNC-17 Build 17 merge so results stay on one base
 | Durations and pay at levels 0, 5, 10 in every industry; determinism (same seed twice, and against the hook off) | `capability_hook.gd` | `capability_test` `test_capnum_durations`, `test_capnum_determinism` |
 | Live hook decision: stays OFF in the game until X18-CAPCOMP (DESIGN.md section 9a) | `capability_hook.gd` | economy_sim fingerprint unchanged with the hook off |
 
+### Review against the register (2026-10-22, owner directive `2026-10-22_expansions_18_19_20_directive.md`)
+
+Register on staging read for PROS-18 and its children, X18-*, Q18-*, X18-STONECUT (STONE-02..06 appear only in its
+notes), X18-CAPCOMP, X18-CAPNUM, CAP-TOOLHOLDER. Pending decisions with options: `DECISIONS_PENDING.md`.
+
+**(a) Implemented and verified (on this branch, in the prospective modules; the live hook off):**
+- Q18-9 (levels never gate), Q18-10 (any party buys; fetch or paid carter): `regional_test`, `settlement_test`.
+- Q18-11 structure and Q18-11A numbers: X18-CAPNUM, the `approved` profile and its hook sites (`capability_test`).
+- Q18-11B and X18-CAPCOMP part 1: experience by hours, caps, straight-line individual level, hours-weighted workforce
+  report, experience kept across industries and on departure dropped; workforce and effective levels kept apart
+  (`experience_test`); per-worker hook path prepared, not enabled.
+- PROS-18 components: capability model, holdings and report, regional market, routes, competition and cooperation,
+  caravan replacement plan (shadow harness), conservation and determinism tests; SYNC-17 to Build 17 `cd7439c`.
+- X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13: rules, fees, known recipients, physical journeys, signatures and the
+  postage window implemented and tested in the prospective module (`courier_test` 44, `contract_sign_test` 20; the
+  window rendered and looked at). **Not wired into the live game loop** (a reconciliation step; live use also needs
+  Q18-14..16 and the fee coefficients).
+- X18-SIM: 59 comparative runs and the report (`CAPABILITY_SIMULATIONS.md`); the owner has since approved the numbers.
+  The deferred 90-day and regional-by-profile runs are not needed any more: the owner's 2026-10-22 directives forbid new
+  long campaigns, and the approved profile is verified by focused tests and two 30-day ledger runs.
+
+**(b) Approved, not yet implemented, needing no unapproved value (done in this round):**
+- Compatibility of experience tracking and the per-worker path with mining, forestry, farming, production and CON-01/02:
+  tested (`experience_test` `test_production_compat`, `test_contract_compat`; `capability_test` farm sites).
+- Workforce experience structurally separate from the facility-limited effective level, no caps invented
+  (`WorkExperience.effective_level`, `facility_cap`, empty `facilities.caps`; `test_effective_kept_apart`).
+- The industry workforce report in the settlement report (`SettlementReport.workforce`; `test_report`).
+- Nothing else approved is implementable without an open value: SET-A..E as phases are covered in part by PROS-18's
+  prospective modules; their live parts wait for the decisions below.
+
+**(c) Blocked on an owner decision:**
+- Switching the per-worker modifiers on (X18-CAPCOMP, X18-CAPNUM live): D1 starting experience, D2 facility limits,
+  D5 level rounding, D6 wages at posting (`DECISIONS_PENDING.md`); D3 thresholds; D4 unattributed activities (trade's
+  modifiers cannot act until D4 gives trade hours).
+- X18-STONECUT and STONE-02..06: the Stoneworking starting levels and migration credit, dressing efficiency values,
+  chisel wear and the chisel recipe.
+- SET-C live trade and SET-D growth: Q18-1..8. Live courier booths: Q18-14, Q18-15, Q18-16, the fee coefficients.
+- Mining's 0-10 mapping of MIN-D's stages: reconciliation item.
+- CAP-TOOLHOLDER: record only, by the owner's instruction (review at reconciliation or if it causes a problem).
+
 ### X18-CAPCOMP part 1 (2026-10-22): workforce experience (owner-approved components only)
 
 | What | Where | Tests |

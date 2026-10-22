@@ -303,8 +303,21 @@ hauling, carting, the player's cancelled (unfinished) actions, sampling and assa
 Per-worker hook path (prepared, NOT enabled): `CapabilityHook.time/work_time/pay(base, industry, who)` take the worker,
 and every hook site passes them; `level_for(industry, who)` reads a forced analysis level, else, only when
 `CapabilityHook.per_worker` and `CapabilityHook.experience` are set (nothing in the game sets them), the worker's own
-whole level (floor of `WorkExperience.level`). A wage posted before a worker is known (the manor's quarry and mending
-jobs) keeps the old path. The live hook stays off until the facility and starting-experience rules are approved.
+whole EFFECTIVE level (floor of `WorkExperience.effective_level`; the rounding is open, DECISIONS_PENDING.md D5). A wage
+posted before a worker is known (the manor's quarry and mending jobs) keeps the old path (D6). The live hook stays off
+until the facility and starting-experience rules are approved.
+
+Workforce and effective kept apart (structure only, no rule invented): `WorkExperience.effective_level(who, industry)` =
+min(experience level, `facility_cap(industry)`), computed and never stored, so nothing a facility does can write the
+experience record; `facilities.caps` in `settlement_industries.json` is empty (no rule approved, D2), so effective =
+experience. The workforce report gives both averages; `SettlementReport.village` carries `workforce` for the seven
+industries.
+
+Compatibility (tested in `experience_test`): mining and felling on the per-worker path take each worker's own time and
+the seam gives no more ore; the contract code (CON-01, CON-02) calls the hook only for the work time of a felling it was
+hired for, never for a price, quantity, wage or deadline; contract felling and mining earn experience as any felling and
+mining; hired work other than the harvest keeps its stated wage. FARM-CROP-01's minute-based crop shares would give a
+faster cutter less grain on the per-worker path: DECISIONS_PENDING.md D7.
 
 Save: optional key `x18_experience` (`mml-x18-experience/0`: minutes per person and industry, the season's hour buckets),
 written only once someone has worked; a save without it (every older save) loads with empty tracking; a section of an
