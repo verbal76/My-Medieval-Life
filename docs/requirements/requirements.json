@@ -5815,6 +5815,46 @@
    "roadmap_reason": "Owner Build 17 decisions 2026-10-21"
   },
   {
+   "id": "CON-UX-01",
+   "title": "Contract window needs design work",
+   "kind": "idea",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "The contract setup really needs some design work",
+   "description": "Contract window needs design work",
+   "source": "owner message 2026-10-22 with a photo of the contract window",
+   "approval": "",
+   "acceptance": [],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with a photo of the contract window"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "owner remark; scope not yet defined (observed: the 3-column goods grid runs off the right edge; long service labels clip)"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "CQ-01",
    "title": "Sword responsiveness and hit detection (buffer, reach, phases, walls)",
    "kind": "approved",
@@ -27132,6 +27172,55 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "lead: a fresh seed-1 world (Clement Ward, smith) quotes 45 and the buy dialog allows 1 at 45-47 coins, so the block is state-dependent; candidates: a full pack (24 kinds; the dialog says so) or the buy box opening at the top of a list scrolled down, out of view. Asked the owner what appears on Buy"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "ruled out the hidden buy box: with the list scrolled down the quantity box still opens in view (trade_buy_scrolled screenshots); a fresh seed-1 Clement Ward sells the axe at 45 to a player with 47. Remaining candidate: a full pack (24 kinds). Waiting for the owner's on-screen message"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "TRADE-UI-02",
+   "title": "Contract proposal's answer shown in view",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "everything hit propose it does nothing like it doesn't change screens. It doesn't say if she accepts doesn't do anything",
+   "description": "Contract proposal's answer shown in view",
+   "source": "owner message 2026-10-22 with a photo of the contract window",
+   "approval": "owner playtest report (Build 17)",
+   "acceptance": [
+    "After Propose the villager's answer is visible without scrolling"
+   ],
+   "implementation": "",
+   "tests": "start_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "1bbf0ab"
+   ],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with a photo of the contract window"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 1bbf0ab; tests; target_build",
+     "why": "cause: the rebuilt window kept its scroll at Propose and the answer line sat above, off-screen; fixed 1bbf0ab, merged into wip/build18 c26502d; contract_reply screenshots before/after looked at; start_test passes. Katherine (farmer) had refused: no makings of an axe and none to buy cheap enough"
     }
    ],
    "target_build": "18"
@@ -27586,6 +27675,48 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "VIS-STEPS-01",
+   "title": "Steps cut through rock need real step art",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "I cut steps through the Rock. That's the best you can give me for an image of steps",
+   "description": "Steps cut through rock need real step art",
+   "source": "owner message 2026-10-22 with a photo of cut steps",
+   "approval": "owner playtest feedback (Build 17)",
+   "acceptance": [
+    "Cut steps read as stone steps in the rock at normal zoom, from art the project owns"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with a photo of cut steps"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "current tile is a Build 14 stand-in (Forgotten Memories paving with darker lines, tools/terrain_art.py); search the packs (Puny World cliff stairs first) for real step art"
     }
    ],
    "target_build": "18"
