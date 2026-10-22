@@ -22142,7 +22142,7 @@
     "A Law skill for player and villagers, saved and migrated (start 0); raised by witnessing and carrying documents and by teaching from the clergy or reeve; couriers.json notary check uses it; wiki updated"
    ],
    "implementation": "",
-   "tests": "trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
+   "tests": "trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
@@ -22198,6 +22198,11 @@
      "date": "2026-10-22",
      "change": "known_defects + The player has no courier job, so cannot gain Law by carrying documents; remaining_work",
      "why": "Known limits from the worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings -> trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation on the combined merge 1daa61f clean"
     }
    ],
    "target_build": "18",
@@ -22208,7 +22213,7 @@
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "Gameplay check; keeper lessons are free and abstract (provisional)",
@@ -23148,7 +23153,7 @@
     "Villagers leave and outsiders arrive for stated reasons (work, land, marriage, hunger); people, purses and goods move with them; conserved; deterministic; saved"
    ],
    "implementation": "",
-   "tests": "On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks",
+   "tests": "On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-migration",
    "commits": [
@@ -23198,6 +23203,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks; test_commit: None -> 1daa61f; commits + e75b3f6; commits + 1daa61f; integrated_in + 18; known_defects + In 30 days only marriage moves occurred; hunger, work and land moves are covered by tests only; known_defects + A leaver's open contract is cancelled with the text 'died'; experience hours do not travel (skills do); remaining_work",
      "why": "Migration worker finished (e75b3f6); merged into wip/build18 at 1daa61f"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks -> On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation on the combined merge 1daa61f clean"
     }
    ],
    "target_build": "18",
@@ -23207,7 +23217,7 @@
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -43299,7 +43309,7 @@
     "Barter deals conserve goods both ways; credit only from parties who trust the buyer; debts recorded, saved, repaid; default lowers standing; no coins created"
    ],
    "implementation": "",
-   "tests": "On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins)",
+   "tests": "On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-creditparity",
    "commits": [
@@ -43349,6 +43359,16 @@
      "date": "2026-10-22",
      "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT; assigned_worker: credit worker (Sonnet subagent, started 2026-10-23) -> credit-parity worker (Sonnet subagent, started 2026-10-23); branch: wip/b18-credit -> wip/b18-creditparity",
      "why": "Parity fixes within the approved requirement (player as lender/seller; player debts to the heir)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins) -> On merge a2ea741: credit_test 68, relations_test 79, contracts_test 154, courier_live_test 138, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks; no barter or credit arose (no household in need without coins); economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation on the combined merge 1daa61f clean"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: INTEGRATION VERIFIED -> TARGETED TESTS PASSED",
+     "why": "In development for the parity fixes; integration verification waits for that merge"
     }
    ],
    "target_build": "18",
@@ -48032,7 +48052,7 @@
     "Goods and fees move atomically; nothing delivered free; no coins created"
    ],
    "implementation": "",
-   "tests": "On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
+   "tests": "On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
@@ -48081,6 +48101,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; test_commit: None -> a2ea741; commits + 4692d05; commits + a2ea741; integrated_in + 18",
      "why": "Courier-completion worker finished (4692d05); merged into wip/build18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings -> On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation on the combined merge 1daa61f clean"
     }
    ],
    "target_build": "18",
@@ -48091,7 +48116,7 @@
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
@@ -48116,7 +48141,7 @@
     "Tests: known and business contacts, location resolution, item availability, capacity, fee, payment collection, deposits, rejected, unavailable recipient, interrupted journey; fulfilled only when done"
    ],
    "implementation": "",
-   "tests": "On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
+   "tests": "On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
@@ -48170,6 +48195,11 @@
      "date": "2026-10-22",
      "change": "known_defects + Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet; remaining_work",
      "why": "Known limits from the worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings -> On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation on the combined merge 1daa61f clean"
     }
    ],
    "target_build": "18",
@@ -48180,7 +48210,7 @@
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "Gameplay and device check of the courier window (rendered with xvfb and looked at: scratchpad courier2_review.png, courier2_form.png)",
@@ -48204,7 +48234,7 @@
     "Smoke tests pass or the missing feature is named; no remote instant signing anywhere"
    ],
    "implementation": "",
-   "tests": "contract_sign_test; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings",
+   "tests": "contract_sign_test; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-courier2",
    "commits": [
@@ -48268,6 +48298,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "Known limits from the worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: contract_sign_test; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings -> contract_sign_test; On merge 4f courier2 (Build 18): courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, trade_skills_test 96, luxury_test 233, regional_food_test 47, chapel_test 68, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days seeds 1, 2: no leaks, 18 and 21 villager bookings; economy_sim 30 days on 1daa61f (couriers completed, credit, migration merged): seed 1 114 alive, seed 2 123 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation on the combined merge 1daa61f clean"
     }
    ],
    "target_build": "18",
@@ -48278,7 +48313,7 @@
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "Gameplay check; houses, land and manor sales stay in person only (not every remote path traced)",
