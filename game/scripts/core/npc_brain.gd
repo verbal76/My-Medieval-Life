@@ -3926,6 +3926,7 @@ func dawn(record := true) -> void:
 		w.quests.drop_failed()
 		w.quests.refresh()
 		w.contracts.dawn()                           # CON-01: lapses, withdrawn offers, businesses' orders
+		w.credit.dawn()                              # TRADE-CREDIT: debts fall due, are repaid or default; households short of food barter or borrow
 		Decay.dawn(w)                                # DVW-B4: a day's spoilage of stored food and wear of what is worn
 
 
