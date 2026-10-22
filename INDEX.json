@@ -1,0 +1,223 @@
+{
+ "format": "mml-requirements-sources/1",
+ "date": "2026-10-23",
+ "note": "Immutable copies of every distinct requirements register found on the remote branches at the 2026-10-23 reconciliation (owner directives docs/directives/2026-10-23_master_requirements_reconciliation.md and docs/directives/2026-10-23_requirements_recovery_audit.md). sources/<blob>.json is the file exactly as git stored it (blob id = sha1 of its content); branches maps each branch to a commit whose register is that blob. Never edited.",
+ "copies": {
+  "a8c4d34934642edea064027c0f32a7e7ddd963d7": {
+   "records": 670,
+   "branches": {
+    "origin/staging/my-medieval-life": "ef97c91e4fe7f63e23efb789cc9d0e57a784e30b",
+    "origin/wip/b16-integration": "ef97c91e4fe7f63e23efb789cc9d0e57a784e30b"
+   }
+  },
+  "bf1512e01583ac37ac6a7d4abe43c7f6cecd1c80": {
+   "records": 562,
+   "branches": {
+    "origin/wip/b16-cattle": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-farms": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-farms2": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-farms3": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-misc": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-misc2": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-misc3": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-stalls": "33013f38b10d6a91123297109a49a6e4036e11c3",
+    "origin/wip/b16-stalls2": "33013f38b10d6a91123297109a49a6e4036e11c3"
+   }
+  },
+  "158070a0b420cf59d1deb9eb95288c2832bdedae": {
+   "records": 449,
+   "branches": {
+    "origin/wip/b16-fam07": "7a630251760a6be48ccae1a49f3d18efb70d443a"
+   }
+  },
+  "8d9b0454630fe2e0d85e52b1c04d1520cbe59682": {
+   "records": 584,
+   "branches": {
+    "origin/wip/b17-con01b": "9f229f7cc1143c963dc807d907554062785b3897",
+    "origin/wip/b17-mine": "9f229f7cc1143c963dc807d907554062785b3897"
+   }
+  },
+  "3e05b569ab502ff4c90736762b76512f65596700": {
+   "records": 600,
+   "branches": {
+    "origin/wip/b17-con02": "70900c0c0b7985d7d9c1a1a6a14f92ae78744fb9"
+   }
+  },
+  "acdb4146e0fbe39bd8ef7fb0409b2b4b74019862": {
+   "records": 567,
+   "branches": {
+    "origin/wip/b17-contracts": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-crafts": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-decay": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-dvwa12": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-dvwa12b": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-minb": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-mining": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-mining2": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/b17-terrain": "8a3d04108359af51eacf7f234a3d6a157f434992",
+    "origin/wip/roadmap-docs": "8a3d04108359af51eacf7f234a3d6a157f434992"
+   }
+  },
+  "1461ed030edbe65ba393cb4882a738335a62b9fb": {
+   "records": 648,
+   "branches": {
+    "origin/wip/b17-equip": "f0827907878d900ece84dc3e5c058b9fd7a657cc"
+   }
+  },
+  "e7967453485f86fd58ed3de212bc2d7d28a40f7a": {
+   "records": 567,
+   "branches": {
+    "origin/wip/b17-minc": "04bf0f772ea4ac311e9906c3dbf5b77c12eb8bf5"
+   }
+  },
+  "f2d4e15d31307b55c3ef78862507458f0f483e45": {
+   "records": 573,
+   "branches": {
+    "origin/wip/b17-mind": "53feefff6a943080585da2309e959c6a2b4dc64f"
+   }
+  },
+  "56ab963568ccfb0bf9f20e758960edb645b16d97": {
+   "records": 606,
+   "branches": {
+    "origin/wip/b17-minf": "e9a01e4ee674059d65aae081828c6f5c4ae14407"
+   }
+  },
+  "ad5d42645c27d7223e9d7079c43d53ddb4fd86de": {
+   "records": 612,
+   "branches": {
+    "origin/wip/b17-minf2": "49b6380d4f0d6a542ff56186d730979586fcdcb5"
+   }
+  },
+  "04c0d16a2ed3d993a51a50eed3de1f2303d428ad": {
+   "records": 648,
+   "branches": {
+    "origin/wip/b17-parity": "e671072910685a543391f7bd70ef7a664187c5ae"
+   }
+  },
+  "00e2f3db749d25902679f0e6328caebb99d73e98": {
+   "records": 635,
+   "branches": {
+    "origin/wip/b17-parity-snapshot": "45554d8d6af482231ba00fa2703067b6c83bea4a"
+   }
+  },
+  "25ed3b849f4be8fba3c172605aed908dca6fef74": {
+   "records": 639,
+   "branches": {
+    "origin/wip/b17-stone": "b4ebc55d2398831450fe4e30b592b281432f2084",
+    "origin/wip/b17-wiki": "b4ebc55d2398831450fe4e30b592b281432f2084"
+   }
+  },
+  "a377ca4a99602ee2ca7f80892597b7a9d1715e8b": {
+   "records": 649,
+   "branches": {
+    "origin/wip/b18-armour": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-axe": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-capability": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-character": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-contractui": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-countryside": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-horse": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-inventory": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-map": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-ore": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-outlaws": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-packfull": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-polish": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-rooms": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-skills": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-steps": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-tailor": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-trees": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-ui-replies": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-visual": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/b18-wiki": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/build17": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/build18": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/expansion21-preparation": "dfec7ec639643eaac42fea80c0988208bc9a9b27",
+    "origin/wip/juice-assessment": "dfec7ec639643eaac42fea80c0988208bc9a9b27"
+   }
+  },
+  "1eec8e85ab8ee678abb2156cde720ba66d38fafd": {
+   "records": 522,
+   "branches": {
+    "origin/wip/b7-015-fixes": "a946ba18d0845ce14a60eab74843a47387218912"
+   }
+  },
+  "9d923d21c32a6c5e69215e773e9394612ffd8eba": {
+   "records": 562,
+   "branches": {
+    "origin/wip/build17-plan": "6607000ac65c27f23111cedbdd162ddd8882613c"
+   }
+  },
+  "7fc306bd3329b84b23a06daf18da085de097d53d": {
+   "records": 436,
+   "branches": {
+    "origin/wip/eq07-housing": "9ec6b40fda7e300f98349414ced224ba1a05c22a"
+   }
+  },
+  "8e561b5423852c1abd65fb20503d1624ee3e0306": {
+   "records": 440,
+   "branches": {
+    "origin/wip/eq10-bad-home": "e0c6ca7a0184b025cfed7ce98f3cb910623f0e30"
+   }
+  },
+  "2264b760ba13dae85a00154d11f9947f609ef8a6": {
+   "records": 443,
+   "branches": {
+    "origin/wip/eq18-tool-recovery": "248e38333d9586a9fabe868985e546d714833ebe"
+   }
+  },
+  "7b2cf071119a0d52b9895e83a4e321d7efc04bed": {
+   "records": 649,
+   "branches": {
+    "origin/wip/expansion18-preparation": "cd7439cd93bd59af3c907845f0265e43090e16cb",
+    "origin/wip/expansion18-snapshot": "cd7439cd93bd59af3c907845f0265e43090e16cb",
+    "origin/wip/expansion19-preparation": "cd7439cd93bd59af3c907845f0265e43090e16cb",
+    "origin/wip/expansion19-snapshot": "cd7439cd93bd59af3c907845f0265e43090e16cb",
+    "origin/wip/x18-readiness": "cd7439cd93bd59af3c907845f0265e43090e16cb"
+   }
+  },
+  "9e4810c0db78861b7877d113ef184154ab8e7c85": {
+   "records": 649,
+   "branches": {
+    "origin/wip/expansion20-preparation": "80e6b99d794d9cf306e593c3339a3a51c3bb2617"
+   }
+  },
+  "a4180408e5400258f8c6830e63898ee7e149b8d1": {
+   "records": 441,
+   "branches": {
+    "origin/wip/fam-guardianship": "ebf43adda2799d26357c78162a36a684df607f51"
+   }
+  },
+  "206d73525b8d038ca58bf818beed16c9100ea8c7": {
+   "records": 649,
+   "branches": {
+    "origin/wip/farm-cropshare": "3dcd5835107e6e7b7536a74b37d819976666657f"
+   }
+  },
+  "545f9c7efa30a65c03055ad8cf79e555a54dbbb5": {
+   "records": 558,
+   "branches": {
+    "origin/wip/fse-blockers": "9f8d3d3ea3953b22deb94145fef7cd30c8cf56aa"
+   }
+  },
+  "851b4887b0428c19fb0b0581b95da8f2122b2542": {
+   "records": 442,
+   "branches": {
+    "origin/wip/house10-room": "4a1d5b1236603addb6611756fdbb625e1bda9591"
+   }
+  },
+  "f615303411efdc716b57a05aa77281f23a7f1ef1": {
+   "records": 511,
+   "branches": {
+    "origin/wip/main-uncommitted": "d33bb387a17bc46ccfc830688230177e444554ba"
+   }
+  },
+  "25b6e7a4feb39c8a1427c3039023d71ffc0c9a92": {
+   "records": 449,
+   "branches": {
+    "origin/wip/od16-money-flow": "a8760bed6a6298878f83da5394e10c6de7053eb8"
+   }
+  }
+ }
+}
