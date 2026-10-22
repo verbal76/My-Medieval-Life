@@ -196,6 +196,32 @@ func _ready() -> void:
 					world.player.pos = shot_warp
 				_sync_levels(0.0)
 				follow_at = _in_view(world.player.pos * T)
+			"steps_ns", "steps_ew":
+				# VIS-STEPS-01: steps cut through a rim, running north-south or east-west, drawn as the game draws them
+				var want := "_ns" if shot_panel == "steps_ns" else "_ew"
+				var o: Overworld = world.map.overworld
+				var found := false
+				for r in range(2, 9):
+					for cy in range(-r, r + 1):
+						for cx in range(-r, r + 1):
+							if found or maxi(absi(cx), absi(cy)) != r:
+								continue
+							o.get_chunk(Vector2i(cx, cy))
+							for i in Overworld.CHUNK * Overworld.CHUNK:
+								var c := Vector2i(cx * Overworld.CHUNK + i % Overworld.CHUNK, cy * Overworld.CHUNK + i / Overworld.CHUNK)
+								if found or not o.is_rim(c):
+									continue
+								for d: Vector2i in Terrain.DIRS:
+									var sp := Terrain.span(o, c - d, d)
+									if not sp.is_empty() and str(sp.kind) == "steps" and not bool(sp.from_top) and Terrain.run_of(d) == want:
+										for rc: Vector2i in sp.cells:
+											o.note_work(rc, "steps" + want)
+											ow_view._draw_works(Overworld.chunk_of(rc))
+										world.player.pos = Vector2(c - d * 3) + Vector2(0.5, 0.5)
+										follow_at = _in_view(world.player.pos * T)
+										found = true
+										break
+				print("steps shot: found=", found)
 			"mine_works", "cave":
 				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
 			"collapse", "shaft", "backfill":
@@ -494,6 +520,15 @@ func _ready() -> void:
 						ui.body_scroll.scroll_vertical = 100000
 						await get_tree().process_frame
 						ui.show_contract(n, t, world.contracts.propose(World.PLAYER, n, "axe", 1, 45, 1))
+						break
+			"contract_grids", "contract_work":
+				# the contract window's goods grid (top) and work grid (scrolled down) at the window width
+				for n: NPC in world.npcs:
+					if n.job == "farmer" and n.alive:
+						ui.show_contract(n, {"all": true})
+						await get_tree().process_frame
+						if shot_panel == "contract_work":
+							ui.body_scroll.scroll_vertical = 100000
 						break
 			"trade_qty":
 				# PL1-03: the quantity control, buying 3 of 8 affordable

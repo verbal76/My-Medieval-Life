@@ -1110,6 +1110,19 @@ func _label(text: String, size := 18, color := Color8(246, 236, 214)) -> Label:
 	return l
 
 
+## How many equal columns (up to `most`) of buttons with these labels fit the window's width without any label being
+## cut: each column must hold the longest label on one line; a label wider than a single column wraps (autowrap).
+func _fit_columns(labels: Array, most: int) -> int:
+	var font := panel.get_theme_font("font", "Button")
+	var size := panel.get_theme_font_size("font_size", "Button")
+	var widest := 0.0
+	for l in labels:
+		widest = maxf(widest, font.get_string_size(str(l), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x)
+	var avail := panel.get_viewport_rect().size.x - 16.0 - 2.0 * 24.0 - 16.0     # window margin, its padding, scrollbar
+	var per := widest + 2.0 * 24.0 + 8.0                                          # a button's padding and the gap
+	return clampi(int(avail / per), 1, most)
+
+
 func _button(text: String, cb: Callable, enabled := true, parent: Control = null) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -2502,7 +2515,6 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 	_label("Propose a contract: what you want from %s, how many, the price for each and how many days they have. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
 	var all: bool = t.get("all", false)
 	var grid := GridContainer.new()
-	grid.columns = 3
 	grid.add_theme_constant_override("h_separation", 8)
 	grid.add_theme_constant_override("v_separation", 8)
 	panel_body.add_child(grid)
@@ -2513,7 +2525,9 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 		var m: Dictionary = k.means(n, id, 3)
 		if int(m.stock) + int(m.cap) > 0:
 			able.append(id)
-	for id in (ids if all else able):
+	var shown: Array = ids if all else able
+	grid.columns = _fit_columns(shown.map(func(i): return ("★ " if able.has(i) else "") + GameData.item_name(i)), 3)
+	for id in shown:
 		var iid: String = id
 		var b := _button(("★ " if able.has(iid) else "") + GameData.item_name(iid), func():
 			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3}
@@ -2526,6 +2540,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 					break
 			show_contract(n, nt), true, grid)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if str(t.get("item", "")) == iid:
 			b.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
 	_button(("Only what %s can supply" % n.name) if all else "All goods", func():
@@ -2537,7 +2552,8 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 	if not opts.is_empty():
 		_label("Or hire %s for work: paid for each unit of the work as it is done." % n.name, 16)
 		var sgrid := GridContainer.new()
-		sgrid.columns = 2
+		sgrid.columns = _fit_columns(opts.map(func(o): return str(o.label)), 2)
+		sgrid.add_theme_constant_override("h_separation", 8)
 		panel_body.add_child(sgrid)
 		for o in opts:
 			var oo: Dictionary = o
@@ -2546,6 +2562,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
 				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3}), true, sgrid)
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			sb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			if t.has("svc") and str(t.get("label", "")) == str(oo.label):
 				sb.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
 	if t.has("svc"):

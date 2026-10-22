@@ -595,7 +595,7 @@
     "terrain"
    ],
    "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json).",
+   "used_for": "VIS-STEPS-01: its stone cliff-stair tile (96, 96) is the cut-steps tile drawn over a cliff rim (game/assets/terrain/steps_ns.png, steps_ew.png; tools/terrain_art.py). Overworld grass/cliff wangset (overworld_tiles.json).",
    "scale": "16 px, 1:1",
    "scan": [
     {
@@ -633,6 +633,8 @@
     }
    ],
    "imported": [
+    "assets/terrain/steps_ew.png",
+    "assets/terrain/steps_ns.png",
     "assets/tiles/punyworld-overworld-tiles.png"
    ]
   },
