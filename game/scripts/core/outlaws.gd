@@ -92,6 +92,7 @@ static func arrive(w: World) -> Array:
 		n.damage = 4.0
 		n.coins = rng.randi_range(5, 15)
 		n.inv.add("copper_sword")
+		w.stat("imported_copper_sword")             # the sword comes in from outside with the outlaw: the item ledger counts it
 		n.hunger = 100.0
 		w.coin_sources += n.coins                    # the purse comes in from outside
 		w.stat("outlaw_coins_in", n.coins)

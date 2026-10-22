@@ -661,7 +661,8 @@ func _sample(start: Dictionary) -> Dictionary:
 	# coins from outside: the caravan's purchases, newcomers' purses (they come in from outside), and a scenario's grant (EQ-06)
 	var c_in := int(_st("caravan_coins_in")) - int(start.stats.get("caravan_coins_in", 0)) \
 			+ int(_st("newcomer_coins_in")) - int(start.stats.get("newcomer_coins_in", 0)) \
-			+ int(_st("scenario_coins_in")) - int(start.stats.get("scenario_coins_in", 0))
+			+ int(_st("scenario_coins_in")) - int(start.stats.get("scenario_coins_in", 0)) \
+			+ int(_st("outlaw_coins_in")) - int(start.stats.get("outlaw_coins_in", 0))        # BANDIT-RETURN: the outlaws' purses come in from outside
 	var c_out := int(_st("caravan_coins_out")) - int(start.stats.get("caravan_coins_out", 0))
 	var src_delta := w.coin_sources - int(start.coin_sources)
 	s.currency = {"holders": c, "total": c.total, "world_total_coins": w.total_coins(), "start_total": start.coins.total,
