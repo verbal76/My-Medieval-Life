@@ -184,6 +184,7 @@
   "shared_wheat_yield": 0,
   "stall_rent_day": 5,
   "stall_evict_days": 2,
+  "business_money": {"_note": "ECON-P3 (owner 2026-10-23: a shop has its own till, the owner pays themselves from it and may choose to move money). A villager household's storefront keeps its sales in its own till (the building's front.till). Each morning the household first draws what its necessity reserve lacks from the till (PAR-02A: necessities come before the working reserve), then the owner pays themselves payout_share (the settlements' rule, settlements.json) of what the till holds above till_reserve; a till below till_reserve is topped up from the household's spendable coins (coins above the necessity reserve). till_reserve is a provisional agent value.", "till_reserve": 10},
   "stall_range": 7,
   "stall_walk_range": 100,
   "stall_buyers_per_hour": 3,
