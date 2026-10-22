@@ -4,7 +4,7 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-21 (synchronized with Build 17 at `cd7439c`, after round 4).
+Updated 2026-10-22 (the gossip frame round on `e91d903`, after the Build 17 synchronization at `cd7439c`).
 
 ## Branch and latest pushed commit
 
@@ -40,6 +40,31 @@ rate: frame p99 1.41 ms and p99.9 3.67 ms, unchanged from round 4.
 Outstanding from the sync: Build 17's contract breaches and acceptance (CON-01/02), and collapse deaths as remembered
 facts, are new event feeds and decision points. They are not wired (no new judgment behaviour); they go in at the Build
 18/19 reconciliation.
+
+## Gossip frame round (owner-directed, 2026-10-22)
+
+Details are in DESIGN.md section 14. Results are byte-identical:
+- the same `judgment_perf` state hashes in every configuration;
+- in the 30-day village on seed 1, the same world fingerprint `1c755f53d12c72bd470b7913fb5e52a6`, the same judgment
+  state hash 1780545997, and no leaks.
+
+**What changed:**
+- reads no longer tell queued meetings that cannot change what they read (cached under a version counter);
+- ledger decay is applied lazily, entry by entry;
+- interpretation builds no dictionary unless traced;
+- the live adapter reads relationship ties without building blank ones.
+
+**Results (500 people, live rate):**
+- frame p99 1.27 to 1.05 ms;
+- frame p99.9 3.35 to 1.81 ms;
+- flushes 391 to 29 over 40 days;
+- daily update 11.6 to 4.0 ms a day.
+
+The worst single frame did not fall: 107 tellings live and 188 at stress, unchanged. It is a necessary dependency flush,
+which only the pending scheduled timing (X19-Q-TIMING) would bound further.
+
+Tests: `judgment_test` 168, `judgment_live_test` 53, `judgment_decay_demo` 24, `judgment_perf` 9 checks, all with 0
+failures.
 
 ## Owner decisions of 2026-10-21: implemented and pending
 
@@ -137,16 +162,18 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
   real merge points with Build 17 and 18 changes to the same functions.
 - Round 4 frame cost (DESIGN.md section 12): with the owner's rules, the frame p99 at 500 people at the live rate rose
   from 0.87 to 1.45 ms here. The causes are the daily decay over every ledger, stories travelling further, and belief
-  upgrades. Not chased (no more speculative optimisation rounds); a result-neutral fix (lazy decay) is described there.
+  upgrades. The 2026-10-22 gossip round (section 14) made the decay lazy and brought p99 to 1.05 ms, with identical
+  results.
 - Permanent memories grow without a cap by design (Q11). At the stress rate, assault victims accumulate them (1,646 at
   500 people over 40 days) under the proposed `permanent_personal_severity` 2000. At the live rate there were 23.
 - Conflicts with existing mechanics, not resolved here (DESIGN.md section 10): `Relations.harmed`'s instant spread to
   kin and friends (Q07), CRT-12's fixed notoriety and regard thresholds (Q14), CRT-06's friendly guard waiving a fine
   (Q08), and regard serving as both trust and harm (Q06).
-- Gossip's frame cost (DESIGN.md section 7, round 3): at 500 people at the live rate, 99 frames in 100 now fit the
-  phone budget on the 4x assumption (0.87 ms here). The rarest frames do not: 1 in 1000 reaches 2.15 ms here (about
-  8.6 ms on the phone), when a read must first tell a long chain of queued meetings. Keeping the result identical
-  requires that. The scheduled option halves those frames (1.25 ms) but changes when word passes, so it is a choice for
+- Gossip's frame cost (DESIGN.md sections 7 and 14): at 500 people at the live rate, 99 frames in 100 fit the phone
+  budget on the 4x assumption (1.05 ms here). The rarest frames do not: 1 in 1000 reaches 1.81 ms here (about 7 ms on
+  the phone), and the worst frame is a dependency flush of up to 107 tellings (about 6 ms here, 25 ms on the phone).
+  Reads now skip flushes that cannot change what they read, but a needed flush stays whole: keeping the result
+  identical requires that. The scheduled option halves those frames (1.25 ms) but changes when word passes, so it is a choice for
   the lead or the owner. A device check should decide.
 - The daily update's worst single hour at 500 people varies with machine load (1.09 to 4.54 ms across runs; median day
   0.55 ms); a device check decides whether `dawn_slice` must run every frame. 2000 people is over the budget.

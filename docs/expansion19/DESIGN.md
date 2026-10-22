@@ -492,4 +492,105 @@ Every other judgment hook auto-merged into Build 17's versions of the same funct
     with judgment off too; the judgment part is one disposition check a sale.
 - **Synthetic frames** (`judgment_perf`, 500 people, live rate, spread): p99 1.41 ms, p99.9 3.67 ms. Round 4 was 1.45
   and 3.78 ms: unchanged.
-- **Still open:** the gossip frame hotspot remains the open performance concern.
+- **Still open:** the gossip frame hotspot remains the open performance concern. Section 14 takes it up.
+
+## 14. Gossip frame round (owner-directed, 2026-10-22, on `e91d903`)
+
+The task was to cut the worst single-frame cost of word of mouth without changing anything it decides: who hears what
+and when, how witnesses read a deed, the Good and Bad ledgers, relationship weighting and rivalry, NPC choices, and
+determinism. Nothing else was merged in.
+
+### Cause (measured)
+
+`judgment_perf` was run at 500 people, rates live and stress, over 40 days, before any change. The heavy frames were:
+- **Dependency flushes forced by reads.** A villager's decision reads an opinion (`net`, `disposition`, `ledger`). Before
+  that read, every queued meeting the person depends on was told: the dependency closure, up to 83 meetings, about 70 to
+  100 us each here.
+  - The worst live frame was 5.4 ms, almost all of it inside decisions: one such flush.
+  - Over 40 days at the live rate there were 391 flushes, 378 ms in all.
+  - In the 30-day village (seed 1) there were 459 flushes; the largest was 77 meetings.
+- **Flushes forced by writes at the heavy rate.** An observation (`observe_all`) changes a witness's records, so their
+  queued meetings must be told first. The worst stress frame (25 ms) was mostly event observation (15.9 ms).
+- **Repeated work in each telling.** For every friends and regard check, the live adapter built a 21-field `_blank()`
+  relationship dictionary and its string key. `interpret` built a parts dictionary for every evaluation, even with nobody
+  reading the trace. Permanence copied the fact's victims and beneficiaries into new arrays.
+- **The daily update.** At each person's dawn, the decay walked every one of their ledger entries: 11.6 ms a day at 500
+  live, 38 ms at stress, and a worst update tick of 6.6 ms at stress.
+
+### What changed (`judgment_store.gd`, `judgment_live.gd`)
+
+1. **Reads skip flushes that cannot change what they read.** `_cu_read(o, subject)` tells the queued meetings first only
+   when one of them could change the entry being read. A meeting changes a ledger only by telling `o` a memory that `o`
+   does not hold, or holds less surely, and has not already judged. It then changes only the entries of that event's
+   believed actors, plus those `o` believed before for an upgrade. `_learnable` collects those actors over the
+   dependency closure:
+   - a read of one entry (`net`, `ledger`, `disposition`) skips the flush when that subject is not among them;
+   - a read of the whole ledger (`most_disliked`, the trade adapter's `_first_stands`) skips it when nothing is
+     learnable at all.
+   With false rumours (misattribution) or retraction on forgetting, every entry counts as changeable, so every read
+   flushes. A write still flushes first, as before.
+2. **The reach is cached.** `_reach(o)` holds the closure, the learnable actors and whether anything is learnable, under
+   a version counter `_gver`. Anything that could change the answer bumps `_gver`: a meeting queued or told, a memory
+   learned, corrected or forgotten, a revised fact, a ledger set by a fixture, a new day, or a load.
+3. **Lazy ledger decay.** Each ledger entry carries the day it was decayed to (an eighth slot, not saved). `_entry()`
+   applies the decay it is owed when the entry is next read, changed or saved: the same integer `_decay_step` steps, in
+   the same order, as the dawn update applied. The dawn update no longer walks the ledgers. Saved rows are unchanged
+   (nine columns, decayed values).
+4. **Interpretation without allocation.** `_interpret_p` returns the number and fills a parts dictionary only when one
+   is passed. `interpret()` still returns the full parts. The trace (`last_trace`) is kept only when `trace` is on (a
+   developer switch, off by default). Permanence scans the packed fact in place. In `tell`, credibility is computed only
+   when a candidate needs it.
+5. **The live adapter reads relationship ties directly.** It uses `ties.get(key)` for friends and regard: no `_blank()`
+   dictionary is built for a pair with no tie.
+
+### Proof that results are identical
+
+- **State hashes.** Every `judgment_perf` configuration ends in the same hash before and after: live 577419741 (spread
+  and told at once), scheduled 1316774373, stress 1399701037, stress scheduled 1092040246. The before run used the
+  judgment code of `e91d903` with the same harness.
+- **Village, 30 days** (`economy_sim --judgment`, seed 1, checkpoints at days 10, 20 and 30):
+  - world fingerprint `1c755f53d12c72bd470b7913fb5e52a6` before and after;
+  - judgment state hash 1780545997 before and after;
+  - the same 2,186 tellings, 1,893 upgrades and 305 ledgers;
+  - currency and item leaks 0 at every checkpoint.
+- **Tests.** `judgment_test.gd` `test_spread_gossip` now also counts reads that skipped a flush. Some must occur in the
+  default setting, and none may occur with misattribution, while the end state still equals telling every meeting at
+  once. A new stale-cache test reads between two queued meetings, with no pump, and compares with meetings told at
+  once.
+- **Mutation checks.** These deliberate faults each fail the suite:
+  - always skipping the flush;
+  - ignoring the subject of a one-entry read;
+  - not bumping the version when a meeting is queued.
+
+### Before and after (`judgment_perf`, 500 people, 40 days, same harness, the machine shared)
+
+| Configuration | Frame p99 ms | p99.9 ms | Worst ms | Most tellings in one frame | Daily update ms/day | Update worst tick ms | Memory MB |
+|---|---|---|---|---|---|---|---|
+| live, spread, before | 1.27 | 3.35 | 5.94 | 107 | 11.58 | 3.48 | 5.9 |
+| live, spread, after | **1.05** | **1.81** | 6.22 | 107 | **4.02** | 3.06 | 6.1 |
+| stress, spread, before | 8.19 | 15.77 | 25.00 | 188 | 38.38 | 6.62 | 17.2 |
+| stress, spread, after | **6.20** | **13.82** | 26.58 | 188 | **11.34** | **2.44** | 17.4 |
+
+- **Flushes.** Live, 40 days: 391 flushes and 378 ms became 29 flushes and 36 ms, with 11,738 reads served without a
+  flush. Stress: 391 became 292, and 1.60 s became 1.31 s.
+- **Village, 30 days:** flushes 459 to 225 (1,524 reads served without one), flush time 112 to 55 ms, dawn time 14.3 to
+  7.8 ms. The largest flush is still 77 meetings (3.2 ms before, 1.8 ms after).
+- **On a phone (4x).** Live spread p99.9 is about 7 ms, from 13. The worst frame is about 25 ms. At stress, p99.9 is
+  about 55 ms and the worst about 105 ms.
+- **The worst single frame did not fall.** The tellings in the heaviest frame are a deterministic count, free of machine
+  noise, and they are unchanged: 107 live and 188 stress. When a flush is needed it is still the whole dependency
+  closure, and that ordering is what keeps results identical. The worst frame figures move within the shared machine's
+  noise (idle ticks reached 1.1 to 1.5 ms).
+- **Save time.** It rose in the harness (live 71 to 307 ms). The harness saves once, at day 40, so the save brings 40
+  days of deferred decay up to date in one go. The game autosaves every hour (`main.gd`), so there the backlog is at
+  most one day. That is the decay the dawn update used to do, now paid in the first save after dawn.
+- **Memory** rose 0.2 MB, from the eighth ledger slot. Stress was already above 16 MB before this round, with 17.2 MB at
+  `e91d903`.
+
+### What remains
+
+- The worst single frame is bounded by a necessary dependency flush. Only a different timing of when word passes (the
+  scheduled option, owner decision X19-Q-TIMING, still pending and not enabled) bounds it further.
+  - With the scheduled option: 8 to 12 ms worst, and 11 and 28 tellings a frame, against 107 and 188.
+- At stress, writes (observations) still force full flushes, since a write must see every earlier meeting.
+- Stress memory is 17.4 MB, above the 16 MB proposed budget, as it already was.
