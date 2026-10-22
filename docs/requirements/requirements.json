@@ -2714,6 +2714,258 @@
    "complexity": "S"
   },
   {
+   "id": "B17F-DEPLETE",
+   "title": "Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Defer noncritical findings, including food affordability, unemployment, chicken extinction, resource depletion trends, and long-run performance analysis, to the appropriate Expansion 18, 19, or 20 backlog. The simulation reporting fixes can also wait.",
+   "description": "Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend",
+   "source": "docs/directives/2026-10-22_build17_personal_playtest_release.md",
+   "approval": "Owner 2026-10-22: deferred noncritical Build 17 finding, to the appropriate expansion backlog",
+   "acceptance": [
+    "Reviewed in its expansion's design; no change without an owner decision"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Expansion 18 (settlement capability, regional trade in ore; mining output bounded +5%). Evidence MIN_G_LONG_RUNS.md.",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build17_personal_playtest_release.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "B17F-FOOD",
+   "title": "Build 17 finding: missed meals for want of money (606-5,417 a year across seeds)",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Defer noncritical findings, including food affordability, unemployment, chicken extinction, resource depletion trends, and long-run performance analysis, to the appropriate Expansion 18, 19, or 20 backlog. The simulation reporting fixes can also wait.",
+   "description": "Build 17 finding: missed meals for want of money (606-5,417 a year across seeds)",
+   "source": "docs/directives/2026-10-22_build17_personal_playtest_release.md",
+   "approval": "Owner 2026-10-22: deferred noncritical Build 17 finding, to the appropriate expansion backlog",
+   "acceptance": [
+    "Reviewed in its expansion's design; no change without an owner decision"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Expansion 20 (Living Economy: household budgets, needs-driven buying). Evidence docs/build17/MIN_G_LONG_RUNS.md; LE-00 audit section on needs.",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build17_personal_playtest_release.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed"
+    }
+   ],
+   "target_build": "20+"
+  },
+  {
+   "id": "B17F-HENS",
+   "title": "Build 17 finding: chickens died out early on seeds 2 and 3",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Defer noncritical findings, including food affordability, unemployment, chicken extinction, resource depletion trends, and long-run performance analysis, to the appropriate Expansion 18, 19, or 20 backlog. The simulation reporting fixes can also wait.",
+   "description": "Build 17 finding: chickens died out early on seeds 2 and 3",
+   "source": "docs/directives/2026-10-22_build17_personal_playtest_release.md",
+   "approval": "Owner 2026-10-22: deferred noncritical Build 17 finding, to the appropriate expansion backlog",
+   "acceptance": [
+    "Reviewed in its expansion's design; no change without an owner decision"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Livestock economics with FARM-08's balance options (herd cost vs income, feed, keeper's purse); Expansion 20 candidate. Evidence MIN_G_LONG_RUNS.md.",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build17_personal_playtest_release.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed"
+    }
+   ],
+   "target_build": "20+"
+  },
+  {
+   "id": "B17F-JOBS",
+   "title": "Build 17 finding: unemployment of 6-30 adults at day 365",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Defer noncritical findings, including food affordability, unemployment, chicken extinction, resource depletion trends, and long-run performance analysis, to the appropriate Expansion 18, 19, or 20 backlog. The simulation reporting fixes can also wait.",
+   "description": "Build 17 finding: unemployment of 6-30 adults at day 365",
+   "source": "docs/directives/2026-10-22_build17_personal_playtest_release.md",
+   "approval": "Owner 2026-10-22: deferred noncritical Build 17 finding, to the appropriate expansion backlog",
+   "acceptance": [
+    "Reviewed in its expansion's design; no change without an owner decision"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Expansion 20 (LE-03 job choice). Evidence MIN_G_LONG_RUNS.md.",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build17_personal_playtest_release.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed"
+    }
+   ],
+   "target_build": "20+"
+  },
+  {
+   "id": "B17F-PERF",
+   "title": "Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93)",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Defer noncritical findings, including food affordability, unemployment, chicken extinction, resource depletion trends, and long-run performance analysis, to the appropriate Expansion 18, 19, or 20 backlog. The simulation reporting fixes can also wait.",
+   "description": "Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93)",
+   "source": "docs/directives/2026-10-22_build17_personal_playtest_release.md",
+   "approval": "Owner 2026-10-22: deferred noncritical Build 17 finding, to the appropriate expansion backlog",
+   "acceptance": [
+    "Reviewed in its expansion's design; no change without an owner decision"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Performance work with Expansion 19's frame-time rounds; no measurement made. Evidence MIN_G_LONG_RUNS.md runtimes.",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build17_personal_playtest_release.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed"
+    }
+   ],
+   "target_build": "19"
+  },
+  {
+   "id": "B17F-SIMREPORT",
+   "title": "economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log",
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Defer noncritical findings, including food affordability, unemployment, chicken extinction, resource depletion trends, and long-run performance analysis, to the appropriate Expansion 18, 19, or 20 backlog. The simulation reporting fixes can also wait.",
+   "description": "economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log",
+   "source": "docs/directives/2026-10-22_build17_personal_playtest_release.md",
+   "approval": "Owner 2026-10-22: deferred noncritical Build 17 finding, to the appropriate expansion backlog",
+   "acceptance": [
+    "Reviewed in its expansion's design; no change without an owner decision"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Test tooling only (no game effect), at the next build's start. Evidence MIN_G_LONG_RUNS.md.",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build17_personal_playtest_release.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; notes",
+     "why": "Placed"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -14543,7 +14795,7 @@
    "id": "LE-00",
    "title": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
    "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
@@ -14551,11 +14803,13 @@
    "acceptance": [
     "Owner decisions registered; no guessed policy"
    ],
-   "implementation": "",
+   "implementation": "wip/expansion20-preparation d82f173: docs/expansion20/LE00_ARCHITECTURE_AUDIT.md (read-only audit: today's economy by file::function, the five principles met/partly/not, integration and conflicts with Expansions 18 and 19, Build 17 findings as candidates, decision-to-stage map, proposed LE-01..07 sequence, risks)",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "d82f173"
+   ],
    "parent": "EXP-D",
    "depends_on": [],
    "blockers": [],
@@ -14564,7 +14818,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "wip/expansion20-preparation",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -14582,6 +14836,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
      "why": "Owner 2026-10-22 (docs/directives/2026-10-22_expansions_18_19_20_directive.md): begin Expansion 20 preparation. Expansion 20 is the Living Economy (OD-30, EXP-D); its first approved stage LE-00 is a read-only architecture audit, started on an isolated branch"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit d82f173; implementation; workstream",
+     "why": "LE-00 read-only architecture audit delivered; no code changed"
     }
    ],
    "target_build": "20+",
