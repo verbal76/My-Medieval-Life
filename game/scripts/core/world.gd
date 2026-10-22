@@ -113,7 +113,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	relations = Relations.new(self)
-	experience = WorkExperience.new()            # X18-CAPCOMP: starts empty (no starting-experience rule approved)
+	experience = WorkExperience.new()            # X18-CAPCOMP: seeded once below (owner D1), after PAR-01A
 	contracts = Contracts.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
@@ -186,6 +186,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	give_start_kit(player)
 	Life.init_player(self)             # B8-029
 	Skills.seed_villagers(self)        # PAR-01A: the settlers' history at their trades (only here and in an old save's migration)
+	experience.seed_once(self)              # X18 HOOK (owner D1): the settlers' starting industry experience, once, from their recorded skills
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	index_interiors()
@@ -3828,7 +3829,7 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
-	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {})   # X18-CAPCOMP: only once someone has worked
+	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {})   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -3845,7 +3846,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
 	experience = WorkExperience.new()
-	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it starts empty
+	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it is seeded once below (D1)
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	property = Property.new(self)
@@ -3959,6 +3960,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
 	if int(d.get("save_version", 0)) < 15:
 		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills
+	if not d.has(WorkExperience.KEY):
+		experience.seed_once(self)          # X18 HOOK (owner D1): a save with no experience section is given its starting experience once
 	_migrate_property(d)
 	if d.has("treasury"):
 		treasury = int(d.treasury)

@@ -68,6 +68,14 @@ profile, held until after the SYNC-17 Build 17 merge so results stay on one base
 | Durations and pay at levels 0, 5, 10 in every industry; determinism (same seed twice, and against the hook off) | `capability_hook.gd` | `capability_test` `test_capnum_durations`, `test_capnum_determinism` |
 | Live hook decision: stays OFF in the game until X18-CAPCOMP (DESIGN.md section 9a) | `capability_hook.gd` | economy_sim fingerprint unchanged with the hook off |
 
+### Owner D1 (2026-10-22): starting experience, implemented
+
+| What | Where | Tests |
+|---|---|---|
+| Once, for a new world and a save with no experience section: days = cap x recorded skill level / 10 per industry (only with xp in the skill); farming from PAR-01A's working history for farmers; the player none; marked `seeded`, kept in `start`; never overwrites; format `mml-x18-experience/1` (0 read, never seeded over) | `settlement/experience.gd` (`seed_once`, `start_days`, `farming_start_days`), `world.gd` (setup after PAR-01A; load when the section is absent) | `experience_test` 61 (formula per industry, the seed-1 smiths 8 and 6, farming from PAR-01A, once only, no overwrite, older-save migration, format 0, determinism, round-trip) |
+
+D1 is no longer open below; D2 is in its final form in `DECISIONS_PENDING.md`.
+
 ### Review against the register (2026-10-22, owner directive `2026-10-22_expansions_18_19_20_directive.md`)
 
 Register on staging read for PROS-18 and its children, X18-*, Q18-*, X18-STONECUT (STONE-02..06 appear only in its
