@@ -19,7 +19,7 @@ const NODE_TEXT := {
 		"back": "No. When the stone is out, the rock is gone and the cell is open ground."},
 	"boulder": {"back": "No. A boulder broken up is gone for good and its cell is open ground."},
 	"prospect_clue": {
-		"where": "On open ground in the village: a rust-red stain, black streaks, green-stained pebbles or a glitter of flecks in the gravel. A stain marks a search area a few cells wide, not a deposit.",
+		"where": "On wild open ground away from the houses, lanes, fields and market (the woods, the hills and the village's edges): a rust-red stain, black streaks, green-stained pebbles or a glitter of flecks in the gravel. A stain marks a search area a few cells wide, not a deposit.",
 		"back": "No. A spot sampled stays sampled, and when every spot round a stain has been sampled it stays sampled out. The stain itself stays.",
 		"notes": "One rock sample for each spot sampled. A sample is worth nothing until a smith assays it at the forge, for a fee."},
 	"open_pit": {
