@@ -77,7 +77,7 @@ Read the overnight directive first.
 - Next: merge the polish branch; then stop optional work and write the morning report (part 16 of the overnight
   directive). The release gate is premature: the tailor placement and the D-decisions are open.
 
-## STATUS: overnight work complete. wip/build18 at c7df646, no worker running. Morning report: docs/build18/MORNING_REPORT_2026-10-23.md. Next: owner decisions (TAILOR-Q first), then implement what they unlock; release gate after.
+## STATUS (2026-10-23): wip/build18 at e8e9d5b. Owner answered TAILOR/BARBER, X18 D2-D9, HORSE-Q, BANDIT-Q, OD-05, OD-06, OD-08, WORLD-LIFE-01, CON-UX-01, seed share, coin sinks (feasts, luxury imports, chapel with priest + alms; clergy directive 2026-10-23_chapel_clergy_relief.md); answers in docs/directives/2026-10-23_*. Merged today: steps orientation, tailor+barber, horse, returning outlaws, capability hook ON (D2-D9, seed share), countryside life. Workers running: wip/b18-rooms (ROOMS-18), wip/b18-contractui (CON-UX-01). Next: merge them; then coin sinks (DVW-B3-FEAST/LUX/CHAPEL), DVW-B5 taxes, settlement Q18 questions, X18-SIM, release gate (determinism re-record, year runs, Build 17 save load, export). No release without the owner.
 
 ## Next actions, in order (historical)
 
