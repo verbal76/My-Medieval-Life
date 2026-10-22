@@ -289,7 +289,7 @@ None.
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | VIS-STEPS-01 | Steps cut through rock need real step art | approved | APPROVED — NOT STARTED | 18 |
-| VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT | 18 |
+| VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | WDR-020 | World Design Rule 20: Autonomous Housing | rule | COMPLETE AND VERIFIED |  |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |

@@ -28047,7 +28047,7 @@
    "id": "VIS-TREE-02",
    "title": "Tree fragments: no stray old tree pieces; stages and stumps draw correctly",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "No unexplained fragments should remain.",
    "description": "Tree fragments: no stray old tree pieces; stages and stumps draw correctly",
    "source": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md",
@@ -28057,10 +28057,12 @@
     "Forestry behaviour unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "tree_test, check_assets",
    "playtest": [],
    "branch": "wip/b18-trees",
-   "commits": [],
+   "commits": [
+    "7c4d1ac"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -28082,6 +28084,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
      "why": "worker investigating on wip/b18-trees (static map shows no leftover tree tiles; runtime drawing next)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 7c4d1ac; tests",
+     "why": "cause: the apple tree's stump was a cut-off strip of the grown apple tree (tools/craftpix_plants.py); no Puny World tree art is drawn anywhere. Fixed with the Living Forest oak stump (7c4d1ac), merged into wip/build18; before/after screenshots looked at; tree_test 45/0, check_assets 0, python tests OK. Awaits owner playtest (best match, not confirmed against the owner's own screenshot)"
     }
    ],
    "target_build": "18"
