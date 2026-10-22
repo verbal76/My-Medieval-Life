@@ -39,6 +39,43 @@ Read the overnight directive first.
 | `wip/expansion19-preparation` | `c4b10e4` | waiting on owner decisions |
 | `wip/multiplayer` | `d18d7d1` | preserved, untouched |
 
+## Progress so far tonight (checkpoint)
+
+- `wip/build18` went from `0fafb8b` to `d63d8d7`:
+  - INV-18 merged (`5f82f0c`): categories, capacity 9/18/27, save version 19, migration, `inventory18_test` 88/0;
+  - TAILOR-18: the purchase is built; where the tailor comes from waits on TAILOR-Q;
+  - ARMOR-01 Option A merged (`609635d`), which also completes CC-01's gear redraw;
+  - Expansion 18 merged (`d63d8d7`) with its inactive parts off: experience recording is live (records only), the
+    capability hook is OFF, and the couriers, formal contracts and regional code are present but not wired.
+- Focused tests on `d63d8d7`, all 0 failures:
+
+  | Suite | Result |
+  |---|---|
+  | `run_tests` | 3,584 checks |
+  | start | 506 steps |
+  | play | 39 steps |
+  | inventory | 88 checks |
+  | experience | 61 checks |
+  | capability | 72 checks |
+  | farming | 224 checks |
+  | crop sharing | 19 checks |
+  | contracts | 138 checks |
+  | courier | 44 checks |
+  | settlement | 83 checks |
+  | wiki | all passed |
+  | character look | 0 failures |
+  | Python | OK |
+
+  Static checks: 0 problems. Run each Godot test with its own private `XDG_DATA_HOME`: a shared user folder gives
+  false save-timing failures.
+- Running: the polish worker (Sonnet) on `wip/b18-polish`: VIS-STEPS-01 art, the contract grid fit and the contract
+  refusal grammar.
+- New owner decisions recorded tonight: TAILOR-Q (where the tailor comes from), BARBER-Q, HORSE-Q.
+- Workers started tonight: armour (Sonnet), Expansion 18 readiness (Sonnet), polish (Sonnet). The inventory worker was
+  already running.
+- Next: merge the polish branch; then stop optional work and write the morning report (part 16 of the overnight
+  directive). The release gate is premature: the tailor placement and the D-decisions are open.
+
 ## Next actions, in order
 
 1. **When the inventory worker reports:**
