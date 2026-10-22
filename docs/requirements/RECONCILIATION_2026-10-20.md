@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 235 (119 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **310** = 195 still open from the baseline + 119 added and open |
+| Entries added since | | 237 (121 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **312** = 195 still open from the baseline + 121 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (235)
+## Added since the baseline (237)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -170,6 +170,7 @@ None.
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | APPROVED — NOT STARTED | owner decision |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | APPROVED — NOT STARTED | owner decision |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | APPROVED — NOT STARTED | owner decision |
+| MAP-01 | Map shows where you are beyond the village | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
@@ -289,6 +290,7 @@ None.
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT | 15 |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | rule | COMPLETE AND VERIFIED | 17 |
+| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | idea | UNKNOWN — INVESTIGATION REQUIRED | owner decision |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) | decision | COMPLETE AND VERIFIED |  |

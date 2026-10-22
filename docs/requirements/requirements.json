@@ -15452,6 +15452,50 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
   },
   {
+   "id": "MAP-01",
+   "title": "Map shows where you are beyond the village",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "the map isn't following me so I have no idea where I am or how to get back",
+   "description": "Map shows where you are beyond the village",
+   "source": "owner message 2026-10-22 with photos of the map and the countryside",
+   "approval": "owner playtest report (Build 17)",
+   "acceptance": [
+    "Beyond the village the map shows the player's direction and distance from it"
+   ],
+   "implementation": "",
+   "tests": "start_test, wiki_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [
+    "8a1fcb9"
+   ],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with photos of the map and the countryside"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 8a1fcb9; tests; target_build",
+     "why": "edge arrow and 'You: N tiles <direction> of the village' (8a1fcb9, merged wip/build18 e672481); in-engine screenshot looked at; start_test, wiki_test pass. A full countryside map is a larger choice for the owner"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "MEM-01",
    "title": "Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test",
    "kind": "approved",
@@ -27179,6 +27223,11 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "ruled out the hidden buy box: with the list scrolled down the quantity box still opens in view (trade_buy_scrolled screenshots); a fresh seed-1 Clement Ward sells the axe at 45 to a player with 47. Remaining candidate: a full pack (24 kinds). Waiting for the owner's on-screen message"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "owner: Emma Stone also would not sell (44 coins, owner holding 85). Ruled out: price (list = quote), a full pack (the player's pack has no kind limit), a hidden buy box (in view with the list scrolled, and with a crowded pack). A fresh world sells. Need the owner's exact steps/message"
     }
    ],
    "target_build": "18"
@@ -29572,6 +29621,48 @@
     }
    ],
    "target_build": "17"
+  },
+  {
+   "id": "WORLD-LIFE-01",
+   "title": "The countryside is empty of people and animals; its trails lead nowhere yet",
+   "kind": "idea",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "once you go off where the map can see it seems to be devoid of all life whether it's animals or humans which is weird cuz these trails. So you think they'd go to another city",
+   "description": "The countryside is empty of people and animals; its trails lead nowhere yet",
+   "source": "owner message 2026-10-22 with a photo of the countryside",
+   "approval": "",
+   "acceptance": [
+    "Scope agreed with the owner before any work (an idea, not approved work)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with a photo of the countryside"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build; acceptance",
+     "why": "owner remark; other settlements are Expansion 18 (Settlement Advancement & Regional Economy), the full network SET-E needs the larger map; wildlife lives only in the village's woods today"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "WR-01",
