@@ -488,7 +488,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 274) |  |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 275) |  |  |  |
-| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | docs/directives/2026-10-23_chapel_clergy_relief.md |  |  |  |
+| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | docs/directives/2026-10-23_chapel_donations_farm.md |  |  |  |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | docs/directives/2026-10-23_owner_answers_coin_sinks.md |  |  |  |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | docs/directives/2026-10-23_owner_answers_coin_sinks.md |  |  |  |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276) |  |  |  |

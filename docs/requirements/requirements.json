@@ -8710,11 +8710,9 @@
    "status": "APPROVED — NOT STARTED",
    "owner_wording": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
    "description": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
-   "source": "docs/directives/2026-10-23_chapel_clergy_relief.md",
+   "source": "docs/directives/2026-10-23_chapel_donations_farm.md",
    "approval": "owner, 2026-10-23",
-   "acceptance": [
-    "A chapel or shrine stands in the village; villagers and the player make offerings there; where the offerings go is recorded; deterministic; wiki page"
-   ],
+   "acceptance": "A chapel stands in the village with a preacher and an assistant (low-paid); villagers and the player give offerings; donations are spent first on food relief before any other relief source; the church has a small farm plot worked by volunteers or else the clergy, its crop going to relief; villagers in need ask at the church; coins and goods conserved; deterministic; wiki page",
    "implementation": "",
    "tests": "",
    "playtest": [],
@@ -8751,10 +8749,15 @@
      "date": "2026-10-22",
      "change": "owner_answer; source",
      "why": "owner added the clergy and relief rules (2026-10-23)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer; acceptance; source",
+     "why": "owner added: donations first fund food relief; church farm plot worked by volunteers (2026-10-23)"
     }
    ],
    "target_build": "18",
-   "owner_answer": "Priest + alms; clergy are one preacher and one church assistant, paid low-wage professions; when villagers do not volunteer, the clergy work the church's fields themselves; donations and the church's crops are the first form of relief; villagers can go to the church and ask for help"
+   "owner_answer": "Priest + alms. Clergy: one preacher and one church assistant, paid low-wage professions. All donations to the chapel are the first funds used for food relief. The church has its own small farm plot; villagers can volunteer to farm it for the church, and when nobody volunteers the clergy work it themselves; the church's donations and crops are the first form of relief; villagers can go to the church and ask for help"
   },
   {
    "id": "DVW-B3-FEAST",
