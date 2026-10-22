@@ -2,11 +2,10 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (8)
+## Workers and task branches (7)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| DVW-B5 | 18 | IN DEVELOPMENT | tax worker (Sonnet subagent, started 2026-10-23) | wip/b18-taxes |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | REG-BUY-01 | 18 | IN DEVELOPMENT | buying worker (Sonnet subagent, started 2026-10-23) | wip/b18-buying |
 | REG-COURIER-01 | 18 | IN DEVELOPMENT | courier worker (Sonnet subagent, started 2026-10-23) | wip/b18-couriers |

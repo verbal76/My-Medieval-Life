@@ -9,25 +9,24 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 81 |
-| Integrated | 41 of 81 (51%) |
-| Automated tests passed | 42 of 81 (52%) |
-| Integration verified | 40 of 81 (49%) |
+| Integrated | 42 of 81 (52%) |
+| Automated tests passed | 43 of 81 (53%) |
+| Integration verified | 41 of 81 (51%) |
 | Gameplay verified | 0 of 81 (0%) |
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 1 of 81 (1%) |
 | Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 24 (2) |
 
-## In development (worker assigned) (4)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | IN DEVELOPMENT | tax worker (Sonnet subagent, started 2026-10-23) / wip/b18-taxes | NOT TESTED |  |  | M |
 | REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | OWNER APPROVED | IN DEVELOPMENT | buying worker (Sonnet subagent, started 2026-10-23) / wip/b18-buying | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | OWNER APPROVED | IN DEVELOPMENT | courier worker (Sonnet subagent, started 2026-10-23) / wip/b18-couriers | NOT TESTED | Builds on SettlementParty (integrated 421525c): wire CourierService into the live World and saves; booths per settlement served by its trader; carts for hire by settlement parties (Q18-12 approved, not yet built); routes from Regions.route_table | design: UNKNOWN | UNKNOWN |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |  | M |
 
-## Integrated, awaiting gameplay or owner verification (40)
+## Integrated, awaiting gameplay or owner verification (41)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -40,6 +39,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and device check; owner review CHAPEL-R1..R5 (non-blocking); wage, piety, offering and seed numbers in balance.json "chapel" are provisional working values, not owner-approved balance; known: Chapel uses the plain house art (no steeple or sign); Player cannot volunteer on the church plot; Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed |  | verification only |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and visual check; feast values in balance.json "feast" are provisional agent values; ale rarely bought (keeper stock thin); known: A partnership is the wedding (no separate rite); guests only from the village; Host and guests must be in the tavern yard at 20:00; about 4 feasts a month are called off |  | verification only |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and device check of the wagon choice and icons; values in balance.json "luxury" provisional; owner may decide whether settlements make or restock luxuries; known: No villager standing or prestige measure exists in Build 18, so owning luxuries has no status effect yet (Luxury.held_by is the reading point); Luxury stock is finite (Wulstead and Higham opening stock only, about 2,200 coins' worth); older saves get none |  | verification only |
+| DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Apply TaxPolicy to the five settlements once REG-BUY-01 (which edits offmap.gd) is merged; band margin 0.2 and 3-day notice are provisional agent values; gameplay check; known: The five settlements still use the single-threshold tax rule (offmap.gd _taxes_and_officials); SET-C-SIM requires the village's rules, so they are to use TaxPolicy too; Announcements appear in the village log and wiki only (no tax panel exists) |  | verification only |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; Build 18 release gate; known: Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified) |  | verification only |
 | ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check. Measured effect over 30 days: the caravan buys 7-8 kinds of goods instead of about 20, and the village earns roughly a quarter to a half less from it (seed 1 +1540 vs +1996 coins, seed 2 +1070 vs +2178); population and food unaffected; known: Courier booths still use SettlementLedger parties, not the new settlements |  | verification only |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate |  | verification only |

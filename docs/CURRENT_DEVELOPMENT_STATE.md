@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `421525c` (2026-10-23) | Build 18 integration; chapel, settlements, feasts, luxuries, the necessity-wage correction, settlement demographics and the trading-party interface merged |
+| `wip/build18` | `724ffeb` (2026-10-23) | Build 18 integration; chapel, settlements, feasts, luxuries, wage correction, settlement demographics, trading-party interface and banded taxes merged |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -40,7 +40,6 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 |---|---|---|---|---|
 | REG-COURIER-01 | courier worker (Sonnet subagent) | `wip/b18-couriers` | `wip/build18` 421525c | couriers on the five settlements, wired into the live game and saves |
 | REG-BUY-01, REG-BUY-P1 | buying worker (Sonnet subagent) | `wip/b18-buying` | `wip/build18` 421525c | the village buys food and goods from the five; the approved selling policy; stays out of couriers.gd and the courier window |
-| DVW-B5 | tax worker (Sonnet subagent) | `wip/b18-taxes` | `wip/build18` 421525c | predictable announced taxes with hysteresis; manor treasury only |
 | X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 
 On their reports:

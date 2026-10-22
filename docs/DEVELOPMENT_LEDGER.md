@@ -181,7 +181,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| DVW-B5 | Predictable taxes with hysteresis, announced | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| DVW-B5 | Predictable taxes with hysteresis, announced | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B6 | Wildlife wandering in from the overworld | 18 | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DVW-B7 | Life chronicle, titles, memorial | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
