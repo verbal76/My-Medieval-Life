@@ -36727,8 +36727,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "Owner approved the REL18-DEVICE sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md)"
     }
-   ]
+   ],
+   "remaining_work": "Owner-approved sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md): all implementation items closed or accepted as permanently blocked, pre-package verification done, then final candidate packages (Android, Windows, Linux) for the owner's device playtest; pass closes REL18-DEVICE, fail means fixes and corrected candidates"
   },
   {
    "id": "REL18-EXPORT",
@@ -36836,8 +36842,14 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_decisions.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "Owner clarified the packaging sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md)"
     }
-   ]
+   ],
+   "remaining_work": "The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md)"
   },
   {
    "id": "REL18-SAVE",
