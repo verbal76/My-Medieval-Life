@@ -108,7 +108,7 @@ func _init() -> void:
 		for r: SettlementLedger in s.regions:
 			check(r.balanced() == "", "%s: %s's books balance over the run (%s)" % [s.name, r.id, r.balanced()])
 	var dd := func(k: String) -> int: return int(w.stats.get(k, 0)) - int(stats_start.get(k, 0))
-	var leak: int = w.total_coins() - coins0 - (dd.call("caravan_coins_in") + dd.call("newcomer_coins_in")) + dd.call("caravan_coins_out")
+	var leak: int = w.total_coins() - coins0 - (dd.call("caravan_coins_in") + dd.call("newcomer_coins_in") + dd.call("scenario_coins_in") + dd.call("outlaw_coins_in")) + dd.call("caravan_coins_out")
 	check(leak == 0, "the live village's currency balances over %d days with the caravan unchanged (leak %d)" % [days, leak])
 	print("TOTALS over %d caravan visits (%d days, seed %d, regional income %d a day):" % [tot.visits, days, seed, income])
 	print("  current caravan: village coins in %d, out %d, net %+d; coins created by the allowance %d" % [tot.actual_in, tot.actual_out, tot.actual_in - tot.actual_out, tot.allowance])
