@@ -646,6 +646,12 @@ traders' tills. Accumulators and prices are rounded to a millionth, so a saved a
   `move_counts`, `suits`), saved as optional keys.
 - Couriers (Q18-12, Q18-13): `Regions.list` and `OffMapSettlement.trader()` give a courier a party with a till and a stock;
   `couriers.gd` reads `SettlementParty` handles (section 12a).
+- SET-D (B18-DP-05): done (Build 18), `OffMapSettlement._develop`, SETTLEMENTS.md section 6c, INT-380 and INT-381. Once a week, after
+  `_move_jobs`: a business with no living worker household for `switch_stay_days` closes (till to the treasury, stock to the traders at
+  market price as far as their till above reserve reaches, the rest to the granary; the place is kept in `closed`), and a missing trade
+  opens when its goods' unmet demand (the `flows.unmet` weekly delta, priced) reaches `switch_to_at_least` a day two weeks running and a
+  settled household earning under half that has its working reserve in savings. No random numbers, no cap, no new rule values. Saved as
+  optional keys `closed`, `dev` and a business's `idle`; counts in `flows.biz_opened` and `flows.biz_closed`.
 - Not done: the village buying food from the settlements, longer trade chains among them, a productivity penalty for missing
   tools, newcomers decoupled from the caravan.
 

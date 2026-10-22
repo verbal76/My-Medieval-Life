@@ -48,7 +48,7 @@ const FLOW_COUNTS := ["coins_from_village", "coins_to_village", "road_coins_in",
 	"wage_short", "relief_units", "tax_households", "tax_businesses", "wages_paid", "official_pay", "horses_foaled",
 	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves", "births", "age_deaths", "households_formed",
 	"inheritances", "orphans_fostered", "regional_coins_in", "regional_coins_out",
-	"outside_coins_in", "outside_coins_out", "migrants_in", "migrants_out"]
+	"outside_coins_in", "outside_coins_out", "migrants_in", "migrants_out", "biz_opened", "biz_closed"]
 ## A member of a household (REG-DEMO-01): [born, sex, partnered, unwilling]. `born` is a settlement day number (negative before the
 ## first step), so age in years is (day - born) / the calendar's year length and needs no daily update; sex 1 is female; partnered 1
 ## means the member is one of the household's couple; unwilling 1 is a person who will not marry (decided once, at birth or founding).
@@ -86,6 +86,8 @@ var prices: Dictionary = {}          # item -> float, the market price (today's 
 var flows: Dictionary = {}
 var start: Dictionary = {}           # the opening books {coins, goods}
 var day := -1
+var closed: Dictionary = {}          # SET-D: business type -> the record of a business that closed (its fields, woods, quarry reserve and horses stay; till and stock were handed on)
+var dev: Dictionary = {"seen": {}, "streak": {}}             # SET-D: {seen: {item: unmet units at the last weekly look}, streak: {business type: weeks of sustained unmet demand}}
 var tax: Dictionary = {}             # DVW-B5: the tax band and any announced change (TaxPolicy), this settlement's own; empty until the first step
 var journal: Array = []              # the settlement's own record: [{day, text}], oldest first (tax announcements, arrivals and departures); not the village log
 var _dem: Dictionary = {}            # today's requests and offers (not saved)
@@ -187,7 +189,7 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 			var T := btype(bt)
 			var b := {"type": bt, "workers": [], "till": int(tills.get(bt, int(data().rules.business_till))), "stock": {}, "reserves": {},
 				"out": (T.get("out", {}) as Dictionary).duplicate(), "acc": {}, "reserve": int(T.get("reserve", 12)),
-				"horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0, "rate": 0.0}
+				"horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0, "rate": 0.0, "idle": 0}
 			if bt == "quarry":
 				b.out = quarry_out.duplicate()
 				for k in reserves:
@@ -572,7 +574,7 @@ func goods() -> Dictionary:
 
 
 func horses() -> int:
-	return int(biz.farm.horses) if biz.has("farm") else 0
+	return (int(biz.farm.horses) if biz.has("farm") else 0) + int(closed.get("farm", {}).get("horses", 0))
 
 
 func population() -> int:
@@ -1204,10 +1206,188 @@ func _move_jobs() -> void:
 					h.stay = 0
 					flows.job_moves += 1
 					break                      # one household a business a week
-	for t in types:
+	_develop()
+	for t in biz:
 		biz[t].week = 0
 	for h in hh:
 		h.inc = 0
+
+
+# ------------------------------------------------------------------ development (SET-D, owner B18-DP-05) ----------------
+## Once a week, after the job moves, a settlement's businesses follow its people and its needs, by the numbers the job moves use:
+##   closing  a business with no living worker household for `switch_stay_days` (two looks) closes (not the traders: they are the
+##            settlement's contact with the road). Its till passes to the treasury; its stock is bought by the traders at market
+##            price as far as their till above its reserve reaches, and the rest goes into the treasury's granary (the rule of
+##            a household with no kin). The fields, woods, quarry reserve and horses stay with the place (`closed`).
+##   opening  a trade the settlement does not have opens when its goods went unmet (units wanted and not found for sale, priced)
+##            worth at least `switch_to_at_least` a day in each of `switch_stay_days / switch_every_days` weeks running, a
+##            household settled `switch_stay_days` in a trade with more than one household, earning under half that a day,
+##            takes it up and puts its coins above its keep-cash into the till, the trade's working reserve at least. A trade made
+##            from what the land gives (fields, flocks, woods, herbs) reopens only where it was before; a trade made from
+##            inputs (the village's recipes) opens only if the settlement has or makes an input of one of its recipes. One a week.
+## No random numbers, no cap on people or businesses; capacity is what its living workers make (_produce).
+func _develop() -> void:
+	var delta := {}
+	for item in flows.unmet:
+		delta[item] = maxi(0, int(flows.unmet[item]) - int((dev.get("seen", {}) as Dictionary).get(item, 0)))
+	dev["seen"] = (flows.unmet as Dictionary).duplicate()
+	_close_idle()
+	_open_trade(delta)
+
+
+func _close_idle() -> void:
+	var types := biz.keys()
+	types.sort()
+	for t in types:
+		if t == "merchant":
+			continue
+		var b: Dictionary = biz[t]
+		if _workers(b) > 0:
+			b.idle = 0
+			continue
+		b.idle = int(b.get("idle", 0)) + 1
+		if int(b.idle) * int(_rules.switch_every_days) >= int(_rules.switch_stay_days):
+			_close_business(t)
+
+
+func _close_business(t: String) -> void:
+	var b: Dictionary = biz[t]
+	gov.coins += int(b.till)
+	var m: Dictionary = biz.get("merchant", {})
+	var items: Array = b.stock.keys()
+	items.sort()
+	for item in items:
+		var n := int(b.stock[item])
+		if not m.is_empty():
+			var u := mini(n, maxi(0, int(m.till) - int(m.reserve)) / price(item))
+			if u > 0:
+				m.till -= u * price(item)
+				gov.coins += u * price(item)
+				_add(m.stock, item, u)
+				n -= u
+		_add(gov.granary, item, n)
+	b.till = 0
+	b.stock = {}
+	b.acc = {}
+	b.workers = []
+	b.idle = 0
+	b.week = 0
+	closed[t] = b
+	biz.erase(t)
+	dev.get("streak", {}).erase(t)
+	flows.biz_closed += 1
+	note("The %s closed: no household was left to work it." % str(btype(t).get("name", t)))
+
+
+## The goods a trade would sell: its recipes' outputs, and a closed place's natural output.
+func _trade_goods(t: String) -> Array:
+	var out := {}
+	for rid in btype(t).get("runs", {}):
+		for o in GameData.recipes[rid].out:
+			out[o] = true
+	for item in (closed[t].out if closed.has(t) else {}):
+		out[item] = true
+	var k := out.keys()
+	k.sort()
+	return k
+
+
+func _inputs_exist(t: String) -> bool:
+	var have := {}
+	for bt in biz:
+		var b: Dictionary = biz[bt]
+		for item in b.stock:
+			have[item] = true
+		if _workers(b) > 0:
+			for item in b.out:
+				have[item] = true
+			for rid in btype(bt).get("runs", {}):
+				for o in GameData.recipes[rid].out:
+					have[o] = true
+	for rid in btype(t).get("runs", {}):
+		var ok := true
+		for i in GameData.recipes[rid]["in"]:
+			ok = ok and have.has(i)
+		if ok:
+			return true
+	return false
+
+
+func _open_trade(delta: Dictionary) -> void:
+	var streak: Dictionary = dev.get("streak", {})
+	dev["streak"] = streak
+	var cands: Array = []
+	for t in _types:
+		if t == "merchant" or biz.has(t):
+			continue
+		if closed.has(t) or (not btype(t).get("runs", {}).is_empty() and (btype(t).get("out", {}) as Dictionary).is_empty()):
+			cands.append(t)
+	cands.sort()
+	var weeks := maxi(1, int(_rules.switch_stay_days) / maxi(1, int(_rules.switch_every_days)))
+	var best := ""
+	var best_pay := 0.0
+	for t in cands:
+		var worth := 0.0
+		for item in _trade_goods(t):
+			worth += float(delta.get(item, 0)) * float(price(item))
+		var pay := worth / float(_rules.switch_every_days)
+		if pay >= float(_rules.switch_to_at_least):
+			streak[t] = int(streak.get(t, 0)) + 1
+		else:
+			streak.erase(t)
+		var feasible := _place_left(closed[t]) if closed.has(t) else _inputs_exist(t)
+		if int(streak.get(t, 0)) >= weeks and feasible and (best == "" or pay > best_pay):
+			best = t
+			best_pay = pay
+	if best == "":
+		return
+	var rec: Dictionary = closed.get(best, {})
+	var reserve: int = int(rec.reserve) if not rec.is_empty() else int(btype(best).get("reserve", 12))
+	var pick := -1
+	var pick_cash := -1
+	for h in hh:
+		if not h.alive or not TRADE_BIZ.has(str(h.trade)) or int(h.stay) < int(_rules.switch_stay_days):
+			continue
+		var ob: String = TRADE_BIZ[h.trade]
+		if not biz.has(ob) or _workers(biz[ob]) <= 1 or best_pay < 2.0 * float(h.rate):
+			continue
+		var cash := int(h.coins) - int(_rules.keep_cash_base) - int(_rules.keep_cash_per_member) * (int(h.adults) + int(h.children))
+		if cash >= reserve and cash > pick_cash:
+			pick = int(h.id)
+			pick_cash = cash
+	if pick < 0:
+		return
+	var h: Dictionary = hh[pick]
+	var nb: Dictionary
+	if rec.is_empty():
+		var T := btype(best)
+		nb = {"type": best, "workers": [], "till": 0, "stock": {}, "reserves": {}, "out": (T.get("out", {}) as Dictionary).duplicate(), "acc": {},
+			"reserve": int(T.get("reserve", 12)), "horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0, "rate": 0.0, "idle": 0}
+	else:
+		nb = rec
+		closed.erase(best)
+	var old: Dictionary = biz[TRADE_BIZ[h.trade]]
+	old.workers.erase(pick)
+	nb.workers = [pick]
+	nb.till = pick_cash
+	h.coins -= pick_cash
+	h.trade = _trade_of(best)
+	h.stay = 0
+	biz[best] = nb
+	streak.erase(best)
+	flows.biz_opened += 1
+	flows.job_moves += 1
+	note("A household took up %s and opened the %s." % [h.trade, str(btype(best).get("name", best))])
+
+
+## A closed place that still has what it gave: a quarry with ore or stone left, or any other that never ran out.
+static func _place_left(rec: Dictionary) -> bool:
+	if (rec.reserves as Dictionary).is_empty():
+		return true
+	for k in rec.reserves:
+		if int(rec.reserves[k]) > 0:
+			return true
+	return false
 
 
 static func _trade_of(bt: String) -> String:
@@ -1577,7 +1757,8 @@ func summary() -> Dictionary:
 		"coins": coins(), "household_coins": cash, "tills": tills, "treasury": int(gov.coins),
 		"trader": int(trader().get("till", 0)), "pantry_days": food_pts / maxf(1.0, need), "horses": horses(),
 		"wage_short": int(flows.wage_short), "relief": int(flows.relief_units), "births": int(flows.births),
-		"age_deaths": int(flows.age_deaths), "households_formed": int(flows.households_formed)}
+		"age_deaths": int(flows.age_deaths), "households_formed": int(flows.households_formed),
+		"biz_opened": int(flows.biz_opened), "biz_closed": int(flows.biz_closed), "businesses": biz.size()}
 
 
 # ------------------------------------------------------------------ people moving to and from the village (MIGRATE-18) ----------------
@@ -1752,6 +1933,7 @@ func wed_in(gi: int, gj: int, p: Dictionary, coins: int, goods: Dictionary) -> i
 func reopen_books() -> void:
 	flows = _blank_flows()
 	flows.horses_start = horses()
+	dev["seen"] = {}
 	start = {"coins": coins(), "goods": goods()}
 
 
@@ -1777,7 +1959,7 @@ func to_dict() -> Dictionary:
 	return {"id": id, "name": name, "kind": kind, "gov_name": gov_name, "miles": miles, "x": pos.x, "y": pos.y,
 		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv,
 		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
-		"tax": tax.duplicate(true), "journal": journal.duplicate(true)}
+		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true)}
 
 
 static func from_dict(d: Dictionary) -> OffMapSettlement:
@@ -1822,20 +2004,11 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 		else:
 			s._recount(c)
 	for t in d.biz:
-		var b: Dictionary = (d.biz[t] as Dictionary).duplicate(true)
-		for k in ["till", "reserve", "horses", "foal", "fed_miss"]:
-			b[k] = int(b[k])
-		b.paid = int(b.get("paid", 0))
-		b.week = int(b.get("week", 0))
-		b.rate = float(b.get("rate", 0.0))
-		b.workers = (b.workers as Array).map(func(x): return int(x))
-		b.stock = _ints(b.stock)
-		b.reserves = _ints(b.reserves)
-		var acc := {}
-		for k in b.acc:
-			acc[k] = float(b.acc[k])
-		b.acc = acc
-		s.biz[t] = b
+		s.biz[t] = _biz_from(d.biz[t])
+	for t in d.get("closed", {}):
+		s.closed[t] = _biz_from(d.closed[t])
+	var dv: Dictionary = d.get("dev", {})
+	s.dev = {"seen": _ints(dv.get("seen", {})), "streak": _ints(dv.get("streak", {}))}
 	var g: Dictionary = (d.gov as Dictionary).duplicate(true)
 	g.coins = int(g.coins)
 	g.granary = _ints(g.granary)
@@ -1865,6 +2038,25 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 		s.journal.append({"day": int(e.day), "text": str(e.text)})
 	s.start = {"coins": int(d.start.coins), "goods": _ints(d.start.goods)}
 	return s
+
+
+## A business as saved (an older save has no `idle`).
+static func _biz_from(bd: Dictionary) -> Dictionary:
+	var b: Dictionary = bd.duplicate(true)
+	for k in ["till", "reserve", "horses", "foal", "fed_miss"]:
+		b[k] = int(b[k])
+	b.paid = int(b.get("paid", 0))
+	b.week = int(b.get("week", 0))
+	b.idle = int(b.get("idle", 0))
+	b.rate = float(b.get("rate", 0.0))
+	b.workers = (b.workers as Array).map(func(x): return int(x))
+	b.stock = _ints(b.stock)
+	b.reserves = _ints(b.reserves)
+	var acc := {}
+	for k in b.acc:
+		acc[k] = float(b.acc[k])
+	b.acc = acc
+	return b
 
 
 ## A member as saved: the four numbers, and the fifth entry (the person's name and skills) when they came from the village.

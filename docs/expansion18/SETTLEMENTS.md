@@ -194,6 +194,35 @@ village's `coin_sources`, `caravan_coins_in/out`, `exported_/imported_`, the set
 both sides (`Regions.move_counts` against the settlements' `migrants_in/out`). The settlement writes each move into its own journal,
 beside its tax announcements (DVW-B5: each settlement now uses the village's banded, announced tax rule, INT-313). INT-310 to INT-312.
 
+## 6c. Settlements grow, shrink and specialize (SET-D; owner B18-DP-05)
+
+Owner B18-DP-05: settlements grow, decline and specialize through the same economic and demographic rules as the village, at off-map
+detail; no population cap, no new off-map housing inventory, demographic rates unchanged (REG-DEMO-D1). Population and employment already
+follow the daily rules (births, deaths, marriages, hunger, `_move_jobs`); a business's output is its living workers' share (`_produce`).
+SET-D adds the two things that were missing, once a week, after the job moves (`OffMapSettlement._develop`, INT-380 and INT-381):
+
+- **A trade opens.** A trade the settlement lacks (a workshop made from the village's recipes, or a field, flock, wood or quarry that
+  closed earlier) opens when the goods it would sell went unmet (units wanted and not found for sale, at the market price) worth at least
+  `switch_to_at_least` a day in each of two weeks running (`switch_stay_days / switch_every_days`), and a household that has stayed in its
+  trade `switch_stay_days`, whose business keeps another household, earning under half that a day, has savings above its keep-cash
+  of at least the new business's working reserve. The household takes up the trade and its savings become the till. One a week. A
+  workshop opens only if the settlement has or makes an input of one of its recipes (the natural-resource constraint); a trade made
+  from what the land gives opens only where it was before.
+- **A business closes.** One with no living worker household for two weekly looks (`switch_stay_days`) closes, except the traders. Its
+  till goes to the treasury; its stock is bought by the traders at market price as far as their till above its reserve reaches and the
+  rest goes into the treasury's granary (the rule for a household with no kin). The place (horses, quarry reserve, its fields) is kept
+  and a household may open it again.
+
+No new numbers: every threshold above is an existing `settlements.json` rule. Provisional (agent decisions): what counts as "unmet demand"
+(the settlement's own `flows.unmet` record, which counts every failed purchase attempt, so it overstates a day's real shortfall); that
+the founding household brings its whole surplus; that closing hands stock to the traders. Not done: new natural-output businesses (the
+off-map has no land model), more than one new business a week, and any housing limit.
+
+Verification (365 days): a 365-day run is one year of simulation. Under the 8-day calendar year it is about 45 game years for the settlements'
+ages and births, so people are born, grow up, marry and have children of their own in it, but it is not labelled multi-generation
+verification here. `regions_sim.gd --report` prints the facts (people present at the start still alive, births by couple-generation,
+openings and closings by trade and day); the numbers are in the DECISIONS.md row.
+
 ## 7. What is not done yet
 
 A settlement has no houses, so "land" draws a village household out only when it has waited for a home, and draws a settlement household in
