@@ -55,10 +55,11 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 
-## Approved, no build assigned (7)
+## Approved, no build assigned (8)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
+| CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | OWNER APPROVED | INTEGRATED |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | OWNER APPROVED | NOT STARTED |

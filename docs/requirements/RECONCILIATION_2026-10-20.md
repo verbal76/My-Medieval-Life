@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 418 (199 of them still open) |
-| **Open entries now** (rules excluded) | | **376** |
+| Entries added since | | 422 (200 of them still open) |
+| **Open entries now** (rules excluded) | | **377** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (418)
+## Added since the baseline (422)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -119,8 +119,8 @@ None.
 | B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | decision | APPROVED | 18 |
 | B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | decision | APPROVED | 18 |
 | B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | decision | APPROVED | 18 |
-| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | decision | OPEN | 18 |
-| B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | decision | OPEN | 18 |
+| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | decision | APPROVED | 18 |
+| B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | decision | APPROVED | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | APPROVED | owner decision |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
@@ -135,6 +135,7 @@ None.
 | CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | decision | APPROVED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
+| CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
@@ -157,7 +158,9 @@ None.
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
-| EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
+| ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
+| EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | approved | NOT APPLICABLE / NOT APPLICABLE / CLOSED | 20 |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
@@ -461,6 +464,7 @@ None.
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

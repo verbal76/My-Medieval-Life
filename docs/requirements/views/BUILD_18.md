@@ -8,15 +8,15 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 80 |
-| Integrated | 56 of 80 (70%) |
-| Automated tests passed | 54 of 80 (68%) |
-| Integration verified | 49 of 80 (61%) |
-| Gameplay verified | 0 of 80 (0%) |
-| Owner playtested | 0 of 80 (0%) |
-| Complete | 1 of 80 (1%) |
-| Open (release blockers) | 79 |
-| Open owner decisions (blocking) | 6 (0) |
+| Approved requirements in scope | 81 |
+| Integrated | 56 of 81 (69%) |
+| Automated tests passed | 54 of 81 (67%) |
+| Integration verified | 49 of 81 (60%) |
+| Gameplay verified | 0 of 81 (0%) |
+| Owner playtested | 0 of 81 (0%) |
+| Complete | 1 of 81 (1%) |
+| Open (release blockers) | 80 |
+| Open owner decisions (blocking) | 4 (0) |
 
 ## In development (worker assigned) (10)
 
@@ -49,7 +49,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Band margin 0.2 and 3-day notice are provisional agent values; gameplay check; known: The five settlements still use the single-threshold tax rule (offmap.gd _taxes_and_officials); SET-C-SIM requires the village's rules, so they are to use TaxPolicy too; Announcements appear in the village log and wiki only (no tax panel exists) |  | verification only |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; Build 18 release gate; known: Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified) |  | verification only |
 | ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check. Measured effect over 30 days: the caravan buys 7-8 kinds of goods instead of about 20, and the village earns roughly a quarter to a half less from it (seed 1 +1540 vs +1996 coins, seed 2 +1070 vs +2178); population and food unaffected; known: Courier booths still use SettlementLedger parties, not the new settlements |  | verification only |
-| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | INTEGRATED | 18 | TARGETED TESTS PASSED | Trade-counter tills (clarification of "a shop has its own till"; assigned with PL1-10); P3.2-P3.4 need the owner (B18-DP-16); World.spendable used in the new rules and _charge only; gameplay check; known: Trade counters (tavern, smith and other trades) still keep takings in the villager's purse; only storefronts and stalls have tills; P3.2-P3.4 (quotes follow money, stock days, market hire wages) not implemented: not covered by the owner's answer |  | verification only |
+| ECON-P3 | Household vs business money: a shop has its own till; the owner pays themselves from it and may choose to move money; World.spendable | OWNER APPROVED | INTEGRATED | 18 | TARGETED TESTS PASSED | Trade-counter tills (clarification of "a shop has its own till", with PL1-10); gameplay check. Not in scope: P3.2 (existing, B13-06), P3.3 and P3.4 (ECON-P3.3, ECON-P3.4: Build 20 proposals); known: Trade counters (tavern, smith and other trades) still keep takings in the villager's purse; only storefronts and stalls have tills; P3.2-P3.4 (quotes follow money, stock days, market hire wages) not implemented: not covered by the owner's answer |  | verification only |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate |  | verification only |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
@@ -106,16 +106,17 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | UNKNOWN |
-| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 9 of 10 professions pass; the sage supplies no profession (owner decision B18-DP-15) |  | M |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | M |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |  | M |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (2)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED | The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md) | design: UNKNOWN | UNKNOWN |
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (1)
 
@@ -123,12 +124,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (6)
+## Open owner decisions (4)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | OPEN | no |  |
-| B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | OPEN | no |  |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  |
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  |

@@ -1556,6 +1556,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> approval OWNER APPROVED; implementation INTEGRATED; verification INTEGRATION VERIFIED; release UNKNOWN; COMPLETE",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note: ECON proposal P3.2 \"quotes follow money\" is this existing behaviour (World.purchase_qty: a buyer is cut to what its coins pay above its necessity reserve, OD-19); recorded as existing functionality, not new development (B18-DP-16)",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
    ],
    "acceptance_derived": true,
@@ -4590,9 +4595,9 @@
    "title": "WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception?",
    "description": "WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-15 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md)",
+   "owner_answer": "APPROVE A, with verification: document the legitimate exception to Rule 2 (the sage's medicine serves injured villagers across professions); no guard stockpiles or artificial dependencies; the verification must distinguish a functioning cross-profession relationship from an unsupported exception; do not weaken the checker globally.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4605,6 +4610,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
    ]
   },
@@ -4614,9 +4624,9 @@
    "title": "ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals?",
    "description": "ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals?",
    "source": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "B18-DP-16 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md)",
+   "owner_answer": "APPROVE the recommendation: ECON-P3 closes on the separation of business and household money only; P3.2 recorded as existing functionality; P3.3 and P3.4 preserved as unapproved Build 20 proposals; not implemented in Build 18.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -4629,6 +4639,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition OPEN -> APPROVED",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
    ]
   },
@@ -8734,6 +8749,11 @@
      "date": "2026-10-23",
      "change": "schema v2: IMPLEMENTED — TESTING REQUIRED -> approval OWNER APPROVED; implementation INTEGRATED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "record corrected: the broader labour and service contracting entered as EMP-CONTRACT-01 belongs here; unfinished kinds tracked as CON-02-KINDS",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
    ],
    "target_build": "17",
@@ -8746,7 +8766,37 @@
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "remaining_work": "Unfinished service kinds tracked as CON-02-KINDS (later build, not Build 18); the original approval and acceptance unchanged"
+  },
+  {
+   "id": "CON-02-KINDS",
+   "kind": "approved",
+   "parent": "CON-02",
+   "title": "CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval",
+   "target_build": "unassigned",
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
+   "approval": "Owner CON-02 (2026-10-21): 'The universal CON-01 system must support contracts for labor and services, not only goods procurement.'; scheduling by owner 2026-10-23 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md)",
+   "owner_wording": "Keep unfinished service types tracked as open dependencies under CON-02. Schedule their further implementation for a later build ... Do not expand Build 18 solely to add more contract types.",
+   "acceptance": [
+    "As CON-02's acceptance: one engine; service terms; feasibility judged by the same rules for the player; work actually performed; nothing created; services needing missing gameplay recorded as dependencies"
+   ],
+   "remaining_work": "A later build (not Build 18); to be scheduled by the owner",
+   "depends_on": [
+    "CON-02"
+   ],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    }
+   ]
   },
   {
    "id": "CON-03",
@@ -13966,7 +14016,7 @@
   },
   {
    "id": "ECON-P3",
-   "title": "Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)",
+   "title": "Household vs business money: a shop has its own till; the owner pays themselves from it and may choose to move money; World.spendable",
    "kind": "approved",
    "owner_wording": null,
    "description": "Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)",
@@ -14029,6 +14079,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: household-money worker (Sonnet subagent, started 2026-10-23) -> ; branch: wip/b18-econp3 -> ; tests:  -> On merges (ECON-P3, then capability wiring) up to 84bf5f0: business_money_test 25, business_test 160, home_test 113, stalls_test 104, credit_test 98, luxury_test 233, regional_food_test 47, courier_live_test 138, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; worker economy_sim 30 days seeds 1, 2 no leaks; test_commit: None -> 84bf5f0; commits + 749c7df; commits + 84bf5f0; integrated_in + 18; known_defects + Trade counters (tavern, smith and other trades) still keep takings in the villager's purse; only storefronts and stalls have tills; known_defects + P3.2-P3.4 (quotes follow money, stock days, market hire wages) not implemented: not covered by the owner's answer; remaining_work",
      "why": "ECON-P3 worker finished (749c7df); merged into wip/build18"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "title narrowed from \"Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)\": P3.2-P3.4 removed from the approved scope (B18-DP-16)",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
    ],
    "acceptance_derived": true,
@@ -14053,18 +14108,73 @@
     "Trade counters (tavern, smith and other trades) still keep takings in the villager's purse; only storefronts and stalls have tills",
     "P3.2-P3.4 (quotes follow money, stock days, market hire wages) not implemented: not covered by the owner's answer"
    ],
-   "remaining_work": "Trade-counter tills (clarification of \"a shop has its own till\"; assigned with PL1-10); P3.2-P3.4 need the owner (B18-DP-16); World.spendable used in the new rules and _charge only; gameplay check"
+   "remaining_work": "Trade-counter tills (clarification of \"a shop has its own till\", with PL1-10); gameplay check. Not in scope: P3.2 (existing, B13-06), P3.3 and P3.4 (ECON-P3.3, ECON-P3.4: Build 20 proposals)"
+  },
+  {
+   "id": "ECON-P3.3",
+   "kind": "proposal",
+   "title": "Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185)",
+   "target_build": "20",
+   "approval_status": "PROPOSED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md",
+   "approval": "",
+   "acceptance": [],
+   "remaining_work": "Unapproved; for Build 20 consideration. Overlaps the rejected P1.1 (ECON-P1.1, OD-01: 'Do not require an existing buyer order before mining can begin'); the rejected design is not reactivated (B18-DP-16)",
+   "related": [
+    "ECON-P1.1",
+    "ECON-P3",
+    "EXP-D"
+   ],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    }
+   ]
+  },
+  {
+   "id": "ECON-P3.4",
+   "kind": "proposal",
+   "title": "Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186)",
+   "target_build": "20",
+   "approval_status": "PROPOSED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md",
+   "approval": "",
+   "acceptance": [],
+   "remaining_work": "Unapproved; for Build 20 consideration alongside wages and service contracts (OD-LE-03), permanent employment (EMP-PERM-01) and NPC competition (WDR-012-C) (B18-DP-16)",
+   "related": [
+    "OD-LE-03",
+    "EMP-PERM-01",
+    "WDR-012-C",
+    "B7-006"
+   ],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    }
+   ]
   },
   {
    "id": "EMP-CONTRACT-01",
    "kind": "approved",
    "title": "Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only",
    "target_build": "20",
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
+   "approval_status": "SUPERSEDED",
+   "implementation_status": "NOT APPLICABLE",
+   "verification_status": "NOT APPLICABLE",
+   "release_status": "NOT APPLICABLE",
+   "completion": "CLOSED",
    "owner_wording": "A player must also be able to negotiate a specific task or quantity of work without permanently employing the NPC. For example, I may contract a miner to produce or deliver 50 iron ore for an agreed payment.",
    "source": "docs/directives/2026-10-23_build18_decision_package_answers.md",
    "approval": "Owner B18-DP-01 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
@@ -14083,8 +14193,14 @@
      "date": "2026-10-23",
      "change": "implementation_status -> NOT STARTED for the Build 20 remainder (existing pieces named in 'implementation')",
      "why": "Build 20 is not authorized for implementation; the existing parts belong to earlier records (CON-01, CON-02, business attendants, PL1-10)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "SUPERSEDED by CON-02 (Build 17 approval of labour and service contracts); unfinished service kinds tracked as CON-02-KINDS; not a Build 20 proposal",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
-   ]
+   ],
+   "superseded_by": "CON-02"
   },
   {
    "id": "EMP-PERM-01",
@@ -14103,7 +14219,7 @@
     "An ongoing employee is distinct from a contracted worker; job acceptance, wages, hours, availability, workplace access, production requirements and termination follow the existing employment framework; real production, payment and conservation demonstrated"
    ],
    "implementation": "Exists: shop/stall attendants (business.gd hire/dismiss, daily wage); building-site helpers (construction.gd hire); manor jobs. Build 18 adds attendants working the player's workshop stations (PL1-10). Missing: a hired miner working the player's mine or pit, and a general assigned production role.",
-   "remaining_work": "Proposed for Build 20 (Living Economy: wages, rents and service contracts, OD-LE-03); the Build 18 part is PL1-10",
+   "remaining_work": "Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it",
    "depends_on": [
     "PL1-10"
    ],
@@ -14117,8 +14233,14 @@
      "date": "2026-10-23",
      "change": "implementation_status -> NOT STARTED for the Build 20 remainder (existing pieces named in 'implementation')",
      "why": "Build 20 is not authorized for implementation; the existing parts belong to earlier records (CON-01, CON-02, business attendants, PL1-10)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "owner assigned to Build 20",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
-   ]
+   ],
+   "owner_answer": "ASSIGN TO BUILD 20. Permanent mine employment and general assigned production roles remain approved design requirements scheduled for Build 20. Preserve the distinction between permanent employment, wages, shifts, assigned workplaces, and negotiated quantity or service contracts. Do not treat temporary contracts or workshop attendants as proof that permanent mine employment is complete."
   },
   {
    "id": "ENV-RTK",
@@ -43956,6 +44078,34 @@
    "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
+   "id": "VER-CON-50ORE",
+   "kind": "approved",
+   "title": "Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline)",
+   "target_build": "18",
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "source": "docs/directives/2026-10-23_dp15_dp16_con02_empperm.md",
+   "approval": "Owner 2026-10-23 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md)",
+   "owner_wording": "When contract verification next runs, include a focused real-world example of a 50-ore quantity contract using existing functionality. Verify actual production, inventory conservation, delivery, payment, and deadline behavior. Do not start a separate full regression campaign for this.",
+   "acceptance": [
+    "A 50-ore CON-01 contract with a miner runs through the live World: ore actually mined, delivered in lots, paid per delivered unit from real funds, conserved, deadline honoured or lapsed by the existing rules; a focused test, not a regression campaign"
+   ],
+   "related": [
+    "CON-01",
+    "CON-02"
+   ],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    }
+   ]
+  },
+  {
    "id": "VIS-ANIMAL-01",
    "title": "Stray fragments above animals removed at the source",
    "kind": "approved",
@@ -44869,6 +45019,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; assigned_worker: close-out worker (Sonnet subagent, started 2026-10-23) -> ; branch: wip/b18-closeout -> ; tests:  -> interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; remaining_work",
      "why": "Close-out audit merged at 027d742"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "B18-DP-15 approved: the sage is a documented exception backed by a verified cross-profession relationship",
+     "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
     }
    ],
    "target_build": "18",
@@ -44884,7 +45039,7 @@
    "design": "SPECIFIED",
    "effort": "M",
    "assigned_worker": "",
-   "remaining_work": "Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 9 of 10 professions pass; the sage supplies no profession (owner decision B18-DP-15)"
+   "remaining_work": "Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains"
   },
   {
    "id": "WDR-003",

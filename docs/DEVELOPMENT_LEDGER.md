@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (558)
+## Approved requirement (560)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -136,6 +136,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CON-03 | Restricted negotiated service advances (CON02-S-1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -188,8 +189,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| ECON-P3 | Household vs business money: a shop has its own till; the owner pays themselves from it and may choose to move money; World.spendable | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | 20 | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner action | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | EQ-01 | Human civilization sustains itself without the player | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -525,6 +526,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -567,7 +569,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 
-## Proposal awaiting an owner decision (not approved) (34)
+## Proposal awaiting an owner decision (not approved) (36)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -594,6 +596,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | ECON-P1.4 | Prospecting new seams (:74) | 17 | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ECON-P1.5 | Distant quarry (:75) | 17 | REJECTED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | 20 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | 20 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | 20+ | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
@@ -675,8 +679,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | 18 | APPROVED |  |
 | B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | 18 | APPROVED |  |
 | B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | 18 | APPROVED |  |
-| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | 18 | OPEN |  |
-| B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | 18 | OPEN |  |
+| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | 18 | APPROVED |  |
+| B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | 18 | APPROVED |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | 15 | SUPERSEDED |  |
