@@ -34,7 +34,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 crop_share_test 19/19). Phase A inventory: `docs/build18/PHASE_A_INVENTORY.md`. Active: UI-HUNGER-01, UI-HUD-01,
 UI-PROGRESS-01, VIS-ANIMAL-01, VIS-CROP-01, VIS-DOOR-01 (visual worker, `wip/b18-visual`); UI-WIKI-01 (`wip/b18-wiki`);
 CC-01 (character worker, `wip/b18-character`: runtime layered sprites, recipe saves, creator UI; no armour values, no barber
-economy). ORE-PLACE-01 fixed and merged into `wip/build18` (`ff8749f`; prospecting clues kept out of the settlement footprint; the determinism gate must be re-baselined at integration). VIS-AXE-01 (lead, `wip/b18-axe`) and VIS-TREE-02 (worker, `wip/b18-trees`). INV-18 merged (wip/build18), TAILOR-18 purchase built, placement awaits TAILOR-Q. ARMOR-01 Option A merged. BARBER-01 waits on owner decisions (armour scope first). Nothing is built or published without the owner.
+economy). ORE-PLACE-01 fixed and merged into `wip/build18` (`ff8749f`; prospecting clues kept out of the settlement footprint; the determinism gate must be re-baselined at integration). VIS-AXE-01 (lead, `wip/b18-axe`) and VIS-TREE-02 (worker, `wip/b18-trees`). INV-18 merged (wip/build18), TAILOR-18 purchase built, placement awaits TAILOR-Q. ARMOR-01 Option A merged. VIS-STEPS-01 and interface fixes (worker, `wip/b18-polish`). BARBER-01 waits on owner decisions (armour scope first). Nothing is built or published without the owner.
 
 The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 in the evening (UTC).
 

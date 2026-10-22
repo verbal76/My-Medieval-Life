@@ -14247,6 +14247,48 @@
    "roadmap_reason": "generational memory is the judgment system's event and belief record; not named in any build, closest fit"
   },
   {
+   "id": "HORSE-Q",
+   "title": "Plough horse: price and what it does",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "A plough horse available for purchase from the visiting caravan.",
+   "description": "Plough horse: price and what it does",
+   "source": "docs/directives/2026-10-22_build18_master_overnight_execution.md",
+   "approval": "",
+   "acceptance": [
+    "Owner sets the horse's price, upkeep (feed) and what it does for ploughing before B14-11 is built"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B14-11",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_master_overnight_execution.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "recorded overnight: the requirement names the horse but not its price, feed or ploughing effect"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "HOUSE-01",
    "title": "Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house",
    "kind": "approved",
@@ -28276,7 +28318,7 @@
    "id": "VIS-STEPS-01",
    "title": "Steps cut through rock need real step art",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "I cut steps through the Rock. That's the best you can give me for an image of steps",
    "description": "Steps cut through rock need real step art",
    "source": "owner message 2026-10-22 with a photo of cut steps",
@@ -28287,7 +28329,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-polish",
    "commits": [],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -28297,7 +28339,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "b18-polish",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -28310,6 +28352,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "current tile is a Build 14 stand-in (Forgotten Memories paving with darker lines, tools/terrain_art.py); search the packs (Puny World cliff stairs first) for real step art"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
+     "why": "overnight polish worker"
     }
    ],
    "target_build": "18"
