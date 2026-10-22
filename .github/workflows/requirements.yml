@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 2
       - name: Fetch the integration branches named by records (paths are checked there too)
         run: |
-          for b in wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
+          for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
             git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
           done
       - uses: actions/setup-python@v5

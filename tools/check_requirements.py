@@ -85,7 +85,7 @@ LINK_RE = re.compile(r"`((?:docs|tools|game|tests|\.github|\.claude)/[^`*\s]+|CL
 REF_LISTS = ("depends_on", "related", "decisions")
 ## Paths named by a record may live on an integration or prospective branch rather than on staging (code and design
 ## notes of Builds 17-21); a path counts as existing if it is in the working tree or on one of these branches.
-PATH_REFS = ["origin/wip/build18", "origin/wip/build17", "origin/wip/expansion18-preparation", "origin/wip/expansion19-preparation",
+PATH_REFS = ["origin/staging/my-medieval-life", "origin/wip/build18", "origin/wip/build17", "origin/wip/expansion18-preparation", "origin/wip/expansion19-preparation",
              "origin/wip/expansion20-preparation", "origin/wip/expansion21-preparation"]
 _REF_FILES = {}
 
