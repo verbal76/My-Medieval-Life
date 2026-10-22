@@ -21936,7 +21936,7 @@
    "implementation": "",
    "tests": "trade_skills_test (Law), contract_sign_test; all 66 Godot suites on merged tree 83d3afc: exit 0, 0 SCRIPT ERROR, 0 FAIL; Python 106 OK; asset, interaction, resource checks 0 problems",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-courier2",
    "commits": [
     "72e6c3e"
    ],
@@ -21973,6 +21973,11 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
+     "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
     }
    ],
    "target_build": "18",
@@ -21981,13 +21986,14 @@
    ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "courier-notary path not live; villagers do not take lessons; clergy teaching waits on DVW-B3-CHAPEL",
    "design": "SPECIFIED",
-   "effort": "S"
+   "effort": "S",
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "LE-00",
@@ -22919,7 +22925,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-migration",
    "commits": [],
    "parent": "SET-C",
    "depends_on": [
@@ -22954,19 +22960,25 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "REG-INV-01: migration depends on settlement demographics"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> migration worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-migration",
+     "why": "Dependencies met (REG-DEMO-01 integrated)"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "L",
-   "remaining_work": "Needs settlement members with ages (REG-DEMO-01) so people who move carry an age, skills and a household"
+   "remaining_work": "Needs settlement members with ages (REG-DEMO-01) so people who move carry an age, skills and a household",
+   "assigned_worker": "migration worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "MILE-01",
@@ -42854,7 +42866,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-credit",
    "commits": [],
    "parent": "SET-C",
    "depends_on": [
@@ -42884,18 +42896,24 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> credit worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-credit",
+     "why": "Approved (Q18-5), specified, unblocked"
     }
    ],
    "target_build": "18",
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "L"
+   "effort": "L",
+   "assigned_worker": "credit worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "TRADE-UI-02",
@@ -47525,7 +47543,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-courier2",
    "commits": [
     "d63d8d7"
    ],
@@ -47560,6 +47578,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
      "why": "courier and formal-contract code merged into wip/build18 with Expansion 18 (d63d8d7) but not wired into play (inert); no worker; Q18-14..16 answered 2026-10-23"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
+     "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
     }
    ],
    "target_build": "18",
@@ -47568,13 +47591,14 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "X18-Q12-POST",
@@ -47594,7 +47618,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-courier2",
    "commits": [
     "d63d8d7"
    ],
@@ -47629,6 +47653,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
      "why": "courier and formal-contract code merged into wip/build18 with Expansion 18 (d63d8d7) but not wired into play (inert); no worker; Q18-14..16 answered 2026-10-23"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
+     "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
     }
    ],
    "target_build": "18",
@@ -47637,13 +47666,14 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "X18-Q13",
@@ -47659,7 +47689,7 @@
    "implementation": "",
    "tests": "contract_sign_test",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-courier2",
    "commits": [
     "d63d8d7"
    ],
@@ -47704,6 +47734,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
      "why": "courier and formal-contract code merged into wip/build18 with Expansion 18 (d63d8d7) but not wired into play (inert); no worker; Q18-14..16 answered 2026-10-23"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> courier-completion worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-courier2",
+     "why": "Couriers live (REG-COURIER-01 at 840e0ed); completing booths, NPC use, the notary path"
     }
    ],
    "target_build": "18",
@@ -47712,13 +47747,14 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
    "design": "PARTIAL",
-   "effort": "L"
+   "effort": "L",
+   "assigned_worker": "courier-completion worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "X18-SIM",

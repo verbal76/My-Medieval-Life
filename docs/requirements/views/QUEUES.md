@@ -2,17 +2,23 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (5)
+## Workers and task branches (11)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| LAW-SKILL | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
+| MIGRATE-18 | 18 | IN DEVELOPMENT | migration worker (Sonnet subagent, started 2026-10-23) | wip/b18-migration |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
+| TRADE-CREDIT | 18 | IN DEVELOPMENT | credit worker (Sonnet subagent, started 2026-10-23) | wip/b18-credit |
+| X18-Q12-BOOTH | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
+| X18-Q12-POST | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
+| X18-Q13 | 18 | IN DEVELOPMENT | courier-completion worker (Sonnet subagent, started 2026-10-23) | wip/b18-courier2 |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 
-## Implemented but not tested (51)
+## Implemented but not tested (48)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -64,9 +70,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WDR-022-C | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | X18-Q12 | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
-| X18-Q12-BOOTH | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
-| X18-Q12-POST | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
-| X18-Q13 | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
 
 ## Awaiting owner playtest or device check (51)
 
