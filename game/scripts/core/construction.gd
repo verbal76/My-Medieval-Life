@@ -35,9 +35,9 @@ const DOORWAY_PREFERENCE := 6   # find_module_slot: ground where a doorway can b
 const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
-## STONE-01: building blocks from the raw-goods merchant and the labourers who dress them; raw stone stays on sale for
+## STONE-01: building blocks from the raw-goods merchant and the labourers and stonecutters who dress them; raw stone stays on sale for
 ## sites marked out before blocks (they keep the cost they were marked out with).
-const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"], "building_block": ["merchant_raw", "laborer"],
+const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"], "building_block": ["merchant_raw", "laborer", "stonecutter"],
 	"log": ["woodcutter", "merchant_raw"], "iron_bar": ["smith", "merchant_goods"]}
 
 var w: World
@@ -412,6 +412,8 @@ func plan_helper(n: NPC) -> bool:
 			return true
 	if own and _make_timber(n, c, need):
 		return true
+	if own and _dress_own(n, c, need):
+		return true
 	b.once("helper_idle_%d_%d" % [n.id, w.day()], "%s %s can find no materials to carry to %s." % [n.name, n.family, w.property.describe(p)])
 	n.doing = "waiting for building materials"
 	n.plan = [b.go(site_cell), b.work(45, "", {}, "idle")]
@@ -450,6 +452,30 @@ func _make_timber(n: NPC, c: Dictionary, need: Dictionary) -> bool:
 		w.stat("builder_axes")
 		return b._get_tool(n, "axe")
 	return false
+
+
+## STONE-02 (owner: any villager may dress stone for their own house or repairs, by the player's rules; a title grants
+## no bypass): when no blocks can be bought for their own household's site, a builder who has the Masonry for it dresses
+## stone themselves, at a workbench, with the mallet and the iron chisel the player needs (dress_stone: World.work_craft),
+## the stone and the tools their own, bought with their own coins above their reserve when they have none; the blocks they
+## dress go into the site (helper_own). True when planned.
+func _dress_own(n: NPC, c: Dictionary, need: Dictionary) -> bool:
+	if int(need.get("building_block", 0)) - (c.load as Inventory).count("building_block") - n.inv.count("building_block") <= 0:
+		return false
+	var b: NPCBrain = w.brain
+	var rec: Dictionary = GameData.recipes["dress_stone"]
+	if n.level(str(rec.skill)) < int(rec.level):
+		return false
+	var miss := w.craft_tool_missing(n, "dress_stone")
+	if miss != "":
+		return b._fetch_dress_tool(n, miss)
+	if n.inv.has_all(rec["in"]):
+		if b._do_recipe(n, "dress_stone"):
+			n.doing = "dressing stone for their own building"
+			w.stat("dressed_for_own_use")
+			return true
+		return false
+	return b._fetch_dress_stone(n)
 
 
 ## The nearest villager selling a material whom the helper can pay (from the employer's purse,

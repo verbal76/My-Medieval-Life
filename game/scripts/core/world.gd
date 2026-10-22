@@ -1350,8 +1350,7 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	var r: Dictionary = GameData.recipes[recipe]
 	if Skills.level(who, str(r.skill)) < int(r.level):
 		return {"result": "level"}
-	var tool := craft_tool(who, recipe)
-	if tool == "-":
+	if craft_tool(who, recipe) == "-":
 		return {"result": "tool"}
 	if not inv.remove_all(r["in"]):
 		return {"result": "materials"}
@@ -1363,28 +1362,66 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 		for id in r["in"]:
 			stat("used_" + id, float(r["in"][id]))
 	var bonus := not exact and rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+	var first := true
 	for id in r.out:
-		_work_goods(who, inv, id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0), "made_")
+		# a bonus unit is one extra of the recipe's main (first) product, never of a by-product (dressing: the fragments)
+		_work_goods(who, inv, id, int(r.out[id]) + (1 if bonus and first and not Skills.is_gear(str(id)) else 0), "made_")
+		first = false
 	if str(r.station) == "anvil":
 		_work_wear(who, "hammer", 2, str(r.skill), "")
-	if tool != "" and _work_wear(who, tool, 1, str(r.skill), "") and who is PlayerState and player.tool == tool and not player.inv.has(tool):
-		player.tool = ""                                   # (the player's last one broke)
+	for t in craft_tool_items(who, recipe):                # STONE-06: every tool the recipe names wears a use a batch
+		if _work_wear(who, t, 1, str(r.skill), "") and who is PlayerState and player.tool == t and not player.inv.has(t):
+			player.tool = ""                               # (the player's last one broke)
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
 
 
 ## STONE-01: the item `who` works `recipe` with when the recipe names a tool kind ("" when it needs none, "-" when they
 ## hold none of that kind): the player's tool in hand or best of that kind, a villager's first in their pack.
 func craft_tool(who, recipe: String) -> String:
-	var kind := str(GameData.recipes[recipe].get("tool", ""))
-	if kind == "":
+	var kinds := craft_tool_kinds(recipe)
+	if kinds.is_empty():
 		return ""
+	var items := craft_tool_items(who, recipe)
+	return "-" if items.size() < kinds.size() else str(items[0])
+
+
+## STONE-06: the tool kinds a recipe needs: its `tool` as one kind (a string) or several (a list: dressing stone takes a
+## mallet and an iron chisel); empty when it needs none.
+func craft_tool_kinds(recipe: String) -> Array:
+	var t = GameData.recipes[recipe].get("tool", "")
+	if t is Array:
+		return t
+	return [] if str(t) == "" else [str(t)]
+
+
+## STONE-06: the item `who` holds of tool kind `kind` ("" if none): the player's tool in hand or best of the kind, a
+## villager's first in their pack.
+func tool_of_kind(who, kind: String) -> String:
 	if who is PlayerState:
-		var t: String = who.tool_of(kind)
-		return t if t != "" else "-"
+		return who.tool_of(kind)
 	for id in who.inv.ids():
 		if str(GameData.item(id).get("tool", "")) == kind:
 			return id
-	return "-"
+	return ""
+
+
+## STONE-06: the items `who` works `recipe` with, one for each kind it needs, in the recipe's order; fewer than the
+## kinds when they lack one.
+func craft_tool_items(who, recipe: String) -> Array:
+	var out := []
+	for kind in craft_tool_kinds(recipe):
+		var found := tool_of_kind(who, str(kind))
+		if found != "":
+			out.append(found)
+	return out
+
+
+## STONE-06: the first tool kind of `recipe` that `who` lacks, "" if they hold them all.
+func craft_tool_missing(who, recipe: String) -> String:
+	for kind in craft_tool_kinds(recipe):
+		if tool_of_kind(who, str(kind)) == "":
+			return str(kind)
+	return ""
 
 
 ## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
@@ -1521,7 +1558,8 @@ func player_craft_refusal(recipe: String) -> String:
 	if player.level(r.skill) < int(r.level):
 		return "Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)]
 	if craft_tool(player, recipe) == "-":
-		return "You need a %s." % str(r.tool)          # STONE-01: the recipe's tool (the mallet to dress stone)
+		var kind := craft_tool_missing(player, recipe)     # STONE-01, STONE-06: the recipe's tool (the mallet and the iron chisel to dress stone)
+		return "You need %s." % ("an iron chisel" if kind == "chisel" else "a " + kind)
 	if not player.inv.has_all(r.in):
 		return "You do not have the materials."
 	return ""

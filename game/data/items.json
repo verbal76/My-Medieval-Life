@@ -521,6 +521,14 @@
       "value": 1,
       "category": "crafted"
     },
+    "chisel": {
+      "name": "Iron chisel",
+      "type": "tool",
+      "tool": "chisel",
+      "value": 18,
+      "durability": 150,
+      "category": "tools"
+    },
     "mallet": {
       "name": "Mallet",
       "type": "tool",

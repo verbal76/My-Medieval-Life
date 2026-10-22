@@ -56,8 +56,8 @@
       "9": {"effects": {"save_chance": 0.25}},
       "10": {"text": "Master carpenter", "effects": {"bonus_chance": 0.2}}
     }},
-    "masonry": {"name": "Masonry", "starts_from": "crafting", "about": "Masonry is stoneworking: dressing raw stone into building blocks at a workbench with a mallet. Everyone who already had Crafting experience began with the same in Masonry, so nothing was lost.", "tiers": {
-      "1": {"text": "Dress stone into building blocks with a mallet"},
+    "masonry": {"name": "Masonry", "starts_from": "crafting", "about": "Masonry is stoneworking: dressing raw stone into building blocks at a workbench with a mallet and an iron chisel. Everyone who already had Crafting experience began with the same in Masonry, so nothing was lost.", "tiers": {
+      "1": {"text": "Dress stone into building blocks with a mallet and an iron chisel"},
       "3": {"effects": {"craft_time": 0.85}},
       "5": {"effects": {"save_chance": 0.15}},
       "7": {"effects": {"bonus_chance": 0.1, "craft_time": 0.7}},

@@ -46,10 +46,11 @@ const NODE_PLAYER_TEXT := {
 const JOB_TEXT := {
 	"miner": "Works the ore seams in the mine yard, the gallery and the cave, quarries the grey rock of worked-out seams, and sells ore and stone to the smith and the raw-goods merchant. When its ore is worked out it takes the manor's trial pit and digging work.",
 	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor. Takes the manor's surveys. See Prospecting and trial pits.",
-	"laborer": "Day labour: mines and quarries stone, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them.",
+	"laborer": "Day labour: mines and quarries stone, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them (with a mallet and an iron chisel).",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
-	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
+	"stonecutter": "A trade of its own, taken up when blocks are wanted and stone is on sale: buys raw stone with its own coins, dresses it into building blocks at a workbench with a mallet and an iron chisel, and sells the blocks to the raw-goods merchant and to builders. It earns only what the blocks fetch above the stone and the tools cost; when nobody wants blocks it earns nothing and, like anyone, looks for other work.",
+	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour (iron chisels for the stoneworkers among them) at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them. The farmers of a field cut it together and share its grain, and the seed kept back for the next sowing, by the work each put into the cutting, after the field's animals are fed.",
 	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",

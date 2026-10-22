@@ -65,11 +65,14 @@ JOB_WORK = {
     "carpenter": [BRAIN + "::_plan_job@carpenter", BRAIN + "::_carpenter_carts", BRAIN + "::_carpenter_goods", BRAIN + "::_carpenter_mallet"],
     "sage": [BRAIN + "::_plan_job@sage"],
     "laborer": [BRAIN + "::_mason"],          # STONE-01: the labourers dress stone into building blocks
+    "stonecutter": [BRAIN + "::_stonecutter", BRAIN + "::_mason"],   # X18-STONECUT: the independent trade of dressing and selling blocks
 }
+# trades nobody starts in, taken up through the job market (Population.JOBS does not list them)
+ADOPTED = {"stonecutter"}     # X18-STONECUT
 # households' own recipes (not a profession): home brewing, cooking at the hearth, a storefront's cart,
 # sawing planks for their own house
 HOUSEHOLD_WORK = [BRAIN + "::_plan_home_work", BRAIN + "::_cook_at_home", BRAIN + "::_plan_cart",
-                  "game/scripts/core/construction.gd::_make_timber"]
+                  "game/scripts/core/construction.gd::_make_timber", "game/scripts/core/construction.gd::_dress_own"]   # STONE-02: dressing for their own house
 # the node categories (resources.json) each gathering job harvests, and the function that does it
 GATHERING = {
     "miner": (["mineral"], BRAIN + "::_miner"),
@@ -122,7 +125,7 @@ def load(root=ROOT):
     ctx = cr.load(root)
     items, recipes, bal = ctx["items"], ctx["recipes"], ctx["balance"]
     brain = (root / BRAIN).read_text(encoding="utf-8")
-    jobs = sorted(cr.gd_const((root / "game/scripts/core/population.gd").read_text(encoding="utf-8"), "JOBS"))
+    jobs = sorted(set(cr.gd_const((root / "game/scripts/core/population.gd").read_text(encoding="utf-8"), "JOBS")) | ADOPTED)
     refs, crafters = [], {}
     for job, cited in sorted(JOB_WORK.items()):
         for ref in cited:
