@@ -20,7 +20,8 @@ static func add_pages(w: Wiki) -> void:
 			"Stand at the stall (within %d tiles) for villagers to buy, or hire an attendant to stand there for you (see the attendant guide). With neither, nobody buys: nothing sells unattended." % range_t,
 			"Larger stall: pay %d coins to the manor once for %d kinds of goods instead of %d, a display for one item that draws buyers from further off, and %d coins a day rent instead of %d." % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_listings")), int(GameData.b("stall_max_listings")), int(GameData.b("stall_large_rent_day")), rent],
 			"The window keeps your revenue, expenses (rent, upgrade, wages) and profit.",
-			"Rent is taken each morning from your coins, then settled coins in the till (never the open sales). If you cannot pay, sales stop; after %d unpaid days the manor takes the pitch back and your goods and coins return to you." % evict,
+			"The till is the business's money, apart from your purse. Put in and Take out move coins between them whenever you choose; Collect takes the lot. A failing stall never quietly spends your food money.",
+			"Rent is taken each morning from the till first (never the open sales), then from your purse, but only from coins above what you keep for food and fuel. If you cannot pay, sales stop; after %d unpaid days the manor takes the pitch back and your goods and coins return to you." % evict,
 		]),
 		Wiki.p("Villagers buy only what they really need and can pay for: the smith ore and coal, the carpenter and builders planks, building blocks, stone and logs, miners and woodcutters a missing tool, guards their gear, households firewood and food. They will not pay more than they would at the merchants, and they stop buying once the need is met."),
 		Wiki.links(["guide:market_stall", "guide:shop", "guide:attendant", "sys:trading", "guide:money", "job:merchant"])], "", "market stall rent sell shop business larger display")
@@ -62,7 +63,7 @@ static func add_pages(w: Wiki) -> void:
 	w.add_page("guide:attendant", "How do I hire an attendant?", "guides", [
 		Wiki.p("An attendant minds your stall or shop while you are away. Open the stall's or shop's window and look under Attendant."),
 		Wiki.bullets([
-			"Hire an adult without a trade of their own (out of work, a manor hand with no job taken, or a labourer): %d coins a day, today's wage at once, then every morning from the till first and then your purse." % wage,
+			"Hire an adult without a trade of their own (out of work, a manor hand with no job taken, or a labourer): %d coins a day, today's wage at once, then every morning from the till first and then your purse (only coins above what you keep for food and fuel)." % wage,
 			"They are a real villager: they walk to the counter in the working day (7 to 18), eat, and sleep at night. Nothing sells before they are at the counter, and nothing sells at night.",
 			"Customers are the same as ever: only villagers with a real need and coins to pay for it, at your prices.",
 			"If neither the till nor your purse can pay the wage, the attendant leaves. Let go whenever you like; closing the stall or shop also lets them go.",

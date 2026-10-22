@@ -260,7 +260,8 @@ func test_villager_storefront() -> void:
 	var buy: Dictionary = other.plan.filter(func(s): return s.get("act", "") == "buy_from")[0]
 	total = w.total_coins()
 	var k0 := n.coins
-	check(w.brain.act(other, "buy_from", buy.args) and n.coins > k0 and w.total_coins() == total, "the keeper is paid (%d coins), coins conserved" % (n.coins - k0))
+	var t0 := BusinessMoney.till_of(house)
+	check(w.brain.act(other, "buy_from", buy.args) and n.coins == k0 and BusinessMoney.till_of(house) > t0 and w.total_coins() == total, "the sale is paid into the storefront's till (%d coins), not the keeper's purse (ECON-P3), coins conserved" % (BusinessMoney.till_of(house) - t0))
 
 
 ## B14 carts: the carpenter saws wheels and the smith forges the axle and ironwork from their own stock.

@@ -735,6 +735,7 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		relations.note_trade(buyer.id if buyer is NPC else Life.PLAYER_ID, seller.id if seller is NPC else Life.PLAYER_ID, day())
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
+		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
 	return true
 
 
@@ -848,6 +849,12 @@ func reserve_of(who) -> int:
 			_reserve_cache.clear()
 		_reserve_cache[key] = int(necessity(who).reserve)
 	return int(_reserve_cache[key])
+
+
+## ECON-P3 (P3.5, one code path): the coins `who` may spend or lend freely, their purse above the necessity reserve.
+## Business money is not here: a till is the business's, and moves to a purse only by the owner's rule or choice.
+func spendable(who) -> int:
+	return maxi(0, int(who.coins) - reserve_of(who))
 
 
 var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)

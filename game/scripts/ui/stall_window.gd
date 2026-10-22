@@ -150,6 +150,7 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		ui._label(line, 16, GOLD if here or (att != null and biz.attendant_present(s)) else COLD)
 	var till := int(s.till)
 	ui._label("Till: %d coins  ·  taken so far: %d coins" % [till, int(s.earned)], 18)
+	ui._label("The till is the business's money. Rent, licence and wages come from it first; your purse only covers what it cannot, and only coins above what you keep for food and fuel. Move money in or out as you choose.", 13)
 	var costs: Dictionary = s.get("costs", {})
 	var parts := []
 	for k in costs:
@@ -164,6 +165,16 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		ui._button("Collect %d coins" % till, func():
 			ui.message("You collect %d coins from the till." % biz.collect(s))
 			show(ui, id), true, acts)
+	for amt in [10, 50]:                        # ECON-P3: the till is the business's; the owner moves money by choice
+		var put: int = amt
+		ui._button("Put in %d" % put, func():
+			var why := biz.deposit(s, put)
+			ui.message(why if why != "" else "You put %d coins in the till." % put)
+			show(ui, id), p.coins >= put, acts)
+		ui._button("Take out %d" % put, func():
+			var why := biz.withdraw(s, put)
+			ui.message(why if why != "" else "You take %d coins from the till." % put)
+			show(ui, id), biz.stalls.withdrawable(s) >= put if biz.stalls.is_market(s) else till >= put, acts)
 	if not built:
 		ui._button("Give up the pitch" if not shop else "Close the shop", func():
 			ui.message(biz.close(s))

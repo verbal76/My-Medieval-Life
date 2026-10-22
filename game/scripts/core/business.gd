@@ -49,11 +49,13 @@ const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: 
 var w: World
 var heading := {}                     # npc id -> game hour they set out for the stall (not saved)
 var stalls: Stalls                    # market stalls: building, sessions and the 5% settlement (STALL-01..06)
+var money: BusinessMoney              # villagers' storefront tills and the owner's pay (ECON-P3)
 
 
 func _init(world: World) -> void:
 	w = world
 	stalls = Stalls.new(world, self)
+	money = BusinessMoney.new(world)
 
 
 # ---------------------------------------------------------------- pitches --------------------
@@ -448,6 +450,27 @@ func collect(s: Dictionary) -> int:
 	return t
 
 
+## ECON-P3: the owner's choice to move money between the purse and the till. "" when done, else why not. A market
+## stall's open session proceeds are not taken out (Q13).
+func deposit(s: Dictionary, amount: int) -> String:
+	if amount <= 0 or w.player.coins < amount:
+		return "You do not have %d coins." % amount
+	w.player.coins -= amount
+	s.till = int(s.get("till", 0)) + amount
+	w.stat("till_deposited", amount)
+	return ""
+
+
+func withdraw(s: Dictionary, amount: int) -> String:
+	var avail := stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0))
+	if amount <= 0 or avail < amount:
+		return "The till holds %d coins%s." % [avail, " you can take now" if stalls.is_market(s) else ""]
+	s.till = int(s.till) - amount
+	w.player.coins += amount
+	w.stat("till_withdrawn", amount)
+	return ""
+
+
 ## Give the pitch (or the shop's trade) back with nothing lost: the unsold goods, the back room's stock and
 ## the till return to the player; what does not fit the pack lies at the stall as loot. No refund of rent
 ## paid. A closed shop leaves its counter and shelves standing. Returns a summary line.
@@ -484,6 +507,7 @@ func close(s: Dictionary, because := "You closed your stall.") -> String:
 ## Each morning: the day's rent (a shop's licence), from the purse and then the till. Unpaid, selling stops;
 ## after stall_evict_days unpaid mornings the pitch is taken back (close()). Then the attendant's wage.
 func daily() -> void:
+	money.daily()                     # the villagers' storefront tills: necessity, the owner's pay, the float (ECON-P3)
 	for s in premises():
 		if is_shop(s) and not is_mine(s):
 			w.note(close(s, "You no longer hold the shop's room."))
@@ -517,12 +541,14 @@ func _rent_due(s: Dictionary) -> void:
 		w.note("You could not pay the %s (%d coins). Sales are stopped until you do; the manor takes it back after %d days." % ["shop's licence" if is_shop(s) else "stall's rent", owed, int(GameData.b("stall_evict_days"))])
 
 
-## Make `amount` ready in the purse, from the till when the purse is short. False (and nothing moved) when
-## the two together cannot cover it. An open market session's proceeds are not drawn on (Q13: not withdrawable until
-## the session is settled).
+## Make `amount` ready in the purse for a business expense (ECON-P3: the business pays from its own till first). The
+## purse covers only what the till cannot, and only from the coins above the necessity reserve (World.spendable): a
+## failing shop does not silently eat the family's food money, the player moves money in by choice (deposit). False (and
+## nothing moved) when the two cannot cover it. An open market session's proceeds are not drawn on (Q13: not
+## withdrawable until the session is settled).
 func _charge(s: Dictionary, amount: int) -> bool:
-	var from_till := mini(maxi(0, amount - w.player.coins), stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0)))
-	if w.player.coins + from_till < amount:
+	var from_till := mini(amount, stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0)))
+	if maxi(0, amount - from_till) > w.spendable(w.player):
 		return false
 	s.till = int(s.get("till", 0)) - from_till
 	w.player.coins += from_till
@@ -987,4 +1013,4 @@ func tills() -> int:
 		t += int(w.stalls[id].get("till", 0))
 	for s in shops():
 		t += int(s.get("till", 0))
-	return t
+	return t + money.front_tills()
