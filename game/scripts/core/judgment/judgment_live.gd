@@ -126,7 +126,7 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	j._cu_read(seller)                          # the whole ledger is read below
 	var d0 := j.disposition(seller, first)
 	var best := int(dc.disposition_mid)
-	for s in (j.ledgers.get(seller, {}) as Dictionary):
+	for s in j.subjects(seller):
 		if int(s) != first:
 			best = maxi(best, j.disposition(seller, int(s)))
 	var gain := JudgmentMath.mul_div(wd, best, 1000) - JudgmentMath.mul_div(wd, d0, 1000)
