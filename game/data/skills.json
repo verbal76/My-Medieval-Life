@@ -132,7 +132,7 @@
       "8": {"effects": {"bonus_chance": 0.15, "craft_time": 0.65}},
       "10": {"text": "Master healer", "effects": {"save_chance": 0.3, "bonus_chance": 0.25}}
     }},
-    "law": {"name": "Law", "about": "Law starts at nothing for everyone. You learn it from the reeve, who will teach you one lesson a day up to level 3 (ask for a lesson when you talk to the reeve). Couriers who carry and witness formal documents will learn it by that work once courier notaries are in the game.", "tiers": {
+    "law": {"name": "Law", "about": "Law starts at nothing for everyone. You learn it from the reeve, who will teach you one lesson a day up to level 3, and from the chapel's preacher, who teaches further (ask for a lesson when you talk to them). A courier learns it by witnessing signatures and carrying signed documents home, and the village's booth keepers take lessons until they know enough to notarise: a courier needs Law 2 to carry a formal contract.", "tiers": {
       "1": {"text": "Witness and carry formal documents"},
       "2": {"text": "Notarise formal contracts for parties who cannot meet"},
       "3": {"text": "The reeve teaches the law up to here"}

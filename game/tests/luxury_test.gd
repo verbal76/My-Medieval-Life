@@ -25,6 +25,7 @@ func _init() -> void:
 	test_rules()
 	test_stock_limit()
 	test_player()
+	test_player_food()
 	test_save_and_determinism()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -267,6 +268,54 @@ func test_player() -> void:
 			crafted += 1
 	p.coins = 1000
 	check(p.inv.category_cap > 0 and Luxury.refusal(w, p, "jewellery").contains("inventory full"), "with the crafted tab of the pack full, the jewellery is refused: " + Luxury.refusal(w, p, "jewellery"))
+
+
+## REG-BUY-01 parity: the player buys food at the wagon like the households and businesses do, at the cheapest trader's price.
+func test_player_food() -> void:
+	var w := _world(1)
+	var p := w.player
+	p.coins = 1000
+	w.minutes = 2 * 1440.0 + 13.0 * 60.0               # day 2: not a visit day
+	check(CaravanFood.offers(w).is_empty() and CaravanFood.refusal(w, p, "wheat") == "The caravan is not here.", "food: when the caravan is not in the village the wagon offers none")
+	w.minutes = 1 * 1440.0 + 13.0 * 60.0               # day 1, 13:00: the first visit
+	var road: Array = w.regions.visiting(w.day())
+	var wul: OffMapSettlement = w.regions.by_id["wulstead"]
+	(wul.trader().stock as Dictionary)["wheat"] = 20            # fixture: the trader holds wheat released by its settlement's businesses
+	(w.regions.by_id["garton"].trader().stock as Dictionary)["wheat"] = 20
+	(w.regions.by_id["garton"].trader().stock as Dictionary)["bread"] = 5
+	wul.reopen_books()
+	w.regions.by_id["garton"].reopen_books()
+	var seller: OffMapSettlement = w.regions.food_seller("wheat", road)
+	check(seller != null and CaravanFood.offers(w).any(func(o): return o.id == "wheat" and int(o.price) == seller.food_price("wheat")), "the wagon offers wheat at the cheapest trader's price (%d)" % (seller.food_price("wheat") if seller != null else -1))
+	var net0 := _net(w)
+	var coins0 := w.total_coins()
+	var held0 := seller.trader_has("wheat")
+	var till0: int = int(seller.trader().till)
+	var price := seller.food_price("wheat")
+	var imp0 := int(w.stats.get("imported_wheat", 0))
+	check(CaravanFood.buy(w, p, "wheat") == "" and p.inv.count("wheat") >= 1 and p.coins == 1000 - price, "the player buys a unit of wheat for %d coins" % price)
+	check(seller.trader_has("wheat") == held0 - 1 and int(seller.trader().till) == till0 + price, "it left that trader's stock and the coins entered its till")
+	check(w.total_coins() == coins0 - price and _net(w) == net0 and int(w.stats.get("imported_wheat", 0)) == imp0 + 1, "the coins left the village, the unit is booked as imported; nothing made")
+	for s: OffMapSettlement in w.regions.list:
+		check(s.audit() == "", "%s's books balance" % s.name)
+	p.coins = 0
+	check(CaravanFood.buy(w, p, "wheat") == "You need %d coins." % seller.food_price("wheat"), "without the coins nothing is sold")
+	p.coins = 1000
+	for s: OffMapSettlement in w.regions.list:
+		s.trader().stock.erase("cheese")
+	check(CaravanFood.buy(w, p, "cheese") == "None of the traders here has any.", "what no trader holds cannot be bought")
+	check(CaravanFood.buy(w, p, "iron_bar") == "The caravan does not sell that.", "the wagon sells only the settlements' foods here")
+	var a := _world(3)
+	var b := _world(3)
+	for x in [a, b]:
+		x.player.coins = 500
+		x.minutes = 1 * 1440.0 + 13.0 * 60.0
+		(x.regions.by_id["garton"].trader().stock as Dictionary)["wheat"] = 20
+		(x.regions.by_id["garton"].trader().stock as Dictionary)["bread"] = 5
+		x.regions.by_id["garton"].reopen_books()
+		CaravanFood.buy(x, x.player, "wheat")
+		CaravanFood.buy(x, x.player, "bread")
+	check(JSON.stringify(a.to_dict(), "", true, true) == JSON.stringify(b.to_dict(), "", true, true), "two worlds of one seed given the same purchases end identical")
 
 
 func test_save_and_determinism() -> void:

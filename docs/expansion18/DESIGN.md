@@ -437,15 +437,14 @@ Formal contracts (Q18-13):
 
 Owner questions from this section:
 - **Q18-14:** which skill (an existing one, or a new "law" skill) gives a courier the standing to notarise, and at what level?
-- **Q18-15:** which businesses count as "major" for their own courier booth? Provisional: the market traders.
-- **Q18-16:** where should the village's booth stand when no market stall is free? Provisional: a stall the keeper builds
-  by the STALL rules near the market.
+- **Q18-15:** answered 2026-10-23: any business with a shop (section 11b).
+- **Q18-16:** answered 2026-10-23: a stall the keeper builds near the market by the STALL rules (section 11b).
 - The fee coefficients and the small-agreement threshold need numbers (Q18-11A-style review).
 
 Reconciliation with Build 17:
 - Special deliveries and formal goods contracts become CON-01 contracts (service terms per Q18-12).
 - The booths' stores and held coins join the census (`SettlementHoldings`) and `World.total_coins`.
-- The CourierService state goes into the save (done, section 11a); FormalAgreements' is still to do.
+- The CourierService state goes into the save (done, section 11a); FormalAgreements' records are saved with it (done, section 11b).
 - The courier window opens from the village booth (done, section 11a).
 
 ### 11a. Couriers in the live game (REG-COURIER-01)
@@ -478,10 +477,55 @@ village (the fixture tests `courier_test.gd` and `contract_sign_test.gd` still d
 - **Saves.** Optional World key `couriers` (booths with their stores and deposits, routes, deliveries, contacts, id counter); no
   save-version change; an older save loads with the five booths and nothing in flight, and the village booth opens at the next dawn.
 - **Player.** A context action beside the village booth opens the courier window (`main.gd`); the window offers deposits waiting there.
-- **Not done.** Villagers never book a courier themselves (no existing NPC decision path does); shops cannot open booths of their own
-  (Q18-15, "any business with a shop"); `FormalAgreements` (the notary path) is not wired in the loop and not saved; a settlement
-  party hires out no carts or couriers (Q18-12 left that open; `carts_for_hire` stays false); the fee coefficients stay the provisional
+- **Done since (section 11b).** Shop booths (Q18-15), the villagers' own postings, the notary path with Law, the Law lessons for booth
+  keepers, settlement carters and the player's food at the wagon (REG-BUY-01 parity). The fee coefficients stay the provisional
   X18-FEES values.
+
+### 11b. Shop booths, villagers' postings, signing and carters (X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL, Q18-10, Q18-15)
+
+All of this is in `couriers.gd`, `formal_contracts.gd`, `law.gd` and the courier window; `tests/courier_live_test.gd` proves it
+(`test_shop_booths`, `test_near_market_booth`, `test_notary_live`, `test_law_lessons`, `test_villagers_post`,
+`test_settlement_carriage`). Agent decisions are provisional and listed in `docs/DECISIONS.md` (2026-10-23, courier items).
+- **Shop booths (Q18-15, "any business with a shop").** `open_shop_booth(owner)`: a business (`is_business`: a trade that buys and sells,
+  or one that keeps a stall) or the player with a market stall they built opens a booth at its shop (its market stall or workplace),
+  kept by its owner, with its own route to each of the five settlements. The route is carried by the village booth's keeper
+  (`route.carrier`), who is paid the flat fee: the owner never pays himself and nobody carries for nothing. Goods wait in the shop
+  booth's store, deposits wait at it (`job.booth`). A dead owner's booth passes to the stall's new tenant, else closes with its
+  routes once it holds nothing and no delivery waits on it (`_tidy_shop_booths`). Booths are opened when wanted (a business's first
+  posting, the player's action beside their stall), not for every shop at once; older saves load as before.
+- **Near the market (Q18-16).** The village booth is a free market stall, else a stall its keeper builds near the market
+  (`Stalls.find_site`, the STALL rules), the keeper being the first hireable villager who holds the planks.
+- **Villagers use couriers.** `villagers_post` (daily): a merchant or smith (the caravan's own rule, `NPCBrain.export_caps`: what is held
+  beyond half of the most they stock; never food, never the village's own tools) that has dealt with a settlement's trader and holds
+  surplus the settlement lacks now (`OffMapSettlement.wants`, net of what is in flight), within what the trader's till pays, sends it
+  from its own booth by the regular route, asking the price the caravan pays on arrival, and pays the flat fee. One delivery in flight
+  a business. Only small payments (a payment above the line is a formal contract and a route cannot carry one). Deterministic.
+- **Signing (X18-Q13).** A delivery that asks for a payment above `contracts.small_value` is formal (`is_formal`): it is refused on a
+  regular route and by a courier with no Law (`Law.qualified`); a special delivery carries a document (`CourierService.agreements`,
+  `FormalAgreements` records, saved): the sender signs before the notary at booking, the recipient on arrival
+  (`sign_before_notary`, only while the notary holds it), the notary brings it home (`bring_home`) and only then it binds. A
+  recipient who will not sign (cannot pay, refuses) leaves it rejected and the goods return; a notary who dies interrupts it
+  and the fee goes back. The notarial fee is part of the special fee (X18-FEES `notary_fee`). CON-01's formal contracts (all between
+  villagers) stay face to face. Land, house and manor sales are in person only (talk and deal windows). A small payment needs no
+  document.
+- **Law (LAW-SKILL).** Witnessing and carrying (`Law.witnessed`, `Law.carried`) raise it; the reeve and the preacher teach
+  (`Law.teach`, one lesson a day); the village booth's keeper takes the lessons (`keepers_learn`, daily) until Law 2, the notary
+  level (provisional); the courier form shows each courier's Law. The player can learn it from the reeve and the preacher; the player
+  does not yet carry documents (there is no player courier job).
+- **Carters (Q18-10, "a willing carter, negotiated and paid; never free").** `carriers(sender, settlement)`: the village booths' keepers
+  and the trader of a settlement the sender has dealt with, which carries to its own settlement on its way home, or anywhere if its
+  party has `carts_for_hire` (the hook stays off in the live game: nothing is turned on globally, the regional market is
+  unchanged). Its fee is the special fee worked out from the work and is paid when the work is done; a trader has no Law and
+  so cannot notarise.
+- **Food at the wagon (REG-BUY-01 parity).** `CaravanFood` (`caravan_food.gd`): the player buys the settlements' foods and raw meat
+  one unit at a time from the cheapest trader on the road, at its floating price, from what it holds (the settlement's selling
+  policy REG-BUY-P1 has already decided what its businesses released); the coins go into its till and out of the village
+  (`coin_sources`, `caravan_coins_out`, `imported_<item>`).
+- **Saves.** Optional `agreements` in the courier service's dict, and `shop`, `carrier`, `booth`, `agreement` keys on booths, routes
+  and deliveries; no version change.
+- **Not done.** A player courier job (carrying documents oneself); a settlement's trader carrying a document; villagers sending by
+  special delivery or to people (not only settlement traders) or buying from a settlement through a courier; coins owed;
+  CON-01 contracts with a party in another settlement.
 
 ## 12. The five neighbouring settlements and their traders (SET-C-SIM, SET-C-FIVE, ECON-P1.3; owner 2026-10-23)
 

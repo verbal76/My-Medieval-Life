@@ -3998,9 +3998,7 @@ func caravan() -> void:
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
-		var caps: Dictionary = BUYS.get(buy_role(o), {})
-		if o.job == "smith":
-			caps = {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
+		var caps: Dictionary = export_caps(o)
 		for id in o.inv.ids():
 			if not caps.has(id) or NOT_EXPORTED.has(id) or (keep_food and (FOOD.has(id) or id == "meat")):
 				continue
@@ -4071,6 +4069,14 @@ func restock_cost(o: NPC) -> int:
 ## owner 2026-10-21; the measure is an agent proposal): the share of its holding of `id` that is surplus over what
 ## it keeps (0 to 1), plus the share of its inputs' cost (`restock`) its coins cannot pay (0 to 1). A seller well
 ## stocked, or with the coins to restock, needs the sale less than one short of its trade's inputs and coins.
+## What the caravan, and the couriers a business posts goods by (CourierService.villagers_post), take from a merchant or smith: item ->
+## the most they stock; their surplus is what they hold beyond half of it.
+func export_caps(o: NPC) -> Dictionary:
+	if o.job == "smith":
+		return {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
+	return BUYS.get(buy_role(o), {})
+
+
 func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
 	var held := maxi(1, o.inv.count(id))
 	var surplus := clampf(float(extra) / float(held), 0.0, 1.0)

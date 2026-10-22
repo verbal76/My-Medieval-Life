@@ -80,7 +80,7 @@ def load(root=ROOT):
     brain = (core / "npc_brain.gd").read_text()
     ctx["buys"] = gd_const(brain, "BUYS")
     ctx["not_exported"] = gd_const(brain, "NOT_EXPORTED")
-    ctx["smith_caps"] = ast.literal_eval(re.search(r"caps = (\{[^}]*\})", func_body(brain, "caravan")).group(1))
+    ctx["smith_caps"] = ast.literal_eval(re.search(r"return (\{[^}]*\})", func_body(brain, "export_caps")).group(1))
     ctx["manor_materials"] = gd_const((core / "manor_work.gd").read_text(), "MATERIALS")
     ctx["fell_logs"] = int(re.search(r"return (\d+) \+ bonus", func_body((core / "world.gd").read_text(), "fell")).group(1))
     return ctx

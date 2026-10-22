@@ -250,7 +250,8 @@ func test_deposit_and_rejection() -> void:
 	# rejected: the recipient cannot pay what is asked
 	a.inv.add("plank", 2)
 	var before_r := totals()
-	var poor_ask := rec.coins + 1000
+	var poor_ask := rec.coins + 1000                 # (a formal payment: only a notary may carry it, so the courier is given the legal standing)
+	courier.skills["law"] = Skills.xp_for_level(int(CourierService.cfg().notary.min_level))
 	var r := cs.book_special({"sender": ref(a), "recipient": ref(rec), "courier": ref(courier), "items": {"plank": 2},
 		"collect": {"kind": "coins", "amount": poor_ask}}, 30)
 	var p0 := a.inv.count("plank")
