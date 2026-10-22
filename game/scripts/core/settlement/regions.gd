@@ -20,6 +20,9 @@ var by_id: Dictionary = {}
 var day := -1                        # the last day stepped
 var migrated_coins := 0              # coins an older save's caravan purse brought (traders' tills): outside coins that existed
 var world_seed := 0
+var moves: Array = []                # MIGRATE-18: the last Migration.LOG_MAX moves between the village and a settlement: {day, settlement, dir ("in" = into the village), reason, people, coins, goods}
+var move_counts: Dictionary = {}     # "<dir>:<reason>" -> people moved, for good
+var suits: Dictionary = {}           # MIGRATE-18 marriage across the road: "<settlement>|<dir>" -> {pair, since}, the pair meeting at the caravan and the day they began
 var journal: Array = []              # the parties' exchange lines (SettlementParty.deal): {day, party, kind, item, n, coins, with}; not saved
 var party_options := {}              # fixtures' settings per party id (SettlementParty.option); not saved
 
@@ -366,9 +369,35 @@ func summary() -> Array:
 	return list.map(func(s): return s.summary())
 
 
+## A move between the village and a settlement (Migration): into the log and the counts.
+func log_move(m: Dictionary) -> void:
+	moves.append(m)
+	if moves.size() > Migration.LOG_MAX:
+		moves.pop_front()
+	var k := "%s:%s" % [m.dir, m.reason]
+	move_counts[k] = int(move_counts.get(k, 0)) + int(m.people)
+
+
+## People who moved from the village to the settlements, net, as the settlements' books say (their `migrants_in` less `migrants_out`).
+func net_migrants_from_village() -> int:
+	var n := 0
+	for s: OffMapSettlement in list:
+		n += int(s.flows.migrants_in) - int(s.flows.migrants_out)
+	return n
+
+
+## The same, as the log's counts say (people out of the village less people into it): must equal net_migrants_from_village.
+func net_migrants_counted() -> int:
+	var n := 0
+	for k in move_counts:
+		n += int(move_counts[k]) * (1 if str(k).begins_with("out:") else -1)
+	return n
+
+
 # ------------------------------------------------------------------ saving ----------------
 func to_dict() -> Dictionary:
-	return {"format": FORMAT, "day": day, "migrated_coins": migrated_coins, "settlements": list.map(func(s): return s.to_dict())}
+	return {"format": FORMAT, "day": day, "migrated_coins": migrated_coins, "settlements": list.map(func(s): return s.to_dict()),
+		"moves": moves.duplicate(true), "move_counts": move_counts.duplicate(), "suits": suits.duplicate(true)}
 
 
 ## The settlements of a save's "regions" section; an unknown format is refused (null), never reinterpreted.
@@ -381,4 +410,11 @@ static func from_dict(d: Dictionary, seed_: int) -> Regions:
 	r.migrated_coins = int(d.get("migrated_coins", 0))
 	for sd in d.settlements:
 		r._add(OffMapSettlement.from_dict(sd))
+	for m in d.get("moves", []):                              # MIGRATE-18 (optional keys: an older save has no moves)
+		r.moves.append({"day": int(m.day), "settlement": str(m.settlement), "dir": str(m.dir), "reason": str(m.reason),
+			"people": int(m.people), "coins": int(m.coins), "goods": int(m.goods)})
+	for k in d.get("move_counts", {}):
+		r.move_counts[str(k)] = int(d.move_counts[k])
+	for k in d.get("suits", {}):
+		r.suits[str(k)] = {"pair": str(d.suits[k].pair), "since": int(d.suits[k].since)}
 	return r

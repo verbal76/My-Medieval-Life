@@ -343,3 +343,12 @@ five (market 6.4, production 1.2, wages and tax 0.5, eating 0.9, prices 0.3), so
 Barter and credit (TRADE-CREDIT), migration (MIGRATE-18), courier booths and visiting in person, births and old age in the
 settlements, the village buying food from them, tool shortage slowing work, newcomers decoupled from the caravan, a longer chain of
 trade among the five than the traders' wholesale round. Seams are named in DESIGN.md section 12.
+
+## MIGRATE-18 and the settlements' tax (DVW-B5), done
+
+People move between the village and the five settlements for work, land, marriage or hunger (`Migration`, SETTLEMENTS.md section 6b,
+INT-310 to INT-312), and each settlement uses the village's banded, announced tax rule with its own state and journal (INT-313).
+Tests: `migration_test` (92 checks), `tax_test` (34), `regions_test` and `settlement_life_test` unchanged in what they claim. The
+30-day runs (seeds 1 and 2) balanced to the coin, good and person: seed 1 saw two marriages into the village, seed 2 two in and one
+out; no other reason met its signal in 30 days (no famine, no one out of work with no place open, no household waiting on a home).
+Not done: experience hours do not travel; a settlement has no houses, so land draws people in only after a marriage there.

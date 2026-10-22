@@ -1490,6 +1490,9 @@ func _sync_sprites() -> void:
 			actors.add_child(s)
 			sprites[n.id] = s
 		var near := n.pos.distance_to(cam) < 30.0
+		if not n.alive and n.away != "":
+			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls
+			continue
 		if not n.alive:
 			# the body falls, flickers and is gone
 			var left: float = dying.get(n.id, FLICKER) - get_process_delta_time()

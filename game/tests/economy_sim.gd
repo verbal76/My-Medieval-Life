@@ -127,10 +127,10 @@ func _init() -> void:
 			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
 			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
 			var bad: Dictionary = samples[-1]
-			if str(bad.regions.audit) != "" or int(bad.regions.coins_mismatch) != 0 or int(bad.regions.goods_mismatch) != 0:
+			if str(bad.regions.audit) != "" or int(bad.regions.coins_mismatch) != 0 or int(bad.regions.goods_mismatch) != 0 or int(bad.regions.people_mismatch) != 0:
 				reached = d + 1
-				print("FATAL day %d seed %d: the neighbouring settlements' books: %s (coins mismatch %d, goods mismatch %d)" % [reached, seed,
-					str(bad.regions.audit), int(bad.regions.coins_mismatch), int(bad.regions.goods_mismatch)])
+				print("FATAL day %d seed %d: the neighbouring settlements' books: %s (coins mismatch %d, goods mismatch %d, people mismatch %d)" % [reached, seed,
+					str(bad.regions.audit), int(bad.regions.coins_mismatch), int(bad.regions.goods_mismatch), int(bad.regions.people_mismatch)])
 				break
 			if int(bad.currency.leak) != 0 or not (bad.ledger.items as Dictionary).is_empty():
 				reached = d + 1
@@ -719,7 +719,9 @@ func _regions(start: Dictionary) -> Dictionary:
 		var f := int(made.get(k, 0)) - int(used.get(k, 0)) + int(in_v.get(k, 0)) - int(out_v.get(k, 0))
 		if d != f:
 			bad_goods[k] = d - f
-	return {"audit": r.audit(), "coins": coins_now, "coins_start": int(start.regions_coins), "coins_delta": coins_now - int(start.regions_coins),
+	# MIGRATE-18: people crossing the boundary: the village's count out less in is what the settlements took in less sent
+	return {"people_mismatch": r.net_migrants_counted() - r.net_migrants_from_village(), "migrants_in": int(_st("migrants_in")), "migrants_out": int(_st("migrants_out")),
+		"moves": r.move_counts.duplicate(), "audit": r.audit(), "coins": coins_now, "coins_start": int(start.regions_coins), "coins_delta": coins_now - int(start.regions_coins),
 		"village_paid_net": net, "coins_mismatch": (coins_now - int(start.regions_coins)) - net,
 		"goods_mismatch": bad_goods.size(), "goods_mismatch_items": bad_goods, "population": r.population(),
 		"settlements": r.summary(), "made": made, "used": used, "bought_from_village": in_v, "sold_to_village": out_v}
@@ -996,6 +998,7 @@ func _print_sample(s: Dictionary) -> void:
 		per.append("%s %d people %dc (treasury %d, trader %d, %d hungry, %d died)" % [st.id, st.population, st.coins, st.treasury, st.trader, st.hungry, st.deaths])
 	print("  neighbours: %d people, %d coins (village paid net %d); %s%s" % [rg.population, rg.coins, rg.village_paid_net, "; ".join(per),
 		("  AUDIT " + str(rg.audit)) if str(rg.audit) != "" else ""])
+	print("  migration (MIGRATE-18): %d to the settlements, %d to the village; by reason %s" % [rg.migrants_out, rg.migrants_in, JSON.stringify(rg.moves)])
 
 
 ## What holds back births, partnering and new households (EQ-07; read only): beds against people, couples

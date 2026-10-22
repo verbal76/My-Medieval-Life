@@ -259,8 +259,8 @@ func test_world_caravan() -> void:
 	var paid_to_village := 0
 	var paid_by_village := 0
 	for s: OffMapSettlement in on_road:
-		paid_to_village += int(s.flows.coins_to_village)
-		paid_by_village += int(s.flows.coins_from_village)
+		paid_to_village += int(s.flows.coins_to_village) + int(s.flows.outside_coins_out)      # (and the purses of people who moved, MIGRATE-18)
+		paid_by_village += int(s.flows.coins_from_village) + int(s.flows.outside_coins_in)
 		check(int(s.trader().till) >= int(OffMapSettlement.rules().trader_reserve_floor) or int(s.trader().till) == tills0[s.id], "%s's trader paid out only coins it held (till %d from %d)" % [s.name, int(s.trader().till), tills0[s.id]])
 		check(s.audit() == "", "%s: its books balance after the visit" % s.name)
 	check(w.total_coins() - village0 == paid_to_village - paid_by_village, "the village's coins changed by exactly what the traders paid and were paid")
@@ -274,6 +274,10 @@ func test_world_caravan() -> void:
 			sold_to_village[k] = int(sold_to_village.get(k, 0)) + int(s.flows.to_village[k])
 		for k in s.flows.from_village:
 			bought_from_village[k] = int(bought_from_village.get(k, 0)) + int(s.flows.from_village[k])
+		for k in s.flows.outside_out:                       # what travellers carried in (MIGRATE-18) crosses the boundary too
+			sold_to_village[k] = int(sold_to_village.get(k, 0)) + int(s.flows.outside_out[k])
+		for k in s.flows.outside_in:
+			bought_from_village[k] = int(bought_from_village.get(k, 0)) + int(s.flows.outside_in[k])
 	var imp := 0
 	var exp := 0
 	for k in w.stats.keys():
@@ -300,7 +304,10 @@ func test_world_caravan() -> void:
 		s.trader().till = 0
 		s.start.coins = s.coins()          # the books reopen with empty tills
 	w2.brain.caravan()
-	check(int(w2.stats.get("caravan_coins_in", 0)) == 0 and w2.coin_sources <= 0, "traders with empty tills buy nothing from the village (no allowance makes up for it); the village only paid them")
+	var w2_paid := 0
+	for s: OffMapSettlement in w2.regions.list:
+		w2_paid += int(s.flows.coins_to_village)
+	check(w2_paid == 0 and int(w2.stats.get("caravan_coins_in", 0)) == int(w2.stats.get("migrant_coins_in", 0)), "traders with empty tills buy nothing from the village (no allowance makes up for it); the village only paid them")
 	var w3 := _world(1)
 	for s: OffMapSettlement in w3.regions.list:
 		var m: Dictionary = s.trader()
@@ -308,9 +315,9 @@ func test_world_caravan() -> void:
 		s.start.goods = s.goods()
 	var exp3 := 0
 	w3.brain.caravan()
-	for k in w3.stats:
-		if str(k).begins_with("imported_"):
-			exp3 += int(w3.stats[k])
+	for s: OffMapSettlement in w3.regions.list:
+		for k in s.flows.to_village:
+			exp3 += int(s.flows.to_village[k])
 	check(exp3 == 0, "traders with nothing on their carts sell the village nothing (an empty trip)")
 	# the visiting rhythm: the nearer come more often
 	var counts := {}

@@ -170,12 +170,35 @@ leave flow lines its audit checks. Nothing calls the market from the daily loop 
 settlement's booth is kept by its trader party, regular routes run from the village to each (days from the settlement's miles), and a
 villager who really dealt with the trader may send goods to it (`DESIGN.md` section 11a).
 
+## 6b. People move between the village and the settlements (MIGRATE-18)
+
+Owner Q18-7, "Both ways, for reasons": villagers leave and outsiders arrive for work, land, marriage or hunger, taking their purses and
+goods; no new population mechanic and no change to any demographic rate (REG-DEMO-D1). `Migration` (`game/scripts/core/settlement/migration.gd`)
+runs on the caravan's visit day, first thing in `NPCBrain.caravan`, for each settlement whose trader is on the road (so the nearer places see
+more traffic and the road itself is not walked: a move is immediate on the day, provisional). For each settlement it tries each reason in
+both directions, at most one move (a person, a couple or a household) per reason, direction and settlement per visit, a pace and not a cap.
+
+| Reason | Villager leaves when | Outsider arrives when |
+|---|---|---|
+| Hunger | the household has under `relief_trigger_days` of food while the village is in famine (its own relief cannot cover it), and a settlement's food businesses hold food above their own claim | the settlement household is hungry and cannot buy a day's food, the village is out of famine with more than `reserve_days` of food in hand, and there is a home to lease or a room to share |
+| Work | an adult without a trade, in a household that cannot live on its income, finds no place open in the labour market, and a settlement business paid its workers at least `switch_to_at_least` a day last week | an adult of a settlement household that earned under `switch_below` a day for a week takes a village post nobody could fill (a succession vacancy past `succession_days` with no apprentice: a real migrant now fills it before a newcomer is made), else an open tool-free place that pays more than their household earned |
+| Land | the household's housing goal ("no home", or "crowded" with a grown member who would found a household) has waited on coins for `mobility_unsustainable_days`; a settlement whose land yields food above its claim takes them in (the off-map has no houses) | a settlement household formed by a marriage there can pay for a house on the manor's market by the village's rule (buy, else two weeks' rent) |
+| Marriage | a grown, unpartnered, willing woman meets a settlement man within the village's partnering ages and gap, and they have known each other `marry_min_days` (the pair meets at each caravan) | the same, a settlement woman and a village man whose house has a bed |
+
+A traveller keeps name, age, sex and skills; a settlement-born member gets a name drawn reproducibly from the settlement, day and sex, and
+the skills of the village's own starting rule (`Skills.start_xp`, PAR-01A) for their household's trade. The purse and the pack travel with
+them (and a whole household's pantry). Villagers who cannot go: the reeve, the sage, guards, clergy, tailor and barber, market traders (their stock is
+the market's), anyone tied to the player, the founding households. The villager who leaves is kept in the village's people as no longer
+alive with `away` set; their post and stall are handed on as after a death. Coins and goods cross exactly like the couriers' (INT-280): the
+village's `coin_sources`, `caravan_coins_in/out`, `exported_/imported_`, the settlement's `outside_*` flow lines, and people are counted on
+both sides (`Regions.move_counts` against the settlements' `migrants_in/out`). The settlement writes each move into its own journal,
+beside its tax announcements (DVW-B5: each settlement now uses the village's banded, announced tax rule, INT-313). INT-310 to INT-312.
+
 ## 7. What is not done yet
 
-Migration is separate (MIGRATE-18): nobody moves in or out of a settlement by marriage here, so marriages are within one settlement,
-and a settlement with few young people (Netherton) can shrink. Houses, partners from the village and elders at founding are not
-modelled.
+A settlement has no houses, so "land" draws a village household out only when it has waited for a home, and draws a settlement household in
+only after it has married there and can pay for a house. A settlement member's experience (hours worked) is not tracked, so it does not
+travel; the skills do. Visiting a settlement in person is Build 20 or later.
 
-Barter and credit between the village and these settlements (TRADE-CREDIT), people moving between them (MIGRATE-18), shops' own courier
-booths (Q18-15) and visiting a settlement in person (Build 20 or later, Q18-8) are separate registers; the seams for them are named in
-`docs/expansion18/DESIGN.md` section 10.
+Barter and credit between the village and these settlements (TRADE-CREDIT), shops' own courier booths (Q18-15) and visiting a settlement
+in person (Build 20 or later, Q18-8) are separate registers; the seams for them are named in `docs/expansion18/DESIGN.md` section 10.

@@ -48,7 +48,7 @@ const FLOW_COUNTS := ["coins_from_village", "coins_to_village", "road_coins_in",
 	"wage_short", "relief_units", "tax_households", "tax_businesses", "wages_paid", "official_pay", "horses_foaled",
 	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves", "births", "age_deaths", "households_formed",
 	"inheritances", "orphans_fostered", "regional_coins_in", "regional_coins_out",
-	"outside_coins_in", "outside_coins_out"]
+	"outside_coins_in", "outside_coins_out", "migrants_in", "migrants_out"]
 ## A member of a household (REG-DEMO-01): [born, sex, partnered, unwilling]. `born` is a settlement day number (negative before the
 ## first step), so age in years is (day - born) / the calendar's year length and needs no daily update; sex 1 is female; partnered 1
 ## means the member is one of the household's couple; unwilling 1 is a person who will not marry (decided once, at birth or founding).
@@ -56,6 +56,10 @@ const M_BORN := 0
 const M_SEX := 1
 const M_PAIR := 2
 const M_UNWILLING := 3
+## A member who came from, or went to, the village (MIGRATE-18) carries a fifth entry, [4]: {n: name, f: family, sk: {skill: xp}}, so
+## the person keeps their name and what they learned across the move. A member born here has only the four entries.
+const M_WHO := 4
+const JOURNAL_MAX := 100             # lines of the settlement's own journal kept (the village's log keeps 300)
 
 static var _data := {}
 static var _rules := {}               # _data.rules and _data.business_types, once loaded (the step reads them thousands of times)
@@ -82,6 +86,8 @@ var prices: Dictionary = {}          # item -> float, the market price (today's 
 var flows: Dictionary = {}
 var start: Dictionary = {}           # the opening books {coins, goods}
 var day := -1
+var tax: Dictionary = {}             # DVW-B5: the tax band and any announced change (TaxPolicy), this settlement's own; empty until the first step
+var journal: Array = []              # the settlement's own record: [{day, text}], oldest first (tax announcements, arrivals and departures); not the village log
 var _dem: Dictionary = {}            # today's requests and offers (not saved)
 var _sup: Dictionary = {}
 var _offers: Dictionary = {}         # item -> [{b, n}] while the market is open
@@ -167,7 +173,7 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 			var children := rng.randi_range(0, 3) if adults == 2 else rng.randi_range(0, 1)
 			var h := {"id": s.hh.size(), "trade": t, "adults": adults, "children": children,
 				"coins": rng.randi_range(int(data().rules.household_coins[0]), int(data().rules.household_coins[1])), "pantry": {"wheat": pantry_per * (adults + children)},
-				"credit": 0.0, "hungry": 0, "acc": {}, "alive": true, "inc": 0, "stay": 0}
+				"credit": 0.0, "hungry": 0, "acc": {}, "alive": true, "inc": 0, "stay": 0, "low": 0, "rate": 0.0, "landless": 0}
 			s.hh.append(h)
 	var quarry_out: Dictionary = spec.get("quarry", {})
 	var reserves: Dictionary = spec.get("reserves", {})
@@ -181,7 +187,7 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 			var T := btype(bt)
 			var b := {"type": bt, "workers": [], "till": int(tills.get(bt, int(data().rules.business_till))), "stock": {}, "reserves": {},
 				"out": (T.get("out", {}) as Dictionary).duplicate(), "acc": {}, "reserve": int(T.get("reserve", 12)),
-				"horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0}
+				"horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0, "rate": 0.0}
 			if bt == "quarry":
 				b.out = quarry_out.duplicate()
 				for k in reserves:
@@ -506,7 +512,7 @@ func _marry(wh: Dictionary, wj: int, mh: Dictionary, mj: int) -> void:
 		bt = "farm" if biz.has("farm") else str(biz.keys()[0])
 		trade = _trade_of(bt)
 	var h := {"id": hh.size(), "trade": trade, "adults": 2, "children": 0, "coins": 0, "pantry": {}, "credit": 0.0, "hungry": 0, "acc": {},
-		"alive": true, "inc": 0, "stay": 0, "mem": [wm, mm], "parents": [int(wh.id), int(mh.id)], "kids": []}
+		"alive": true, "inc": 0, "stay": 0, "mem": [wm, mm], "parents": [int(wh.id), int(mh.id)], "kids": [], "low": 0, "rate": 0.0, "landless": 1}
 	wm[M_PAIR] = 1
 	mm[M_PAIR] = 1
 	for src in [[wh, wj], [mh, mj]]:
@@ -699,6 +705,13 @@ func _lap(what: String, t0: int) -> int:
 	var t := Time.get_ticks_usec()
 	laps[what] = int(laps.get(what, 0)) + t - t0
 	return t
+
+
+## A line in the settlement's own journal (never the village log).
+func note(text: String) -> void:
+	journal.append({"day": day, "text": text})
+	if journal.size() > JOURNAL_MAX:
+		journal.pop_front()
 
 
 # --- market
@@ -1110,10 +1123,13 @@ func _pay_wages() -> void:
 
 func _taxes_and_officials() -> void:
 	var ob := _obligations()
-	var holiday := float(ob) * float(GameData.b("treasury_tax_holiday_days"))
-	var reserve := float(ob) * float(GameData.b("treasury_reserve_days"))
-	if float(gov.coins) < holiday:
-		var rate := float(GameData.b("tax_rate_low_treasury")) if float(gov.coins) < reserve else float(GameData.b("tax_rate_normal"))
+	# DVW-B5: the village's banded, announced rule (TaxPolicy), on this settlement's own treasury and wages; its announcements
+	# go to the settlement's own journal. Same rates, boundaries, margin and notice as the village.
+	var ts := TaxPolicy.step(tax, float(gov.coins), float(ob), day)
+	for line: String in ts.notes:
+		note(line)
+	var rate := float(ts.rate)
+	if rate > 0.0:
 		for h in hh:
 			if not h.alive:
 				continue
@@ -1164,6 +1180,11 @@ func _move_jobs() -> void:
 	for t in types:
 		var b: Dictionary = biz[t]
 		pay[t] = float(b.week) / 7.0 / maxf(1.0, float(_workers(b)))
+	for t in types:
+		biz[t].rate = _q(float(pay[t]))                      # MIGRATE-18: what a worker of the trade was paid a day last week (a place is open where it is high)
+	for h in hh:
+		h.rate = _q(float(h.inc) / 7.0)                      # and what the household earned a day: a week under `switch_below` is a week short of work
+		h.low = int(h.get("low", 0)) + 1 if float(h.rate) < float(_rules.switch_below) else 0
 	var best := ""
 	for t in types:
 		if t != "merchant" and _workers(biz[t]) > 0 and float(pay[t]) >= float(_rules.switch_to_at_least) and (best == "" or float(pay[t]) > float(pay[best])):
@@ -1559,6 +1580,172 @@ func summary() -> Dictionary:
 		"age_deaths": int(flows.age_deaths), "households_formed": int(flows.households_formed)}
 
 
+# ------------------------------------------------------------------ people moving to and from the village (MIGRATE-18) ----------------
+## What Migration (migration.gd) asks of a settlement. A traveller's record is {age (years), sex, unw, pair, born (the settlement day,
+## for a member born here), n, f, sk (name, family, skills: only for a person who came from the village)}.
+func _pack_of(m: Array, pair: int) -> Dictionary:
+	var out := {"age": _age(m), "sex": int(m[M_SEX]), "unw": int(m[M_UNWILLING]), "pair": pair, "born": int(m[M_BORN])}
+	if m.size() > M_WHO:
+		out.n = str(m[M_WHO].n)
+		out.f = str(m[M_WHO].f)
+		out.sk = (m[M_WHO].sk as Dictionary).duplicate()
+	return out
+
+
+## The member a traveller becomes here (always with the fifth entry: they keep their name and skills for good).
+func _member_of(p: Dictionary) -> Array:
+	return [day - roundi(float(p.age) * _yd), int(p.sex), int(p.get("pair", 0)), int(p.unw), {"n": str(p.n), "f": str(p.f), "sk": (p.sk as Dictionary).duplicate()}]
+
+
+func _cross_in(coins: int, goods: Dictionary, people: int) -> void:
+	flows.outside_coins_in += coins
+	for k in goods:
+		_add(flows.outside_in, k, int(goods[k]))
+	flows.migrants_in += people
+
+
+func _cross_out(coins: int, goods: Dictionary, people: int) -> void:
+	flows.outside_coins_out += coins
+	for k in goods:
+		_add(flows.outside_out, k, int(goods[k]))
+	flows.migrants_out += people
+
+
+## What would leave with member `j` of household `hi`: their share of its coins and pantry (all of it when they are its last
+## member, as in _marry). Nothing is changed.
+func person_load(hi: int, j: int) -> Dictionary:
+	var h: Dictionary = hh[hi]
+	var n: int = h.mem.size()
+	var goods := {}
+	for k in h.pantry:
+		var q: int = int(h.pantry[k]) if n == 1 else int(h.pantry[k]) / n
+		if q > 0:
+			goods[k] = q
+	return {"people": [_pack_of(h.mem[j], 0)], "coins": int(h.coins) if n == 1 else int(h.coins) / n, "goods": goods}
+
+
+## Member `j` leaves household `hi` with person_load's coins and goods; the household closes if they were its last.
+func release_person(hi: int, j: int) -> Dictionary:
+	var l := person_load(hi, j)
+	var h: Dictionary = hh[hi]
+	h.coins -= int(l.coins)
+	for k in l.goods:
+		_take(h.pantry, k, int(l.goods[k]))
+	_remove_member(h, j)
+	if h.mem.is_empty():
+		h.alive = false
+		h.credit = 0.0
+	_recount(h)
+	_cross_out(int(l.coins), l.goods, 1)
+	return l
+
+
+## What would leave with the whole of household `hi`.
+func household_load(hi: int) -> Dictionary:
+	var h: Dictionary = hh[hi]
+	var people := []
+	for m in h.mem:
+		people.append(_pack_of(m, int(m[M_PAIR])))
+	return {"people": people, "coins": int(h.coins), "goods": (h.pantry as Dictionary).duplicate()}
+
+
+## The whole household leaves with its coins and pantry; it is dissolved (its business keeps its other households).
+func release_household(hi: int) -> Dictionary:
+	var l := household_load(hi)
+	var h: Dictionary = hh[hi]
+	h.coins = 0
+	h.pantry = {}
+	h.credit = 0.0
+	h.mem = []
+	h.alive = false
+	_recount(h)
+	_cross_out(int(l.coins), l.goods, l.people.size())
+	return l
+
+
+## A household arrives and joins business `bt` (a settlement has no houses: a new household needs none). Returns its id.
+func receive_household(people: Array, coins: int, goods: Dictionary, bt: String) -> int:
+	if not biz.has(bt) or bt == "merchant":
+		bt = "farm" if biz.has("farm") else str(biz.keys()[0])
+	var mem := []
+	for p in people:
+		mem.append(_member_of(p))
+	var h := {"id": hh.size(), "trade": _trade_of(bt), "adults": 0, "children": 0, "coins": coins, "pantry": goods.duplicate(), "credit": 0.0,
+		"hungry": 0, "acc": {}, "alive": true, "inc": 0, "stay": 0, "mem": mem, "parents": [], "kids": [], "low": 0, "rate": 0.0, "landless": 0}
+	hh.append(h)
+	biz[bt].workers.append(h.id)
+	_recount(h)
+	_cross_in(coins, goods, people.size())
+	return int(h.id)
+
+
+## One person arrives to work in business `bt`: they join its smallest living worker household.
+func receive_person(p: Dictionary, coins: int, goods: Dictionary, bt: String) -> int:
+	if not biz.has(bt) or bt == "merchant":
+		bt = "farm" if biz.has("farm") else str(biz.keys()[0])
+	var host := -1
+	for i in biz[bt].workers:
+		if hh[i].alive and (host < 0 or hh[i].mem.size() < hh[host].mem.size()):
+			host = int(i)
+	if host < 0:
+		return receive_household([p], coins, goods, bt)
+	var h: Dictionary = hh[host]
+	h.mem.append(_member_of(p))
+	h.coins += coins
+	for k in goods:
+		_add(h.pantry, k, int(goods[k]))
+	_recount(h)
+	_cross_in(coins, goods, 1)
+	return host
+
+
+## A bride from the village marries the member `gj` of household `gi`: they found a household of their own with an equal share of his
+## household's coins and pantry and everything she brought, take up his trade and join its business (as _marry does for two members).
+func wed_in(gi: int, gj: int, p: Dictionary, coins: int, goods: Dictionary) -> int:
+	var gh: Dictionary = hh[gi]
+	var gm: Array = gh.mem[gj]
+	var trade := str(gh.trade)
+	var bt := ""
+	if trade != "official" and TRADE_BIZ.has(trade) and biz.has(TRADE_BIZ[trade]):
+		bt = TRADE_BIZ[trade]
+	else:
+		bt = "farm" if biz.has("farm") else str(biz.keys()[0])
+		trade = _trade_of(bt)
+	var bm := _member_of(p)
+	bm[M_PAIR] = 1
+	gm[M_PAIR] = 1
+	var h := {"id": hh.size(), "trade": trade, "adults": 2, "children": 0, "coins": coins, "pantry": goods.duplicate(), "credit": 0.0, "hungry": 0,
+		"acc": {}, "alive": true, "inc": 0, "stay": 0, "mem": [bm, gm], "parents": [int(gh.id)], "kids": [], "low": 0, "rate": 0.0, "landless": 1}
+	var n: int = gh.mem.size()
+	var cs: int = int(gh.coins) if n == 1 else int(gh.coins) / n
+	gh.coins -= cs
+	h.coins += cs
+	for k in gh.pantry.keys():
+		var q: int = int(gh.pantry[k]) if n == 1 else int(gh.pantry[k]) / n
+		if q > 0:
+			_take(gh.pantry, k, q)
+			_add(h.pantry, k, q)
+	if n == 1:
+		h.credit = _q(float(gh.credit))
+		gh.credit = 0.0
+	gh.mem.remove_at(gj)
+	gh.kids.append(h.id)
+	hh.append(h)
+	biz[bt].workers.append(h.id)
+	flows.households_formed += 1
+	if gh.mem.is_empty():
+		gh.alive = false
+		for k in gh.pantry:
+			_add(h.pantry, k, int(gh.pantry[k]))
+		gh.pantry = {}
+		h.coins += int(gh.coins)
+		gh.coins = 0
+	_recount(gh)
+	_recount(h)
+	_cross_in(coins, goods, 1)
+	return int(h.id)
+
+
 # ------------------------------------------------------------------ saving ----------------
 ## Take the present coins, goods and horses as the opening books and clear the flow lines (a test that sets a purse or a
 ## stock by hand does this so audit() measures from there).
@@ -1589,7 +1776,8 @@ func to_dict() -> Dictionary:
 	_clean(gv.acc)
 	return {"id": id, "name": name, "kind": kind, "gov_name": gov_name, "miles": miles, "x": pos.x, "y": pos.y,
 		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv,
-		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day}
+		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
+		"tax": tax.duplicate(true), "journal": journal.duplicate(true)}
 
 
 static func from_dict(d: Dictionary) -> OffMapSettlement:
@@ -1609,10 +1797,13 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 			c[k] = int(c[k])
 		c.inc = int(c.get("inc", 0))
 		c.stay = int(c.get("stay", 0))
+		c.low = int(c.get("low", 0))                       # MIGRATE-18 (optional keys: an older save has none)
+		c.rate = float(c.get("rate", 0.0))
+		c.landless = int(c.get("landless", 0))
 		c.parents = (c.get("parents", []) as Array).map(func(x): return int(x))
 		c.kids = (c.get("kids", []) as Array).map(func(x): return int(x))
 		if c.has("mem"):
-			c.mem = (c.mem as Array).map(func(m): return [int(m[0]), int(m[1]), int(m[2]), int(m[3])])
+			c.mem = (c.mem as Array).map(func(m): return _member_from(m))
 		c.credit = float(c.credit)
 		c.pantry = _ints(c.pantry)
 		var acc := {}
@@ -1636,6 +1827,7 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 			b[k] = int(b[k])
 		b.paid = int(b.get("paid", 0))
 		b.week = int(b.get("week", 0))
+		b.rate = float(b.get("rate", 0.0))
 		b.workers = (b.workers as Array).map(func(x): return int(x))
 		b.stock = _ints(b.stock)
 		b.reserves = _ints(b.reserves)
@@ -1661,8 +1853,30 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 	for k in FLOW_COUNTS:
 		s.flows[k] = int(d.flows.get(k, 0))
 	s._toll_acc = float(d.get("toll_acc", 0.0))
+	s.tax = (d.get("tax", {}) as Dictionary).duplicate(true)             # DVW-B5 (optional key: an older save starts in the band the treasury shows)
+	if s.tax.has("band"):
+		s.tax.band = int(s.tax.band)
+		var pd: Dictionary = s.tax.get("pending", {})
+		if not pd.is_empty():
+			pd.to = int(pd.to)
+			pd.announced = int(pd.announced)
+			pd.effective = int(pd.effective)
+	for e in d.get("journal", []):
+		s.journal.append({"day": int(e.day), "text": str(e.text)})
 	s.start = {"coins": int(d.start.coins), "goods": _ints(d.start.goods)}
 	return s
+
+
+## A member as saved: the four numbers, and the fifth entry (the person's name and skills) when they came from the village.
+static func _member_from(m: Array) -> Array:
+	var out := [int(m[0]), int(m[1]), int(m[2]), int(m[3])]
+	if m.size() > M_WHO and m[M_WHO] is Dictionary:
+		var w: Dictionary = m[M_WHO]
+		var sk := {}
+		for k in w.get("sk", {}):
+			sk[str(k)] = int(w.sk[k])
+		out.append({"n": str(w.get("n", "")), "f": str(w.get("f", "")), "sk": sk})
+	return out
 
 
 static func _ints(d: Dictionary) -> Dictionary:
