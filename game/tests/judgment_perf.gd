@@ -14,10 +14,12 @@ extends SceneTree
 ## daily update's worst tick, the cost of a weighed choice, memory, store sizes and save size and time, and checks the
 ## bounds the design promises (memories within capacity, facts within the horizon), the save round trip, spread = now,
 ## and determinism. It does not assert speed: the numbers are measurements for the budgets (docs/expansion19/DESIGN.md).
-##   godot --headless --path game --script res://tests/judgment_perf.gd [-- --sizes 100,500,2000 --days 40 --rates live,stress]
+##   godot --headless --path game --script res://tests/judgment_perf.gd [-- --sizes 100,500,2000 --days 40 --rates live,stress
+##       --variants spread,now,scheduled]   (fewer variants: a narrower measurement; spread = now is checked only when both run)
 
 var failures := 0
 var checks := 0
+var breakdown := false              # --breakdown: the store's memory structure by structure (reported runs only)
 const RATES := {"live": 0.0064, "stress": 0.5}   # significant events a person a day
 const WITNESSES := 4
 const MEETINGS_PER_PERSON := 3      # hours a day spent with someone (Relations.share pairs), 7:00 to 21:00
@@ -46,18 +48,24 @@ func _init() -> void:
 		days = int(args[args.find("--days") + 1])
 	if "--rates" in args:
 		rates = Array(str(args[args.find("--rates") + 1]).split(","))
+	breakdown = "--breakdown" in args
+	var variants := ["spread", "now", "scheduled"]
+	if "--variants" in args:
+		variants = Array(str(args[args.find("--variants") + 1]).split(","))
 	var rows := []
 	for rate in rates:
 		for n in sizes:
 			var r := run(n, days, str(rate), true, "spread")
 			rows.append(r)
-			if n <= 500:
+			if n <= 500 and "now" in variants:
 				var now := run(n, days, str(rate), false, "now")
 				rows.append(now)
 				check(now.hash == r.hash, "%s, %d people: gossip spread over ticks ends in the same state as gossip told at once" % [rate, n])
+			if n <= 500 and "scheduled" in variants:
 				var sch := run(n, days, str(rate), false, "scheduled")
 				rows.append(sch)
 				print("%s, %d people: scheduled timing (a design option) differs from the hour timing by design: %s" % [rate, n, "same state" if sch.hash == r.hash else "different state"])
+				print("%s, %d people: scheduled against hour timing, choice by choice: %s" % [rate, n, JSON.stringify(_compare(r, sch))])
 	var a := run(sizes[0], mini(days, 10), str(rates[-1]), false)
 	var b := run(sizes[0], mini(days, 10), str(rates[-1]), false)
 	check(a.hash == b.hash, "determinism: the same %d-person run twice ends in the same state hash" % sizes[0])
@@ -67,6 +75,9 @@ func _init() -> void:
 		print("%-6s | %6d | %-9s | %6.1f | %6.2f | %6.2f | %9.2f | %6.2f | %5.2f / %5.2f / %6.2f | %15.2f | %17.2f | %9.1f | %8d | %7d | %6.1f | %7.0f | %7.1f | %7.1f" % [r.rate, r.n, r.gossip,
 			r.total_ms, r.ev_ms, r.gossip_ms, r.dec_ms, r.dawn_ms, r.p99_frame_ms, r.p999_frame_ms, r.max_frame_ms, r.idle_max_ms, r.max_update_ms, r.us_per_choice,
 			r.counts.memories, r.counts.ledgers, r.mem_mb, r.save_kb, r.save_ms, r.load_ms])
+	for r in rows:
+		r.erase("_chosen")
+		r.erase("_disp")
 	print("JSON " + JSON.stringify(rows))
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -88,7 +99,6 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 				social.set_kin(i, k)
 		social.set_friends(i, (i + 4) % n)
 		social.set_friends(i, (i + 5) % n)
-	var mem0 := OS.get_static_memory_usage()
 	var config := JudgmentStore.default_cfg()
 	if gossip == "scheduled":
 		config.gossip.timing = "scheduled"
@@ -111,6 +121,8 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 	var max_tick_tellings := 0              # the most tellings in one tick, and the most beliefs taken in (deterministic
 	var max_tick_beliefs := 0               # workload counts, free of the shared machine's timing noise)
 	var ev_count := 0
+	var chosen := PackedInt64Array()        # every weighed choice in order, and every disposition it read: the timing
+	var seen_disp := PackedInt64Array()     # variants are compared choice by choice (the schedule of choices is fixed)
 	for d in days:
 		var due := int(floor(per_day * (d + 1))) - int(floor(per_day * d))     # a fractional rate spread evenly over the days
 		var part := {"ev": 0, "gossip": 0, "dec": 0, "dawn": 0}
@@ -163,7 +175,11 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 						for c in 3:
 							var who := (p + 1 + JudgmentMath.hash_ints([d, p, 6, k, c]) % 19) % n
 							cands.append({"id": who, "counterparty": who, "factors": {"necessity": 60000, "affordability": 50000 + c * 10000, "urgency": 40000}})
-						JudgmentWeighting.choose(j, cfg, p, "trade_buy", cands)
+						var res := JudgmentWeighting.choose(j, cfg, p, "trade_buy", cands)
+						chosen.append(int(res.chosen) if res.chosen is int else -1)
+						for row in res.trace:
+							if (row as Dictionary).has("factors"):
+								seen_disp.append(int(row.factors.disposition))
 						if d >= days / 2:
 							choices += 1
 				var t4 := Time.get_ticks_usec()
@@ -197,7 +213,6 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 		j.call("flush_gossip")
 	if sliced:
 		j.call("finish_dawn")
-	var mem_mb := float(OS.get_static_memory_usage() - mem0) / 1048576.0
 	var counts := j.counts()
 	var cap := int(cfg.memory.capacity)
 	var over := 0
@@ -229,6 +244,17 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 		check(err == "" and j2.state_hash() == h, "%s, %d people: the save loads back to the same state" % [rate, n])
 		print("%s, %d people: %d events; %s; stats %s" % [rate, n, ev_count, JSON.stringify(counts), JSON.stringify(j.stats)])
 		print("%s, %d people: time (us) %s" % [rate, n, JSON.stringify(j.timing)])
+	# memory: what releasing the store gives back (the harness's own arrays of frame times and choices are not counted);
+	# with --breakdown, structure by structure first
+	var save_kb := float(text.length()) / 1024.0
+	j2 = null
+	text = ""
+	var m_a := OS.get_static_memory_usage()
+	var parts_kb := _breakdown(j) if report and breakdown else {}
+	j = null
+	var mem_mb := float(m_a - OS.get_static_memory_usage()) / 1048576.0
+	if not parts_kb.is_empty():
+		print("%s, %d people: memory by structure (KB, freed when cleared, in this order) %s" % [rate, n, JSON.stringify(parts_kb)])
 	var ms := func(us: int) -> float:
 		return float(us) / 1000.0 / maxf(1.0, float(measured))
 	var row := {"permanent_memories": permanent, "rate": rate, "n": n, "days": days, "events_day": int(round(per_day)), "ev_ms": ms.call(sums.ev), "gossip_ms": ms.call(sums.gossip),
@@ -237,10 +263,51 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 		"max_tick_tellings": max_tick_tellings, "max_tick_beliefs": max_tick_beliefs,
 		"p99_frame_ms": _pct(frames, 0.99) / 1000.0, "p999_frame_ms": _pct(frames, 0.999) / 1000.0, "idle_max_ms": float(idle_max) / 1000.0,
 		"us_per_choice": float(sums.dec) / maxf(1.0, float(choices)), "sliced": sliced,
-		"counts": counts, "mem_mb": mem_mb, "save_kb": float(text.length()) / 1024.0, "save_ms": float(save_us) / 1000.0,
-		"load_ms": float(load_us) / 1000.0, "hash": h}
+		"counts": counts, "mem_mb": mem_mb, "save_kb": save_kb, "save_ms": float(save_us) / 1000.0,
+		"load_ms": float(load_us) / 1000.0, "hash": h, "_chosen": chosen, "_disp": seen_disp}
 	row.total_ms = float(row.ev_ms) + float(row.gossip_ms) + float(row.dec_ms) + float(row.dawn_ms)
 	return row
+
+
+## How two timing variants' weighed choices differ: the same choices are asked in the same order, so they compare one
+## by one: how many chose differently, and how many of the dispositions read differed (and by how much at most).
+static func _compare(a: Dictionary, b: Dictionary) -> Dictionary:
+	var ca: PackedInt64Array = a._chosen
+	var cb: PackedInt64Array = b._chosen
+	var da: PackedInt64Array = a._disp
+	var db: PackedInt64Array = b._disp
+	var out := {"choices": ca.size(), "chosen_differently": 0, "dispositions_read": da.size(), "dispositions_differing": 0, "largest_difference": 0}
+	for i in mini(ca.size(), cb.size()):
+		if ca[i] != cb[i]:
+			out.chosen_differently += 1
+	for i in mini(da.size(), db.size()):
+		if da[i] != db[i]:
+			out.dispositions_differing += 1
+			out.largest_difference = maxi(int(out.largest_difference), absi(da[i] - db[i]))
+	return out
+
+
+## The store's memory, structure by structure: each is emptied in turn and what that gives back is recorded (KB).
+## Destroys the store's contents: called last.
+static func _breakdown(j: JudgmentStore) -> Dictionary:
+	var out := {}
+	var m := 0
+	for name in ["_reach_cache", "ledgers", "contrib", "memories", "knowers", "facts", "fact_tags", "fact_orig", "by_day",
+			"_perm_refs", "told_today", "_glast", "_sched", "_early", "_retiring", "stats", "timing", "last_trace"]:
+		m = OS.get_static_memory_usage()
+		var v = j.get(name)
+		if v is Dictionary:
+			(v as Dictionary).clear()
+		v = null
+		out[name] = float(m - OS.get_static_memory_usage()) / 1024.0
+	for name in ["_people", "_queue", "_gq"]:
+		m = OS.get_static_memory_usage()
+		j.set(name, PackedInt64Array())
+		out[name] = float(m - OS.get_static_memory_usage()) / 1024.0
+	m = OS.get_static_memory_usage()
+	j.set("_gdone", PackedByteArray())
+	out["_gdone"] = float(m - OS.get_static_memory_usage()) / 1024.0
+	return out
 
 
 static func _median(xs: Array) -> float:

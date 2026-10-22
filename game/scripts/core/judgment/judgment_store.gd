@@ -100,7 +100,9 @@ var knowers := {}        # event id -> PackedInt64Array of everyone who has judg
 var by_day := {}         # day -> [event ids] (horizon expiry)
 var memories := {}       # observer -> {event id -> PackedInt64Array (M_*)}
 var contrib := {}        # observer -> {event id -> PackedInt64Array [actor, good, bad, ...] by actor}
-var ledgers := {}        # observer -> {subject -> PackedInt64Array [life good, life bad, n, fading good, fading bad, permanent good, permanent bad, the day decayed to]}
+var ledgers := {}        # observer -> [subjects (PackedInt64Array, ascending), values (PackedInt64Array, L_W a subject: life good, life bad, n, fading good, fading bad, permanent good, permanent bad, the day decayed to)]
+const L_W := 8                   # values a ledger entry
+var _none := PackedInt64Array()  # put in a record's place while its array changes, so the change is made in place
 var told_today := {}     # teller -> tellings today (gossip.daily_budget)
 var stats := {}          # counters for diagnostics and performance reports
 var unread := {}         # a saved section this version cannot read: kept and written back unchanged (CLAUDE.md s.7)
@@ -506,6 +508,8 @@ func _bound(observer: int) -> void:
 		if ordinary <= _cap:
 			return
 		_forget(observer, worst)
+		if ordinary - 1 <= _cap:
+			return                                 # what a second pass would find: one ordinary memory fewer
 
 
 ## Forget a memory. Its points stay in the ledger (unless retract_on_forget); its contribution record goes too, since
@@ -778,73 +782,116 @@ func contribution(observer: int, ev: int, actor: int) -> Array:
 ## when none). The lifetime totals never fade (history, spec s.5.2); NET uses the fading and permanent parts.
 func ledger(observer: int, subject: int) -> Array:
 	_cu_read(observer, subject)
-	var mine: Dictionary = ledgers.get(observer, {})
-	if not mine.has(subject):
+	var rec = ledgers.get(observer)
+	var i := -1 if rec == null else _lfind(rec, subject)
+	if i < 0:
 		return [0, 0, 0, 0, 0, 0, 0]
-	return Array(_entry(mine, subject)).slice(0, 7)
+	_ldecay(rec, i)
+	return Array((rec[1] as PackedInt64Array).slice(L_W * i, L_W * i + 7))
 
 
-## A ledger entry with the decay it is due applied (2026-10-22, lazily): the fading parts lose _decay_step a day for
+## Everyone `observer` has a ledger entry for, ascending.
+func subjects(observer: int) -> PackedInt64Array:
+	var rec = ledgers.get(observer)
+	return PackedInt64Array() if rec == null else rec[0]
+
+
+## Ledgers are kept per observer as two packed arrays (2026-10-22, memory): the subjects, ascending, and L_W values
+## for each, so an entry costs its values and no dictionary slot or array of its own. Same values, same order.
+static func _lfind(rec: Array, subject: int) -> int:
+	var subs: PackedInt64Array = rec[0]
+	var i := subs.bsearch(subject)
+	return i if i < subs.size() and subs[i] == subject else -1
+
+
+## The entry at `i` with the decay it is due applied (2026-10-22, lazily): the fading parts lose _decay_step a day for
 ## every day since it was last brought up to date, the same integer steps in the same order the daily update applied
 ## to every ledger at each person's dawn, so every value read is the same; only entries nobody reads wait.
-func _entry(mine: Dictionary, subject) -> PackedInt64Array:
-	var l: PackedInt64Array = mine[subject]
-	if l[7] < day:
-		if _decay > 0 and (l[3] != 0 or l[4] != 0):
-			for i in day - l[7]:
-				l[3] = l[3] - _decay_step(l[3])
-				l[4] = l[4] - _decay_step(l[4])
-		l[7] = day
-		mine[subject] = l
-	return l
+func _ldecay(rec: Array, i: int) -> void:
+	var v: PackedInt64Array = rec[1]
+	var b := L_W * i
+	if v[b + 7] >= day:
+		return
+	rec[1] = _none
+	if _decay > 0 and (v[b + 3] != 0 or v[b + 4] != 0):
+		for k in day - v[b + 7]:
+			v[b + 3] = v[b + 3] - _decay_step(v[b + 3])
+			v[b + 4] = v[b + 4] - _decay_step(v[b + 4])
+	v[b + 7] = day
+	rec[1] = v
+
+
+## The place of `subject` in `observer`'s ledger, brought up to date, or made (all 0, decayed to today) when missing
+## (`count`: as a new judgment in the stats).
+func _lslot(observer: int, subject: int, count: bool) -> int:
+	if not ledgers.has(observer):
+		ledgers[observer] = [PackedInt64Array(), PackedInt64Array()]
+		_add_person(observer)
+	var rec: Array = ledgers[observer]
+	var subs: PackedInt64Array = rec[0]
+	var i := subs.bsearch(subject)
+	if i < subs.size() and subs[i] == subject:
+		_ldecay(rec, i)
+		return i
+	rec[0] = _none
+	subs.insert(i, subject)
+	rec[0] = subs
+	var v: PackedInt64Array = rec[1]
+	rec[1] = _none
+	v.insert(L_W * i, day)
+	for k in L_W - 1:
+		v.insert(L_W * i, 0)
+	rec[1] = v
+	if count:
+		_stat("ledgers")
+	return i
 
 
 func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int, perm := false) -> void:
-	if not ledgers.has(observer):
-		ledgers[observer] = {}
-		_add_person(observer)
-	var mine: Dictionary = ledgers[observer]
-	var l: PackedInt64Array
-	if mine.has(subject):
-		l = _entry(mine, subject)
-	else:
-		l = PackedInt64Array([0, 0, 0, 0, 0, 0, 0, day])
-		_stat("ledgers")
-	l[0] = maxi(0, l[0] + dg)
-	l[1] = maxi(0, l[1] + db)
-	l[2] = l[2] + dn
-	var at := 5 if perm else 3
-	l[at] = maxi(0, l[at] + dg)
-	l[at + 1] = maxi(0, l[at + 1] + db)
-	mine[subject] = l
+	var i := _lslot(observer, subject, true)
+	var rec: Array = ledgers[observer]
+	var v: PackedInt64Array = rec[1]
+	rec[1] = _none
+	var b := L_W * i
+	v[b] = maxi(0, v[b] + dg)
+	v[b + 1] = maxi(0, v[b + 1] + db)
+	v[b + 2] = v[b + 2] + dn
+	var at := b + (5 if perm else 3)
+	v[at] = maxi(0, v[at] + dg)
+	v[at + 1] = maxi(0, v[at + 1] + db)
+	rec[1] = v
 
 
 ## Set a ledger's GOOD and BAD outright (tests and fixtures: an opinion formed before the scenario starts).
 func set_ledger(observer: int, subject: int, good_points: int, bad_points: int) -> void:
 	_cu(observer)
 	_gver += 1
-	if not ledgers.has(observer):
-		ledgers[observer] = {}
-		_add_person(observer)
-	var l: PackedInt64Array = _entry(ledgers[observer], subject) if (ledgers[observer] as Dictionary).has(subject) else PackedInt64Array([0, 0, 0, 0, 0, 0, 0, day])
-	l[0] = good_points
-	l[1] = bad_points
-	l[3] = good_points
-	l[4] = bad_points
-	l[5] = 0
-	l[6] = 0
-	ledgers[observer][subject] = l
+	var i := _lslot(observer, subject, false)
+	var rec: Array = ledgers[observer]
+	var v: PackedInt64Array = rec[1]
+	rec[1] = _none
+	var b := L_W * i
+	v[b] = good_points
+	v[b + 1] = bad_points
+	v[b + 3] = good_points
+	v[b + 4] = bad_points
+	v[b + 5] = 0
+	v[b + 6] = 0
+	rec[1] = v
 
 
 ## NET judgment of `subject` by `observer`, milli-points: GOOD - BAD over the fading parts (decayed, Q02) and the
 ## permanent parts (murder, never decayed).
 func net(observer: int, subject: int) -> int:
 	_cu_read(observer, subject)
-	var mine: Dictionary = ledgers.get(observer, {})
-	if not mine.has(subject):
+	var rec = ledgers.get(observer)
+	var i := -1 if rec == null else _lfind(rec, subject)
+	if i < 0:
 		return 0
-	var l := _entry(mine, subject)
-	return l[3] + l[5] - l[4] - l[6]
+	_ldecay(rec, i)
+	var v: PackedInt64Array = rec[1]
+	var b := L_W * i
+	return v[b + 3] + v[b + 5] - v[b + 4] - v[b + 6]
 
 
 func good(observer: int, subject: int) -> int:
@@ -872,9 +919,7 @@ func most_disliked(observer: int, besides := -999) -> int:
 	_cu_read(observer)
 	var best := -999
 	var best_net := 0
-	var mine: Dictionary = ledgers.get(observer, {})
-	var ids := mine.keys()
-	ids.sort()
+	var ids := subjects(observer)                # ascending (a copy: reading never changes who is in it)
 	for s in ids:
 		var v := net(observer, int(s))
 		if int(s) != besides and v < best_net:
@@ -1089,13 +1134,15 @@ func tell(teller: int, listener: int) -> int:
 		var m: PackedInt64Array = mem[ev]
 		if not facts.has(ev) or _mem_names(m, listener):
 			continue
-		if cred < 0:
-			cred = credibility(listener, teller)
-		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
-		if conf <= 0:
+		# the most any credibility could give (it is at most 1000, and the rounding never falls as it rises): the
+		# filters that need no credibility go first, so it is found only for a real candidate (the same choices)
+		var top := JudgmentMath.mul_div(m[M_CONF] * _b_hop, JudgmentMath.ONE, 1000000)
+		if top <= 0:
 			continue                               # a story nobody could believe at all is not passed on
+		var held := -1
 		if heard.has(ev):
-			if (heard[ev] as PackedInt64Array)[M_CONF] >= conf:
+			held = (heard[ev] as PackedInt64Array)[M_CONF]
+			if held >= top:
 				continue                           # held as surely already: hearing it again changes nothing (Q06)
 		elif mine.has(ev):
 			continue
@@ -1104,6 +1151,11 @@ func tell(teller: int, listener: int) -> int:
 			var at := kn.bsearch(listener)
 			if at < kn.size() and kn[at] == listener:
 				continue                           # judged before and since forgotten
+		if cred < 0:
+			cred = credibility(listener, teller)
+		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
+		if conf <= 0 or held >= conf:
+			continue
 		keys.append(((SAL_ROOM - m[M_SAL]) << 40) | int(ev))
 	if keys.is_empty():
 		return 0
@@ -1325,7 +1377,7 @@ func _cu(o: int) -> void:
 
 ## One person's daily update: their ordinary memories fade (for each day the update covers) and the faint are
 ## forgotten, then their records of retired events go. The fading parts of their judgments decay (Q02) entry by entry
-## when next read or changed (_entry), the same steps; a murder's permanent part never decays.
+## when next read or changed (_ldecay), the same steps; a murder's permanent part never decays.
 func _dawn_one(o: int) -> void:
 	var mem: Dictionary = memories.get(o, {})
 	if not mem.is_empty():
@@ -1349,7 +1401,7 @@ func _dawn_one(o: int) -> void:
 		for ev in mine.keys():
 			if _retiring.has(ev):
 				mine.erase(ev)
-	# the fading parts of the person's ledgers decay when each entry is next read or changed (_entry): the same steps
+	# the fading parts of the person's ledgers decay when each entry is next read or changed (_ldecay): the same steps
 
 
 ## One day's decay of a fading part: its share at the rate, rounded, and at least one milli-point while anything is
@@ -1388,7 +1440,7 @@ func counts() -> Dictionary:
 		for ev in contrib[o]:
 			nc += (contrib[o][ev] as PackedInt64Array).size() / 3
 	for o in ledgers:
-		nl += (ledgers[o] as Dictionary).size()
+		nl += (ledgers[o][0] as PackedInt64Array).size()
 	return {"facts": facts.size(), "memories": nm, "contributions": nc, "ledgers": nl}
 
 
@@ -1423,9 +1475,13 @@ func to_dict() -> Dictionary:
 			for i in range(0, row.size(), 3):
 				cs.append([int(o), int(ev), row[i], row[i + 1], row[i + 2]])
 	for o in _sorted(ledgers):
-		for s in _sorted(ledgers[o]):
-			var l := _entry(ledgers[o], s)
-			ls.append([int(o), int(s), l[0], l[1], l[2], l[3], l[4], l[5], l[6]])
+		var rec: Array = ledgers[o]
+		var subs: PackedInt64Array = rec[0]
+		for i in subs.size():
+			_ldecay(rec, i)
+			var v: PackedInt64Array = rec[1]
+			var b := L_W * i
+			ls.append([int(o), subs[i], v[b], v[b + 1], v[b + 2], v[b + 3], v[b + 4], v[b + 5], v[b + 6]])
 	var tt := []
 	for t in _sorted(told_today):
 		tt.append([int(t), int(told_today[t])])
@@ -1518,11 +1574,16 @@ func load_dict(d: Dictionary) -> String:
 		row.append_array(PackedInt64Array([int(r[2]), int(r[3]), int(r[4])]))
 		contrib[o][ev] = row
 	for r in m.ledgers:
-		if not ledgers.has(int(r[0])):
-			ledgers[int(r[0])] = {}
 		var pg := int(r[7]) if (r as Array).size() > 8 else 0        # round-1..3 rows have no permanent part
 		var pb := int(r[8]) if (r as Array).size() > 8 else 0
-		ledgers[int(r[0])][int(r[1])] = PackedInt64Array([int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), pg, pb, day])
+		var i := _lslot(int(r[0]), int(r[1]), false)
+		var rec: Array = ledgers[int(r[0])]
+		var v: PackedInt64Array = rec[1]
+		rec[1] = _none
+		var vals := [int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), pg, pb, day]
+		for k in L_W:
+			v[L_W * i + k] = vals[k]
+		rec[1] = v
 	for r in m.told_today:
 		told_today[int(r[0])] = int(r[1])
 	for r in m.get("scheduled", []):
