@@ -9,24 +9,22 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 73 |
-| Integrated | 33 of 73 (45%) |
-| Automated tests passed | 34 of 73 (47%) |
-| Integration verified | 33 of 73 (45%) |
+| Integrated | 36 of 73 (49%) |
+| Automated tests passed | 37 of 73 (51%) |
+| Integration verified | 36 of 73 (49%) |
 | Gameplay verified | 0 of 73 (0%) |
 | Owner playtested | 0 of 73 (0%) |
 | Complete | 1 of 73 (1%) |
 | Open (release blockers) | 72 |
 | Open owner decisions (blocking) | 10 (2) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | M |
-| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | M |
-| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | XL |
+| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) / wip/b18-feast | NOT TESTED |  |  | M |
 
-## Integrated, awaiting gameplay or owner verification (32)
+## Integrated, awaiting gameplay or owner verification (35)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -38,12 +36,15 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | CON-UX-01 | Contract window needs design work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and device check; owner review CHAPEL-R1..R5 (non-blocking); wage, piety, offering and seed numbers in balance.json "chapel" are provisional working values, not owner-approved balance; known: Chapel uses the plain house art (no steeple or sign); Player cannot volunteer on the church plot; Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed |  | verification only |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; Build 18 release gate; known: Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified) |  | verification only |
+| ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check. Measured effect over 30 days: the caravan buys 7-8 kinds of goods instead of about 20, and the village earns roughly a quarter to a half less from it (seed 1 +1540 vs +1996 coins, seed 2 +1070 vs +2178); population and food unaffected; known: Courier booths still use SettlementLedger parties, not the new settlements |  | verification only |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate |  | verification only |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | MAP-01 | Map shows where you are beyond the village | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; the determinism gate must be re-recorded on Build 18 (REL18-DET) because clue placement changed |  | verification only |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: no doorway on a house's east wall (furniture) or between rooms stacked north-south; the old-world (legacy plots) view is untested by screenshot |  | verification only |
+| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; owner may review the lore choices in docs/expansion18/SETTLEMENTS.md; known: Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open) |  | verification only |
+| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned); known: No births or old-age deaths in the settlements yet; Village cannot buy food from the settlements yet; no tool-shortage productivity penalty |  | verification only |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | STONE-05 | Stoneworking skill: a distinct skill in the existing skill system that governs stone dressing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
@@ -63,11 +64,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | final percentages after X18-SIM (Q18-11); MIN-D mining stages mapped to 0-10 (reconciliation item); owner playtest |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (22)
+## Ready to proceed now (approved, specified, nothing open blocks it) (21)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |

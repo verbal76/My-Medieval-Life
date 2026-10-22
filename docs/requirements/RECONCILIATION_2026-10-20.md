@@ -137,7 +137,7 @@ None.
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
@@ -389,8 +389,8 @@ None.
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SEED-04 | Households save planting material from their own harvests | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
-| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
-| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |

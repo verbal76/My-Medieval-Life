@@ -178,7 +178,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | DVW-B5 | Predictable taxes with hysteresis, announced | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -187,7 +187,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner action | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | EQ-01 | Human civilization sustains itself without the player | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -474,8 +474,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SET-E | Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
