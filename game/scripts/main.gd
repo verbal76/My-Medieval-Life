@@ -75,6 +75,7 @@ var shot_path := ""
 var shot_frames := 0
 var shot_warp := Vector2.INF
 var shot_advance := 0.0
+var shot_side := Vector2i(0, 1)        # swing panels: the side of the tree or rock the swinger stands on (--side n|s|e|w)
 var shot_zoom := 0.0
 var shot_panel := ""
 var shot_field_state := ""
@@ -146,6 +147,8 @@ func _ready() -> void:
 				shot_zoom = float(args[i + 1])
 			"--panel":
 				shot_panel = args[i + 1]
+			"--side":
+				shot_side = {"n": Vector2i(0, -1), "s": Vector2i(0, 1), "e": Vector2i(1, 0), "w": Vector2i(-1, 0)}.get(args[i + 1], Vector2i(0, 1))
 			"--pick":
 				shot_pick = float(args[i + 1])          # pick every wild plant within this many tiles of the warp point (screenshots)
 			"--field-state":
@@ -4407,7 +4410,7 @@ func _swing_panel(mining: bool, frame: int) -> void:
 	var tool_id := "rusty_pickaxe" if mining else "axe"
 	p.inv.add(tool_id, 1)
 	p.tool = tool_id
-	var c: Vector2i = world.brain.beside(cell, cell + Vector2i(0, 1))
+	var c: Vector2i = world.brain.beside(cell, cell + shot_side)
 	p.pos = Vector2(c) + Vector2(0.5, 0.5)
 	follow_at = _in_view(p.pos * T)
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
