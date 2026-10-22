@@ -31,7 +31,7 @@ extends RefCounted
 
 ## What each trade is glad of: what it works with or most enjoys after work. Obvious on purpose.
 const FAVOURITES := {
-	"miner": ["pickaxe", "ale", "roast_meat"], "laborer": ["bread", "ale", "pottage"], "woodcutter": ["axe", "bread"],
+	"miner": ["pickaxe", "ale", "roast_meat"], "prospector": ["ale", "bread"], "laborer": ["bread", "ale", "pottage"], "woodcutter": ["axe", "bread"],
 	"carpenter": ["plank", "hammer"], "smith": ["coal", "iron_ore", "iron_bar"], "tanner": ["hide", "rabbit_pelt"],
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "plough"], "cook": ["meat", "egg", "milk", "cheese"],
 	"tavernkeeper": ["wheat", "apple"], "hunter": ["leather", "roast_meat", "iron_sword"], "merchant": ["copper_ring", "gold_ring", "wool_cloth"],
@@ -511,7 +511,7 @@ func hour(h: int) -> void:
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
 				for o: NPC in grid.get(c + Vector2i(dx, dy), []):
-					if o.id <= n.id or n.pos.distance_to(o.pos) > r:
+					if o.id <= n.id or n.pos.distance_to(o.pos) > r or o.depth != n.depth:     # MIN-A: not through rock
 						continue
 					var kind := "met"
 					if working and n.job != "" and (n.job == o.job or (n.workplace != "" and n.workplace == o.workplace)):

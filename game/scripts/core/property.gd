@@ -582,6 +582,10 @@ func can_claim(rect: Rect2i) -> String:
 	if _road.is_empty():
 		for c in m.data.road:
 			_road[Vector2i(int(c[0]), int(c[1]))] = true
+	if w.pits != null:
+		var pit: String = w.pits.claim_refusal(rect)          # MIN-E: an open pit, its border or its spoil heaps
+		if pit != "":
+			return pit
 	for y in range(rect.position.y, rect.end.y):
 		for x in range(rect.position.x, rect.end.x):
 			if _road.has(Vector2i(x, y)):

@@ -126,7 +126,6 @@ const CORNER_MARGIN := Vector2(28, 14)
 ## Windows keep CORNER_MARGIN; the HUD sits closer, moving only off a camera cutout it would overlap.
 const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
 const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
-const PICKPOCKET_REACH := 1.8      # tiles: the talk window offers "Pick <name>'s pocket" this close
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -1583,9 +1582,23 @@ func _manor_next(j: Dictionary) -> String:
 		"put":
 			if j.kind == "quarry":
 				return "Next: bring %d stone to the manor's works yard (you have %d)." % [int(j.qty), main.world.player.inv.count("stone")]
+			if j.kind == "excavate":
+				return "Next: bring the pit's stone to the manor's works yard."
 			return "Next: take it to %s." % mw.dest_name(j.to)
 		"mend":
 			return "Next: mend %s." % str(j.get("place", "the road"))
+		"sample":
+			return "Next: take a rock sample by %s (%d of %d taken)." % [main.world.prospecting.stain(main.world.prospecting.clue(str(j.clue))), int(j.taken), int(j.qty)]
+		"assay":
+			return "Next: have a smith at the forge assay the survey's samples."
+		"report":
+			return "Next: tell the manor what the samples showed (at the manor's door)."
+		"dig":
+			return "Next: dig the trial pit where the reeve marked it."
+		"excavate":
+			return "Next: dig the manor's open pit (%d of %d dug)." % [j.load.total(), int(j.qty)]
+		"tip":
+			return "Next: tip the earth onto the pit's spoil heap."
 	return ""
 
 
@@ -2183,26 +2196,20 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 		var price := int(GameData.b("fireball_price"))
 		var known: bool = w.player.spells.get("fireball", false)
 		_talk_choice(choices, "Learn Fireball (%d coins)" % price if not known else "You know Fireball", func():
-			if w.player.coins >= price:
-				w.player.coins -= price
-				n.coins += price
-				w.player.spells["fireball"] = true
-				w.player.gain("magic", 100)
-				var story: Dictionary = w.quests.active_from(n)
-				var thanks := w.quests.line(story, "thanks") if not story.is_empty() else ""
-				w.quests.on_learned("fireball")
+			var learned := w.player_learn_fireball(n)          # the price, the payment and the spell are core's (DVW-A12 R12)
+			if learned.ok:
 				message("You learned Fireball. Press F (or the Fire button) to cast it; it uses stamina.")
-				if thanks != "":
-					_talk_view(n, thanks)
+				if str(learned.thanks) != "":
+					_talk_view(n, str(learned.thanks))
 				else:
 					hide_all()
 			else:
-				message("You need %d coins." % price), not known)
+				message(str(learned.why)), not known)
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
 	# ...never a child's (owner, 2026-10-18: B8-010, keep disabled)
-	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child":
+	if w.pickpocket_in_reach(n):                  # the reach is core's (World.PICKPOCKET_REACH, DVW-A12 R14)
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
 	_relation_choices(n, choices)
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
@@ -2226,6 +2233,9 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 					message("%s comes to live with your family." % n.name)
 				_talk_view(n, "With you? ...Yes. Thank you." if why == "" else why))
 		return
+	# CON-01: goods-procurement contracts: propose one, or see those open and offered with this villager
+	var deals: Array = w.contracts.with_player(n)
+	_talk_choice(choices, ("Contracts (%d)" % deals.size()) if not deals.is_empty() else "Propose a contract", func(): show_contract(n))
 	if not _giftable().is_empty():
 		_talk_choice(choices, "Give a gift", func(): show_gifts(n))
 	if r.can_befriend(n):
@@ -2249,6 +2259,237 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 				if why == "":
 					message("%s said yes: you are partners." % n.name)
 				_talk_view(n, "Yes. Yes, I will." if why == "" else why))
+
+
+## CON-01: the contract window with a villager. Open contracts and the villager's standing offers to the player, each
+## with what can be done now (collect or deliver what is in hand, cancel; agree to or decline an offer); the villager's
+## last answer (a counteroffer can be agreed to); and a new proposal: the goods (those the villager can come by first,
+## or all goods), then quantity, price per unit and days with - and + buttons (touch, pad and keyboard alike), the
+## total and Propose. The rules are Contracts'; this only shows them. `t`: the terms being drawn up; `reply`: the answer.
+func show_contract(n: NPC, t := {}, reply := {}) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	var p := w.player
+	_open("contract", "Contracts with %s  ·  you have %d coins" % [n.name, p.coins])
+	panel_back = func(): _talk_view(n, Dialogue.opening(w, n))
+	for c in k.with_player(n):
+		var cc: Dictionary = c
+		var item := GameData.item_name(cc.item).to_lower()
+		var h := HBoxContainer.new()
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 18)
+		h.add_child(l)
+		panel_body.add_child(h)
+		var done := func(said: String) -> void:
+			if said != "":
+				message(said)
+			show_contract(n, t)
+		if Contracts.is_service(cc):
+			_service_row(n, cc, l, h, done)
+		elif str(cc.state) == "offered":
+			l.text = "%s asks you for %d %s at %d each within %d days (%d coins, set aside when you agree)." % [n.name, int(cc.qty), item,
+					int(cc.price_each), int(cc.days), int(cc.qty) * int(cc.price_each)]
+			_button("Agree", func():
+				var why := k.accept_offer(cc)
+				done.call(why if why != "" else "Agreed: %d %s for %s." % [int(cc.qty), item, n.name]), true, h)
+			_button("Counter", func():
+				show_contract(n, {"counter": int(cc.id), "item": str(cc.item), "qty": int(cc.qty), "price": int(cc.price_each), "days": int(cc.days)}), true, h)
+			_button("Decline", func():
+				k.decline_offer(cc)
+				done.call(""), true, h)
+		elif cc.buyer == World.PLAYER:
+			l.text = "You buy %d %s at %d each: %d delivered, due by the end of day %d. %d coins set aside." % [int(cc.qty), item, int(cc.price_each),
+					int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
+			var held := mini(n.inv.count(cc.item), Contracts.left(cc))
+			_button("Collect %d" % held, func():
+				var got := k.deliver(cc, held)
+				done.call(("%s hands over %d %s; %d coins paid." % [n.name, got, item, got * int(cc.price_each)]) if got > 0 else "You have no room for it."),
+					held > 0 and p.inv.can_add(cc.item), h)
+			_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+		else:
+			l.text = "You supply %d %s at %d each: %d delivered, due by the end of day %d." % [int(cc.qty), item, int(cc.price_each),
+					int(cc.delivered), int(cc.deadline_day) + 1]
+			var have := mini(p.inv.count(cc.item), Contracts.left(cc))
+			_button("Deliver %d" % have, func():
+				var gave := k.deliver(cc, have)
+				done.call(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(cc.price_each)]) if gave > 0 else "%s has no room for it." % n.name),
+					have > 0, h)
+			_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+	if not reply.is_empty():
+		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
+		if str(reply.answer) == "counter" and not reply.get("from_buyer", false):     # a buyer's counter is its standing offer, above
+			var ct: Dictionary = t.duplicate()
+			ct.qty = int(reply.qty)
+			ct.price = int(reply.price_each)
+			ct.days = int(reply.days)
+			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
+				var r2 := k.propose(World.PLAYER, n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
+				if r2.has("contract"):
+					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)])
+					show_contract(n, {}, r2)
+				else:
+					show_contract(n, ct, r2))
+	if t.has("counter"):
+		_counter_terms(n, t)
+		return
+	_label("Propose a contract: what you want from %s, how many, the price for each and how many days they have. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
+	var all: bool = t.get("all", false)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	panel_body.add_child(grid)
+	var ids := GameData.items.keys()
+	ids.sort()
+	var able := []
+	for id in ids:
+		var m: Dictionary = k.means(n, id, 3)
+		if int(m.stock) + int(m.cap) > 0:
+			able.append(id)
+	for id in (ids if all else able):
+		var iid: String = id
+		var b := _button(("★ " if able.has(iid) else "") + GameData.item_name(iid), func():
+			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3}
+			var m3: Dictionary = k.means(n, iid, 3)
+			nt.qty = clampi(int(m3.stock) + int(m3.cap), 1, 10)
+			for d in range(1, int(Contracts.cfg().max_days) + 1):        # the deadline the seller's pace allows
+				var md: Dictionary = k.means(n, iid, d)
+				if int(md.stock) + int(md.cap) >= int(nt.qty):
+					nt.days = d
+					break
+			show_contract(n, nt), true, grid)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if str(t.get("item", "")) == iid:
+			b.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+	_button(("Only what %s can supply" % n.name) if all else "All goods", func():
+		var nt: Dictionary = t.duplicate()
+		nt.all = not all
+		show_contract(n, nt))
+	# CON-02: work instead of goods, from the services the game performs (ContractServices.options)
+	var opts := ContractServices.options(k, World.PLAYER)
+	if not opts.is_empty():
+		_label("Or hire %s for work: paid for each unit of the work as it is done." % n.name, 16)
+		var sgrid := GridContainer.new()
+		sgrid.columns = 2
+		panel_body.add_child(sgrid)
+		for o in opts:
+			var oo: Dictionary = o
+			var sb := _button(str(oo.label), func():
+				var svc := {"service": oo.service, "site": oo.site}
+				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
+				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3}), true, sgrid)
+			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			if t.has("svc") and str(t.get("label", "")) == str(oo.label):
+				sb.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+	if t.has("svc"):
+		_term_steppers(n, t)
+		var stotal := int(t.qty) * int(t.price)
+		_label("%s: %d units at %d each = %d coins, by the end of day %d." % [str(t.label), int(t.qty), int(t.price), stotal, w.day() + int(t.days)], 18)
+		_button("Propose", func():
+			var r := k.propose(World.PLAYER, n, "", int(t.qty), int(t.price), int(t.days), [], t.svc)
+			if r.has("contract"):
+				message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
+				show_contract(n, {}, r)
+			else:
+				show_contract(n, t, r), p.coins >= stotal)
+	if str(t.get("item", "")) != "":
+		_term_steppers(n, t)
+		var total := int(t.qty) * int(t.price)
+		_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), int(t.price), total,
+				w.day() + int(t.days)], 18)
+		_button("Propose", func():
+			var r := k.propose(World.PLAYER, n, str(t.item), int(t.qty), int(t.price), int(t.days))
+			if r.has("contract"):
+				message("Contract made: %d %s from %s." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), n.name])
+				show_contract(n, {}, r)
+			else:
+				show_contract(n, t, r), p.coins >= total)
+	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
+
+
+## The quantity, price-each and days rows of the contract window, each with - and + buttons (touch, pad, keyboard).
+func _term_steppers(n: NPC, t: Dictionary) -> void:
+	var step := func(key: String, by: int, hi: int) -> void:
+		var nt: Dictionary = t.duplicate()
+		nt[key] = clampi(int(nt[key]) + by, 1, hi)
+		show_contract(n, nt)
+	for row in [["Quantity", "qty", 999, [-10, -1], [1, 10]], ["Price each", "price", 999, [-1], [1]], ["Days", "days", int(Contracts.cfg().max_days), [-1], [1]]]:
+		var h := HBoxContainer.new()
+		h.alignment = BoxContainer.ALIGNMENT_CENTER
+		panel_body.add_child(h)
+		var key: String = row[1]
+		var hi: int = row[2]
+		for by in row[3]:
+			var bb: int = by
+			_button(str(bb), func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+		var l := Label.new()
+		l.text = "%s: %d" % [row[0], int(t[key])]
+		l.custom_minimum_size = Vector2(200, 0)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.add_theme_font_size_override("font_size", 20)
+		h.add_child(l)
+		for by in row[4]:
+			var bb: int = by
+			_button("+%d" % bb, func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+
+
+## CON-01: the player's counter to a villager's standing offer (the player supplies): the goods are the villager's to
+## name, the quantity, price and days the player's to put back. The villager answers by Contracts.counter_offer.
+func _counter_terms(n: NPC, t: Dictionary) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	var oc := k.get_contract(int(t.counter))
+	var item := GameData.item_name(str(t.item)).to_lower() if not Contracts.is_service(oc) else "units of work (%s)" % k.describe(oc)
+	_label("Your terms for supplying %s with %s: how many, the price for each and the days you need." % [n.name, item], 16)
+	_term_steppers(n, t)
+	_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), item, int(t.price), int(t.qty) * int(t.price), w.day() + int(t.days)], 18)
+	_button("Put these terms to %s" % n.name, func():
+		var r := k.counter_offer(k.get_contract(int(t.counter)), int(t.qty), int(t.price), int(t.days))
+		r.from_buyer = true
+		if r.has("contract"):
+			message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
+		show_contract(n, {}, r))
+	_button("Back", func(): show_contract(n))
+
+
+## CON-02: a service contract's row in the contract window: a villager's offer to hire the player (Agree, Counter,
+## Decline); the player's hire of the villager (collect stone dug for a player with no home to bring it to, Cancel);
+## the player's own work for the villager (report the readings taken for it, Withdraw).
+func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Callable) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	var what := k.describe(cc)
+	if str(cc.state) == "offered":
+		l.text = "%s would hire you to %s at %d a unit within %d days (%d coins, set aside when you agree)." % [n.name, what, int(cc.price_each),
+				int(cc.days), int(cc.qty) * int(cc.price_each)]
+		_button("Agree", func():
+			var why := k.accept_offer(cc)
+			done.call(why if why != "" else "Agreed: you will %s for %s." % [what, n.name]), true, h)
+		_button("Counter", func():
+			show_contract(n, {"counter": int(cc.id), "item": "", "qty": int(cc.qty), "price": int(cc.price_each), "days": int(cc.days)}), true, h)
+		_button("Decline", func():
+			k.decline_offer(cc)
+			done.call(""), true, h)
+	elif cc.buyer == World.PLAYER:
+		var stone := int(cc.get("load", {}).get("stone", 0))
+		l.text = "%s works for you, to %s at %d a unit: %d done, due by the end of day %d. %d coins set aside." % [n.name, what, int(cc.price_each),
+				int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
+		if stone > 0:
+			_button("Collect %d stone" % stone, func():
+				var got := ContractServices.player_collect(k, cc)
+				done.call(("%s hands over %d stone." % [n.name, got]) if got > 0 else "You have no room for it."), true, h)
+		_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+	else:
+		l.text = "You work for %s, to %s at %d a unit: %d done, due by the end of day %d." % [n.name, what, int(cc.price_each),
+				int(cc.delivered), int(cc.deadline_day) + 1]
+		if str(cc.service) == "survey":
+			_button("Report readings", func():
+				var told := ContractServices.player_report(k, cc)
+				done.call(("You tell %s %d readings and are paid %d coins." % [n.name, told, told * int(cc.price_each)]) if told > 0 \
+						else "You have no new readings of that stain to tell (take samples there and have a smith assay them)."), true, h)
+		_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
 
 
 ## What the player can give: food, flowers, ale, clothes, jewellery, medicine and useful things in the pack
@@ -2317,10 +2558,7 @@ func _helper_choices(n: NPC, choices: GridContainer) -> void:
 				return
 			message("%s will carry%s for the rest of the working day." % [n.name, where])
 			_talk_view(n, "Right. I'll get to it.")
-		var need: Dictionary = pp.site.need.duplicate()
-		for id in need.keys():
-			need[id] = maxi(0, int(need[id]) - w.player.chest.count(id))
-		var spend := mini(c.estimate(need), maxi(0, w.player.coins - wage))
+		var spend := w.player_helper_budget(pp)                # what the helper may spend: core's (DVW-A12 R21)
 		_talk_choice(choices, "From my chest%s (%d coins)" % [where, wage], func(): hire.call(0), w.player.coins >= wage)
 		_talk_choice(choices, "Buy the rest too (%d + %d)" % [wage, spend], func(): hire.call(spend), w.player.coins >= wage and spend > 0)
 	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))
@@ -2482,16 +2720,14 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 	qp.confirmed.connect(func(q: int):
 		if buying:
 			var b: Dictionary = w.player_buy_many(n, id, q)
-			if b.result == "bought":
-				main._xp("trading", Skills.trade_xp(int(b.paid)))
+			if b.result == "bought":                    # (its Trading xp is core's, DVW-A12 R13)
 				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
 			else:
 				message(b.text)
 			show_trade(n)
 			return
 		var r: Dictionary = w.player_sell_many(n, id, q)
-		if r.sold > 0:
-			main._xp("trading", Skills.trade_xp(int(r.paid)))
+		if r.sold > 0:                                  # (its Trading xp is core's, DVW-A12 R13)
 			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
 		if r.result == "sold":
 			show_trade(n)
@@ -2520,7 +2756,6 @@ func show_craft(station_id: String) -> void:
 		var rec: Dictionary = GameData.recipes[r]
 		var ins := ", ".join(rec.in.keys().map(func(k): return "%d %s (%d)" % [int(rec.in[k]), GameData.item_name(k), p.inv.count(k)]))
 		var outs := ", ".join(rec.out.keys().map(func(k): return "%d %s" % [int(rec.out[k]), GameData.item_name(k)]))
-		var lv_ok := p.level(rec.skill) >= int(rec.level)
 		var h := HBoxContainer.new()
 		h.add_child(_icon(rec.out.keys()[0]))
 		var l := Label.new()
@@ -2529,7 +2764,7 @@ func show_craft(station_id: String) -> void:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(l)
 		var rr: String = r
-		_button("Make", func(): main.craft(rr, station_id), lv_ok and p.inv.has_all(rec.in) and no == "", h)
+		_button("Make", func(): main.craft(rr, station_id), w.player_craft_refusal(rr) == "" and no == "", h)     # core decides (DVW-A12 R3)
 		panel_body.add_child(h)
 
 
@@ -3019,19 +3254,10 @@ func _home_storable() -> Array:
 	return p.inv.ids().filter(func(id): return not worn.has(id))
 
 
-## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing.
+## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing. The rule is
+## core's (World.player_home_move, DVW-A12 R20).
 func home_move(id: String, from_chest: bool, qty: int) -> bool:
-	var w: World = main.world
-	var p := w.player
-	var src: Inventory = p.chest if from_chest else p.inv
-	var dst: Inventory = p.inv if from_chest else p.chest
-	if qty < 1 or not w.transfer(src, dst, id, qty):
-		return false
-	if from_chest:
-		p.take_marks(id, qty)
-	else:
-		p.store_marks(id, qty)
-	return true
+	return main.world.player_home_move(id, from_chest, qty)
 
 
 func _home_move_all(from: String) -> void:

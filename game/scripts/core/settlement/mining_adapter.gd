@@ -143,6 +143,9 @@ func local_supply(settlement_id: String) -> Dictionary:
 ## Whether a living adult villager can dig: one holding a pickaxe, or any adult while a pickaxe lies in a household's
 ## store or the manor's yard (MIN-D's tool count). Reads the World's people and stores; decides nothing by level.
 func _can_dig() -> bool:
+	if has_min_d() and _world.discovery.has_method("practitioners"):
+		# Build 17's rule (MIN-SKILLCAP, MIN-D2): a resident with Mining 1 and a pickaxe of their own or their household's
+		return not (_world.discovery.practitioners({"kind": "practitioners", "skill": "mining", "min_level": 1, "tool": "pickaxe"}) as Array).is_empty()
 	if not "npcs" in _world:
 		return false
 	var adults := false

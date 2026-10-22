@@ -12,12 +12,13 @@ const WAKE := 6.0
 # what each job buys, with the stock it stops buying at
 const BUYS := {
 	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
-	"carpenter": {"log": 30},
+	"carpenter": {"log": 30, "shovel_blade": 1},      # MIN-SHOVEL: one smith's blade on hand for a shovel to order
 	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12},          # wool: woven into cloth (Build 13)
 	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
-	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
+	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20,
+		"building_block": 20},        # STONE-01: dressed blocks kept for builders, as the stone was
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
 		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
 		"red_berries": 15, "blueberries": 15, "apple": 15,    # households' gathered berries and apples, brought to market (B14)
@@ -27,7 +28,9 @@ const BUYS := {
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
 		# like the other made goods, and the caravan carries the surplus away
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
-		"herbal_poultice": 8},                     # households' home-brewed poultices, brought to market (B14)
+		"herbal_poultice": 8,                      # households' home-brewed poultices, brought to market (B14)
+		"nails": 24, "mallet": 2,                  # B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
+		"shovel": 2},                              # MIN-SHOVEL (owner MIN-E-Q4): diggers' shovels, assembled to order
 }
 # SHOP-01 (owner, 2026-10-20 section 6): the stations each producing trade works at. Their recipes (recipes.json) are
 # what its purchases of their inputs are for: it buys an input only for a recipe it has the skill for, up to its want
@@ -35,14 +38,14 @@ const BUYS := {
 const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
 # items an NPC keeps for its own work and will not sell
-const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
+const KEEPS := {"sage": ["flower"], "miner": ["pickaxe", "shovel"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "shovel", "mallet"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed", "flower_seed", "red_berry_cutting", "blue_berry_cutting"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
 # who to sell each item to, in order of preference
 const OUTLETS := {
 	"iron_ore": ["smith", "merchant_raw"], "copper_ore": ["smith", "merchant_raw"], "gold_ore": ["smith", "merchant_goods"],
-	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
+	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
@@ -58,6 +61,8 @@ const OUTLETS := {
 	# PAR-04 (owner OD-18.4): the made goods only the player used to make, and where their makers sell them
 	"copper_ring": ["merchant_goods"], "gold_ring": ["merchant_goods"], "amulet": ["merchant_goods"], "iron_helmet": ["merchant_goods"],
 	"leather_cap": ["merchant_goods"], "gold_bar": ["merchant_goods"], "plough": ["merchant_goods"],
+	"nails": ["merchant_goods"], "mallet": ["merchant_goods"],     # B14-07: the smith's nails, the carpenter's mallets
+	"shovel": ["merchant_goods"], "shovel_blade": ["carpenter"],   # MIN-SHOVEL: the carpenter's shovels, the smith's blades for them
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple"]
 const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
@@ -66,7 +71,7 @@ const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese
 const EDIBLE := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple", "egg", "milk", "carrot", "potato"]
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
-const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block"]     # STONE-01: blocks are the village's stone, dressed
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -84,7 +89,11 @@ func _init(world: World) -> void:
 
 
 # ---------------------------------------------------------------- plan helpers ---------------
-func go(c: Vector2i, speed := 1.0) -> Dictionary:
+## A walk to cell `c` on `level` (MIN-A: World._walk routes it through a portal when the walker is on another level;
+## the key is left out on the surface, so surface plans are as they were).
+func go(c: Vector2i, speed := 1.0, level := 0) -> Dictionary:
+	if level != 0:
+		return {"k": "go", "to": c, "speed": speed, "level": level}
 	return {"k": "go", "to": c, "speed": speed}
 
 
@@ -108,10 +117,17 @@ func work_look(n: NPC) -> Array:
 	match str(s.get("act", "")):
 		"mine", "mj_mine":
 			return ["swing", "pickaxe"]
+		"prospect":
+			return ["swing", "hammer"]
 		"chop":
 			return ["swing", "axe"]
 		"mj_step":
+			if str(w.manor_work.job(int(s.get("args", {}).get("job", -1))).get("kind", "")) == "excavate":
+				return ["swing", "pickaxe"]            # MIN-E: the manor's open pit is dug with a pickaxe
 			return ["swing", "hammer"]
+		"svc_step":                                    # CON-02: digging a pit with a pickaxe, sampling with the kit's hammer
+			var sc: Dictionary = w.contracts.get_contract(int(s.get("args", {}).get("id", -1)))
+			return ["swing", "pickaxe" if str(sc.get("service", "")) == "dig" else "hammer"]
 		"hunt", "slaughter":
 			return ["swing", "rusty_sword"]
 		"harvest", "sow", "feed_pen", "fp_work":
@@ -128,12 +144,12 @@ func doit(act: String, args := {}) -> Dictionary:
 	return {"k": "do", "act": act, "args": args}
 
 
-func beside(c: Vector2i, from: Vector2i) -> Vector2i:
+func beside(c: Vector2i, from: Vector2i, level := 0) -> Vector2i:
 	var best := c
 	var bd := 1e9
 	for d in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1)]:
 		var n: Vector2i = c + d
-		if not w.map.is_solid(n):
+		if not (w.map.is_solid(n) if level == 0 else w.underground.is_solid(level, n)):      # MIN-A: on the seam's own level
 			var dd := from.distance_to(n)
 			if dd < bd:
 				bd = dd
@@ -209,6 +225,9 @@ func decide(n: NPC) -> void:
 		return
 	# a job taken for the manor is carried on to the end (ManorWork)
 	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
+		return
+	# a contract it accepted is worked on and delivered (CON-01, Contracts.plan)
+	if h >= WORK_START and h < WORK_END and w.contracts.plan(n):
 		return
 	if h >= WORK_START and h < WORK_END and n.job != "":
 		if h < 12.0 and _day_labour(n):
@@ -582,6 +601,95 @@ func _carpenter_goods(n: NPC) -> bool:
 	return false
 
 
+## B14-07, PAR-04: the carpenter makes a mallet (make_mallet: a log and a plank at the workbench) only for a buyer who wants
+## one, and sells what it has made to that buyer; with no buyer, or without the skill or the wood, it goes on with its
+## other work (false).
+func _carpenter_mallet(n: NPC) -> bool:
+	if n.inv.count("mallet") > 0 and not keeps(n, "mallet"):   # (one made for the manor's order is not for sale: MIN-EQUIP)
+		return _plan_sell(n, "mallet") if _buyer_for(n, "mallet") != null else false
+	if not _can_make(n, "make_mallet") or not n.inv.has_all(GameData.recipes["make_mallet"]["in"]):
+		return false
+	if _buyer_for(n, "mallet") == null:
+		return false
+	if _do_recipe(n, "make_mallet"):
+		n.doing = "making a mallet"
+		return true
+	return false
+
+
+## MIN-SHOVEL (owner MIN-E-Q4, 2026-10-21): the carpenter makes a shovel only for a buyer who wants one (the goods
+## merchant's stock, as mallets): a haft from a plank at the workbench (make_shovel_haft), fitted with the iron blade the
+## smith forges and sells it (forge_shovel_blade; the carpenter keeps one on hand, BUYS), assembled at the workbench
+## (assemble_shovel), and sold to that buyer. Without a buyer, the skill, the plank or the blade it goes on with its other
+## work (false). Nothing is made from nothing: every part is a recipe's, every sale a purchase.
+func _carpenter_shovel(n: NPC) -> bool:
+	if n.inv.count("shovel") > 0:
+		return _plan_sell(n, "shovel") if _buyer_for(n, "shovel") != null else false
+	if _buyer_for(n, "shovel") == null or not _can_make(n, "assemble_shovel"):
+		return false
+	if n.inv.has_all(GameData.recipes["assemble_shovel"]["in"]) and _do_recipe(n, "assemble_shovel"):
+		n.doing = "making a shovel"
+		return true
+	if n.inv.count("shovel_haft") < 1 and _can_make(n, "make_shovel_haft") and n.inv.has_all(GameData.recipes["make_shovel_haft"]["in"]) \
+			and _do_recipe(n, "make_shovel_haft"):
+		n.doing = "making a shovel haft"
+		return true
+	return false
+
+
+## STONE-01 (owner decision 2026-10-21: "Quarry extraction → Raw stone → Stoneworking → Finished building blocks →
+## Construction"): the labourer is the village's stoneworker. While building blocks are wanted (the raw-goods merchant
+## buys them for builders, or open sites need more than anyone has on sale) a labourer with a mallet dresses the raw
+## stone they hold into blocks at a workbench (dress_stone, the player's recipe: two stone, half an hour, Crafting 1)
+## and sells them on; without a mallet they buy one (the goods merchant's, made by the carpenter); without stone in
+## hand they quarry it as before (false: _miner), or, when no stone is left to quarry or the merchant has all the stone
+## it will take, buy the merchant's (quarried stone, or the caravan's). Nothing is dressed for nobody: with no demand, false and the day goes on as before.
+func _mason(n: NPC) -> bool:
+	if n.role != "adult":
+		return false
+	if n.inv.count("building_block") > 0 and _buyer_for(n, "building_block") != null:
+		return _plan_sell(n, "building_block")
+	if not _block_demand(n):
+		return false
+	var rec: Dictionary = GameData.recipes["dress_stone"]
+	if n.level(str(rec.skill)) < int(rec.level):
+		return false
+	if w.craft_tool(n, "dress_stone") == "-":
+		for o: NPC in w.npcs:
+			if o.alive and o != n and not w.asleep(o) and (o.job == "carpenter" or buy_role(o) == "merchant_goods") \
+					and o.inv.has("mallet") and not keeps(o, "mallet") and n.coins - w.reserve_of(n) >= w.sell_price(o, "mallet"):
+				n.doing = "buying a mallet to dress stone"
+				n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": "mallet", "qty": 1})]
+				return true
+		return false
+	if n.inv.has_all(rec["in"]):
+		if _do_recipe(n, "dress_stone"):
+			n.doing = "dressing stone into building blocks"
+			return true
+		return false
+	if _buyer_for(n, "stone") != null and not w.nearest_seam(n, ["stone"]).is_empty():
+		return false                                    # quarry it (_miner: a labourer quarries stone while it sells)
+	var short := int(rec["in"]["stone"]) - n.inv.count("stone")
+	for v: NPC in _with_buy_role("merchant_raw"):
+		if v != n and not w.asleep(v) and v.inv.count("stone") >= short and n.coins - w.reserve_of(n) >= w.sell_price(v, "stone") * short:
+			n.doing = "buying stone to dress"
+			n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": "stone", "qty": short})]
+			return true
+	return false
+
+
+## STONE-01: whether building blocks are wanted now: a buyer takes them from `n` (the raw-goods merchant's stock for
+## builders), or the open building sites need more than the blocks on sale.
+func _block_demand(n: NPC) -> bool:
+	if _buyer_for(n, "building_block") != null:
+		return true
+	var held := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and (o.job == "laborer" or buy_role(o) == "merchant_raw"):
+			held += o.inv.count("building_block")
+	return w.construction.open_need("building_block") > held
+
+
 ## Who sells a cart part or a handcart: a carpenter, smith or merchant holding one (the nearest first).
 func _part_seller(id: String, n: NPC) -> NPC:
 	var best: NPC = null
@@ -827,13 +935,23 @@ func _plan_eat(n: NPC) -> bool:
 func _plan_job(n: NPC) -> bool:
 	match n.job:
 		"miner", "laborer":
+			if n.job == "laborer" and _mason(n):         # STONE-01: blocks dressed to demand
+				return true
 			return _miner(n)
 		"woodcutter":
 			return _woodcutter(n)
+		"prospector":
+			return w.prospecting.plan(n)          # MIN-C: clues, samples and the assayer (Prospecting.plan)
 		"carpenter":
+			if w.mine_works.supply.carpenter_work(n):   # MIN-EQUIP: the manor's supports, ladders, mallets; a miner's minecart
+				return true
 			if _carpenter_carts(n):
 				return true
 			if _carpenter_goods(n):
+				return true
+			if _carpenter_mallet(n):                 # B14-07
+				return true
+			if _carpenter_shovel(n):                 # MIN-SHOVEL
 				return true
 			if n.inv.count("plank") >= 30:
 				return _plan_sell(n, "plank") if _buyer_for(n, "plank") else _idle_at_work(n, "waiting for orders")
@@ -849,6 +967,8 @@ func _plan_job(n: NPC) -> bool:
 		"hunter":
 			return _hunter(n)
 		"tavernkeeper", "merchant", "reeve":
+			if n.job == "reeve" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.reeve_fallback(n):
+				return true          # LOG-01: an unclaimed delivery with no free manor hand
 			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor"}[n.job]
 			n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
 			return true
@@ -993,32 +1113,60 @@ func _miner(n: NPC) -> bool:
 	var carried := 0
 	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
 		carried += n.inv.count(o)
+	var mcp := w.mine_works.supply.miner_cart_plan(n) if carried == 0 else []
+	if not mcp.is_empty():
+		n.plan = mcp                   # MIN-EQUIP: the household's minecart, bought with the miner's coins and set on the rails
+		return true
 	if carried >= int(GameData.b("carry_ore")):
+		var haul := w.mine_works.cart_haul_plan(n, not w.nearest_seam(n, ores).is_empty()) if n.depth != 0 else []
+		if not haul.is_empty():
+			n.plan = haul              # MIN-F2 (Q3): into a minecart when its way is cheaper than carrying out
+			return true
 		return _plan_sell_all(n)       # sells whatever has a buyer first
 	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null and _can_mine(n, o))
-	var d: Dictionary = w.nearest_deposit(n.cell(), ores) if not ores.is_empty() else {}
+	var d: Dictionary = w.nearest_seam(n, ores) if not ores.is_empty() else {}        # MIN-A: the gallery's seams too
 	if d.is_empty():
+		# MIN-D, MIN-E: a miner whose ore is worked out digs the manor's trial pit or open pit for new ore, if posted (paid work)
+		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)):
+			if w.manor_work.seek_kind(n, ["trial", "excavate", "tunnel"]):
+				return true
+			# MIN-SHOVEL: posted earthwork it could do only with a shovel: it buys one, if one is for sale and it can pay
+			if OpenPits.held_tool(n, "shovel") == "" and w.manor_work.shovel_would_open(World.npc_ref(n.id)) and _buy_tool(n, "shovel"):
+				return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
 		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
 			if _buyer_for(n, o) != null and _can_mine(n, o):
 				sellable.append(o)
 		if not sellable.is_empty():
-			d = w.nearest_deposit(n.cell(), sellable)
+			d = w.nearest_seam(n, sellable)
 	if d.is_empty():
 		if carried > 0:
 			return _plan_sell_all(n)
-		if w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
+		if w.nearest_seam(n, ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
 			# the mine is worked out: the manor takes on those who lose their living
 			_change_job(n, "manor_hand", "the mine is worked out")
 			return false
 		return _idle_at_work(n, "waiting for ore buyers")
-	var at := Vector2i(d.x, d.y)
 	n.doing = "mining %s" % GameData.item_name(d.ore).to_lower()
+	n.plan = w.mine_works.cart_fetch_plan(n, d) + seam_steps(n, d, "mine", {})     # MIN-F2 (Q3): a minecart brought along, on the way
+	return true
+
+
+## MIN-A: the steps to work seam `d` on whatever level it lies: walk beside it on its level (the router takes the
+## walker through the portal) and swing; the act's args name the seam by level and cell.
+func seam_steps(n: NPC, d: Dictionary, act: String, args: Dictionary) -> Array:
+	var at := Vector2i(d.x, d.y)
+	var lv := World.level_of(d)
+	var a := args.duplicate()
+	a.x = d.x
+	a.y = d.y
+	if lv != 0:
+		a.level = lv
+	var from := n.cell() if n.depth == lv else at
 	# X18 HOOK (Expansion 18, X18-SIM): CapabilityHook is off in the game (exactly base x skill time); analysis runs only
 	var mins := CapabilityHook.work_time(float(GameData.b("mine_minutes")), "mining", Skills.value(n, "mining", "mine_time", 1.0))
-	n.plan = [go(beside(at, n.cell())), work(mins, "mine", {"x": d.x, "y": d.y}, "work", at)]
-	return true
+	return [go(beside(at, from, lv), 1.0, lv), work(mins, act, a, "work", at)]
 
 
 ## PAR-01: whether `n` may work a seam of `ore` (gold ore needs Mining level 3, as for the player).
@@ -1060,14 +1208,16 @@ func _woodcutter(n: NPC) -> bool:
 	return true
 
 
-## PAR-01: whether `n` has the skill level recipe `r` needs (the player's requirement).
+## PAR-01: whether `n` has the skill level recipe `r` needs (the player's requirement), and the tool it names
+## (STONE-01: the mallet to dress stone; World.craft_tool).
 func _can_make(n: NPC, r: String) -> bool:
 	var rec: Dictionary = GameData.recipes[r]
-	return n.level(str(rec.skill)) >= int(rec.level)
+	return n.level(str(rec.skill)) >= int(rec.level) and (not rec.has("tool") or w.craft_tool(n, r) != "-")
 
 
 ## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
-const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough"]
+const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet", "shovel_blade",
+	"timber_support", "ladder", "minecart"]       # MIN-EQUIP: the carpenter's, for the manor's orders and a miner's household
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
@@ -1146,8 +1296,8 @@ func _smith(n: NPC) -> bool:
 		var cap := 1 if out in ["hammer", "iron_armor", "padlock", "cart_axle", "cart_ironwork"] else 3
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in) and _can_make(n, r):
 			wants.append([inv.count(out), r])
-	# PAR-04: the jewellery and the helmet only for a buyer who wants one
-	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring"]:
+	# PAR-04: the jewellery, the helmet and nails (B14-07) only for a buyer who wants them
+	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring", "forge_nails", "forge_shovel_blade"]:
 		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
 			continue
 		var out: String = GameData.recipes[r].out.keys()[0]
@@ -1287,12 +1437,14 @@ func _keeper_pen(n: NPC) -> Dictionary:
 	return {}
 
 
-## Stock an NPC holds back instead of selling: a keeper keeps four days of feed for the pen.
+## Stock an NPC holds back instead of selling: a keeper keeps four days of feed for the pen, and anyone what it still
+## owes on its contracts (CON-01).
 func reserve(n: NPC, id: String) -> int:
+	var owed: int = w.contracts.held_for(n, id) if w.contracts else 0
 	if id != "wheat" or n.job != "farmer":
-		return 0
+		return owed
 	var pen := _keeper_pen(n)
-	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4)
+	return owed + (0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4))
 
 
 ## FARM-08B: the feed a keeper still lacks to hold its reserve (0 for anyone keeping no pen): a buyer of wheat whom
@@ -1388,6 +1540,8 @@ func _hunter(n: NPC) -> bool:
 
 func _guard(n: NPC, h: float) -> void:
 	_take_guard_post(n)
+	if Decay.plan_rearm(w, n):            # DVW-B4: armour worn out is bought again from a seller, with its own coins
+		return
 	var on_duty := (h >= WAKE and h < SLEEP) if n.workplace == "day" else (h >= SLEEP - 1.0 or h < WAKE + 1.0)
 	var shops_open := h >= WORK_START and h < WORK_END
 	if not on_duty:
@@ -1420,7 +1574,7 @@ func _loot_to_recover(n: NPC) -> Dictionary:
 	var best: Dictionary = {}
 	var bd := float(GameData.b("guard_loot_range"))
 	for l in w.loot:
-		if int(l.coins) <= 0:
+		if int(l.coins) <= 0 or World.level_of(l) != 0:      # MIN-A: guards do not go below the surface
 			continue
 		if not l.has("t"):
 			l.t = w.minutes
@@ -1521,12 +1675,12 @@ func _clan_child(n: NPC, h: float) -> void:
 
 
 func _prey_for(n: NPC):
-	if w.player.alive and w.player.pos.distance_to(n.pos) < 18.0:
+	if w.player.alive and w.player.pos.distance_to(n.pos) < 18.0 and w.player_level == n.depth:
 		return w.player
 	var best = null
 	var bd := 40.0
 	for o: NPC in w.npcs:
-		if not o.alive or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
+		if not o.alive or o.depth != n.depth or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
 			continue
 		if _guard_near(o.pos, 14.0):
 			continue
@@ -1600,6 +1754,10 @@ func keeps(o: NPC, id: String) -> bool:
 		return true
 	if o.job == "smith" and w.manor_orders.any(func(x): return int(x.smith) == o.id and str(x.tool) == id):
 		return true                                   # forged for the manor's order (EQ-19)
+	if o.job == "carpenter":                          # MIN-EQUIP: only as many as the manor has ordered from it are held back
+		var ordered := w.manor_orders.filter(func(x): return int(x.smith) == o.id and str(x.tool) == id).size()
+		if ordered > 0 and o.inv.count(id) <= ordered:
+			return true
 	return id == "axe" and o.household >= 0 and o.household < w.households.size() \
 			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
 
@@ -1856,24 +2014,35 @@ func local_tool_need() -> Dictionary:
 
 
 func _get_tool(n: NPC, tool: String) -> bool:
-	# the goods merchant retails tools (the smith's wholesale buyer, B7-016); the smith sells what the merchant lacks
-	for role in ["merchant_goods", "smith"]:
-		for o: NPC in w.npcs:
-			if o.alive and ((o.job == "smith") if role == "smith" else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
-				if n.coins >= w.sell_price(o, tool):
-					n.doing = "buying a new %s" % tool
-					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
-					return true
+	if _buy_tool(n, tool):
+		return true
 	once("no_tool_%d_%d" % [n.id, w.day()], "%s %s has no %s and cannot get one." % [n.name, n.family, tool])
 	n.doing = "out of work: needs a %s" % tool
 	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
 	return true
 
 
+## A trip to buy `tool` from whoever sells it (the goods merchant first, the smith's wholesale buyer, B7-016; then the
+## smith; MIN-SHOVEL: then the carpenter, who makes shovels): false when nobody has one for sale it can pay for.
+func _buy_tool(n: NPC, tool: String) -> bool:
+	for role in ["merchant_goods", "smith", "carpenter"]:
+		if role == "carpenter" and tool != "shovel":
+			continue
+		for o: NPC in w.npcs:
+			if o.alive and ((o.job == role) if role in ["smith", "carpenter"] else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
+				if n.coins >= w.sell_price(o, tool):
+					n.doing = "buying a new %s" % tool
+					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
+					return true
+	return false
+
+
 func _do_recipe(n: NPC, r: String) -> bool:
 	var rec: Dictionary = GameData.recipes[r]
 	if n.level(str(rec.skill)) < int(rec.level):        # PAR-01: the player's requirement
 		w.stat("skill_short_" + r)
+		return false
+	if rec.has("tool") and w.craft_tool(n, r) == "-":     # STONE-01: the recipe's tool, as for the player
 		return false
 	var st := _station_for(n, rec.station)
 	if st == "":
@@ -1953,7 +2122,7 @@ func _most(n: NPC, ids: Array) -> String:
 
 func _guard_near(p: Vector2, r: float) -> bool:
 	for o: NPC in w.npcs:
-		if o.alive and o.job == "guard" and not w.asleep(o) and o.pos.distance_to(p) <= r:
+		if o.alive and o.job == "guard" and not w.asleep(o) and o.pos.distance_to(p) <= r and o.depth == w.level_at(p):     # MIN-A: one level
 			return true
 	return false
 
@@ -1962,7 +2131,7 @@ func _guard_near(p: Vector2, r: float) -> bool:
 func _bandit_seen(n: NPC) -> NPC:
 	var here := w.place_of(n.pos)
 	for o: NPC in w.npcs:
-		if o.alive and o.role == "bandit" and o.pos.distance_to(n.pos) <= float(GameData.b("witness_radius")) and w.place_of(o.pos) == here:
+		if o.alive and o.role == "bandit" and o.pos.distance_to(n.pos) <= float(GameData.b("witness_radius")) and w.place_of(o.pos) == here and o.depth == n.depth:
 			return o
 	return null
 
@@ -2198,6 +2367,12 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if v == null or not v.alive:
 				return false
 			return w.farm.buy_seed_item(v, str(a.item), mini(int(a.qty), v.inv.count(str(a.item))), n) == ""
+		"contract_deliver":                                # CON-01: goods handed over on a contract, paid from the coins set aside
+			return w.contracts.npc_deliver(n, int(a.id))
+		"contract_sign":                                   # CON-01, Q18-13: a formal contract signed face to face
+			return w.contracts.npc_sign(n, int(a.id))
+		"svc_step":                                        # CON-02: a unit of a service contract's work, by its own system
+			return w.contracts.svc_step(n, int(a.id))
 		"buy_stall":
 			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
 		"stall_stock":
@@ -2218,7 +2393,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			w.deal_xp(b, n, paid)
 			return true
 		"mine":
-			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)))
+			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)), int(a.get("level", 0)))
 			var r := w.work_mine(n, d, n.inv)                   # the player's swing (PAR-01)
 			if r.result != "ok":
 				return false
@@ -2234,6 +2409,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if w.work_felled(n, logs, n.inv).broke:           # the player's felling (PAR-01)
 				w.note("%s %s's axe broke." % [n.name, n.family])
 			return true
+		"prospect":                                       # MIN-C: a rock sample from a clue's area, the player's rule
+			return w.prospecting.npc_sample(n, a)
+		"assay":                                          # MIN-C: the samples carried to a smith at the forge
+			return w.prospecting.npc_assay(n, a)
+		"assay_done":                                     # MIN-C: the smith's assay at the forge is over
+			release_station(n, a.get("station", ""))
+			return true
+		"report_find":                                    # MIN-C: a prospector tells the manor of its finds
+			return w.prospecting.report(n, int(a.id))
 		"craft":
 			release_station(n, a.get("station", ""))
 			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
@@ -2282,6 +2466,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"mj_step", "mj_mine":
 			return w.manor_work.act(n, what, a)
+		"mc_load", "mc_hitch", "mc_park", "mc_unload", "mc_place":
+			return w.mine_works.cart_act(n, what, a)       # MIN-F2 (Q3): a miner's minecart haul
 		"day_labour":
 			var wage := int(GameData.b("day_labour_wage"))
 			if w.treasury >= wage:
@@ -2329,7 +2515,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"recover_loot":
 			for l in w.loot:
-				if int(l.coins) > 0 and n.pos.distance_to(l.pos) < 1.6:
+				if int(l.coins) > 0 and n.pos.distance_to(l.pos) < 1.6 and World.level_of(l) == 0:
 					var c := int(l.coins)
 					l.coins = 0
 					w.treasury += c                  # the manor's, for the village (EQ-20)
@@ -2358,12 +2544,12 @@ func fight(n: NPC, dt: float) -> void:
 	var tnpc: NPC = null
 	if n.target == -2:
 		tpos = w.player.pos
-		tdead = not w.player.alive
+		tdead = not w.player.alive or w.player_level != n.depth        # MIN-A: rock between them
 	else:
 		tnpc = w.npc(n.target)
 		# gone, or into a building the fighter is not in (a door between them); a sleeper is still
-		# a target (owner rule: sleeping is not immunity) and wakes when struck
-		if tnpc == null or not tnpc.alive or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)):
+		# a target (owner rule: sleeping is not immunity) and wakes when struck; or on another level (MIN-A)
+		if tnpc == null or not tnpc.alive or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)) or tnpc.depth != n.depth:
 			tdead = true
 		else:
 			tpos = tnpc.pos
@@ -2479,6 +2665,11 @@ func reeve_day() -> void:
 	# stone for the works from the village's own seams, when the yard lacks it (a job for the reeve's list)
 	if budget > 0:
 		w.manor_work.post_quarry()
+	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
+	w.manor_work.post_pits()                         # MIN-E: a load of the manor's open pit, or a pit staked for a find out of a trial's reach
+	w.manor_work.post_tunnels()                      # MIN-F2: a load cut at a supported face below ground, while the works lack stone
+	w.mine_works.supply.procure()                    # MIN-EQUIP: the supports, repair goods, ladders and mallet its shore work needs
+	w.manor_work.post_shore()                        # MIN-EQUIP: set up, repair or ladder below ground, with the yard's goods
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
 		if id == "stone" and quarrying:
@@ -2687,12 +2878,18 @@ func _order_for(o: NPC) -> Dictionary:
 func _deliver_orders() -> void:
 	for x in w.manor_orders.duplicate():
 		var smith := w.npc(int(x.smith))
-		if smith == null or not smith.alive or smith.job != "smith" or w.day() - int(x.day) > int(GameData.b("manor_order_days")):
+		if smith == null or not smith.alive or smith.job not in ["smith", "carpenter"] or w.day() - int(x.day) > int(GameData.b("manor_order_days")):
 			w.manor_orders.erase(x)                   # (an order not met in time lapses: its worker is free to seek other work)
 			w.stat("gov_tool_order_lapsed")
 			continue
 		var tool := str(x.tool)
 		if not smith.inv.has(tool):
+			continue
+		if int(x["for"]) == -1:                       # MIN-EQUIP: ordered for the manor's works yard
+			smith.inv.remove(tool)
+			w.manor_work.yard.add(tool)
+			w.manor_orders.erase(x)
+			w.stat("gov_equipment_delivered_" + tool)
 			continue
 		var to: NPC = null
 		var first := w.npc(int(x["for"]))
@@ -3237,9 +3434,12 @@ func job_market() -> Dictionary:
 		"tool": "", "at": Vector2i(15, 15)}
 	var ore := 0
 	for dp in w.deposits:
-		ore += int(dp.amount)
+		if w.villagers_reach(dp):          # MIN-A: ore on a level no villager can reach yet opens no places
+			ore += int(dp.amount)
+	ore += w.quarry_stone_left()            # MIN-B: the stone left to quarry is work too
 	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
 		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
+	market["prospector"] = w.discovery.prospector_place(avg.call("prospector", 0.0))     # MIN-D: adoption by the job rules
 	return market
 
 
@@ -3279,7 +3479,7 @@ func seek_work() -> void:
 			var best := ""
 			var best_score := -1e9
 			var home := w.building_door(n.home)
-			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner"]:
+			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector"]:
 				var opt: Dictionary = market[job]
 				if int(opt.open) <= 0 or job == n.job:
 					continue
@@ -3338,7 +3538,7 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 			n.workplace = pick.id if not pick.is_empty() else ""
 		"woodcutter", "hunter":
 			n.workplace = "forest"
-		"miner":
+		"miner", "prospector":
 			n.workplace = "mine"
 		"merchant":
 			n.workplace = place
@@ -3630,6 +3830,8 @@ func dawn(record := true) -> void:
 		seek_work()
 		w.quests.drop_failed()
 		w.quests.refresh()
+		w.contracts.dawn()                           # CON-01: lapses, withdrawn offers, businesses' orders
+		Decay.dawn(w)                                # DVW-B4: a day's spoilage of stored food and wear of what is worn
 
 
 func _day_labour(n: NPC) -> bool:
@@ -3793,7 +3995,8 @@ func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
 func _caravan_imports() -> int:
 	var left := {}
 	for d in w.deposits:
-		left[d.ore] = int(left.get(d.ore, 0)) + int(d.amount)
+		if w.villagers_reach(d):           # MIN-A: the village's own ore is what its workers can reach
+			left[d.ore] = int(left.get(d.ore, 0)) + int(d.amount)
 	var stock: Dictionary = GameData.b("caravan_import_stock")
 	var spent := 0
 	for o: NPC in w.npcs:

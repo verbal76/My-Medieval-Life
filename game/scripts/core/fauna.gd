@@ -324,18 +324,18 @@ func provoke(a: Animal, who: String) -> void:
 ## The position of whoever `who` names, or INF if they are gone.
 func _foe_pos(who: String) -> Vector2:
 	if who == "player":
-		return w.player.pos if w.player.alive else Vector2.INF
+		return w.player.pos if w.player.alive and w.player_level == 0 else Vector2.INF      # MIN-A: animals live on the surface
 	var n: NPC = w.npc(int(who.trim_prefix("npc:")))
-	return n.pos if n != null and n.alive else Vector2.INF
+	return n.pos if n != null and n.alive and n.depth == 0 else Vector2.INF
 
 
 ## A starving wolf or bear goes for a person standing in its wood with nobody else within alone_radius.
 func _hunt_people(a: Animal) -> void:
 	if a.anger != "" or not bool(a.spec().get("people", false)) or a.hunger >= float(wl().people_hunger):
 		return
-	var people := [["player", w.player.pos]] if w.player.alive else []
+	var people := [["player", w.player.pos]] if w.player.alive and w.player_level == 0 else []     # MIN-A: nobody below
 	for n: NPC in w.npcs:
-		if n.alive and not w.asleep(n) and n.pos.distance_to(a.pos) <= w.detail_radius:
+		if n.alive and not w.asleep(n) and n.depth == 0 and n.pos.distance_to(a.pos) <= w.detail_radius:
 			people.append(["npc:%d" % n.id, n.pos])
 	for p in people:
 		var at: Vector2 = p[1]
@@ -685,7 +685,7 @@ func _move(a: Animal, dt: float) -> void:
 		a.goal = prey.pos
 		a.wait = 0.0
 	else:
-		var threat: Vector2 = w.player.pos if w.player.alive and w.player.pos.distance_to(a.pos) < flee else Vector2.INF
+		var threat: Vector2 = w.player.pos if w.player.alive and w.player_level == 0 and w.player.pos.distance_to(a.pos) < flee else Vector2.INF
 		if flee > 0.0:
 			for b: Animal in animals:                       # prey run from a hunter that could take them (the last one found)
 				if b.alive and b.area == a.area and b.pos.distance_to(a.pos) < flee and (b.spec().get("prey", []) as Array).has(a.species):

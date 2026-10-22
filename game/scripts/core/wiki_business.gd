@@ -22,7 +22,7 @@ static func add_pages(w: Wiki) -> void:
 			"The window keeps your revenue, expenses (rent, upgrade, wages) and profit.",
 			"Rent is taken each morning from your coins, then settled coins in the till (never the open sales). If you cannot pay, sales stop; after %d unpaid days the manor takes the pitch back and your goods and coins return to you." % evict,
 		]),
-		Wiki.p("Villagers buy only what they really need and can pay for: the smith ore and coal, the carpenter and builders planks, stone and logs, miners and woodcutters a missing tool, guards their gear, households firewood and food. They will not pay more than they would at the merchants, and they stop buying once the need is met."),
+		Wiki.p("Villagers buy only what they really need and can pay for: the smith ore and coal, the carpenter and builders planks, building blocks, stone and logs, miners and woodcutters a missing tool, guards their gear, households firewood and food. They will not pay more than they would at the merchants, and they stop buying once the need is met."),
 		Wiki.links(["guide:market_stall", "guide:shop", "guide:attendant", "sys:trading", "guide:money", "job:merchant"])], "", "market stall rent sell shop business larger display")
 	var cost: Dictionary = Stalls.cost()
 	var cost_text := ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))

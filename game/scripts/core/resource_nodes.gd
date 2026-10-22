@@ -117,7 +117,12 @@ static func instances(world: World, d: Dictionary) -> Array:
 	var m: Dictionary = d.get("match", {})
 	match str(m.get("kind", "")):
 		"deposit":
-			return world.deposits.filter(func(dp): return dp.ore == m.ore)
+			var out := world.deposits.filter(func(dp): return dp.ore == m.ore)
+			if m.ore == "stone":                 # MIN-B: the host rock of worked-out ore seams is quarried as stone
+				for dp in world.deposits:
+					if dp.has("host") and int(dp.amount) <= 0:
+						out.append(dp.host)
+			return out
 		"boulder":
 			return world.boulders.filter(func(b): return int(b.amount) > 0)
 		"tree":
@@ -128,6 +133,19 @@ static func instances(world: World, d: Dictionary) -> Array:
 			return world.plants.filter(func(pl): return pl.kind == m.plant and pl.state != "cleared")
 		"animal":
 			return world.fauna.animals.filter(func(a: Animal): return a.alive and a.species == m.species)
+		"clue":                                  # MIN-C: the prospecting clues (Prospecting.generate)
+			return world.prospecting.clues.duplicate() if world.prospecting != null else []
+		"pit":                                   # MIN-E: the open pits staked (OpenPits)
+			return world.pits.pits.duplicate() if world.pits != null else []
+		"tunnel":                                # MIN-F: the rock cells being cut (MineWorks.cut), sorted
+			var out := []
+			if world.mine_works != null:
+				var keys: Array = world.mine_works.cut.keys()
+				keys.sort()
+				for k in keys:
+					var p: PackedStringArray = str(k).split(",")
+					out.append({"level": int(p[0]), "x": int(p[1]), "y": int(p[2])})
+			return out
 	return []
 
 
@@ -136,12 +154,15 @@ static func instances(world: World, d: Dictionary) -> Array:
 ## seam, a stump, a field not ripe, the keeper's animals) are found too: can_harvest says why.
 ## `exact`: only the cell itself (a tap or click names one thing; a tree counts on its trunk and
 ## the canopy cell above it, World.tree_at).
+## It looks on the level the player is on (MIN-A): below the surface only the level's seams are there.
 static func node_at(world: World, cell: Vector2i, exact := false) -> Dictionary:
 	for dc: Vector2i in ([Vector2i.ZERO] if exact else NEIGHBOURS):
 		var c: Vector2i = cell + dc
-		var dep := world.deposit_at(c)
+		var dep := world.deposit_at(c, world.player_level)
 		if not dep.is_empty():
 			return _found(def_for_deposit(dep), dep)
+		if world.player_level != 0:
+			continue
 		var t := world.tree_at(c)
 		if not t.is_empty():
 			return _found(def_for("tree"), t)
@@ -164,10 +185,12 @@ static func _found(d: Dictionary, ref) -> Dictionary:
 ## Where an instance stands: a seam's or a tree trunk's cell, a field's middle cell, an animal's cell.
 static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 	match str(d.get("match", {}).get("kind", "")):
-		"deposit", "boulder", "tree", "plant":
+		"deposit", "boulder", "tree", "plant", "clue", "tunnel":
 			return Vector2i(int(ref.x), int(ref.y))
 		"field":
 			return Vector2i(int(ref.x) + int(ref.w) / 2, int(ref.y) + int(ref.h) / 2)
+		"pit":
+			return Vector2i(int(ref.x) + OpenPits.size() / 2, int(ref.y) + OpenPits.size() / 2)
 		"animal":
 			return (ref as Animal).cell()
 	return Vector2i.ZERO
@@ -180,6 +203,16 @@ static func remaining(world: World, d: Dictionary, ref) -> int:
 	match str(d.get("match", {}).get("kind", "")):
 		"deposit", "boulder":
 			return maxi(0, int(ref.amount))
+		"clue":
+			return maxi(0, world.prospecting.samples_left(ref))
+		"tunnel":
+			return MineWorks.cell_units() - world.mine_works.cut_at(int(ref.level), Vector2i(int(ref.x), int(ref.y)))
+		"pit":
+			var gl := OpenPits.left(ref)
+			var n := 0
+			for id in gl:
+				n += int(gl[id])
+			return n
 		"tree":
 			return int(products(d).get("log", 0)) if ref.state == "grown" else 0
 		"field":
@@ -232,6 +265,9 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 		"animal":
 			if not (ref as Animal).alive:
 				return "It is gone."
+		"clue":
+			if world.prospecting.samples_left(ref) <= 0:
+				return "The ground round this stain has been sampled out."
 	if bool(d.get("tool_required", false)) and p.tool_of(str(d.tool)) == "":
 		return str(d.tool_hint)
 	if str(d.get("skill", "")) != "" and int(d.get("level", 0)) > 1 and p.level(str(d.skill)) < int(d.level):
@@ -244,7 +280,8 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 static func theft_note(world: World, d: Dictionary, ref) -> String:
 	match str(d.get("match", {}).get("kind", "")):
 		"field":
-			for fo: NPC in world.field_workers(ref):
+			var fo := world.field_owner(ref)                 # one test of whose a field is (DVW-A12 R17)
+			if fo != null:
 				return "%s %s's field: taking it is theft" % [fo.name, fo.family]
 		"animal":
 			var a := ref as Animal

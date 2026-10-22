@@ -1213,16 +1213,36 @@ func test_hiring() -> void:
 	q2.day = w.day() - 3
 	w.quests.drop_failed()
 	check(not p.quests.has(q2), "work left undone lapses")
-	# a miner's shift, and it is saved
+	# the miner's shift is retired (owner, OD-01): never offered or accepted again ...
 	var mn: NPC = w.npcs.filter(func(o): return o.job == "miner")[0]
 	mn.inv.remove("iron_ore", mn.inv.count("iron_ore"))
 	mn.coins = 20
-	var q3: Dictionary = w.quests.accept(mn, "work_the_mine")
-	check(not q3.is_empty(), "a miner short of ore hires the player")
+	check(w.quests.hire_offer(mn).is_empty() and not w.quests.hires(mn), "a miner short of ore no longer offers the retired shift")
+	check(w.quests.accept(mn, "work_the_mine").is_empty(), "and it cannot be taken on")
+	w.quests.offers.clear()
+	w.quests.refresh()
+	check(not w.quests.offers.values().has("work_the_mine"), "nor offered at dawn")
+	# ... but a shift already accepted in an older save is honoured once: its wage was set aside then
+	var mine_coins0 := w.total_coins()
+	var q3 := {"id": "work_the_mine", "giver": mn.id, "day": w.day(), "target": -1, "reserved": 8}
+	mn.coins -= 8                                          # as the old save holds it: set aside from the miner's mine_purse
+	p.quests.append(q3)
+	check(w.total_coins() == mine_coins0, "the set-aside wage is counted while the shift is open")
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
-	check(w2.player.quests.any(func(x): return x.id == "work_the_mine" and int(x.giver) == mn.id), "accepted work is saved")
+	var q4: Dictionary = w2.player.quests.filter(func(x): return x.id == "work_the_mine")[0]
+	check(int(q4.reserved) == 8 and w2.total_coins() == mine_coins0, "an accepted shift loads with its wage still set aside")
+	w2.player.inv.add("iron_ore", 6)
+	var mine_purse := w2.player.coins
+	check(w2.quests.complete(q4) == 8 and w2.player.coins == mine_purse + 8 and not w2.player.quests.has(q4), "it is paid once, in full, from what was set aside")
+	check(w2.quests.complete(q4) <= 0 and w2.player.coins == mine_purse + 8, "and never twice")
+	var q5 := {"id": "work_the_mine", "giver": mn.id, "day": w.day() - 5, "target": -1, "reserved": 8}
+	var mine_mc := mn.coins
+	p.quests.erase(q3)
+	p.quests.append(q5)
+	w.quests.drop_failed()
+	check(not p.quests.has(q5) and mn.coins == mine_mc + 8, "a stale retired shift lapses and its wage goes back to the miner")
 	w.dispose()
 	w2.dispose()
 
@@ -1285,12 +1305,12 @@ func test_building_site() -> void:
 	w.start_site(pl)
 	check(w.site_progress(pl) == 0.0, "a new site is 0% done")
 	p.inv.add("plank", 30)
-	p.inv.add("stone", 5)
+	p.inv.add("building_block", 5)          # STONE-01: a house takes building blocks
 	w.deliver(pl, p.inv)
 	check(absf(w.site_progress(pl) - 35.0 / 60.0) < 0.001, "the progress bar counts delivered loads (%.2f)" % w.site_progress(pl))
 	var coins0 := w.total_coins()
 	var back := w.cancel_site(pl, p.inv)
-	check(back == {"plank": 30, "stone": 5} and p.inv.count("plank") == 30 and p.inv.count("stone") == 5, "giving up a site returns every delivered load")
+	check(back == {"plank": 30, "building_block": 5} and p.inv.count("plank") == 30 and p.inv.count("building_block") == 5, "giving up a site returns every delivered load")
 	check(pl.site.is_empty() and w.owner_of(pl) == World.PLAYER and w.total_coins() == coins0, "the frame comes down; the plot stays the player's; no coin changes")
 	# a full pack: what does not fit is left in a bundle at the site
 	w.start_site(pl)
@@ -1300,7 +1320,7 @@ func test_building_site() -> void:
 	var loot0 := w.loot.size()
 	w.cancel_site(pl, p.inv)
 	var bundle: Dictionary = w.loot.back() if w.loot.size() > loot0 else {}
-	check(not bundle.is_empty() and int(bundle.inv.count("plank")) + p.inv.count("plank") == 30 and int(bundle.inv.count("stone")) + p.inv.count("stone") == 5, "with no room in the pack, the rest waits in a bundle at the site")
+	check(not bundle.is_empty() and int(bundle.inv.count("plank")) + p.inv.count("plank") == 30 and int(bundle.inv.count("building_block")) + p.inv.count("building_block") == 5, "with no room in the pack, the rest waits in a bundle at the site")
 	p.inv.max_stacks = 0
 	# a site from a save made before sites kept their cost still shows its progress and refunds
 	w.start_site(pl)
@@ -1410,7 +1430,7 @@ func test_interiors() -> void:
 	for n in [inside_eye, outside_eye]:
 		n.plan = [w.brain.work(600, "", {}, "idle")]
 		n.anim = "idle"
-	w.player.pos = Vector2(w.home_cell(walker, "chest")) + Vector2(0.5, 0.5)
+	w.player.pos = Vector2(int(crate.x), int(crate.y)) + Vector2(0.5, 0.5)        # at the crate: within reach (DVW-A12 R15)
 	var crimes0 := w.player.crimes.size()
 	w.player_take(crate)
 	check(w.player.crimes.size() == crimes0 + 1 and int(w.player.crimes[-1].witnesses) == 1, "a theft inside a house is seen by the one awake inside, not by the one at the door or the sleeper")
@@ -1487,7 +1507,7 @@ func _all_goods(w: World) -> Dictionary:
 		add.call(l.inv)
 	# materials delivered to unfinished building sites and carried by hired helpers are still goods
 	# held (the audit: site materials count in the goods-conservation test)
-	for src in [w.site_goods(), w.construction.carried(), w.manor_work.goods()]:
+	for src in [w.site_goods(), w.construction.carried(), w.manor_work.goods(), w.contracts.goods()]:
 		for id in src:
 			out[id] = int(out.get(id, 0)) + int(src[id])
 	return out
@@ -1862,7 +1882,7 @@ func test_construction() -> void:
 	check(w.property.describe(site).begins_with("the %s family's building site for a house" % p.family), "a site is named for its family: %s" % w.property.describe(site))
 	check(w.property.describe(w.buildings["b5"]).begins_with("the %s family's house" % w.households[w.household_in("b5")].family), "a house is named for the family living there: %s" % w.property.describe(w.buildings["b5"]))
 	# generic construction: anyone may deliver; the site's owner keeps the building
-	var ids := ["plank", "stone", "log", "iron_bar"]
+	var ids := ["plank", "building_block", "stone", "log", "iron_bar"]
 	var ledger0 := _ledger(w, ids)
 	var carrier: NPC = w.npcs[30]
 	for id in GameData.b("house_cost"):
@@ -1958,7 +1978,7 @@ func test_helpers() -> void:
 	helper.workplace = ""
 	_at_hour(w, 7.5)
 	var c0: int = coins.call()
-	var ids := ["plank", "stone", "log", "iron_bar"]
+	var ids := ["plank", "building_block", "stone", "log", "iron_bar"]
 	# the employer's goods: the chest, what the helper carries, the site, the building
 	var own := func() -> Dictionary:
 		var out := {}
@@ -2001,7 +2021,7 @@ func test_helpers() -> void:
 		if o.alive and o.job == "carpenter":
 			o.inv.add("plank", 20)
 		if o.alive and w.brain.buy_role(o) == "merchant_raw":
-			o.inv.add("stone", 20)
+			o.inv.add("building_block", 20)
 			o.inv.add("log", 20)
 	w.minutes += World.DAY
 	_at_hour(w, 7.2)
@@ -2193,8 +2213,8 @@ func test_simulation(days: int) -> void:
 	check(w.total_coins() == coins0 + w.coin_sources, "coins conserved: %d + sources %d = %d" % [coins0, w.coin_sources, w.total_coins()])
 	var st: Dictionary = w.stats
 	var expect := wheat0 + int(st.get("made_wheat", 0)) - int(st.get("used_wheat", 0)) - int(st.get("feed_eaten_wheat", 0)) \
-		- int(st.get("eaten_wheat", 0)) - int(st.get("exported_wheat", 0)) - int(st.get("farm_seed_saved", 0))
-	check(_wheat_held(w) == expect, "grain conserved: held %d, expected %d (harvest - cooked - fed - eaten - exported - kept as seed)" % [_wheat_held(w), expect])
+		- int(st.get("eaten_wheat", 0)) - int(st.get("exported_wheat", 0)) - int(st.get("farm_seed_saved", 0)) - int(st.get("spoiled_wheat", 0))
+	check(_wheat_held(w) == expect, "grain conserved: held %d, expected %d (harvest - cooked - fed - eaten - exported - kept as seed - spoiled in store, DVW-B4)" % [_wheat_held(w), expect])
 	var c := _census(w)
 	check(c.alive_villagers >= 90, "most villagers alive after %d days (%d)" % [days, c.alive_villagers])
 	check(int(c.made.get("iron_bar", 0)) + int(c.made.get("pickaxe", 0)) + int(c.made.get("axe", 0)) > 0, "smith produced something")
@@ -2770,6 +2790,10 @@ func test_build7_economy() -> void:
 	for d in w.deposits:
 		if d.ore == "stone":
 			d.amount = 0
+		if d.has("host"):
+			d.host.amount = 0              # MIN-B: the village's own stone is also the host rock and the boulders
+	for bd in w.boulders:
+		bd.amount = 0
 	var exp0 := int(w.stats.get("exported_stone", 0))
 	b.caravan()
 	var got := 0
@@ -3297,7 +3321,7 @@ func test_resource_registry() -> void:
 		check(d.has("range") and d.has("tool") and d.has("tool_hint") and d.has("verb") and d.has("action_label"), "%s has range, tool, tool_hint, verb and action_label" % id)
 	# every deposit is a seam node; what is left is its amount
 	var ok := true
-	for dep in w.deposits:
+	for dep in w.deposits.filter(func(x): return World.level_of(x) == 0):     # the surface's (the gallery's below: underground_test)
 		var at := ResourceNodes.node_at(w, Vector2i(dep.x, dep.y))
 		ok = ok and not at.is_empty() and at.ref == dep and at.def.match.ore == dep.ore and ResourceNodes.remaining(w, at.def, dep) == int(dep.amount) \
 				and ResourceNodes.instances(w, at.def).has(dep) and ResourceNodes.cell_of(w, at.def, dep) == Vector2i(dep.x, dep.y)
@@ -3383,7 +3407,7 @@ func test_resource_registry() -> void:
 	check(ResourceNodes.sources_of("gold_ore").any(func(s): return s.kind == "node" and s.id == "gold_seam"), "gold ore comes from the gold seam (Build 13)")
 	check(ResourceNodes.sources_of("bread").any(func(s): return s.kind == "recipe") and ResourceNodes.sources_of("bread").any(func(s): return s.kind == "start_kit"), "bread: the home food table makes it (PL2-013), and the start kit has it")
 	check(ResourceNodes.uses_of("iron_ore").any(func(u): return u.kind == "buyer" and u.id == "smith" and int(u.qty) == int(NPCBrain.BUYS.smith.iron_ore)), "buyers come from NPCBrain.BUYS")
-	check(ResourceNodes.uses_of("stone").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")
+	check(ResourceNodes.uses_of("building_block").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")
 	check(ResourceNodes.uses_of("pickaxe").any(func(u): return u.kind == "tool" and u.id == "iron_seam"), "a pickaxe is the tool for the seams")
 	check(ResourceNodes.sources_of("stone").any(func(s): return s.kind == "import") and ResourceNodes.sources_of("iron_ore").any(func(s): return s.kind == "import"), "caravan imports are sources")
 	w.dispose()
@@ -3490,7 +3514,7 @@ func test_village_layout() -> void:
 	var trees := {}
 	for t in w.trees:
 		trees[Vector2i(int(t.x), int(t.y))] = true
-	for d in w.deposits:
+	for d in w.deposits.filter(func(x): return World.level_of(x) == 0):      # the gallery's seams are reached below (underground_test)
 		var c := Vector2i(int(d.x), int(d.y))
 		check(next_to.call(c) and not trees.has(c), "B8-004: the %s seam at %s is on open ground and can be reached on foot" % [d.ore, c])
 	# B8-002: every interior floor cell (and the tavern's open-air kitchen) shows a floor tile, never plain grass

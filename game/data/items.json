@@ -27,6 +27,11 @@
       "type": "resource",
       "value": 1
     },
+    "building_block": {
+      "name": "Building block",
+      "type": "resource",
+      "value": 3
+    },
     "log": {
       "name": "Log",
       "type": "resource",
@@ -165,13 +170,15 @@
       "name": "Leather armour",
       "type": "armor",
       "value": 30,
-      "armor": 3
+      "armor": 3,
+      "durability": 300
     },
     "iron_armor": {
       "name": "Iron armour",
       "type": "armor",
       "value": 80,
-      "armor": 6
+      "armor": 6,
+      "durability": 600
     },
     "rusty_sword": {
       "name": "Rusty sword",
@@ -259,19 +266,22 @@
       "name": "Plain clothes",
       "type": "armor",
       "value": 2,
-      "armor": 0
+      "armor": 0,
+      "durability": 240
     },
     "leather_cap": {
       "name": "Leather cap",
       "type": "head",
       "value": 14,
-      "armor": 1
+      "armor": 1,
+      "durability": 240
     },
     "iron_helmet": {
       "name": "Iron helmet",
       "type": "head",
       "value": 36,
-      "armor": 2
+      "armor": 2,
+      "durability": 480
     },
     "copper_ring": {
       "name": "Copper ring",
@@ -317,6 +327,31 @@
     "cart_axle": {"name": "Cart axle", "type": "resource", "value": 20},
     "cart_ironwork": {"name": "Cart ironwork", "type": "resource", "value": 19},
     "handcart": {"name": "Handcart", "type": "resource", "value": 90, "cart": true},
-    "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"}
+    "nails": {
+      "name": "Nails",
+      "type": "resource",
+      "value": 1
+    },
+    "mallet": {
+      "name": "Mallet",
+      "type": "tool",
+      "tool": "mallet",
+      "value": 8,
+      "durability": 150,
+      "speed": 1.0
+    },
+    "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"},
+    "prospecting_kit": {"name": "Prospector's kit", "type": "tool", "tool": "prospecting_kit", "value": 34, "durability": 40, "speed": 1.0},
+    "ore_sample": {"name": "Rock sample", "type": "resource", "value": 0},
+    "topsoil": {"name": "Topsoil", "type": "resource", "value": 0},
+    "dirt": {"name": "Dirt", "type": "resource", "value": 0},
+    "spoil": {"name": "Spoil", "type": "resource", "value": 0},
+    "timber_support": {"name": "Timber support", "type": "resource", "value": 8},
+    "track_section": {"name": "Track section", "type": "resource", "value": 10},
+    "minecart": {"name": "Minecart", "type": "resource", "value": 170, "cart": true},
+    "ladder": {"name": "Ladder", "type": "resource", "value": 14},
+    "shovel": {"name": "Shovel", "type": "tool", "tool": "shovel", "value": 20, "durability": 120, "speed": 1.0},
+    "shovel_blade": {"name": "Shovel blade", "type": "resource", "value": 15},
+    "shovel_haft": {"name": "Shovel haft", "type": "resource", "value": 3}
   }
 }

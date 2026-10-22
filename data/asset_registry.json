@@ -6959,9 +6959,9 @@
     "units",
     "nature"
    ],
-   "status": "reference",
-   "used_for": "Building atlas data (data/) used by the tools.",
-   "opportunities": "Bridge.png for walkways (B14-07).",
+   "status": "partial",
+   "used_for": "Building atlas data (data/) used by the tools. Bridge.png (B14-07): the planks of its two frames are the walkway and wooden-stair tiles drawn over a cliff's rim made passable (game/assets/terrain/walkway_*.png, stairs_*.png; tools/terrain_art.py; Terrain, OverworldView).",
+   "opportunities": "More of its buildings and props as the village grows.",
    "scan": [
     {
      "source": "MiniWorldSprites.zip",
@@ -7024,7 +7024,12 @@
      "images": []
     }
    ],
-   "imported": []
+   "imported": [
+    "assets/terrain/stairs_ew.png",
+    "assets/terrain/stairs_ns.png",
+    "assets/terrain/walkway_ew.png",
+    "assets/terrain/walkway_ns.png"
+   ]
   },
   {
    "id": "miniworld_plus",
@@ -7971,6 +7976,7 @@
     "assets/icons/ale.png",
     "assets/icons/axe.png",
     "assets/icons/blueberries.png",
+    "assets/icons/building_block.png",
     "assets/icons/cart_axle.png",
     "assets/icons/cart_ironwork.png",
     "assets/icons/cart_wheel.png",
@@ -7979,6 +7985,7 @@
     "assets/icons/copper_bar.png",
     "assets/icons/copper_ore.png",
     "assets/icons/copper_sword.png",
+    "assets/icons/dirt.png",
     "assets/icons/feather.png",
     "assets/icons/fireball.png",
     "assets/icons/flower.png",
@@ -7995,25 +8002,38 @@
     "assets/icons/iron_helmet.png",
     "assets/icons/iron_ore.png",
     "assets/icons/iron_sword.png",
+    "assets/icons/ladder.png",
     "assets/icons/leather.png",
     "assets/icons/leather_armor.png",
     "assets/icons/leather_cap.png",
     "assets/icons/linen_bandage.png",
     "assets/icons/lockpick.png",
     "assets/icons/log.png",
+    "assets/icons/mallet.png",
     "assets/icons/meat.png",
+    "assets/icons/minecart.png",
+    "assets/icons/nails.png",
+    "assets/icons/ore_sample.png",
     "assets/icons/padlock.png",
     "assets/icons/pickaxe.png",
     "assets/icons/plank.png",
     "assets/icons/plough.png",
     "assets/icons/pottage.png",
+    "assets/icons/prospecting_kit.png",
     "assets/icons/rabbit_pelt.png",
     "assets/icons/red_berries.png",
     "assets/icons/roast_meat.png",
     "assets/icons/rusty_pickaxe.png",
     "assets/icons/rusty_sword.png",
+    "assets/icons/shovel.png",
+    "assets/icons/shovel_blade.png",
+    "assets/icons/shovel_haft.png",
+    "assets/icons/spoil.png",
     "assets/icons/stone.png",
     "assets/icons/strong_healing_tonic.png",
+    "assets/icons/timber_support.png",
+    "assets/icons/topsoil.png",
+    "assets/icons/track_section.png",
     "assets/icons/wheat.png",
     "assets/markers/combat.png",
     "assets/markers/food.png",
@@ -11913,8 +11933,9 @@
     "props",
     "ramps"
    ],
-   "status": "planned",
-   "opportunities": "Stone ramps and cliff steps for B14-07; fences (4 styles) for pens and fields; animated water and waterfalls (6 frames) for plateau streams; colour-variant trees and bushes for forest variety (as Living Forest-style trees). No cart, wagon, wheelbarrow or horse.",
+   "status": "partial",
+   "used_for": "B14-07: its laid-stone paving, reduced 1/2 (box) with step lines, is the cut-steps tile drawn over a cliff's rim (game/assets/terrain/steps.png; tools/terrain_art.py). Its stone ramps are side-on slopes for a 32 px terrace look and its brick paving reads as paving, not steps, at one 16 px world tile: not used for the steps themselves.",
+   "opportunities": "Stone ramps for open-pit terraces (MIN-A, with the pits' terrace art); fences (4 styles) for pens and fields; animated water and waterfalls (6 frames) for plateau streams; colour-variant trees and bushes for forest variety (as Living Forest-style trees). No cart, wagon, wheelbarrow or horse.",
    "scale": "32 px tiles drawn at the world's pixel density: 1:1, each tile covering 2 x 2 world tiles",
    "known_issues": "The .rar copy has a truncated WaterTiles file; the zip is complete and is the source.",
    "scan": [
@@ -12036,7 +12057,9 @@
      ]
     }
    ],
-   "imported": []
+   "imported": [
+    "assets/terrain/steps.png"
+   ]
   },
   {
    "id": "animal_farm",

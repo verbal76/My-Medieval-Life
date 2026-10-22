@@ -1,6 +1,6 @@
 {
   "format": "mml-capabilities/1",
-  "_note": "PROSPECTIVE (Expansion 18, PROS-18, wip/expansion18-preparation; not live gameplay). A settlement's capability per industry, SET-B (spec s.4), in the schema MIN_A_ARCHITECTURE.md s.9 sketched for SET-A: industries -> levels -> needs. A level holds when every need of it and of every level below it holds; levels are derived from the world (people, skills, tools, stock, structures, transport, records), never stored as truth. Mining is external: its level comes from MIN-D (Build 17) through MiningCapabilityAdapter and is never computed here. Need vocabulary is MIN-D's (game/data/capabilities.json on wip/b17-mind b0506db: practitioners {jobs, skill, min_level, count, as}, station {type}, structure {what}, transport {any: handcart | carry}, deposit_access, records, portal) plus stock, industry and any, so at the Build 18 reconciliation these industries move into capabilities.json unchanged (docs/expansion18/DESIGN.md section 8). Every threshold below is an agent proposal, provisional (owner question Q18-2: thresholds and the first industries).",
+  "_note": "PROSPECTIVE (Expansion 18, PROS-18, wip/expansion18-preparation; not live gameplay). A settlement's capability per industry, SET-B (spec s.4), in the schema MIN_A_ARCHITECTURE.md s.9 sketched for SET-A: industries -> levels -> needs. A level holds when every need of it and of every level below it holds; levels are derived from the world (people, skills, tools, stock, structures, transport, records), never stored as truth. Mining is external: its level comes from MIN-D (Build 17) through MiningCapabilityAdapter and is never computed here. Need vocabulary is MIN-D's (game/data/capabilities.json on wip/b17-mind b0506db: practitioners {jobs, skill, min_level, count, as}, station {type}, structure {what}, transport {any: handcart | carry}, deposit_access, records, portal) plus stock, industry and any, so at the Build 18 reconciliation these industries move into capabilities.json unchanged (docs/expansion18/DESIGN.md section 8). Every threshold below is an agent proposal, provisional (owner question Q18-2: thresholds and the first industries). SYNC-17 (Build 17 cd7439c, MIN-SKILLCAP): practitioners are counted by Skills level and the tool of the needed kind (an optional `tool` key, as in capabilities.json), never by job title, except where the game's own rule makes a trade the sole performer (farming: only farmers work the manor's fields, NPCBrain field workers; the analogue of MIN-D's assayer). The resident player counts by the villagers' rule; a shared household tool counts once (Discovery.practitioner).",
   "need_kinds": [
     "deposit_access",
     "practitioners",
@@ -31,15 +31,11 @@
           "needs": [
             {
               "kind": "practitioners",
-              "jobs": [
-                "woodcutter"
-              ],
-              "count": 1
-            },
-            {
-              "kind": "tool_stock",
+              "skill": "woodcutting",
+              "min_level": 1,
               "tool": "axe",
-              "count": 1
+              "count": 1,
+              "as": "woodcutter"
             }
           ]
         },
@@ -51,12 +47,9 @@
               "kind": "practitioners",
               "skill": "woodcutting",
               "min_level": 3,
-              "count": 2
-            },
-            {
-              "kind": "tool_stock",
               "tool": "axe",
-              "count": 2
+              "count": 2,
+              "as": "skilled woodcutter"
             },
             {
               "kind": "transport",
@@ -77,10 +70,10 @@
           "needs": [
             {
               "kind": "practitioners",
-              "jobs": [
-                "carpenter"
-              ],
-              "count": 1
+              "skill": "crafting",
+              "min_level": 1,
+              "count": 1,
+              "as": "carpenter"
             },
             {
               "kind": "station",
@@ -102,16 +95,13 @@
               "kind": "practitioners",
               "skill": "crafting",
               "min_level": 3,
-              "count": 1
+              "tool": "hammer",
+              "count": 1,
+              "as": "joiner"
             },
             {
               "kind": "station",
               "type": "workbench",
-              "count": 1
-            },
-            {
-              "kind": "tool_stock",
-              "tool": "hammer",
               "count": 1
             }
           ]
@@ -127,10 +117,11 @@
           "needs": [
             {
               "kind": "practitioners",
-              "jobs": [
-                "smith"
-              ],
-              "count": 1
+              "skill": "smithing",
+              "min_level": 1,
+              "tool": "hammer",
+              "count": 1,
+              "as": "smith"
             },
             {
               "kind": "station",
@@ -152,12 +143,9 @@
               "kind": "practitioners",
               "skill": "smithing",
               "min_level": 3,
-              "count": 1
-            },
-            {
-              "kind": "tool_stock",
               "tool": "hammer",
-              "count": 1
+              "count": 1,
+              "as": "toolmaker"
             },
             {
               "kind": "any",
@@ -184,7 +172,9 @@
               "kind": "practitioners",
               "skill": "smithing",
               "min_level": 6,
-              "count": 2
+              "tool": "hammer",
+              "count": 2,
+              "as": "master smith"
             },
             {
               "kind": "industry",
@@ -207,7 +197,8 @@
               "jobs": [
                 "farmer"
               ],
-              "count": 1
+              "count": 1,
+              "as": "farmer"
             },
             {
               "kind": "structure",
@@ -225,12 +216,17 @@
               "jobs": [
                 "farmer"
               ],
-              "count": 4
+              "count": 4,
+              "as": "farmer"
             },
             {
-              "kind": "tool_stock",
+              "kind": "practitioners",
+              "jobs": [
+                "farmer"
+              ],
               "tool": "plough",
-              "count": 1
+              "count": 1,
+              "as": "ploughman"
             },
             {
               "kind": "structure",
@@ -250,14 +246,19 @@
           "needs": [
             {
               "kind": "practitioners",
-              "jobs": [
-                "tanner"
-              ],
-              "count": 1
+              "skill": "crafting",
+              "min_level": 1,
+              "count": 1,
+              "as": "tanner"
             },
             {
               "kind": "station",
               "type": "workbench",
+              "count": 1
+            },
+            {
+              "kind": "stock",
+              "item": "hide",
               "count": 1
             }
           ]
@@ -273,10 +274,10 @@
           "needs": [
             {
               "kind": "practitioners",
-              "jobs": [
-                "merchant"
-              ],
-              "count": 1
+              "skill": "trading",
+              "min_level": 1,
+              "count": 1,
+              "as": "trader"
             },
             {
               "kind": "structure",
@@ -293,7 +294,8 @@
               "kind": "practitioners",
               "skill": "trading",
               "min_level": 3,
-              "count": 1
+              "count": 1,
+              "as": "seasoned trader"
             },
             {
               "kind": "transport",

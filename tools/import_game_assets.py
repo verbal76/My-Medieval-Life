@@ -25,6 +25,10 @@ records each file's source archive and path. This is that step. It writes:
                                                      the Living Forest package in private-assets/ (not in the
                                                      repository), by tools/living_forest.py (skipped, files kept,
                                                      if the package is missing)
+    game/assets/terrain/*, icons/nails.png, icons/mallet.png
+                                                     B14-07's ways through a cliff and its two items, by
+                                                     tools/terrain_art.py (Forgotten Memories, from private-assets/,
+                                                     and Miniworld's bridge)
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
 Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E, NE, N, NW, W,
@@ -52,6 +56,7 @@ import puny_world_terrain as pwt
 import animal_farm  # noqa: E402
 import craftpix_plants  # noqa: E402
 import living_forest
+import terrain_art  # noqa: E402
 
 OUT = REPO / "game" / "assets"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
@@ -163,6 +168,23 @@ ICONS = {
     # a stick as the axle, an iron slab as the ironwork and a plank slab as the cart
     "cart_wheel": "Armour/Wooden-Shield-01", "cart_axle": "Wood/Stick-01", "cart_ironwork": "Blocks/Metal-Slab-02",
     "handcart": "Blocks/Wood-Plank-Slab-03",
+    # MIN-C prospecting: the brown leather pack as the prospector's kit (hammer, chisel and sample bags in a satchel),
+    # the reddish rock fragments as a rock sample
+    "prospecting_kit": "Tools/Backpack-05", "ore_sample": "Stone/Rocks-10",
+    # MIN-E open-pit earth: the grass-topped dirt block as topsoil, the plain brown dirt block as dirt (subsoil), the
+    # grey pebbles as spoil (broken rock and gravel)
+    "topsoil": "Blocks/Dirt-Block-01", "dirt": "Blocks/Dirt-Block-13", "spoil": "Stone/Rocks-02",
+    # MIN-F underground works (stand-ins: the pack has no pit prop, rail or mine cart): the dark squared log block as
+    # the timber support (a prop and cap), a plank as the track section, the dark iron tub as the minecart's body
+    "timber_support": "Blocks/Wood-Log-Block-06", "track_section": "Wood/Wood-Plank-Type-B-04",
+    "minecart": "Metal/Metal-Bucket-02",
+    # STONE-01: the light grey dressed block as the finished building block (squared faces), apart from raw stone's chunk
+    "building_block": "Blocks/Stone-Block-02",
+    # MIN-F2: a bundle of sticks stands in for the ladder (the pack has none)
+    "ladder": "Wood/Sticks-01",
+    # MIN-SHOVEL: the grey iron-headed shovel as the shovel; the plain wooden shovel as the carpenter's haft (a
+    # medieval shovel was a wooden blade and handle shod with iron); a grey iron slab as the smith's blade (its iron shoe)
+    "shovel": "Tools/Shovel-05", "shovel_haft": "Tools/Shovel-15", "shovel_blade": "Blocks/Metal-Slab-05",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).
@@ -619,6 +641,7 @@ def main():
     living_forest.import_into(prov, record)           # the trees: from the private package if it is there, else kept as they are
     craftpix_plants.import_into(prov, record)         # fruit trees (B14): from the private Craftpix zip, else kept as they are
     animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
+    terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

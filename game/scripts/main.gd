@@ -10,6 +10,9 @@ var map: VillageMap
 var world: World
 var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
+var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
+var surface_works: WorksView   # MIN-F: track laid in the mine's yard (drawn from World.mine_works)
+var _pit_site := {}            # MIN-E: the last site looked at for staking a pit ({key, ok}: the cheap check, cached)
 var actors: Node2D
 var above: Node2D
 const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
@@ -101,6 +104,11 @@ var diamonds := {}             # npc id -> the quest marker sprite over a quest 
 var placing := {}              # choosing where to build: {kind, at: the footprint's top-left cell}
 var ghost: PlacementGhost      # the footprint shown while placing
 var place_step := 0.0          # seconds until a held stick or key moves the footprint again
+var level_views := {}          # MIN-A: LevelMap id -> LevelView (the levels below the surface)
+var level_alpha := 0.0         # MIN-A: how far the level below is faded in (the surface is faded out by as much)
+var level_shown := 0           # MIN-A: the level whose view is showing or fading (0: none)
+var portal_goal := {}          # MIN-A: a tapped portal: the end whose stand the player walks to, to go through
+var portal_said := -1          # MIN-A: the frame a refused crossing last said why (once a push, not every frame)
 const FLICKER := 1.2           # seconds a body flickers before it disappears
 const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
@@ -174,6 +182,18 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"underground":
+				# MIN-A: the player walks into the adit; the gallery shows and the surface is faded out
+				world.player.pos = Vector2(world.underground.portals[0].ends[0].stand) + Vector2(0.5, 0.5)
+				world.player_through(Vector2.UP)
+				if shot_warp != Vector2.INF:
+					world.player.pos = shot_warp
+				_sync_levels(0.0)
+				follow_at = _in_view(world.player.pos * T)
+			"mine_works", "cave":
+				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
+			"collapse", "shaft", "backfill":
+				_struct_shot(shot_panel)                # MIN-F2: a caved-in tunnel, a shaft with its ladder, a backfilled passage
 			"gain":
 				ui.gain("+2 red berries", "red_berries")
 				ui.gain("+1 Iron ore", "iron_ore")
@@ -185,6 +205,8 @@ func _ready() -> void:
 				ui.show_trade(sage)
 			"farm_tilled", "farm_growing", "farm_pen":
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
+			"open_pit", "open_pit_dug":
+				_pit_shot(shot_panel == "open_pit_dug")  # MIN-E: an open pit part dug (or dug out), its spoil heaps, people beside it
 			"small_room", "small_room_inside":
 				_room_shot(shot_panel == "small_room_inside")   # HOUSE-10: the small room built against b_v1_house
 			"employer_star":
@@ -342,7 +364,7 @@ func _ready() -> void:
 				world.buy_plot(pl)
 				world.start_site(pl)
 				world.player.inv.add("plank", 30)
-				world.player.inv.add("stone", 8)
+				world.player.inv.add("building_block", 8)
 				world.deliver(pl, world.player.inv)
 				world.player.pos = Vector2(float(pl.door[0]) + 0.5, float(pl.door[1]) + 1.5)
 				follow_at = _in_view(world.player.pos * T)
@@ -649,7 +671,7 @@ func _ready() -> void:
 				world.buy_plot(pl)
 				world.start_site(pl)
 				world.player.inv.add("plank", 30)
-				world.player.inv.add("stone", 20)
+				world.player.inv.add("building_block", 20)
 				world.player.inv.add("log", 10)
 				world.deliver(pl, world.player.inv)
 				world.property.lease(world.plots[1], World.PLAYER)
@@ -901,6 +923,9 @@ func _build_scene() -> void:
 	add_child(ow_view)
 	blood_layer = Node2D.new()
 	add_child(blood_layer)
+	var clues := ClueView.new()                   # MIN-C: prospecting stains on the ground, under the characters
+	blood_layer.add_child(clues)
+	clues.setup(world.prospecting, T, func(c: Vector2i) -> bool: return world.plant_at(c).is_empty() and not world.map.is_solid(c))
 	actors = Node2D.new()
 	actors.y_sort_enabled = true
 	add_child(actors)
@@ -922,6 +947,10 @@ func _build_scene() -> void:
 	ghost.z_index = MARKER_Z
 	above.add_child(ghost)
 	view.build(map, above, actors)             # overlay tiles of solid cells are drawn among the characters (B8-025)
+	pit_view = PitView.new()                     # MIN-E: open pits and spoil heaps, on the ground under the "below" layers
+	view.add_child(pit_view)
+	view.move_child(pit_view, view.layer("below0").get_index())
+	pit_view.setup(view, world.pits)
 	_draw_village_exits()
 	tree_view.setup(world)
 	_replace_tree_tiles()
@@ -955,6 +984,7 @@ func _build_scene() -> void:
 	ow_view.follow(world.player.pos, world.player.pos, 0.0, 6)      # the nearest chunks at once, the rest over the next frames
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
+	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
 	dying.clear()
 	fading.clear()
 	for n: NPC in world.npcs:
@@ -963,6 +993,7 @@ func _build_scene() -> void:
 	world.event.connect(func(t): ui.log_line(t))
 	world.building_added.connect(_on_building_added)
 	world.show_tables()                  # the tavern's tables show only the food that is on them
+	_build_levels()
 
 
 ## The village map draws its trees as tiles; the game draws them as sprites (TreeView). Take the tree
@@ -1060,7 +1091,7 @@ func _show_plants() -> void:
 
 func _apply_world_changes() -> void:
 	for d in world.deposits:
-		if int(d.amount) <= 0:
+		if int(d.amount) <= 0 and World.level_of(d) == 0:       # a level's seams are drawn by its LevelView (MIN-A)
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
 	world.sync_boulders()                    # boulders already broken up (B8-026)
 	for b in world.boulders:                 # the small ones are drawn small (PL1-06)
@@ -1173,6 +1204,7 @@ func _process(delta: float) -> void:
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
 	_sync_sprites()
+	_sync_levels(delta)
 	_sync_gather_mark()
 	ui.update_hud()
 
@@ -1437,7 +1469,8 @@ func approach(n: NPC) -> void:
 		ui.show_talk(n)
 
 
-## B14: each cart drawn with the mine cart tile (a stand-in until the owner's own art).
+## B14: each cart drawn with the mine cart tile (a stand-in until the owner's own art). MIN-F: a minecart with the
+## atlas's own mine cart, empty or heaped with rock when it holds anything; on its level only (_sync_levels).
 func _sync_carts() -> void:
 	var seen := {}
 	for c in world.carts.carts:
@@ -1445,10 +1478,15 @@ func _sync_carts() -> void:
 		var s: Sprite2D = cart_sprites.get(int(c.id))
 		if s == null:
 			s = Sprite2D.new()
-			s.texture = _tile_texture(CART_TILE)
 			s.offset = Vector2(0, -T / 2.0 + 2.0)
 			actors.add_child(s)
 			cart_sprites[int(c.id)] = s
+		var tile := CART_TILE
+		if Carts.kind_of(c) == "minecart":
+			tile = MINECART_FULL_TILE if (c.store as Inventory).total() > 0 else MINECART_TILE
+		if s.get_meta("tile", -1) != tile:
+			s.texture = _tile_texture(tile)
+			s.set_meta("tile", tile)
 		s.position = (c.pos as Vector2) * T
 		s.flip_h = (c.facing as Vector2).x < 0.0
 	for id in cart_sprites.keys():
@@ -1458,6 +1496,8 @@ func _sync_carts() -> void:
 
 
 const CART_TILE := 3009          # the mine cart on its rail (tools/build_village.py MINE_CART, atlas 0)
+const MINECART_TILE := 3229      # MIN-F: the paid atlas's empty mine cart (the column of carts beside CART_TILE)
+const MINECART_FULL_TILE := 3449  # MIN-F: the same cart heaped with grey rock
 
 
 ## One tile of the map's atlases as a texture (tile = atlas * 100000 + index).
@@ -1594,7 +1634,7 @@ func _player_step(delta: float) -> void:
 	walking = v.length() > 0.1
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
-				* (Carts.pull_speed() if not world.carts.pulled_by(World.PLAYER).is_empty() else 1.0)     # B14: a cart is slower going
+				* (world.carts.pull_speed_for(world.carts.pulled_by(World.PLAYER)) if not world.carts.pulled_by(World.PLAYER).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
 		var before := p.pos
 		var moved_x := _try_move(Vector2(step.x, 0))
@@ -1604,6 +1644,7 @@ func _player_step(delta: float) -> void:
 		elif not moved_x and absf(v.x) > absf(v.y):
 			_slide_to_gap(Vector2(step.x, 0))
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
+		_through_portal(v)
 		player_sprite.face(v)
 		player_sprite.play("walk")
 		player_sprite.speed_scale = _sprint_scale()
@@ -1611,6 +1652,7 @@ func _player_step(delta: float) -> void:
 		sprinting = false
 		if player_sprite.anim in ["walk", "swing", "gather", "work"]:
 			_rest_anim()
+		_through_portal(Vector2.ZERO)        # MIN-A: a tapped adit, reached
 	_find_target()
 	if Input.is_action_just_pressed("interact"):
 		interact()
@@ -1666,12 +1708,12 @@ func cancel_action(why := "") -> void:
 ## when the balance's sprint_toggle is on. It needs stamina and ends when that is gone; the speed
 ## multiplier is returned and the cost taken (net of the regeneration the world just added).
 func _sprint_step(delta: float) -> float:
-	var p := world.player
-	if sprint_latched and not sprinting and p.stamina >= float(GameData.b("sprint_min_stamina")):
+	var p := world.player                 # the stamina rules are PlayerState's (DVW-A12 R19); the input latches are here
+	if sprint_latched and not sprinting and p.can_sprint():
 		sprinting = true
 	if not bool(GameData.b("sprint_toggle")):
 		if Input.is_action_pressed("sprint"):
-			if not sprinting and not sprint_spent and p.stamina >= float(GameData.b("sprint_min_stamina")):
+			if not sprinting and not sprint_spent and p.can_sprint():
 				sprinting = true
 		else:
 			sprint_spent = false
@@ -1679,22 +1721,21 @@ func _sprint_step(delta: float) -> float:
 				sprinting = false
 	if not sprinting:
 		return 1.0
-	p.stamina = maxf(0.0, p.stamina - (float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))) * delta)
-	if p.stamina <= 0.0:
+	if not p.sprint_drain(delta):
 		sprinting = false            # out of breath: back to walking until Shift is let go and pressed again
 		sprint_spent = true
 		if sprint_latched:
 			sprint_latched = false
 			ui.set_sprint_mode(false)
 		return 1.0
-	return float(GameData.b("sprint_speed"))
+	return PlayerState.sprint_speed()
 
 
 ## Sprint on or off (LT; Shift when sprint_toggle is on). It cannot start without some stamina.
 func toggle_sprint() -> void:
 	if sprinting:
 		sprinting = false
-	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")) and action.is_empty():
+	elif world.player.can_sprint() and action.is_empty():
 		sprinting = true
 
 
@@ -1705,13 +1746,13 @@ func toggle_run_latch() -> void:
 	if sprint_latched:
 		sprint_latched = false
 		sprinting = false
-	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")):
+	elif world.player.can_sprint():
 		sprint_latched = true
 	ui.set_sprint_mode(sprint_latched)
 
 
 func _sprint_scale() -> float:
-	return float(GameData.b("sprint_speed")) if sprinting else 1.0
+	return PlayerState.sprint_speed() if sprinting else 1.0
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes
@@ -1724,8 +1765,8 @@ func _route_step(_delta: float) -> Vector2:
 		walk_goal = goal
 		walk_stuck = 0.0
 		var here := Vector2i(floori(p.pos.x), floori(p.pos.y))
-		walk_path = map.find_path_world(here, goal)
-		if walk_path.is_empty() and not (map.in_village(here) and map.in_village(goal)):
+		walk_path = world.path_for_player(here, goal)            # the level the player is on (MIN-A)
+		if walk_path.is_empty() and world.player_level == 0 and not (map.in_village(here) and map.in_village(goal)):
 			walk_path = PackedVector2Array([Vector2(here), Vector2(goal)])      # too far or no way found: straight there, sliding along what is in the way
 		walk_i = 1                       # the first point is the cell the player stands in
 		if walk_path.is_empty():
@@ -1734,7 +1775,7 @@ func _route_step(_delta: float) -> Vector2:
 			return Vector2.ZERO
 	# the last stretch goes to the exact point; before it, to the centre of each cell on the way
 	var target := move_to if walk_i >= walk_path.size() - 1 else walk_path[walk_i] + Vector2(0.5, 0.5)
-	if map.is_solid_world(goal) and walk_i >= walk_path.size() - 1:
+	if world.solid_for_player(goal) and walk_i >= walk_path.size() - 1:
 		target = walk_path[walk_path.size() - 1] + Vector2(0.5, 0.5)
 	var d := target - p.pos
 	# a waypoint is reached within 0.15 tiles, or within most of a frame's step: a long frame (a slow
@@ -1753,7 +1794,7 @@ func _route_step(_delta: float) -> Vector2:
 func _talk_step() -> void:
 	if talk_to == null:
 		return
-	if not talk_to.alive or _covered(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0:
+	if not talk_to.alive or _covered(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0 or talk_to.depth != world.player_level:     # MIN-A: not through rock
 		talk_to = null
 		move_to = Vector2.INF
 		return
@@ -1793,7 +1834,7 @@ func _blocked_corners(at: Vector2) -> int:
 	var n := 0
 	for c in BODY:
 		var q: Vector2 = at + c
-		if map.is_solid_world(Vector2i(floori(q.x), floori(q.y))):
+		if world.solid_for_player(Vector2i(floori(q.x), floori(q.y))):     # the level the player is on (MIN-A)
 			n += 1
 	return n
 
@@ -1841,8 +1882,11 @@ func facing_vec() -> Vector2:
 ## the station, plot, pen, door, bed or manor step at their feet. `target` is the one the player chose
 ## with cycle_target (else the first), and the prompt names it, and the next, when there are several.
 func _find_target() -> void:
+	if world.player_level != 0:
+		_find_target_below()               # MIN-A: below the surface only what is on the player's level
+		return
 	var p := world.player
-	var probe := p.pos + facing_vec() * 0.9
+	var probe := p.pos + facing_vec() * World.TARGET_PROBE      # the reach is core's (DVW-A12 R15)
 	var near: Array = []        # [distance to the probe, order, target]
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
@@ -1855,7 +1899,7 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
-		if at.distance_to(p.pos) > 2.2:
+		if at.distance_to(p.pos) > World.CONTAINER_REACH:
 			continue
 		var d := at.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, at):
@@ -1868,6 +1912,8 @@ func _find_target() -> void:
 			if d < 1.5 and world.reaches(p.pos, at):
 				near.append([d, near.size(), _shop_target(post)])
 	for i in world.loot.size():
+		if World.level_of(world.loot[i]) != 0:
+			continue                       # left below the surface (MIN-A)
 		var d: float = world.loot[i].pos.distance_to(probe)
 		if (d < 1.5 or world.loot[i].pos.distance_to(p.pos) < 1.2) and world.reaches(p.pos, world.loot[i].pos):       # underfoot counts too (PL2-004)
 			var from: String = world.loot[i].from
@@ -1923,11 +1969,10 @@ func _find_target() -> void:
 			break
 		for f in world.fields:
 			if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
-				var whose := ""
-				for fo: NPC in world.field_workers(f):
-					whose = "%s %s's" % [fo.name, fo.family]
-					break
-				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
+				var fo := world.field_owner(f)                  # whose it is: core's (DVW-A12 R17)
+				var whose := "%s %s's" % [fo.name, fo.family] if fo != null else ""
+				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""],
+						"theft": world.field_is_theft(f)}
 				break
 		if not front.is_empty():
 			break
@@ -1937,22 +1982,14 @@ func _find_target() -> void:
 	# at the player's feet (the last of these was the only one offered before B8-014: it comes first)
 	var here: Array = []
 	here.append_array(_fit_targets(world.place_of(p.pos)))
-	# B14 carts: the one you pull can be let go anywhere; a cart beside you can be pulled (yours) or opened
-	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
-	if not pulling.is_empty():
-		here.append({"kind": "cart_park", "id": int(pulling.id), "label": "Let go of your cart"})
-		if (pulling.pos as Vector2).distance_to(p.pos) < 1.6:
-			here.append({"kind": "chest", "id": "cart:%d" % int(pulling.id), "label": "Open your cart: store things"})
-	else:
-		var cart: Dictionary = world.carts.near(p.pos, 1.3)
-		if not cart.is_empty():
-			if world.carts.may_use(cart, World.PLAYER):
-				here.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your cart"})
-			here.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
+	here.append_array(_prospect_targets(cands))           # MIN-C: a clue's ground underfoot, a smith who can assay
+	here.append_array(_pit_targets(cands))                # MIN-E: the player's own open pit and spoil heaps, or ground to stake one
+	here.append_array(_cart_targets(0))
+	here.append_array(_works_targets())                   # MIN-F: track in the mine's yard
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
-		if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+		if u.distance_to(p.pos) < World.STATION_REACH and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
 			var no := world.station_refusal(id)
 			here.append({"kind": "station", "id": id, "label": ("Use Stove" if st.type == "stove" else "Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
 	for pl in world.plots:
@@ -2065,8 +2102,9 @@ func _find_target() -> void:
 		cands.erase(front)
 		cands.push_front(front)
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
-	var lawful := cands.filter(func(c): return not str(c.get("label", "")).contains("theft"))
-	cands = lawful + cands.filter(func(c): return str(c.get("label", "")).contains("theft"))
+	# (whether a choice is theft is core's: World.chest_is_theft, container_is_theft, field_is_theft, DVW-A12 R16)
+	var lawful := cands.filter(func(c): return not c.get("theft", false))
+	cands = lawful + cands.filter(func(c): return c.get("theft", false))
 	target_options = cands
 	var pick := 0
 	for i in cands.size():
@@ -2135,9 +2173,23 @@ func _manor_label(j: Dictionary) -> String:
 		"put":
 			if j.kind == "quarry":
 				return "Bring %d stone to the works yard (you have %d)" % [int(j.qty), world.player.inv.count("stone")]
+			if j.kind == "excavate":
+				return "Bring the pit's stone to the works yard"
 			return "Put the manor's goods in %s" % mw.dest_name(j.to)
 		"mend":
 			return "Mend %s (%d hours)" % [str(j.get("place", "the road")), roundi(float(ManorWork.cfg("mend_minutes")) / 60.0)]
+		"sample":
+			return "Take a rock sample for the manor's survey (%d of %d)" % [int(j.taken) + 1, int(j.qty)]
+		"assay":
+			return "Have the survey's samples assayed here (%d coins each)" % int(Prospecting.cfg().assay.fee)
+		"report":
+			return "Tell the manor what the survey's samples showed"
+		"dig":
+			return "Dig the manor's trial pit here (%d hours)" % roundi(float(Discovery.cfg().trial.minutes) / 60.0)
+		"excavate":
+			return "Dig the manor's open pit here (%d of %d dug)" % [j.load.total(), int(j.qty)]
+		"tip":
+			return "Tip the manor's earth onto the spoil heap"
 	return ""
 
 
@@ -2226,7 +2278,7 @@ func _container_target(c: Dictionary) -> Dictionary:
 	var whose := world.container_whose(c)
 	if id == "":
 		return {"kind": "info", "label": "Empty %s (%s)" % [c.kind, whose], "text": "There is nothing in the %s." % c.kind}
-	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose]}
+	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose], "theft": world.container_is_theft(c)}
 
 
 ## A chest, crate or barrel (PL2-002): yours to fill, or someone else's (theft, perhaps locked).
@@ -2238,8 +2290,8 @@ func _chest_target(u: Dictionary) -> Dictionary:
 	if i.access == "own":
 		return {"kind": "chest", "id": u.id, "label": "Open %s: store things" % what}
 	if world.chests.is_locked(u):
-		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what}
-	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what}
+		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what, "theft": world.chest_is_theft(u)}
+	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what, "theft": world.chest_is_theft(u)}
 
 
 ## Pick a locked chest's lock (PL2-002): takes game time, may snap the pick, and may be seen.
@@ -2252,8 +2304,7 @@ func pick_lock(uid: String) -> void:
 	var secs := world.chests.pick_minutes(u) / float(GameData.b("game_minutes_per_second"))
 	ui.hide_all()
 	start_action("Picking the lock", secs, func():
-		var r: Dictionary = world.chests.attempt(u)
-		_xp("stealth", 4 if r.result == "open" else 1)
+		var r: Dictionary = world.player_pick_lock(u)          # the try and its xp are core's (DVW-A12 R6)
 		ui.message(r.text, 6.0)
 		if r.result == "open":
 			ui.show_chest(uid))
@@ -2263,7 +2314,7 @@ func pick_lock(uid: String) -> void:
 ## The pile of loot drawn at a map position (within 0.8 tile), or INF.
 func _loot_at(wpos: Vector2) -> Vector2:
 	for l in world.loot:
-		if l.pos.distance_to(wpos) < 0.8:
+		if l.pos.distance_to(wpos) < 0.8 and World.level_of(l) == world.player_level:
 			return l.pos
 	return Vector2.INF
 
@@ -2288,7 +2339,9 @@ func _usable_at(wpos: Vector2) -> Vector2:
 func pickpocket(n: NPC) -> void:
 	ui.hide_all()
 	var r: Dictionary = world.pickpocket(n)
-	_xp("stealth", 8 if r.ok else 2)
+	if r.get("refused", false):                 # out of reach (DVW-A12 R14): no try was made
+		ui.message(r.text)
+		return
 	if not r.ok:
 		say(n, "Thief! Get your hand out of my purse!")
 	ui.message(r.text)
@@ -2346,12 +2399,19 @@ func _gain(text: String, item := "") -> void:
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
-	if str(target.get("kind", "")) in ["deposit", "tree", "plant", "loot", "fruit"]:
-		var tp: Vector2 = world.loot[target.i].pos if target.kind == "loot" and target.i < world.loot.size() else Vector2(_target_cell(target)) + Vector2(0.5, 0.5)
-		if not world.reaches(p.pos, tp):
-			stop_gather("")
-			ui.message("A wall is in the way.")
-			return
+	var far := ""                                  # the reach is core's (DVW-A12 R15)
+	match str(target.get("kind", "")):
+		"deposit", "tree", "plant", "fruit":
+			far = world.player_reach_cell(_target_cell(target), str(target.kind) in ["tree", "fruit"])
+		"loot":
+			if target.i < world.loot.size():
+				far = world.player_reach_point(world.loot[target.i].pos, World.TARGET_PROBE + World.TARGET_REACH)
+		"field":
+			far = world.player_reach_field(target.field)
+	if far != "":
+		stop_gather("")
+		ui.message(far)
+		return
 	match target.kind:
 		"npc":
 			approach(target.npc)
@@ -2384,77 +2444,104 @@ func _use() -> void:
 			var c: Dictionary = target.c
 			var place := world.container_place(c)
 			var got := world.player_take(c)
-			if got == "full":
+			if got == "far":
+				ui.message(world.player_container_reach(c))         # out of reach (DVW-A12 R15)
+			elif got == "full":
 				ui.message("Your pack is full.")
 			elif got == "":
 				ui.message("There is nothing to take.")
 			else:
-				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0
-				if seen == 0:
-					_xp("stealth", 3)
+				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0      # (the xp for it is core's, R6)
 				var said := "You take 1 %s from %s. %s" % [GameData.item_name(got).to_lower(), place,
 						"Nobody saw." if seen == 0 else ("%d %s saw you!" % [seen, "person" if seen == 1 else "people"])]
 				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
 		"loot":
-			var l: Dictionary = world.loot[target.i]
-			var taken := 0
-			for id in l.inv.ids():
-				var n: int = l.inv.count(id)
-				if p.inv.add(id, n):
-					l.inv.remove(id, n)
-					taken += n
-					_gain("+%d %s" % [n, GameData.item_name(id)], id)
-			if int(l.coins) > 0:
-				_gain("+%d coins" % int(l.coins), "coins")
-			elif taken == 0:
-				ui.message("Your pack is full." if l.inv.total() > 0 else "There is nothing left.")
-			elif l.inv.total() > 0:
+			var got := world.player_loot(int(target.i))             # the taking is core's (DVW-A12 R5)
+			if str(got.far) != "":
+				ui.message(str(got.far))
+				return
+			for pair in got.items:
+				_gain("+%d %s" % [int(pair[1]), GameData.item_name(str(pair[0]))], str(pair[0]))
+			if int(got.coins) > 0:
+				_gain("+%d coins" % int(got.coins), "coins")
+			elif got.items.is_empty():
+				ui.message("Your pack is full." if int(got.left) > 0 else "There is nothing left.")
+			elif int(got.left) > 0:
 				ui.message("Your pack is full: some is left behind.")
-			p.coins += int(l.coins)
-			l.coins = 0
-			if l.inv.total() == 0:
-				world.loot.remove_at(target.i)
+		"sample":
+			_sample(target.clue, target.cell)
+		"assay":
+			_assay(target.npc)
+		"trial_dig":
+			_trial_dig(target.clue, target.cell, str(target.tool))
+		"pit_stake":
+			_pit_stake(target.origin)
+		"pit_dig":
+			_pit_dig(target.pit, target.cell, str(target.tool))
+		"tunnel_cut":
+			_tunnel_cut(target.cell, str(target.tool))
+		"support_place", "track_lay":
+			_works_place(str(target.kind), target.cell)
+		"works_repair", "ladder_set":
+			_works_fix(str(target.kind), target.cell)
+		"shaft_dig":
+			_shaft_dig(target.cell, str(target.tool))
+		"fill_own":
+			_fill_own(target.cell)
+		"fill_order":
+			var why: String = world.manor_work.order_backfill(world.player_level, target.cell, int(target.units))
+			ui.message(why if why != "" else "The order is made and its wage set aside. Leave the spoil at the mine's mouth, where the order's workers take it.")
+		"fill_cancel":
+			var fj: Dictionary = world.manor_work.job(int(target.job))
+			if not fj.is_empty():
+				world.manor_work.cancel_backfill(fj)
+				ui.message("The order is cancelled: its wage comes back to you; the fill placed stays where it is.")
+		"fill_stock":
+			var sj: Dictionary = world.manor_work.job(int(target.job))
+			if not sj.is_empty():
+				var q: int = world.manor_work.stock_backfill(sj, p.inv, world.manor_work.backfill_needs(sj))
+				ui.message("You leave %d spoil for the backfill order." % q)
+		"pit_fill":
+			var r := world.pits.backfill(target.pit, target.cell, p.inv)
+			ui.message("You put back a unit of %s." % GameData.item_name(str(r.item)).to_lower() if r.result == "ok" else str(r.why))
+		"pit_tip":
+			var moved := world.pits.tip(target.pit, p.inv)
+			ui.message("You tip %s onto the spoil heap." % _goods_text(moved) if not moved.is_empty() else "The spoil heaps are full.")
+		"pit_take":
+			var got := world.pits.take(target.pit, str(target.item), 10, p.inv)
+			if got > 0:
+				_gain("+%d %s" % [got, GameData.item_name(str(target.item))], str(target.item))
+			else:
+				ui.message("Your pack is full.")
 		"deposit":
 			var dep: Dictionary = target.dep
-			var pick := p.tool_of("pickaxe")
-			if pick == "":
-				ui.message("Requires a pickaxe. The smith sells them.")
+			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
+			if not mp.ok:
+				ui.message(str(mp.why))
 				return
-			if dep.ore == "gold_ore" and not Skills.has(p, "mining", "gold"):
-				ui.message("Gold needs Mining level 3.")
-				return
-			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
-			start_action("Mining", secs, func():
-				var full := not p.inv.can_add(str(dep.get("ore", "stone")))
-				var r := world.work_mine(p, dep, p.inv, pick)          # the same swing as a miner's (PAR-01)
+			var pick: String = mp.tool
+			start_action("Mining", float(mp.secs), func():
+				var r := world.player_mine(dep, pick)                  # the same swing as a miner's (PAR-01)
 				if r.result == "out":
 					ui.message("The seam is worked out.")
 					return
 				if r.result == "gold":
 					ui.message("Gold needs Mining level 3.")
 					return
-				if full:
+				if r.full:
 					ui.message("Your pack is full: the ore is left at your feet.")
 				else:
 					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
 				if r.broke:
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
-					if p.tool == pick:
-						p.tool = ""
 				_level_up("mining", int(r.up)), "swing", pick)
 		"tree":
-			var axe := p.tool_of("axe")
-			if axe == "":
-				ui.message("Requires an axe. The smith sells them.")
-				return
-			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
-			secs *= Skills.value(p, "woodcutting", "chop_time", 1.0)
 			var tr: Dictionary = target.tree
-			var why := Trees.refusal(str(tr.state))         # only a mature tree can be felled
-			if why != "":
-				ui.message(why)
+			var fp := world.player_fell_plan(tr)                      # the rules are in core (DVW-A12 R2)
+			if not fp.ok:
+				ui.message(str(fp.why))
 				return
-			_chop(tr, axe, secs)
+			_chop(tr, str(fp.tool), float(fp.secs))
 		"station":
 			ui.show_craft(target.id)
 		"field":
@@ -2547,16 +2634,426 @@ func _use() -> void:
 			var pay := int(mj.reserved)
 			var finish := func(ok: bool) -> void:
 				if not ok:
-					ui.message("You need %d stone for the manor: mine it at the stone seams." % int(mj.qty) if mj.kind == "quarry" else "There is nothing here to take.")
+					ui.message("You need %d stone for the manor: mine it at the stone seams." % int(mj.qty) if mj.kind == "quarry"
+							else (mw.last_refusal if mj.kind in ["survey", "trial", "excavate"] and mw.last_refusal != "" else "There is nothing here to take."))
 				elif mw.job_of("player").is_empty():
-					ui.message("Work for the manor done. The manor pays you %d coins." % pay)
+					var found := ""
+					if mj.kind == "trial":
+						found = " The pit strikes ore: a new seam is opened." if mj.get("found", false) else " The pit finds no ore."
+					elif mj.kind == "excavate" and mj.get("found", false):
+						found = " The pit has struck ore: a new seam is opened."
+					ui.message("Work for the manor done.%s The manor pays you %d coins." % [found, pay])
+				elif mj.kind == "survey":
+					ui.message(ui._manor_next(mj))
 				else:
 					ui.message("You take the manor's goods. %s" % ui._manor_next(mj))
-			if mw.step(mj) == "mend":
+			mw.last_refusal = ""
+			var step := mw.step(mj)
+			if step == "mend":
 				var secs := float(ManorWork.cfg("mend_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
+			elif step == "sample":
+				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
+			elif step == "dig":
+				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "shovel")
+			elif step == "excavate":
+				var pit := world.pits.pit(int(mj.pit))
+				var cell := mw.excavate_cell(mj)
+				var pick := OpenPits.held_tool(p, world.pits.tool_needed(pit, cell)) if not pit.is_empty() and cell.x >= 0 else ""
+				if pit.is_empty() or cell.x < 0 or pick == "":
+					ui.message("There is nothing in the pit you can dig now: earth needs a shovel, rock a pickaxe." if OpenPits.kinds_held(p).size() < 2 else "There is nothing in the pit that can be dug now.")
+					return
+				start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), pick), func():
+					var was: int = mj.load.total()
+					var ok := mw.do_step(mj, "player", p.inv)
+					if ok and mj.load.total() > was:
+						ui.message("Dug for the manor: %d of %d. %s" % [mj.load.total(), int(mj.qty), ui._manor_next(mj)])
+					else:
+						finish.call(ok), "swing", pick)
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
+
+
+## MIN-C: what prospecting offers here: the ground of a clue's search area underfoot (sample it with a prospector's
+## kit, or what the stain is without one), and a smith in `cands` who could assay a rock sample the player carries.
+## The rules are Prospecting's (the same as a prospector's); this only offers them.
+func _prospect_targets(cands: Array) -> Array:
+	var out := []
+	var pr: Prospecting = world.prospecting
+	if pr == null or world.player_level != 0:
+		return out
+	var p := world.player
+	var cell := Vector2i(floori(p.pos.x), floori(p.pos.y))
+	var c := pr.area_at(cell)
+	if not c.is_empty():
+		var key := "%s@%d,%d" % [c.id, cell.x, cell.y]
+		if not p.inv.has(Prospecting.KIT):
+			out.append({"kind": "info", "id": key, "text": pr.sample_refusal(p, c, cell),
+					"label": "%s near here: a prospector's kit could sample it" % World.cap(pr.stain(c))})
+		elif pr.samples_left(c) > 0:
+			out.append({"kind": "sample", "id": key, "clue": c, "cell": cell,
+					"label": "Take a rock sample here (%s nearby; %d samples left round it)" % [pr.stain(c), pr.samples_left(c)]})
+	# MIN-D: a trial pit on clear ground of a clue's area in front of the player, with a shovel (Discovery.trial_dig;
+	# owner MIN-E-Q4: earth is dug with a shovel)
+	var ahead := Vector2i((p.pos + facing_vec() * 1.0).floor())
+	var ca := pr.area_at(ahead)
+	var pick := p.tool_of(str(Discovery.cfg().trial.get("tool", "shovel")))
+	if not ca.is_empty() and pick != "" and world.discovery.ground_refusal(ca, ahead) == "":
+		out.append({"kind": "trial_dig", "id": "%s@%d,%d" % [ca.id, ahead.x, ahead.y], "clue": ca, "cell": ahead, "tool": pick,
+				"label": "Dig a trial pit here (%s nearby; %d hours; %d pits left round it)" % [pr.stain(ca), roundi(float(Discovery.cfg().trial.minutes) / 60.0), world.discovery.trials_left(ca)]})
+	if p.inv.has(Prospecting.ITEM):
+		for t in cands:
+			if str(t.get("kind", "")) in ["npc", "shop"] and (t.npc as NPC).job == "smith" and not world.asleep(t.npc):
+				out.append({"kind": "assay", "npc": t.npc, "label": "Ask %s to assay a rock sample (%d coins)" % [(t.npc as NPC).name, int(Prospecting.cfg().assay.fee)]})
+	return out
+
+
+## MIN-E: what the open pits offer here (OpenPits: the rules are core's, the same as a villager's). The player's own
+## pit: dig the cell ahead (or beside it) with a pickaxe, put a unit back that the pack holds (the last dug goes back
+## first), tip the pack's earth onto its spoil heap, take earth from the heap. The manor's pit is dug only through its
+## job (the manor_job target). With a pickaxe in hand and nothing else in front, the ground ahead may be staked for a
+## pit (a cheap look here; the full check when it is used).
+func _pit_targets(cands: Array) -> Array:
+	var out := []
+	var pp: OpenPits = world.pits
+	if pp == null or world.player_level != 0:
+		return out
+	var p := world.player
+	var ahead := Vector2i((p.pos + facing_vec() * 1.0).floor())
+	var mine := Vector2i(p.pos.floor())
+	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+		var cell: Vector2i = ahead + dc
+		if maxi(absi(cell.x - mine.x), absi(cell.y - mine.y)) > 1 or cell == mine:
+			continue
+		var hp := pp.heap_at(cell)
+		if not hp.is_empty() and str(hp.pit.owner) == World.PLAYER:
+			var earth := 0
+			for id in OpenPits.earth_items():
+				earth += p.inv.count(id)
+			if earth > 0:
+				out.append({"kind": "pit_tip", "id": "heap@%d,%d" % [cell.x, cell.y], "pit": hp.pit, "label": "Tip your earth onto the spoil heap (%d)" % earth})
+			for id in OpenPits.earth_items():
+				if pp.heap_count(hp.pit, id) > 0:
+					out.append({"kind": "pit_take", "id": "heap@%d,%d:%s" % [cell.x, cell.y, id], "pit": hp.pit, "item": id,
+							"label": "Take %s from the spoil heap (%d there)" % [GameData.item_name(id).to_lower(), pp.heap_count(hp.pit, id)]})
+			break
+		var pit := pp.pit_at(cell)
+		if pit.is_empty() or str(pit.owner) != World.PLAYER:
+			continue
+		var i := OpenPits.index(pit, cell)
+		var pick := OpenPits.held_tool(p, pp.tool_needed(pit, cell))      # MIN-E-Q4: a shovel for earth, a pickaxe for rock
+		if pick != "" and pp.dig_ground_refusal(pit, cell) == "":
+			var item := OpenPits.item_of(int(pit.dug[i]))
+			out.append({"kind": "pit_dig", "id": "pit@%d,%d" % [cell.x, cell.y], "pit": pit, "cell": cell, "tool": pick,
+					"label": "Dig %s from your open pit (%d of the %s left here)" % [GameData.item_name(item).to_lower(), OpenPits.cum(OpenPits.depth_of(int(pit.dug[i])) + 1) - int(pit.dug[i]), "ramp" if OpenPits.is_ramp(i) else "layer"]})
+		if pp.fill_refusal(pit, cell, p.inv) == "":
+			out.append({"kind": "pit_fill", "id": "fill@%d,%d" % [cell.x, cell.y], "pit": pit, "cell": cell,
+					"label": "Put back a unit of %s" % GameData.item_name(OpenPits.item_of(int(pit.dug[i]) - 1)).to_lower()})
+		if not out.is_empty():
+			break
+	if out.is_empty() and cands.is_empty() and p.tool != "" and str(GameData.item(p.tool).get("tool", "")) in ["pickaxe", "shovel"]:
+		var origin := OpenPits.origin_ahead(ahead, facing_vec())
+		var key := "%d,%d" % [origin.x, origin.y]
+		if str(_pit_site.get("key", "")) != key or int(_pit_site.get("at", -1)) != int(world.minutes):
+			_pit_site = {"key": key, "at": int(world.minutes), "ok": pp.site_open(origin)}
+		if _pit_site.ok:
+			out.append({"kind": "pit_stake", "id": "stake@" + key, "origin": origin,
+					"label": "Mark out an open pit here (%d by %d, with its spoil heaps)" % [OpenPits.size(), OpenPits.size()]})
+	return out
+
+
+## "3 topsoil and 2 dirt": goods moved, in words.
+func _goods_text(goods: Dictionary) -> String:
+	var parts := []
+	for id in goods:
+		parts.append("%d %s" % [int(goods[id]), GameData.item_name(id).to_lower()])
+	return " and ".join(parts)
+
+
+## MIN-E: stake an open pit ahead (OpenPits.open_pit, after its full site check).
+func _pit_stake(origin: Vector2i) -> void:
+	var why := world.pits.site_refusal(origin)
+	if why != "":
+		ui.message(why)
+		return
+	world.pits.open_pit(World.PLAYER, origin)
+	ui.message("You mark out an open pit. Dig its earth with a shovel and its rock with a pickaxe; tip the earth on its spoil heaps.")
+
+
+## MIN-E: dig a unit from cell `cell` of the player's pit, timed as a mining swing (OpenPits.dig: the unit to the pack,
+## the pickaxe wears, Mining xp; down at the rock a body within reach is opened as a seam).
+func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.pits.dig_refusal(p, pit, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), tool), func():
+		var r := world.pits.dig(p, pit, cell, p.inv, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		if not (r.exposed as Dictionary).is_empty():
+			ui.message("The pit strikes %s: a new seam is opened." % GameData.item_name(str(r.exposed.ore)).to_lower())
+		if r.broke:
+			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
+		_level_up("mining", int(r.up)), "swing", tool)
+
+
+## B14 carts: the one you pull can be let go anywhere; a cart beside you on `level` can be pulled (yours) or opened.
+## MIN-F: below the surface the same, for a minecart on the player's level.
+func _cart_targets(level: int) -> Array:
+	var out := []
+	var p := world.player
+	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
+	if not pulling.is_empty():
+		var what := "minecart" if Carts.kind_of(pulling) == "minecart" else "cart"
+		out.append({"kind": "cart_park", "id": int(pulling.id), "label": "Let go of your %s" % what})
+		if (pulling.pos as Vector2).distance_to(p.pos) < 1.6:
+			out.append({"kind": "chest", "id": "cart:%d" % int(pulling.id), "label": "Open your %s: store things" % what})
+	else:
+		var cart: Dictionary = world.carts.near(p.pos, 1.3, level)
+		if not cart.is_empty():
+			if world.carts.may_use(cart, World.PLAYER):
+				out.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your %s (%s)" % ["minecart" if Carts.kind_of(cart) == "minecart" else "cart", world.carts.condition(cart)]})     # DVW-B4: its wear
+			out.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
+	return out
+
+
+## MIN-F: below the surface, the rock face ahead (cut it with a pickaxe; or why it may not be cut yet), a timber
+## support to set up on the floor ahead or underfoot, a track section to lay underfoot or ahead; on the surface, track
+## in the mine's yard. The rules are MineWorks' (the same for villagers); these are only the offers.
+func _works_targets() -> Array:
+	var out := []
+	var mw: MineWorks = world.mine_works
+	if mw == null:
+		return out
+	var p := world.player
+	var lv := world.player_level
+	var mine := Vector2i(p.pos.floor())
+	var ahead := Vector2i((p.pos + facing_vec() * 0.9).floor())
+	if lv != 0:
+		var pick := ""
+		for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+			var c: Vector2i = ahead + dc
+			if c == mine or maxi(absi(c.x - mine.x), absi(c.y - mine.y)) > 1 or not world.underground.is_solid(lv, c) or not world.deposit_at(c, lv).is_empty():
+				continue
+			if not mw.shaft_at(lv, c).is_empty():
+				continue                                 # a shaft's mouth: its own offers below
+			var why := mw.cut_refusal(lv, c)
+			var held := mw.held_at(lv, c)
+			pick = p.tool_of(mw.tool_kind(lv, c))         # MIN-E-Q4: rock a pickaxe; rubble or fill a shovel
+			if why == "" and pick != "":
+				out.append({"kind": "tunnel_cut", "id": "cut@%d,%d" % [c.x, c.y], "cell": c, "tool": pick,
+						"label": ("Dig out the %s (%d units of spoil)" % ["fallen rock" if mw.rubble_at(lv, c) > 0 else "backfill", held]) if held > 0
+						else "Cut into the rock (%d of %d units left here: stone, then spoil)" % [MineWorks.cell_units() - mw.cut_at(lv, c), MineWorks.cell_units()]})
+			elif why.begins_with("Set up a timber support") or (why == "" and pick == ""):
+				var need := "a shovel to dig out" if held > 0 else "a pickaxe to cut"
+				out.append({"kind": "info", "id": "face@%d,%d" % [c.x, c.y], "text": why if why != "" else "You need %s it." % need,
+						"label": "The rock face: " + (why if why != "" else "needs %s it" % need).to_lower().trim_suffix(".")})
+			break
+		if p.inv.has(str(MineWorks.cfg().support.item)):
+			for c in [ahead, mine]:
+				if mw.support_refusal(p, c) == "":
+					out.append({"kind": "support_place", "id": "support@%d,%d" % [c.x, c.y], "cell": c, "label": "Set up a timber support here"})
+					break
+		# MIN-F2 (Q1): a worn support or ladder beside the player
+		for c in [ahead, mine]:
+			var what := mw._repairable(lv, c)
+			if what != "":
+				var cond := mw.support_condition(lv, c) if what == "support" else int(mw.shaft_at(lv, c).ladder)
+				var rwhy := mw.repair_refusal(p, c)
+				out.append({"kind": "works_repair" if rwhy == "" else "info", "id": "repair@%d,%d" % [c.x, c.y], "cell": c, "text": rwhy,
+						"label": "Repair the %s (%d%% sound)%s" % ["timber support" if what == "support" else "ladder", roundi(100.0 * cond / float(MineWorks.cfg().stability.full)), "" if rwhy == "" else ": " + rwhy.to_lower().trim_suffix(".")]})
+				break
+		# MIN-F2 (Q4): a shaft ahead: dig it on, or set its ladder; or sink one in the floor ahead
+		var sh := mw.shaft_at(lv, ahead)
+		if not sh.is_empty():
+			if mw.shaft_done(sh) and int(sh.rubble) <= 0:
+				if int(sh.ladder) < 0:
+					var lwhy := mw.ladder_refusal(p, ahead)
+					out.append({"kind": "ladder_set" if lwhy == "" else "info", "id": "ladder@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "text": lwhy,
+							"label": "Set a ladder into the shaft" if lwhy == "" else "The shaft: " + lwhy.to_lower().trim_suffix(".")})
+			elif pick != "" and mw.shaft_refusal(p, ahead, pick) == "":
+				out.append({"kind": "shaft_dig", "id": "shaft@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "tool": pick,
+						"label": "Dig the shaft on (%d of %d dug)" % [int(sh.dug), MineWorks.shaft_units()]})
+		elif pick != "" and ahead != mine and mw.shaft_refusal(p, ahead, pick) == "" and p.inv.has(str(MineWorks.cfg().ladder.item)):
+			out.append({"kind": "shaft_dig", "id": "shaft@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "tool": pick,
+					"label": "Sink a shaft to the level below here"})
+		# MIN-F2 (Q5): backfill, only by the player's choice: with their own spoil, or by an order they pay for
+		if ahead != mine and mw.fill_ground_refusal(lv, ahead) == "":
+			var order := world.manor_work.backfill_order(lv, ahead)
+			if p.inv.has("spoil") and mw.fill_refusal(p, ahead, p.inv) == "":
+				out.append({"kind": "fill_own", "id": "fill@%d,%d" % [ahead.x, ahead.y], "cell": ahead,
+						"label": "Put spoil back into the passage (%d of %d)" % [mw.fill_at(lv, ahead), MineWorks.cell_units()]})
+			if order.is_empty():
+				var units := MineWorks.cell_units() - mw.fill_at(lv, ahead)
+				out.append({"kind": "fill_order", "id": "order@%d,%d" % [ahead.x, ahead.y], "cell": ahead, "units": units,
+						"label": "Backfill Tunnel: order this passage filled (%d spoil, %d coins for the worker)" % [units, maxi(1, units * int(MineWorks.cfg().backfill.order_rate))]})
+			else:
+				out.append({"kind": "fill_cancel", "id": "cancel@%d,%d" % [ahead.x, ahead.y], "job": int(order.id),
+						"label": "Cancel the backfill order here (%d of %d placed)" % [int(order.placed), int(order.qty)]})
+	else:
+		# MIN-F2 (Q5): at a backfill order's depot, the player leaves spoil for it
+		for j in world.manor_work.jobs:
+			if j.kind == "backfill" and Vector2(int(j.depot[0]), int(j.depot[1])).distance_to(Vector2(mine)) <= 1.5 and p.inv.has("spoil") and world.manor_work.backfill_needs(j) > 0:
+				out.append({"kind": "fill_stock", "id": "stock@%d" % int(j.id), "job": int(j.id),
+						"label": "Leave spoil for the backfill order (%d wanted, you have %d)" % [world.manor_work.backfill_needs(j), p.inv.count("spoil")]})
+				break
+	if p.inv.has(str(MineWorks.cfg().track.item)):
+		for c in [mine, ahead]:
+			if mw.track_refusal(p, c) == "":
+				out.append({"kind": "track_lay", "id": "track@%d,%d" % [c.x, c.y], "cell": c, "label": "Lay a track section here"})
+				break
+	return out
+
+
+## MIN-F: cut a unit from the rock face, timed as a mining swing (MineWorks.dig: the unit to the pack, the pickaxe
+## wears, Mining xp; the cell's last unit opens it as floor).
+func _tunnel_cut(cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.mine_works.dig_refusal(p, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Cutting", world.mine_works.player_secs(cell, tool), func():
+		var r := world.mine_works.dig(p, cell, p.inv, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		if r.opened:
+			ui.message("The rock is cut through: the tunnel goes on.")
+		if r.broke:
+			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
+		_level_up("mining", int(r.up)), "swing", tool)
+
+
+## MIN-F: set up a timber support or lay a track section (MineWorks), timed by its minutes as a building job.
+func _works_place(kind: String, cell: Vector2i) -> void:
+	var p := world.player
+	var mw: MineWorks = world.mine_works
+	var sc: Dictionary = MineWorks.cfg().support if kind == "support_place" else MineWorks.cfg().track
+	var why := mw.support_refusal(p, cell) if kind == "support_place" else mw.track_refusal(p, cell)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Building", float(sc.minutes) / float(GameData.b("game_minutes_per_second")) * 0.6, func():
+		var r := mw.place_support(p, cell) if kind == "support_place" else mw.lay_track(p, cell)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		ui.message("The timber support stands: the rock within %d cells may be cut." % int(sc.reach) if kind == "support_place" else "You lay a track section.")
+		if r.broke:
+			ui.message("Your mallet broke.")
+		_level_up(str(sc.skill), int(r.up)), "swing", str(sc.tool))
+
+
+## MIN-F2: repair a worn support or ladder, or set a ladder into a shaft (MineWorks), timed as building.
+func _works_fix(kind: String, cell: Vector2i) -> void:
+	var p := world.player
+	var mw: MineWorks = world.mine_works
+	var why := mw.repair_refusal(p, cell) if kind == "works_repair" else mw.ladder_refusal(p, cell)
+	if why != "":
+		ui.message(why)
+		return
+	var mins := float(MineWorks.cfg().support.repair_minutes) if kind == "works_repair" else float(MineWorks.cfg().ladder.minutes)
+	start_action("Building", mins / float(GameData.b("game_minutes_per_second")) * 0.6, func():
+		var r := mw.repair(p, cell) if kind == "works_repair" else mw.install_ladder(p, cell)
+		ui.message(str(r.why) if r.result != "ok" else ("It is sound again." if kind == "works_repair" else "The ladder stands in the shaft: it can be climbed."))
+		if r.result == "ok" and r.broke:
+			ui.message("Your mallet broke."), "swing", "mallet")
+
+
+## MIN-F2: dig a unit of a shaft, timed as a mining swing.
+func _shaft_dig(cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.mine_works.shaft_refusal(p, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Digging", world.mine_works.shaft_secs(cell, tool), func():
+		var r := world.mine_works.dig_shaft(p, cell, p.inv, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		if r.done:
+			ui.message("The shaft breaks through to the level below. Set a ladder in it to climb down.")
+		_level_up("mining", int(r.up)), "swing", "pickaxe")
+
+
+## MIN-F2 (Q5): the player puts a unit of their own spoil back into the passage ahead.
+func _fill_own(cell: Vector2i) -> void:
+	var p := world.player
+	var why := world.mine_works.fill_refusal(p, cell, p.inv)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Filling", world.mine_works.fill_secs(), func():
+		var r := world.mine_works.fill(p, cell, p.inv)
+		if r.result != "ok":
+			ui.message(str(r.why))
+		elif r.full:
+			ui.message("The passage is filled to the roof."))
+
+
+## MIN-C: take a rock sample from the ground underfoot, timed as a mining swing (Prospecting.take_sample: the kit
+## wears, the sample and its origin go to the pack, Mining xp).
+func _sample(c: Dictionary, cell: Vector2i) -> void:
+	var p := world.player
+	var why := world.prospecting.sample_refusal(p, c, cell)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Sampling", Prospecting.player_secs(), func():
+		var r := world.prospecting.take_sample(p, c, cell)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(Prospecting.ITEM), Prospecting.ITEM)
+		if r.broke:
+			ui.message("Your prospector's kit is worn out.")
+		_level_up("mining", int(r.up)), "swing", "hammer")
+
+
+## MIN-D: dig a trial pit on the cell ahead, timed as a mining swing (Discovery.trial_dig: the pickaxe wears, Mining
+## xp; within reach of the clue's body a seam is opened there, else nothing is found).
+func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.discovery.trial_refusal(p, c, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Digging a trial pit", Discovery.player_secs(), func():
+		var r := world.discovery.trial_dig(p, c, cell, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		if (r.found as Dictionary).is_empty():
+			ui.message("The trial pit finds no ore.")
+		else:
+			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower())
+		ui.message("The earth you dug lies in a spoil pile beside the pit.")
+		if r.broke:
+			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
+		_level_up("mining", int(r.up)), "swing", tool)
+
+
+## MIN-C: smith `n` assays the oldest rock sample the player carries (Prospecting.assay: the fee, the coal, the forge
+## for the assay's time); the player waits beside the forge for the reading.
+func _assay(n: NPC) -> void:
+	var r := world.prospecting.assay(world.player, n)
+	if r.result != "ok":
+		ui.message(str(r.why))
+		return
+	var rec: Dictionary = r.record
+	var c := world.prospecting.clue(str(rec.clue))
+	var said := "%s assays your sample from %s %s: %s." % [n.name, world.prospecting.stain(c), world.prospecting.place(c),
+			world.prospecting.reading_text(rec)]
+	start_action("Waiting for the assay", float(Prospecting.cfg().assay.minutes) / float(GameData.b("game_minutes_per_second")) * 0.6,
+			func(): ui.message(said), "gather")
 
 
 ## Fell a mature tree blow by blow: each blow is a short action that cuts the tree (its cut marks, chips
@@ -2568,33 +3065,34 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
-		if tr.state != "grown":
+		var r := world.player_chop(tr, side, axe)          # the same felling as a woodcutter's (PAR-01, DVW-A12 R2)
+		if r.result == "gone":
 			return                                       # someone else felled it meanwhile
-		var r := world.chop_tree(tr, side, int(Skills.value(p, "woodcutting", "log_bonus")))
-		if int(r.logs) <= 0:
+		if r.result == "blow":
 			_chop(tr, axe, secs)
 			return
-		var full := not p.inv.can_add("log")
-		var f := world.work_felled(p, int(r.logs), p.inv, axe)     # the same as a woodcutter's (PAR-01)
-		if full:
+		if r.full:
 			ui.message("Your pack is full: the logs are left at your feet.")
 		else:
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
-		var saplings := world.sapling_drop(tr, Skills.value(p, "woodcutting", "sapling_bonus"))
-		for id in saplings:
-			if world.player_gain(id, int(saplings[id])) == int(saplings[id]):
-				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
-		if f.broke:
+		for id in r.saplings:
+			_gain("+%d %s" % [int(r.saplings[id]), GameData.item_name(id)], id)
+		if r.broke:
 			ui.message("Your %s broke." % GameData.item_name(axe).to_lower())
-			if p.tool == axe:
-				p.tool = ""
-		_level_up("woodcutting", int(f.up)), "swing", axe)
+		_level_up("woodcutting", int(r.up)), "swing", axe)
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
-## B14: set the handcart from the pack down in front of you; it becomes a cart in the world.
-func set_down_cart() -> void:
+## B14: set the handcart from the pack down in front of you; it becomes a cart in the world. MIN-F: a minecart is set
+## down on track, underfoot or ahead, on the player's level (MineWorks.set_down_minecart).
+func set_down_cart(item := "handcart") -> void:
 	var p := world.player
+	if item == "minecart":
+		var mine := Vector2i(p.pos.floor())
+		var cell := mine if world.mine_works.track_at(world.player_level, mine) else Vector2i((p.pos + facing_vec()).floor())
+		var r := world.mine_works.set_down_minecart(p, World.PLAYER, cell)
+		ui.message(str(r.why) if r.result != "ok" else "You set the minecart down on its rails. Pull it along the track, or open it to load it.")
+		return
 	if not p.inv.has("handcart"):
 		return
 	var at := p.pos + facing_vec()
@@ -2618,13 +3116,10 @@ func plant_sapling(item: String) -> void:
 		return
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	start_action("Planting", float(Trees.cfg().plant_seconds), func():
-		if not p.inv.has(item) or world.plant_refusal(cell) != "":
+		var t := world.player_plant_sapling(cell, item)          # the rules are core's (DVW-A12 R4)
+		if t.is_empty():
 			ui.message("It cannot be planted there now.")
-			return
-		var t := world.plant_tree(cell, item)
-		if not t.is_empty():
-			p.inv.remove(item, 1)
-			world.stat("used_" + item)               # the sapling is used up (SEED-02: the ledger counts it)
+		else:
 			ui.message("You plant the %s. It will grow into a tree in a few days." % GameData.item_name(item).to_lower().replace(" sapling", " sapling"))
 	)
 
@@ -2660,8 +3155,9 @@ func start_action(label: String, secs: float, done: Callable, anim := "gather", 
 	player_sprite.play(anim)
 
 
+## Xp earned by the player: core's (World.player_xp, DVW-A12 R6); a new level's banner comes by player_leveled.
 func _xp(skill: String, n: int) -> void:
-	_level_up(skill, world.player.gain(skill, n))
+	world.player_xp(skill, n)
 
 
 ## The banner for a new level (`up` 0: none).
@@ -2678,28 +3174,14 @@ func _level_up(skill: String, up: int) -> void:
 ## does not hold is waited for (World.station_refusal); the player's work takes the station meanwhile.
 func craft(recipe: String, station := "") -> void:
 	var r: Dictionary = GameData.recipes[recipe]
-	var p := world.player
-	if station == "":
-		for id in world.stations_of(str(r.station)):
-			if (Vector2(world.station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
-				station = id
-	if station != "":
-		var no := world.station_refusal(station)
-		if no != "":
-			ui.message(no)
-			return
-	if p.level(r.skill) < int(r.level):
-		ui.message("Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)])
+	var cp := world.player_craft_begin(recipe, station)          # the rules are in core (DVW-A12 R3)
+	if not cp.ok:
+		ui.message(str(cp.why))
 		return
-	if not p.inv.has_all(r.in):
-		ui.message("You do not have the materials.")
-		return
-	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(r.skill), "craft_time", 1.0)
-	if station != "":
-		world.reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	station = str(cp.station)
 	ui.hide_all()
-	start_action("Crafting", secs, func():
-		var res := world.work_craft(p, recipe, p.inv)           # the same as a villager's (PAR-01, PAR-04)
+	start_action("Crafting", float(cp.secs), func():
+		var res := world.player_craft(recipe)                   # the same as a villager's (PAR-01, PAR-04)
 		if res.result != "ok":
 			return
 		_level_up(str(r.skill), int(res.up))
@@ -2715,6 +3197,9 @@ func craft(recipe: String, station := "") -> void:
 ## Returns "start", "queued" or "ignored".
 func attack(only: Object = null) -> String:
 	if not action.is_empty():
+		return "ignored"
+	if world.player_level != 0:
+		ui.message("Nothing to fight here.")      # MIN-A: nobody but the player goes below yet
 		return "ignored"
 	var r := swing.press(swing_time(), only)
 	if r == "start":
@@ -2748,20 +3233,18 @@ func _blow() -> void:
 	var who: Object = Combat.target(world, p.pos, facing_vec(), swing.only)
 	if who is NPC:
 		swing.hits += 1
-		_hit(who, _strike(p))
-		_xp("combat", 4)
+		var hp0: float = who.hp
+		var h := world.player_melee_npc(who)          # the strike, the harm, the crime and the xp are core's (DVW-A12 R7-R9)
+		if h.crit:
+			ui.message("A telling blow!")
+		_hit_fx(sprites.get(who.id), who.max_hp, hp0 - float(h.dealt), float(h.dealt))
+		_level_up("combat", int(h.up))
 	elif who is Animal:
 		swing.hits += 1
-		_hit_animal(who, _strike(p))
-
-
-## The damage of one blow: the weapon's, and a double blow with the Combat tier's crit chance.
-func _strike(p: PlayerState) -> float:
-	var d := p.damage()
-	if world.rng.randf() < Skills.value(p, "combat", "crit_chance"):
-		ui.message("A telling blow!")
-		return d * 2.0
-	return d
+		var s := world.player_strike()
+		if s.crit:
+			ui.message("A telling blow!")
+		_hit_animal(who, float(s.dmg))
 
 
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
@@ -2802,6 +3285,8 @@ func _foe_in_reach() -> Object:
 ## Mark a person or animal with the sword and strike it: the player walks over if needed. Each
 ## further tap (or right-click) on it is another strike; picking someone else moves the sword.
 func strike(who: Object) -> void:
+	if who is NPC and (who as NPC).depth != world.player_level:
+		return                             # MIN-A: rock lies between them
 	chase = who
 	strike_pending = true
 
@@ -2848,49 +3333,21 @@ func _chase_step() -> void:
 
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
 ## livestock is theft from its keeper, a crime like attacking a villager.
+## The rules are core's (World.player_hit_animal, DVW-A12 R10); the blow and a guard's words are shown here.
 func _hit_animal(a: Animal, dmg: float) -> void:
 	var before := a.hp
-	a.hp -= dmg
-	_hit_fx(animal_sprites.get(a.id), before, a.hp, dmg)
-	if a.hp > 0.0:
-		world.fauna.provoke(a, "player")            # a wolf or a bear fights back (B14)
-		return
-	_xp("combat", Skills.kill_xp(a.species, world.player.damage()))     # per kill, as a villager's (FSE-B12)
-	var keeper: NPC = null
-	if not a.wild():
-		keeper = world.pen_keeper(world.fauna.pens[a.area])
-	var what := a.label().to_lower()
-	var beast := a.wild() and bool(a.spec().get("people", false))
-	world.stat(("hunted_" if a.wild() else "slaughtered_") + a.species)     # FSE-B10: the wildlife ledger, as for villagers
-	var bag: Inventory = world.fauna.kill(a)
-	if beast:
-		world.relations.defended(a.pos)        # a wolf or a bear put down near people (CRT-10)
-	if bag.total() > 0:
-		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
-	if keeper != null:                         # theft from the keeper, known the way a theft is (World.witness, PAR-05)
-		var saw := world.near(world.player.pos, float(GameData.b("witness_radius"))).has(keeper)
-		world.witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
-		keeper.remember(("%s killed my %s" % [world.player.name, what]) if saw else ("found my %s dead" % what))
-		if saw and keeper.role == "adult" and keeper.target == -1:
-			keeper.target = -2                # a keeper who sees it comes after the player
-		if world.last_guard != "":
-			ui.message(world.last_guard)
-		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
+	var h := world.player_hit_animal(a, dmg)
+	_hit_fx(animal_sprites.get(a.id), before, before - dmg, dmg)
+	if str(h.guard) != "":
+		ui.message(str(h.guard))
 
 
+## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,
+## DVW-A12 R8); the blow is shown here.
 func _hit(n: NPC, dmg: float) -> void:
-	var dealt := world.harm_npc(n, dmg)          # their Combat damage_taken and armour, as the player's (PAR-01)
-	_hit_fx(sprites.get(n.id), n.max_hp, n.hp, dealt)
-	# the blow wakes a sleeper and the noise wakes those near, who then see it (owner rule)
-	world.wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
-	if n.role != "bandit":
-		_crime(n)
-	elif n.target == -1:
-		n.target = -2
-	if n.hp <= 0.0:
-		world.kill(n, "slain by %s %s" % [world.player.name, world.player.family])
-		if n.role == "bandit":
-			world.relations.defended(n.pos)    # villagers who saw a bandit put down think better of you (CRT-10)
+	var hp0 := n.hp
+	var h := world.player_hit_npc(n, dmg)
+	_hit_fx(sprites.get(n.id), n.max_hp, hp0 - float(h.dealt), float(h.dealt))
 
 
 ## A blow that landed (Build 8 report: no sign of damage): the target flashes red, the damage floats
@@ -2941,65 +3398,41 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 			bar.visible = false)
 
 
-## Attacking a villager is a crime: adults who are hit fight back, and those who see it (World.aware_of_attack, PAR-05)
-## remember it; the guards among them answer, and the victim and the other witnesses carry word to a guard
-## (World.raise_alarm, report_crime). Nobody else knows.
-func _crime(victim: NPC) -> void:
-	var p := world.player
-	victim.remember("attacked by %s" % p.name)
-	world.relations.harmed(victim, float(Relations.cfg().victim_harm))
-	if victim.role == "adult":
-		victim.target = -2
-	var aware := world.aware_of_attack(p.pos, victim)
-	for n: NPC in aware.seen:
-		if n.role != "bandit":
-			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
-			world.relations.harmed(n, float(Relations.cfg().witness_harm))
-	world.raise_alarm(aware, -2)
-	world.stat("player_assault")
-	world.note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
-
-
 func fireball() -> void:
 	var p := world.player
-	if not p.spells.get("fireball", false):
-		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
+	if world.player_level != 0:
+		ui.message("Nothing to fight here.")      # MIN-A: nobody but the player goes below yet
 		return
-	var cd := Skills.value(p, "magic", "fireball_cooldown", float(GameData.b("fireball_cooldown")))
-	var cost := float(GameData.b("fireball_stamina")) * Skills.value(p, "magic", "fireball_stamina", 1.0)
-	if p.fireball_cd > 0.0 or p.stamina < cost:
+	var cast := world.player_cast_fireball()          # knowing it, the cooldown, the stamina and the xp are core's (R11)
+	if not cast.ok:
+		if str(cast.why) != "":
+			ui.message(str(cast.why))
 		return
-	p.fireball_cd = cd
-	p.stamina -= cost
 	player_sprite.play("throw", true)
 	var node := Sprite2D.new()
 	node.texture = load("res://assets/icons/fireball.png")
 	node.z_index = 5
 	actors.add_child(node)
-	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": 8.0})
-	_xp("magic", 6)
+	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": World.FIREBALL_RANGE})
 
 
 func _projectiles_step(delta: float) -> void:
 	for pr in projectiles.duplicate():
-		var step: Vector2 = pr.dir * 9.0 * delta
+		var step: Vector2 = pr.dir * World.FIREBALL_SPEED * delta
 		pr.pos += step
 		pr.left -= step.length()
 		pr.node.position = pr.pos * T
 		pr.node.rotation += delta * 12.0
-		var hit := false
-		var dmg := 14.0 * Skills.value(world.player, "magic", "fireball_damage", 1.0)
-		for n: NPC in world.present(pr.pos, 0.6):
-			_hit(n, dmg)
-			hit = true
-			break
-		if not hit:
-			for a: Animal in world.fauna.near(pr.pos, 0.6):
-				_hit_animal(a, dmg)
-				hit = true
-				break
+		var h := world.player_fireball_hit(pr.pos)       # who it strikes, the harm and the xp are core's (DVW-A12 R11)
+		var hit: bool = h.who != null
+		if h.who is NPC:
+			_hit_fx(sprites.get(h.who.id), h.who.max_hp, float(h.before) - float(h.dealt), float(h.dealt))
+		elif h.who is Animal:
+			_hit_fx(animal_sprites.get(h.who.id), float(h.before), float(h.before) - float(h.dealt), float(h.dealt))
+			if str(h.guard) != "":
+				ui.message(str(h.guard))
 		if hit:
-			_xp("magic", 6)                    # a spell that lands teaches more than one that is cast
+			_level_up("magic", int(h.up))
 		if hit or pr.left <= 0.0 or map.is_solid_world(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
 			pr.node.queue_free()
 			projectiles.erase(pr)
@@ -3668,6 +4101,8 @@ func _tap(screen_pos: Vector2) -> void:
 		cancel_action("You stop.")     # a tap while working stops it (B8-011)
 		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	if _tap_portal(wpos) or _tap_below(wpos):
+		return                            # MIN-A: the adit tapped, or a tap below the surface
 	var pile := _loot_at(wpos)
 	if pile != Vector2.INF and _creature_at(wpos) == null:
 		# a tapped pile (a carcass, a dropped bag): walk up to it and take it, in any mode (PL2-004)
@@ -3943,15 +4378,7 @@ func _sync_player_pose() -> void:
 
 
 func _rest_now() -> void:
-	var p := world.player
-	var h := world.hour()
-	var until := 6.0 if h < 6.0 else 30.0
-	var night := h >= 18.0 or h < 6.0
-	var mins := (until - h) * 60.0 if night else float(GameData.b("rest").day_minutes)
-	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
-	for i in steps:
-		world.update(0.5)
-	world.rest_recover(p, mins, night)        # the one recovery model (PAR-03)
+	world.player_rest()                         # how long, the world going on and the recovery are core's (DVW-A12 R18)
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
 
@@ -4024,6 +4451,277 @@ func _room_shot(inside: bool) -> void:
 ## calls the game uses (till, sow, grow by the clock, fence a pen, buy stock). `kind`: farm_tilled (an L-shaped
 ## field of tilled soil), farm_growing (the field sown with four crops, some ripe) or farm_pen (two pens with
 ## animals beside the field).
+## MIN-E screenshots: the clear site nearest the warp point is staked and dug by a villager by the rules (OpenPits.dig,
+## the earth tipped on the heaps): part way, or (`full`) to its floor. The villager stands on the ramp, the player at
+## the pit's edge.
+func _pit_shot(full: bool) -> void:
+	var pp: OpenPits = world.pits
+	var aim := shot_warp if shot_warp != Vector2.INF else world.player.pos
+	var origin := pp.best_site(aim)
+	var bd := 1e9
+	for y in map.h if origin.x <= -1000 else 0:                    # none near: the clear site nearest the aim anywhere
+		for x in map.w:
+			var o := Vector2i(x, y)
+			if Vector2(o).distance_squared_to(aim) < bd and pp.site_open(o) and pp.site_refusal(o) == "":
+				bd = Vector2(o).distance_squared_to(aim)
+				origin = o
+	if origin.x <= -1000:
+		print("open_pit shot: no clear site within %d cells of %s" % [int(OpenPits.cfg().manor.site_search), aim])
+		return
+	print("open_pit shot: a pit at %s" % origin)
+	var pit := pp.open_pit(World.MANOR, origin)
+	var n: NPC = world.brain._first_with_job("laborer")
+	if n == null:
+		n = world.npcs[0]
+	n.inv.add("pickaxe", 40)
+	n.inv.add("shovel", 40)                       # MIN-E-Q4: the earth is dug with a shovel
+	var far := Vector2(world.manor_work.yard_cell()) + Vector2(0.5, 0.5)
+	for o: NPC in world.npcs:
+		if OpenPits.rect(pit).grow(2).has_point(o.cell()):
+			o.pos = far
+	world.player.pos = far
+	var units := 0
+	var budget := 1000 if full else 70
+	while units < budget:
+		var c := pp.next_dig(pit, n.cell(), n.cell())
+		if c.x < 0:
+			break
+		n.pos = Vector2(pp.stand_for(pit, OpenPits.index(pit, c), n.cell())) + Vector2(0.5, 0.5)
+		if pp.dig(n, pit, c, n.inv, OpenPits.held_tool(n, pp.tool_needed(pit, c))).result != "ok":
+			break
+		units += 1
+		pp.tip(pit, n.inv)
+	var s := OpenPits.size()
+	n.pos = Vector2(OpenPits.cell_of(pit, s + s / 2)) + Vector2(0.5, 0.5)     # on the ramp, a ring down
+	n.plan = [{"k": "work", "min": 600.0, "anim": "work"}]
+	world.player.pos = Vector2(int(pit.x) + s, int(pit.y) + s) + Vector2(0.5, 0.5)       # at the south-east corner of the border
+	follow_at = _in_view((Vector2(int(pit.x), int(pit.y)) + Vector2(s, s) / 2.0 + Vector2(0, 2.5)) * T)
+	camera.position = follow_at
+
+
+## MIN-F screenshot: a labourer, by the works' own rules (MineWorks, from real goods in their pack), sets up a timber
+## support in the gallery, cuts the rock beside it open, lays track from the adit's inner mouth to the new face and sets
+## a minecart down on it with the stone cut; the player walks in and stands by it. With `cave` (MIN-H): the player
+## goes in through the cave's own mouth and a villager stands on its floor, walked there through the router.
+## MIN-F2 screenshots, staged by the works' own rules from real goods (as _works_shot): "collapse" a tunnel cell beside a
+## worn support caved in after the dawns it took, "shaft" a shaft sunk from the gallery to the cave with its ladder,
+## "backfill" one passage filled by the player and the next part filled. The player and a labourer stand by it.
+func _struct_shot(kind: String) -> void:
+	var u := world.underground
+	var mw: MineWorks = world.mine_works
+	var e0: Dictionary = u.portals[0].ends[0]
+	var e1: Dictionary = u.portals[0].ends[1]
+	var lm := u.map_at(-1, e1.stand)
+	var n: NPC = world.brain._first_with_job("laborer")
+	if n == null:
+		n = world.npcs[0]
+	n.plan.clear()
+	n.target = -1
+	n.depth = -1
+	for it in ["pickaxe", "mallet"]:
+		n.inv.add(it, 1)
+	n.inv.add("timber_support", 4)
+	n.inv.add("ladder", 1)
+	world.player.pos = Vector2(e0.stand) + Vector2(0.5, 0.5)
+	world.player_through(Vector2(e1.stand - e0.stand))
+	var focus := Vector2i(-1, -1)
+	if kind == "shaft":
+		for sc in lm.floor_cells():
+			var bes := Vector2i(-1, -1)
+			for d: Vector2i in VillageMap.SIDES:
+				if not lm.is_solid(sc + d):
+					bes = sc + d
+			if bes.x < 0:
+				continue
+			n.pos = Vector2(bes) + Vector2(0.5, 0.5)
+			if not mw.supported(-1, sc) and mw.support_refusal(n, bes) == "":
+				mw.place_support(n, bes)
+			var cave := u.map_at(-2, sc)
+			if mw.shaft_refusal(n, sc) == "" and cave != null and not cave.is_solid(sc):
+				focus = sc
+				break
+		for k in 20:
+			var r := mw.dig_shaft(n, focus, n.inv)
+			if r.result != "ok" or r.done:
+				break
+		print("shaft shot: shaft at %s: %s" % [focus, mw.install_ladder(n, focus)])
+	else:
+		var face := Vector2i(-1, -1)
+		var f0 := Vector2i(-1, -1)
+		for fc in lm.floor_cells():
+			for d: Vector2i in VillageMap.SIDES:
+				var c := fc + d
+				if face.x < 0 and lm.is_solid(c) and world.deposit_at(c, -1).is_empty() and lm.region.grow(-1).has_point(c) and u.under_rock(world.map, c) and u.hidden_at(-1, c).is_empty():
+					face = c
+					f0 = fc
+		n.pos = Vector2(f0) + Vector2(0.5, 0.5)
+		mw.place_support(n, f0)
+		var cutc: Array[Vector2i] = []
+		for k in 3:
+			var nxt := Vector2i(-1, -1)
+			for c in lm.cells():
+				if mw.rock_refusal(-1, c) == "" and u.hidden_at(-1, c).is_empty():
+					nxt = c
+					break
+			if nxt.x < 0:
+				break
+			for d: Vector2i in VillageMap.SIDES:
+				if not lm.is_solid(nxt + d):
+					n.pos = Vector2(nxt + d) + Vector2(0.5, 0.5)
+			for k2 in MineWorks.cell_units():
+				mw.dig(n, nxt, n.inv)
+			cutc.append(nxt)
+		focus = cutc[0] if not cutc.is_empty() else f0
+		if kind == "collapse":
+			for s2 in mw.supports:
+				s2[3] = 150                           # the timber long unrepaired
+			for d in 200:
+				world.minutes += 1440.0
+				mw.dawn()
+				var fallen := cutc.filter(func(c): return lm.is_solid(c))
+				if not fallen.is_empty():
+					focus = fallen[0]
+					break
+			print("collapse shot: day %d, fallen %s, collapses %d" % [world.day(), focus, int(world.stats.get("tunnel_collapses", 0))])
+		else:
+			var p := world.player
+			p.inv.add("spoil", 12)
+			var fillc: Vector2i = cutc[cutc.size() - 1]
+			var stand := Vector2i(-1, -1)
+			for d: Vector2i in VillageMap.SIDES:
+				if not lm.is_solid(fillc + d) and fillc + d != focus:
+					stand = fillc + d
+			p.pos = Vector2(stand) + Vector2(0.5, 0.5)
+			for k in MineWorks.cell_units():
+				mw.fill(p, fillc, p.inv)
+			if cutc.size() > 1:
+				var part: Vector2i = cutc[cutc.size() - 2]
+				for d: Vector2i in VillageMap.SIDES:
+					if not lm.is_solid(part + d) and part + d != fillc:
+						p.pos = Vector2(part + d) + Vector2(0.5, 0.5)
+				for k in 2:
+					mw.fill(p, part, p.inv)
+			focus = fillc
+			print("backfill shot: filled %s (%d), fill in the ground %d" % [fillc, mw.fill_at(-1, fillc), mw.fill_in()])
+	# the player and the labourer stand beside it
+	var spots: Array[Vector2i] = []
+	for dy in range(-2, 3):
+		for dx in range(-2, 3):
+			var c := focus + Vector2i(dx, dy)
+			if not lm.is_solid(c) and c != focus and not mw.support_at(-1, c) and mw.shaft_at(-1, c).is_empty():
+				spots.append(c)
+	var weigh := func(c: Vector2i) -> float: return Vector2(c).distance_to(Vector2(focus)) + (2.5 if c.y > focus.y else 0.0)     # beside, not in front of it
+	spots.sort_custom(func(a2: Vector2i, b2: Vector2i): return weigh.call(a2) < weigh.call(b2))
+	if spots.size() >= 2:
+		world.player.pos = Vector2(spots[0]) + Vector2(0.5, 0.5)
+		n.pos = Vector2(spots[1]) + Vector2(0.5, 0.5)
+	n.plan = [{"k": "work", "min": 600.0, "anim": "work"}]
+	_sync_carts()
+	_sync_levels(0.0)
+	follow_at = _in_view(Vector2(focus) * T + Vector2(T, T) / 2.0)
+	camera.position = follow_at
+
+
+func _works_shot(cave: bool) -> void:
+	var u := world.underground
+	var pi := 1 if cave else 0
+	var e0: Dictionary = u.portals[pi].ends[0]
+	var e1: Dictionary = u.portals[pi].ends[1]
+	var lm := u.map_at(int(e1.level), e1.stand)
+	var n: NPC = world.brain._first_with_job("laborer")
+	if n == null:
+		n = world.npcs[0]
+	n.plan.clear()
+	n.target = -1
+	world.player.pos = Vector2(e0.stand) + Vector2(0.5, 0.5)
+	world.player_through(Vector2(e1.stand - e0.stand))
+	if cave:
+		# the villager walks from the surface into the cave through its mouth (the level router)
+		var floors := lm.floor_cells()
+		var goal: Vector2i = floors[floors.size() / 2]
+		n.depth = 0
+		n.pos = Vector2(e0.stand) + Vector2(0, 1.5)
+		n.plan = [world.brain.go(goal, 1.0, lm.level), {"k": "work", "min": 600.0, "anim": "work"}]
+		for k in 400:
+			world._run_plan(n, 0.25, 0.25 * float(GameData.b("game_minutes_per_second")))
+			if n.depth == lm.level and n.plan.size() == 1:
+				break
+		print("cave shot: villager on level %d at %s (goal %s), plan left %d" % [n.depth, n.cell(), goal, n.plan.size()])
+		world.player.pos = n.pos + Vector2(-1.5, 0.5) if not lm.is_solid(Vector2i((n.pos + Vector2(-1.5, 0.5)).floor())) else n.pos + Vector2(0, 1.0)
+		if lm.is_solid(Vector2i(world.player.pos.floor())):
+			world.player.pos = Vector2(lm.nearest_walkable(Vector2i(world.player.pos.floor()))) + Vector2(0.5, 0.5)
+	else:
+		var mw: MineWorks = world.mine_works
+		n.depth = lm.level
+		n.inv.add("pickaxe", 1)                     # the staged picture's goods (as _pit_shot's pickaxe)
+		n.inv.add("mallet", 1)
+		n.inv.add("timber_support", 3)
+		n.inv.add("track_section", 40)
+		n.inv.add("minecart", 1)
+		# the face: the floor cell with the most cuttable rock beside it, farthest from the mouth
+		var best := Vector2i(-1, -1)
+		var bscore := -1
+		for f in lm.floor_cells():
+			var k := 0
+			for d: Vector2i in VillageMap.SIDES:
+				var c := f + d
+				if lm.is_solid(c) and world.deposit_at(c, lm.level).is_empty() and lm.region.grow(-1).has_point(c) and u.under_rock(world.map, c):
+					k += 1
+			var score := k * 100 + int(Vector2(f).distance_to(Vector2(e1.stand)))
+			if k > 0 and score > bscore:
+				bscore = score
+				best = f
+		n.pos = Vector2(best) + Vector2(0.5, 0.5)
+		print("works shot: support at %s: %s" % [best, mw.place_support(n, best)])
+		var opened := 0
+		for _pass in 3:
+			for c in lm.cells():
+				if mw.rock_refusal(lm.level, c) != "":
+					continue
+				var stand := Vector2i(-1, -1)
+				for d: Vector2i in VillageMap.SIDES:
+					if not lm.is_solid(c + d):
+						stand = c + d
+				n.pos = Vector2(stand) + Vector2(0.5, 0.5)
+				var r := {}
+				for k in MineWorks.cell_units():
+					r = mw.dig(n, c, n.inv)
+				if r.get("opened", false):
+					opened += 1
+				if opened >= 4:
+					break
+			if opened >= 4:
+				break
+		var path: Array[Vector2i] = []
+		for pt in lm.find_path(e1.stand, best):         # four ways: a diagonal step goes round by its side cell
+			if not path.is_empty() and path[path.size() - 1].x != int(pt.x) and path[path.size() - 1].y != int(pt.y):
+				path.append(Vector2i(int(pt.x), path[path.size() - 1].y))
+			path.append(Vector2i(pt))
+		for pt in path:
+			n.pos = Vector2(pt) + Vector2(0.5, 0.5)
+			mw.lay_track(n, Vector2i(pt))
+		print("works shot: %d cells cut open, %d track, stone cut %d" % [opened, mw.track_cells(lm.level).size(), n.inv.count("stone")])
+		var cart_at: Vector2i = Vector2i(path[maxi(0, path.size() - 2)]) if path.size() > 0 else best
+		n.pos = Vector2(cart_at) + Vector2(0.5, 0.5)
+		var sd := mw.set_down_minecart(n, World.hh_ref(n.household), cart_at)
+		if sd.result == "ok":
+			var store: Inventory = sd.cart.store
+			for id in ["stone", "spoil"]:
+				var q := n.inv.count(id)
+				n.inv.remove(id, q)
+				store.add(id, q)
+		n.pos = Vector2(best) + Vector2(0.5, 0.5)
+		n.plan = [{"k": "work", "min": 600.0, "anim": "work"}]
+		world.player.pos = Vector2(cart_at) + Vector2(0.5, 0.5) + Vector2(0, 0.0)
+		var side := Vector2i(world.player.pos.floor()) + Vector2i(0, 1)
+		if not lm.is_solid(side):
+			world.player.pos = Vector2(side) + Vector2(0.5, 0.5)
+	_sync_carts()
+	_sync_levels(0.0)
+	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
+
+
 func _farm_shot(kind: String) -> void:
 	var p := world.player
 	p.coins = 3000
@@ -4216,7 +4914,7 @@ func _gather_stand(d: Dictionary, ref) -> Vector2:
 	var cell := ResourceNodes.cell_of(world, d, ref)
 	if str(d.match.kind) == "plant":
 		return Vector2(cell) + Vector2(0.5, 0.5)          # plants are walked on: pick them standing there
-	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)))) + Vector2(0.5, 0.5)
+	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)), world.player_level)) + Vector2(0.5, 0.5)
 
 
 func _gather_target(d: Dictionary, ref) -> Dictionary:
@@ -4256,3 +4954,220 @@ func _sync_gather_mark() -> void:
 			r = Rect2(Vector2(ResourceNodes.cell_of(world, d, gather.ref)), Vector2(1, 1))
 	gather_mark.points = PackedVector2Array([r.position * T, Vector2(r.end.x, r.position.y) * T, r.end * T,
 			Vector2(r.position.x, r.end.y) * T, r.position * T])
+
+
+# ---------------------------------------------------------------- underground (MIN-A) --------
+## One LevelView per level map (docs/build17/MIN_A_ARCHITECTURE.md), between the surface's tiles and the characters,
+## hidden until the player goes below. A seam below that is worked out is redrawn on its level.
+func _build_levels() -> void:
+	level_views.clear()
+	level_alpha = 1.0 if world.player_level != 0 else 0.0
+	level_shown = world.player_level
+	if world.underground == null:
+		return
+	for lm: LevelMap in world.underground.maps:
+		var lv := LevelView.new()
+		lv.name = "level_" + lm.id
+		add_child(lv)
+		move_child(lv, ow_view.get_index() + 1)
+		lv.setup_level(view, world, lm, world.underground.specs[lm.id])
+		lv.visible = false
+		level_views[lm.id] = lv
+		var spec: Dictionary = world.underground.specs[lm.id]
+		if spec.has("mouth") and view.layer(str(spec.mouth.layer)) != null:     # MIN-H: a cave's own mouth in the rock face
+			view.set_tile(view.layer(str(spec.mouth.layer)), Vector2i(int(spec.portal.door[0]), int(spec.portal.door[1])), int(spec.mouth.tile))
+	world.level_tile_changed.connect(_on_level_tile_changed)
+	if world.mine_works != null:
+		world.mine_works.changed.connect(_on_works_changed)
+		surface_works = WorksView.new()               # MIN-F: track in the mine's yard, faded with the surface
+		surface_works.setup(world.mine_works, 0)
+		view.add_child(surface_works)
+		view.move_child(surface_works, view.layer("below0").get_index())
+	_sync_levels(0.0)
+
+
+func _on_level_tile_changed(level: int, cell: Vector2i, value: int) -> void:
+	var lm := world.underground.map_at(level, cell)
+	if lm != null and level_views.has(lm.id):
+		level_views[lm.id].set_seam(cell, value)
+
+
+## MIN-F: a tunnel cell cut open is drawn again with the rock round it (the WorksViews redraw track and supports).
+func _on_works_changed(level: int, cell: Vector2i) -> void:
+	if level == 0:
+		return
+	for d in [0, -1]:                                  # MIN-F2: a shaft also changes the level below its mouth
+		var lm := world.underground.map_at(level + d, cell)
+		if lm == null:
+			continue
+		if not level_views.has(lm.id):                 # a level a shaft has just reached: its view is made now
+			var lv := LevelView.new()
+			lv.name = "level_" + lm.id
+			add_child(lv)
+			move_child(lv, ow_view.get_index() + 1)
+			lv.setup_level(view, world, lm, world.underground.specs[lm.id])
+			lv.visible = false
+			level_views[lm.id] = lv
+		level_views[lm.id].redraw_around(world, cell)
+
+
+## The player crosses a portal when walking into its door from its stand (`v` the way they move), or when a tapped
+## portal's stand is reached (`v` zero). The route, the target and gathering stop: the other side is another map.
+func _through_portal(v: Vector2) -> void:
+	if v.length() < 0.1:
+		if portal_goal.is_empty() or move_to != Vector2.INF:
+			return
+		var e := portal_goal
+		portal_goal = {}
+		if int(e.level) != world.player_level or Vector2i(floori(world.player.pos.x), floori(world.player.pos.y)) != e.stand:
+			return
+		v = Vector2(e.door - e.stand)
+	var r := world.player_through(v)
+	if r.is_empty():
+		return
+	if r.has("refused"):
+		if Engine.get_process_frames() - portal_said > 90:
+			ui.message(str(r.refused))
+		portal_said = Engine.get_process_frames()
+		return
+	move_to = Vector2.INF
+	walk_goal = Vector2i(-1, -1)
+	walk_path = PackedVector2Array()
+	portal_goal = {}
+	chase = null
+	talk_to = null
+	reach_to = Vector2.INF
+	target = {}
+	if not gather.is_empty():
+		stop_gather("")
+	if cam_free:
+		recenter()
+
+
+## A tap on a portal's door (the adit's mouth from either side): walk to its stand and go through. True if it was.
+func _tap_portal(wpos: Vector2) -> bool:
+	if world.underground == null:
+		return false
+	var e := world.underground.portal_door(world.player_level, Vector2i(floori(wpos.x), floori(wpos.y)))
+	if e.is_empty():
+		return false
+	chase = null
+	talk_to = null
+	reach_to = Vector2.INF
+	portal_goal = e
+	move_to = Vector2(e.stand) + Vector2(0.5, 0.5)
+	return true
+
+
+## A tap below the surface: a pile on the player's level is walked to and taken, a seam beside the player is worked,
+## anywhere else is walked to. Nobody else is below yet, so there is no one to talk to or strike. True below.
+func _tap_below(wpos: Vector2) -> bool:
+	if world.player_level == 0:
+		return false
+	chase = null
+	talk_to = null
+	reach_to = Vector2.INF
+	portal_goal = {}
+	if gather_mode:
+		var hit := ResourceNodes.node_at(world, Vector2i(floori(wpos.x), floori(wpos.y)), true)     # the level's seams
+		if hit.is_empty():
+			_gain("Nothing to gather there")
+		else:
+			select_resource(hit, true)
+		return true
+	var pile := _loot_at(wpos)
+	if pile != Vector2.INF:
+		reach_to = pile
+		move_to = pile if pile.distance_to(world.player.pos) > 1.2 else Vector2.INF
+		if move_to == Vector2.INF:
+			_reach_step()
+		return true
+	var who := world.present(wpos, 0.8)          # a villager working below (World.present sees the tapped point's level)
+	if not who.is_empty() and (who[0] as NPC).depth == world.player_level:
+		talk_to = who[0]                         # walk up to them and talk
+		return true
+	if wpos.distance_to(world.player.pos) < 1.8:
+		player_sprite.face(wpos - world.player.pos)
+		_find_target()
+		if not target.is_empty():
+			interact()
+			return true
+	move_to = wpos
+	return true
+
+
+## The target list below the surface: piles and seams on the player's level only (the same seam target as above
+## ground, so Use mines it by World.work_mine, PAR-01).
+func _find_target_below() -> void:
+	var p := world.player
+	var probe := p.pos + facing_vec() * 0.9
+	var cands: Array = []
+	for n: NPC in world.present(p.pos, 2.5):        # villagers working on this level (World.present: one level)
+		if n.pos.distance_to(probe) < 1.5:
+			cands.append({"kind": "npc", "npc": n, "label": ("%s is asleep" % _who(n)) if world.asleep(n) else "Talk to %s" % _who(n)})
+	for i in world.loot.size():
+		var l: Dictionary = world.loot[i]
+		if World.level_of(l) != world.player_level:
+			continue
+		if l.pos.distance_to(probe) < 1.5 or l.pos.distance_to(p.pos) < 1.2:
+			var from: String = l.from
+			var what := _loot_text(l)
+			cands.append({"kind": "loot", "i": i, "label": ("Take %s from %s" % [what, from]) if from.begins_with("the ") and what != "" else ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)})
+	var c := Vector2i(floori(probe.x), floori(probe.y))
+	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+		var dep := world.deposit_at(c + dc, world.player_level)
+		if not dep.is_empty() and int(dep.amount) > 0:
+			cands.push_front({"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
+					else "%s seam" % GameData.item_name(dep.ore) + ": requires a pickaxe (the smith sells them)"})
+			break
+	cands.append_array(_cart_targets(world.player_level))     # MIN-F: a minecart on this level
+	cands.append_array(_works_targets())                       # MIN-F: the rock face, supports, track
+	talk_alt = {}
+	target_options = cands
+	target = cands[0] if not cands.is_empty() else {}
+	var passing: bool = walking and target.get("kind", "") == "deposit"
+	ui.prompt("" if passing or not gather.is_empty() else str(target.get("label", "")))
+
+
+## Fade between the surface and the level below over RoofFade.FADE_TIME, as a roof lifts: the level's view in, and
+## the surface's tiles, trees, roofs, markers and everyone on it out (the player never fades). Piles show on their
+## own level only.
+func _sync_levels(delta: float) -> void:
+	if level_views.is_empty():
+		return
+	if world.player_level != 0:
+		level_shown = world.player_level
+	var goal := 1.0 if world.player_level != 0 else 0.0
+	var was := level_alpha
+	level_alpha = move_toward(level_alpha, goal, delta / RoofFade.FADE_TIME) if delta > 0.0 else goal
+	for lv: LevelView in level_views.values():
+		lv.visible = level_alpha > 0.0 and lv.level_map.level == level_shown
+		lv.modulate.a = level_alpha
+		if lv.visible:
+			lv.follow(world.player.pos)
+	for i in loot_nodes.size():
+		if i < world.loot.size():
+			loot_nodes[i].visible = World.level_of(world.loot[i]) == world.player_level
+	# villagers show on their own level: those on the surface fade with it, those below with the level shown
+	var surf := 1.0 - level_alpha
+	for n: NPC in world.npcs:
+		var s: ActorSprite = sprites.get(n.id)
+		if s != null:
+			s.modulate.a = surf if n.depth == 0 else (level_alpha if n.depth == level_shown else 0.0)
+		var b = bubbles.get(n.id)
+		if b != null and is_instance_valid(b):
+			b.visible = n.depth == world.player_level
+	for c in world.carts.carts:                   # MIN-F: carts too show on their own level
+		var cs: Sprite2D = cart_sprites.get(int(c.id))
+		if cs != null:
+			var cl := World.level_of(c)
+			cs.modulate.a = surf if cl == 0 else (level_alpha if cl == level_shown else 0.0)
+	if level_alpha == 0.0 and was == 0.0:
+		return
+	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
+	fade.append_array(view.sorted_of.values())
+	fade.append_array(animal_sprites.values())
+	fade.append_array(house_signs.values())
+	for node in fade:
+		if is_instance_valid(node):
+			(node as CanvasItem).modulate.a = surf

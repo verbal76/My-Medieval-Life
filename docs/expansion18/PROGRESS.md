@@ -8,7 +8,10 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 
 ## Branch and latest pushed commit
 
-- Branch: `wip/expansion18-preparation`, from `b721616` (staging: the released Build 16 plus records; no Build 17 code).
+- Branch: `wip/expansion18-preparation`, from `b721616` (staging: the released Build 16 plus records).
+- **Build 17 baseline: `cd7439c`** (`origin/wip/build17`, merged one way on 2026-10-21 under SYNC-17,
+  `docs/directives/2026-10-21_sync_expansions_with_build17.md`; the last pre-sync commit is `842ca59`, and the lead's
+  safety snapshot `wip/expansion18-snapshot` `9cf9fe1`). Nothing of this branch goes into Build 17.
 - Latest pushed commit: see `git log origin/wip/expansion18-preparation -1` (the commit carrying this file; the hash is
   reported to the lead with each push).
 
@@ -45,15 +48,25 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
 Not done in round 4 (stated plainly): the 90-day runs, the `revised_bounded` model's runs and the regional harness by
 profile, held until after the SYNC-17 Build 17 merge so results stay on one baseline (CAPABILITY_SIMULATIONS.md s.4).
 
+### SYNC-17 (2026-10-21): Build 17 `cd7439c` merged one way; the evaluator follows Build 17's rule
+
+| What | Resolution |
+|---|---|
+| Conflicts | `tests/census.gd` (kept the delegation; Build 17's new holders, contract escrow goods, open-pit spoil and contracts' reserved coins, moved into `SettlementHoldings`); `manor_work.gd` and `npc_brain.gd` (Build 17's mining plan, `seam_steps` and `mine_works.cart_fetch_plan`, taken whole; the X18 mining HOOK moved into `NPCBrain.seam_steps`; Build 17's contract felling in `contracts.gd` gained the same off-in-game chop HOOK); `economy_sim.gd` (Build 17's `reached` and FATAL kept; the CAPABILITY line reports on `reached` days); `tests.yml` (Build 17's suites, then this branch's). Register and ledger files are Build 17's, untouched. |
+| PROS-18 correction (MIN-SKILLCAP, MIN-D2) | Practitioners by Skills level and tool kind, never by title (`jobs` only for farming, where only farmers work the manor's fields); a shared household tool serves one member; the resident player counts by the villagers' rule. Live village: `Discovery.practitioners`/`tool_stock` themselves; snapshots: the same rule (`practitioner_count`). `settlement_industries.json` rewritten to skill+tool needs; `facts.gd` reads `Discovery.residents()`; the mining adapter's "can anyone dig" is `Discovery.practitioners` (a pickaxe in the manor's yard makes nobody a miner). No new eligibility rule. |
+| Mining live | The adapter now reads the live MIN-D (`source "min-d"`); a worked-out village still has quarry stone (Build 17's host rock and boulders), never ore. |
+| Fixture | `tests/fixtures/x18_min_d_mining.json` refreshed from `cd7439c`'s `capabilities.json` (skill+tool, shovels for excavators). |
+| Stoneworking | X18-STONECUT, STONE-02..06 documented only (below); Build 17's `dress_stone` unchanged. |
+
 ## Features implemented provisionally
 
-- **Mining capability** comes only through `MiningCapabilityAdapter` (fixture / live / none), mapped to MIN-D's real
-  interface as read on `origin/wip/b17-mind` b0506db (`World.discovery.evaluate/level/history/manor_finds`,
-  `World.underground.portals`, `World._quarry_sources`, `villagers_reach`, `level_of`) and tested against a fake World with
-  those members. Live on this branch (no Build 17 code): level 0, source `unavailable`.
-- **The village's own ore** (`local_supply`) counts against its regional ore demand (MIN-D's reachable seams; on this
-  branch the Build 16 seams) when a living adult has a pickaxe to hand; the mining level does not decide it (Q18-9,
-  corrected 2026-10-21: an earlier version required level 1), it only scales it through the output factor (1.0).
+- **Mining capability** comes only through `MiningCapabilityAdapter` (fixture / live / none), reading MIN-D's interface
+  (`World.discovery.evaluate/level/history/manor_finds/practitioners`, `World.underground.portals`,
+  `World._quarry_sources`, `villagers_reach`, `level_of`). Since SYNC-17 the live game has MIN-D: source `min-d`, the level
+  `Discovery.evaluate("mining")` gives (tested); a fake World still tests the edges.
+- **The village's own ore** (`local_supply`) counts against its regional ore demand (MIN-D's reachable seams) when a
+  resident can dig by Build 17's rule (Mining 1 and a pickaxe of their own or their household's); the mining level does
+  not decide it (Q18-9), it only scales it through the output factor (1.0).
 - **Thresholds and first industries** in `settlement_industries.json` (agent proposals; Q18-2).
 - **Market parameters** (`reserve_days` 6, `scarcity_premium` 1.0, `cash_floor` 20, `preferred_margin_pct` 10) and
   **transport** (carrier 12 units, handcart 60, terrain factors).
@@ -74,19 +87,25 @@ profile, held until after the SYNC-17 Build 17 merge so results stay on one base
 
 | Dependency | Build 17 item | Effect here |
 |---|---|---|
-| Mining capability levels 1-4, hidden deposits | MIN-D (`wip/b17-mind` b0506db, to be merged into `wip/build17`) | adapter mapped to its interface (fake-World tests); mining level is 0 live on this branch until the reconciliation; smithing 2's "mining 1 or iron bars" alternative uses it |
+| Mining capability levels 1-4, hidden deposits | MIN-D (in `wip/build17`, merged here at `cd7439c`) | the adapter reads it live; smithing 2's "mining 1 or iron bars" alternative uses it; the one-evaluator plan's step 4 is partly done (practitioners and tool stock delegate to Discovery) |
 | Discovery records with provenance | MIN-C | `records` needs (none used by non-mining industries yet) |
 | Underground portals | MIN-F / OD-29 | `portal` needs (mining 4 is MIN-D's) |
 | Procurement contracts | CON-01 (`contracts.gd`, goods only; parties "player", "npc:<id>", "manor") | purchases become CON-01 contracts; `to_contract_offer` gives the shape, `execute` stands in; households and off-map parties need references (Q18-13); carriage needs service terms (Q18-12) |
 | Quarry chain, stone after ore | MIN-B | stone imports in the caravan (`_caravan_stone`) become regional supply or local quarrying |
 | Rules moved into `core/` | DVW-A12 (OD-28) | pay and output factors apply to the wages and outputs those rules compute (never gates, Q18-9) |
 | Save versions | Build 17's last `SAVE_VERSION` (17 on `wip/build17`) | the provisional section is versioned from there |
-| `census.gd` holders | any new Build 17 holders (contract reserves, underground stores) | must be added to `SettlementHoldings.holders` at reconciliation |
+| `census.gd` holders | Build 17's holders | done at SYNC-17 for `cd7439c` (contract escrow, open-pit spoil, contracts' reserved coins); any later holder must be added to `SettlementHoldings.holders` at the next sync |
 
 ## Known integration risks
 
-1. **Census move.** Build 17 may add holders to `tests/census.gd` (it has not as of `origin/wip/build17` read on
-   2026-10-21); a merge would then put them in the wrong file. Reconcile by moving them into `SettlementHoldings`.
+1. **Census move.** Build 17 added holders to `tests/census.gd` by `cd7439c` (contracts, pits); moved into
+   `SettlementHoldings` at SYNC-17. A later Build 17 holder needs the same move at the next sync.
+1a. **Tool holders count as practitioners (Build 17's rule, adopted as is).** Anyone with the skill level asked (every
+   Skills level is at least 1) and a tool of the kind in their pack or household store counts, whatever their job. In the
+   starting village (seed 1) the only hammer holders are the two smiths (smithing 8 and 6), so the village reads
+   smithing 3 (master smithy) and falls to 0 when they die (tested). By the same rule a villager carrying a tool for sale
+   would count for a level-1 need; that is Build 17's MIN-SKILLCAP rule, followed here without change. If it should
+   exclude goods held for sale, the change belongs in `Discovery.practitioner` (Build 17), not in a second rule here.
 2. **Two capability files and loops until the reconciliation.** MIN-D created `game/data/capabilities.json` and
    `Discovery.evaluate`. Resolved by plan (DESIGN.md section 8): the vocabulary is already aligned and tested
    (`test_min_d_schema`); at the reconciliation the non-mining industries move into `capabilities.json` and
@@ -144,6 +163,17 @@ credit), Q18-6 (may abstract regions meet "two settlements develop different pro
 (SET-E stays 20+), as worded in the engineering plan, section 5.
 
 ## Integration-readiness estimate (from tests actually run)
+
+- **SYNC-17 (on the merged `cd7439c` baseline, private `XDG_DATA_HOME`, one Godot at a time, after `--import`):**
+  this branch's `settlement_test` 83, `capability_test` 50 (incl. "the hook is off in the game: every work time and
+  wage is exactly the existing one"), `regional_test` 71, `courier_test` 44, `contract_sign_test` 20; Build 17's
+  `parity_mining_test` 62, `equip_test` 51, `discovery_test` 65, `job_board_test` 28, `contracts_test` 138,
+  `services_test` 51, `quarry_test` 39, `wiki_test` (all passed), `conservation_test` 8: all passing, 0 failures.
+  `economy_sim --days 30 --seed 1` (no capability flags): reached day 30, no FATAL, `LEAKS: currency 0; items {};
+  deposits []; animals {}`, alive 110, no starvation, 308 s. `python3 -m unittest discover -s tests` 105 OK;
+  `check_requirements` 0 problems, `check_interactions` 0, `check_resources` 0.
+- The X18-SIM model runs (59, `CAPABILITY_SIMULATIONS.md`) were on the Build 16 baseline; they and the deferred runs
+  (90-day, `revised_bounded`, regional harness by profile) are to be redone on this baseline, under SIM-01 and SIM-02.
 
 - Run on this branch (latest round, private `XDG_DATA_HOME`): `capability_test` (42 checks), `settlement_test` (66),
   `regional_test` (71), `caravan_compare` 10 days (110 checks, six shadow sets) and 30 days seed 1 (290 checks), all

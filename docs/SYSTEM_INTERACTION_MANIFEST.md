@@ -141,7 +141,7 @@ Rules:
 
 ### INT-013 · Attacking villagers or livestock is a crime
 - **Trigger:** The player hits a villager, or kills a keeper's animal.
-- **Source:** `game/scripts/main.gd::_crime`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/world.gd::aware_of_attack`, `game/scripts/core/world.gd::raise_alarm`, `game/scripts/core/world.gd::report_crime`, `game/scripts/core/world.gd::deliver_report`, `game/scripts/core/npc_brain.gd::_report`, `game/scripts/core/world.gd::witness`
+- **Source:** `game/scripts/core/world.gd::player_assault`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/world.gd::aware_of_attack`, `game/scripts/core/world.gd::raise_alarm`, `game/scripts/core/world.gd::report_crime`, `game/scripts/core/world.gd::deliver_report`, `game/scripts/core/npc_brain.gd::_report`, `game/scripts/core/world.gd::witness`
 - **Affects:** Crime, Combat, Livestock
 - **Expected:** (PAR-05, owner OD-18.5, 2026-10-20: guards have no unexplained knowledge of an assault) The victim remembers it and an adult victim fights back. Who learns of it is decided by `World.aware_of_attack`, the same for any attacker: those who see it (awake, in the same place, within `witness_radius`) remember it, and the victim knows. There is no hearing (final directive, section 9). Free guards who saw it answer (`World.raise_alarm`); the victim and the other witnesses carry a report (`World.report_crime`, saved on the villager) to a guard: at once if one is in sight, else they walk to the nearest awake guard within `report.range` (`NPCBrain._report`, the `report` step), who then takes on the attacker (`World.deliver_report`). A report lapses after `report.hours` or when the attacker is dead. Nobody else knows. Killing a keeper's animal is a theft from the keeper, known as a theft is (`World.witness`, INT-008): a keeper who sees it remembers who did it and comes after the player; one who does not finds the animal dead.
 - **Tests:** `game/tests/play_test.gd`, `game/tests/world_test.gd::_par05_awareness`
@@ -359,7 +359,7 @@ Rules:
 
 ### INT-039 · Talking to a villager: conversation or a called-out line
 - **Trigger:** The player uses a villager in front of them, or reaches one they tapped.
-- **Source:** `game/scripts/main.gd::approach`, `game/scripts/main.gd::say`, `game/scripts/main.gd::_sync_bubbles`, `game/scripts/ui/dialogue.gd::busy`, `game/scripts/ui/dialogue.gd::brush_off`, `game/scripts/ui/dialogue.gd::opening`, `game/scripts/ui/dialogue.gd::meet`, `game/scripts/ui/dialogue.gd::animal_killed`, `game/scripts/core/npc.gd::remember`, `game/scripts/main.gd::_crime`, `game/scripts/ui/game_ui.gd::show_talk`, `game/scripts/view/speech_bubble.gd`
+- **Source:** `game/scripts/main.gd::approach`, `game/scripts/main.gd::say`, `game/scripts/main.gd::_sync_bubbles`, `game/scripts/ui/dialogue.gd::busy`, `game/scripts/ui/dialogue.gd::brush_off`, `game/scripts/ui/dialogue.gd::opening`, `game/scripts/ui/dialogue.gd::meet`, `game/scripts/ui/dialogue.gd::animal_killed`, `game/scripts/core/npc.gd::remember`, `game/scripts/core/world.gd::player_assault`, `game/scripts/ui/game_ui.gd::show_talk`, `game/scripts/view/speech_bubble.gd`
 - **Affects:** Interface, Crime, Households, Save
 - **Expected:**
   - A villager who is busy (the current plan step is a walk, or work with the working animation, or they are fighting) calls out one line in a speech bubble over their head for 2.5 s and carries on; the talk window does not open. At most one bubble per villager. Bandits always get the talk window. A shopkeeper at their counter or stall opens their shop instead (INT-041).
@@ -933,7 +933,7 @@ Rules:
 
 ### INT-108 · Combat, magic and trading skills change fights, spells and prices
 - **Trigger:** The player strikes, casts Fireball, is hurt, buys or sells.
-- **Source:** `game/scripts/core/player_state.gd::damage`, `game/scripts/main.gd::_strike`, `game/scripts/main.gd::attack`, `game/scripts/main.gd::fireball`, `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::player_price_factor`
+- **Source:** `game/scripts/core/player_state.gd::damage`, `game/scripts/core/world.gd::player_strike`, `game/scripts/main.gd::attack`, `game/scripts/main.gd::fireball`, `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::player_price_factor`
 - **Affects:** Combat, Health, Market, Coins
 - **Expected:** (PL2-005) Combat tiers raise blow damage, shorten the swing delay, give a chance of a double blow and cut damage taken (not hunger); Magic tiers shorten the Fireball cooldown, cut its stamina cost and raise its damage; Trading tiers move the player's buy and sell prices up to 20% (coins still move between real holders, so the supply is unchanged). Trade xp grows with the coins in the deal.
 - **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/skills_test.gd::test_early_play`
@@ -1213,7 +1213,7 @@ Rules:
 
 ### INT-148 · Friendship, courting and marriage: gifts, help, befriending, proposals; friends' benefits
 - **Trigger:** Every hour (people near each other share it); the player talks with, gives a gift to, completes a request for, befriends, asks to court or proposes in the talk window; each dawn (villagers court; ties cool); the player trades with, hires or is stopped by a guard near a friend.
-- **Source:** `game/scripts/core/relations.gd::give`, `game/scripts/core/relations.gd::gift_effect`, `game/scripts/core/relations.gd::favourites`, `game/scripts/core/relations.gd::helped`, `game/scripts/core/relations.gd::befriend`, `game/scripts/core/relations.gd::ask_court`, `game/scripts/core/relations.gd::propose`, `game/scripts/core/relations.gd::dawn`, `game/scripts/core/relations.gd::_villagers_court`, `game/scripts/core/relations.gd::hour`, `game/scripts/core/relations.gd::share`, `game/scripts/core/relations.gd::talked`, `game/scripts/core/relations.gd::player_tick`, `game/scripts/core/relations.gd::defended`, `game/scripts/core/relations.gd::harmed`, `game/scripts/core/npc_brain.gd::_plan_seek_company`, `game/scripts/core/world.gd::witness`, `game/scripts/main.gd::_crime`, `game/scripts/main.gd::_hit`, `game/scripts/core/world.gd::_on_hour`, `game/scripts/ui/game_ui.gd::show_talk`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/world.gd::player_quote`, `game/scripts/core/world.gd::guard_confront`, `game/scripts/core/construction.gd::hire`, `game/scripts/ui/game_ui.gd::_relation_choices`, `game/scripts/ui/game_ui.gd::show_gifts`, `game/scripts/ui/dialogue.gd::news`, `game/scripts/core/life.gd::dawn`
+- **Source:** `game/scripts/core/relations.gd::give`, `game/scripts/core/relations.gd::gift_effect`, `game/scripts/core/relations.gd::favourites`, `game/scripts/core/relations.gd::helped`, `game/scripts/core/relations.gd::befriend`, `game/scripts/core/relations.gd::ask_court`, `game/scripts/core/relations.gd::propose`, `game/scripts/core/relations.gd::dawn`, `game/scripts/core/relations.gd::_villagers_court`, `game/scripts/core/relations.gd::hour`, `game/scripts/core/relations.gd::share`, `game/scripts/core/relations.gd::talked`, `game/scripts/core/relations.gd::player_tick`, `game/scripts/core/relations.gd::defended`, `game/scripts/core/relations.gd::harmed`, `game/scripts/core/npc_brain.gd::_plan_seek_company`, `game/scripts/core/world.gd::witness`, `game/scripts/core/world.gd::player_assault`, `game/scripts/main.gd::_hit`, `game/scripts/core/world.gd::_on_hour`, `game/scripts/ui/game_ui.gd::show_talk`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/world.gd::player_quote`, `game/scripts/core/world.gd::guard_confront`, `game/scripts/core/construction.gd::hire`, `game/scripts/ui/game_ui.gd::_relation_choices`, `game/scripts/ui/game_ui.gd::show_gifts`, `game/scripts/ui/dialogue.gd::news`, `game/scripts/core/life.gd::dawn`
 - **Affects:** Family, Households, Market, Crime, Building, Interface, Save
 - **Expected:** (owner, 2026-10-19: CRT-01..07) Every pair of people has a tie: regard and attraction, and days known (separate days of real contact). The player's closeness is measured as they play (CRT-10): minutes within `close.tiles` of awake villagers in the same place, the nearest counting `close.focus_factor`, at most `close.daily_regard` a day, a day known after `close.known_minutes`; every channel adds within `regard_daily_cap` and `attraction_daily_cap` a day; courting needs `court_min_days` days known and marriage `marry_min_days`. Killing a bandit, wolf or bear near villagers raises their regard (`defend_regard`, once a day); a crime seen or suffered lowers it (`witness_harm`, `victim_harm`). A single villager with `seek.coins` or a gift spends `seek.chance` of evenings beside the one they court (or their closest friend), buying a gift first with `seek.gift_coins` (CRT-11). A proposal is refused (CRT-12) when the one asked does not mean to marry (`unwilling_percent`, fixed per person), when the suitor has slain a villager or is notorious (`notoriety_refuse` crimes seen in `notoriety_days`), when their regard is below `marry_regard`, or when a rival courting them holds more of their heart; harm spreads to the victim's kin (`kin_harm_share`) and friends (`friend_harm_share`); a villager slain by the player is `kill_harm`. Shared experiences start ties (CRT-08): each hour people awake within `shared.near_tiles` share it, work (same trade or workplace, at work) counting most, then evening company, then time nearby, at most `shared.daily_cap` regard a day; each pair's hour counts once (CRT-09); a conversation with the player adds `talk_first`, then `talk_more`, then `talk_decay` times less each time that day; villagers befriend each other at `befriend_at` and court only someone known on `interest_days` days at `interest_at` attraction or more, never again someone who refused them for good. Attraction from time together is scaled by the pair's chemistry (fixed per pair and world: `chemistry_min` + `chemistry_span` u²) and by `shared.courting_factor` while courting; gifts do not depend on chemistry. Villagers without spare means seek company on `seek.poor_chance` of evenings. A gift moves one real item from the giver to the receiver: food, flowers, ale, clothes and jewellery always add attraction (between people who may court: humans of age, not kin, not partnered elsewhere, either sex) and regard; the receiver's favourites (their trade's FAVOURITES, food when hungry, medicine when hurt) count `favourite_factor` and are marked with the reason in the gift list; one gift a day counts, a repeat counts less. Help (a request done) adds regard. At `befriend_at` regard the player may Befriend (no proposal). At `court_at` attraction a request to court is accepted, else declined; a proposal while courting is accepted after `propose_min_days` at `propose_at`, else declined as too soon and attraction drops. Villagers court each other by the same rules each dawn (replacing the random pairing), with gifts they hold or time together. Friends trade at `friend_price` better, carry for the player's site with no wage, tell who is courting, and back the player before a guard (a friend guard warns only; a friend nearby halves the fine). Partners of one sex have no children. Ties save in `relations` (older saves: strangers). Goods and coins only move.
 - **Tests:** `game/tests/relations_test.gd`, `game/tests/aging_test.gd::test_partners_and_births`
@@ -1395,46 +1395,306 @@ Rules:
 - **Expected:** The keeper buys whatever part of its feed want the best seller can spare and the keeper can pay for (the SHOP-01 part-lot rule, as the player may), not only a whole three-day lot. Farmers keep in hand for sale what the keepers lack of their four-day feed reserve, besides what the cook and food merchant want, so grain is not all put away in family chests no one buys from. A keeper short of feed culls beyond the breeding stock elderly animals first (they no longer breed), then the young. No feed or animal from nothing.
 - **Tests:** `game/tests/herd_test.gd`
 
+### INT-173 · The adit gallery: a separate level map tied to its surface portal (MIN-A, OD-29)
+- **Trigger:** The player or a villager steps through the adit portal; a villager's goal lies on another level.
+- **Source:** `game/scripts/core/underground.gd::portal_from`, `game/scripts/core/underground.gd::next_leg`, `game/scripts/core/underground.gd::find_path`, `game/scripts/core/level_map.gd::find_path`, `game/scripts/core/world.gd`
+- **Affects:** Resources, Employment, Inventory, Save, Interface
+- **Expected:** Underground space is its own map, entered only through a portal fixed to a surface cell; open pits stay on the surface. A villager whose goal is on another level walks to the portal, crosses and paths on the far level (one router for every level). Seams below use the surface seam rules; what is carried crosses with its carrier, nothing is made or lost at the portal. The gallery and its seams are saved (save version 17).
+- **Tests:** `game/tests/underground_test.gd`
+
+### INT-174 · Quarry stone from worked-out seams and boulders (MIN-B, B7-007)
+- **Trigger:** A seam's ore is used up; the player swings at its rock; a labourer, miner, manor quarry hand or contract seller looks for stone.
+- **Source:** `game/scripts/core/world.gd::quarry_stone_left`, `game/scripts/core/world.gd::_quarry_sources`, `game/scripts/core/world.gd::_open_quarried`, `game/scripts/core/manor_work.gd::post_quarry`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Resources, Inventory, Employment, Market, Treasury, Building, Ledger
+- **Expected:** Each ore seam keeps a second finite pool of stone (20) that opens only once its ore is out; the ore never refills. Player and villagers quarry it, and the village's boulders, by the seam rule (time, wear, xp, mined_stone). The village's stone left (seams, leftover rock, boulders) sets the caravan's stone threshold, the reeve's quarry posting and contract feasibility. A fully quarried cell opens like a broken boulder, on the surface or widening the gallery.
+- **Tests:** `game/tests/quarry_test.gd`, `game/tests/underground_test.gd`
+
+### INT-175 · Negotiated procurement contracts (CON-01)
+- **Trigger:** A buyer (the player, a villager, a business, the manor through its reeve) proposes a contract for an item, quantity, unit price and term; a villager makes the player a standing offer; the other side accepts, counters, refuses, signs, delivers or lets it lapse.
+- **Source:** `game/scripts/core/contracts.gd::evaluate`, `game/scripts/core/contracts.gd::obligations`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/contracts.gd::offer_to_player`, `game/scripts/core/contracts.gd::counter_offer`, `game/scripts/core/contracts.gd::buyer_answer`, `game/scripts/core/contracts.gd::accept_offer`, `game/scripts/core/contracts.gd::deliver`, `game/scripts/core/contracts.gd::reserved_total`, `game/scripts/core/contracts.gd::_pay_units`, `game/scripts/core/contract_services.gd::means`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Coins, Market, Inventory, Employment, Treasury, Workshops, Households, Ledger, Interface, Save
+- **Expected:** One contract record for player-villager, villager-player and villager-villager. The seller weighs feasibility, skill, tools, stock, time (with a 15 % spare margin; a later day countered rather than a refusal), its obligations (manor jobs, building-site carrying, the manor's tool orders it is forging, a post at a stall: read, never changed), household needs, input costs and what its hours earn in its own trade, relationship (friend's price for friends, partners and kin) and risk (a premium per early cancellation on record); counters both ways through one buyer rule. A contract of at least `formal_total` coins is formal and is concluded only face to face (within `sign_reach`, same place and level; the reeve for the manor; owner Q18-13): a distant villager buyer walks over first, nothing set aside meanwhile; unsigned in 2 days, or a party dead, it ends with nothing moved. Small agreements need no signing. The buyer's coins are reserved on agreement, paid per unit delivered, counted in the coin census and returned on lapse or cancel; no double delivery or payment. Goods and services (CON-02, owner 2026-10-21) share the record, evaluation, counters, signing and one payment path: coins reserved at agreement, each unit paid only when delivered or done. Q-C1..Q-C9 are owner-approved Build 17 defaults (`docs/build17/CON01_COMPLETION.md`).
+- **Tests:** `game/tests/contracts_test.gd`
+
+### INT-176 · Goods decay: stored food spoils, clothes, armour and carts wear (DVW-B4)
+- **Trigger:** Each dawn (spoilage and wear of what is worn); a blow on an armoured fighter.
+- **Source:** `game/scripts/core/decay.gd::dawn`, `game/scripts/core/decay.gd::spoil_inv`, `game/scripts/core/decay.gd::wear_npc`, `game/scripts/core/decay.gd::wear_player`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Food, Inventory, Equipment, Granary, Households, Market, Combat, Ledger
+- **Expected:** Stored food spoils at its item's rate by a seeded draw, so the same world spoils the same way; worn clothes, armour and carts lose condition and break at zero. Spoiled goods leave through the ledger as decay, never silently. A guard whose armour wore out buys again by the ordinary rule.
+- **Tests:** `game/tests/decay_test.gd`
+
+### INT-177 · Cliff steps, stairs and walkways; no unreachable cells (B14-07, DVW-A10)
+- **Trigger:** The player cuts cliff steps or builds wooden stairs or a walkway; the overworld is generated.
+- **Source:** `game/scripts/core/terrain.gd::refusal`, `game/scripts/core/terrain.gd::cost`, `game/scripts/core/terrain.gd::plan`, `game/scripts/core/terrain.gd::targets_at`
+- **Affects:** Overworld, Building, Inventory, Crafting, Player state
+- **Expected:** Steps need a pickaxe and Mining, stairs and walkways planks, nails, a mallet and Carpentry, taken from real inventory; each opens a crossing over a cliff or water. Ground nothing can reach is sealed, so no item or creature is lost in a black-hole space.
+- **Tests:** `game/tests/terrain_test.gd`
+
+### INT-178 · Nails and mallets made to order for the goods merchant (B14-07, PAR-04)
+- **Trigger:** A goods merchant holds fewer than 24 nails or 2 mallets; a smith or carpenter at work.
+- **Source:** `game/scripts/core/npc_brain.gd::_carpenter_mallet`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Crafting, Workshops, Market, Coins, Inventory
+- **Expected:** The smith forges nails (iron bars, taken from its other forging) and the carpenter makes a mallet (a log and a plank at the workbench) only when a goods merchant wants them, and sells all of it to that buyer; nothing is made for an absent buyer. The player crafts both by the same recipes. Coins only change hands.
+- **Tests:** `game/tests/crafts_test.gd`
+
+### INT-179 · Red flowers grow outside the village (PL1-12)
+- **Trigger:** The overworld generator draws a chunk.
+- **Source:** `game/scripts/core/overworld.gd`, `tools/build_overworld_tiles.py`
+- **Affects:** Overworld, Resources, Save
+- **Expected:** The low red flower (tile 2656) is among the wild flowers outside the village, picked, regrown and saved like the others. Overworld generator version 2; every object keeps its cell, so a version 1 save still applies its felled trees and worked rocks.
+- **Tests:** `game/tests/crafts_test.gd`, `game/tests/overworld_test.gd`
+
+### INT-180 · Prospecting clues, samples and assay (MIN-C)
+- **Trigger:** The world starts or loads (clues placed from the seed); the player or a prospector samples in a clue's area; a holder asks a smith to assay a sample; a prospector reports to the manor.
+- **Source:** `game/scripts/core/prospecting.gd::generate`, `game/scripts/core/prospecting.gd::take_sample`, `game/scripts/core/prospecting.gd::assay`, `game/scripts/core/prospecting.gd::npc_assay`, `game/scripts/core/prospecting.gd::plan`, `game/scripts/core/prospecting.gd::report`, `game/scripts/main.gd`
+- **Affects:** Resources, Inventory, Coins, Workshops, Employment, Save, Interface, Ledger
+- **Expected:** Clues come from the world seed alone (no rng draw, overworld generator unchanged); 55 % lie over a mineral body, the rest are false, and no body is added to the deposits (that is MIN-D). One sample a cell, four a clue, with a prospecting kit that wears; samples carry their origin. A smith assays at the forge for a 6-coin fee paid holder to smith, 1 coal and 40 minutes queued after its current work; the reading is seeded and can miss or mislead, confidence at most 0.9. Only the sampler, the smith and (once reported) the manor know a reading. No coins or ore from nothing.
+- **Tests:** `game/tests/prospecting_test.gd`
+
+### INT-181 · A prospector orders its kit by contract (MIN-C, CON-01)
+- **Trigger:** A prospector has no kit and none is for sale.
+- **Source:** `game/scripts/core/prospecting.gd::_get_kit`, `game/scripts/core/contracts.gd::propose`, `game/scripts/core/contracts.gd::buyer_answer`, `game/scripts/core/world.gd::work_craft`
+- **Affects:** Crafting, Workshops, Coins, Market
+- **Expected:** The prospector proposes a CON-01 contract for one kit at its value and answers a smith's counter by the shared buyer rule; a smith forges it (1 iron bar, 1 plank, 1 leather) and delivers it against the reserved coins.
+- **Tests:** `game/tests/prospecting_test.gd`, `game/tests/contracts_test.gd`
+
+### INT-182 · Trial pits open hidden bodies as ordinary seams (MIN-D, OD-28, OD-29)
+- **Trigger:** The player or a villager digs a trial pit with a pickaxe within 2 cells of a clue, on clear, open ground.
+- **Source:** `game/scripts/core/discovery.gd::trial_dig`, `game/scripts/core/discovery.gd::_open_seam`, `game/scripts/main.gd`, `game/scripts/core/manor_work.gd::do_step`
+- **Affects:** Resources, Inventory, Player state, Employment, Save, Ledger
+- **Expected:** One rule for player and villagers (120 minutes, pickaxe wear 2, 6 Mining xp, at most 4 pits a clue); most pits miss and a misleading stain never yields. A struck body becomes one ordinary seam in World.deposits (same record, swing, host rock and save as any seam), sized as the village's per-seam amount x grade / 5, never refilled; `found_<ore>` records the amount so deposits balance as start + found - end = mined. Opened seams are restored on load.
+- **Tests:** `game/tests/discovery_test.gd`
+
+### INT-183 · Village mining capability levels from present assets (MIN-D)
+- **Trigger:** Each dawn.
+- **Source:** `game/scripts/core/discovery.gd::dawn`, `game/scripts/core/discovery.gd::evaluate`, `game/scripts/core/world.gd`
+- **Affects:** Employment, Workshops, Households, Treasury
+- **Expected:** Levels are computed from what villagers, households and the manor hold now (capabilities.json) and gate nothing (owner, Q18-9: they shape pay and output only, the effect coming with Expansion 18): 1 surface extraction from the start; 2 needs a living prospector, a kit, a smith, a forge and a find the manor knows; 3 and 4 wait for MIN-E and MIN-F. The player's own goods do not count. Levels fall when the assets go; each change is logged with its reason. Nothing is granted.
+- **Tests:** `game/tests/discovery_test.gd`
+
+### INT-184 · Prospecting adopted through the labour market and the manor's job board (MIN-D, MIN-C-Q1)
+- **Trigger:** The labour market's review; the reeve's evening postings; a miner with no ore left.
+- **Source:** `game/scripts/core/discovery.gd::prospector_place`, `game/scripts/core/discovery.gd::survey_target`, `game/scripts/core/discovery.gd::trial_target`, `game/scripts/core/manor_work.gd::post_discovery`, `game/scripts/core/npc_brain.gd::job_market`, `game/scripts/core/npc_brain.gd::reeve_day`, `game/scripts/core/npc_brain.gd::_miner`
+- **Affects:** Employment, Treasury, Wages, Coins, Workshops
+- **Expected:** One prospector's place opens while nobody prospects and villagers take it by the ordinary job rules. The reeve posts one survey at a time (two samples, assays, a report; 22 coins from the treasury, the worker paying the assay fees) and one trial pit at a time for the manor's best known find (8 coins for the labour, strike or not), as ordinary manor work, not a mining wage. A miner whose ore is out takes a trial pit before quarrying. Independent prospecting and CON-01 sales stay open; no ownership or rights in finds (MIN-C-Q2).
+- **Tests:** `game/tests/discovery_test.gd`, `game/tests/prospecting_test.gd`
+
+### INT-185 · An open pit staked: its ground is reserved (MIN-E)
+- **Trigger:** The player stakes a pit with a pickaxe in hand, or the manor stakes one for a known find no trial pit can reach.
+- **Source:** `game/scripts/core/open_pit.gd::open_pit`, `game/scripts/core/open_pit.gd::site_refusal`, `game/scripts/core/manor_work.gd::post_pits`, `game/scripts/main.gd`
+- **Affects:** Property, Fields, Building, Market, Resources, Ledger
+- **Expected:** Pits are on the surface inside the village (OD-29), 5x5 with a walkable border and two spoil heaps. Planting, land claims, stalls, house sites and trial pits all refuse pit ground, its border and heaps; the ground is counted once in the ledger.
+- **Tests:** `game/tests/openpit_test.gd`
+
+### INT-186 · Digging an open pit unit by unit (MIN-E)
+- **Trigger:** The player or a villager (the manor's excavate job, or a miner with no ore left) digs a pit cell.
+- **Source:** `game/scripts/core/open_pit.gd::dig`, `game/scripts/core/manor_work.gd::do_step`, `game/scripts/core/npc_brain.gd`, `game/scripts/main.gd`
+- **Affects:** Inventory, Equipment, Player state, Employment, Treasury, Wages, Resources, Ledger
+- **Expected:** One rule for player and villagers: each dig takes one finite unit of the cell's layer (topsoil, dirt, spoil, then stone), wears the pickaxe 1, gives 4 Mining xp and is counted `dug_<item>`; terraces and a ramp keep the floor reachable and a dig that would cut a walkable cell off is refused. The manor's excavate job pays the existing quarry rate per load from the treasury (no new wage); capability levels gate nothing (Q18-9).
+- **Tests:** `game/tests/openpit_test.gd`
+
+### INT-187 · A pit dug to rock exposes a hidden body as an ordinary seam (MIN-E, MIN-D, OD-28)
+- **Trigger:** A pit cell (not the ramp) is dug down to the rock within 2 cells of a prospecting body.
+- **Source:** `game/scripts/core/open_pit.gd::_expose`, `game/scripts/core/discovery.gd::expose`, `game/scripts/core/discovery.gd::_open_seam`
+- **Affects:** Resources, Employment, Market, Ledger
+- **Expected:** The body opens through the trial pit's code into one ordinary seam in World.deposits (host rock, `found_<ore>` counted, mined by the one swing, never refilled); a misleading stain has nothing under it.
+- **Tests:** `game/tests/openpit_test.gd`, `game/tests/discovery_test.gd`
+
+### INT-188 · Earth tipped on heaps, taken or backfilled (MIN-E)
+- **Trigger:** A digger tips its load; someone takes earth from a heap; earth is put back into the pit.
+- **Source:** `game/scripts/core/open_pit.gd::tip`, `game/scripts/core/open_pit.gd::take`, `game/scripts/core/open_pit.gd::backfill`
+- **Affects:** Containers, Inventory, Resources, Ledger, Save
+- **Expected:** Topsoil, dirt and spoil are real items (value 0, no buyer yet) held in the heaps, which are solid while they hold anything and are counted in the census; stone is kept. Backfill returns the last layer dug first. Nothing appears or vanishes. Pits and heaps are saved (save version 17, "pits"; absent: none).
+- **Tests:** `game/tests/openpit_test.gd`
+
+### INT-189 · A service contract's work done through the existing work code (CON-02)
+- **Trigger:** A seller under a service contract (digging the buyer's open pit; surveying a stain) does its next unit.
+- **Source:** `game/scripts/core/contract_services.gd::means`, `game/scripts/core/contract_services.gd::plan`, `game/scripts/core/contract_services.gd::step`, `game/scripts/core/open_pit.gd::dig`, `game/scripts/core/open_pit.gd::tip`, `game/scripts/core/prospecting.gd::take_sample`, `game/scripts/core/prospecting.gd::assay`
+- **Affects:** Employment, Coins, Inventory, Resources, Containers, Ledger, Save
+- **Expected:** The going rate is the manor job board's rate for the same work (no new wage). A pit dig uses the open-pit dig and tip code (earth to the pit's heaps, stone to the buyer's chest or collected in the window); a survey takes samples with the seller's own kit, pays the assay fee as the manor's survey does, and tells each reading to the buyer face to face. Each unit is paid when done from the coins reserved at agreement; cancel or lapse returns the rest; units done stay paid. Goods a seller carries on a service are counted in the census. Manor tool orders, paid quests, the job board, carriers and attendants are unchanged and count only as obligations.
+- **Tests:** `game/tests/services_test.gd`
+
+### INT-190 · Tunnels cut through rock, within reach of a timber support (MIN-F)
+- **Trigger:** The player or a villager cuts a rock cell below ground with a pickaxe; someone sets up a timber support.
+- **Source:** `game/scripts/core/mine_works.gd::dig_refusal`, `game/scripts/core/mine_works.gd::dig`, `game/scripts/core/mine_works.gd::place_support`, `game/scripts/main.gd`
+- **Affects:** Inventory, Equipment, Player state, Resources, Crafting, Save, Ledger
+- **Expected:** One rule for player and villagers: a rock cell under the hill (rock all round, never a seam, from an open face, within 2 cells of a support) gives 3 stone then 2 spoil, one unit per cut (counted `cut_<item>`, pickaxe wear, Mining xp), and opens only after its last unit; no floor is left unreachable. Supports (sawhorse: 1 log, 2 planks) are set up with a mallet from real inventory and used up; their only effect is where rock may be cut (no collapse is simulated); the capability evaluator may count them, gating nothing (Q18-9). Saved in "mine_works".
+- **Tests:** `game/tests/underground_ext_test.gd`
+
+### INT-191 · Track and minecarts (MIN-F)
+- **Trigger:** Track is laid (workbench: 2 planks, 4 nails; a mallet); a minecart (the handcart parts chain) is set down on track and pulled; a minecart reaches a level's mouth.
+- **Source:** `game/scripts/core/mine_works.gd::lay_track`, `game/scripts/core/mine_works.gd::set_down_minecart`, `game/scripts/core/carts.gd::place`, `game/scripts/core/carts.gd::pull_speed_for`, `game/scripts/core/carts.gd::cross`, `game/scripts/core/world.gd::player_through`, `game/scripts/core/world.gd::_npc_through`
+- **Affects:** Inventory, Crafting, Containers, Resources, Save
+- **Expected:** Track sections are used up from real inventory, laid on a level's floor or the mine yard. A minecart follows its puller only along track on its level (0.95 of walking speed against a handcart's 0.75) and crosses a mouth only with track on both sides; handcarts are still refused at the adit. Goods ride in the cart and are never made or lost.
+- **Tests:** `game/tests/underground_ext_test.gd`
+
+### INT-192 · The natural cave and stacked levels (MIN-H)
+- **Trigger:** The world is set up or loaded; a villager or the player goes through the cave's mouth; awareness, reach or fights between people.
+- **Source:** `game/scripts/core/underground.gd::levels_at`, `game/scripts/core/underground.gd::reachable_levels`, `game/scripts/core/world.gd::level_at`, `game/scripts/core/world.gd::_npc_through`
+- **Affects:** Resources, Employment, Market, Crime, Combat, Save
+- **Expected:** A natural cave on level -2 under the mine hill with its own surface mouth, generated from the seed by the gallery's generator with its own salt (the adit gallery unchanged); its seams are ordinary deposit records, so the cave's ore counts as the village's own (labour market, caravan threshold, quests). Villagers reach it through the one level router. Where levels stack, a person's level is resolved by who stands there; nobody sees, reaches or fights across levels. Underground generator version 2; saves keep version 17 with defaults for absent keys.
+- **Tests:** `game/tests/underground_ext_test.gd`, `game/tests/underground_test.gd`
+
+### INT-193 · Underground stability, collapse and support wear (MIN-F2, MIN-F-Q1)
+- **Trigger:** Each dawn, for cells the works have dug and for shafts.
+- **Source:** `game/scripts/core/mine_works.gd::dawn`, `game/scripts/core/mine_works.gd::stability`, `game/scripts/core/mine_works.gd::collapse`, `game/scripts/core/mine_works.gd::repair`, `game/scripts/core/world.gd`
+- **Affects:** Resources, Inventory, Containers, Save, Ledger
+- **Expected:** Stability from nearby supports by condition and distance plus a capped share from backfilled neighbours; below the threshold a cell may collapse by a seeded hash of seed, day and cell (the world's random stream untouched), filling with rubble as spoil, blocking paths, crushing a support on it, and moving people, carts and piles to the nearest floor; rubble is dug out again as spoil. Supports and ladders wear daily and are repaired with real planks and nails. Generated gallery and cave cells are treated as stable. Rates are balance parameters (`mine_works.json`).
+- **Tests:** `game/tests/underground_struct_test.gd`
+
+### INT-194 · Hidden underground ore and the manor's tunnelling jobs (MIN-F2, MIN-F-Q2)
+- **Trigger:** A tunnel or shaft cut beside hidden ore; the reeve's evening.
+- **Source:** `game/scripts/core/mine_works.gd::expose_beside`, `game/scripts/core/discovery.gd::open_hidden`, `game/scripts/core/manor_work.gd::post_tunnels`, `game/scripts/core/mine_works.gd::manor_face`
+- **Affects:** Resources, Employment, Treasury, Wages, Ledger
+- **Expected:** Hidden ore exists in the seeded world beforehand and opens as an ordinary seam (`found_<ore>`), depleting and never refilled; villagers gain no knowledge of unexposed ore. The manor posts one tunnelling job at a time, only under sound timber, on the existing job board and wage rules from the treasury; independent mining stays separate.
+- **Tests:** `game/tests/underground_struct_test.gd`
+
+### INT-195 · Minecart preference for miners below ground (MIN-F2, MIN-F-Q3)
+- **Trigger:** A miner below ground with a full load.
+- **Source:** `game/scripts/core/mine_works.gd::haul_costs`, `game/scripts/core/mine_works.gd::cart_haul_plan`, `game/scripts/core/mine_works.gd::cart_act`, `game/scripts/core/carts.gd::room`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Containers, Inventory, Employment
+- **Expected:** The miner uses a household minecart on connected track within reach, with room and unclaimed, only when its cost in walked cells per unit is lower than carrying; one claimant at a time; goods loaded, pulled along the track and unloaded, never made or lost; otherwise the miner carries.
+- **Tests:** `game/tests/underground_struct_test.gd`
+
+### INT-196 · Shafts, ladders and deeper levels (MIN-F2, MIN-F-Q4)
+- **Trigger:** A shaft dug unit by unit and a ladder set (3 planks, 6 nails).
+- **Source:** `game/scripts/core/mine_works.gd::dig_shaft`, `game/scripts/core/mine_works.gd::install_ladder`, `game/scripts/core/underground.gd::add_level`, `game/scripts/core/underground.gd::add_portal`
+- **Affects:** Resources, Inventory, Employment, Save
+- **Expected:** A laddered shaft becomes a portal the one level router uses; the first shaft below the cave makes level -3 (rock with its own hidden ore), levels stop at -4; goods change level only in someone's hands; carts are refused at shafts; shafts are in the stability check.
+- **Tests:** `game/tests/underground_struct_test.gd`
+
+### INT-197 · Player-ordered backfilling (MIN-F2, MIN-F-Q5)
+- **Trigger:** The player chooses Backfill Tunnel (or fills a cell themselves).
+- **Source:** `game/scripts/core/manor_work.gd::order_backfill`, `game/scripts/core/manor_work.gd::cancel_backfill`, `game/scripts/core/mine_works.gd::fill`, `game/scripts/main.gd`
+- **Affects:** Coins, Inventory, Employment, Resources, Save, Ledger
+- **Expected:** Only the player's action creates an order; its wage comes from the player's coins and is held until done; labourers may take it from the board (manor hands may not) and carry the player's spoil from the depot; units placed equal units removed (`filled_spoil`); a filled cell blocks travel and adds limited, capped stability, never repairing timber; re-dug fill returns as spoil, never ore; cancelling returns the held wage and leaves placed fill. No villager or manor ever starts a backfill.
+- **Tests:** `game/tests/underground_struct_test.gd`
+
+### INT-198 · Stone dressed into building blocks for construction (STONE-01)
+- **Trigger:** A labourer (or the player) dresses stone at a workbench; a building site or room takes its materials.
+- **Source:** `game/data/recipes.json`, `game/scripts/core/npc_brain.gd::_mason`, `game/scripts/core/world.gd::work_craft`, `game/data/balance.json`
+- **Affects:** Crafting, Building, Resources, Market, Inventory, Employment, Save
+- **Expected:** Quarried raw stone is the only source of blocks, 2 stone to 2 blocks (`exact`, no skill save or bonus); labourers dress only when the raw-goods merchant or open building sites want blocks, buying a mallet and stone if needed, and sell blocks to the merchant and builders; houses, workshops and rooms take blocks where they took stone, in the same numbers; fittings, mending, the farmland gate, contracts and the caravan keep raw stone; sites from older saves keep their recorded stone cost and refund stone. No block from nothing.
+- **Planned (Expansion 18, not built):** the Stoneworking skill governs dressing and how much stone becomes blocks, the rest conserved as waste (STONE-04, STONE-05); an iron chisel from the smiths is needed with the mallet (STONE-06), linking stoneworking to smithing and iron; the stonecutter trade and villagers dressing for their own use (X18-STONECUT, STONE-02); materials by kind of repair (STONE-03).
+- **Tests:** `game/tests/stone_test.gd`, `game/tests/housing_test.gd`, `game/tests/play_test.gd`
+
+### INT-199 · A recipe's required tool, one rule for player and villagers (STONE-01)
+- **Trigger:** Anyone crafts a recipe that names a `tool` (today `dress_stone`, the mallet).
+- **Source:** `game/scripts/core/world.gd::work_craft`, `game/scripts/core/npc_brain.gd::_can_make`, `game/scripts/core/npc_brain.gd::_do_recipe`, `game/scripts/main.gd`
+- **Affects:** Crafting, Equipment, Inventory, Employment
+- **Expected:** Without the tool the craft is refused ("You need a mallet.") for the player and skipped by villagers and contract work alike; each craft wears the tool by 1.
+- **Tests:** `game/tests/stone_test.gd`, `game/tests/contracts_test.gd`
+
+### INT-200 · The resident player counted in the village's mining capability (MIN-D2, MIN-SKILLCAP)
+- **Trigger:** Dawn, when the capability levels are evaluated.
+- **Source:** `game/scripts/core/discovery.gd::dawn`, `game/scripts/core/discovery.gd::evaluate`
+- **Affects:** Player state, Employment, Equipment, Households
+- **Expected:** While the player's family has a home in the village, the player counts by the villagers' rule (skills, and the tools in pack and home chest), read only, never moved; leaving drops them at the next dawn. People count by skill and tools, not job title; a tool in a household store counts for one member. Levels are reported only, never a gate (Q18-9).
+- **Tests:** `game/tests/parity_mining_test.gd`, `game/tests/discovery_test.gd`
+
+### INT-201 · A trial pit's earth left in a pile and reused (MIN-D3)
+- **Trigger:** A trial pit is dug by the player, a villager or a manor job.
+- **Source:** `game/scripts/core/discovery.gd::trial_dig`, `game/scripts/main.gd`, `game/scripts/core/manor_work.gd::do_step`, `game/scripts/core/open_pit.gd::backfill`
+- **Affects:** Resources, Loot, Inventory, Ledger
+- **Expected:** One cell of earth down to the rock (2 topsoil, 3 dirt, 3 spoil), counted `trial_ground_`/`dug_`, left in a pile beside the pit; anyone may take it, carry it or tip it into an open pit (`backfilled_`). No coins, stone or ore from the earth; goods conserved.
+- **Tests:** `game/tests/parity_mining_test.gd`, `game/tests/discovery_test.gd`
+
+### INT-202 · Earth by shovel, rock by pickaxe, for every digger and job (MIN-SHOVEL)
+- **Trigger:** Anyone digs a pit, a trial pit, a tunnel's fallen rock or fill, or takes a dig job or contract.
+- **Source:** `game/scripts/core/open_pit.gd::dig`, `game/scripts/core/mine_works.gd::dig`, `game/scripts/core/manor_work.gd::excavate_cell`, `game/scripts/core/contract_services.gd::means`
+- **Affects:** Equipment, Resources, Employment, Crafting
+- **Expected:** Topsoil, dirt, spoil, fallen rock and fill take a shovel; stone and cutting rock take a pickaxe; the tool used wears and may break, for the player and villagers alike. Jobs and contracts only take cells the worker's tools can dig; older saves' open jobs and part-dug pits are not stranded.
+- **Tests:** `game/tests/parity_mining_test.gd`, `game/tests/openpit_test.gd`, `game/tests/underground_ext_test.gd`, `game/tests/services_test.gd`
+
+### INT-203 · Shovels made to want and bought with own coins (MIN-SHOVEL)
+- **Trigger:** The goods merchant wants shovels, or a miner can take posted digging only for want of one.
+- **Source:** `game/scripts/core/npc_brain.gd::_carpenter_shovel`, `game/scripts/core/npc_brain.gd::_buy_tool`, `game/scripts/core/manor_work.gd::shovel_would_open`, `game/data/recipes.json`
+- **Affects:** Crafting, Market, Coins, Inventory
+- **Expected:** The smith forges a blade (1 iron bar), the carpenter makes a haft (1 plank) and assembles the shovel; they are made only to a buyer's want and sold to the merchant's stock; a miner buys one with its own coins. Nothing free.
+- **Tests:** `game/tests/parity_mining_test.gd`, `game/tests/crafts_test.gd`
+
+### INT-204 · Digging refused on held land and the manor's fields (MIN-RIGHTS)
+- **Trigger:** Anyone marks out a pit or digs a trial pit.
+- **Source:** `game/scripts/core/open_pit.gd`, `game/scripts/core/discovery.gd::trial_refusal`
+- **Affects:** Property, Fields, Resources
+- **Expected:** Refused on land a household holds and on the manor's fields; common ground needs no permit or fee; no tunnel rock lies under held land.
+- **Tests:** `game/tests/parity_mining_test.gd`
+
+### INT-205 · The manor procures mining equipment from the trades (MIN-EQUIP, MIN-F2-Q1)
+- **Trigger:** The reeve's evening.
+- **Source:** `game/scripts/core/mine_supply.gd::manor_needs`, `game/scripts/core/mine_supply.gd::procure`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Treasury, Crafting, Market, Inventory, Employment
+- **Expected:** The manor works out real needs (a support for the face it wants to tunnel, planks for worn supports holding an open passage, ladders for broken shafts, one mallet for the yard), buys what someone holds from the treasury above its reserve, or orders the rest from a carpenter with a paid advance; finished pieces are delivered to the works yard. Carpenters make supports, ladders, mallets and minecarts; the smith supplies nails, axles and ironwork by the usual part purchases. A carpenter holds back only what the manor ordered. No mining wage or market of its own. Extends INT-063, INT-178, INT-194.
+- **Tests:** `game/tests/equip_test.gd`
+
+### INT-206 · Shore jobs on the manor's board (MIN-EQUIP)
+- **Trigger:** The manor holds a support, plank or ladder for a face, a worn support or a broken shaft.
+- **Source:** `game/scripts/core/mine_supply.gd::shore_wanted`, `game/scripts/core/manor_work.gd`
+- **Affects:** Employment, Wages, Equipment, Resources
+- **Expected:** A "shore" job (set up a support, repair one, fit a ladder) at the repair wage, ranked before mending, taken by villagers by the board's rules; not offered to the player. Extends INT-066, INT-194.
+- **Tests:** `game/tests/equip_test.gd`
+
+### INT-207 · A miner's household buys a minecart where track serves its seam (MIN-EQUIP)
+- **Trigger:** A miner's seam below ground is served by track and a cart would save carrying.
+- **Source:** `game/scripts/core/npc_brain.gd`, `game/scripts/core/mine_supply.gd`
+- **Affects:** Coins, Market, Equipment, Households
+- **Expected:** Bought from a carpenter with the household's own coins and set on the rails; nobody lays track or sinks a shaft on their own, so carts appear only on track the player laid. Extends INT-191, INT-195.
+- **Tests:** `game/tests/equip_test.gd`
+
+### INT-208 · A collapse's outcome for the people in the cell (MIN-COLLAPSE, MIN-F2-Q2)
+- **Trigger:** A tunnel or shaft cell collapses at dawn.
+- **Source:** `game/scripts/core/mine_works.gd::collapse`, `game/scripts/core/world.gd`
+- **Affects:** Health, Character, Player state, Save, Loot
+- **Expected:** Each person in the cell lives or dies by a fixed seeded formula (seed, day, cell, person; tunables in `mine_works.json`, temporary); a villager who dies goes through `World.kill` (INT-017), the player through the ordinary death (INT-018); a survivor steps to an open neighbouring cell or is trapped, unable to act, until the cell is dug out with a shovel; minecarts and piles in the cell are buried with it; trapped people are saved. No injuries (HEALTH-01). Extends INT-193.
+- **Tests:** `game/tests/equip_test.gd`, `game/tests/underground_struct_test.gd`
+
+### INT-209 · The reeve carries an unclaimed delivery when no manor hand is free (LOG-01)
+- **Trigger:** A villager reeve's working round, before the board's latest start, with a delivery (haul) open.
+- **Source:** `game/scripts/core/manor_work.gd::reeve_fallback`, `game/scripts/core/manor_work.gd::is_staff`, `game/scripts/core/npc_brain.gd`
+- **Affects:** Employment, Wages, Inventory, Granary, Relief
+- **Expected:** Only when no living manor hand is free does the reeve take an open delivery, by the board's rules (first come, one job at a time); as salaried staff no wage is set aside or paid (the reeve is also excluded from surveys and backfill, as hands are). The goods are loaded where they lie and put down once at their destination. Urgent relief keeps `deliver_now`.
+- **Tests:** `game/tests/job_board_test.gd`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
 
 | System | Interactions |
 |---|---|
-| Character | INT-001, INT-018, INT-031, INT-080 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109, INT-121, INT-122, INT-145, INT-146, INT-150, INT-155, INT-156 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128, INT-131, INT-132, INT-134, INT-136, INT-137, INT-146, INT-160, INT-162, INT-164, INT-166, INT-168, INT-170, INT-171 |
-| Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129, INT-138, INT-141, INT-145, INT-147, INT-149, INT-158, INT-159, INT-163 |
-| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108, INT-139, INT-141, INT-142, INT-145, INT-155 |
-| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108, INT-156 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117, INT-146, INT-148 |
-| Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117, INT-154 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130, INT-160, INT-161, INT-164, INT-170, INT-171 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121, INT-140, INT-141, INT-143, INT-145, INT-147, INT-152, INT-156, INT-162, INT-163 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-156, INT-157 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147, INT-148, INT-149, INT-151, INT-152, INT-154, INT-156, INT-157, INT-158, INT-159, INT-162, INT-164, INT-165, INT-168, INT-169, INT-171, INT-172 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-157, INT-158, INT-159, INT-164, INT-165, INT-168, INT-169, INT-170, INT-172 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129, INT-131, INT-134, INT-154, INT-169, INT-170 |
-| Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
-| Relief | INT-024, INT-047, INT-066, INT-159 |
-| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159, INT-165, INT-172 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160, INT-162, INT-164, INT-165, INT-166, INT-167, INT-168, INT-170, INT-171, INT-172 |
-| Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156 |
+| Character | INT-001, INT-018, INT-031, INT-080, INT-208 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109, INT-121, INT-122, INT-145, INT-146, INT-150, INT-155, INT-156, INT-177, INT-182, INT-186, INT-190, INT-200, INT-208 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128, INT-131, INT-132, INT-134, INT-136, INT-137, INT-146, INT-160, INT-162, INT-164, INT-166, INT-168, INT-170, INT-171, INT-173, INT-174, INT-175, INT-176, INT-177, INT-178, INT-180, INT-182, INT-186, INT-188, INT-189, INT-190, INT-191, INT-193, INT-195, INT-196, INT-197, INT-198, INT-199, INT-201, INT-203, INT-205, INT-209 |
+| Equipment | INT-003, INT-004, INT-015, INT-031, INT-176, INT-186, INT-190, INT-199, INT-200, INT-202, INT-206, INT-207 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129, INT-138, INT-141, INT-145, INT-147, INT-149, INT-158, INT-159, INT-163, INT-176 |
+| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108, INT-139, INT-141, INT-142, INT-145, INT-155, INT-208 |
+| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108, INT-156, INT-176, INT-192 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117, INT-146, INT-148, INT-192 |
+| Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117, INT-154, INT-201, INT-208 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130, INT-160, INT-161, INT-164, INT-170, INT-171, INT-185, INT-204 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121, INT-140, INT-141, INT-143, INT-145, INT-147, INT-152, INT-156, INT-162, INT-163, INT-173, INT-174, INT-179, INT-180, INT-182, INT-185, INT-186, INT-187, INT-188, INT-189, INT-190, INT-191, INT-192, INT-193, INT-194, INT-196, INT-197, INT-198, INT-201, INT-202, INT-204, INT-206 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-156, INT-157, INT-177, INT-178, INT-181, INT-190, INT-191, INT-198, INT-199, INT-202, INT-203, INT-205 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147, INT-148, INT-149, INT-151, INT-152, INT-154, INT-156, INT-157, INT-158, INT-159, INT-162, INT-164, INT-165, INT-168, INT-169, INT-171, INT-172, INT-174, INT-175, INT-176, INT-178, INT-181, INT-185, INT-187, INT-192, INT-198, INT-203, INT-205, INT-207 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-157, INT-158, INT-159, INT-164, INT-165, INT-168, INT-169, INT-170, INT-172, INT-175, INT-178, INT-180, INT-181, INT-184, INT-189, INT-197, INT-203, INT-207 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129, INT-131, INT-134, INT-154, INT-169, INT-170, INT-174, INT-175, INT-183, INT-184, INT-186, INT-194, INT-205 |
+| Wages | INT-023, INT-029, INT-059, INT-066, INT-083, INT-184, INT-186, INT-194, INT-206, INT-209 |
+| Relief | INT-024, INT-047, INT-066, INT-159, INT-209 |
+| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159, INT-165, INT-172, INT-176, INT-209 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160, INT-162, INT-164, INT-165, INT-166, INT-167, INT-168, INT-170, INT-171, INT-172, INT-175, INT-176, INT-183, INT-200, INT-207 |
+| Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156, INT-173, INT-174, INT-175, INT-180, INT-182, INT-183, INT-184, INT-186, INT-187, INT-189, INT-192, INT-194, INT-195, INT-196, INT-197, INT-198, INT-199, INT-200, INT-202, INT-205, INT-206, INT-209 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080, INT-151 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145, INT-172 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127, INT-149, INT-163 |
 | Bandits | INT-012, INT-014, INT-050, INT-149, INT-153, INT-154 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153, INT-158, INT-168, INT-170 |
-| Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154, INT-160, INT-162, INT-165, INT-166, INT-167, INT-168, INT-169, INT-171 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156, INT-162 |
-| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148, INT-149, INT-150 |
-| Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153, INT-158, INT-168, INT-170, INT-174, INT-177, INT-185, INT-198 |
+| Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107, INT-175, INT-178, INT-180, INT-181, INT-183, INT-184 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154, INT-160, INT-162, INT-165, INT-166, INT-167, INT-168, INT-169, INT-171, INT-174, INT-175, INT-176, INT-180, INT-182, INT-185, INT-186, INT-187, INT-188, INT-189, INT-190, INT-193, INT-194, INT-197, INT-201 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156, INT-162, INT-173, INT-175, INT-179, INT-180, INT-182, INT-188, INT-189, INT-190, INT-191, INT-192, INT-193, INT-196, INT-197, INT-198, INT-208 |
+| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148, INT-149, INT-150, INT-173, INT-175, INT-180 |
+| Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146, INT-188, INT-189, INT-191, INT-193, INT-195 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111, INT-138 |
-| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130, INT-142, INT-151, INT-153, INT-170 |
+| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130, INT-142, INT-151, INT-153, INT-170, INT-185, INT-204 |
 | Calendar | INT-077, INT-123, INT-147, INT-149, INT-161, INT-163, INT-167, INT-171 |
 | Family | INT-077, INT-078, INT-079, INT-080, INT-148, INT-151, INT-152, INT-153 |
-| Overworld | INT-071, INT-074, INT-076, INT-087 |
+| Overworld | INT-071, INT-074, INT-076, INT-087, INT-177, INT-179 |
 
 <!-- index:end -->

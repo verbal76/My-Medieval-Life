@@ -14,10 +14,11 @@ extends SceneTree
 ##       analysis only: tests/capability_metrics.gd)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
-## Exit code 1 if the currency or any item does not balance.
+## Exit code 1 if the currency or any item does not balance. SIM-01 (owner, 2026-10-21): run the longest duration once and
+## read days 30, 90, 100 from its checkpoints (--every); a ledger broken at a checkpoint stops the run there (FATAL line).
 
 const STEP := 0.5
-const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "log", "plank", "iron_bar", "copper_bar",
+const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block", "log", "plank", "iron_bar", "copper_bar",
 	"wheat", "meat", "hide", "leather", "pottage", "roast_meat", "ale", "pickaxe", "axe", "hammer"]
 const Census := preload("res://tests/census.gd")
 const CapMetrics := preload("res://tests/capability_metrics.gd")     # X18-SIM (Expansion 18): analysis switch, off unless asked
@@ -85,7 +86,7 @@ func _init() -> void:
 		CapMetrics.post_setup(cap_info, w)
 	var cap0 := CapMetrics.snapshot(w) if cap_on else {}
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
-		"deposits": w.deposits.map(func(d): return int(d.amount)), "animals": _animal_counts(), "alive": _villagers().size(),
+		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "fill_out": w.mine_works.fill_out, "fill_in": w.mine_works.fill_in(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
 	var samples: Array = [_sample(start)]
 	_herd_day(0)
@@ -97,6 +98,7 @@ func _init() -> void:
 	w.map.profiling = profile
 	var update_us := 0
 	var harness_us := 0
+	var reached := days               # the day the run got to: `days`, or the checkpoint where a ledger broke
 	for d in days:
 		if scenario != "" and d == scenario_day:
 			_intervene(scenario)
@@ -122,6 +124,14 @@ func _init() -> void:
 			_print_sample(samples[-1])
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
+			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
+			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
+			var bad: Dictionary = samples[-1]
+			if int(bad.currency.leak) != 0 or not (bad.ledger.items as Dictionary).is_empty():
+				reached = d + 1
+				print("FATAL day %d seed %d: currency leak %d; items %s; deposits %s; animals %s" % [reached, seed, int(bad.currency.leak),
+					JSON.stringify(bad.ledger.items), JSON.stringify(bad.ledger.deposits), JSON.stringify(bad.ledger.animals)])
+				break
 	var secs := (Time.get_ticks_msec() - t0) / 1000.0
 	if profile:
 		_print_profile(update_us, harness_us, secs, days)
@@ -130,12 +140,12 @@ func _init() -> void:
 			if watch_lost.has(int(e[5])) and int(e[0]) >= watch_from - 2:
 				print("WATCH MISS ", str(e))
 	var final: Dictionary = samples[-1]
-	_print_final(final, start, seed, days, secs)
+	_print_final(final, start, seed, reached, secs)
 	if cap_on:
-		print("CAPABILITY " + JSON.stringify(CapMetrics.report(cap_info, w, cap0, days)))
+		print("CAPABILITY " + JSON.stringify(CapMetrics.report(cap_info, w, cap0, reached)))
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
-		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,
+		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
@@ -453,6 +463,19 @@ func _st(k: String) -> float:
 	return float(w.stats.get(k, 0.0))
 
 
+## CON-01: contracts over the run (counters from World.stats) and those on record now, by item and by who to whom.
+func _contracts_summary() -> Dictionary:
+	var items := {}
+	var pairs := {}
+	for c in w.contracts.list:
+		items[str(c.item)] = int(items.get(str(c.item), 0)) + 1
+		var p := "%s>%s:%s" % [str(c.buyer).get_slice(":", 0), str(c.seller).get_slice(":", 0), str(c.state)]
+		pairs[p] = int(pairs.get(p, 0)) + 1
+	return {"made": int(_st("contracts_made")), "units": int(_st("contract_units")), "paid": int(_st("contract_paid")),
+		"lapsed": int(_st("contracts_lapsed")), "cancelled": int(_st("contracts_cancelled")), "offers_to_player": int(_st("contract_offers_to_player")),
+		"reserved_now": w.contracts.reserved_total(), "on_record_by_item": items, "on_record_by_parties": pairs}
+
+
 func _sample(start: Dictionary) -> Dictionary:
 	var s := {"day": w.day(), "clock": w.clock_text(), "fingerprint": _fingerprint()}       # the determinism gate compares these (PERF-03)
 	# people
@@ -575,6 +598,8 @@ func _sample(start: Dictionary) -> Dictionary:
 	s.materials = {"held": held, "held_by_job": by_job_held, "deposit_left": left, "deposits": w.deposits.map(func(d): return [d.ore, int(d.amount)]),
 		"deposits_exhausted": w.deposits.filter(func(d): return int(d.amount) <= 0).size(), "trees": tree_states,
 		"mined": _keys_with("mined_", ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]),
+		"dug": _keys_with("dug_", ["topsoil", "dirt", "spoil", "stone"]), "pits": w.pits.pits.size(), "pit_seams": int(_st("pit_seams")),
+		"underground": _keys_with("", ["tunnel_cells_opened", "supports_set_up", "supports_repaired", "shore_jobs_posted", "manor_job_tunnel", "manor_job_shore", "gov_mine_equipment", "minecart_hauls", "minecarts_set_down_by_miners", "shafts_sunk", "tunnel_collapses", "collapse_deaths", "collapse_survivors", "seams_found_below"]),
 		"felled_trees": int(_st("trees_felled")), "felled_logs": int(_st("felled_log")), "burned_logs": int(_st("burned_log")),
 		"broke": _keys_with("broke_", ["pickaxe", "axe", "hammer"])}
 	# wildlife
@@ -708,6 +733,7 @@ func _keys_with(prefix: String, ids: Array) -> Dictionary:
 func _coins() -> Dictionary:
 	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0,
 		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total(),
+		"contract_reserves": w.contracts.reserved_total(),   # CON-01: buyers' coins set aside for contracts
 		"stall_tills": w.business.tills()}         # takings held in stall tills until settled (STALL-05)
 	for n: NPC in w.npcs:
 		out["dead" if not n.alive else ("bandits" if n.role == "bandit" else "villagers")] += n.coins
@@ -744,9 +770,10 @@ func _animal_counts() -> Dictionary:
 
 
 ## The flow accounts since `start`. Items: held(start) + produced + imported - consumed - exported
-## = held(now); produced = made_ (recipes, harvest, kills, home cooking) + mined_ + felled_;
+## = held(now); produced = made_ (recipes, harvest, kills, home cooking) + mined_ + felled_ + dug_ (MIN-E open pits);
 ## consumed = eaten_ + used_ (recipes, home cooking) + used_building_ + used_works_ + used_repairs_
-## + feed_eaten_ (troughs) + burned_ (firewood) + broke_ (tools) + poached_lost_ (the bandits' game) + spoiled_ (carcasses left to spoil).
+## + feed_eaten_ (troughs) + burned_ (firewood) + broke_ (tools) + poached_lost_ (the bandits' game) + spoiled_ (carcasses left to spoil)
+## + backfilled_ (earth put back into a pit); MIN-F: cut_ (rock cut from a tunnel face) is produced too.
 ## Only non-zero residuals are kept, with their terms.
 func _ledger(start: Dictionary) -> Dictionary:
 	var st0: Dictionary = start.stats
@@ -758,7 +785,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for id in start.goods:
 		ids[id] = true
 	for k in w.stats:
-		for p in ["made_", "mined_", "felled_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "spoiled_", "wild_eaten_", "farm_harvest_"]:
+		for p in ["made_", "mined_", "felled_", "dug_", "cut_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "spoiled_", "wild_eaten_", "farm_harvest_", "backfilled_", "filled_"]:
 			if str(k).begins_with(p):
 				ids[str(k).substr(p.length())] = true
 				break
@@ -772,10 +799,10 @@ func _ledger(start: Dictionary) -> Dictionary:
 	var keys := ids.keys()
 	keys.sort()
 	for id in keys:
-		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id)
+		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id) + d.call("dug_" + id) + d.call("cut_" + id)
 		var consumed: int = d.call("eaten_" + id) + d.call("used_" + id) + d.call("used_building_" + id) + d.call("used_works_" + id) \
 			+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id) + d.call("spoiled_" + id) \
-			+ d.call("wild_eaten_" + id)
+			+ d.call("wild_eaten_" + id) + d.call("backfilled_" + id) + d.call("filled_" + id)
 		if id == "wheat":                     # farmers keep seed back from the grain they cut (Farming.save_seed)
 			consumed += d.call("farm_seed_saved")
 		elif id == "wheat_seed":
@@ -794,13 +821,53 @@ func _ledger(start: Dictionary) -> Dictionary:
 			bad[id] = row
 	var dep := []
 	var mined_by_ore := {}
+	# MIN-D: a seam opened by a trial pit during the run starts at 0 here and enters the books as found_<ore> (its host
+	# rock as found_stone): start + found - end = mined
 	for i in w.deposits.size():
 		var ore: String = w.deposits[i].ore
-		mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + int(start.deposits[i]) - int(w.deposits[i].amount)
+		var s0 := int(start.deposits[i]) if i < (start.deposits as Array).size() else 0
+		mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + s0 - int(w.deposits[i].amount)
+	for ore in ["iron_ore", "coal", "copper_ore", "gold_ore"]:
+		if d.call("found_" + ore) != 0:
+			mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + d.call("found_" + ore)
+	# MIN-B: the other stone pools: worked-out seams' host rock, the village's boulders (villagers quarry both now)
+	var hosts_now := _hosts()
+	var host_fall := 0
+	for i in hosts_now.size():
+		host_fall += (int(start.hosts[i]) if i < (start.hosts as Array).size() else 0) - int(hosts_now[i])
+	mined_by_ore["stone"] = int(mined_by_ore.get("stone", 0)) + host_fall + d.call("found_stone") + int(start.boulders) - _boulder_stone()
 	for ore in mined_by_ore:
 		var counted: int = d.call("mined_" + ore)
 		if counted != int(mined_by_ore[ore]):
 			dep.append({"ore": ore, "taken_from_deposits": mined_by_ore[ore], "mined_counted": counted})
+	# MIN-E: the open pits' ground, a pool per item: start + staked (pit_ground_) - end = dug - backfilled. MIN-D-Q3: a
+	# trial pit's earth enters the books as trial_ground_ when it is dug (all of it at once: nothing is left in a trial pit)
+	var pits_now: Dictionary = w.pits.ground_left()
+	var pit_ids := {}
+	for id in pits_now:
+		pit_ids[id] = true
+	for id in start.get("pits", {}):
+		pit_ids[id] = true
+	for k in w.stats:
+		if str(k).begins_with("pit_ground_"):
+			pit_ids[str(k).substr(11)] = true
+		if str(k).begins_with("trial_ground_"):
+			pit_ids[str(k).substr(13)] = true
+	for id in pit_ids:
+		var fall: int = int(start.get("pits", {}).get(id, 0)) + d.call("pit_ground_" + id) + d.call("trial_ground_" + id) - int(pits_now.get(id, 0))
+		var net: int = d.call("dug_" + id) - d.call("backfilled_" + id)
+		if fall != net:
+			dep.append({"pit": id, "taken_from_pits": fall, "dug_counted": net})
+	# MIN-F: the rock cut from the tunnels, a pool per item: (now - start) of MineWorks.ground_cut (rock and rubble) plus,
+	# for spoil, the fill dug out again (MIN-F2) = cut_; and the fill in the ground: start + filled_spoil - dug again = now
+	var cut_now: Dictionary = w.mine_works.ground_cut()
+	var fill_out: int = w.mine_works.fill_out - int(start.get("fill_out", 0))
+	for id in ["stone", "spoil"]:
+		var taken: int = int(cut_now.get(id, 0)) - int(start.get("cut", {}).get(id, 0)) + (fill_out if id == "spoil" else 0)
+		if taken != d.call("cut_" + id):
+			dep.append({"tunnel": id, "taken_from_rock": taken, "cut_counted": d.call("cut_" + id)})
+	if w.mine_works.fill_in() - int(start.get("fill_in", 0)) != d.call("filled_spoil") - fill_out:
+		dep.append({"backfill": "spoil", "fill_rise": w.mine_works.fill_in() - int(start.get("fill_in", 0)), "filled_counted": d.call("filled_spoil") - fill_out})
 	var animals := {}
 	var now_a := _animal_counts()
 	var kinds: Array = GameData.b("animals").keys().filter(func(k): return k != "_note")
@@ -829,6 +896,19 @@ func _fingerprint() -> String:
 	for hh in w.households:
 		parts.append(str(hh.pantry.items))
 	return "|".join(parts).md5_text()
+
+
+## MIN-B: each deposit's host rock left (0 for a seam with none), in deposit order.
+func _hosts() -> Array:
+	return w.deposits.map(func(d): return int(d.host.amount) if d.has("host") else 0)
+
+
+## The stone the village's boulders still hold.
+func _boulder_stone() -> int:
+	var n := 0
+	for b in w.boulders:
+		n += maxi(0, int(b.amount))
+	return n
 
 
 func _jsonable(d: Dictionary) -> Dictionary:
@@ -951,6 +1031,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("growth: %s" % JSON.stringify(s.growth))
 	print("trade: %s" % JSON.stringify(s.trade))
 	print("manor work: %s" % JSON.stringify(s.manor_work))
+	print("contracts: %s" % JSON.stringify(_contracts_summary()))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
 	print("events: %s" % JSON.stringify(s.events))

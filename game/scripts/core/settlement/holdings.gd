@@ -9,7 +9,8 @@ extends RefCounted
 ##
 ## Goods holders: villagers, markets (the market roles and the tables), household pantries, the granary,
 ## troughs, building sites and carried loads, the player (pack, chest, premises), loot, the manor's work,
-## carts and villagers' built stalls. Coin holders: the same split as World.total_coins (coins/sum equals it).
+## carts, villagers' built stalls, goods carried on service contracts (CON-02) and the open pits' spoil (MIN-E). The
+## Build 17 holders were moved here from tests/census.gd at the SYNC-17 merge (cd7439c). Coin holders: the same split as World.total_coins (coins/sum equals it).
 
 const MARKET_ROLES := ["merchant_raw", "merchant_food", "merchant_goods", "tavernkeeper"]
 
@@ -48,6 +49,15 @@ static func holders(w: World) -> Dictionary:
 	for s in w.business.stalls.npc_built():        # villagers' built market stalls: their sale stock (STALL-02)
 		for id in s.get("stock", {}):
 			g.stalls[id] = int(g.stalls.get(id, 0)) + int(s.stock[id])
+	g["contracts"] = {}
+	var cg: Dictionary = w.contracts.goods()       # CON-02 (Build 17): goods dug for buyers and still carried on service contracts
+	for id in cg:
+		g.contracts[id] = int(cg[id])
+	g["pits"] = {}
+	if w.pits != null:                             # MIN-E (Build 17): earth lying on the open pits' spoil heaps
+		var pg: Dictionary = w.pits.goods()
+		for id in pg:
+			g.pits[id] = int(pg[id])
 	for id in w.fauna.pens:
 		var tr := int(w.fauna.pens[id].trough)
 		if tr > 0:
@@ -78,6 +88,8 @@ static func coins(w: World) -> Dictionary:
 		c.reserved += w.quests.reserved_total()
 	if w.manor_work:
 		c.reserved += w.manor_work.reserved_total()
+	if w.contracts:
+		c.reserved += w.contracts.reserved_total()    # CON-01 (Build 17): buyers' coins set aside for contracts
 	for a: NPC in w.npcs:
 		if w.brain.buy_role(a) in MARKET_ROLES:
 			c.markets += a.coins

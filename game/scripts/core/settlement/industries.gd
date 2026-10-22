@@ -146,16 +146,10 @@ static func evaluate(facts: Dictionary, d: Dictionary = {}) -> Dictionary:
 static func holds(need: Dictionary, facts: Dictionary, lv: Dictionary) -> bool:
 	match str(need.kind):
 		"practitioners":
-			var jobs: Array = need.get("jobs", [need.job] if need.has("job") else [])
-			var c := 0
-			for p in facts.get("practitioners", []):
-				if not jobs.is_empty() and not jobs.has(str(p.job)):
-					continue
-				if need.has("skill") and int((p.get("skills", {}) as Dictionary).get(str(need.skill), 0)) < int(need.get("min_level", 1)):
-					continue
-				c += 1
-			return c >= int(need.get("count", 1))
+			return practitioner_count(need, facts) >= int(need.get("count", 1))
 		"tool_stock":
+			if facts.get("discovery") != null:           # the live village: MIN-D's own count (Discovery.tool_stock)
+				return int(facts.discovery.tool_stock(str(need.tool))) >= int(need.get("count", 1))
 			var tools: Dictionary = facts.get("tools", facts.get("stock", {}))
 			return int(tools.get(str(need.tool), 0)) >= int(need.get("count", 1))
 		"stock":
@@ -188,6 +182,35 @@ static func holds(need: Dictionary, facts: Dictionary, lv: Dictionary) -> bool:
 	return false
 
 
+## How many residents meet a practitioners need. The rule is Build 17's (MIN-SKILLCAP, MIN-D2; docs/build17/
+## MIN_PARITY_SHOVELS.md), never a second one: in the live village it is Discovery.practitioners itself (facts.discovery);
+## for an abstract settlement's facts it is the same rule on the snapshot: a resident's Skills level in `skill` at least
+## `min_level`; when the need names a `tool`, a tool of that kind in their own pack, or one in their shared store (a
+## household's pantry, the resident player's home chest) not already given to another member (a shared tool serves one
+## practitioner); `jobs` only where the game's own rule makes a trade the sole performer. The resident player counts by
+## the villagers' rule. capability_test checks the snapshot rule gives Discovery's counts on a live village.
+static func practitioner_count(need: Dictionary, facts: Dictionary) -> int:
+	if facts.get("discovery") != null:
+		return (facts.discovery.practitioners(need) as Array).size()
+	var jobs: Array = need.get("jobs", [need.job] if need.has("job") else [])
+	var kind := str(need.get("tool", ""))
+	var used := {}
+	var stores: Dictionary = facts.get("stores", {})
+	var c := 0
+	for p in facts.get("practitioners", []):
+		if not jobs.is_empty() and not jobs.has(str(p.get("job", ""))):
+			continue
+		if need.has("skill") and int((p.get("skills", {}) as Dictionary).get(str(need.skill), Skills.level_of(0))) < int(need.get("min_level", 1)):
+			continue
+		if kind != "" and int((p.get("tools", {}) as Dictionary).get(kind, 0)) <= 0:
+			var key := str(p.get("store", ""))
+			if key == "" or int((stores.get(key, {}) as Dictionary).get(kind, 0)) - int(used.get(key + "/" + kind, 0)) <= 0:
+				continue
+			used[key + "/" + kind] = int(used.get(key + "/" + kind, 0)) + 1
+		c += 1
+	return c
+
+
 static func describe(need: Dictionary) -> String:
 	match str(need.kind):
 		"practitioners":
@@ -195,6 +218,8 @@ static func describe(need: Dictionary) -> String:
 			var who := str(need.as) if need.has("as") else ("/".join(jobs) if not jobs.is_empty() else "worker")
 			if need.has("skill"):
 				who += " with %s %d+" % [str(need.skill), int(need.get("min_level", 1))]
+			if need.has("tool"):
+				who += " and a %s" % str(need.tool)
 			return "%d %s" % [int(need.get("count", 1)), who]
 		"tool_stock":
 			return "%d %s" % [int(need.get("count", 1)), str(need.tool)]

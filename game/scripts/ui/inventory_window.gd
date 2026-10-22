@@ -270,7 +270,10 @@ func _build_details() -> void:
 	if bonus.has("max_stamina"):
 		lines.append("+%d max stamina while worn." % int(bonus.max_stamina))
 	if it.has("durability"):
-		lines.append("Wear left: %d of %d." % [int(p.inv.durability.get(id, it.durability)), int(it.durability)])
+		var left := int(p.inv.durability.get(id, it.durability))
+		lines.append("Wear left: %d of %d (%s)." % [left, int(it.durability), Decay.condition(left, int(it.durability))])     # DVW-B4
+	if Decay.keeping_text(id) != "":
+		lines.append(Decay.keeping_text(id))
 	var crafts := ResourceNodes.uses_of(id).filter(func(u): return u.kind == "recipe")
 	if not crafts.is_empty():
 		lines.append("Used for: " + "; ".join(crafts.map(func(u): return _use_line(w, id, u))) + ".")
@@ -306,8 +309,8 @@ func _build_details() -> void:
 	if it.has("plant") or it.has("propagates"):
 		_action("Plant", func(): ui.main.plant_sapling(iid))
 	if it.get("cart", false):
-		_action("Set it down", func():                  # B14: a handcart becomes a cart in the world
-			ui.main.set_down_cart()
+		_action("Set it down", func():                  # B14: a handcart becomes a cart in the world (MIN-F: a minecart, on track)
+			ui.main.set_down_cart(iid)
 			_after())
 	_action("Drop", func():
 		w.player_drop(iid, 1)

@@ -1,0 +1,21 @@
+{
+  "format": "mml-open-pit/1",
+  "note": "MIN-E open-pit excavation (Mining spec stage 3, sections 6, 7 and 11, phase E; docs/build17/MIN_E_OPEN_PIT.md), read by OpenPits (game/scripts/core/open_pit.gd). A pit is a square of `size` x `size` cells staked on clear common ground of the village (OD-29: open pits stay on the surface), with a border of walkable ground one cell wide round it (a road may run by) and `heaps` spoil heap cells beside it. Under every cell lie the same finite layers, top first: each layer's `amount` units of its item, dug one unit at a time with the layer's `tool` (owner MIN-E-Q4, 2026-10-21: a shovel for topsoil, dirt and spoil, the earth; a pickaxe for the rock; both wear `wear` a unit; docs/build17/MIN_PARITY_SHOVELS.md) (`minutes` a unit for a villager; the player's swing is timed as a mining swing). A cell of ring r (0 the edge) is dug to depth `ring_depth[r]` (whole layers), so the sides are terraced; the cells of `ramp` (one per ring, from the north edge to the middle) stay walkable at every depth (the ramp), every other dug cell is solid (a terrace wall or a cut). Digging never cuts off a walkable cell (DVW-A10). When a cell other than the ramp is dug down to the layer marked `rock`, a prospecting body (MIN-C/MIN-D) within `expose_reach` cells (Chebyshev) is opened there as an ordinary seam (Discovery.expose: the trial pit's own rule). Earth (every layer not marked `keep`) goes onto the pit's spoil heaps, each holding its share of the pit's whole earth (a heap is a solid cell while it holds anything; storage takes ground); dug units can be put back (backfill), the last dug first. The manor stakes a pit only for a find it knows that no trial pit can still reach, at the clear site within `manor.site_search` cells of its readings, and posts one excavate job at a time: a load of `manor.load` (balance.json carry_ore) units at the quarry job's rate a unit. Every number is an agent decision (a minor detail under the standing release directive), not owner-approved balance; whether topsoil, dirt, spoil, quarry stone and building blocks are different goods is the owner's open question (Mining spec section 12).",
+  "gen_version": 1,
+  "size": 5,
+  "layers": [
+    {"item": "topsoil", "amount": 2, "minutes": 20, "tool": "shovel"},
+    {"item": "dirt", "amount": 3, "minutes": 25, "tool": "shovel"},
+    {"item": "spoil", "amount": 3, "minutes": 30, "tool": "shovel"},
+    {"item": "stone", "amount": 8, "minutes": 25, "rock": true, "keep": true, "tool": "pickaxe"}
+  ],
+  "ring_depth": [2, 3, 4],
+  "wear": 1,
+  "xp": 4,
+  "heaps": 2,
+  "expose_reach": 2,
+  "manor": {
+    "load": "carry_ore",
+    "site_search": 6
+  }
+}

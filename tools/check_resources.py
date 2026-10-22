@@ -225,7 +225,7 @@ def uses_of(ctx, item):
     return sorted(out)
 
 
-CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant"}
+CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant", "assay", "backfill"}
 
 
 def reachable(ctx, node_ok):
@@ -431,6 +431,25 @@ def problems(ctx):
         elif m.get("kind") == "fruit_tree":
             if not isinstance(bal_.get("fruit_trees", {}).get(m.get("species", "")), dict):
                 out.append("%s: no fruit_trees entry %r in balance.json" % (nid, m.get("species")))
+        elif m.get("kind") == "clue":
+            if not (ctx["root"] / "game" / "data" / "prospecting.json").exists():
+                out.append("%s: a clue node needs game/data/prospecting.json" % nid)
+        elif m.get("kind") == "pit":
+            pf = ctx["root"] / "game" / "data" / "open_pit.json"
+            if not pf.exists():
+                out.append("%s: a pit node needs game/data/open_pit.json" % nid)
+            else:
+                layer_items = {str(l["item"]) for l in json.loads(pf.read_text())["layers"]}
+                if layer_items != set(products(ctx, n)):
+                    out.append("%s: yields %s differ from open_pit.json's layers %s" % (nid, sorted(products(ctx, n)), sorted(layer_items)))
+        elif m.get("kind") == "tunnel":
+            wf = ctx["root"] / "game" / "data" / "mine_works.json"
+            if not wf.exists():
+                out.append("%s: a tunnel node needs game/data/mine_works.json" % nid)
+            else:
+                cell_items = {str(l["item"]) for l in json.loads(wf.read_text())["cell"]}
+                if cell_items != set(products(ctx, n)):
+                    out.append("%s: yields %s differ from mine_works.json's cell %s" % (nid, sorted(products(ctx, n)), sorted(cell_items)))
         elif m.get("kind") not in ("tree", "field", "player_field", "player_pen"):
             out.append("%s: unknown match kind %r" % (nid, m.get("kind")))
     # every harvestable kind in the map and balance has a node, and no kind has two
@@ -626,6 +645,18 @@ def _instances(ctx, n):
         f = ctx["balance"]["fruit_trees"]
         return 0, "the village trees within %d tiles of a house door, one in %d (new worlds), and any planted from saplings; %d %s a picking" % (
             f["orchard_house_range"], f["orchard_share"], f[m["species"]]["yield"], f[m["species"]]["item"])
+    if m["kind"] == "clue":
+        pc = json.loads((ctx["root"] / "game" / "data" / "prospecting.json").read_text())
+        return 0, "generated from the world seed (MIN-C): a clue in about %d%% of the village's %d-cell blocks, %d samples each; %d%% lie over a mineral body" % (
+            pc["clue_percent"], pc["block"], pc["samples_per_clue"], pc["true_percent"])
+    if m["kind"] == "tunnel":
+        wc = json.loads((ctx["root"] / "game" / "data" / "mine_works.json").read_text())
+        return 0, "cut in play below ground (MIN-F): each rock cell under the hill gives %s" % (
+            ", ".join("%d %s" % (l["amount"], l["item"]) for l in wc["cell"]))
+    if m["kind"] == "pit":
+        pc = json.loads((ctx["root"] / "game" / "data" / "open_pit.json").read_text())
+        return 0, "staked in play (MIN-E): each %d x %d cells over the layers %s" % (
+            pc["size"], pc["size"], ", ".join("%d %s" % (l["amount"], l["item"]) for l in pc["layers"]))
     if m["kind"] == "plant":
         n_pl = sum(1 for pl in v.get("plants", []) if pl["kind"] == m["plant"])
         return n_pl, "%d plants on the map, each ripe again plant_regrow_seasons after it is picked" % n_pl

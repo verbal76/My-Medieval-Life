@@ -775,7 +775,9 @@ func buy_seed_item(n: NPC, item: String, qty: int, buyer) -> String:
 ## (act: harvest, sow, clear_tree, clear_plant, till; `low` ones are the last choice unless the plough is in hand,
 ## so Use still builds and talks as before).
 func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
-	var out := []
+	var out := Terrain.targets_at(w, c, p)       # B14-07: a cliff's rim faced in the world outside: steps, stairs, walkways
+	if not out.is_empty():
+		return out
 	if cells.has(c):
 		var cell: Dictionary = cells[c]
 		match str(cell.state):
@@ -824,6 +826,8 @@ func _t(act: String, c: Vector2i, label: String, extra := {}) -> Dictionary:
 func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 	var c: Vector2i = t.cell
 	var bad := func(text: String) -> Dictionary: return {"ok": false, "why": text}
+	if str(t.act) == "terrain":
+		return Terrain.plan(w, t, p)              # B14-07
 	match str(t.act):
 		"till":
 			var no := till_refusal(c, p)

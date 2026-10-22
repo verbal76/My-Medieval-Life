@@ -20,14 +20,17 @@ const SCHEMES := {"kbm": "Keyboard and mouse", "gamepad": "Gamepad", "touch": "T
 const STATION_NAMES := {"anvil": "Anvil", "armory_counter": "Armory counter", "forge": "Forge", "mine_cart": "Mine cart",
 	"oven": "Oven", "sawhorse": "Sawhorse", "stove": "Stove", "tavern_counter": "Tavern counter", "well": "Well",
 	"workbench": "Workbench"}
+## Pages a profession's page points on to.
+const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"], "laborer": ["sys:mining"], "reeve": ["sys:manor_jobs", "sys:manor_treasury"], "smith": ["sys:prospecting"]}
 const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "items_gear", "head": "items_gear",
 	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials", "medicine": "items_medicine"}
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
 const JOB_TEXT := {
-	"miner": "Works the ore seams in the mine and sells ore to the smith and the raw-goods merchant.",
-	"laborer": "Day labour: mines, hauls and does odd work where it is needed.",
+	"miner": "Works the ore seams in the mine yard, the gallery and the cave, quarries the grey rock of worked-out seams, and sells ore and stone to the smith and the raw-goods merchant. When its ore is worked out it takes the manor's trial pit and digging work.",
+	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor. Takes the manor's surveys. See Prospecting and trial pits.",
+	"laborer": "Day labour: mines and quarries stone, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them.",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
-	"carpenter": "Buys logs and saws them into planks.",
+	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
 	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them.",
@@ -36,7 +39,7 @@ const JOB_TEXT := {
 	"hunter": "Hunts wild boar and rabbits for meat and hides.",
 	"merchant": "Runs a market stall or shop and trades goods.",
 	"guard": "Watches the village: stops thieves, returns stolen goods and fines the thief.",
-	"reeve": "Runs the manor's accounts and posts its jobs on the job board.",
+	"reeve": "Runs the manor's accounts and posts its jobs on the job board (talk to the reeve and ask for work).",
 	"sage": "The village lorekeeper; tells the story and keeps the Apothecary (medicine brewed from flowers, bandages from the tanner).",
 }
 
@@ -113,6 +116,11 @@ static func build() -> Wiki:
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
+	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
+	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
+	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
+	add_provider(WikiExcavation.add_pages)     # Build 17: shovels and pickaxes, trial-pit earth, where to dig, capability
+	add_provider(WikiMineEquipment.add_pages)     # MIN-EQUIP, MIN-COLLAPSE (wiki_mine_equipment.gd)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -297,7 +305,9 @@ func _items() -> void:
 		if it.has("armor"):
 			rows.append(["Armour", str(int(it.armor))])
 		if it.has("durability"):
-			rows.append(["Durability", "%d uses" % int(it.durability)])
+			rows.append(["Durability", ("%d days worn" if str(it.get("type", "")) in ["armor", "head"] else "%d uses") % int(it.durability)])     # DVW-B4
+		if Decay.rate(id) > 0.0:
+			rows.append(["Keeps", "%s in a hundred spoil a day" % str(snappedf(Decay.rate(id) * 100.0, 0.1))])     # DVW-B4
 		if it.has("speed"):
 			rows.append(["Work speed", "x%s" % str(it.speed)])
 		if it.has("tool"):
@@ -323,8 +333,11 @@ func _items() -> void:
 			for r in using:
 				blocks.append({"t": "recipe", "id": r})
 		var uses := []
-		for u in GameData.resources.materials.get(id, []):
-			uses.append(str(u.text))
+		if WikiMining.USE_TEXT.has(id):
+			uses.append_array(WikiMining.USE_TEXT[id])     # player-facing wording for the Build 17 mining goods
+		else:
+			for u in GameData.resources.materials.get(id, []):
+				uses.append(str(u.text))
 		if not uses.is_empty():
 			blocks.append(h("Other uses"))
 			blocks.append(bullets(uses))
@@ -360,12 +373,14 @@ func _nodes() -> void:
 		for i in n.get("yields", {}):
 			y.append(_iname(i))
 		rows.append(["Gives", ", ".join(y)])
-		rows.append(["Comes back?", str(n.get("regeneration", "?")).split(" Once")[0].split("; ")[0]])
+		var ov: Dictionary = WikiMining.NODE_TEXT.get(id, {})     # player-facing wording for the mining nodes (Build 17)
+		rows[0][1] = str(ov.get("where", rows[0][1]))
+		rows.append(["Comes back?", str(ov.get("back", str(n.get("regeneration", "?")).split(" Once")[0].split("; ")[0]))])
 		var blocks := [stats(rows)]
-		if str(n.get("tool_hint", "")) != "":
-			blocks.append(p(str(n.tool_hint)))
-		if str(n.get("yield_notes", "")) != "":
-			blocks.append(p(str(n.yield_notes)))
+		if str(ov.get("hint", n.get("tool_hint", ""))) != "":
+			blocks.append(p(str(ov.get("hint", n.get("tool_hint", "")))))
+		if str(ov.get("notes", n.get("yield_notes", ""))) != "":
+			blocks.append(p(str(ov.get("notes", n.get("yield_notes", "")))))
 		blocks.append(links(n.get("yields", {}).keys().map(func(i): return _item_link(i)), "Products"))
 		if str(n.get("skill", "")) != "":
 			blocks.append(links(["skill:" + str(n.skill)], "Skill"))
@@ -481,6 +496,8 @@ func _jobs() -> void:
 		if not buys.is_empty():
 			blocks.append(p("Buys: " + ", ".join(buys.keys().map(func(i): return _iname(i))) + "."))
 			blocks.append(links(buys.keys().map(func(i): return _item_link(i)), "Buys"))
+		if JOB_LINKS.has(j):
+			blocks.append(links(JOB_LINKS[j], "See also"))
 		if tools_kept.has(j):
 			blocks.append(links(tools_kept[j].map(func(i): return _item_link(i)), "Keeps for work"))
 		add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", blocks, "", j)
@@ -510,8 +527,8 @@ func _guides() -> void:
 		p("Fell a tree with an axe to get logs, then saw them at the sawhorse: %s makes %s." % [_amounts(plank_r["in"]), _amounts(plank_r.out)]),
 		{"t": "chain", "id": "plank"}, links(["recipe:saw_planks", "item:log", "item:plank", "node:tree", "station:sawhorse"])])
 	guide.call("mine", "Mine", [
-		p("Stand in front of a seam or boulder with a pickaxe and press Use (E, or A on a pad), or press G for Gather mode and click it. Mining skill unlocks more ore and slower tool wear. Seams do not refill; boulders do not come back either."),
-		links(["node:iron_seam", "node:coal_seam", "node:copper_seam", "node:stone_seam", "node:boulder", "skill:mining", "sys:gather"])])
+		p("Stand in front of a seam or boulder with a pickaxe and press Use (E, or A on a pad), or press G for Gather mode and click it. The prompt says how much is left. Mining skill unlocks more ore and slower tool wear. Seams do not refill and boulders do not come back; when a seam's ore is out, the grey rock round it can still be quarried for stone. Prospecting finds new seams, open pits and tunnels go deeper: see Mining and quarrying."),
+		links(["sys:mining", "sys:prospecting", "sys:open_pits", "sys:mining_underground", "node:iron_seam", "node:coal_seam", "node:copper_seam", "node:stone_seam", "node:boulder", "skill:mining", "sys:gather"])])
 	guide.call("smelt", "Smelt and forge", [
 		p("Ore becomes bars at the forge (ore and coal), and bars become tools, weapons and armour at the anvil. Smithing skill gates the better recipes."),
 		{"t": "chain", "id": "iron_sword"}, links(["station:forge", "station:anvil", "skill:smithing", "recipe:smelt_iron", "job:smith"])])
