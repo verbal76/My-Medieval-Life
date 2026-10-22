@@ -247,6 +247,8 @@ Yes, on structural grounds rather than statistical ones:
 - **The moderate model** fits the research's figures best for crafts (CAPABILITY_CURVES.md), but on this evidence is no better than conservative.
 - **The aggressive model is not recommended.** It shows no measurable output advantage, and its multipliers act mostly on finite resources.
 
+**Update (round 2):** the 90-day runs, the regional harness by profile and the Q18-11A `approved` profile were run on the Build 18 code; see `CAPABILITY_SIMULATIONS_90DAY.md`. The list below is round 1's state.
+
 **Not yet run (pending, stated plainly):**
 - the `revised_bounded` model's own runs;
 - the 90-day runs (baseline and each model at level 10, normal and resource-poor);

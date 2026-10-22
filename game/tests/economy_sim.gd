@@ -10,7 +10,7 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
-##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report]   (Expansion 18 X18-SIM,
+##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
 ##       analysis only: tests/capability_metrics.gd)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
@@ -85,6 +85,7 @@ func _init() -> void:
 	if cap_on:
 		CapMetrics.post_setup(cap_info, w)
 	var cap0 := CapMetrics.snapshot(w) if cap_on else {}
+	var cap_at: PackedStringArray = str(arg.call("--cap-at", "")).split(",")
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources, "regions_coins": w.regions.coins(), "regions_goods": w.regions.goods(),
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "fill_out": w.mine_works.fill_out, "fill_in": w.mine_works.fill_in(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
@@ -124,6 +125,8 @@ func _init() -> void:
 			_print_sample(samples[-1])
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
+			if cap_on and str(d + 1) in cap_at:      # X18-SIM: a milestone read from this one run (SIM-01), read only
+				print("CAPABILITY@%d %s" % [d + 1, JSON.stringify(CapMetrics.report(cap_info, w, cap0, d + 1))])
 			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
 			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
 			var bad: Dictionary = samples[-1]
