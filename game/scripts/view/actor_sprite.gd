@@ -26,8 +26,17 @@ const LIE_BODY_Y := -4.5      # the lying frame's body centre, from the feet (px
 const LIE_FOOT_SHIFT := 1.5   # the body (17 px) is a little longer than the bed (16): shifted toward the foot this much
 const SIT_DROP := -1.0        # seated: the feet are this far below the chair's centre (the cut line, 5 px above it, is the stool's top: the stool shows under the body)
 const SIT_CUT := -4.0         # seated: nothing below this local y (the knees) is drawn
-const SWING_ANGLES := [-15.0, 120.0, 95.0]    # degrees, per swing frame: the tool raised, down, following through
-const SWING_HAND := Vector2(6, -8)            # the hand, from the feet (pixels), on the side faced
+# VIS-AXE-01 (owner, Build 18): the held tool's pose for each frame of the swing, by the way the swinger faces ("side" is
+# east, mirrored for west; NE/SE use it): [hand x, hand y (pixels from the feet, at the body's hand height), the
+# direction the head points (degrees: 0 ahead, 90 down), mirror the icon (so the edge leads the stroke), drawn behind
+# the body]. Wind-up raised behind the head (never across the face), the stroke to the trunk of the neighbouring cell,
+# the recovery lowered. The icons (Survival RPG Icons, Tools) all lie handle low right, head high left.
+const SWING_POSES := {
+	"side": [[-1, -5, -155.0, true, true], [4, -4, 15.0, true, false], [4, -3, 50.0, true, false]],
+	"south": [[4, -5, -70.0, true, true], [2, -1, 92.0, true, false], [3, -2, 120.0, true, false]],
+	"north": [[-3, -5, -150.0, false, true], [-2, -6, -85.0, false, true], [2, -5, -40.0, false, true]],
+}
+const ICON_HEAD := -135.0                      # where an icon's head points, unmirrored (degrees, from the grip)
 
 var anim := "idle"
 var dir := 0
@@ -153,12 +162,21 @@ func _place_tool(i: int) -> void:
 	tool_icon.visible = anim == "swing" and tool_item != "" and tool_icon.texture != null
 	if not tool_icon.visible:
 		return
-	var side := -1.0 if dir in [5, 6, 7, 4] else 1.0        # faced west (and north: the left) or east (and south)
-	var a: float = SWING_ANGLES[i % SWING_ANGLES.size()]
-	tool_icon.scale = Vector2(side, 1.0) * 0.85
-	tool_icon.rotation = side * deg_to_rad(a + 45.0)
-	tool_icon.position = Vector2(SWING_HAND.x * side, SWING_HAND.y)
-	tool_icon.show_behind_parent = dir in [3, 4, 5]        # facing away: the tool is behind the body
+	var key := "south" if dir == 0 else ("north" if dir == 4 else "side")
+	var poses: Array = SWING_POSES[key]
+	var pose: Array = poses[i % poses.size()]
+	var hand := Vector2(float(pose[0]), float(pose[1]))
+	var head := float(pose[2])
+	var mirror: bool = pose[3]
+	if dir in [5, 6, 7]:                                    # faced west: the east pose mirrored
+		hand.x = -hand.x
+		head = 180.0 - head
+		mirror = not mirror
+	tool_icon.scale = Vector2(-0.85 if mirror else 0.85, 0.85)
+	tool_icon.rotation = deg_to_rad(head - ((-180.0 - ICON_HEAD) if mirror else ICON_HEAD))   # mirrored, the head rests at -45
+	tool_icon.position = hand
+	tool_icon.show_behind_parent = pose[4]
+	tool_icon.z_index = 0 if pose[4] else 1               # a relative z above the body would override drawing behind it
 
 
 func face(v: Vector2) -> void:
