@@ -20,6 +20,8 @@ var by_id: Dictionary = {}
 var day := -1                        # the last day stepped
 var migrated_coins := 0              # coins an older save's caravan purse brought (traders' tills): outside coins that existed
 var world_seed := 0
+var journal: Array = []              # the parties' exchange lines (SettlementParty.deal): {day, party, kind, item, n, coins, with}; not saved
+var party_options := {}              # fixtures' settings per party id (SettlementParty.option); not saved
 
 
 static func create(seed_: int) -> Regions:
@@ -75,6 +77,50 @@ func step_hour(d: int, h: int) -> void:
 func catch_up(to: int) -> void:
 	for d in range(day + 1, to + 1):
 		step_day(d)
+
+
+# ------------------------------------------------------------------ the trading parties (REG-PARTY-01) ----------------
+## Every holder of every settlement as a trading party (SettlementParty), by id: each settlement's trader, its other businesses,
+## its treasury and its living households. `place` limits it to one settlement.
+func parties(place := "") -> Array:
+	var out := []
+	for s: OffMapSettlement in list:
+		if place != "" and s.id != place:
+			continue
+		var types := s.biz.keys()
+		types.sort()
+		for t in types:
+			out.append(SettlementParty.make(self, s, "trader" if t == "merchant" else str(t)))
+		out.append(SettlementParty.make(self, s, "treasury"))
+		for h in s.hh:
+			if h.alive:
+				out.append(SettlementParty.make(self, s, "hh:%d" % int(h.id)))
+	out.sort_custom(func(a, b): return a.id < b.id)
+	return out
+
+
+## The party a reference names ("region:<settlement>/<holder>" or "<settlement>/<holder>"); null when there is none (an unknown
+## settlement or holder, a dissolved household): nothing is guessed.
+func party(ref: String) -> SettlementParty:
+	var key := ref.trim_prefix("region:")
+	var at := key.find("/")
+	if at <= 0 or not by_id.has(key.substr(0, at)):
+		return null
+	var p := SettlementParty.make(self, by_id[key.substr(0, at)], key.substr(at + 1))
+	return p if p.alive() and p.holder != "" else null
+
+
+## The roads between the settlements for RegionalMarket, between places: {"a>b": route}, both ways. The way between two is
+## the straight distance of their places on the regional map, along roads (provisional: the settlements are linked by road).
+func route_table() -> Dictionary:
+	var out := {}
+	for a: OffMapSettlement in list:
+		for b: OffMapSettlement in list:
+			if a.id == b.id:
+				continue
+			var tiles := maxi(1, roundi(Vector2(a.pos).distance_to(Vector2(b.pos))))
+			out[a.id + ">" + b.id] = TradeRoutes.abstract_route(a.id, b.id, tiles, {"road": 1.0}, "carrier")
+	return out
 
 
 # ------------------------------------------------------------------ who is on the road ----------------
@@ -203,16 +249,26 @@ func population() -> int:
 
 
 ## "" when every settlement's books balance and the coins among them are conserved (what the traders pay each other
-## balances: the road coins in and out cancel), else the first thing that does not.
+## balances: the road coins and the parties' regional coins and goods in and out cancel), else the first thing that does not.
 func audit() -> String:
 	var rin := 0
 	var rout := 0
 	var gin := {}
 	var gout := {}
+	var xin := 0
+	var xout := 0
+	var xgin := {}
+	var xgout := {}
 	for s: OffMapSettlement in list:
 		var e := s.audit()
 		if e != "":
 			return e
+		xin += int(s.flows.regional_coins_in)
+		xout += int(s.flows.regional_coins_out)
+		for k in s.flows.regional_in:
+			xgin[k] = int(xgin.get(k, 0)) + int(s.flows.regional_in[k])
+		for k in s.flows.regional_out:
+			xgout[k] = int(xgout.get(k, 0)) + int(s.flows.regional_out[k])
 		rin += int(s.flows.road_coins_in)
 		rout += int(s.flows.road_coins_out)
 		for k in s.flows.road_in:
@@ -223,6 +279,10 @@ func audit() -> String:
 		return "road coins in %d, out %d" % [rin, rout]
 	if gin != gout:
 		return "road goods in %s, out %s" % [str(gin), str(gout)]
+	if xin != xout:
+		return "regional coins in %d, out %d" % [xin, xout]
+	if xgin != xgout:
+		return "regional goods in %s, out %s" % [str(xgin), str(xgout)]
 	return ""
 
 

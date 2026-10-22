@@ -12,7 +12,8 @@ var checks := 0
 var failures := 0
 var w: World
 var cs: CourierService
-var east: SettlementLedger
+var east: SettlementParty                       # Wulstead's trader: a holder of a real off-map settlement (REG-PARTY-01)
+var rg: Regions
 
 
 func check(cond: bool, what: String) -> void:
@@ -37,6 +38,8 @@ func _init() -> void:
 	test_deposit_and_rejection()
 	test_unavailable_and_interrupted()
 	test_player_same_rules()
+	check(rg.audit() == "" and int(rg.by_id["wulstead"].flows.outside_coins_in) > 0,
+		"Wulstead's books balance after every hand-over and payment: the courier traffic is `outside_*` flow lines (%s)" % rg.audit())
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -65,11 +68,11 @@ func trader(role: String) -> NPC:
 func totals() -> Dictionary:
 	var coins := w.total_coins() + cs.held_coins()
 	var goods := Census.goods(w)
-	for src in [cs.held_goods()] + cs.regions.values().map(func(l): return l.stock.items):
+	for src in [cs.held_goods()] + cs.regions.values().map(func(l): return l.held_items()):
 		for id in src:
 			goods[id] = int(goods.get(id, 0)) + int(src[id])
 	for id in cs.regions:
-		coins += (cs.regions[id] as SettlementLedger).coins
+		coins += cs.regions[id].purse()
 	return {"coins": coins, "goods": goods}
 
 
@@ -95,13 +98,17 @@ func test_booths() -> void:
 	check(err == "" and not b.is_empty() and str(b.keeper) == ref(keeper),
 		"the village has a courier booth kept by a hirable villager (%s)" % ("a free market stall" if free != "" else "a stall they built by the STALL rules"))
 	check(free != "" or not w.business.stalls.built(ref(keeper)).is_empty(), "the booth is a stall of the existing stall system")
-	east = SettlementLedger.make({"id": "eastmarch", "name": "Eastmarch", "pos": [900, 0], "coins": 500,
-		"stock": {"iron_ore": 50}, "needs": {"wheat": 5.0}, "transport": {"handcart": 1}})
+	rg = Regions.create(1)
+	var tr: Dictionary = rg.by_id["wulstead"].trader()          # fixture: a trader with 500 coins and 50 iron ore to sell
+	tr.till = 500
+	tr.stock = {"iron_ore": 50}
+	rg.by_id["wulstead"].reopen_books()
+	east = rg.party("wulstead/trader")
 	cs.open_region_booth(east)
 	var village := SettlementLedger.make({"id": "village"})
-	cs.links = TradeRoutes.table([village, east], [["village", "eastmarch", 900, {"road": 1.0}]])
-	var r := cs.add_route(str(b.id), str(cs.booth_of("eastmarch").id), -1.0, 1)
-	check(not r.is_empty() and float(r.days) > 0.0 and int(r.fee_per_load) > 0, "a regular route runs from the village booth to Eastmarch's (%.1f days, %d coins a load)" % [float(r.days), int(r.fee_per_load)])
+	cs.links = TradeRoutes.table([village, east], [["village", "wulstead", 900, {"road": 1.0}]])
+	var r := cs.add_route(str(b.id), str(cs.booth_of("wulstead").id), -1.0, 1)
+	check(not r.is_empty() and float(r.days) > 0.0 and int(r.fee_per_load) > 0, "a regular route runs from the village booth to Wulstead's (%.1f days, %d coins a load)" % [float(r.days), int(r.fee_per_load)])
 
 
 func test_recipients() -> void:
@@ -140,13 +147,13 @@ func test_fees() -> void:
 	check(int(q.loads) == 2 and int(q.fee) == 2 * int(r.fee_per_load), "a regular route charges a flat fee a load: 30 wheat = 2 loads = %d coins" % int(q.fee))
 	var a: NPC = people()[1]
 	var c: NPC = people()[2]
-	var base := cs.quote({"kind": "special", "sender": ref(a), "recipient": "region:eastmarch", "courier": ref(c), "items": {"wheat": 10}})
-	var heavy := cs.quote({"kind": "special", "sender": ref(a), "recipient": "region:eastmarch", "courier": ref(c), "items": {"wheat": cs.capacity(ref(c)) * 2}})
-	var notary := cs.quote({"kind": "special", "sender": ref(a), "recipient": "region:eastmarch", "courier": ref(c), "items": {"wheat": 10}, "notarise": true})
+	var base := cs.quote({"kind": "special", "sender": ref(a), "recipient": "region:wulstead/trader", "courier": ref(c), "items": {"wheat": 10}})
+	var heavy := cs.quote({"kind": "special", "sender": ref(a), "recipient": "region:wulstead/trader", "courier": ref(c), "items": {"wheat": cs.capacity(ref(c)) * 2}})
+	var notary := cs.quote({"kind": "special", "sender": ref(a), "recipient": "region:wulstead/trader", "courier": ref(c), "items": {"wheat": 10}, "notarise": true})
 	var near := cs.quote({"kind": "special", "sender": ref(a), "recipient": ref(c), "courier": ref(c), "items": {"wheat": 10}})
 	check(int(heavy.fee) > int(base.fee) and int(heavy.loads) == 2, "a special delivery costs more for more loads (%d -> %d)" % [int(base.fee), int(heavy.fee)])
 	check(int(notary.fee) - int(base.fee) == int(CourierService.cfg().special.notary_fee), "and the notarial service adds its fee")
-	check(int(near.fee) < int(base.fee), "and a local errand costs less than a journey to Eastmarch (%d < %d)" % [int(near.fee), int(base.fee)])
+	check(int(near.fee) < int(base.fee), "and a local errand costs less than a journey to Wulstead (%d < %d)" % [int(near.fee), int(base.fee)])
 	var sum := 0
 	for k in base.parts:
 		sum += int(base.parts[k])
@@ -157,25 +164,25 @@ func test_route_delivery() -> void:
 	var a: NPC = people()[1]
 	a.inv.add("wheat", 30)                          # fixture: goods to send
 	a.coins += 40
-	# a regional trade with Eastmarch makes it a known business for this sender (its journal)
+	# a regional trade with Wulstead makes it a known business for this sender (its journal)
 	var vp := SettlementLedger.make({"id": "village/npc:%d" % a.id, "settlement": "village", "coins": 50, "transport": {"carry": 1}, "needs": {"iron_ore": 1.0}})
 	var rm := RegionalMarket.plan([vp, east], cs.links)
 	RegionalMarket.execute(rm, [vp, east], 0)
-	check(cs.is_known(ref(a), "region:eastmarch"), "a villager who has traded with Eastmarch can send to it")
+	check(cs.is_known(ref(a), "region:wulstead/trader"), "a villager who has traded with Wulstead can send to it")
 	var before := totals()
 	var r: Dictionary = cs.routes[0]
 	var keeper := str(cs.booth_of("village").keeper)
 	var k0 := cs.coins_of(keeper)
-	var too_much := cs.book_route({"route": r.id, "sender": ref(a), "recipient": "region:eastmarch", "items": {"wheat": 999}})
+	var too_much := cs.book_route({"route": r.id, "sender": ref(a), "recipient": "region:wulstead/trader", "items": {"wheat": 999}})
 	check(too_much.has("error"), "booking goods the sender does not have is refused (%s)" % str(too_much.get("error", "")))
-	var j := cs.book_route({"route": r.id, "sender": ref(a), "recipient": "region:eastmarch", "items": {"wheat": 30}, "recipient_kind": "business"})
+	var j := cs.book_route({"route": r.id, "sender": ref(a), "recipient": "region:wulstead/trader", "items": {"wheat": 30}, "recipient_kind": "business"})
 	check(not j.has("error") and str(j.state) == "at_booth" and cs.coins_of(keeper) - k0 == int(j.fee), "booked at the booth: the flat fee (%d) is paid to the booth's keeper, the wheat handed over" % int(j.fee))
 	check(totals() == before, "booking moves goods and coins, creates none")
-	var e0 := east.stock.count("wheat")
+	var e0 := east.held("wheat")
 	cs.tick(float(r.next_day))
 	check(str(j.state) == "in_transit", "the courier leaves on the route's day with the wheat in its pack")
 	cs.tick(float(j.arrive) + 0.01)
-	check(east.stock.count("wheat") - e0 == 30, "and hands it over at Eastmarch after the journey")
+	check(east.held("wheat") - e0 == 30, "and hands it over at Wulstead after the journey")
 	check(str(j.state) == "returning", "then travels back (the contract is not fulfilled yet)")
 	cs.tick(float(j.back) + 0.01)
 	check(str(j.state) == "fulfilled" and totals() == before, "back home: fulfilled; every good and coin accounted for")

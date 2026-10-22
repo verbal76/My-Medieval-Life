@@ -141,7 +141,7 @@ static func costed(from: String, to: String, tiles: int, effective: float, mode:
 
 
 ## A route found on a grid between two settlements' positions; {} when none exists (cut off: no trade).
-static func grid_route(a: SettlementLedger, b: SettlementLedger, classify: Callable, bounds: Rect2i) -> Dictionary:
+static func grid_route(a, b, classify: Callable, bounds: Rect2i) -> Dictionary:
 	var p := grid_path(a.pos, b.pos, classify, bounds)
 	if not p.found:
 		return {}
@@ -166,7 +166,7 @@ static func abstract_route(from: String, to: String, tiles: int, mix: Dictionary
 ## RegionalMarket). cost_per_unit here is a carrier's, for reports.
 static func table(ledgers: Array, links: Array) -> Dictionary:
 	var places := {}
-	for l: SettlementLedger in ledgers:
+	for l in ledgers:
 		places[l.settlement] = true
 	var out := {}
 	for k in links:

@@ -4,6 +4,10 @@ extends RefCounted
 ## settlements and the parties in them, and the trades it would make. A STAND-IN for the negotiated contracts the live
 ## game will use (CON-01, Build 17; `to_contract_offer` maps a line to a CON-01 offer); nothing here touches the World.
 ##
+## REG-PARTY-01: the parties are the holders of the five off-map settlements (SettlementParty, over OffMapSettlement's own books)
+## or, in analysis and tests, SettlementLedger fixtures and the village's snapshots; this class reads and changes a party only through
+## their common interface (held, purse, need_rate, local_yield, sale_cap, can_deal, deal, journal, ...), never its fields.
+##
 ## Spec s.5, a viable trade needs all of:
 ##   demand     the buyer's unmet need: what its people use over `reserve_days`, less what it holds and what its own
 ##              workings can still yield (local_supply);
@@ -38,21 +42,20 @@ static func cfg() -> Dictionary:
 	return SettlementIndustries.data().market
 
 
-static func horizon(l: SettlementLedger, item: String) -> int:
-	return int(ceil(float(l.needs.get(item, 0.0)) * float(cfg().reserve_days) - 1e-9))
+static func horizon(l, item: String) -> int:
+	return int(ceil(l.need_rate(item) * float(cfg().reserve_days) - 1e-9))
 
 
 ## What `l` lacks of its horizon need: less what it holds and what its own workings can still yield (local_supply:
 ## a village with ore in its own reachable seams does not need to import ore; DESIGN.md "Ore demand").
-static func demand(l: SettlementLedger, item: String) -> int:
-	return maxi(0, horizon(l, item) - l.stock.count(item) - int(l.local_supply.get(item, 0)))
+static func demand(l, item: String) -> int:
+	return maxi(0, horizon(l, item) - l.held(item) - l.local_yield(item))
 
 
-static func supply(l: SettlementLedger, item: String) -> int:
-	var n := maxi(0, l.stock.count(item) - horizon(l, item))
-	if l.sale_limit is Dictionary:
-		n = mini(n, int(l.sale_limit.get(item, 0)))
-	return n
+static func supply(l, item: String) -> int:
+	var n := maxi(0, l.held(item) - horizon(l, item))
+	var cap: int = l.sale_cap(item)
+	return n if cap < 0 else mini(n, cap)
 
 
 static func ask(item: String) -> int:
@@ -61,7 +64,7 @@ static func ask(item: String) -> int:
 
 ## What `l` will pay a unit of `item`, carriage included: its value, plus up to scarcity_premium times it as its store of
 ## the horizon need runs out (all of it when it holds none).
-static func willing(l: SettlementLedger, item: String) -> int:
+static func willing(l, item: String) -> int:
 	var h := horizon(l, item)
 	if h <= 0:
 		return 0
@@ -69,12 +72,12 @@ static func willing(l: SettlementLedger, item: String) -> int:
 	return int(floor(float(ask(item)) * (1.0 + float(cfg().scarcity_premium) * scarcity) + 1e-9))
 
 
-static func spendable(l: SettlementLedger) -> int:
-	return maxi(0, l.coins - int(cfg().cash_floor))
+static func spendable(l) -> int:
+	return maxi(0, l.purse() - int(cfg().cash_floor))
 
 
 ## What a party can carry home itself in one round: its own transport, if it can travel at all.
-static func self_capacity(l: SettlementLedger) -> int:
+static func self_capacity(l) -> int:
 	return TradeRoutes.capacity(l.transport) if l.can_travel else 0
 
 
@@ -82,8 +85,8 @@ static func self_capacity(l: SettlementLedger) -> int:
 ## A report for the wiki and the simulations; it moves nothing.
 static func balance(ledgers: Array, item: String) -> Dictionary:
 	var out := {"item": item, "need_per_day": 0.0, "held": 0, "demand": 0, "supply": 0, "by": {}}
-	for l: SettlementLedger in _sorted(ledgers):
-		var row := {"need_per_day": float(l.needs.get(item, 0.0)), "held": l.stock.count(item),
+	for l in _sorted(ledgers):
+		var row := {"need_per_day": l.need_rate(item), "held": l.held(item),
 			"demand": demand(l, item), "supply": supply(l, item)}
 		out.by[l.id] = row
 		out.need_per_day += row.need_per_day
@@ -96,10 +99,10 @@ static func balance(ledgers: Array, item: String) -> Dictionary:
 ## Every good any party needs or holds, sorted.
 static func goods_of(ledgers: Array) -> Array:
 	var ids := {}
-	for l: SettlementLedger in ledgers:
-		for k in l.needs:
+	for l in ledgers:
+		for k in l.need_items():
 			ids[k] = true
-		for k in l.stock.items:
+		for k in l.held_items():
 			ids[k] = true
 	var out := ids.keys()
 	out.sort()
@@ -118,11 +121,11 @@ static func _key(a: String, b: String) -> String:
 
 ## The cheapest way to get goods from seller `s` to buyer `b` over route `r` now: [fee_each, mode, carrier id,
 ## capacity left] or [] when there is none (the buyer cannot travel or carry more, and no willing carter has room).
-static func _carriage(s: SettlementLedger, b: SettlementLedger, r: Dictionary, room: Dictionary, carters: Array) -> Array:
+static func _carriage(s, b, r: Dictionary, room: Dictionary, carters: Array) -> Array:
 	if int(room.get(b.id, 0)) > 0:
 		return [0, "self", "", int(room[b.id])]
 	var best: Array = []
-	for c: SettlementLedger in carters:
+	for c in carters:
 		if c.id == b.id or int(room.get(c.id, 0)) <= 0:      # (a seller may cart its own goods: a separate, paid service)
 			continue
 		if c.settlement != s.settlement and c.settlement != b.settlement:
@@ -150,7 +153,7 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 	var left := {}            # seller id -> {item: units still for sale}
 	var room := {}            # party id -> units it can still carry this round (its own trips, or as a carter)
 	var cash := {}            # buyer id -> coins it can still spend
-	for l: SettlementLedger in ls:
+	for l in ls:
 		left[l.id] = {}
 		room[l.id] = TradeRoutes.capacity(l.transport) if l.carts_for_hire else self_capacity(l)
 		cash[l.id] = spendable(l)
@@ -159,25 +162,25 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 	var lost := []
 	var margin := float(cfg().preferred_margin_pct) / 100.0
 	for item in goods_of(ls):
-		for l: SettlementLedger in ls:
+		for l in ls:
 			left[l.id][item] = supply(l, item)
 		# the neediest buyer first (the share of its horizon it lacks), ties to the lower id
 		var buyers := []
-		for l: SettlementLedger in ls:
+		for l in ls:
 			if demand(l, item) > 0:
 				buyers.append(l)
 		buyers.sort_custom(func(x, y):
 			var sx := float(demand(x, item)) / float(maxi(1, horizon(x, item)))
 			var sy := float(demand(y, item)) / float(maxi(1, horizon(y, item)))
 			return sx > sy or (sx == sy and x.id < y.id))
-		for b: SettlementLedger in buyers:
+		for b in buyers:
 			var want := demand(b, item)
 			var pay := willing(b, item)
 			var reason := ""
 			while want > 0:
 				var offers := []      # [delivered each, seller id, carriage, route]
 				var no_carriage := false
-				for s: SettlementLedger in ls:
+				for s in ls:
 					if s.id == b.id or int(left[s.id][item]) <= 0 or (s.settlement == b.settlement and not local):
 						continue
 					if s.settlement == b.settlement:
@@ -237,43 +240,41 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 
 
 static func _place(ls: Array, id: String) -> String:
-	for l: SettlementLedger in ls:
+	for l in ls:
 		if l.id == id:
 			return l.settlement
 	return id
 
 
 ## Apply a plan: for each line, the seller's goods go to the buyer and the price to the seller; with a carter, the fee
-## goes from the buyer to the carter. Each is a matched pair of journal lines. A line whose goods or coins are no longer
+## goes from the buyer to the carter. Each is a matched pair of journal lines (and, between holders of two settlements, of
+## `regional_*` flow lines the settlements' audit checks: SettlementParty.deal). A line whose goods or coins are no longer
 ## there is refused whole and reported. Returns {done: [line], refused: [line]}.
 static func execute(plan_d: Dictionary, ledgers: Array, day := 0) -> Dictionary:
 	var by := {}
-	for l: SettlementLedger in ledgers:
+	for l in ledgers:
 		by[l.id] = l
 	var done := []
 	var refused := []
 	for line in plan_d.lines:
-		var s: SettlementLedger = by.get(line.seller)
-		var b: SettlementLedger = by.get(line.buyer)
-		var c: SettlementLedger = by.get(line.carrier) if str(line.carriage) == "carter" else null
+		var s = by.get(line.seller)
+		var b = by.get(line.buyer)
+		var c = by.get(line.carrier) if str(line.carriage) == "carter" else null
 		var n := int(line.units)
 		var total := int(line.total)
 		var fee := int(line.get("fee_total", 0))
-		if s == null or b == null or n <= 0 or s.stock.count(line.item) < n or b.coins < total + fee \
-				or not b.stock.can_add(line.item) or (str(line.carriage) == "carter" and c == null):
+		var pays_fee: bool = c != null and fee > 0
+		# every side is checked before any is made: a line is applied whole or refused whole
+		if s == null or b == null or n <= 0 or (str(line.carriage) == "carter" and c == null) \
+				or not s.can_deal("sell", line.item, n, total) or not b.can_deal("buy", line.item, n, total + fee) \
+				or (pays_fee and not c.can_deal("carriage_earned", line.item, n, fee)):
 			refused.append(line)
 			continue
-		s.stock.remove(line.item, n)
-		b.stock.add(line.item, n)
-		b.coins -= total
-		s.coins += total
-		s._log(day, "sell", line.item, n, total, b.id)
-		b._log(day, "buy", line.item, n, total, s.id)
-		if c != null and fee > 0:
-			b.coins -= fee
-			c.coins += fee
-			b._log(day, "carriage_paid", line.item, n, fee, c.id)
-			c._log(day, "carriage_earned", line.item, n, fee, b.id)
+		s.deal("sell", b, line.item, n, total, day)
+		b.deal("buy", s, line.item, n, total, day)
+		if pays_fee:
+			b.deal("carriage_paid", c, line.item, n, fee, day)
+			c.deal("carriage_earned", b, line.item, n, fee, day)
 		done.append(line)
 	return {"done": done, "refused": refused}
 
@@ -283,7 +284,7 @@ static func execute(plan_d: Dictionary, ledgers: Array, day := 0) -> Dictionary:
 ## lines only (when some of the parties are snapshots made for that day).
 static func matched(ledgers: Array, day := -1) -> String:
 	var pairs := {}
-	for l: SettlementLedger in ledgers:
+	for l in ledgers:
 		for e in l.journal:
 			if day >= 0 and int(e.day) != day:
 				continue
@@ -313,7 +314,7 @@ static func matched(ledgers: Array, day := -1) -> String:
 
 
 ## A planned line as a CON-01 procurement offer (Build 17 `Contracts`, goods only: buyer, seller, item, qty,
-## price_each, deadline_day, terms), the record the live game will negotiate instead of this stand-in's execute. Party
+## price_each, deadline_day, terms), the record the live game will negotiate instead of this stand-in's execute. 
 ## ids map to CON-01 refs at integration ("npc:<id>", "manor", "player"; off-map parties need a ref CON-01 does not
 ## have yet). The carriage is NOT part of it: CON-01 has no service contracts (Q18-12).
 static func to_contract_offer(line: Dictionary, day: int) -> Dictionary:

@@ -8,6 +8,7 @@ extends SceneTree
 var checks := 0
 var failures := 0
 var w: World
+var rg: Regions
 var cs: CourierService
 var fa: FormalAgreements
 
@@ -34,9 +35,12 @@ func _init() -> void:
 		if str(w.stalls[sid].get("tenant", "")) == "":
 			free = sid
 	cs.open_booth("npc:%d" % keeper.id, free)
-	var east := SettlementLedger.make({"id": "eastmarch", "name": "Eastmarch", "pos": [900, 0], "coins": 300})
+	rg = Regions.create(1)
+	rg.by_id["wulstead"].trader().till = 300             # fixture: Wulstead's trader holds 300 coins
+	rg.by_id["wulstead"].reopen_books()
+	var east := rg.party("wulstead/trader")
 	cs.open_region_booth(east)
-	cs.links = TradeRoutes.table([SettlementLedger.make({"id": "village"}), east], [["village", "eastmarch", 900, {"road": 1.0}]])
+	cs.links = TradeRoutes.table([SettlementLedger.make({"id": "village"}), east], [["village", "wulstead", 900, {"road": 1.0}]])
 	test_classes()
 	test_face_to_face()
 	test_no_remote_signing()
@@ -54,7 +58,7 @@ func ref(n: NPC) -> String:
 
 
 func coins() -> int:
-	return w.total_coins() + cs.held_coins() + (cs.regions.eastmarch as SettlementLedger).coins
+	return w.total_coins() + cs.held_coins() + cs.regions["wulstead/trader"].purse()
 
 
 func test_classes() -> void:
@@ -86,7 +90,7 @@ func test_no_remote_signing() -> void:
 	var ag := fa.draft("commercial", [ref(a), ref(b)], 300)
 	check(fa.sign(ag, ref(a)) == "" and not fa.binding(ag), "the holder signs its copy; one signature is not enough (incomplete)")
 	check(fa.sign(ag, ref(b)) != "" and not ag.signatures.has(ref(b)), "the other party cannot sign a document it does not hold: no remote, instant signing")
-	check(fa.sign(ag, "region:eastmarch") != "", "nor can someone who is not a party")
+	check(fa.sign(ag, "region:wulstead/trader") != "", "nor can someone who is not a party")
 
 
 func test_notary() -> void:
@@ -94,20 +98,20 @@ func test_notary() -> void:
 	var notary: NPC = adults()[3]
 	var plain: NPC = adults()[4]
 	var c: Dictionary = CourierService.cfg().notary
-	var ag := fa.draft("commercial", [ref(a), "region:eastmarch"], 500)
+	var ag := fa.draft("commercial", [ref(a), "region:wulstead/trader"], 500)
 	a.coins += 50
 	notary.skills[str(c.skill)] = Skills.xp_for_level(int(c.min_level))       # fixture: a courier with the provisional legal standing
 	plain.skills[str(c.skill)] = 0
-	check(fa.send_with_notary(ag, ref(plain), ref(a), "region:eastmarch") != "", "a courier without legal standing cannot notarise (provisional check: %s %d)" % [str(c.skill), int(c.min_level)])
+	check(fa.send_with_notary(ag, ref(plain), ref(a), "region:wulstead/trader") != "", "a courier without legal standing cannot notarise (provisional check: %s %d)" % [str(c.skill), int(c.min_level)])
 	var before := coins()
-	check(fa.send_with_notary(ag, ref(notary), ref(a), "region:eastmarch") == "" and str(ag.state) == "with_notary" and str(ag.holder) == ref(notary),
+	check(fa.send_with_notary(ag, ref(notary), ref(a), "region:wulstead/trader") == "" and str(ag.state) == "with_notary" and str(ag.holder) == ref(notary),
 		"sent with a qualified notary: the sender signs before it, it carries the document; the fee is held at the booth")
 	check(coins() == before, "holding the fee moves coins, creates none")
-	check(fa.sign(ag, "region:eastmarch") != "", "Eastmarch cannot sign before the notary arrives")
+	check(fa.sign(ag, "region:wulstead/trader") != "", "Wulstead cannot sign before the notary arrives")
 	fa.tick(float(ag.due) - 0.01)
-	check(not ag.signatures.has("region:eastmarch"), "nothing is signed while the document is on the road")
+	check(not ag.signatures.has("region:wulstead/trader"), "nothing is signed while the document is on the road")
 	fa.tick(float(ag.due) + 0.01)
-	check(ag.signatures.has("region:eastmarch") and not fa.binding(ag), "the notary arrives and Eastmarch signs; not binding until the document is back")
+	check(ag.signatures.has("region:wulstead/trader") and not fa.binding(ag), "the notary arrives and Wulstead signs; not binding until the document is back")
 	var n0 := notary.coins
 	fa.tick(float(ag.back) + 0.01)
 	check(fa.binding(ag) and str(ag.holder) == ref(a) and notary.coins - n0 == int(ag.fee), "back with both signatures: the contract is complete; the notary is paid its fee (%d)" % int(ag.fee))
@@ -116,19 +120,19 @@ func test_notary() -> void:
 	check(int(notary.skills.law) == Skills.xp_for_level(int(c.min_level)) + 2 * int(lw.witness_xp) + int(lw.carry_xp),
 		"LAW-SKILL: the notary learned from it: two signatures witnessed and a document carried home (Law %d xp)" % int(notary.skills.law))
 	# rejected
-	var rj := fa.draft("ownership", [ref(a), "region:eastmarch"], 80)
+	var rj := fa.draft("ownership", [ref(a), "region:wulstead/trader"], 80)
 	rj.refuse = true
 	a.coins += 20
-	fa.send_with_notary(rj, ref(notary), ref(a), "region:eastmarch")
+	fa.send_with_notary(rj, ref(notary), ref(a), "region:wulstead/trader")
 	fa.tick(float(rj.due) + 0.01)
 	fa.tick(float(rj.back) + 0.01)
-	check(str(rj.state) == "rejected" and not fa.binding(rj) and str(rj.holder) == ref(a), "Eastmarch refuses: the document comes back unsigned by it; rejected, not binding")
+	check(str(rj.state) == "rejected" and not fa.binding(rj) and str(rj.holder) == ref(a), "Wulstead refuses: the document comes back unsigned by it; rejected, not binding")
 	# interrupted
-	var it := fa.draft("ownership", [ref(a), "region:eastmarch"], 80)
+	var it := fa.draft("ownership", [ref(a), "region:wulstead/trader"], 80)
 	a.coins += 20
 	var a0 := a.coins
 	var before2 := coins()
-	fa.send_with_notary(it, ref(notary), ref(a), "region:eastmarch")
+	fa.send_with_notary(it, ref(notary), ref(a), "region:wulstead/trader")
 	w.kill(notary, "waylaid on the road")
 	fa.tick(float(it.due) + 0.01)
 	check(str(it.state) == "interrupted" and not fa.binding(it) and a.coins == a0, "the notary is waylaid: the agreement is interrupted, incomplete; the held fee goes back")

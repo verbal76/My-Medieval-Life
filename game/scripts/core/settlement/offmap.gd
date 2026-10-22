@@ -23,7 +23,13 @@ extends RefCounted
 ##
 ## Conservation (SIM rules): coins and goods change only by the lines in `flows`, so
 ##   coins(now) = start + coins_from_village - coins_to_village + road_coins_in - road_coins_out + migrated_in
+##                + regional_coins_in - regional_coins_out + outside_coins_in - outside_coins_out
 ##   goods(now) = start + produced - used + from_village - to_village + road_in - road_out
+##                + regional_in - regional_out + outside_in - outside_out
+## (REG-PARTY-01, SettlementParty: `regional_*` is trade between holders of two of the five settlements, matched by the other
+## settlement's opposite line, which Regions.audit checks; `outside_*` is an exchange with a party that is none of the five
+## settlements' holders (the courier service's booths and packs, the village's people, an analysis fixture), whose own books
+## carry the other end.)
 ## and `audit()` checks both. Nothing is created but natural output (fields, woods, quarries, herbs) and nothing is
 ## destroyed but use (eating, recipes' inputs, upkeep).
 ##
@@ -36,11 +42,13 @@ const TRADE_BIZ := {"farmer": "farm", "herder": "herd", "forester": "forest", "m
 	"merchant": "merchant"}
 const PREPARED := ["pottage", "roast_meat", "bread", "cheese"]       # foods the cookshop makes (a share of a household's food)
 const PREPARED_SHARE := 0.3
-const FLOW_GOODS := ["produced", "used", "from_village", "to_village", "road_in", "road_out", "unmet"]
+const FLOW_GOODS := ["produced", "used", "from_village", "to_village", "road_in", "road_out", "unmet", "regional_in", "regional_out",
+	"outside_in", "outside_out"]
 const FLOW_COUNTS := ["coins_from_village", "coins_to_village", "road_coins_in", "road_coins_out", "migrated_in", "deaths",
 	"wage_short", "relief_units", "tax_households", "tax_businesses", "wages_paid", "official_pay", "horses_foaled",
 	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves", "births", "age_deaths", "households_formed",
-	"inheritances", "orphans_fostered"]
+	"inheritances", "orphans_fostered", "regional_coins_in", "regional_coins_out",
+	"outside_coins_in", "outside_coins_out"]
 ## A member of a household (REG-DEMO-01): [born, sex, partnered, unwilling]. `born` is a settlement day number (negative before the
 ## first step), so age in years is (day - born) / the calendar's year length and needs no daily update; sex 1 is female; partnered 1
 ## means the member is one of the household's couple; unwilling 1 is a person who will not marry (decided once, at birth or founding).
@@ -589,7 +597,8 @@ func trader() -> Dictionary:
 func audit() -> String:
 	var f := flows
 	var want_c: int = int(start.coins) + int(f.coins_from_village) - int(f.coins_to_village) + int(f.road_coins_in) \
-		- int(f.road_coins_out) + int(f.migrated_in)
+		- int(f.road_coins_out) + int(f.migrated_in) + int(f.regional_coins_in) - int(f.regional_coins_out) \
+		+ int(f.outside_coins_in) - int(f.outside_coins_out)
 	if want_c != coins():
 		return "%s coins %d, books say %d" % [id, coins(), want_c]
 	var have := goods()
@@ -600,7 +609,8 @@ func audit() -> String:
 		ids[k] = true
 	for k in ids:
 		var w := int(start.goods.get(k, 0)) + int(f.produced.get(k, 0)) - int(f.used.get(k, 0)) + int(f.from_village.get(k, 0)) \
-			- int(f.to_village.get(k, 0)) + int(f.road_in.get(k, 0)) - int(f.road_out.get(k, 0))
+			- int(f.to_village.get(k, 0)) + int(f.road_in.get(k, 0)) - int(f.road_out.get(k, 0)) \
+			+ int(f.regional_in.get(k, 0)) - int(f.regional_out.get(k, 0)) + int(f.outside_in.get(k, 0)) - int(f.outside_out.get(k, 0))
 		if w != int(have.get(k, 0)):
 			return "%s %s %d, books say %d" % [id, k, int(have.get(k, 0)), w]
 	var hs := int(f.horses_start) + int(f.horses_foaled) - int(f.horses_died) - int(f.horses_sold)
