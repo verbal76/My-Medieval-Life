@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **496** |
 | Outstanding (not complete, superseded or canceled) | 247 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 28 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -43,12 +43,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
 | Build 18: Settlement Advancement & Regional Economy | 68 | 62 |
-| Build 19: NPC Judgment System | 22 | 15 |
+| Build 19: NPC Judgment System | 16 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **323** | **247** |
+| **Total open** | **317** | **247** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -250,7 +250,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | approved | APPROVED — NOT STARTED |  |  |
 
-### Build 19: NPC Judgment System (22)
+### Build 19: NPC Judgment System (16)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -269,12 +269,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
-| SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
-| SJD-Q04 | Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
-| SJD-Q05 | Judgment open decision: How much may prior judgment bias interpretation of ambiguous events? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
-| SJD-Q09 | Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
-| SJD-Q12 | Judgment open decision: What makes an event important enough to score? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
-| SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED |  | emergent gameplay is the judgment system's purpose |
 
 ### Build 20 or later (outside the five builds) (48)
@@ -1027,7 +1021,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 34, status BLOCKED) (103)
+## Owner decisions, open and answered (open: 28, status BLOCKED) (103)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1106,17 +1100,17 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| SJD-Q04 | Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| SJD-Q05 | Judgment open decision: How much may prior judgment bias interpretation of ambiguous events? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
+| SJD-Q04 | Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
+| SJD-Q05 | Judgment open decision: How much may prior judgment bias interpretation of ambiguous events? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
 | SJD-Q06 | Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q07 | Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q08 | Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| SJD-Q09 | Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q09 | Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
 | SJD-Q10 | Judgment open decision: What judgment information, if any, can the player see? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q11 | Judgment open decision: How should memory persistence and forgiveness vary by severity? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| SJD-Q12 | Judgment open decision: What makes an event important enough to score? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
-| SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q12 | Judgment open decision: What makes an event important enough to score? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
+| SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | COMPLETE AND VERIFIED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | TAILOR-Q | Where the tailor comes from | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) | COMPLETE AND VERIFIED | docs/directives/2026-10-22_x18_d1_starting_experience.md |

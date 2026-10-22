@@ -27224,10 +27224,10 @@
    "id": "SJD-Q03",
    "title": "Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale?",
-   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
    "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
@@ -27263,20 +27263,26 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Own tolerance each: personality-based thresholds seeded at birth"
   },
   {
    "id": "SJD-Q04",
    "title": "Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour?",
-   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
    "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
@@ -27312,20 +27318,26 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Mixed feelings: wary but willing (payment up front, gossip, can swing either way)"
   },
   {
    "id": "SJD-Q05",
    "title": "Judgment open decision: How much may prior judgment bias interpretation of ambiguous events?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: How much may prior judgment bias interpretation of ambiguous events?",
-   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
    "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
@@ -27361,11 +27373,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "No bias: every ambiguous event judged on its own, regardless of prior opinion"
   },
   {
    "id": "SJD-Q06",
@@ -27536,10 +27554,10 @@
    "id": "SJD-Q09",
    "title": "Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness?",
-   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
    "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
@@ -27575,11 +27593,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Sometimes near-best: usually the best option, occasionally a close second, by seeded repeatable randomness"
   },
   {
    "id": "SJD-Q10",
@@ -27695,10 +27719,10 @@
    "id": "SJD-Q12",
    "title": "Judgment open decision: What makes an event important enough to score?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: What makes an event important enough to score?",
-   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
    "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
@@ -27734,20 +27758,26 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Events that help or harm them, their kin or property, plus witnessed crimes and kindnesses; trivia ignored"
   },
   {
    "id": "SJD-Q13",
    "title": "Judgment open decision: How should individual decision weights be learned, configured or tuned?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment open decision: How should individual decision weights be learned, configured or tuned?",
-   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
    "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
@@ -27783,11 +27813,17 @@
      "date": "2026-10-20",
      "change": "next action",
      "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)",
+   "owner_answer": "Weights seeded from personality at birth, then shaped by life events; deterministic"
   },
   {
    "id": "SJD-Q14",
