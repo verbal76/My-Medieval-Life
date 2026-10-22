@@ -523,7 +523,7 @@ func _batch(n: NPC, p: Dictionary, task: String, cs: Array, plough: bool, crop :
 		"till": "ploughing the family's plot"}[task]
 	# X18 HOOK (Expansion 18, X18-CAPNUM farming F1): off in the game (exactly `mins`); in analysis, faster tilling, sowing and
 	# cutting only: the cells, seed and crop are the same, never more yield
-	var dur := mins if task == "clear" else CapabilityHook.time(mins, "farming")
+	var dur := mins if task == "clear" else CapabilityHook.time(mins, "farming", n)
 	n.plan = [w.brain.go(stand), w.brain.work(dur, "fp_work", {"plot": str(p.id), "task": task, "crop": crop,
 		"cells": take.map(func(c: Vector2i) -> Array: return [c.x, c.y])}, "work", first)]
 	return true

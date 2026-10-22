@@ -68,6 +68,14 @@ profile, held until after the SYNC-17 Build 17 merge so results stay on one base
 | Durations and pay at levels 0, 5, 10 in every industry; determinism (same seed twice, and against the hook off) | `capability_hook.gd` | `capability_test` `test_capnum_durations`, `test_capnum_determinism` |
 | Live hook decision: stays OFF in the game until X18-CAPCOMP (DESIGN.md section 9a) | `capability_hook.gd` | economy_sim fingerprint unchanged with the hook off |
 
+### X18-CAPCOMP part 1 (2026-10-22): workforce experience (owner-approved components only)
+
+| What | Where | Tests |
+|---|---|---|
+| Experience per person and industry from hours worked (1 day per 8 hours), never decaying, leaving with the person; caps 12/18/24; straight-line individual level; hours-weighted workforce level of the last season (report only; "no active workers") | `settlement/experience.gd`, `settlement_industries.json` `experience`; `World` (`_note_work`, `note_player_work`, dawn prune, optional save key `x18_experience`); `main.gd` (player actions) | `experience_test` 31 |
+| Per-worker hook path prepared, not enabled (each worker's own level; the Q18-11B effective level is per worker) | `capability_hook.gd`, every hook site passes the worker | `experience_test` `test_per_worker_path` |
+| Not implemented (not approved): facility caps, starting experience (tracking starts empty), thresholds | DESIGN.md section 9b | — |
+
 ## Features implemented provisionally
 
 - **Mining capability** comes only through `MiningCapabilityAdapter` (fixture / live / none), reading MIN-D's interface

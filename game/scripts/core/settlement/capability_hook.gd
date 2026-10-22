@@ -21,33 +21,57 @@ extends RefCounted
 ## labour at a game-set base rate (the harvest hand's wage, Quests.promised), never to crop prices or negotiated terms.
 
 static var forced := {}           # industry -> level 0..10 (analysis only); empty = off
-static var profile := ""          # the profile the forced levels read; "" = the active one (neutral)
+static var profile := ""          # the profile the forced levels read; "" = the active one
+## X18-CAPCOMP part 1 (owner 2026-10-22): the PER-WORKER path, prepared and NOT ENABLED. Individual experience is the basis
+## of individual performance and pay, so the modifiers will read each worker's own level (WorkExperience.level), not a
+## settlement level: the Q18-11B effective level is each worker's own effective level. Nothing in the game sets
+## `per_worker` or `experience`; until the facility and starting-experience rules are approved the hook stays off.
+static var per_worker := false
+static var experience: WorkExperience = null
 
 
 static func off() -> void:
 	forced = {}
 	profile = ""
+	per_worker = false
+	experience = null
 
 
-static func time(base: float, industry: String) -> float:
-	if forced.is_empty() or not forced.has(industry):
+## The level the modifiers read for `who` in `industry`, or -1 for none (the base applies): a forced analysis level;
+## else, only on the prepared per-worker path, the worker's own level, whole levels (floor) of WorkExperience.level
+## (no facility cap: none is approved, so the effective level equals the experience level).
+static func level_for(industry: String, who = null) -> int:
+	if forced.has(industry):
+		return int(forced[industry])
+	if per_worker and experience != null and who != null:
+		return int(floor(experience.level(WorkExperience.key_of(who), industry)))
+	return -1
+
+
+static func time(base: float, industry: String, who = null) -> float:
+	var l := level_for(industry, who)
+	if l < 0:
 		return base
-	return base / SettlementIndustries.output_multiplier(industry, int(forced[industry]), profile, true)
+	return base / SettlementIndustries.output_multiplier(industry, l, profile, true)
 
 
 ## A unit's work time where the worker's own Skill already shortens it (skill_time, the Skills time factor): off, exactly
 ## the existing base x skill_time; on, the two gains added over the base once each (no double counting,
 ## SettlementProductivity.unit_minutes).
-static func work_time(base: float, industry: String, skill_time: float) -> float:
-	if forced.is_empty() or not forced.has(industry):
+static func work_time(base: float, industry: String, skill_time: float, who = null) -> float:
+	var l := level_for(industry, who)
+	if l < 0:
 		return base * skill_time
-	return SettlementProductivity.unit_minutes(base, industry, int(forced[industry]), skill_time, profile, true)
+	return SettlementProductivity.unit_minutes(base, industry, l, skill_time, profile, true)
 
 
-static func pay(base: int, industry: String) -> int:
-	if forced.is_empty() or not forced.has(industry):
+## A wage at a base rate; `who` the worker when the wage is set for a known worker (a job posted to nobody yet keeps
+## the settlement path).
+static func pay(base: int, industry: String, who = null) -> int:
+	var l := level_for(industry, who)
+	if l < 0:
 		return base
-	return roundi(float(base) * SettlementIndustries.pay_multiplier(industry, int(forced[industry]), profile, true))
+	return roundi(float(base) * SettlementIndustries.pay_multiplier(industry, l, profile, true))
 
 
 ## The productive industry a recipe belongs to, by its station (forge, anvil: smithing; sawhorse: carpentry; workbench:

@@ -123,6 +123,7 @@ jobs:
           $godot --headless --path game --script res://tests/capability_test.gd
           $godot --headless --path game --script res://tests/courier_test.gd
           $godot --headless --path game --script res://tests/contract_sign_test.gd
+          $godot --headless --path game --script res://tests/experience_test.gd
 
       - name: Short economy simulation (FR-07)
         run: |

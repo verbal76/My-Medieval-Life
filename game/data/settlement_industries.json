@@ -582,5 +582,19 @@
     "scarcity_premium": 1.0,
     "cash_floor": 20,
     "preferred_margin_pct": 10
+  },
+  "experience": {
+    "_note": "Owner X18-CAPCOMP part 1 (2026-10-22, docs/directives/2026-10-22_x18_capcomp_experience_decision.md): each person's experience per industry from actual hours worked in this settlement, 1 experience day per 8 game hours (480 minutes), never decaying; caps in experience days; individual level = 10 x min(days, cap) / cap; the industry's workforce level = hours-weighted average of the individual levels of workers active in the last season (2 game days), a reporting and planning metric only. NOT DECIDED (nothing here): starting experience for new worlds or old saves, facility caps, thresholds (WorkExperience starts empty).",
+    "minutes_per_day": 480,
+    "caps_days": {
+      "mining": 12,
+      "forestry": 12,
+      "farming": 18,
+      "trade": 18,
+      "tanning": 18,
+      "carpentry": 24,
+      "smithing": 24
+    },
+    "window_game_days": 2
   }
 }

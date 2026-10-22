@@ -242,7 +242,7 @@ The owner's mandatory rules and how they hold:
    and 10; the same crop in the regional model.
 3. **Durations by the effective level.** The hook's level is the effective level. Slaughter, clearing ground and fencing
    are not among the owner's listed tasks and keep their times.
-4. **Pay on paid farm labour only.** The one wage the game sets from a base rate for farm work is the harvest hand's
+4. **Pay on paid farm labour only.** (Since X18-CAPCOMP part 1 the level these read will be each worker's own; section 9b.) The one wage the game sets from a base rate for farm work is the harvest hand's
    (`work_the_harvest`, 6 coins): `Quests.promised` takes `CapabilityHook.pay(wage, "farming")`, set aside and paid as
    one amount. Grain prices are untouched (tested).
 5. **Experience kept under facility limits.** Until X18-CAPCOMP's numbers are approved the split is a concept only: one
@@ -266,6 +266,50 @@ never creates or moves grain if, at the merge, `args.min` carries the hooked min
 worked minutes): the level is the settlement's, so every cutter's minutes scale by the same factor and the proportions,
 and `take_crop`'s total, are unchanged. The pen feed step that branch adds inside the harvest act (15 minutes) should take
 the same farming hook. Not merged here.
+
+## 9b. Workforce experience (X18-CAPCOMP part 1; owner, 2026-10-22)
+
+Decision verbatim in `docs/directives/2026-10-22_x18_capcomp_experience_decision.md` (staging). Implemented as a record
+only (`game/scripts/core/settlement/experience.gd`, `WorkExperience`; data `settlement_industries.json` `experience`):
+
+- **Experience** per person (villager or player) and industry, from actual hours worked in that industry in this
+  settlement: 1 experience day per 8 game hours. It never decays and is never reduced by facilities, other workers or
+  time away. It leaves with the person: at each dawn `World._new_day` forgets every villager who is no longer alive
+  (death; a departure that removes or ends the villager).
+- **Caps** (experience days): mining, forestry 12; farming, trade, tanning 18; carpentry, smithing 24.
+- **Individual level** = 10 x min(days, cap) / cap, straight-line, real-valued 0-10, each worker's own. A level-10 master
+  beside a level-0 apprentice keeps the advantage; the apprentice inherits nothing.
+- **Workforce level** of an industry = the hours-weighted average of the individual levels of the workers active in it in
+  the last season (2 game days, hour buckets; active = any hours in the window). A **reporting and planning metric
+  only**, never a modifier applied to every worker. With nobody active: `"no active workers"`, never 0.
+- **The Q18-11B effective level is now each worker's own effective level** (the owner's clarification): individual
+  experience is the basis of individual performance and pay; facilities may later lower a worker's effective capability,
+  never their experience. Until the facility rules are approved, effective = experience level; no cap is invented.
+- **Not decided, not implemented:** facility caps; starting experience for new worlds and existing saves (tracking starts
+  empty: nobody has experience until they work; nothing is seeded from `Skills.tenure_share` or PAR-01A history);
+  thresholds.
+
+Hours attribution (the capability hook's own mapping, `WorkExperience.industry_of_step`): villagers' work steps, credited
+per tick for the minutes actually worked (`World._run_plan` -> `_note_work`): `mine`/`mj_mine` (mining swings, the
+manor's quarrying) mining; `chop` forestry; `craft` by the recipe's station (`CapabilityHook.recipe_industry`: forge and
+anvil smithing, sawhorse carpentry, workbench on hides tanning; cooking, brewing, weaving none); `harvest`, `sow`,
+`feed_pen`, `collect_pen`, household plots' `fp_work` till/sow/harvest farming; the manor's `mend` job carpentry. The
+player's finished actions (`main.gd` `start_action`, `World.note_player_work`): mining, chopping, tilling/sowing/
+harvesting, crafting by recipe, mending. **Not attributed (open questions):** trade (a trader's time at the stall has no
+work act; selling and buying are instant), slaughter, hunting, foraging and picking, clearing ground, fencing, building
+(construction sites, stalls), the manor's survey, trial pits, open-pit excavation, tunnelling, shoring, backfill and
+hauling, carting, the player's cancelled (unfinished) actions, sampling and assays.
+
+Per-worker hook path (prepared, NOT enabled): `CapabilityHook.time/work_time/pay(base, industry, who)` take the worker,
+and every hook site passes them; `level_for(industry, who)` reads a forced analysis level, else, only when
+`CapabilityHook.per_worker` and `CapabilityHook.experience` are set (nothing in the game sets them), the worker's own
+whole level (floor of `WorkExperience.level`). A wage posted before a worker is known (the manor's quarry and mending
+jobs) keeps the old path. The live hook stays off until the facility and starting-experience rules are approved.
+
+Save: optional key `x18_experience` (`mml-x18-experience/0`: minutes per person and industry, the season's hour buckets),
+written only once someone has worked; a save without it (every older save) loads with empty tracking; a section of an
+unknown format is kept and written back untouched. `SAVE_VERSION` is not bumped (this branch's practice: Build 17 owns
+the versions; the section joins the versioned save at integration).
 
 ## 10. Regional purchasing and carriage (owner Q18-10, 2026-10-21)
 

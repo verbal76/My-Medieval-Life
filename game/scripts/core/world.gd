@@ -88,6 +88,7 @@ var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
+var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP part 1): hours worked by industry, a record only; optional save key
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
 var prospecting: Prospecting  # MIN-C: clues, samples and assays (scripts/core/prospecting.gd); clues generated from the seed, the rest saved in "prospecting"
@@ -112,6 +113,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	relations = Relations.new(self)
+	experience = WorkExperience.new()            # X18-CAPCOMP: starts empty (no starting-experience rule approved)
 	contracts = Contracts.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
@@ -363,6 +365,12 @@ func _on_hour(h: int) -> void:
 
 
 func _new_day() -> void:
+	# X18 HOOK (X18-CAPCOMP part 1): experience leaves with the person: whoever is no longer a living villager is forgotten
+	for k in experience.minutes.keys():
+		if str(k).begins_with("npc:"):
+			var gone: NPC = npc(int(str(k).get_slice(":", 1)))
+			if gone == null or not gone.alive:
+				experience.forget(str(k))
 	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004); what spoils is counted
 	# (spoiled_<item>), so the goods ledger accounts for it
 	var kept := []
@@ -471,6 +479,7 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 				n.anim = s.get("anim", "work")
 				if s.has("face"):
 					n.facing = (Vector2(s.face) + Vector2(0.5, 0.5) - n.pos)
+				_note_work(n, s, minf(gm, maxf(n.work_left, 0.0)))   # X18 HOOK (X18-CAPCOMP): a record of hours worked, read by nothing
 				n.work_left -= gm
 				if n.work_left <= 0.0:
 					n.plan.pop_front()
@@ -542,6 +551,22 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.work_left = float(n.plan[1].min)
 		return true
 	return false
+
+
+## X18 HOOK (Expansion 18, X18-CAPCOMP part 1): credit `mins` of a villager's work step to its industry (WorkExperience
+## .industry_of_step, the capability hook's mapping); a record only, it changes nothing the game does.
+func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
+	var act := str(s.get("act", ""))
+	if act == "":
+		return
+	var args: Dictionary = s.get("args", {})
+	var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
+	experience.credit(World.npc_ref(n.id), WorkExperience.industry_of_step(act, args, kind), mins, minutes)
+
+
+## X18 HOOK (X18-CAPCOMP part 1): credit the player's finished work (`secs` real seconds of an action in `industry`).
+func note_player_work(industry: String, secs: float) -> void:
+	experience.credit(WorkExperience.PLAYER, industry, secs * float(GameData.b("game_minutes_per_second")), minutes)
 
 
 # ---------------------------------------------------------------- player ---------------------
@@ -3803,7 +3828,7 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
-	}
+	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {})   # X18-CAPCOMP: only once someone has worked
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -3819,6 +3844,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
+	experience = WorkExperience.new()
+	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it starts empty
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	property = Property.new(self)

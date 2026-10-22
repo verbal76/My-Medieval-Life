@@ -836,19 +836,19 @@ func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 			if no != "":
 				return bad.call(no)
 			var plough := p.tool_of("plough")
-			return {"ok": true, "label": "Ploughing" if plough != "" else "Digging", "secs": CapabilityHook.time(float(till_cost(p).seconds), "farming"), "anim": "swing" if plough != "" else "gather",
+			return {"ok": true, "label": "Ploughing" if plough != "" else "Digging", "secs": CapabilityHook.time(float(till_cost(p).seconds), "farming", p), "anim": "swing" if plough != "" else "gather",
 					"tool": plough, "run": func() -> Dictionary: return {"items": {}, "text": till(c, p)}}
 		"sow":
 			var no := sow_refusal(c, str(t.crop), p)
 			if no != "":
 				return bad.call(no)
-			return {"ok": true, "label": "Sowing", "secs": CapabilityHook.time(float(cfg().sow_seconds), "farming"), "anim": "gather", "tool": "",
+			return {"ok": true, "label": "Sowing", "secs": CapabilityHook.time(float(cfg().sow_seconds), "farming", p), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": {}, "text": sow(c, str(t.crop), p)}}
 		"harvest":
 			for id in harvest_goods(c):
 				if not p.inv.can_add(id):
 					return bad.call("Your pack is full.")
-			return {"ok": true, "label": "Harvesting", "secs": CapabilityHook.time(float(cfg().harvest_seconds), "farming"), "anim": "gather", "tool": "",
+			return {"ok": true, "label": "Harvesting", "secs": CapabilityHook.time(float(cfg().harvest_seconds), "farming", p), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": harvest(c, p), "text": ""}}
 		"clear_tree":
 			var tr: Dictionary = t.tree
