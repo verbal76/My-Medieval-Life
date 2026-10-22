@@ -294,7 +294,7 @@ func _test_prospector_day() -> void:
 	w.brain._change_job(n, Prospecting.JOB, "a test")
 	n.coins = 200
 	n.plan.clear()
-	var coins0 := _coins(w) + w.caravan_purse
+	var coins0 := _coins(w) + w.regions.coins()
 	var goods0: Dictionary = Census.goods(w)
 	var ordered := false
 	var had_kit := false
@@ -314,7 +314,7 @@ func _test_prospector_day() -> void:
 	check(_st(w, "mined_" + Prospecting.ITEM) >= 2, "the prospector takes samples at the clues (%d)" % _st(w, "mined_" + Prospecting.ITEM))
 	check(not mine.is_empty() and _st(w, "assays") >= 1, "and has them assayed by the smith (%d readings)" % mine.size())
 	check(not unreported.call(), "every find is reported to the manor (%d of %d readings found traces)" % [mine.filter(func(r): return str(r.ore) != "").size(), mine.size()])
-	check(_coins(w) + w.caravan_purse == coins0, "coins conserved over the prospector's day (fees, the kit's price)")
+	check(_coins(w) + w.regions.coins() == coins0, "coins conserved over the prospector's day (fees, the kit's price)")
 	var goods1: Dictionary = Census.goods(w)
 	var held := int(goods1.get(Prospecting.ITEM, 0))
 	check(held == _st(w, "mined_" + Prospecting.ITEM) - _st(w, "used_" + Prospecting.ITEM), "every sample is held or was assayed (%d held)" % held)

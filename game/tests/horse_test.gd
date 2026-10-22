@@ -93,11 +93,16 @@ func test_buying() -> void:
 	# conservation
 	p.coins = 500
 	var net0 := w.total_coins() - w.coin_sources
-	var purse0 := w.caravan_purse
+	var dealer: OffMapSettlement = w.regions.horse_dealer(w.day())
+	var till0 := int(dealer.biz.farm.till) if dealer != null else 0
+	var herd0 := dealer.horses() if dealer != null else 0
+	var other0 := w.regions.coins()
 	var got := w.farm.buy_horse(p)
 	check(got == "", "with 500 coins the horse is bought (%s)" % got)
-	check(p.coins == 380 and w.caravan_purse == purse0 + 120, "120 coins left the player and went into the caravan's purse exactly")
+	check(p.coins == 380 and dealer != null and w.regions.coins() == other0 + 120 and dealer.horses() == herd0 - 1, "120 coins left the player and went to the dealer's settlement exactly, and its herd is one horse less (%s)" % (dealer.name if dealer != null else "no dealer"))
+	check(dealer != null and dealer.id == "wulstead" and dealer.audit() == "", "the horse came from Wulstead, the nearest settlement with one on the road, and its books balance")
 	check(w.total_coins() - w.coin_sources == net0, "no coin was made or lost (coins less outside sources unchanged)")
+	check(dealer != null and int(dealer.biz.farm.till) == till0 + 120, "the price entered a farm's till in the dealer's settlement")
 	var horse := w.farm.plough_horse()
 	check(horse != null and horse.area == pen.id and horse.sex == "m" and horse.adult(w.minutes) and horse.hunger == 100.0, "an adult horse stands in the player's horse pen, fed")
 	check(w.farm.buy_horse(p) == "You already have a plough horse." and p.coins == 380, "a second horse is refused")
@@ -186,7 +191,7 @@ func test_save() -> void:
 	w2.load_dict(VillageMap.load_default(), d)
 	var h2 := w2.farm.plough_horse()
 	check(h2 != null and h2.species == "horse" and is_equal_approx(h2.hunger, 61.0) and h2.area == pen.id, "the horse loads in its pen with its hunger")
-	check(int(w2.fauna.pens[pen.id].trough) == 5 and w2.caravan_purse == w.caravan_purse and w2.coin_sources == w.coin_sources, "its trough and the caravan's purse load")
+	check(int(w2.fauna.pens[pen.id].trough) == 5 and w2.regions.coins() == w.regions.coins() and w2.coin_sources == w.coin_sources, "its trough and the settlements' coins load")
 	w2.player.inv.add("plough")
 	check(float(w2.farm.till_cost(w2.player).seconds) == 1.0, "the loaded horse still speeds the plough")
 	check(int(d.save_version) == World.SAVE_VERSION, "the save version is unchanged (%d): the horse is an ordinary pen animal" % World.SAVE_VERSION)

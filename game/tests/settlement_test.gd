@@ -299,7 +299,7 @@ func test_live_village() -> void:
 		for id in rep.goods[grp]:
 			grouped[id] = int(grouped.get(id, 0)) + int(rep.goods[grp][id])
 	check(grouped == rep.goods_total, "every good falls in exactly one group (market, private, public, player, loot)")
-	check(int(rep.outside.caravan_purse) == w.caravan_purse, "the caravan's purse is reported apart, outside the village")
+	check(int(rep.outside.settlement_coins) == w.regions.coins(), "the neighbouring settlements' coins are reported apart, outside the village")
 	# owner Q18-10: anyone may buy; the village's parties partition its purses and goods without counting twice
 	var ps := SettlementReport.parties(w, {"wheat": 10.0, "bread": 4.0})
 	var pt := SettlementReport.party_totals(ps)

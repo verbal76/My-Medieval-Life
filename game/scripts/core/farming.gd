@@ -488,6 +488,8 @@ func buy_horse_refusal(p: PlayerState) -> String:
 	var c: Dictionary = cfg().caravan_horse
 	if not caravan_here():
 		return "The caravan is not here."
+	if w.regions.horse_dealer(w.day()) == null:
+		return "None of the traders here has a horse to sell."
 	if plough_horse() != null:
 		return "You already have a plough horse."
 	if pen_with_room("horse").is_empty():
@@ -497,25 +499,27 @@ func buy_horse_refusal(p: PlayerState) -> String:
 	return ""
 
 
-## Buy the plough horse from the visiting caravan into your horse pen. The coins go to the caravan's purse and leave
-## the village (coin_sources falls, as for any coin the village pays the caravan); the horse comes from outside.
-## "" when done.
+## Buy the plough horse from the visiting caravan into your horse pen. The horse is one a visiting trader's settlement
+## holds (Regions.horse_dealer: a horse-dealer among the traders on the road today, the nearest settlement first;
+## SET-C-FIVE, ECON-P1.3): the settlement's herd is one less, and the coins go to the dealer's till and leave the village
+## (coin_sources falls, as for any coin the village pays the caravan). "" when done.
 func buy_horse(p: PlayerState) -> String:
 	var no := buy_horse_refusal(p)
 	if no != "":
 		return no
 	var price := int(cfg().caravan_horse.price)
 	var dst := pen_with_room("horse")
+	var dealer: OffMapSettlement = w.regions.horse_dealer(w.day())
+	dealer.sell_horse(price)
 	p.coins -= price
 	w.coin_sources -= price
-	w.caravan_purse += price
 	var a: Animal = w.fauna.spawn(dst.id, "horse", "m", null)
 	a.born = w.minutes - (Animal.stage_days(a.spec(), "grow") + 1.0) * 1440.0       # a grown horse
 	a.next_birth = w.minutes + Animal.stage_days(a.spec(), "breed") * 1440.0
 	a.goal = Vector2.INF
 	w.stat("farm_bought_horse")
 	w.stat("caravan_sold_horse")
-	w.note("%s %s bought a plough horse from the caravan for %d coins." % [p.name, p.family, price])
+	w.note("%s %s bought a plough horse from the caravan's trader from %s for %d coins." % [p.name, p.family, dealer.name, price])
 	return ""
 
 

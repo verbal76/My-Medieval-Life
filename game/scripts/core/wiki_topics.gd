@@ -31,6 +31,7 @@ static func add_pages(w: Wiki) -> void:
 	_journal(sys)
 	_causes(sys)
 	_caravan(sys)
+	_neighbours(sys)
 	_bandits(sys)
 
 
@@ -103,23 +104,58 @@ static func _caravan(sys: Callable) -> void:
 	var farm: Dictionary = GameData.b("farming")
 	var stone: Dictionary = GameData.b("caravan_stone")
 	sys.call("caravan", "The merchant caravan", [
-		Wiki.p("Every %d days, at noon, a merchant caravan passes through. It is the village's trade with the world outside: it deals with the village's merchants, smiths and sage, and with you only for one thing, a plough horse (see below), and each visit is written in the Journal's village record. What you sell to the merchants and the smith may end up on its carts." % every),
+		Wiki.p("Every %d days, at noon, a merchant caravan passes through. It is the traders of the five neighbouring settlements (see The neighbouring settlements): the village's trade with the world outside. It deals with the village's merchants, smiths and sage, and with you only for one thing, a plough horse (see below), and each visit is written in the Journal's village record, with the settlements whose traders came. What you sell to the merchants and the smith may end up on its carts." % every),
+		Wiki.p("Which traders come depends on the road: %s, and all of them on the very first visit. A trader sells only what it has brought and buys only with the coins in its own purse, so a visit can be a poor one: a trader may come with nothing to sell, or with no money to buy." % Wiki._and_list(OffMapSettlement.data().settlements.map(func(s): return "%s's %s" % [str(s.name), _every_time(maxi(1, ceili(float(s.miles) / 20.0)))]))),
 		Wiki.h("What it buys"),
 		Wiki.p("It buys the merchants' and smiths' surplus (the smiths' %s), what each holds above half of the most they stock, at %d%% of its value. It never buys the mine's raw %s. While the village has less than %d days of food it buys no food, and it leaves behind as many axes and pickaxes as villagers need: workers whose trade needs one they lack, and householders building a home without an axe." % [_names(GameData.resources.exports.smith_caps.keys()), 80, _names(NPCBrain.NOT_EXPORTED), int(GameData.b("caravan_food_reserve_days"))]),
 		Wiki.p("Nobody is served first for their trade. It buys one piece at a time, each from the seller who needs the sale most: the one holding the most surplus for its stock, and the one whose coins fall furthest short of the inputs its trade lacks. A seller well stocked, with coins to restock, may sell nothing when the purse is short."),
-		Wiki.p("It also buys from the producers: what hunters hold beyond their own stock of meat, hides and pelts, and tanners beyond their leather (each keeps %s), within the same purse and the same food rule." % Wiki._and_list((GameData.b("caravan_producer_keep") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_producer_keep")[k]), GameData.item_name(k).to_lower()]))),
-		Wiki.p("It pays from its own purse, which starts at %d coins. It spends at most %d a visit and never more than it holds. The region's demand adds up to %d coins a day (never taking the purse past %d), less as the village's coins near %d a head and nothing at that, and every coin the village pays it for goods goes into it. So a surplus it cannot pay for stays on the shelf." % [int(GameData.b("caravan_float")), int(GameData.b("caravan_coins")), int(GameData.b("caravan_allowance")), int(GameData.b("caravan_float")), int(GameData.b("caravan_ceiling_per_head"))]),
+		Wiki.p("It also buys from the producers: what hunters hold beyond their own stock of meat, hides and pelts, and tanners beyond their leather (each keeps %s), within the traders' purses and the same food rule." % Wiki._and_list((GameData.b("caravan_producer_keep") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_producer_keep")[k]), GameData.item_name(k).to_lower()]))),
+		Wiki.p("It buys only what a settlement still wants (what its people, workshops and council would use, less what it makes itself), and it pays from the traders' own purses: every coin it pays the village is a coin that settlement had, and every coin the village pays it goes into the trader's purse. No coin is made for it. So a surplus nobody wants, or one the traders cannot pay for, stays on the shelf."),
 		Wiki.h("What it sells"),
 		Wiki.bullets([
 			"Ore and coal: once the village's own seams of one are down to %d or less, each smith buys up to %s." % [int(GameData.b("caravan_import_when_left")), Wiki._and_list((GameData.b("caravan_import_stock") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_import_stock")[k]), GameData.item_name(k).to_lower()]))],
 			"Stone: once the village's stone (its stone seams, the grey rock of worked-out seams and its boulders) is down to %d or less, a cart of up to %d at %s times its value, for the raw-goods merchants." % [int(GameData.b("caravan_import_when_left")), int(stone.load), str(stone.markup)],
 			"Medicine: up to %d pieces a visit for the sage's Apothecary, the scarcest first (%s)." % [int(GameData.b("caravan_apothecary_per_visit")), _names((GameData.b("caravan_apothecary_stock") as Dictionary).keys())],
 			"Seed: up to %d a visit for the food merchant, the scarcest first (%s)." % [int(farm.caravan_seed_per_visit), _names((farm.caravan_seed_stock as Dictionary).keys())]]),
-		Wiki.p("Plough horse: while the caravan is in the village (visit days, from noon for %d hours, its wagon at the market road), you can buy a plough horse from it for %d coins if you have a horse pen with room (see How do I keep animals). The coins go into its purse and leave the village." % [int(farm.caravan_horse.hours), int(farm.caravan_horse.price)]),
+		Wiki.p("Plough horse: while the caravan is in the village (visit days, from noon for %d hours, its wagon at the market road), you can buy a plough horse for %d coins if you have a horse pen with room (see How do I keep animals). The horse is one of a settlement's own, led along by its trader; %s keep horses, and the nearest one on the road that day sells. If no trader who has come has a horse, there is none for sale that day. The coins go to that settlement and leave the village." % [int(farm.caravan_horse.hours), int(farm.caravan_horse.price), Wiki._and_list(_horse_places())]),
 		Wiki.p("Buyers pay from their own coins and keep back what their household will need over the next %d days: food it has not got, a log a night, medicine for anyone hurt, rent falling due, less wages it can count on. They spend that money only on food, firewood and medicine, so a smith or sage with a hungry family buys less stock, and one with full stores buys freely." % int(GameData.b("reserve_days"))),
 		Wiki.h("Newcomers"),
 		Wiki.p("When a trade falls short (a %s dies or retires, or the last farmer, woodcutter or miner), the post stays open for %d days; then an adult without a trade, a labourer or a manor hand takes it as an apprentice. If nobody can, a newcomer comes with the next caravan (at the latest %d days after the death), with %d coins of their own, takes the post and its workplace, and lodges with the dead worker's household or in an empty house." % [_or_list(NPCBrain.SKILLED), int(GameData.b("succession_days")), int(GameData.b("newcomer_max_days")), int(GameData.b("newcomer_coins"))]),
-		Wiki.links(["sys:trading", "job:merchant", "job:smith", "job:sage", "place:mine", "item:stone", "sys:journal_map", "guide:animals", "animal:horse"])], "caravan trade export import newcomer merchant")
+		Wiki.links(["sys:neighbours", "sys:trading", "job:merchant", "job:smith", "job:sage", "place:mine", "item:stone", "sys:journal_map", "guide:animals", "animal:horse"])], "caravan trade export import newcomer merchant trader")
+
+
+# game/data/settlements.json, OffMapSettlement, Regions (SET-C-SIM, SET-C-FIVE); docs/expansion18/SETTLEMENTS.md for the lore.
+static func _neighbours(sys: Callable) -> void:
+	var d := OffMapSettlement.data()
+	var rows := []
+	for s in d.settlements:
+		rows.append("%s, %s %s about %d miles away: %s." % [str(s.name), "an" if str(s.kind)[0] in "aeiou" else "a", str(s.kind), int(s.miles), _names_plain(s.industries)])
+	sys.call("neighbours", "The neighbouring settlements", [
+		Wiki.p("Five other places lie along the road: Wulstead, Netherton, Garton, Higham-on-the-Way and Bourton Abbas, named in the old tale of the Well at the World's End. You cannot walk to them yet, but they are real: each is a small economy of its own, with households that have money and food, workshops and farms that make and sell things, and a council, steward or abbey that collects a tax and a market toll and pays its officials. They run by the same rules as the village, in less detail, a day at a time."),
+		Wiki.bullets(rows),
+		Wiki.h("What they do for you"),
+		Wiki.p("Their traders are the caravan (see The merchant caravan). They bring what their places have: ore and coal and stone from Garton's diggings and Bourton Abbas's quarry, medicines from the herb gardens, seed and cuttings from the farms, and plough horses from %s. They take from the village what their people and workshops still need, and pay for it from their own purses. The traders also trade with each other every few days, so Garton's ore can reach a forge in Higham." % Wiki._and_list(_horse_places())),
+		Wiki.h("What can go wrong"),
+		Wiki.p("Nothing is made for them. A place with a poor harvest, or whose workshops sell little, has little money to spend, and its traders buy less. A household that cannot buy food goes hungry, and one that stays hungry loses people; the council gives day labour and buys food for the hungry while it has money to spare. A place can shrink. Nothing rescues it, and what the village sells it or buys from it can matter."),
+		Wiki.h("Not in the game yet"),
+		Wiki.p("You cannot visit them in person, swap goods for goods, owe or be owed money, or send word by courier, and people do not move between them and the village. Births and old age are not played out there either."),
+		Wiki.links(["sys:caravan", "sys:trading", "sys:manor_treasury", "animal:horse"])], "neighbouring settlements towns Wulstead Netherton Garton Higham Bourton Abbas trade traders caravan")
+
+
+## The settlements that keep working horses to sell (settlements.json "horses").
+static func _horse_places() -> Array:
+	return OffMapSettlement.data().settlements.filter(func(s): return int(s.get("horses", 0)) > 0).map(func(s): return str(s.name))
+
+
+static func _every_time(n: int) -> String:
+	return {1: "every time", 2: "every second time", 3: "every third time", 4: "every fourth time"}.get(n, "every %dth time" % n)
+
+
+static func _names_plain(ids: Array) -> String:
+	var out := []
+	for i in ids:
+		out.append(str(i))
+	return "known for " + Wiki._and_list(out)
 
 
 # Population.generate (the band), NPCBrain._bandit, _prey_for, fight (robbing, fleeing), act "poach",

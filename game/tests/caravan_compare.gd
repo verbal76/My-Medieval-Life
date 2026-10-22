@@ -1,6 +1,6 @@
 extends SceneTree
 ## PROSPECTIVE harness (Expansion 18, SET-C caravan replacement plan and Q18-11 curve analysis; PROS-18): runs the live
-## village with the CURRENT caravan (CARAVAN-TMP, the 30-coin daily allowance) unchanged, and beside it, in shadow, asks
+## village with the CURRENT caravan (since ECON-P1.3 the traders of the five neighbouring settlements, Regions; the CARAVAN-TMP 30-coin daily allowance is gone) and beside it, in shadow, asks
 ## what genuine regional trade would have done at each caravan visit: three finite off-map settlements
 ## (tests/fixtures/x18_regions.json) with their own stocks, needs, production, reserves and closed purses, trading with
 ## read-only snapshots of the village's parties (owner Q18-10: anyone may buy) through RegionalMarket and TradeRoutes.
@@ -80,7 +80,6 @@ func _init() -> void:
 				check(JSON.stringify(w.to_dict()) == before, "the shadow regional trade leaves the World untouched")
 				untouched_checked = true
 		var s0 := w.stats.duplicate()
-		var purse0 := w.caravan_purse
 		for i in per_day:
 			w.update(STEP)
 			w.player.hunger = 100.0                      # the idle player is fed, as in economy_sim
@@ -92,7 +91,7 @@ func _init() -> void:
 		var d := func(k: String) -> int: return int(w.stats.get(k, 0)) - int(s0.get(k, 0))
 		var c_in: int = d.call("caravan_coins_in")
 		var c_out: int = d.call("caravan_coins_out")
-		var allowance := (w.caravan_purse - purse0) + c_in - c_out
+		var allowance := 0                              # the allowance is gone (ECON-P1.3): the traders pay with the coins in their tills
 		tot.actual_in += c_in
 		tot.actual_out += c_out
 		tot.allowance += allowance

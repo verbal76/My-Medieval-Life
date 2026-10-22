@@ -3937,30 +3937,22 @@ func _day_labour(n: NPC) -> bool:
 	return true
 
 
-## A merchant caravan passes through. It is a finite regional market (B7-014, agent decision under the
-## owner's authorization of 2026-10-18; every number provisional): it holds a purse (World.caravan_purse),
-## which gains the regional demand for the village's goods (`caravan_allowance` coins a day, up to
-## `caravan_float`, tapering to nothing as the village's coins reach `caravan_ceiling_per_head` a head)
-## and every coin the village pays it for ore, coal and stone; it spends from it, at
-## most `caravan_coins` a visit, and never pays out a coin it does not hold. It sells first, then buys
-## the market's surplus (never the mine's raw ore, coal and stone, NOT_EXPORTED) at 0.8 x value, one unit at a time,
-## each to the seller that needs the sale most (EQ-22: caravan_line_need), so a short purse goes where the need is.
-## The village's currency can therefore grow only by the allowance, and never past its ceiling; the
-## goods leave the village; the coins are logged in coin_sources.
+## The caravan passes through (every `caravan_every_days`, at noon): the traders of the five neighbouring settlements
+## (Regions; ECON-P1.3, owner 2026-10-23: "their traders, carrying only what they actually have and paying with their actual
+## coins; the daily allowance goes away"). Whichever traders are on the road today (Regions.visiting: the nearer settlements
+## come more often) sell the village what they hold (ore, coal, stone, medicines, seed) and buy the market's and the
+## producers' surplus at 0.8 x value, one unit at a time, each to the seller that needs the sale most (EQ-22:
+## caravan_line_need), but only what their settlement still wants (OffMapSettlement.wants) and only with the coins in
+## the trader's own till above its floor. Nothing is bought for coins the trader does not hold and nothing is sold that it
+## does not carry. The village's currency changes only by what the village pays them and what they pay it; the goods
+## cross the boundary the same way; the coins are logged in coin_sources.
 func caravan() -> void:
 	succession_caravan()                             # newcomers for the posts nobody could take (B8-016)
-	var every := maxi(1, int(GameData.b("caravan_every_days")))
-	var float_coins := int(GameData.b("caravan_float"))
-	if w.caravan_purse < float_coins:
-		# the region's demand tops the purse up, less and less as the village's coins near their ceiling
-		var ceiling := float(GameData.b("caravan_ceiling_per_head")) * float(w.alive_count() - w.alive_count("bandit"))
-		var room := clampf(1.0 - float(w.total_coins()) / maxf(1.0, ceiling), 0.0, 1.0)
-		w.caravan_purse = mini(float_coins, w.caravan_purse + roundi(float(GameData.b("caravan_allowance")) * every * room))
-	var sold := _caravan_imports()
-	var stone := _caravan_stone()
-	_caravan_apothecary()
-	_caravan_seeds()
-	var budget := mini(int(GameData.b("caravan_coins")), w.caravan_purse)
+	var on_road: Array = w.regions.begin_visit(w.day())
+	var sold := _caravan_imports(on_road)
+	var stone := _caravan_stone(on_road)
+	_caravan_apothecary(on_road)
+	_caravan_seeds(on_road)
 	var bought := 0
 	# merchants do not sell the village's food away when there is less than a few days of it (the
 	# village's need weighted by age, as everywhere)
@@ -4018,13 +4010,13 @@ func caravan() -> void:
 		var o: NPC = line[0]
 		if not restock.has(o.id):
 			restock[o.id] = restock_cost(o)
-	while budget > 0:
+	while true:
 		var best: Array = []
 		var best_need := -1.0
 		for line in lines:
 			var o: NPC = line[0]
 			var id: String = line[1]
-			if int(line[2]) <= 0 or maxi(1, roundi(GameData.value(id) * 0.8)) > budget:
+			if int(line[2]) <= 0 or w.regions.buyer_for(id, maxi(1, roundi(GameData.value(id) * 0.8)), on_road) == null:
 				continue
 			var need := caravan_line_need(o, id, int(line[2]), int(restock[o.id]))
 			if best.is_empty() or need > best_need or (need == best_need and (o.id < (best[0] as NPC).id
@@ -4042,17 +4034,17 @@ func caravan() -> void:
 			continue
 		tool_stock[id] = int(tool_stock.get(id, 0)) - 1
 		best[2] = int(best[2]) - 1
+		var buyer: OffMapSettlement = w.regions.buyer_for(id, price, on_road)
+		buyer.buy_from_village(id, 1, price)             # the trader pays from its own till; the goods enter its stock
 		o.inv.remove(id)
 		w.stat("exported_" + id)
 		o.coins += price
 		o.earned += price
-		budget -= price
-		w.caravan_purse -= price
 		w.coin_sources += price
 		w.stat("caravan_coins_in", price)
 		w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
 		bought += price
-	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s%s." % [bought,
+	w.note("Traders from %s pass through, buy %d coins' worth from the market%s%s." % [", ".join(on_road.map(func(r): return r.name)), bought,
 		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
 		(" and %d stone to the market" % stone) if stone > 0 else ""])
 
@@ -4082,7 +4074,9 @@ func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
 ## When the village's own seams of an ore (or coal) are worked out, the caravan brings it: each
 ## smith buys up to `caravan_import_stock` at the caravan's price while keeping the trader cash
 ## floor. The coins leave the village (coin_sources falls). Returns the coins spent.
-func _caravan_imports() -> int:
+func _caravan_imports(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var left := {}
 	for d in w.deposits:
 		if w.villagers_reach(d):           # MIN-A: the village's own ore is what its workers can reach
@@ -4097,11 +4091,14 @@ func _caravan_imports() -> int:
 				continue
 			var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
 			while o.inv.count(id) < int(stock[id]) and w.can_afford(o, price, false, id):
+				var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
+				if seller == null:
+					break                          # no trader on the road carries any
+				seller.sell_to_village(id, 1, price)
 				o.coins -= price
 				o.spent += price
 				o.inv.add(id)
 				w.coin_sources -= price
-				w.caravan_purse += price
 				w.stat("caravan_coins_out", price)
 				spent += price
 				w.stat("imported_" + id)
@@ -4111,7 +4108,9 @@ func _caravan_imports() -> int:
 ## The caravan's medicines (PL1-04): each visit it sells the sage up to caravan_apothecary_per_visit
 ## pieces, the scarcest first, towards caravan_apothecary_stock, at base value from the sage's own coins
 ## (above the trader cash floor). Finite: it stops when the sage cannot pay.
-func _caravan_apothecary() -> int:
+func _caravan_apothecary(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var sage := w.npc(w.sage_id)
 	if sage == null or not sage.alive:
 		return 0
@@ -4122,17 +4121,17 @@ func _caravan_apothecary() -> int:
 		var worst := 1.0
 		for id in stock:
 			var fill := float(sage.inv.count(id)) / float(stock[id])
-			if fill < worst and w.can_afford(sage, GameData.value(id)):
+			if fill < worst and w.can_afford(sage, GameData.value(id)) and w.regions.seller_for(id, on_road) != null:
 				worst = fill
 				pick = id
 		if pick == "":
 			break
 		var price := GameData.value(pick)
+		w.regions.seller_for(pick, on_road).sell_to_village(pick, 1, price)
 		sage.coins -= price
 		sage.spent += price
 		sage.inv.add(pick)
 		w.coin_sources -= price
-		w.caravan_purse += price
 		w.stat("caravan_coins_out", price)
 		w.stat("imported_" + pick)
 		spent += price
@@ -4142,7 +4141,9 @@ func _caravan_apothecary() -> int:
 ## The caravan's seed (Build 13 economy rule 3): each visit it sells the food merchant up to
 ## caravan_seed_per_visit seeds, the scarcest first, towards caravan_seed_stock, at seed value from the
 ## merchant's own coins above the trader cash floor. Finite like the apothecary's resupply.
-func _caravan_seeds() -> int:
+func _caravan_seeds(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var cfg: Dictionary = GameData.b("farming")
 	var stock: Dictionary = cfg.caravan_seed_stock
 	var spent := 0
@@ -4154,17 +4155,17 @@ func _caravan_seeds() -> int:
 			var worst := 1.0
 			for id in stock:
 				var fill := float(o.inv.count(id)) / float(stock[id])
-				if fill < worst and w.can_afford(o, GameData.value(id)) and o.inv.can_add(id):
+				if fill < worst and w.can_afford(o, GameData.value(id)) and o.inv.can_add(id) and w.regions.seller_for(id, on_road) != null:
 					worst = fill
 					pick = id
 			if pick == "":
 				break
 			var price := GameData.value(pick)
+			w.regions.seller_for(pick, on_road).sell_to_village(pick, 1, price)
 			o.coins -= price
 			o.spent += price
 			o.inv.add(pick)
 			w.coin_sources -= price
-			w.caravan_purse += price
 			w.stat("caravan_coins_out", price)
 			w.stat("imported_" + pick)
 			spent += price
@@ -4181,9 +4182,11 @@ func _stone_scarce() -> bool:
 ## raw-goods merchants, the village's stone sellers (Construction.SELLERS), buy it up to their
 ## stock cap while keeping the trader cash floor; what they cannot pay for goes back with the cart.
 ## The coins leave the village (coin_sources falls). Returns the stone sold.
-func _caravan_stone() -> int:
+func _caravan_stone(on_road := []) -> int:
 	if not _stone_scarce():
 		return 0
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var cfg: Dictionary = GameData.b("caravan_stone")
 	var cart := int(cfg.load)
 	var price := maxi(1, roundi(GameData.value("stone") * float(cfg.markup)))
@@ -4192,11 +4195,14 @@ func _caravan_stone() -> int:
 		if not o.alive or buy_role(o) != "merchant_raw":
 			continue
 		while cart > 0 and wants(o, "stone") > 0 and w.can_afford(o, price, false, "stone"):
+			var seller: OffMapSettlement = w.regions.seller_for("stone", on_road)
+			if seller == null:
+				break
+			seller.sell_to_village("stone", 1, price)
 			o.coins -= price
 			o.spent += price
 			o.inv.add("stone")
 			w.coin_sources -= price
-			w.caravan_purse += price
 			w.stat("imported_stone")
 			w.stat("caravan_stone_coins", price)
 			w.stat("caravan_coins_out", price)
