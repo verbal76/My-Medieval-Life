@@ -23739,6 +23739,90 @@
    "owner_answer": "Ordinary small agreements need no notarization; formal commercial contracts and ownership transfers need signatures; parties meeting face to face may sign without a notary; when they cannot meet, a courier with legal skill may act as notary and physically carry the documents for signing and back; no remote instant signing."
   },
   {
+   "id": "Q18-2",
+   "title": "Q18-2: first industries are forestry, carpentry, masonry, smithing, farming, tanning, trade and mining",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Those 7 + masonry",
+   "description": "Q18-2: first industries are forestry, carpentry, masonry, smithing, farming, tanning, trade and mining",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded; settlement_industries data follows it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "Forestry, carpentry, masonry, smithing, farming, tanning, trade and mining"
+  },
+  {
+   "id": "Q18-3",
+   "title": "Q18-3: off-map settlements are simulated economies like this one (money from their villagers, government and companies), same rules at lighter detail",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Those settlements have simulated economies just like this one, it comes from their villagers, or village political structure or companies.",
+   "description": "Q18-3: off-map settlements are simulated economies like this one (money from their villagers, government and companies), same rules at lighter detail",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded; implementation tracked by SET-C-SIM"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "No closed purse or invented income: each off-map settlement is a simulated economy whose coins come from its villagers, its political structure and its companies; same rules as the village, updated in daily steps without walking people; full detail only where the player is"
+  },
+  {
    "id": "Q18-9",
    "title": "Settlement capability levels affect pay scales and production output only; never a permission gate",
    "kind": "decision",
@@ -25878,6 +25962,50 @@
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "the Settlement Advancement & Regional Economy expansion"
+  },
+  {
+   "id": "SET-C-SIM",
+   "title": "Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Same rules, lighter detail",
+   "description": "Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md",
+   "approval": "owner, 2026-10-23 (Q18-3)",
+   "acceptance": [
+    "Each off-map settlement holds households with members and purses, a government treasury collecting taxes and paying wages, and businesses; production, consumption, wages, taxes and trade move real coins and goods by the village's rules each day; no coins or goods from nowhere (conservation tested); deterministic; saved; cheap enough for a phone"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SET-C",
+   "depends_on": [
+    "Q18-3"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope (SET-C)"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "SET-D",
