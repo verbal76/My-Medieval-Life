@@ -138,8 +138,9 @@ multipliers, diminishing returns, industries may differ, base values from the ex
 
 - **Q18-11A (numbers):** which magnitudes and which curve per industry. Analysis in `CAPABILITY_CURVES.md` (owner's
   candidate, front-loaded, intermediate, industry-differentiated); none adopted.
-- **Q18-11B (composition):** how people's local experience, tools, facilities and infrastructure make up a level. Four
-  options with pros and cons in `CAPABILITY_CURVES.md` section 5; the research measures no tools or facilities share.
+- **Q18-11B (composition): ANSWERED 2026-10-22, option 2** (people's experience capped by facilities; workforce and
+  effective levels per industry; shortages never erase experience; modifiers use the effective level; X18-CAPCOMP). Open
+  for owner approval: the experience measure, facility caps, tenure rules and thresholds. Not implemented.
 - **Q18-12** and **Q18-13** were decided by the owner on 2026-10-21 and are implemented in round 4 (above). New questions
   from that work: **Q18-14** which skill gives a courier legal standing to notarise (no "law" skill exists; provisional
   trading 5); **Q18-15** which businesses are "major" for their own booth (provisional: the market traders); **Q18-16**

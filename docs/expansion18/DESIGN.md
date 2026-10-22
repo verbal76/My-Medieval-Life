@@ -176,7 +176,14 @@ Decisions (verbatim in `docs/directives/2026-10-21_expansion18_decisions_q18_9_q
 production output only, never permission (Q18-9); every productive industry uses levels 0-10, 0 = baseline, never
 inability; AdjustedPay = BasePay x PayMultiplier(industry, level) and AdjustedOutput = BaseOutput x
 OutputMultiplier(industry, level), with the bases from the existing systems; diminishing returns; different industries
-may differ (Q18-11, structure APPROVED). The numbers (Q18-11A) and the composition of a level (Q18-11B) are OPEN.
+may differ (Q18-11, structure APPROVED). The numbers (Q18-11A) are OPEN. **The composition of a level (Q18-11B) is
+APPROVED (owner, 2026-10-22, option 2, `docs/directives/2026-10-22_q18_11b_decision.md` on staging; X18-CAPCOMP):
+people's experience, capped by facilities.** Each industry keeps two values on 0-10: a *workforce* level (the relevant
+experience of the settlement's people) and an *effective* level (the workforce level within the limits of available,
+operational facilities). A facility shortage lowers only the effective level and never erases accumulated experience; the
+pay and output modifiers read the effective level; no level permits or forbids anyone's work (Q18-9). Not yet decided and
+to be proposed to the owner: the experience measure (a tenure record per worker and industry), the facility caps, tenure
+rules and thresholds. Not implemented; Build 17 unchanged.
 
 - **Data** (`settlement_industries.json` `effects`): `max_level` 10; `shapes` (share of the full bonus at each level:
   `owner_candidate`, the owner's example table; `front_loaded`, 80% of the gain by level 4; `intermediate`, their mean);
