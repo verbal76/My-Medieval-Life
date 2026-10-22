@@ -8710,7 +8710,7 @@
    "status": "APPROVED — NOT STARTED",
    "owner_wording": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
    "description": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
-   "source": "docs/directives/2026-10-23_owner_answers_chapel.md",
+   "source": "docs/directives/2026-10-23_chapel_clergy_relief.md",
    "approval": "owner, 2026-10-23",
    "acceptance": [
     "A chapel or shrine stands in the village; villagers and the player make offerings there; where the offerings go is recorded; deterministic; wiki page"
@@ -8746,10 +8746,15 @@
      "date": "2026-10-22",
      "change": "owner_answer; source",
      "why": "owner answered where offerings go (2026-10-23)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer; source",
+     "why": "owner added the clergy and relief rules (2026-10-23)"
     }
    ],
    "target_build": "18",
-   "owner_answer": "Priest + alms: a small chapel with a priest villager; offerings keep the priest; the rest goes as alms to the poorest households; coins stay in the village"
+   "owner_answer": "Priest + alms; clergy are one preacher and one church assistant, paid low-wage professions; when villagers do not volunteer, the clergy work the church's fields themselves; donations and the church's crops are the first form of relief; villagers can go to the church and ask for help"
   },
   {
    "id": "DVW-B3-FEAST",
@@ -12314,7 +12319,7 @@
    "id": "FARM-CROP-SEED",
    "title": "Seed kept back from a shared field is split among its cutters by work, as the grain is",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Share seed by work too",
    "description": "Seed kept back from a shared field is split among its cutters by work, as the grain is",
    "source": "docs/directives/2026-10-23_owner_answers_seed_share.md",
@@ -12323,10 +12328,12 @@
     "The kept-back seed of a field cut by several workers is divided by work done (D7: minutes x own work rate), largest remainder, ties to the smaller id; conserving; crop_share_test covers it"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "crop_share_test 26/0 (seed split by work), farming 224/0; merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "60e8318"
+   ],
    "parent": "FARM-CROP-01",
    "depends_on": [],
    "blockers": [],
@@ -12348,6 +12355,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Build 18 scope"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 60e8318; tests",
+     "why": "merged into wip/build18 (e8e9d5b)"
     }
    ],
    "target_build": "18"
@@ -30597,17 +30609,19 @@
    "id": "WORLD-LIFE-01",
    "title": "The countryside is empty of people and animals; its trails lead nowhere yet",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "once you go off where the map can see it seems to be devoid of all life whether it's animals or humans which is weird cuz these trails. So you think they'd go to another city",
    "description": "The countryside is empty of people and animals; its trails lead nowhere yet",
    "source": "docs/directives/2026-10-23_owner_answers_countryside.md",
    "approval": "owner, 2026-10-23",
    "acceptance": "Wild animals roam the overworld outside the village under the existing wildlife rules; travellers walk the trails between the map edge and the village; deterministic from the seed; no coins or goods created; screenshots looked at",
    "implementation": "",
-   "tests": "",
+   "tests": "countryside_test 38/0, overworld 101/0, wildlife 61/0; screenshots looked at by the worker; ambient animals and travellers (cannot be hunted yet); merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "e8e9d5b"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -30634,6 +30648,11 @@
      "date": "2026-10-22",
      "change": "UNKNOWN — INVESTIGATION REQUIRED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build; acceptance",
      "why": "owner approved the scope (2026-10-23)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit e8e9d5b; tests",
+     "why": "merged into wip/build18 (e8e9d5b)"
     }
    ],
    "target_build": "18",
@@ -30754,7 +30773,7 @@
    "id": "X18-CAPCOMP",
    "title": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Maintain separate workforce capability and effective settlement capability values for each industry, on the established 0–10 scale. ... Facility shortages must not erase accumulated worker experience. Pay and output modifiers use the effective capability level.",
    "description": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
    "source": "docs/directives/2026-10-22_q18_11b_decision.md",
@@ -30766,14 +30785,15 @@
     "Experience formula, facility caps, tenure rules and thresholds are presented to the owner before any is fixed; Build 17 unchanged"
    ],
    "implementation": "wip/expansion18-preparation 4ce9927: settlement/experience.gd (hours to experience days, caps, straight-line level, hours-weighted active-worker average as a report, no-active-workers), per-worker hook path prepared and off, optional save key x18_experience; tracking starts empty",
-   "tests": "experience_test",
+   "tests": "capability hook ON with D2-D9; experience 79/0, capability 72/0, crop_share 26/0, job_board 28/0, contracts 138/0; 30-day sims seeds 1,2 hook on/off: 0 currency and item leaks; merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0",
    "playtest": [],
    "branch": "",
    "commits": [
     "4ce9927",
     "4115b48",
     "da4d610",
-    "3de7a8f"
+    "3de7a8f",
+    "60e8318"
    ],
    "parent": "PROS-18",
    "depends_on": [
@@ -30839,6 +30859,11 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "owner D2 (2026-10-23): no facility limit now (effective = experience); when facilities gain wear or damage, a worn facility caps whoever works at it (option 1 now, option 4 later)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 60e8318; tests",
+     "why": "merged into wip/build18 (e8e9d5b)"
     }
    ],
    "target_build": "18"

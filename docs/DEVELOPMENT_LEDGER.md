@@ -11,11 +11,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 69 |
-| ACTIVE DEVELOPMENT | 19 |
+| APPROVED — NOT STARTED | 67 |
+| ACTIVE DEVELOPMENT | 18 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 49 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 52 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
@@ -202,7 +202,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | F-1 | NPC workshop construction | approved | DEFERRED |  | NPCs building workshops is settlement development |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | APPROVED — NOT STARTED |  |  |
+| FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MAP-01 | Map shows where you are beyond the village | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -234,8 +234,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
-| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | approved | APPROVED — NOT STARTED |  |  |
-| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | ACTIVE DEVELOPMENT |  |  |
+| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | ACTIVE DEVELOPMENT |  |  |
@@ -451,6 +451,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | Touch drag on an Android phone, Physical gamepad | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | a controller: D-pad up opens the Journal, left stick press opens Build | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | two-device LAN, phone | ACTIVE DEVELOPMENT |
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -469,9 +470,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | VIS-STEPS-01 | Steps cut through rock need real step art | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
+| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (69)
+## APPROVED — NOT STARTED (67)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -485,7 +488,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 274) |  |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 275) |  |  |  |
-| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | docs/directives/2026-10-23_owner_answers_chapel.md |  |  |  |
+| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | docs/directives/2026-10-23_chapel_clergy_relief.md |  |  |  |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | docs/directives/2026-10-23_owner_answers_coin_sinks.md |  |  |  |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | docs/directives/2026-10-23_owner_answers_coin_sinks.md |  |  |  |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276) |  |  |  |
@@ -497,7 +500,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx; docs/directives/2026-10-20_fam07_clarification_living_economy.md |  |  |  |
 | FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | docs/directives/2026-10-20_fam07_clarification_living_economy.md |  | after WDR-016-C |  |
-| FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | docs/directives/2026-10-23_owner_answers_seed_share.md |  |  |  |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
@@ -542,10 +544,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
-| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | docs/directives/2026-10-23_owner_answers_countryside.md |  |  |  |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (19)
+## ACTIVE DEVELOPMENT (18)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -562,7 +563,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`, `693e0c3`, `6615da4`, `1b05da0`, `e91d903`, `05adc9d`, `c4b10e4`; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
-| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md | `4ce9927`, `4115b48`, `da4d610`, `3de7a8f`; experience_test | after Q18-11B; after PROS-18 | Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md | courier_test |  |  |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | docs/directives/2026-10-21_courier_booths_known_recipients.md |  |  |  |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | docs/directives/2026-10-21_courier_contract_interface_pricing.md |  |  |  |
@@ -651,7 +651,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (49)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (52)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -687,6 +687,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters | after CTR-01 | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `4bfc81b`; world_test::_ctr01_counters | after CTR-02 | Device playtest; more counters (carpenter, sage) need counter stations in their buildings (a village-generator change: generator version bump) |
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | docs/directives/2026-10-21_build16_master_completion_directive.md | `a36a0ab`; farm_place_test (25 checks; mouse, touch, keys/pad); xvfb screenshots |  |  |
+| FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | docs/directives/2026-10-23_owner_answers_seed_share.md | `60e8318`; crop_share_test 26/0 (seed split by work), farming 224/0; merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0 |  |  |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md | start_test.gd (498 steps); screenshot of the gamepad controls list |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
@@ -703,7 +704,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md | `ba1369e`, `534cf7c`; run_tests 3,586, play 39, start 506, inventory18 88, tailor_barber 24 ok, wiki, character_look, terrain 34: 0 failures, 0 script errors (isolated XDG dirs); branch wip/b18-tailor |  |  |
 | VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps | `8366315`, `c160de1`; terrain_test 34/0, start_test 506/0, check_assets 0 problems; screenshots of all four climb directions looked at; branch wip/b18-polish |  |  |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device check of wiki navigation on touch and controller |
+| WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | docs/directives/2026-10-23_owner_answers_countryside.md | `e8e9d5b`; countryside_test 38/0, overworld 101/0, wildlife 61/0; screenshots looked at by the worker; ambient animals and travellers (cannot be hunted yet); merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0 |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md | `4ce9927`, `4115b48`, `da4d610`, `3de7a8f`, `60e8318`; capability hook ON with D2-D9; experience 79/0, capability 72/0, crop_share 26/0, job_board 28/0, contracts 138/0; 30-day sims seeds 1,2 hook on/off: 0 currency and item leaks; merged tree e8e9d5b: run_tests 3587/0, start 506/0, play 39/0, wiki, conservation 8/0 | after Q18-11B; after PROS-18 | Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration |
 
 ## BLOCKED (14)
 
