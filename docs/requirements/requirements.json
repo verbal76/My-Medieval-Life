@@ -26895,6 +26895,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 20+",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Owner 2026-10-22 authorized Expansion 21 (Village Politics, OD-30) preliminary preparation, planning only (docs/directives/2026-10-22_expansion21_preliminary_authorization.md), on wip/expansion21-preparation"
     }
    ],
    "acceptance_derived": true,
