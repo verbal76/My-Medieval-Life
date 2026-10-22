@@ -32318,10 +32318,10 @@
    "id": "X19-ASSAULT",
    "title": "Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)?",
-   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md",
    "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
    "acceptance": [
     "Owner decides"
@@ -32352,18 +32352,24 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Permanent: being assaulted is never forgotten, like murder"
   },
   {
    "id": "X19-CRT12",
    "title": "Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs?",
-   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md",
    "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
    "acceptance": [
     "Owner decides"
@@ -32394,18 +32400,24 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Keep the fixed notoriety and regard cut-offs for courtship (CRT-12)"
   },
   {
    "id": "X19-DECAY",
    "title": "Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays)",
-   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md",
    "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
    "acceptance": [
     "Owner decides"
@@ -32436,9 +32448,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23), correcting the agent's mislabelled option"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Half-life of 2 game years (16 game days on the current 8-day year) for ordinary deeds, applied to each deed's contribution in the observer's judgment ledger, not to the overall relationship score; murder and assault never decay; deterministic; no arbitrary forgiveness or resets"
   },
   {
    "id": "X19-GUARD",

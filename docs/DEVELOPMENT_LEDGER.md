@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **499** |
 | Outstanding (not complete, superseded or canceled) | 250 |
 
-Also in the register: 29 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 28 are open (status BLOCKED).
+Also in the register: 29 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 16 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 63 | 15 |
+| Waiting on an owner decision | 60 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **317** | **250** |
+| **Total open** | **314** | **250** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -333,7 +333,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (63)
+### Waiting on an owner decision (60)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -393,9 +393,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | APPROVED — NOT STARTED | Owner designation | Numbering 20+ needs the owner |
-| X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | BLOCKED |  |  |
-| X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | BLOCKED |  |  |
-| X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | decision | BLOCKED |  |  |
 | X19-GUARD | A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine? | decision | BLOCKED |  |  |
 | X19-HARMED | Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)? | decision | BLOCKED |  |  |
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | decision | BLOCKED |  |  |
@@ -1024,7 +1021,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 28, status BLOCKED) (103)
+## Owner decisions, open and answered (open: 25, status BLOCKED) (103)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1124,9 +1121,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X18-D7 | Expansion 18 D7: crop shares split by work done (minutes x the cutter's own work rate) | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
 | X18-D8 | Expansion 18 D8: wages with skill modifiers round to the nearest whole coin | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
 | X18-D9 | Expansion 18 D9: experience is dropped at the next dawn after death or departure | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
-| X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
-| X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
-| X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
+| X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
+| X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
+| X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
 | X19-GUARD | A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 | X19-HARMED | Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | BLOCKED | docs/directives/2026-10-21_parallel_prospective_development_18_19.md |
