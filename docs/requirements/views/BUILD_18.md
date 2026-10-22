@@ -18,12 +18,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 24 (2) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (7)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | IN DEVELOPMENT | household-money worker (Sonnet subagent, started 2026-10-23) / wip/b18-econp3 | NOT TESTED |  |  | M |
+| SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria |  | XS |
+| SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria | SET-A | S |
+| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | lands with SET-C-SIM and SET-C-FIVE | SET-B | UNKNOWN |
 | TRADE-CREDIT | Barter and credit with trust: goods-for-goods deals and recorded debts that must be repaid; unpaid debts hurt standing | OWNER APPROVED | IN DEVELOPMENT | 18 | TARGETED TESTS PASSED | Parity fixes (player as lender/seller; player debts to the heir like villagers); values in balance.json credit provisional; gameplay check; known: Parity gaps: the player cannot lend or sell on credit/barter to villagers (UI is player-as-buyer only); a dead player's debts are written off whereas a villager's pass to the heir; Settlement traders do not barter or lend |  | L |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) / wip/b18-closeout | NOT TESTED | docs/systems/MATERIAL_INTERDEPENDENCY.md professions table; the sage's supply link |  | M |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | IN DEVELOPMENT | Build 18 wip/build18 | NOT TESTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |  | M |
 
 ## Integrated, awaiting gameplay or owner verification (49)
@@ -80,7 +84,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | TARGETED TESTS PASSED | Gameplay and device check of the courier window (rendered with xvfb and looked at: scratchpad courier2_review.png, courier2_form.png); known: Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet |  | verification only |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | TARGETED TESTS PASSED | Gameplay check; houses, land and manor sales stay in person only (not every remote path traced) |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (11)
+## Ready to proceed now (approved, specified, nothing open blocks it) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -92,11 +96,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
-| SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria |  | XS |
-| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | docs/systems/MATERIAL_INTERDEPENDENCY.md professions table; the sage's supply link |  | M |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (17)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (15)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -106,8 +108,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | PL2-015 | Farming, livestock, hand plough | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED | The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md) | design: UNKNOWN | UNKNOWN |
-| SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria | SET-A | S |
-| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | lands with SET-C-SIM and SET-C-FIVE | SET-B | UNKNOWN |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SET-C, design: DESIGN WORK REQUIRED | XL |
 | STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | STONE-D1, STONE-D2, design: OWNER DECISION REQUIRED | S |
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | STONE-D1, design: OWNER DECISION REQUIRED | S |

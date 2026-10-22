@@ -38802,7 +38802,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-closeout",
    "commits": [
     "d63d8d7",
     "60e8318"
@@ -38848,6 +38848,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=close-out against the specification's acceptance criteria",
      "why": "settlement design, ledger and capability model merged with Expansion 18 (d63d8d7) and live since 60e8318 (capability hook on); close-out against the specification not done"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> close-out worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-closeout",
+     "why": "Close-out audit against the source acceptance criteria; small in-scope gaps fixed, others reported"
     }
    ],
    "target_build": "18",
@@ -38858,13 +38863,14 @@
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "close-out against the specification's acceptance criteria",
    "design": "SPECIFIED",
-   "effort": "XS"
+   "effort": "XS",
+   "assigned_worker": "close-out worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "SET-B",
@@ -38880,7 +38886,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-closeout",
    "commits": [
     "d63d8d7",
     "60e8318"
@@ -38928,6 +38934,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=close-out against the specification's acceptance criteria",
      "why": "settlement design, ledger and capability model merged with Expansion 18 (d63d8d7) and live since 60e8318 (capability hook on); close-out against the specification not done"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> close-out worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-closeout",
+     "why": "Close-out audit against the source acceptance criteria; small in-scope gaps fixed, others reported"
     }
    ],
    "target_build": "18",
@@ -38938,13 +38949,14 @@
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "close-out against the specification's acceptance criteria",
    "design": "SPECIFIED",
-   "effort": "S"
+   "effort": "S",
+   "assigned_worker": "close-out worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "SET-C",
@@ -38960,7 +38972,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-closeout",
    "commits": [
     "d63d8d7"
    ],
@@ -39007,6 +39019,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=lands with SET-C-SIM and SET-C-FIVE",
      "why": "regional-economy code merged with Expansion 18 (d63d8d7) but not wired; replaced in practice by SET-C-SIM (in development)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> close-out worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-closeout",
+     "why": "Close-out audit against the source acceptance criteria; small in-scope gaps fixed, others reported"
     }
    ],
    "target_build": "18",
@@ -39017,13 +39034,14 @@
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "lands with SET-C-SIM and SET-C-FIVE",
    "design": "SPECIFIED",
-   "effort": "UNKNOWN"
+   "effort": "UNKNOWN",
+   "assigned_worker": "close-out worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "SET-C-FIVE",
@@ -44378,7 +44396,7 @@
    "implementation": "Chains exist (farmer>cook, woodcutter>carpenter, miner>smith, hunter>tanner, keeper>cook); not audited per profession",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-closeout",
    "commits": [],
    "parent": null,
    "depends_on": [],
@@ -44413,6 +44431,11 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> close-out worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-closeout",
+     "why": "Close-out audit against the source acceptance criteria; small in-scope gaps fixed, others reported"
     }
    ],
    "target_build": "18",
@@ -44421,12 +44444,13 @@
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "assigned_worker": "close-out worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "WDR-003",

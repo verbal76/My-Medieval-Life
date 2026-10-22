@@ -38,6 +38,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
+| SET-A, SET-B, SET-C, WDR-002-C | close-out worker (Sonnet subagent) | `wip/b18-closeout` | `wip/build18` 1daa61f | audit against the source acceptance criteria; mainly docs and tests |
 | ECON-P3 | household-money worker (Sonnet subagent) | `wip/b18-econp3` | `wip/build18` a2ea741 | business and household money separate (shop tills) |
 | TRADE-CREDIT (parity) | credit-parity worker (Sonnet subagent) | `wip/b18-creditparity` | `wip/build18` a2ea741 | the player lends and barters as seller; the player's debts pass to the heir |
 | X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |

@@ -2,19 +2,23 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (7)
+## Workers and task branches (11)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | ECON-P3 | 18 | IN DEVELOPMENT | household-money worker (Sonnet subagent, started 2026-10-23) | wip/b18-econp3 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| SET-A | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
+| SET-B | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
+| SET-C | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | TRADE-CREDIT | 18 | IN DEVELOPMENT | credit-parity worker (Sonnet subagent, started 2026-10-23) | wip/b18-creditparity |
+| WDR-002-C | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 
-## Implemented but not tested (48)
+## Implemented but not tested (44)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -49,11 +53,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | PL2-014 | 18 | PARTIALLY IMPLEMENTED |  |
 | PL2-015 | 18 | PARTIALLY IMPLEMENTED |  |
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
-| SET-A | 18 | PARTIALLY IMPLEMENTED | close-out against the specification's acceptance criteria |
-| SET-B | 18 | PARTIALLY IMPLEMENTED | close-out against the specification's acceptance criteria |
-| SET-C | 18 | PARTIALLY IMPLEMENTED | lands with SET-C-SIM and SET-C-FIVE |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
-| WDR-002-C | 18 | PARTIALLY IMPLEMENTED |  |
 | WDR-004-C | 18 | PARTIALLY IMPLEMENTED |  |
 | WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
