@@ -15,7 +15,7 @@ CLAUDE.md (rules MSW-01, SIM-01, SIM-02, WIKI-01 in sections 3 and 5). **V** = v
 | `wip/expansion19-preparation` (worker `a6cffdef98c095994`) | `05adc9d` (+ snapshot `wip/expansion19-snapshot` `239aa50`) | Worker on the gossip-timing proposal, worst-frame and memory investigation |
 | `wip/expansion20-preparation` (worktree `scratchpad/x20wt`) | `d82f173` | LE-00 audit done; hold (no implementation without authorization) |
 | `wip/expansion21-preparation` (worktree `scratchpad/x21wt`; worker `a4ecc05968f664a95`, idle) | `0eeb3df` | Preliminary plan done; planning only |
-| `wip/juice-assessment` (worktree `scratchpad/juicewt`; worker `a4ecc05968f664a95`) | from `dfec7ec` | JUICE-00 Game Juice read-only assessment in progress (owner 2026-10-22); report top ten, nothing implemented |
+| `wip/juice-assessment` (worktree `scratchpad/juicewt`; worker `a4ecc05968f664a95`) | from `dfec7ec` | JUICE-00 assessment done (`bebf1f3`); top ten and decisions JD1-JD6 with the owner; nothing implemented |
 | `wip/multiplayer` | unchanged | never merged into staging without explicit approval |
 
 Snapshot branches are preservation copies only, never merged.
@@ -28,7 +28,7 @@ Snapshot branches are preservation copies only, never merged.
   on its branch.
 - **Expansion 19** `a6cffdef98c095994`: written X19-Q-TIMING proposal (not implemented), byte-identical worst-frame
   reduction investigation, heavy-rate memory breakdown (17.4 MB vs 16 MB).
-- **Planning worker** `a4ecc05968f664a95`: running JUICE-00 (Game Juice assessment, read-only) on `wip/juice-assessment`.
+- **Planning worker** `a4ecc05968f664a95`: idle (JUICE-00 delivered).
 
 ## Decisions taken this session (all recorded; do not reopen)
 

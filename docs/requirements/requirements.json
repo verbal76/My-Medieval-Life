@@ -12031,6 +12031,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 20+ (owner assets)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "JUICE-00 found owned, unused audio: the Living Forest pack's 20 sound effects (asset registry); the 'no audio supplied' blocker may not hold - for the owner (Juice decision JD1)"
     }
    ],
    "acceptance_derived": true,
@@ -14679,7 +14684,7 @@
    "id": "JUICE-00",
    "title": "Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Begin a preliminary Game Juice and Player Feedback assessment as a separate, unnumbered presentation workstream. This is planning and evaluation only. Do not implement effects or change gameplay without approval.",
    "description": "Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only)",
    "source": "docs/directives/2026-10-22_game_juice_preliminary_assessment.md",
@@ -14688,11 +14693,13 @@
     "Assessment document: inventory of current feedback and reusable assets, opportunities by activity, priority ranking, quick wins vs larger upgrades, dependencies on Expansions 18-21, design decisions, phased plan; observations separate from recommendations",
     "Read-only; no code, assets, builds, simulations or merges; top ten reported to the owner; nothing implemented before approval"
    ],
-   "implementation": "",
+   "implementation": "wip/juice-assessment bebf1f3: juice/PRELIMINARY_ASSESSMENT.md on that branch (inventory, opportunities, ranking, quick wins, dependencies, decisions JD1-JD6, phases J1-J5)",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "bebf1f3"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -14701,7 +14708,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "wip/juice-assessment",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -14714,6 +14721,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
      "why": "Started with the idle planning worker on wip/juice-assessment (from Build 17)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit bebf1f3; workstream; implementation",
+     "why": "Read-only assessment delivered; top ten to the owner; nothing implemented"
     }
    ],
    "target_build": "20+"
