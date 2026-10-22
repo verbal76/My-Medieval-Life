@@ -1,0 +1,732 @@
+{
+ "format": "mml-character-style/1",
+ "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip (rules: tools/puny_chargen.py, a port of the pack's manifest.tds)",
+ "dim": 32,
+ "frames": 29,
+ "directions": [
+  "S",
+  "SE",
+  "E",
+  "NE",
+  "N",
+  "NW",
+  "W",
+  "SW"
+ ],
+ "draw_order": [
+  "race",
+  "shoes",
+  "clothes",
+  "gloves",
+  "jaw",
+  "hair",
+  "facial-hair",
+  "eyes",
+  "eyelashes",
+  "headwear",
+  "ears-&-horns",
+  "weapon-overlay"
+ ],
+ "always": {
+  "eyes": "eyes",
+  "weapon-overlay": "weapon-overlay"
+ },
+ "human_only": [
+  "eyes",
+  "eyelashes"
+ ],
+ "selections": {
+  "clothes": "clothes",
+  "eyes": "eyes",
+  "facial_hair": "hair",
+  "hair": "hair",
+  "leather_shoes": "leather",
+  "skin": "skin",
+  "tunic": "tunic"
+ },
+ "ramps": {
+  "clothes": [
+   [
+    "ff2d2dff",
+    "d80000ff",
+    "b60000ff",
+    "770000ff",
+    "46000aff"
+   ],
+   [
+    "00b49dff",
+    "009782ff",
+    "007966ff",
+    "004f43ff",
+    "002e27ff"
+   ],
+   [
+    "739e0fff",
+    "5f8700ff",
+    "405b00ff",
+    "344b00ff",
+    "1c2a00ff"
+   ],
+   [
+    "2d77ffff",
+    "004cdaff",
+    "0037b6ff",
+    "092369ff",
+    "000e3eff"
+   ],
+   [
+    "f2cc0fff",
+    "ddb309ff",
+    "be8500ff",
+    "824000ff",
+    "431a05ff"
+   ],
+   [
+    "ee1ce7ff",
+    "c200bbff",
+    "950091ff",
+    "64005aff",
+    "3b0036ff"
+   ],
+   [
+    "b0b0b0ff",
+    "8a8a8aff",
+    "636363ff",
+    "424242ff",
+    "242424ff"
+   ]
+  ],
+  "eyes": [
+   [
+    "e8e8e8ff",
+    "3c3c3cff",
+    "222222ff"
+   ],
+   [
+    "e8e8e8ff",
+    "565656ff",
+    "3a3a3aff"
+   ],
+   [
+    "e8e8e8ff",
+    "092369ff",
+    "000e3eff"
+   ],
+   [
+    "e8e8e8ff",
+    "004cdaff",
+    "092369ff"
+   ],
+   [
+    "e8e8e8ff",
+    "004f43ff",
+    "002e27ff"
+   ],
+   [
+    "e8e8e8ff",
+    "007966ff",
+    "004f43ff"
+   ],
+   [
+    "e8e8e8ff",
+    "455000ff",
+    "1f2c00ff"
+   ],
+   [
+    "e8e8e8ff",
+    "627105ff",
+    "455000ff"
+   ],
+   [
+    "e8e8e8ff",
+    "824000ff",
+    "431a05ff"
+   ],
+   [
+    "e8e8e8ff",
+    "be8500ff",
+    "824000ff"
+   ],
+   [
+    "e8e8e8ff",
+    "770000ff",
+    "46000aff"
+   ],
+   [
+    "e8e8e8ff",
+    "b60000ff",
+    "770000ff"
+   ],
+   [
+    "e8e8e8ff",
+    "040404ff",
+    "040404ff"
+   ],
+   [
+    "e8e8e8ff",
+    "e8e8e8ff",
+    "e8e8e8ff"
+   ]
+  ],
+  "hair": [
+   [
+    "e9a61aff",
+    "c88215ff",
+    "985d10ff",
+    "683714ff",
+    "40200dff"
+   ],
+   [
+    "8c4d2bff",
+    "754227ff",
+    "51301eff",
+    "2f1e16ff",
+    "201710ff"
+   ],
+   [
+    "5e5e5eff",
+    "505050ff",
+    "393939ff",
+    "222222ff",
+    "191919ff"
+   ],
+   [
+    "8d8d8dff",
+    "7e7e7eff",
+    "646464ff",
+    "3f3f3fff",
+    "252525ff"
+   ],
+   [
+    "ffffffff",
+    "e8e8e8ff",
+    "e4e4e4ff",
+    "b4b4b4ff",
+    "999999ff"
+   ],
+   [
+    "ff1b1bff",
+    "fc0000ff",
+    "c80000ff",
+    "760808ff",
+    "3f0b0bff"
+   ],
+   [
+    "ffff1bff",
+    "fcfc00ff",
+    "c8c800ff",
+    "7e7e00ff",
+    "4a4a00ff"
+   ],
+   [
+    "1bff1bff",
+    "00fc00ff",
+    "00c800ff",
+    "087608ff",
+    "0b3f0bff"
+   ],
+   [
+    "1bffffff",
+    "00fcfcff",
+    "00c8c8ff",
+    "007e7eff",
+    "004a4aff"
+   ],
+   [
+    "1b1bffff",
+    "0000fcff",
+    "0000c8ff",
+    "080876ff",
+    "0b0b3fff"
+   ],
+   [
+    "ff1bffff",
+    "fc00fcff",
+    "c800c8ff",
+    "7e007eff",
+    "4a004aff"
+   ]
+  ],
+  "leather": [
+   [
+    "9d552dff",
+    "6d3e23ff",
+    "492b1aff"
+   ],
+   [
+    "856317ff",
+    "5d4717ff",
+    "3f3013ff"
+   ],
+   [
+    "a57a18ff",
+    "7b5d1aff",
+    "3f3013ff"
+   ]
+  ],
+  "skin": [
+   [
+    "fae7b5ff",
+    "f7d099ff",
+    "f6a954ff",
+    "d97f40ff",
+    "aa5a33ff",
+    "84482aff"
+   ],
+   [
+    "fee5cbff",
+    "f4caaeff",
+    "e4a47cff",
+    "c3734dff",
+    "9c4d3aff",
+    "84482aff"
+   ],
+   [
+    "ffe8bcff",
+    "f4d7a0ff",
+    "f8bc76ff",
+    "bc7a44ff",
+    "8e5834ff",
+    "563829ff"
+   ],
+   [
+    "ffd8b2ff",
+    "eeac83ff",
+    "d38b59ff",
+    "ae6b3fff",
+    "805037ff",
+    "563829ff"
+   ],
+   [
+    "fdc37fff",
+    "e09c4cff",
+    "ae6b3fff",
+    "7f4c31ff",
+    "513323ff",
+    "3c261aff"
+   ],
+   [
+    "be8652ff",
+    "835a33ff",
+    "624423ff",
+    "40321dff",
+    "2b2511ff",
+    "1a1609ff"
+   ],
+   [
+    "a76d4bff",
+    "6a3a2eff",
+    "4b2a26ff",
+    "33211eff",
+    "251816ff",
+    "1c1311ff"
+   ],
+   [
+    "ccdbffff",
+    "9b9affff",
+    "8e56f1ff",
+    "6a2b93ff",
+    "380f56ff",
+    "1f0436ff"
+   ],
+   [
+    "e2e739ff",
+    "a7cb35ff",
+    "5ba60bff",
+    "347322ff",
+    "214614ff",
+    "1c3012ff"
+   ],
+   [
+    "ffdd38ff",
+    "c4c32aff",
+    "7ca000ff",
+    "4b7012ff",
+    "2f440bff",
+    "1c3012ff"
+   ],
+   [
+    "ffc58bff",
+    "ff6644ff",
+    "e50000ff",
+    "a90000ff",
+    "6d0f0fff",
+    "4a0c0cff"
+   ]
+  ],
+  "tunic": [
+   [
+    "856317ff",
+    "5d4717ff",
+    "3f3013ff"
+   ],
+   [
+    "82400dff",
+    "552a07ff",
+    "341700ff"
+   ],
+   [
+    "606b00ff",
+    "424b01ff",
+    "2d3100ff"
+   ],
+   [
+    "d8ca74ff",
+    "a99f5eff",
+    "82734cff"
+   ],
+   [
+    "c8c0b7ff",
+    "9d958dff",
+    "746c65ff"
+   ]
+  ]
+ },
+ "layers": {
+  "race": {
+   "human": {
+    "sheet": "res://assets/characters/layers/race/human.png",
+    "ramps": [
+     [
+      "skin",
+      "skin"
+     ]
+    ]
+   }
+  },
+  "shoes": {
+   "leather-boots": {
+    "sheet": "res://assets/characters/layers/shoes/leather-boots.png",
+    "ramps": [
+     [
+      "leather",
+      "leather_shoes"
+     ]
+    ]
+   }
+  },
+  "clothes": {
+   "basic": {
+    "sheet": "res://assets/characters/layers/clothes/basic.png",
+    "ramps": [
+     [
+      "clothes",
+      "clothes"
+     ]
+    ]
+   },
+   "tunic": {
+    "sheet": "res://assets/characters/layers/clothes/tunic.png",
+    "ramps": [
+     [
+      "tunic",
+      "tunic"
+     ]
+    ]
+   }
+  },
+  "hair": {
+   "f1": {
+    "sheet": "res://assets/characters/layers/hair/f1.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "f2": {
+    "sheet": "res://assets/characters/layers/hair/f2.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "f3": {
+    "sheet": "res://assets/characters/layers/hair/f3.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "f4": {
+    "sheet": "res://assets/characters/layers/hair/f4.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m1": {
+    "sheet": "res://assets/characters/layers/hair/m1.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m2": {
+    "sheet": "res://assets/characters/layers/hair/m2.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m3": {
+    "sheet": "res://assets/characters/layers/hair/m3.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m4": {
+    "sheet": "res://assets/characters/layers/hair/m4.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m5": {
+    "sheet": "res://assets/characters/layers/hair/m5.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m6": {
+    "sheet": "res://assets/characters/layers/hair/m6.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m7": {
+    "sheet": "res://assets/characters/layers/hair/m7.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m8": {
+    "sheet": "res://assets/characters/layers/hair/m8.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   },
+   "m9": {
+    "sheet": "res://assets/characters/layers/hair/m9.png",
+    "ramps": [
+     [
+      "hair",
+      "hair"
+     ]
+    ]
+   }
+  },
+  "facial-hair": {
+   "beard1": {
+    "sheet": "res://assets/characters/layers/facial-hair/beard1.png",
+    "ramps": [
+     [
+      "hair",
+      "facial_hair"
+     ]
+    ]
+   },
+   "beard2": {
+    "sheet": "res://assets/characters/layers/facial-hair/beard2.png",
+    "ramps": [
+     [
+      "hair",
+      "facial_hair"
+     ]
+    ]
+   },
+   "mustache": {
+    "sheet": "res://assets/characters/layers/facial-hair/mustache.png",
+    "ramps": [
+     [
+      "hair",
+      "facial_hair"
+     ]
+    ]
+   }
+  },
+  "eyes": {
+   "eyes": {
+    "sheet": "res://assets/characters/layers/eyes/eyes.png",
+    "ramps": [
+     [
+      "eyes",
+      "eyes"
+     ]
+    ]
+   }
+  },
+  "eyelashes": {
+   "f1": {
+    "sheet": "res://assets/characters/layers/eyelashes/f1.png",
+    "ramps": []
+   },
+   "f2": {
+    "sheet": "res://assets/characters/layers/eyelashes/f2.png",
+    "ramps": []
+   },
+   "f3": {
+    "sheet": "res://assets/characters/layers/eyelashes/f3.png",
+    "ramps": []
+   },
+   "m1": {
+    "sheet": "res://assets/characters/layers/eyelashes/m1.png",
+    "ramps": []
+   },
+   "m2": {
+    "sheet": "res://assets/characters/layers/eyelashes/m2.png",
+    "ramps": []
+   },
+   "n1": {
+    "sheet": "res://assets/characters/layers/eyelashes/n1.png",
+    "ramps": []
+   },
+   "n2": {
+    "sheet": "res://assets/characters/layers/eyelashes/n2.png",
+    "ramps": []
+   },
+   "n3": {
+    "sheet": "res://assets/characters/layers/eyelashes/n3.png",
+    "ramps": []
+   }
+  },
+  "weapon-overlay": {
+   "weapon-overlay": {
+    "sheet": "res://assets/characters/layers/weapon-overlay/weapon-overlay.png",
+    "ramps": []
+   }
+  }
+ },
+ "creation": {
+  "picks": {
+   "race": [
+    "human"
+   ],
+   "hair": [
+    null,
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "m1",
+    "m2",
+    "m3",
+    "m4",
+    "m5",
+    "m6",
+    "m7",
+    "m8",
+    "m9"
+   ],
+   "facial-hair": [
+    null,
+    "beard1",
+    "beard2",
+    "mustache"
+   ],
+   "eyelashes": [
+    null,
+    "f1",
+    "f2",
+    "f3",
+    "m1",
+    "m2",
+    "n1",
+    "n2",
+    "n3"
+   ],
+   "clothes": [
+    "basic",
+    "tunic"
+   ],
+   "shoes": [
+    null,
+    "leather-boots"
+   ]
+  },
+  "swatches": {
+   "skin": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "hair": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "eyes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    12
+   ],
+   "clothes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "tunic": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "leather_shoes": [
+    0,
+    1,
+    2
+   ]
+  },
+  "linked": {
+   "facial_hair": "hair"
+  }
+ },
+ "worn_layers": {}
+}

@@ -148,12 +148,26 @@ func _run() -> void:
 	_press("New game")
 	check(ui.is_open("creation"), "character creation opens")
 	_press("Female")
-	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
-	var tunic: Dictionary = looks.filter(func(l): return l.sex == "female" and l.outfit != "basic")[1]
-	ui.show_creation({"name": "", "family": "", "sex": "female", "look": tunic.id})
+	# CC-01: the look is chosen feature by feature (or at random) and previewed from the recipe
+	check(_press("Randomize"), "a Randomize button")
+	var tunic: Dictionary = CharacterLook.normalize({"picks": {"race": "human", "hair": "f2", "facial-hair": "", "eyelashes": "f1", "clothes": "tunic", "shoes": "leather-boots"},
+		"swatches": {"skin": 3, "hair": 1, "facial_hair": 1, "eyes": 8, "clothes": 0, "tunic": 2, "leather_shoes": 0}})
+	ui.show_creation({"name": "", "family": "", "sex": "female", "appearance": tunic})
+	var prev_tex: Texture2D = (ui.panel_body.find_child("Preview", true, false) as TextureRect).texture.atlas
+	check(prev_tex == CharacterLook.texture(tunic), "the preview is drawn from the recipe")
+	var hair_next: Button = ui.panel_body.find_child("Hair >", true, false)
+	hair_next.pressed.emit()
+	var prev2: Texture2D = (ui.panel_body.find_child("Preview", true, false) as TextureRect).texture.atlas
+	var t2: Dictionary = tunic.duplicate(true)
+	t2.picks.hair = "f3"
+	check(prev2 != prev_tex and prev2 == CharacterLook.texture(t2),
+		"the next hair style (f2 to f3) redraws the preview")
+	var labels := _texts(ui.panel_body)
+	check(not labels.contains("Hat") and not labels.contains("Armour") and not labels.contains("Gloves"), "no headwear, armour or gloves to choose")
+	ui.show_creation({"name": "", "family": "", "sex": "female", "appearance": tunic})
 	_press("Begin")
 	check(ui.is_open("creation") and main.world == null, "a character needs a name")
-	ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female", "look": tunic.id})
+	ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female", "appearance": tunic})
 	var edits: Array = ui.panel_body.find_children("*", "LineEdit", true, false)
 	check(edits.size() == 2, "name and family fields")
 	# typing into the family field stays there (a phone keyboard sends key events)
@@ -175,7 +189,8 @@ func _run() -> void:
 	var w: World = main.world
 	var p := w.player
 	check(w != null and p.name == "Ada" and p.family == "Thorne" and p.sex == "female", "created Ada Thorne (female)")
-	check(p.look == tunic.id and p.sprite == tunic.sprite and main.player_sprite != null, "the chosen look is the player's sprite (%s)" % p.sprite.get_file())
+	check(p.appearance == tunic and p.heir_appearance == tunic and main.player_sprite != null and main.player_sprite.texture == CharacterLook.texture(tunic, [p.armor, p.head]),
+		"the chosen look is the player's sprite, drawn from its recipe")
 	# 4-5. the origin story, then the village
 	check(ui.is_open("origin") and main.paused, "the origin story is shown and the world waits")
 	check(_texts(ui.panel_body).contains("%d coins" % int(GameData.b("start_coins_player"))) and not _texts(ui.panel_body).contains("five coins"), "the origin story names the real starting coins")
@@ -905,13 +920,13 @@ func _run() -> void:
 	ui.hide_all()
 
 	# 19-20. save, reload, and the state is the same
-	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
+	var snap := {"name": p.name, "look": p.appearance, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
 		"weapon": p.weapon, "tool": p.tool, "armor": p.armor, "head": p.head, "amulet": p.amulet, "ring": p.ring, "wheat": p.inv.count("wheat"), "crimes": p.crimes.size(),
 		"minutes": int(w.minutes), "pos": Vector2i(p.pos)}
 	main.save_game(false)
 	main.continue_game()
 	var q: PlayerState = main.world.player
-	var now := {"name": q.name, "look": q.look, "sprite": q.sprite, "coins": q.coins, "hp": int(q.hp),
+	var now := {"name": q.name, "look": q.appearance, "sprite": q.sprite, "coins": q.coins, "hp": int(q.hp),
 		"weapon": q.weapon, "tool": q.tool, "armor": q.armor, "head": q.head, "amulet": q.amulet, "ring": q.ring, "wheat": q.inv.count("wheat"), "crimes": q.crimes.size(),
 		"minutes": int(main.world.minutes), "pos": Vector2i(q.pos)}
 	check(main.world != w, "a fresh world was loaded from the save")
@@ -1717,7 +1732,7 @@ func _save_safety_tests() -> void:
 	main.save_game(false)
 	var old := _raw(TEST_SAVE)
 	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
-	main.new_game({"name": "Ada", "family": "Test", "sex": looks[0].sex, "look": looks[0].id, "sprite": looks[0].sprite})
+	main.new_game({"name": "Ada", "family": "Test", "sex": looks[0].sex, "appearance": looks[0].recipe})
 	var prev: String = TEST_SAVE.get_basename() + main.PREVIOUS_SUFFIX
 	check(_raw(prev) == old, "starting a new character keeps the previous game, unchanged, as %s" % prev.get_file())
 	main.resume_after_origin()

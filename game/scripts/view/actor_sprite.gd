@@ -116,7 +116,12 @@ func _set_cut(on: bool) -> void:
 
 
 func setup(sheet_path: String) -> void:
-	texture = load(sheet_path)
+	setup_texture(load(sheet_path))
+
+
+## The same with a sheet already in hand (CC-01: the player's, composed from their recipe by CharacterLook).
+func setup_texture(sheet: Texture2D) -> void:
+	texture = sheet
 	hframes = 29
 	vframes = 8
 	offset = Vector2(0, -7)          # the drawn feet (frame row 23) on the position, where collision has them

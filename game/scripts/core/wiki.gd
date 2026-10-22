@@ -646,7 +646,7 @@ func _systems() -> void:
 		links(["sys:family", "sys:trading"])])
 	sys.call("inheritance", "Inheritance", [
 		p("When a villager dies their coins and goods go to the family first: the eldest adult child, then the partner, then other kin; only with no family does the household take them. A household with nobody left leaves the goods where they fell and its house returns to the manor."),
-		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps your name and look; with none, a new heir of your family takes over. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
+		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps their own name and looks; with none, a relative of your family takes over, looking as you did when you began. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
 		links(["sys:death", "sys:saving", "sys:family", "sys:orphans", "sys:posts"])])
 	sys.call("animal_life", "Animals through life", [
 		p("Animals are newborn, juvenile, adult and elderly by their age in game days. Only adults breed, and breeding slows as an area fills up. The elderly move slower and die of old age somewhere in their last stage. Young animals are drawn with the baby art. Each animal's page lists its stage lengths."),
@@ -658,6 +658,10 @@ func _systems() -> void:
 	sys.call("death", "Death", [
 		p("At 0 health, or of old age, you die; Causes of death lists what can kill you and the villagers. The world carries on. What you carried stays where you fell, for anyone to take, your heir too. Your heir inherits the house and chest and starts with the starting kit."),
 		links(["sys:death_causes", "sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
+	sys.call("appearance", "Your appearance", [
+		p("When you start a new game you choose how you look: your skin, hair style and hair colour, a beard or none, eye colour, eyelashes, plain clothes or a tunic and their colour, and leather boots or bare feet. Randomize picks a whole new look; the arrows beside each feature step through its choices, and the figure beside them shows you from the front and three sides."),
+		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. Your look is kept in your save."),
+		links(["sys:inheritance", "sys:saving"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
 		{"t": "chain", "id": "pickaxe"}, {"t": "chain", "id": "iron_sword"}, {"t": "chain", "id": "leather_armor"}, {"t": "chain", "id": "plank"}, {"t": "chain", "id": "roast_meat"}, {"t": "chain", "id": "ale"},
@@ -678,6 +682,7 @@ func _not_yet() -> void:
 	var items := {
 		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built, fit it with equipment and hire an attendant (see the guides). Not built yet: attendants and hired workers who craft at the shop's stations from its stock, shops in houses you only rent from a neighbour, a stall display shown over the stall, and trading skill perks on your sales."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
+		"looks_more": ["Armour you can see, and a barber", "Armour and helmets protect you but do not yet show on your figure, and there is no barber to change your hair once you have begun."],
 		"farm_more": ["Draught animals, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself (see the farming guides), but there are no horses or oxen to pull a plough, no roofed coops or shelters, no watering or weather, no traps for rabbits, no animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:

@@ -16,6 +16,216 @@
    "sha256": "db6e36b368fd7fafc66aefa3adc23f8e527c2d4f45109f5079f8d73c41f0e15d"
   },
   {
+   "file": "assets/characters/layers/race/human.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/race/human.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "6b9e0e471566ebd24170f010fa32e9fedefa6709409dc4c0b8a3ac0c267e26ce"
+  },
+  {
+   "file": "assets/characters/layers/shoes/leather-boots.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/shoes/leather-boots.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "9dee36475bdcb01bea7ee1a6216518c7ce9c1952e3dd336ce74c482b0206d115"
+  },
+  {
+   "file": "assets/characters/layers/clothes/basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/clothes/basic.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "57afcd9f5bacf4dd3dd8570e290748201b88cc619a4e0ed97539ce79a5a05301"
+  },
+  {
+   "file": "assets/characters/layers/clothes/tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/clothes/tunic.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "57584df85ad2020ebfda7810ace8130de8021a6a198435581cb0b9b871f3cc5b"
+  },
+  {
+   "file": "assets/characters/layers/hair/f1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "14a01d333bf464ea5c444ae0cc2660f1257589c6aaaa7ee3f7e1105454de179d"
+  },
+  {
+   "file": "assets/characters/layers/hair/f2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "af11ecd4f7fb122102e5b81dfa7e792855dc6407fad23a7b575a054bf892fb2a"
+  },
+  {
+   "file": "assets/characters/layers/hair/f3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "be8b1744c75f7666376d75d7f2568610c7560c7bd8b5dd0eb906251e9a91895a"
+  },
+  {
+   "file": "assets/characters/layers/hair/f4.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f4.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "9f8d4c7e966ae33f4a5f507570ca563d63949de6aff095b344c45832c93177d5"
+  },
+  {
+   "file": "assets/characters/layers/hair/m1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "57a56d53919089a29b889a9b395acb714f68e1e36ebb5ab48f08133f53713160"
+  },
+  {
+   "file": "assets/characters/layers/hair/m2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "65312a202fe5ad9fa85e6ee1fab7eeea1f863e35fb3050f8fbef411d2cd2d0bc"
+  },
+  {
+   "file": "assets/characters/layers/hair/m3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "5d9dc336cf8cef3a8de79d31719f6d6a89a96a30b1aca34465bf95b2fea97c1c"
+  },
+  {
+   "file": "assets/characters/layers/hair/m4.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m4.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "ef8c29d18bd7fc397a77589f5405b3810f79f780c6ac90194c1c5addafbb3121"
+  },
+  {
+   "file": "assets/characters/layers/hair/m5.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m5.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "8dc28017856ba78f2d744641fd7620668cc9378d079614bffd50764c6454f6ef"
+  },
+  {
+   "file": "assets/characters/layers/hair/m6.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m6.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "af3db6abe4c87c824dded023e2f62156d43beac2010ccb967aac6dd058a0f444"
+  },
+  {
+   "file": "assets/characters/layers/hair/m7.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m7.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "2f486222762e56cf25d5f9377a65e55e4131bf8eee22b968799b343e23c5ac59"
+  },
+  {
+   "file": "assets/characters/layers/hair/m8.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m8.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3666550b668aae7400d97b80d6875f9589ebfa06489b32390aaad4fff187aa0a"
+  },
+  {
+   "file": "assets/characters/layers/hair/m9.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m9.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "8a56bd273f94bb40f16a81e27ec6295373516d5c9aef12dce409cef5b5230a7d"
+  },
+  {
+   "file": "assets/characters/layers/facial-hair/beard1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/facial-hair/beard1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "60e7859d6922d8c8492c7e20eff2148c77860f2026254a2cee3568e42cec8fe9"
+  },
+  {
+   "file": "assets/characters/layers/facial-hair/beard2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/facial-hair/beard2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "94a65f1e8e3df585370983e9ccbe31ec0961b29e8e4f4accde269b34ddc82c38"
+  },
+  {
+   "file": "assets/characters/layers/facial-hair/mustache.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/facial-hair/mustache.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3557a64df20c776568118ed5dca854fd1b5fdd78a651c4ebaf1f0edc901333fb"
+  },
+  {
+   "file": "assets/characters/layers/eyes/eyes.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyes/eyes.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "8839730b488b4a0db84e5bd222755dc1817e422af2d0f5da5a375d7e4483a10a"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/f1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/f1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "e43a24eed4135c31971ba7ff1af4387a8a1ddda16fb44c5f4d3b22c1fced4799"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/f2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/f2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "7d9b5b935536facf93b27412b0a3ee99efc9924bfaeb5481600262ddd34050fb"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/f3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/f3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "306acffe294060895c8ef8d1b9d3cf5eb9bca26b54ee3ea37644725715758fdb"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/m1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/m1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "557a10d03c5a40c010e46f3c6836aa7c384991e1ae7f621963d35cb6beb0a28c"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/m2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/m2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "9904d05efb449e140ba24902385cdfedccac71df1093a39e7cf40ab4e6685d7a"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/n1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/n1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "bd8680197d00556559e51ca9695ebcc22c1352b2fedf9f6bb1d6b18b7f6f4dde"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/n2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/n2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "1f580759bbf25099b2c8f76de2d9c2a1887ced1b4a5b6f1e84f615226d00d280"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/n3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/n3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "b2adc0f4f670ff8eb3696203d10fa29cf619ea131889b0516c63b0ba15fd0025"
+  },
+  {
+   "file": "assets/characters/layers/weapon-overlay/weapon-overlay.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/weapon-overlay/weapon-overlay.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "5df971546131eb2f57bfb9807bb06f35594ca1baf42ce98ee1e1e98a7877b9fa"
+  },
+  {
    "file": "assets/characters/villager_00.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",

@@ -13,8 +13,12 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/tiles/cozyfarm-tiles.png             CozyFarm_full_version.zip (fences, gates)
     game/assets/animals/<species>.png                CozyFarm_full_version.zip (livestock, bunnies) and
                                                      PunyMonsters.zip (boars)
-    game/assets/characters/player_<s><n>_<outfit>.png player looks for character creation (listed in
-                                                     game/data/appearances.json)
+    game/assets/characters/player_<s><n>_<outfit>.png the Build 7-17 player looks (game/data/appearances.json,
+                                                     now each with its recipe: what old saves migrate from)
+    game/assets/characters/layers/<layer>/<option>.png  CC-01: the uncoloured PUNY CHARACTERS (TDSM) layer
+                                                     sheets character creation offers, copied unchanged and
+                                                     drawn at run time from a recipe (CharacterLook), with
+    game/data/character_style.json                   the draw order, palette ramps and choice lists they use
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
     game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
@@ -221,6 +225,83 @@ HATS = {
     "bandit": ["thief-bandana", "assassin-bandana", "rogue-hood"],
     "guard": ["soldier-helm", "knight-helm", "novice-helm"],
 }
+# CC-01 (owner, 2026-10-22: an ordinary medieval civilian, appearance only): what character creation offers.
+# None = "none". No headwear, armour, foreign or fantasy clothes, gloves, horns or ears; human only.
+CREATION_PICKS = {
+    "race": ["human"],
+    "hair": [None, "f1", "f2", "f3", "f4", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"],
+    "facial-hair": [None, "beard1", "beard2", "mustache"],
+    "eyelashes": [None, "f1", "f2", "f3", "m1", "m2", "n1", "n2", "n3"],
+    "clothes": ["basic", "tunic"],
+    "shoes": [None, "leather-boots"],
+}
+# swatch rows offered per colour selection: natural skin (0-6); natural hair: golden, brown, black, grey, white
+# (NATURAL_HAIR without row 6, which is lemon yellow (255, 255, 27) in the game, not a blonde; the other rows are
+# pure reds, greens, blues and magentas); eyes without the red (10, 11) and blank white (13) rows; every row of
+# the clothes, tunic and leather ramps (plain dyed cloth and leather)
+CREATION_SWATCHES = {
+    "skin": list(range(7)), "hair": [0, 1, 2, 3, 4], "eyes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12],
+    "clothes": list(range(7)), "tunic": list(range(5)), "leather_shoes": list(range(3)),
+}
+CREATION_LINKED = {"facial_hair": "hair"}    # a beard takes the hair's colour, as the importer's looks always had
+ALWAYS_LAYERS = {"eyes": "eyes", "weapon-overlay": "weapon-overlay"}   # drawn without a pick (puny_chargen.render)
+HUMAN_ONLY = ["eyes", "eyelashes"]
+
+
+def civilian_recipe(recipe):
+    """The part of a puny_chargen recipe the run-time look keeps: the creation layers' picks and the swatches
+    the layers drawn actually use. Drawing it gives the same sheet as puny_chargen.render(recipe) when the
+    recipe has nothing outside the creation layers."""
+    picks = {k: recipe["picks"].get(k) for k in CREATION_PICKS}
+    sels = {"eyes"}
+    for layer, code in picks.items():
+        if code is not None:
+            sels |= {sel for _, sel in dict(STYLE_CHOICES[layer])[code]}
+    return {"picks": picks, "swatches": {s: recipe["swatches"][s] for s in sorted(sels)}}
+
+
+STYLE_CHOICES = {}
+
+
+def _import_character_layers(record, style, zip_name):
+    """CC-01: the layer sheets creation offers (copied unchanged) and game/data/character_style.json, the rules
+    CharacterLook (game/scripts/view/character_look.gd) draws by, all taken from puny_chargen's port of the
+    pack's manifest.tds: draw order, which ramp and colour selection recolours each layer, and the ramps."""
+    layers, used_ramps = {}, {"eyes"}
+    wanted = {layer: [c for c in codes if c is not None] for layer, codes in CREATION_PICKS.items()}
+    wanted.update({layer: [code] for layer, code in ALWAYS_LAYERS.items()})
+    for layer in puny_chargen.DRAW_ORDER:
+        if layer not in wanted:
+            continue
+        pairs_of = dict(style.choices.get(layer, []))
+        layers[layer] = {}
+        for code in wanted[layer]:
+            pairs = [["eyes", "eyes"]] if layer == "eyes" else [list(p) for p in pairs_of.get(code, [])]
+            member = f"assets/{layer}/{code}.png"
+            dest = OUT / "characters" / "layers" / layer / f"{code}.png"
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(style.z.read(member))
+            record(dest, zip_name, member, "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)")
+            layers[layer][code] = {"sheet": "res://" + str(dest.relative_to(REPO / "game")), "ramps": pairs}
+            used_ramps |= {r for r, _ in pairs}
+    ramps = {}
+    for r in sorted(used_ramps):
+        img = style.ramps[r].convert("RGBA")
+        ramps[r] = [["%02x%02x%02x%02x" % img.getpixel((x, y)) for x in range(img.width)] for y in range(img.height)]
+    selections = {sel: ramp for sel, ramp in sorted(puny_chargen.SELECTIONS.items()) if ramp in used_ramps
+                  and any(sel == s for lay in layers.values() for o in lay.values() for _, s in o["ramps"])}
+    data = {
+        "format": "mml-character-style/1",
+        "source": zip_name + " (rules: tools/puny_chargen.py, a port of the pack's manifest.tds)",
+        "dim": puny_chargen.DIM, "frames": puny_chargen.FRAMES, "directions": puny_chargen.DIRECTIONS,
+        "draw_order": puny_chargen.DRAW_ORDER, "always": ALWAYS_LAYERS, "human_only": HUMAN_ONLY,
+        "selections": selections, "ramps": ramps, "layers": layers,
+        "creation": {"picks": CREATION_PICKS, "swatches": CREATION_SWATCHES, "linked": CREATION_LINKED},
+        # hook for later equipment (ARMOR-01, owner decisions pending): worn item id -> {"layer", "option",
+        # "swatches", "hides": [layers]}. Empty: nothing worn changes the drawn look yet.
+        "worn_layers": {},
+    }
+    (REPO / "game" / "data" / "character_style.json").write_text(json.dumps(data, indent=1) + "\n")
 
 
 def sha(path):
@@ -487,6 +568,8 @@ def main():
     chars.mkdir(parents=True, exist_ok=True)
     style = puny_chargen.Style()
     zip_name = "PUNY_CHARACTERS_v2.1_tdsm-2026.zip"
+    STYLE_CHOICES.update(style.choices)
+    _import_character_layers(record, style, zip_name)
     groups = (("villager", VILLAGERS, 1000), ("bandit", BANDITS, 2000), ("player", PLAYERS, 3000),
               ("guard", GUARDS, 4000))
     for kind, count, seed0 in groups:
@@ -524,8 +607,10 @@ def main():
                 img.save(dest)
                 record(dest, zip_name, "assets/* layers per recipe",
                        f"tools/puny_chargen.py recipe seed {seed}, {sex}, {outfit} clothes: " + json.dumps(recipe["picks"], sort_keys=True))
-                looks.append({"id": name, "sex": sex, "face": i, "outfit": outfit, "sprite": f"res://assets/characters/{name}.png"})
-    (REPO / "game" / "data" / "appearances.json").write_text(json.dumps({"format": "mml-appearances/1", "looks": looks}, indent=1) + "\n")
+                looks.append({"id": name, "sex": sex, "face": i, "outfit": outfit, "sprite": f"res://assets/characters/{name}.png",
+                              "recipe": civilian_recipe(recipe)})
+    # mml-appearances/2: each look carries its recipe, which saves holding only the look or its sprite migrate to
+    (REPO / "game" / "data" / "appearances.json").write_text(json.dumps({"format": "mml-appearances/2", "looks": looks}, indent=1) + "\n")
     icons = OUT / "icons"
     icons.mkdir(parents=True, exist_ok=True)
     iz = AssetZip(ICON_ZIP)

@@ -1,117 +1,393 @@
 {
- "format": "mml-appearances/1",
+ "format": "mml-appearances/2",
  "looks": [
   {
    "id": "player_m0_basic",
    "sex": "male",
    "face": 0,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_m0_basic.png"
+   "sprite": "res://assets/characters/player_m0_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m2",
+     "facial-hair": null,
+     "eyelashes": "m1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 5,
+     "eyes": 13,
+     "hair": 1,
+     "leather_shoes": 2,
+     "skin": 0
+    }
+   }
   },
   {
    "id": "player_m0_tunic",
    "sex": "male",
    "face": 0,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_m0_tunic.png"
+   "sprite": "res://assets/characters/player_m0_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m2",
+     "facial-hair": null,
+     "eyelashes": "m1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 11,
+     "hair": 1,
+     "leather_shoes": 2,
+     "skin": 0,
+     "tunic": 2
+    }
+   }
   },
   {
    "id": "player_m1_basic",
    "sex": "male",
    "face": 1,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_m1_basic.png"
+   "sprite": "res://assets/characters/player_m1_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m5",
+     "facial-hair": "beard1",
+     "eyelashes": "m1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 3,
+     "eyes": 8,
+     "facial_hair": 0,
+     "hair": 0,
+     "leather_shoes": 1,
+     "skin": 2
+    }
+   }
   },
   {
    "id": "player_m1_tunic",
    "sex": "male",
    "face": 1,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_m1_tunic.png"
+   "sprite": "res://assets/characters/player_m1_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m5",
+     "facial-hair": "beard1",
+     "eyelashes": "m1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 2,
+     "facial_hair": 0,
+     "hair": 0,
+     "leather_shoes": 0,
+     "skin": 2,
+     "tunic": 1
+    }
+   }
   },
   {
    "id": "player_m2_basic",
    "sex": "male",
    "face": 2,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_m2_basic.png"
+   "sprite": "res://assets/characters/player_m2_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m7",
+     "facial-hair": "mustache",
+     "eyelashes": "m1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 1,
+     "eyes": 6,
+     "facial_hair": 2,
+     "hair": 2,
+     "leather_shoes": 0,
+     "skin": 4
+    }
+   }
   },
   {
    "id": "player_m2_tunic",
    "sex": "male",
    "face": 2,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_m2_tunic.png"
+   "sprite": "res://assets/characters/player_m2_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m7",
+     "facial-hair": "mustache",
+     "eyelashes": "m1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 13,
+     "facial_hair": 2,
+     "hair": 2,
+     "leather_shoes": 2,
+     "skin": 4,
+     "tunic": 4
+    }
+   }
   },
   {
    "id": "player_m3_basic",
    "sex": "male",
    "face": 3,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_m3_basic.png"
+   "sprite": "res://assets/characters/player_m3_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m9",
+     "facial-hair": null,
+     "eyelashes": "m1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 4,
+     "eyes": 3,
+     "hair": 6,
+     "leather_shoes": 1,
+     "skin": 6
+    }
+   }
   },
   {
    "id": "player_m3_tunic",
    "sex": "male",
    "face": 3,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_m3_tunic.png"
+   "sprite": "res://assets/characters/player_m3_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "m9",
+     "facial-hair": null,
+     "eyelashes": "m1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 3,
+     "hair": 6,
+     "leather_shoes": 0,
+     "skin": 6,
+     "tunic": 4
+    }
+   }
   },
   {
    "id": "player_f0_basic",
    "sex": "female",
    "face": 0,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_f0_basic.png"
+   "sprite": "res://assets/characters/player_f0_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f1",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 2,
+     "eyes": 4,
+     "hair": 1,
+     "leather_shoes": 0,
+     "skin": 0
+    }
+   }
   },
   {
    "id": "player_f0_tunic",
    "sex": "female",
    "face": 0,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_f0_tunic.png"
+   "sprite": "res://assets/characters/player_f0_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f1",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 10,
+     "hair": 1,
+     "leather_shoes": 0,
+     "skin": 0,
+     "tunic": 4
+    }
+   }
   },
   {
    "id": "player_f1_basic",
    "sex": "female",
    "face": 1,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_f1_basic.png"
+   "sprite": "res://assets/characters/player_f1_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f2",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 2,
+     "eyes": 6,
+     "hair": 0,
+     "leather_shoes": 1,
+     "skin": 2
+    }
+   }
   },
   {
    "id": "player_f1_tunic",
    "sex": "female",
    "face": 1,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_f1_tunic.png"
+   "sprite": "res://assets/characters/player_f1_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f2",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 10,
+     "hair": 0,
+     "leather_shoes": 2,
+     "skin": 2,
+     "tunic": 4
+    }
+   }
   },
   {
    "id": "player_f2_basic",
    "sex": "female",
    "face": 2,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_f2_basic.png"
+   "sprite": "res://assets/characters/player_f2_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f3",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 3,
+     "eyes": 7,
+     "hair": 2,
+     "leather_shoes": 0,
+     "skin": 4
+    }
+   }
   },
   {
    "id": "player_f2_tunic",
    "sex": "female",
    "face": 2,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_f2_tunic.png"
+   "sprite": "res://assets/characters/player_f2_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f3",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 8,
+     "hair": 2,
+     "leather_shoes": 0,
+     "skin": 4,
+     "tunic": 2
+    }
+   }
   },
   {
    "id": "player_f3_basic",
    "sex": "female",
    "face": 3,
    "outfit": "basic",
-   "sprite": "res://assets/characters/player_f3_basic.png"
+   "sprite": "res://assets/characters/player_f3_basic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f4",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "basic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "clothes": 5,
+     "eyes": 4,
+     "hair": 6,
+     "leather_shoes": 2,
+     "skin": 6
+    }
+   }
   },
   {
    "id": "player_f3_tunic",
    "sex": "female",
    "face": 3,
    "outfit": "tunic",
-   "sprite": "res://assets/characters/player_f3_tunic.png"
+   "sprite": "res://assets/characters/player_f3_tunic.png",
+   "recipe": {
+    "picks": {
+     "race": "human",
+     "hair": "f4",
+     "facial-hair": null,
+     "eyelashes": "f1",
+     "clothes": "tunic",
+     "shoes": "leather-boots"
+    },
+    "swatches": {
+     "eyes": 6,
+     "hair": 6,
+     "leather_shoes": 1,
+     "skin": 6,
+     "tunic": 0
+    }
+   }
   }
  ]
 }

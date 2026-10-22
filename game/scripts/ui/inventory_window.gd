@@ -518,7 +518,7 @@ func _outlined(font: Font, art_pos: Vector2, s: String, size: int, colour: Color
 ## The player's idle figure in the portrait frame, at a whole number of screen pixels per sprite
 ## pixel, and their name on the plate below.
 func _draw_portrait(p: PlayerState, font: Font) -> void:
-	var sheet: Texture2D = _icon(p.sprite)
+	var sheet: Texture2D = CharacterLook.player_sheet(p)
 	if sheet:
 		var inside := _r(PORTRAIT)
 		var m := floorf(minf(inside.size.x / FIGURE.size.x, inside.size.y / FIGURE.size.y) * px) / px

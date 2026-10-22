@@ -426,7 +426,7 @@ func _test_saves() -> void:
 	w.treasury = 5000
 	w.manor_work.post_discovery()
 	var sd := w.to_dict()
-	check(int(sd.save_version) == 17, "no new save version (17)")
+	check(int(sd.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(sd)))
 	var d2 := w2.discovery.opened(str(h.clue.id))

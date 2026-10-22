@@ -1141,15 +1141,28 @@ func show_credits() -> void:
 	_button("Back", func(): show_title(main.can_continue()))
 
 
-## Character creation: name, family, male or female, and a look (face and clothes) from
-## game/data/appearances.json, with a preview of the sprite the player will walk around as.
+## Character creation: name, family, male or female, and an appearance (CC-01, owner 2026-10-22): a recipe of the
+## PUNY CHARACTERS layers drawn by CharacterLook, chosen feature by feature or at random, within what an ordinary
+## medieval villager wears (game/data/character_style.json "creation": human, natural skin, hair and eyes, plain
+## clothes or a tunic, leather boots or none; no headwear, armour or gloves). Appearance only: the starting kit
+## and coins are the same for everyone. The preview is drawn from the live recipe.
+const CREATION_FEATURES := [
+	["Skin", "swatch", "skin"], ["Hair", "pick", "hair"], ["Hair colour", "swatch", "hair"],
+	["Beard", "pick", "facial-hair"], ["Eyes", "swatch", "eyes"], ["Eyelashes", "pick", "eyelashes"],
+	["Clothes", "pick", "clothes"], ["Clothes colour", "swatch", "clothes"], ["Boots", "pick", "shoes"],
+	["Boots colour", "swatch", "leather_shoes"],
+]
+const CREATION_NAMES := {"basic": "Plain clothes", "tunic": "Tunic", "leather-boots": "Leather boots",
+	"beard1": "Beard", "beard2": "Full beard", "mustache": "Moustache"}
+
+
 func show_creation(spec: Dictionary) -> void:
-	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
 	var sx: String = spec.get("sex", "male")
-	var look: String = spec.get("look", "")
-	var mine := looks.filter(func(l): return l.sex == sx and l.outfit == "basic") + looks.filter(func(l): return l.sex == sx and l.outfit != "basic")
-	if look == "" or mine.filter(func(l): return l.id == look).is_empty():
-		look = mine[0].id
+	var recipe: Dictionary = CharacterLook.normalize(spec.get("appearance", {}))
+	if recipe.is_empty():
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		recipe = CharacterLook.random_recipe(rng, sx)
 	_open("creation", "Who are you?", false)
 	panel_back = func(): show_title(main.can_continue())
 	var names := HBoxContainer.new()
@@ -1169,16 +1182,16 @@ func show_creation(spec: Dictionary) -> void:
 	fam_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	names.add_child(fam_edit)
 	var current := func() -> Dictionary:
-		return {"name": name_edit.text.strip_edges(), "family": fam_edit.text.strip_edges(), "sex": sx, "look": look}
+		return {"name": name_edit.text.strip_edges(), "family": fam_edit.text.strip_edges(), "sex": sx, "appearance": recipe.duplicate(true)}
+	var redo := func(change: Callable) -> void:      # rebuild the window with a changed spec
+		var nxt: Dictionary = current.call()
+		change.call(nxt)
+		show_creation(nxt)
 	var sexes := HBoxContainer.new()
 	panel_body.add_child(sexes)
 	for choice in ["male", "female"]:
 		var c: String = choice
-		var b := _button(("> " if c == sx else "") + c.capitalize(), func():
-			var nxt: Dictionary = current.call()
-			nxt.sex = c
-			nxt.look = ""
-			show_creation(nxt), true, sexes)
+		var b := _button(("> " if c == sx else "") + c.capitalize(), func(): redo.call(func(n): n.sex = c), true, sexes)
 		b.custom_minimum_size = Vector2(150, 52)
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1191,35 +1204,109 @@ func show_creation(spec: Dictionary) -> void:
 			return
 		if spec2.family == "":
 			spec2.family = "Wanderer"
-		spec2.sprite = looks.filter(func(l): return l.id == look)[0].sprite
 		main.new_game(spec2), true, sexes)
 	begin.custom_minimum_size = Vector2(160, 52)
 	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
 	panel_body.add_child(row)
+	# the preview: facing you large, and the four sides it walks
+	var left := VBoxContainer.new()
+	row.add_child(left)
+	var sheet := CharacterLook.texture(recipe)
 	var preview := TextureRect.new()
-	preview.custom_minimum_size = Vector2(128, 128)
+	preview.name = "Preview"
+	preview.custom_minimum_size = Vector2(160, 160)
 	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	preview.texture = _look_frame(looks.filter(func(l): return l.id == look)[0].sprite)
-	row.add_child(preview)
+	preview.texture = _sheet_frame(sheet, 0)
+	left.add_child(preview)
+	var sides := HBoxContainer.new()
+	left.add_child(sides)
+	for d in [2, 4, 6]:                          # east, north, west (ActorSprite.DIRS)
+		var t := TextureRect.new()
+		t.custom_minimum_size = Vector2(52, 52)
+		t.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		t.texture = _sheet_frame(sheet, d)
+		sides.add_child(t)
+	var rnd := _button("Randomize", func():
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		redo.call(func(n): n.appearance = CharacterLook.random_recipe(rng, sx)), true, left)
+	rnd.custom_minimum_size = Vector2(160, 52)
+	# one row per feature: < its value >
 	var grid := GridContainer.new()
 	grid.columns = 4
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(grid)
-	for l in mine:
-		var lid: String = l.id
-		var b := Button.new()
-		b.icon = _look_frame(l.sprite)
-		b.expand_icon = true
-		b.custom_minimum_size = Vector2(72, 72)
-		b.tooltip_text = "%s clothes" % ("plain" if l.outfit == "basic" else "tunic")
-		b.modulate = Color(1, 1, 1) if lid == look else Color(0.75, 0.75, 0.75)
-		b.pressed.connect(func():
-			var nxt: Dictionary = current.call()
-			nxt.look = lid
-			show_creation(nxt))
-		grid.add_child(b)
-	_label("Top row: plain clothes. Bottom row: a tunic.", 16)
+	for f in CREATION_FEATURES:
+		var label: String = f[0]
+		var kind: String = f[1]
+		var key: String = f[2]
+		if kind == "swatch" and key == "clothes" and recipe.picks.get("clothes", "") == "tunic":
+			key = "tunic"                        # a tunic has its own ramp of colours
+		if kind == "swatch" and key == "leather_shoes" and recipe.picks.get("shoes", "") == "":
+			continue                             # no boots, no boot colour
+		var opts: Array = CharacterLook.options(key) if kind == "pick" else CharacterLook.rows(key)
+		if opts.size() < 2:
+			continue
+		var now = recipe.picks.get(key, "") if kind == "pick" else int(recipe.swatches.get(key, opts[0]))
+		var at := maxi(opts.find(now), 0)
+		var name_l := Label.new()
+		name_l.text = label
+		name_l.add_theme_font_size_override("font_size", 16)
+		name_l.add_theme_color_override("font_color", Color8(246, 236, 214))
+		grid.add_child(name_l)
+		for step in [-1, 1]:
+			var nxt_v = opts[(at + step + opts.size()) % opts.size()]
+			var k := key
+			var b := Button.new()
+			b.text = "<" if step < 0 else ">"
+			b.name = "%s %s" % [label, b.text]
+			b.custom_minimum_size = Vector2(48, 44)
+			b.pressed.connect(func(): redo.call(func(n):
+				if kind == "pick":
+					n.appearance.picks[k] = nxt_v
+				else:
+					CharacterLook.set_swatch(n.appearance, k, int(nxt_v))))
+			grid.add_child(b)
+			if step < 0:
+				grid.add_child(_creation_value(kind, key, now, at, opts.size()))
+	_label("Your looks only: everyone starts with the same clothes, tools and coins.", 15)
+
+
+## A feature's current value in character creation: a colour swatch, or the option's name.
+func _creation_value(kind: String, key: String, now, at: int, count: int) -> Control:
+	if kind == "swatch":
+		var c := ColorRect.new()
+		c.color = CharacterLook.swatch_color(key, int(now))
+		c.custom_minimum_size = Vector2(120, 32)
+		c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		return c
+	var l := Label.new()
+	l.custom_minimum_size = Vector2(120, 0)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", 16)
+	l.add_theme_color_override("font_color", Color8(246, 236, 214))
+	if str(now) == "":
+		l.text = "None"
+	elif CREATION_NAMES.has(str(now)):
+		l.text = CREATION_NAMES[str(now)]
+	else:
+		var has_none := 1 if CharacterLook.options(key).has("") else 0
+		l.text = "Style %d of %d" % [at + 1 - has_none, count - has_none]
+	return l
+
+
+## One direction's standing frame (row `d` of ActorSprite.DIRS) of a character sheet, head to feet.
+func _sheet_frame(sheet: Texture2D, d: int) -> AtlasTexture:
+	var at := AtlasTexture.new()
+	at.atlas = sheet
+	at.region = Rect2(4, 4 + d * 32, 24, 24)
+	return at
 
 
 func _look_frame(sheet: String) -> AtlasTexture:

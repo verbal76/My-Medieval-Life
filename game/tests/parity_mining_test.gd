@@ -488,7 +488,7 @@ func _test_saves() -> void:
 	var t := _trial_spot(w)
 	w.discovery.trial_dig(p, t.clue, t.cell, "shovel")
 	var sd := w.to_dict()
-	check(int(sd.save_version) == 17, "no new save version (17)")
+	check(int(sd.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(sd)))
 	check(w2.player.inv.count("shovel") == p.inv.count("shovel") and int(w2.player.inv.durability.get("shovel", 0)) == int(p.inv.durability.get("shovel", 0)),

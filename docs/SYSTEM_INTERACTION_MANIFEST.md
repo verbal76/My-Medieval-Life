@@ -57,10 +57,10 @@ Rules:
 
 ### INT-001 · Character creation sets the player
 - **Trigger:** The player presses Begin on the creation panel.
-- **Source:** `game/scripts/ui/game_ui.gd::show_creation`, `game/scripts/main.gd::new_game`, `game/data/appearances.json`
+- **Source:** `game/scripts/ui/game_ui.gd::show_creation`, `game/scripts/main.gd::new_game`, `game/scripts/view/character_look.gd::render`, `game/data/character_style.json`
 - **Affects:** Character, Interface, Save
-- **Expected:** A name is required (the family defaults to "Wanderer"). The chosen look's sprite becomes the player's and heir's sprite. The world waits paused on the origin story.
-- **Tests:** `game/tests/start_test.gd`
+- **Expected:** A name is required (the family defaults to "Wanderer"). The appearance (CC-01) is a recipe of Puny Characters layers chosen feature by feature or at random within creation's civilian choices; it becomes the player's and the relative heir's look (PlayerState appearance and heir_appearance, saved; a save of version 17 or older migrates its look to the recipe it was baked from) and the player is drawn from it. Appearance only: the starting kit, armour and coins are unchanged. The world waits paused on the origin story.
+- **Tests:** `game/tests/start_test.gd`, `game/tests/character_look_test.gd`
 
 ### INT-002 · Origin story starts the game
 - **Trigger:** Begin on the origin panel.

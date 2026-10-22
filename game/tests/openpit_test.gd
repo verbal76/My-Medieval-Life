@@ -515,7 +515,7 @@ func _test_saves() -> void:
 			n.inv.add("shovel")
 	pp.tip(p, n.inv)
 	var sd := w.to_dict()
-	check(int(sd.save_version) == 17 and sd.has("pits"), "no new save version (17); the pits are saved")
+	check(int(sd.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17 and sd.has("pits"), "no new save version of its own (17; 18 is CC-01); the pits are saved")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(sd)))
 	check(JSON.stringify(w2.pits.to_dict()) == JSON.stringify(pp.to_dict()), "every pit's depths and heaps round-trip exactly")
