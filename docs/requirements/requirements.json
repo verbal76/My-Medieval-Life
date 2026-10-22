@@ -8697,6 +8697,132 @@
    "roadmap_reason": "coin sinks and predictable taxes are settlement finance"
   },
   {
+   "id": "DVW-B3-CHAPEL",
+   "title": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
+   "description": "Coin sink: offerings at a village chapel or shrine (a chapel building is needed)",
+   "source": "docs/directives/2026-10-23_owner_answers_coin_sinks.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "A chapel or shrine stands in the village; villagers and the player make offerings there; where the offerings go is recorded; deterministic; wiki page"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "DVW-B3",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_coin_sinks.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "DVW-B3-FEAST",
+   "title": "Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten",
+   "description": "Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten",
+   "source": "docs/directives/2026-10-23_owner_answers_coin_sinks.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Households (and the player) hold a wedding feast or a seasonal feast at the tavern, buying real food and ale from stock; coins conserved (paid to sellers); deterministic; wiki page"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "DVW-B3",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_coin_sinks.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "DVW-B3-LUX",
+   "title": "Coin sink: luxury imports sold by the caravan for status",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Coin sink: luxury imports sold by the caravan for status",
+   "description": "Coin sink: luxury imports sold by the caravan for status",
+   "source": "docs/directives/2026-10-23_owner_answers_coin_sinks.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "The caravan sells costly goods (spices, fine cloth, jewellery); villagers and the player buy them from real coins that leave with the caravan; deterministic; wiki page"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "DVW-B3",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_coin_sinks.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "DVW-B4",
    "title": "Goods decay (grain spoils, clothes/armour/carts wear)",
    "kind": "approved",
