@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 248 (127 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **317** = 195 still open from the baseline + 127 added and open |
+| Entries added since | | 248 (126 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **316** = 195 still open from the baseline + 126 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -85,8 +85,8 @@ None.
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | APPROVED — NOT STARTED | 18 |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED | owner decision |
-| BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED | 18 |
-| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | BLOCKED | owner decision |
+| BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | ACTIVE DEVELOPMENT | 18 |
+| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | COMPLETE AND VERIFIED | owner decision |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |

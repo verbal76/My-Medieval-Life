@@ -5722,7 +5722,7 @@
    "id": "BARBER-01",
    "title": "Barber service: change hairstyle in the village through the economy",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "Add a barber shop service that allows the player to change their hairstyle after character creation.",
    "description": "Barber service: change hairstyle in the village through the economy",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -5733,7 +5733,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-tailor",
    "commits": [],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -5743,7 +5743,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "b18-tailor",
    "superseded_by": null,
    "notes": "docs/build18/PHASE_A_INVENTORY.md",
    "history": [
@@ -5756,6 +5756,11 @@
      "date": "2026-10-22",
      "change": "target_build; notes",
      "why": "Build 18 target; Phase A inventory in docs/build18/PHASE_A_INVENTORY.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream; target_build",
+     "why": "BARBER-Q answered; same worker as the tailor (same files), on wip/b18-tailor"
     }
    ],
    "target_build": "18"
@@ -5764,7 +5769,7 @@
    "id": "BARBER-Q",
    "title": "Barber: staffing, place, price and what counts as a haircut",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Do not invent service prices, barber wages, resource consumption or production requirements. Present unresolved economic rules for owner approval.",
    "description": "Barber: staffing, place, price and what counts as a haircut",
    "source": "docs/build18/PHASE_A_INVENTORY.md",
@@ -5798,9 +5803,15 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "recorded overnight; to present in the morning (the tailor's labour-market pattern can be reused once the owner sets price and scope)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "owner answered 2026-10-23 (three questions in session)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Add a barber villager (new worlds; rented market pitch; older saves get a barber's job opening, as for the tailor); the barber changes hairstyle, beard and hair colour (the creator's options: 13 styles or none, beard/moustache or none, 5 natural colours); 5 coins a visit, paid to the barber"
   },
   {
    "id": "CAP-TOOLHOLDER",

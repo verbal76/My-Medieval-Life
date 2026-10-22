@@ -11,8 +11,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 64 |
-| ACTIVE DEVELOPMENT | 20 |
+| APPROVED — NOT STARTED | 63 |
+| ACTIVE DEVELOPMENT | 21 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 41 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **482** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 86 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 40 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 86 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 68 | 15 |
+| Waiting on an owner decision | 67 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **317** | **233** |
+| **Total open** | **316** | **233** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -186,7 +186,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED |  |  |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED |  |  |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED |  |  |
-| BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED |  |  |
+| BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | ACTIVE DEVELOPMENT |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED |  |  |
@@ -328,13 +328,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (68)
+### Waiting on an owner decision (67)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED |  |  |
-| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | BLOCKED |  |  |
 | DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -466,7 +465,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (64)
+## APPROVED — NOT STARTED (63)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -474,7 +473,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
-| BARBER-01 | Barber service: change hairstyle in the village through the economy | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
@@ -535,12 +533,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (20)
+## ACTIVE DEVELOPMENT (21)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | B16-READY | Build 16 development audit and release-readiness report | docs/directives/2026-10-21_build16_audit_release_readiness.md |  |  |  |
+| BARBER-01 | Barber service: change hairstyle in the village through the economy | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-tailor |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Owner decision on the FARM-08 yield and switches and on the remaining balance options (herd cost vs milk income, 4-day trough vs harvest gaps, household feed purse or granary sales, unsold milk and cheese); crop sharing decided (FARM-08-Q-CROP, option B) and implemented on wip/farm-cropshare (FARM-CROP-01) |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
@@ -998,13 +997,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 40, status BLOCKED) (86)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (86)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | BLOCKED | owner message 2026-10-22 with a photo after the band was killed |
-| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | BLOCKED | docs/build18/PHASE_A_INVENTORY.md |
+| BARBER-Q | Barber: staffing, place, price and what counts as a haircut | COMPLETE AND VERIFIED | docs/build18/PHASE_A_INVENTORY.md |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | COMPLETE AND VERIFIED | docs/design/FARM08_YIELD_COMPARISON.md |
 | HORSE-Q | Plough horse: price and what it does | BLOCKED | docs/directives/2026-10-22_build18_master_overnight_execution.md |
