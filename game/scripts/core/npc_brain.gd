@@ -3953,6 +3953,7 @@ func _day_labour(n: NPC) -> bool:
 ## does not carry. The village's currency changes only by what the village pays them and what they pay it; the goods
 ## cross the boundary the same way; the coins are logged in coin_sources.
 func caravan() -> void:
+	Migration.visit(w)                               # MIGRATE-18: people travel with the caravan, a real migrant before a made newcomer
 	succession_caravan()                             # newcomers for the posts nobody could take (B8-016)
 	var on_road: Array = w.regions.begin_visit(w.day())
 	var sold := _caravan_imports(on_road)

@@ -640,8 +640,10 @@ traders' tills. Accumulators and prices are rounded to a millionth, so a saved a
 
 - TRADE-CREDIT (barter and debt, Q18-5): `OffMapSettlement.sell_to_village` and `buy_from_village` are the two places a swap or a
   debt would replace coins; a debt would need a ledger line type the audit knows.
-- MIGRATE-18 (Q18-7): households are the unit (`hh`, with `adults` and `children` and `trade`); a household arriving or leaving
-  is a new `flows` line and a change of `population`; births and deaths of age are not played in the settlements yet.
+- MIGRATE-18 (Q18-7): done (Build 18), `Migration`, SETTLEMENTS.md section 6b, INT-310 to INT-312. Households are still the unit
+  (`hh`, with `adults`, `children`, `trade`); a member who came from the village carries a fifth entry `{n, f, sk}` (name, family,
+  skills); an arrival or departure is `outside_*` flow lines plus `migrants_in/out`; the log and counts are in `Regions` (`moves`,
+  `move_counts`, `suits`), saved as optional keys.
 - Couriers (Q18-12, Q18-13): `Regions.list` and `OffMapSettlement.trader()` give a courier a party with a till and a stock;
   `couriers.gd` reads `SettlementParty` handles (section 12a).
 - Not done: the village buying food from the settlements, longer trade chains among them, a productivity penalty for missing
