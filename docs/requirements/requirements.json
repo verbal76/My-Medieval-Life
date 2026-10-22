@@ -5575,6 +5575,48 @@
    "acceptance_derived": true
   },
   {
+   "id": "BANDIT-Q",
+   "title": "Should outlaws ever return once the band is wiped out?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "The villagers and I have killed all the bandits so there's just no more bandits in the game I guess",
+   "description": "Should outlaws ever return once the band is wiped out?",
+   "source": "owner message 2026-10-22 with a photo after the band was killed",
+   "approval": "",
+   "acceptance": [
+    "Owner decides whether and how a band can form again (today only unplaced orphans join, OD-11)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with a photo after the band was killed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "recorded; not yet presented (other decisions first, one at a time)"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "BARBER-01",
    "title": "Barber service: change hairstyle in the village through the economy",
    "kind": "approved",
@@ -27403,7 +27445,7 @@
    "id": "UI-HUD-01",
    "title": "HUD status panel too large: shrink and move the date line",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "We can shrink the text on the bottom line a little bit and move it over, but that brown box got really big. It's covering a lot of real estate",
    "description": "HUD status panel too large: shrink and move the date line",
    "source": "owner message 2026-10-22 with a photo of the HUD",
@@ -27412,10 +27454,12 @@
     "The panel no wider than its bars need; date and time smaller and moved; values unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests, start_test, play_test, wiki_test, farming_test",
    "playtest": [],
    "branch": "wip/b18-visual",
-   "commits": [],
+   "commits": [
+    "a38eea9"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27442,6 +27486,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit a38eea9; tests",
+     "why": "visual worker's fix merged into wip/build18 (0048b56); screenshots looked at by the worker; merged branch: run_tests 3584, start, play, wiki, farming, crop-share tests pass; awaits owner playtest and a phone check"
     }
    ],
    "target_build": "18"
@@ -27450,7 +27499,7 @@
    "id": "UI-HUNGER-01",
    "title": "Hunger icon becomes a drumstick",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Preferred design: a chicken drumstick.",
    "description": "Hunger icon becomes a drumstick",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -27459,10 +27508,12 @@
     "Recognizable food icon at the HUD's size; bars unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests, start_test, play_test, wiki_test, farming_test",
    "playtest": [],
    "branch": "wip/b18-visual",
-   "commits": [],
+   "commits": [
+    "a38eea9"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27489,6 +27540,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit a38eea9; tests",
+     "why": "visual worker's fix merged into wip/build18 (0048b56); screenshots looked at by the worker; merged branch: run_tests 3584, start, play, wiki, farming, crop-share tests pass; awaits owner playtest and a phone check"
     }
    ],
    "target_build": "18"
@@ -27497,7 +27553,7 @@
    "id": "UI-PROGRESS-01",
    "title": "Progress bar visible on light and dark ground",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Make the indicator clearly visible against both light and dark backgrounds.",
    "description": "Progress bar visible on light and dark ground",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -27506,10 +27562,12 @@
     "Dark track, distinct fill, outline; timing unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests, start_test, play_test, wiki_test, farming_test",
    "playtest": [],
    "branch": "wip/b18-visual",
-   "commits": [],
+   "commits": [
+    "a38eea9"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27536,6 +27594,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit a38eea9; tests",
+     "why": "visual worker's fix merged into wip/build18 (0048b56); screenshots looked at by the worker; merged branch: run_tests 3584, start, play, wiki, farming, crop-share tests pass; awaits owner playtest and a phone check"
     }
    ],
    "target_build": "18"
@@ -27598,7 +27661,7 @@
    "id": "VIS-ANIMAL-01",
    "title": "Stray fragments above animals removed at the source",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Remove the stray fragments at their source.",
    "description": "Stray fragments above animals removed at the source",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -27607,10 +27670,12 @@
     "Cause confirmed; every animal sharing the path checked visually"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests, start_test, play_test, wiki_test, farming_test",
    "playtest": [],
    "branch": "wip/b18-visual",
-   "commits": [],
+   "commits": [
+    "a38eea9"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27637,6 +27702,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit a38eea9; tests",
+     "why": "visual worker's fix merged into wip/build18 (0048b56); screenshots looked at by the worker; merged branch: run_tests 3584, start, play, wiki, farming, crop-share tests pass; awaits owner playtest and a phone check"
     }
    ],
    "target_build": "18"
@@ -27695,7 +27765,7 @@
    "id": "VIS-CROP-01",
    "title": "Ripe wheat recognizable; planted, growing, mature, harvested look distinct",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Mature: Dense golden wheat with recognizable heads of grain.",
    "description": "Ripe wheat recognizable; planted, growing, mature, harvested look distinct",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -27704,10 +27774,12 @@
     "Four distinct looks from existing states; no farming mechanic changed"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests, start_test, play_test, wiki_test, farming_test",
    "playtest": [],
    "branch": "wip/b18-visual",
-   "commits": [],
+   "commits": [
+    "a38eea9"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27734,6 +27806,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit a38eea9; tests",
+     "why": "visual worker's fix merged into wip/build18 (0048b56); screenshots looked at by the worker; merged branch: run_tests 3584, start, play, wiki, farming, crop-share tests pass; awaits owner playtest and a phone check"
     }
    ],
    "target_build": "18"
@@ -27742,7 +27819,7 @@
    "id": "VIS-DOOR-01",
    "title": "Doorway transition: characters no longer pass under a closed door",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Do not allow characters to visibly pass underneath a closed door.",
    "description": "Doorway transition: characters no longer pass under a closed door",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -27751,10 +27828,12 @@
     "Dark opening while someone crosses, fade at the threshold, no flicker with several users, pathing unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests, start_test, play_test, wiki_test, farming_test",
    "playtest": [],
    "branch": "wip/b18-visual",
-   "commits": [],
+   "commits": [
+    "a38eea9"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27781,6 +27860,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit a38eea9; tests",
+     "why": "visual worker's fix merged into wip/build18 (0048b56); screenshots looked at by the worker; merged branch: run_tests 3584, start, play, wiki, farming, crop-share tests pass; awaits owner playtest and a phone check"
     }
    ],
    "target_build": "18"

@@ -12,9 +12,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 66 |
-| ACTIVE DEVELOPMENT | 26 |
+| ACTIVE DEVELOPMENT | 20 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 30 |
+| IMPLEMENTED — TESTING REQUIRED | 36 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **480** |
 | Outstanding (not complete, superseded or canceled) | 231 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 79 owner decision (open or answered), 30 world design rule, 10 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 80 owner decision (open or answered), 30 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 66 | 15 |
+| Waiting on an owner decision | 67 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **313** | **231** |
+| **Total open** | **314** | **231** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -215,14 +215,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | TRADE-UI-02 | Contract proposal's answer shown in view | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT |  |  |
-| UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | ACTIVE DEVELOPMENT |  |  |
-| UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | ACTIVE DEVELOPMENT |  |  |
+| UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT |  |  |
-| VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-STEPS-01 | Steps cut through rock need real step art | approved | APPROVED — NOT STARTED |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -326,11 +326,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (66)
+### Waiting on an owner decision (67)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
+| BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED |  |  |
 | DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -533,7 +534,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (26)
+## ACTIVE DEVELOPMENT (20)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -549,12 +550,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `8eec56e`, `283ec55`; settlement_test 63, regional_test 67, caravan_compare 20/50; run_tests, world_test, start_test, parity_test, conservation_test, business_test; branch wip/expansion18-preparation |  |  |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`, `693e0c3`, `6615da4`, `1b05da0`, `e91d903`, `05adc9d`, `c4b10e4`; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
-| UI-HUD-01 | HUD status panel too large: shrink and move the date line | owner message 2026-10-22 with a photo of the HUD | branch wip/b18-visual |  |  |
-| UI-HUNGER-01 | Hunger icon becomes a drumstick | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
-| UI-PROGRESS-01 | Progress bar visible on light and dark ground | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
-| VIS-ANIMAL-01 | Stray fragments above animals removed at the source | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
-| VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
-| VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | branch wip/b18-trees |  |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md | `4ce9927`, `4115b48`, `da4d610`, `3de7a8f`; experience 61 (17 new for D1), settlement 83, capability 72, world 339, conservation 8, run_tests 3544, start 499; 30-day seed 1 fingerprint 1c755f53 unchanged, no leaks | after Q18-11B; after PROS-18 | Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration |
@@ -602,7 +597,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (30)
+## IMPLEMENTED — TESTING REQUIRED (36)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -632,8 +627,14 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need | after SHOP-01 | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | owner message 2026-10-22 with photos of the trade window and HUD | `9cc1db5`, `bc90e81`; start_test |  |  |
 | TRADE-UI-02 | Contract proposal's answer shown in view | owner message 2026-10-22 with a photo of the contract window | `1bbf0ab`; start_test |  |  |
+| UI-HUD-01 | HUD status panel too large: shrink and move the date line | owner message 2026-10-22 with a photo of the HUD | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
+| UI-HUNGER-01 | Hunger icon becomes a drumstick | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
+| UI-PROGRESS-01 | Progress bar visible on light and dark ground | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | docs/directives/2026-10-22_build18_master_integration.md | `63f96c6`; wiki_test, start_test; branch wip/b18-wiki |  |  |
+| VIS-ANIMAL-01 | Stray fragments above animals removed at the source | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `3829098`; furniture_test, start_test; branch wip/b18-axe |  |  |
+| VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
+| VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test 72 (22 new: durations and pay at L0/5/10 for seven industries, farm sites, harvest wage 50->52, yield 100 wheat at L0 and L10, determinism), regional 71, settlement 83, farming 217, farm_plots 104, herd 19, world 339, conservation 8, run_tests 3544; economy_sim 30 days seed 1 hook off fingerprint 1c755f53 identical, forced L10 no leaks wheat unchanged | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
@@ -992,10 +993,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 38, status BLOCKED) (79)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (80)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
+| BANDIT-Q | Should outlaws ever return once the band is wiped out? | BLOCKED | owner message 2026-10-22 with a photo after the band was killed |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | COMPLETE AND VERIFIED | docs/design/FARM08_YIELD_COMPARISON.md |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md |
