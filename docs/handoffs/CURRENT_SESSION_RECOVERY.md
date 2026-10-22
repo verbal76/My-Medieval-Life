@@ -31,10 +31,11 @@ Read the overnight directive first.
 | Branch | Head | State |
 |---|---|---|
 | `staging/my-medieval-life` (main worktree, local `wip/b16-integration`; push both) | latest decision record | records only |
-| `wip/build18` (worktree `scratchpad/b18wt`) | `0fafb8b` | integrated Build 18: tracks A fixes, CC-01, FARM-CROP-01, ORE, AXE, TREES, MAP, trade fixes, visuals |
-| `wip/b18-inventory` (worktree `scratchpad/b18inv`) | from `0fafb8b`, uncommitted work in progress | INV-18 plus TAILOR-18 (inventory worker, model inherited) |
-| `wip/b18-armour` (worktree `scratchpad/b18armour`) | from `0fafb8b` | ARMOR-01 Option A plus gear redraw (Sonnet worker) |
-| `wip/x18-readiness` (worktree `scratchpad/x18ready`) | from `wip/expansion18-preparation` `3de7a8f` | integration-readiness review only, no merge (Sonnet worker) |
+| `wip/build18` (worktree `scratchpad/b18wt`) | `d63d8d7` | integrated Build 18: track A fixes, CC-01 complete, FARM-CROP-01, INV-18 (save 19), TAILOR-18 purchase, ARMOR-01 Option A, Expansion 18 (inactive parts off) |
+| `wip/b18-inventory` | `ba1369e` | merged; worker done |
+| `wip/b18-armour` | `9f3a237` | merged; worker done |
+| `wip/b18-polish` (worktree `scratchpad/b18polish`) | from `d63d8d7` | RUNNING (Sonnet): VIS-STEPS-01 art, contract grid fit, contract refusal grammar. Next: review, merge, focused tests (contracts, services, start, wiki), register |
+| `wip/x18-readiness` | `0182466` | readiness note (done); Expansion 18 merged into Build 18 as `d63d8d7` |
 | `wip/expansion18-preparation` | `3de7a8f` | Expansion 18 code; D2–D9 open |
 | `wip/expansion19-preparation` | `c4b10e4` | waiting on owner decisions |
 | `wip/multiplayer` | `d18d7d1` | preserved, untouched |
@@ -76,7 +77,7 @@ Read the overnight directive first.
 - Next: merge the polish branch; then stop optional work and write the morning report (part 16 of the overnight
   directive). The release gate is premature: the tailor placement and the D-decisions are open.
 
-## Next actions, in order
+## Next actions, in order (items 1-3 DONE; now: merge the polish branch, then the morning report)
 
 1. **When the inventory worker reports:**
    - review its commits;
