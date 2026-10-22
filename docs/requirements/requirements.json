@@ -5680,10 +5680,10 @@
    "id": "BANDIT-Q",
    "title": "Should outlaws ever return once the band is wiped out?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "The villagers and I have killed all the bandits so there's just no more bandits in the game I guess",
    "description": "Should outlaws ever return once the band is wiped out?",
-   "source": "owner message 2026-10-22 with a photo after the band was killed",
+   "source": "docs/directives/2026-10-23_owner_answers_bandits.md",
    "approval": "",
    "acceptance": [
     "Owner decides whether and how a band can form again (today only unplaced orphans join, OD-11)"
@@ -5714,9 +5714,59 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "recorded; not yet presented (other decisions first, one at a time)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Outlaws drift in: one season after the last bandit dies, 2 or 3 outlaws arrive from outside and camp in the woods; the band grows from there by the orphan rule (OD-11)"
+  },
+  {
+   "id": "BANDIT-RETURN",
+   "title": "Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Outlaws drift in; 1 season later, 2-3",
+   "description": "Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods",
+   "source": "docs/directives/2026-10-23_owner_answers_bandits.md",
+   "approval": "owner, 2026-10-23 (BANDIT-Q)",
+   "acceptance": [
+    "When no bandit lives, one season after the last died, 2 or 3 new adult outlaws enter from the map edge, make camp in the woods and act as the band; deterministic from the seed; saved; no other rescue"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "BANDIT-Q"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_bandits.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope (owner answer during Build 18)"
+    }
+   ],
+   "target_build": "18"
   },
   {
    "id": "BARBER-01",

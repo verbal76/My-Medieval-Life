@@ -10,7 +10,7 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 255 (125 of them still open) |
+| Entries added since | | 256 (125 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **315** = 195 still open from the baseline + 125 added and open |
 | Open entries moved to another build | | 2 |
 
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (255)
+## Added since the baseline (256)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -84,7 +84,8 @@ None.
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED | 18 |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | APPROVED — NOT STARTED | 18 |
-| BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | BLOCKED | owner decision |
+| BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | COMPLETE AND VERIFIED | owner decision |
+| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | APPROVED — NOT STARTED | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | COMPLETE AND VERIFIED | owner decision |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
