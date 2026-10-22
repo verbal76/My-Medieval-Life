@@ -8,22 +8,23 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 73 |
-| Integrated | 36 of 73 (49%) |
-| Automated tests passed | 37 of 73 (51%) |
-| Integration verified | 36 of 73 (49%) |
-| Gameplay verified | 0 of 73 (0%) |
-| Owner playtested | 0 of 73 (0%) |
-| Complete | 1 of 73 (1%) |
-| Open (release blockers) | 72 |
+| Approved requirements in scope | 74 |
+| Integrated | 36 of 74 (49%) |
+| Automated tests passed | 37 of 74 (50%) |
+| Integration verified | 36 of 74 (49%) |
+| Gameplay verified | 0 of 74 (0%) |
+| Owner playtested | 0 of 74 (0%) |
+| Complete | 1 of 74 (1%) |
+| Open (release blockers) | 73 |
 | Open owner decisions (blocking) | 10 (2) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) / wip/b18-feast | NOT TESTED |  |  | M |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | IN DEVELOPMENT | luxury worker (Sonnet subagent, started 2026-10-23) / wip/b18-luxury | NOT TESTED |  |  | S |
+| REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | OWNER APPROVED | IN DEVELOPMENT | lead / wip/build18 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (35)
 

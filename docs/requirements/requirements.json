@@ -35972,6 +35972,44 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "REG-INV-01",
+   "kind": "approved",
+   "title": "Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics",
+   "description": "Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics",
+   "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
+   "owner_wording": "Please perform a focused, evidence-based investigation ... Report the root causes, missing functionality, and recommended implementation order.",
+   "approval": "Owner directive 2026-10-23 (docs/directives/2026-10-23_regional_economy_investigation.md)",
+   "acceptance": [
+    "Root cause of Higham's decline classified as legitimate economics or a broken/missing circulation mechanism, with evidence",
+    "Village sustainability assessed from existing runs plus only focused experiments",
+    "Dependencies and actionable requirements for village buying from settlements, courier booths on the five settlements and settlement demographics recorded in the register; gameplay-design choices queued as owner decisions",
+    "No balance values changed to improve results"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/build18",
+     "why": "Started by the lead"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/build18"
+  },
+  {
    "id": "REL-14-16",
    "title": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
    "kind": "approved",

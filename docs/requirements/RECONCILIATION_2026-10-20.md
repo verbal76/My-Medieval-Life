@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 388 (194 of them still open) |
-| **Open entries now** (rules excluded) | | **371** |
+| Entries added since | | 389 (195 of them still open) |
+| **Open entries now** (rules excluded) | | **372** |
 | Open entries moved to another build | | 4 |
 
 ## Closed since the baseline (54)
@@ -86,7 +86,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (388)
+## Added since the baseline (389)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -371,6 +371,7 @@ None.
 | Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons | decision | APPROVED |  |
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) | decision | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | APPROVED | 18 |
+| REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
