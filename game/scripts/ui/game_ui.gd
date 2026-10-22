@@ -22,7 +22,8 @@ var body_scroll: ScrollContainer   # the window body's scroller (follows focus)
 var bar_labels := {}             # meter key -> the words drawn on its bar ("Health 80/100")
 var bar_danger := {}             # meter key -> true while that meter is low (B8-019)
 var coins_label: Label
-var clock_label: Label
+var clock_label: Label         # the time of day ("07:00")
+var date_label: Label          # the season, year and day ("Spring, Year 1  Day 3")
 var prompt_label: Label
 var prompt_box: PanelContainer
 var prompt_icon: TextureRect
@@ -361,20 +362,25 @@ func _build_hud() -> void:
 		v.add_child(h)
 		bars[key] = pb
 		bar_labels[key] = vl
+	# UI-HUD-01 (owner, 2026-10-22): the box is only as wide as the bars. Coins and the time of day share the
+	# bottom row (the time at its right end); the date sits under them in smaller words, so it no longer
+	# widens the box.
 	var row := HBoxContainer.new()
 	row.add_child(_ui_icon("coins", 24))
 	coins_label = Label.new()
-	coins_label.custom_minimum_size = Vector2(56, 0)
 	coins_label.tooltip_text = "Coins in your purse"
 	coins_label.mouse_filter = Control.MOUSE_FILTER_PASS
-	coins_label.add_theme_font_size_override("font_size", 18)
+	coins_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	coins_label.add_theme_font_size_override("font_size", 16)
 	row.add_child(coins_label)
 	clock_label = Label.new()
-	clock_label.custom_minimum_size = Vector2(104, 0)
-	clock_label.add_theme_font_size_override("font_size", 18)
+	clock_label.add_theme_font_size_override("font_size", 16)
 	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(clock_label)
 	v.add_child(row)
+	date_label = Label.new()
+	date_label.add_theme_font_size_override("font_size", 14)
+	v.add_child(date_label)
 
 	log_box = VBoxContainer.new()
 	log_box.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -778,7 +784,10 @@ func update_hud() -> void:
 	_meter_text("hunger", bar_words(p.hunger, HUNGER_MAX), p.hunger / HUNGER_MAX)
 	_meter_text("stamina", bar_words(p.stamina, p.stamina_cap()), p.stamina / maxf(1.0, p.stamina_cap()))
 	coins_label.text = " %d" % p.coins
-	clock_label.text = w.clock_text()
+	var when: String = w.clock_text()                 # "Spring, Year 1  Day 3  07:00": the date, then the time
+	var cut := when.rfind(" ")
+	date_label.text = when.left(cut).strip_edges()
+	clock_label.text = when.substr(cut + 1)
 	# the prompt and toast follow their own size (a container's minimum size settles a frame late)
 	if prompt_box.visible:
 		_place_bottom(prompt_box, _prompt_bottom())
