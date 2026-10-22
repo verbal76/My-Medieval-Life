@@ -13095,10 +13095,15 @@
    "approval": "owner, 2026-10-23",
    "acceptance": "The caravan is the traders of the five simulated settlements: it carries only goods they have and pays with their coins; the daily allowance (CARAVAN-TMP) is removed; conserving; deterministic; saves migrate; wiki updated",
    "implementation": "Awaiting | **A different finite caravan purse is implemented** (INT-020, `9c13794`): allowance, float, ceiling per head, no raw-ore export | AWAIT-OWNER (recorded) / implemented variant — contradiction",
-   "tests": "",
+   "tests": "regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-regions",
-   "commits": [],
+   "commits": [
+    "bf312b8",
+    "bf821f9",
+    "083798f",
+    "3704bfe"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -13155,6 +13160,16 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "REQ-CTRL-02 conflict review: the copies diverged (build line: proposal, 'APPROVED — NOT STARTED' by the owner's OD-01 of 2026-10-21, 'EXPANSION 18 OWNS THIS WORK'; staging: kind approved by the owner's answer of 2026-10-23, the caravan becomes the settlements' traders). Both are owner approvals for Build 18 and do not contradict: no owner review needed beyond the record"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0; test_commit: None -> 3704bfe; commits + bf312b8; commits + bf821f9; commits + 083798f; commits + 3704bfe; integrated_in + 18",
+     "why": "Regions worker finished (083798f); merged into wip/build18 at 3704bfe with targeted chapel/regions/save checks"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + Courier booths still use SettlementLedger parties, not the new settlements; remaining_work",
+     "why": "Measured economic effect recorded for the owner"
     }
    ],
    "acceptance_derived": true,
@@ -13162,16 +13177,23 @@
    "roadmap_gate": "",
    "roadmap_reason": "caravan as a finite regional market; household versus business money",
    "owner_answer": "The caravan is the traders of the five simulated settlements: it carries only goods they have and pays with their coins; the daily allowance (CARAVAN-TMP) is removed",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "regions worker (Sonnet subagent, started 2026-10-23)",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "test_commit": "3704bfe",
+   "known_defects": [
+    "Courier booths still use SettlementLedger parties, not the new settlements"
+   ],
+   "remaining_work": "Gameplay check. Measured effect over 30 days: the caravan buys 7-8 kinds of goods instead of about 20, and the village earns roughly a quarter to a half less from it (seed 1 +1540 vs +1996 coins, seed 2 +1070 vs +2178); population and food unaffected"
   },
   {
    "id": "ECON-P1.4",
@@ -37940,10 +37962,15 @@
     "Five settlements generated deterministically from the seed with different characters; each reachable by a trail; saved"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-regions",
-   "commits": [],
+   "commits": [
+    "bf312b8",
+    "bf821f9",
+    "083798f",
+    "3704bfe"
+   ],
    "parent": "SET-C",
    "depends_on": [
     "Q18-4"
@@ -37982,19 +38009,36 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IN DEVELOPMENT; assigned_worker=regions worker (Sonnet subagent, started 2026-10-23); branch=wip/b18-regions",
      "why": "regions worker started 2026-10-23 from wip/build18 83d3afc; uncommitted work in progress"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0; test_commit: None -> 3704bfe; commits + bf312b8; commits + bf821f9; commits + 083798f; commits + 3704bfe; integrated_in + 18",
+     "why": "Regions worker finished (083798f); merged into wip/build18 at 3704bfe with targeted chapel/regions/save checks"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open); remaining_work",
+     "why": "Known limitations from the worker's report"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "regions worker (Sonnet subagent, started 2026-10-23)",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "test_commit": "3704bfe",
+   "known_defects": [
+    "Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open)"
+   ],
+   "remaining_work": "Gameplay check; owner may review the lore choices in docs/expansion18/SETTLEMENTS.md"
   },
   {
    "id": "SET-C-SIM",
@@ -38008,10 +38052,15 @@
     "Each off-map settlement holds households with members and purses, a government treasury collecting taxes and paying wages, and businesses; production, consumption, wages, taxes and trade move real coins and goods by the village's rules each day; no coins or goods from nowhere (conservation tested); deterministic; saved; cheap enough for a phone"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-regions",
-   "commits": [],
+   "commits": [
+    "bf312b8",
+    "bf821f9",
+    "083798f",
+    "3704bfe"
+   ],
    "parent": "SET-C",
    "depends_on": [
     "Q18-3"
@@ -38045,19 +38094,37 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IN DEVELOPMENT; assigned_worker=regions worker (Sonnet subagent, started 2026-10-23); branch=wip/b18-regions",
      "why": "regions worker started 2026-10-23 from wip/build18 83d3afc; uncommitted work in progress"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> regions_test 113 checks, chapel_test 68, save_transfer_test 21 on merge 3704bfe (0 failures); worker on identical game code 083798f: run_tests 3591, all game test files 0 failures, Python 106 OK, check_interactions 231 / 0, economy_sim 30 days seeds 1 and 2 no FATAL, currency and item leaks 0; test_commit: None -> 3704bfe; commits + bf312b8; commits + bf821f9; commits + 083798f; commits + 3704bfe; integrated_in + 18",
+     "why": "Regions worker finished (083798f); merged into wip/build18 at 3704bfe with targeted chapel/regions/save checks"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + No births or old-age deaths in the settlements yet; known_defects + Village cannot buy food from the settlements yet; no tool-shortage productivity penalty; remaining_work",
+     "why": "Known limitations from the worker's report"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "regions worker (Sonnet subagent, started 2026-10-23)",
    "design": "SPECIFIED",
-   "effort": "XL"
+   "effort": "XL",
+   "test_commit": "3704bfe",
+   "known_defects": [
+    "No births or old-age deaths in the settlements yet",
+    "Village cannot buy food from the settlements yet; no tool-shortage productivity penalty"
+   ],
+   "remaining_work": "Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned)"
   },
   {
    "id": "SET-D",

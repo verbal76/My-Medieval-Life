@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `71b6285` (2026-10-23) | Build 18 integration; chapel merged (DVW-B3-CHAPEL); 67 Godot suites passed on the chapel code |
+| `wip/build18` | `3704bfe` (2026-10-23) | Build 18 integration; chapel and the five settlements merged; targeted checks on the merge (chapel, regions, save transfer) |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -38,8 +38,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| SET-C-SIM, SET-C-FIVE, ECON-P1.3 | regions worker (Sonnet subagent) | `wip/b18-regions` | `wip/build18` 83d3afc | uncommitted work at the reconciliation; settlements from the lore locations (`docs/directives/2026-10-23_lore_locations_basis.md`); merge onto `wip/build18` 71b6285 (chapel merged: watch the "chapel" key in the settlement holdings script and INT-225..227 numbering) |
-| DVW-B3-FEAST | feast worker (Sonnet subagent) | `wip/b18-feast` | `wip/build18` 2e059fa | wedding and seasonal feasts at the tavern (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`); stays out of the settlement scripts (the regions worker owns them) |
+| DVW-B3-FEAST | feast worker (Sonnet subagent) | `wip/b18-feast` | `wip/build18` 2e059fa (merge onto 3704bfe; the regions merge also changed `World.load_dict`) | wedding and seasonal feasts at the tavern (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`); stays out of the settlement scripts (the regions worker owns them) |
 
 On their reports:
 1. Review the work.
@@ -50,12 +49,12 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Merge the regions worker when it reports (the chapel is merged).
+1. Merge the feast worker when it reports (chapel and regions are merged).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);
    - ECON-P3, DVW-B5, DVW-B3-FEAST;
-   - after the regions merge: TRADE-CREDIT, MIGRATE-18, DVW-B3-LUX.
+   - now unblocked by the regions merge: TRADE-CREDIT, MIGRATE-18, DVW-B3-LUX (couriers still use the old SettlementLedger parties).
 3. Human reviews flagged by the reconciliation (`docs/requirements/RECONCILIATION_2026-10-23.md`, "Needs review").
 4. The Build 18 release gate (REL18-*) only when the work is integrated; no distributable without the owner.
 

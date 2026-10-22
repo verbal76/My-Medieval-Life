@@ -389,8 +389,8 @@ None.
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SEED-04 | Households save planting material from their own harvests | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
-| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
-| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
