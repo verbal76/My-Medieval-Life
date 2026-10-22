@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 231 (115 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **306** = 195 still open from the baseline + 115 added and open |
+| Entries added since | | 232 (116 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **307** = 195 still open from the baseline + 116 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (231)
+## Added since the baseline (232)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -84,7 +84,7 @@ None.
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED | 18 |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
-| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | ACTIVE DEVELOPMENT | 18 |
+| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | PARTIALLY IMPLEMENTED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
@@ -270,13 +270,14 @@ None.
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | COMPLETE AND VERIFIED | 16 |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | approved | UNKNOWN — INVESTIGATION REQUIRED | 18 |
 | TREAS-01 | The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock | approved | COMPLETE AND VERIFIED | 16 |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | approved | ACTIVE DEVELOPMENT | 18 |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | ACTIVE DEVELOPMENT | 18 |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | ACTIVE DEVELOPMENT | 18 |
-| UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | ACTIVE DEVELOPMENT | 18 |
+| UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | ACTIVE DEVELOPMENT | 18 |
-| VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | ACTIVE DEVELOPMENT | 18 |
+| VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT | 18 |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT | 18 |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT | 18 |

@@ -5713,7 +5713,7 @@
    "id": "CC-01",
    "title": "Character creator replaces the eight preset looks (appearance only, civilian)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "The existing eight-character selection system must be replaced with the character creator.",
    "description": "Character creator replaces the eight preset looks (appearance only, civilian)",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -5724,10 +5724,12 @@
     "Appearance persists through save/load, directions, equipment and hairstyle changes"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "character_look_test, start_test, equip_test, save_transfer_test",
    "playtest": [],
    "branch": "wip/b18-character",
-   "commits": [],
+   "commits": [
+    "5c9689f"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -5754,6 +5756,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 character worker started (no armour values or barber economy)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit 5c9689f; tests",
+     "why": "runtime recipe sprite, civilian-only creator, save v18 with migration merged into wip/build18 (ec10e48); character_look_test (24), start_test, equip_test pass; screenshots looked at. Remaining: redraw on gear change belongs to ARMOR-01; phone layout and device cost unmeasured"
     }
    ],
    "target_build": "18"
@@ -27088,6 +27095,48 @@
    "complexity": "S"
   },
   {
+   "id": "TRADE-AXE-01",
+   "title": "Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "I have the 45 coins but Clement won't let me buy the ax",
+   "description": "Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins",
+   "source": "owner message 2026-10-22 with photos of the trade window and HUD",
+   "approval": "owner playtest report (Build 17)",
+   "acceptance": [
+    "Cause found; buying works or the refusal is shown and explained in view"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-22 with photos of the trade window and HUD"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "lead: a fresh seed-1 world (Clement Ward, smith) quotes 45 and the buy dialog allows 1 at 45-47 coins, so the block is state-dependent; candidates: a full pack (24 kinds; the dialog says so) or the buy box opening at the top of a list scrolled down, out of view. Asked the owner what appears on Buy"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "TREAS-01",
    "title": "The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock",
    "kind": "approved",
@@ -27300,7 +27349,7 @@
    "id": "UI-WIKI-01",
    "title": "Village Encyclopedia: navigable, searchable wiki window",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Replace the button wall with a usable encyclopedia",
    "description": "Village Encyclopedia: navigable, searchable wiki window",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -27309,10 +27358,12 @@
     "Category panel, search, readable articles, controller focus, correct title; generated content unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "wiki_test, start_test",
    "playtest": [],
    "branch": "wip/b18-wiki",
-   "commits": [],
+   "commits": [
+    "63f96c6"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27339,6 +27390,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 wiki worker started"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 63f96c6; tests",
+     "why": "Village Encyclopedia window merged into wip/build18 (ec10e48); wiki_test and start_test pass; desktop and phone screenshots looked at; device check (touch, controller) still needed"
     }
    ],
    "target_build": "18"
@@ -27394,7 +27450,7 @@
    "id": "VIS-AXE-01",
    "title": "Lumberjack axe: believable chop, blade never through the head",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Axe blades do not swing through characters' heads.",
    "description": "Lumberjack axe: believable chop, blade never through the head",
    "source": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md",
@@ -27404,10 +27460,12 @@
     "Chopping duration, yield, durability, productivity and jobs unchanged"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "furniture_test, start_test",
    "playtest": [],
    "branch": "wip/b18-axe",
-   "commits": [],
+   "commits": [
+    "3829098"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -27429,6 +27487,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
      "why": "lead: swing reconstructed, fixing on wip/b18-axe"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3829098; tests",
+     "why": "per-facing swing poses and behind-body drawing merged into wip/build18 (ec10e48); in-engine chop_swing screenshots from all four sides looked at; furniture_test and start_test pass; awaits owner playtest"
     }
    ],
    "target_build": "18"
