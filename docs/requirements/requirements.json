@@ -14676,6 +14676,49 @@
    "target_build": "15"
   },
   {
+   "id": "JUICE-00",
+   "title": "Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Begin a preliminary Game Juice and Player Feedback assessment as a separate, unnumbered presentation workstream. This is planning and evaluation only. Do not implement effects or change gameplay without approval.",
+   "description": "Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only)",
+   "source": "docs/directives/2026-10-22_game_juice_preliminary_assessment.md",
+   "approval": "Owner directive 2026-10-22: planning and evaluation only",
+   "acceptance": [
+    "Assessment document: inventory of current feedback and reusable assets, opportunities by activity, priority ranking, quick wins vs larger upgrades, dependencies on Expansions 18-21, design decisions, phased plan; observations separate from recommendations",
+    "Read-only; no code, assets, builds, simulations or merges; top ten reported to the owner; nothing implemented before approval"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "wip/juice-assessment",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_game_juice_preliminary_assessment.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
+     "why": "Started with the idle planning worker on wip/juice-assessment (from Build 17)"
+    }
+   ],
+   "target_build": "20+"
+  },
+  {
    "id": "K-1",
    "title": "5 coins vs land 60+",
    "kind": "approved",
