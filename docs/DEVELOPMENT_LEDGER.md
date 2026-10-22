@@ -12,9 +12,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 66 |
-| ACTIVE DEVELOPMENT | 15 |
+| ACTIVE DEVELOPMENT | 14 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 46 |
+| IMPLEMENTED — TESTING REQUIRED | 47 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 12 |
 | DEFERRED | 10 |
@@ -170,7 +170,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | MIN-EQUIP | Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | approved | IMPLEMENTED — TESTING REQUIRED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
 | MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | ACTIVE DEVELOPMENT |  | the Mining & Industrial Development expansion |
+| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | IMPLEMENTED — TESTING REQUIRED | Build 17 | Owner Build 17 decisions 2026-10-21 |
 | MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -524,7 +524,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (15)
+## ACTIVE DEVELOPMENT (14)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -533,7 +533,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Report written (docs/design/FARM08_YIELD_COMPARISON.md, provisional 2.0 a cell); 365-day variants on the integrated commit, then the owner's decision; switches stay off |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
-| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F | After the MIN-EQUIP/MIN-COLLAPSE merge and the determinism re-baseline: one monitored 365-day economy_sim run per seed 1-4 on GitHub (long-sims.yml, every 10), checkpoints for days 30/90/100 (SIM-01); material checks |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
@@ -582,7 +581,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (46)
+## IMPLEMENTED — TESTING REQUIRED (47)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -618,6 +617,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-EQUIP | Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement | docs/directives/2026-10-21_build17_minf2_q1_q2_decisions.md | `9a7b513`; equip_test 51, underground_struct 90, underground_ext 113, underground 95, crafts 20, world 339, run_tests 3544, start 499, parity 55, wiki_test |  | MIN-G one 365-day run per seed 1-4 |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf | `e929446`; underground_ext_test 113; underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3538, start 499, play 37, parity 55 | after MIN-E |  |
 | MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md | `f7f9f71`; underground_struct_test 90; underground_ext 113, underground 95, openpit 66, discovery 65, quarry 39, contracts 138, services 51, world 339, run_tests 3544, start 499, play 37, parity 55 |  |  |
+| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F | Visual review, release documentation gate, Build 17 readiness report; owner decision on the harness one-line fix |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md | `a659f42`, `e929446`; underground_ext_test, underground_test |  |  |
 | MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md | `fbdc8fc`; parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test |  | MIN-G one 365-day run per seed 1-4 |
 | MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | docs/directives/2026-10-21_build17_consolidated_14_decisions.md | `fbdc8fc`; parity_mining_test (62), discovery 65, prospecting 54, openpit 66, quarry 39, underground 95, underground_ext 113, underground_struct 90, services 51, contracts 138, crafts 20, parity 55, conservation 8, world 339, run_tests 3544, start 499, play 39, job_board 16, wiki_test |  | MIN-G one 365-day run per seed 1-4 |

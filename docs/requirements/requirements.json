@@ -17608,7 +17608,7 @@
    "id": "MIN-G",
    "title": "Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -17637,7 +17637,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "After the MIN-EQUIP/MIN-COLLAPSE merge and the determinism re-baseline: one monitored 365-day economy_sim run per seed 1-4 on GitHub (long-sims.yml, every 10), checkpoints for days 30/90/100 (SIM-01); material checks",
+   "next_action": "Visual review, release documentation gate, Build 17 readiness report; owner decision on the harness one-line fix",
    "priority": "future",
    "workstream": "expansion A",
    "superseded_by": null,
@@ -17662,6 +17662,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Gate passed on cd7439c; dispatching long-sims.yml on wip/build17: seeds 1,2,3,4, 365 days, every 10 (one monitored run per seed, SIM-01)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; next_action",
+     "why": "365-day runs (Actions 39692107077, 7e19008 = cd7439c game code) seeds 1-4 all passed: no coin or item leaks, no FATAL, 0 script errors; fingerprints recorded; outcomes recorded (docs/build17/MIN_G_LONG_RUNS.md). Checkpoint day lines not readable (artifacts blocked by the proxy). Harness defect found: open pits counted as building sites (reporting only). Material checks (WDR-001-C/003-C/013-C via check_materials) and visual review remain for the readiness report"
     }
    ],
    "target_build": "17",
