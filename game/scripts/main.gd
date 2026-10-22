@@ -28,6 +28,7 @@ var sprites := {}              # npc id -> ActorSprite
 var animal_sprites := {}       # animal id -> AnimalSprite
 var cart_sprites := {}         # cart id -> Sprite2D (B14: the mine cart stands in for the handcart)
 var player_sprite: ActorSprite
+var player_worn := ""          # ARMOR-01: the worn armour and head item the player's sheet was drawn with
 var loot_nodes: Array = []
 var projectiles: Array = []    # {node, pos, dir, left}
 var target := {}               # current interaction target
@@ -272,6 +273,20 @@ func _ready() -> void:
 					ui.inventory_window().gear_buttons["weapon"].grab_focus()
 				elif shot_panel == "inventory_tab":
 					ui.inventory_window().tab_buttons[2].grab_focus()
+			"worn_none", "worn_iron_armor", "worn_iron_helmet", "worn_iron_both", "worn_leather":
+				# ARMOR-01: the player (made at the creator's defaults) wearing nothing, iron armour, an iron helmet, both,
+				# or leather armour and a cap (no art: unchanged); the other worn panels show the same character
+				var gear := {"worn_iron_armor": ["iron_armor"], "worn_iron_helmet": ["iron_helmet"],
+						"worn_iron_both": ["iron_armor", "iron_helmet"], "worn_leather": ["leather_armor", "leather_cap"]}
+				for id in gear.get(shot_panel, []):
+					world.player.inv.add(id, 1)
+					world.player_equip(id)
+				if world.player.appearance.is_empty():
+					world.player.appearance = CharacterLook.normalize(CharacterLook.random_recipe(_shot_rng(), "male"))
+					world.player.sprite = ""
+					player_worn = "reset"
+				camera.zoom = Vector2(12, 12) * view_scale
+				follow_at = _in_view(world.player.pos * T)
 			"title":
 				ui.show_title(false)
 			"creation":
@@ -1005,6 +1020,7 @@ func _build_scene() -> void:
 		sprites[n.id] = s
 	player_sprite = ActorSprite.new()
 	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
+	player_worn = _worn_key()
 	actors.add_child(player_sprite)
 	camera = Camera2D.new()
 	camera.zoom = Vector2(3, 3) * view_scale
@@ -1216,9 +1232,34 @@ func _on_building_added(b: Dictionary) -> void:
 
 
 # ---------------------------------------------------------------- frame ----------------------
+func _shot_rng() -> RandomNumberGenerator:
+	var r := RandomNumberGenerator.new()
+	r.seed = 7
+	return r
+
+
+func _worn_key() -> String:
+	return "%s|%s" % [world.player.armor, world.player.head]
+
+
+## ARMOR-01 (view only): redraw the player's sheet when the worn armour or helmet changes (put on, taken off, a
+## load or an heir sets them); the recipe, the saved state and the animation frame are untouched.
+func _refresh_player_worn() -> void:
+	if player_sprite == null:
+		return
+	var key := _worn_key()
+	if key == player_worn:
+		return
+	player_worn = key
+	var sheet := CharacterLook.player_sheet(world.player)
+	if sheet != null:
+		player_sprite.texture = sheet
+
+
 func _process(delta: float) -> void:
 	if world == null:
 		return
+	_refresh_player_worn()
 	if shot_path != "":
 		_screenshot_step(delta)
 	if not placing.is_empty():
@@ -4316,6 +4357,7 @@ func _notification(what: int) -> void:
 func continue_as_heir() -> void:
 	world.continue_as_heir()
 	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
+	player_worn = _worn_key()
 	player_sprite.play("idle")
 	ui.hide_all()
 	save_game(false)

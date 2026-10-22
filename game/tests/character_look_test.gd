@@ -17,7 +17,7 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
 	var st := CharacterLook.style()
-	check(st.format == "mml-character-style/1" and st.worn_layers.is_empty(), "the style is read; nothing worn changes the look yet")
+	check(st.format == "mml-character-style/1" and st.worn_layers.has("iron_armor") and st.worn_layers.has("iron_helmet") and not st.worn_layers.has("leather_armor"), "the style is read; iron armour and the iron helmet have worn layers, leather gear none")
 
 	# 1. the same sheet as the importer's generator: every Build 7-17 look, drawn from its recipe
 	var same := 0
@@ -140,7 +140,30 @@ func _init() -> void:
 	var worn := CharacterLook.apply_worn(r1, ["test_hood", "plain_clothes"])
 	check(worn.picks.hair == "" and worn.picks.shoes == "leather-boots" and worn.swatches.leather_shoes == 1 and r1.picks.hair == "m5", "a worn item's entry hides and adds layers without touching the recipe")
 	st.worn_layers.erase("test_hood")
-	check(CharacterLook.apply_worn(r1, ["plain_clothes", "iron_helmet"]) == {"picks": r1.picks, "swatches": r1.swatches}, "with no entries, worn items change nothing")
+	check(CharacterLook.apply_worn(r1, ["plain_clothes", "leather_armor", "leather_cap", ""]) == {"picks": r1.picks, "swatches": r1.swatches}, "items with no entry (plain clothes, leather gear, nothing) change nothing")
+
+	# 8. ARMOR-01: iron armour and the iron helmet draw their layers, taking them off restores the look
+	var rec_before := JSON.stringify(r1)
+	var bare := CharacterLook.render(r1)
+	var arm := CharacterLook.apply_worn(r1, ["iron_armor", ""])
+	check(arm.picks.clothes == "metal-armour" and arm.swatches.metal_armour == 1 and arm.picks.get("headwear", "") == r1.picks.get("headwear", ""), "iron armour sets the clothes layer to metal-armour on a steel swatch")
+	var helm := CharacterLook.apply_worn(r1, ["", "iron_helmet"])
+	check(helm.picks.headwear == "novice-helm" and helm.picks.clothes == r1.picks.clothes, "the iron helmet sets the headwear layer to the novice helm")
+	var img_arm := CharacterLook.render(arm)
+	var img_helm := CharacterLook.render(helm)
+	var img_both := CharacterLook.render(CharacterLook.apply_worn(r1, ["iron_armor", "iron_helmet"]))
+	check(_seen(img_arm) != _seen(bare) and _seen(img_helm) != _seen(bare) and _seen(img_both) != _seen(img_arm) and _seen(img_both) != _seen(img_helm), "armour, helmet and both each draw differently from the bare look")
+	check(_seen(CharacterLook.render(CharacterLook.apply_worn(r1, ["", ""]))) == _seen(bare) and _seen(CharacterLook.render(CharacterLook.apply_worn(r1, ["leather_armor", "leather_cap"]))) == _seen(bare), "taking items off, or wearing leather gear (no art), draws the bare look")
+	check(JSON.stringify(r1) == rec_before, "wearing never changes the recipe")
+	var ps := PlayerState.new()
+	ps.appearance = CharacterLook.normalize(r1)
+	var rec_saved := JSON.stringify(ps.appearance)
+	ps.armor = "iron_armor"
+	var sheet_worn := CharacterLook.player_sheet(ps)
+	ps.armor = ""
+	var sheet_bare := CharacterLook.player_sheet(ps)
+	check(_seen(sheet_worn.get_image()) != _seen(sheet_bare.get_image()) and JSON.stringify(ps.appearance) == rec_saved, "player_sheet follows the worn armour while the saved appearance stays as it was")
+	check(not ps.to_dict().has("worn") and JSON.stringify(ps.to_dict().appearance) == rec_saved, "the save holds the recipe, not the worn layers")
 
 	print("character_look_test: %d failure(s)" % failures)
 	quit(1 if failures else 0)
