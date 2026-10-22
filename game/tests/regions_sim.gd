@@ -24,7 +24,7 @@ func _init() -> void:
 			var bad := r.audit()
 			print("day %d: %d people, %d coins%s" % [d + 1, r.population(), r.coins(), ("  FATAL " + bad) if bad != "" else ""])
 			for s in r.summary():
-				print("   %-9s pop %3d hh %2d hungry %2d deaths %2d coins %5d (hh %4d tills %4d treasury %4d trader %4d) food %.1f d horses %d wage_short %d relief %d" % [s.id, s.population, s.households, s.hungry, s.deaths, s.coins, s.household_coins, s.tills, s.treasury, s.trader, s.pantry_days, s.horses, s.wage_short, s.relief])
+				print("   %-9s pop %3d hh %2d hungry %2d hunger-deaths %2d born %3d age-deaths %3d formed %3d coins %5d (hh %4d tills %4d treasury %4d trader %4d) food %.1f d horses %d wage_short %d relief %d" % [s.id, s.population, s.households, s.hungry, s.deaths, s.births, s.age_deaths, s.households_formed, s.coins, s.household_coins, s.tills, s.treasury, s.trader, s.pantry_days, s.horses, s.wage_short, s.relief])
 			var detail := str(arg.call("--detail", ""))
 			if detail != "":
 				var o: OffMapSettlement = r.by_id[detail]

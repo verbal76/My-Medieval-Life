@@ -39,7 +39,15 @@ const PREPARED_SHARE := 0.3
 const FLOW_GOODS := ["produced", "used", "from_village", "to_village", "road_in", "road_out", "unmet"]
 const FLOW_COUNTS := ["coins_from_village", "coins_to_village", "road_coins_in", "road_coins_out", "migrated_in", "deaths",
 	"wage_short", "relief_units", "tax_households", "tax_businesses", "wages_paid", "official_pay", "horses_foaled",
-	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves"]
+	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves", "births", "age_deaths", "households_formed",
+	"inheritances", "orphans_fostered"]
+## A member of a household (REG-DEMO-01): [born, sex, partnered, unwilling]. `born` is a settlement day number (negative before the
+## first step), so age in years is (day - born) / the calendar's year length and needs no daily update; sex 1 is female; partnered 1
+## means the member is one of the household's couple; unwilling 1 is a person who will not marry (decided once, at birth or founding).
+const M_BORN := 0
+const M_SEX := 1
+const M_PAIR := 2
+const M_UNWILLING := 3
 
 static var _data := {}
 static var _rules := {}               # _data.rules and _data.business_types, once loaded (the step reads them thousands of times)
@@ -48,6 +56,9 @@ static var profile := false              # diagnostics (tests/regions_sim.gd --p
 static var laps := {}
 static var _pts_cache := {}
 static var _val_cache := {}
+var _yd := 8                         # the calendar's days in a year (Life.year_days), read at the start of each step
+var _lim := 16.0                     # the village's adolescent_until, and the age old-age death starts, cached like _yd
+var _mort_from := 60.0
 
 var id := ""
 var name := ""
@@ -56,7 +67,7 @@ var gov_name := ""
 var miles := 0
 var pos := Vector2i.ZERO
 var industries: Array = []
-var hh: Array = []                   # households: {id, trade, adults, children, coins, pantry{}, credit, hungry, acc{}, alive}
+var hh: Array = []                   # households: {id, trade, adults, children, mem[[born, sex, pair, unwilling]], parents[], kids[], coins, pantry{}, credit, hungry, acc{}, alive}
 var biz: Dictionary = {}             # business type -> {type, workers[], till, stock{}, reserves{}, out{}, acc{}, reserve, horses, foal, fed_miss}
 var gov: Dictionary = {}             # {coins, granary{}, officials[], acc{}}
 var prices: Dictionary = {}          # item -> float, the market price (today's whole-coin price is its rounding)
@@ -183,6 +194,13 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 	for h in s.hh:
 		if h.trade == "official":
 			s.gov.officials.append(h.id)
+	s._yd = Life.year_days()
+	s._lim = float(Life.cfg().adolescent_until)
+	s._mort_from = float(Life.cfg().mortality_from)
+	var arng := RandomNumberGenerator.new()          # ages have their own stream: the draws above (and so every founding number) are unchanged
+	arng.seed = world_seed * 7919 + (index + 1) * 104729 + 31
+	for h in s.hh:
+		s._seed_ages(h, arng, 0)
 	s.flows = _blank_flows()
 	s.flows.horses_start = s.horses()
 	s.start = {"coins": s.coins(), "goods": s.goods()}
@@ -196,6 +214,324 @@ static func _blank_flows() -> Dictionary:
 	for k in FLOW_COUNTS:
 		f[k] = 0
 	return f
+
+
+# ------------------------------------------------------------------ people (REG-DEMO-01) ----------------
+## Give a household's `adults` and `children` ages, as Life.seed_population does for the village (same start ranges): a couple is a
+## woman and a man (his age follows hers), the one adult of a household is a woman or a man by a coin, the mother of children is
+## 28-42 (inside the start range), children are start_child_age years old but 16 years younger than their mother. `ref` is the
+## settlement day the ages are measured at (0 at founding, the saved day for an older save without ages).
+func _seed_ages(h: Dictionary, rng: RandomNumberGenerator, ref: int) -> void:
+	var c: Dictionary = Life.cfg()
+	var yd := Life.year_days()
+	var a_lo := float(c.start_adult_age[0])
+	var a_hi := float(c.start_adult_age[1])
+	var kids := int(h.children)
+	var mem: Array = []
+	var anchor := 0.0
+	if int(h.adults) >= 2:
+		anchor = rng.randf_range(maxf(a_lo, 28.0), minf(a_hi, 42.0)) if kids > 0 else rng.randf_range(a_lo, a_hi)
+		var man := clampf(anchor + rng.randf_range(-4.0, 8.0), a_lo, a_hi)
+		mem.append([ref - roundi(anchor * yd), 1, 1, _unwilling(rng)])
+		mem.append([ref - roundi(man * yd), 0, 1, _unwilling(rng)])
+		for k in int(h.adults) - 2:
+			mem.append([ref - roundi(rng.randf_range(a_lo, a_hi) * yd), rng.randi_range(0, 1), 0, _unwilling(rng)])
+	elif int(h.adults) == 1:
+		anchor = rng.randf_range(maxf(a_lo, 28.0), minf(a_hi, 42.0)) if kids > 0 else rng.randf_range(a_lo, a_hi)
+		mem.append([ref - roundi(anchor * yd), rng.randi_range(0, 1), 0, _unwilling(rng)])
+	var c_lo := float(c.start_child_age[0])
+	for k in kids:
+		var top := maxf(c_lo, minf(float(c.start_child_age[1]), anchor - 16.0)) if anchor > 0.0 else float(c.start_child_age[1])
+		mem.append([ref - roundi(rng.randf_range(c_lo, top) * yd), rng.randi_range(0, 1), 0, _unwilling(rng)])
+	h.mem = mem
+	h.parents = []
+	h.kids = []
+	_recount(h)
+
+
+## The village's share of people who do not mean to marry (balance.json relations.unwilling_percent).
+static func _unwilling(rng: RandomNumberGenerator) -> int:
+	return 1 if rng.randf() * 100.0 < float(GameData.b("relations").unwilling_percent) else 0
+
+
+## A reproducible number in [0, 1) from three integers (no random stream to save: a settlement's days stay the same after a reload).
+static func _roll(a: int, b: int, c: int) -> float:
+	var x: int = a * 0x2545F4914F6CDD1D + b * 0x1E3779B97F4A7C15 + c * 0x2A09E667F3BCC909 + 0x1234567
+	x = x ^ ((x >> 29) & 0x7FFFFFFFF)
+	x = x * 0x2127599BF4325C37
+	x = x ^ ((x >> 32) & 0xFFFFFFFF)
+	x = x * 0x165667B19E3779F9
+	x = x ^ ((x >> 28) & 0xFFFFFFFFF)
+	return float((x >> 20) & 0xFFFFFF) / 16777216.0
+
+
+func _age(m: Array) -> float:
+	return float(day - int(m[M_BORN])) / float(_yd)
+
+
+## Adults and children counts from the members' ages (a child is under the village's adolescent_until; elders count as adults
+## here, as they always did) and the couple flag cleared when the couple is not both there.
+func _recount(h: Dictionary) -> void:
+	var lim := _lim
+	var a := 0
+	var k := 0
+	var f := 0
+	var m := 0
+	for x in h.mem:
+		if _age(x) < lim:
+			k += 1
+		else:
+			a += 1
+		if int(x[M_PAIR]) == 1:
+			if int(x[M_SEX]) == 1:
+				f += 1
+			else:
+				m += 1
+	if f != 1 or m != 1:
+		for x in h.mem:
+			x[M_PAIR] = 0
+	h.adults = a
+	h.children = k
+
+
+func _is_adult(m: Array) -> bool:
+	return _age(m) >= _lim
+
+
+## The dawn of a settlement's day: ageing, old-age deaths, births to couples, new couples founding households. The village's own
+## rules (balance.json life, relations) at household level; every roll is a reproducible function of (settlement, day, person).
+func _life() -> void:
+	_yd = Life.year_days()
+	var c: Dictionary = Life.cfg()
+	_lim = float(c.adolescent_until)
+	_mort_from = float(c.mortality_from)
+	var salt := id.hash() & 0xFFFFFF
+	var n0 := hh.size()
+	_old_age(salt)
+	var tt := Time.get_ticks_usec() if profile else 0
+	var chance := 1.0 / (float(c.birth_interval_years) * _yd)
+	for i in n0:
+		var h: Dictionary = hh[i]
+		if h.alive:
+			_try_birth(h, chance, salt)
+	if profile:
+		tt = _lap("life:births", tt)
+	_found_household(salt)
+	if profile:
+		tt = _lap("life:marry", tt)
+
+
+## Old-age deaths, by the village's mortality curve (Life.death_chance) rolled once a day for each member.
+func _old_age(salt: int) -> void:
+	for i in hh.size():
+		var h: Dictionary = hh[i]
+		if not h.alive:
+			continue
+		var dead := false
+		for j in range(h.mem.size() - 1, -1, -1):
+			var m: Array = h.mem[j]
+			var ag := _age(m)
+			var p := Life.death_chance(ag) if ag >= _mort_from else 0.0
+			if p > 0.0 and (p >= 1.0 or _roll(salt, day * 7 + 1, int(m[M_BORN]) * 64 + i) < p):
+				_remove_member(h, j)
+				flows.age_deaths += 1
+				dead = true
+		if dead:
+			_after_loss(h)
+		else:
+			_recount(h)
+
+
+func _try_birth(h: Dictionary, chance: float, salt: int) -> void:
+	var c: Dictionary = Life.cfg()
+	var mother: Array = []
+	for m in h.mem:
+		if int(m[M_PAIR]) == 1 and int(m[M_SEX]) == 1:
+			mother = m
+	if mother.is_empty():
+		return
+	var age := _age(mother)
+	if age < float(c.birth_mother_min_age) or age > float(c.birth_mother_max_age):
+		return
+	for m in h.mem:
+		if _age(m) < float(c.birth_min_gap_years):
+			return
+	if _roll(salt, day * 7 + 2, int(h.id)) >= chance:
+		return
+	if _pantry_pts(h) < float(c.birth_min_food_days) * _need_pts(h):
+		return
+	var sex := 1 if _roll(salt, day * 7 + 3, int(h.id)) < 0.5 else 0
+	var unw := 1 if _roll(salt, day * 7 + 4, int(h.id)) * 100.0 < float(GameData.b("relations").unwilling_percent) else 0
+	h.mem.append([day, sex, 0, unw])
+	flows.births += 1
+	_recount(h)
+
+
+## Take member `j` out of a household (death); the caller then runs _after_loss.
+func _remove_member(h: Dictionary, j: int) -> void:
+	var m: Array = h.mem[j]
+	h.mem.remove_at(j)
+	if int(m[M_PAIR]) == 1:
+		for x in h.mem:
+			x[M_PAIR] = 0                                   # a couple ends when one of them dies
+
+
+## After a household lost a member: when no adult is left it is closed. Its children (if any) and its coins and goods pass by the
+## inheritance rule: to the nearest living kin household (the households its members founded, eldest first; then those its
+## founders came from; then their other offspring: the village's order, Life.heir_of), else children go to the settlement's
+## smallest living household (the village's Guardianship: kin or a household that takes them in), and with no children and no kin
+## the coins and food pass to the treasury (the rule of Build 18's first settlements).
+func _after_loss(h: Dictionary) -> void:
+	_recount(h)
+	if int(h.adults) > 0:
+		return
+	var heir := _heir(h)
+	if heir < 0 and not h.mem.is_empty():
+		heir = _guardian(h)
+	h.alive = false
+	if heir < 0:
+		flows.deaths += h.mem.size()                         # no household anywhere to take the children in
+		h.mem = []
+		gov.coins += int(h.coins)
+		h.coins = 0
+		for k in h.pantry:
+			_add(gov.granary, k, int(h.pantry[k]))
+		h.pantry = {}
+		return
+	var e: Dictionary = hh[heir]
+	e.coins += int(h.coins)
+	h.coins = 0
+	for k in h.pantry:
+		_add(e.pantry, k, int(h.pantry[k]))
+	h.pantry = {}
+	e.credit = _q(float(e.credit) + float(h.credit))
+	h.credit = 0.0
+	if not h.mem.is_empty():
+		flows.orphans_fostered += h.mem.size()
+		e.mem.append_array(h.mem)
+		h.mem = []
+		_recount(e)
+	flows.inheritances += 1
+
+
+func _heir(h: Dictionary) -> int:
+	var order: Array = []
+	order.append_array(h.kids)
+	order.append_array(h.parents)
+	for p in h.parents:
+		order.append_array(hh[int(p)].kids)
+	for i in order:
+		var k := int(i)
+		if k != int(h.id) and hh[k].alive and int(hh[k].adults) > 0:
+			return k
+	return -1
+
+
+func _guardian(h: Dictionary) -> int:
+	var best := -1
+	for e in hh:
+		if e.alive and int(e.id) != int(h.id) and int(e.adults) > 0 and (best < 0 or e.mem.size() < hh[best].mem.size()):
+			best = int(e.id)
+	return best
+
+
+## Two grown, unpartnered people of different, unrelated households who are of an age to marry (the village's partner_min_age,
+## partner_max_age, partner_max_gap), have been of age marry_min_days and do not refuse (unwilling_percent) marry and found a
+## household of their own: one pair a day at most. They leave with an equal share of their households' coins and pantries (all of
+## it when it is the last of the household), take up the man's trade (an official's household, a farm's) and join its
+## business. The off-map has no houses: a new household needs none (lighter detail; provisional).
+func _found_household(salt: int) -> void:
+	var c: Dictionary = Life.cfg()
+	var lo := float(c.partner_min_age)
+	var hi := float(c.partner_max_age)
+	var wait := lo * _yd + float(GameData.b("relations").marry_min_days)
+	var women: Array = []
+	var men: Array = []
+	for h in hh:
+		if not h.alive:
+			continue
+		for j in h.mem.size():
+			var m: Array = h.mem[j]
+			var a := _age(m)
+			if int(m[M_PAIR]) == 1 or int(m[M_UNWILLING]) == 1 or a < lo or a > hi or float(day - int(m[M_BORN])) < wait:
+				continue
+			if int(h.adults) < 2 and int(h.children) > 0:
+				continue                                            # the only adult of a household with children does not leave it
+			if h.mem.size() == 1 and not _may_close(h):
+				continue
+			(women if int(m[M_SEX]) == 1 else men).append([int(h.id), j])
+	for w in women:
+		var wh: Dictionary = hh[w[0]]
+		var wa := _age(wh.mem[w[1]])
+		for mm in men:
+			var mh: Dictionary = hh[mm[0]]
+			if int(mh.id) == int(wh.id) or _related(wh, mh) or absf(_age(mh.mem[mm[1]]) - wa) > float(c.partner_max_gap):
+				continue
+			_marry(wh, int(w[1]), mh, int(mm[1]))
+			return
+
+
+## A one-person household may leave to marry only if no post is left empty: not an official's, and its business keeps a household.
+func _may_close(h: Dictionary) -> bool:
+	if str(h.trade) == "official" or not TRADE_BIZ.has(str(h.trade)):
+		return false
+	return biz.has(TRADE_BIZ[h.trade]) and _workers(biz[TRADE_BIZ[h.trade]]) >= 2
+
+
+func _related(a: Dictionary, b: Dictionary) -> bool:
+	if a.parents.has(int(b.id)) or b.parents.has(int(a.id)):
+		return true
+	for p in a.parents:
+		if b.parents.has(p):
+			return true
+	return false
+
+
+func _marry(wh: Dictionary, wj: int, mh: Dictionary, mj: int) -> void:
+	var wm: Array = wh.mem[wj]
+	var mm: Array = mh.mem[mj]
+	var trade := str(mh.trade)
+	var bt := ""
+	if trade != "official" and TRADE_BIZ.has(trade) and biz.has(TRADE_BIZ[trade]):
+		bt = TRADE_BIZ[trade]
+	else:
+		bt = "farm" if biz.has("farm") else str(biz.keys()[0])
+		trade = _trade_of(bt)
+	var h := {"id": hh.size(), "trade": trade, "adults": 2, "children": 0, "coins": 0, "pantry": {}, "credit": 0.0, "hungry": 0, "acc": {},
+		"alive": true, "inc": 0, "stay": 0, "mem": [wm, mm], "parents": [int(wh.id), int(mh.id)], "kids": []}
+	wm[M_PAIR] = 1
+	mm[M_PAIR] = 1
+	for src in [[wh, wj], [mh, mj]]:
+		var o: Dictionary = src[0]
+		var n: int = o.mem.size()
+		var cs: int = int(o.coins) if n == 1 else int(o.coins) / n
+		o.coins -= cs
+		h.coins += cs
+		for k in o.pantry.keys():
+			var q: int = int(o.pantry[k]) if n == 1 else int(o.pantry[k]) / n
+			if q > 0:
+				_take(o.pantry, k, q)
+				_add(h.pantry, k, q)
+		if n == 1:
+			h.credit = _q(float(h.credit) + float(o.credit))
+			o.credit = 0.0
+		o.mem.remove_at(int(src[1]))
+		o.kids.append(h.id)
+	hh.append(h)
+	biz[bt].workers.append(h.id)
+	flows.households_formed += 1
+	for o in [wh, mh]:
+		if o.mem.is_empty():                                         # the last of a household goes with the couple: it closes, nothing left behind
+			o.alive = false
+			_recount(o)
+			for k in o.pantry:
+				_add(h.pantry, k, int(o.pantry[k]))
+			o.pantry = {}
+			h.coins += int(o.coins)
+			o.coins = 0
+		else:
+			_recount(o)
+	_recount(h)
 
 
 # ------------------------------------------------------------------ books ----------------
@@ -334,6 +670,9 @@ func step_day(d: int) -> void:
 	_stable()
 	if profile:
 		t0 = _lap("eat", t0)
+	_life()
+	if profile:
+		t0 = _lap("life", t0)
 	_update_prices()
 	_pcache = {}
 	_move_jobs()
@@ -835,18 +1174,23 @@ func _eat() -> void:
 
 
 func _lose_member(h: Dictionary) -> void:
-	if int(h.children) > 0:
-		h.children -= 1
-	else:
-		h.adults -= 1
+	# hunger takes the youngest child first, else the oldest (as it always took children first)
+	var pick := -1
+	for j in h.mem.size():
+		var m: Array = h.mem[j]
+		if pick < 0:
+			pick = j
+			continue
+		var p: Array = h.mem[pick]
+		if _is_adult(m) == _is_adult(p):
+			if int(m[M_BORN]) > int(p[M_BORN]) if not _is_adult(m) else int(m[M_BORN]) < int(p[M_BORN]):
+				pick = j
+		elif not _is_adult(m):
+			pick = j
+	if pick >= 0:
+		_remove_member(h, pick)
 	flows.deaths += 1
-	if int(h.adults) + int(h.children) <= 0:
-		h.alive = false
-		gov.coins += int(h.coins)
-		h.coins = 0
-		for k in h.pantry:
-			_add(gov.granary, k, int(h.pantry[k]))
-		h.pantry = {}
+	_after_loss(h)
 
 
 ## The settlement's working horses eat the farms' wheat (from their own stock: grain they grew), and a fed pair breeds.
@@ -1023,7 +1367,8 @@ func summary() -> Dictionary:
 	return {"id": id, "population": population(), "households": households(), "hungry": hungry, "deaths": int(flows.deaths),
 		"coins": coins(), "household_coins": cash, "tills": tills, "treasury": int(gov.coins),
 		"trader": int(trader().get("till", 0)), "pantry_days": food_pts / maxf(1.0, need), "horses": horses(),
-		"wage_short": int(flows.wage_short), "relief": int(flows.relief_units)}
+		"wage_short": int(flows.wage_short), "relief": int(flows.relief_units), "births": int(flows.births),
+		"age_deaths": int(flows.age_deaths), "households_formed": int(flows.households_formed)}
 
 
 # ------------------------------------------------------------------ saving ----------------
@@ -1076,6 +1421,10 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 			c[k] = int(c[k])
 		c.inc = int(c.get("inc", 0))
 		c.stay = int(c.get("stay", 0))
+		c.parents = (c.get("parents", []) as Array).map(func(x): return int(x))
+		c.kids = (c.get("kids", []) as Array).map(func(x): return int(x))
+		if c.has("mem"):
+			c.mem = (c.mem as Array).map(func(m): return [int(m[0]), int(m[1]), int(m[2]), int(m[3])])
 		c.credit = float(c.credit)
 		c.pantry = _ints(c.pantry)
 		var acc := {}
@@ -1083,6 +1432,16 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 			acc[k] = float(c.acc[k])
 		c.acc = acc
 		s.hh.append(c)
+	s._yd = Life.year_days()
+	s._lim = float(Life.cfg().adolescent_until)
+	s._mort_from = float(Life.cfg().mortality_from)
+	var nrng := RandomNumberGenerator.new()           # a save from before REG-DEMO-01 has no ages: drawn from the settlement's own id and day
+	nrng.seed = str(d.id).hash() + s.day * 7919 + 31
+	for c in s.hh:
+		if not c.has("mem"):
+			s._seed_ages(c, nrng, s.day)
+		else:
+			s._recount(c)
 	for t in d.biz:
 		var b: Dictionary = (d.biz[t] as Dictionary).duplicate(true)
 		for k in ["till", "reserve", "horses", "foal", "fed_miss"]:
