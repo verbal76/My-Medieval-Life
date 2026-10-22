@@ -12,9 +12,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 64 |
-| ACTIVE DEVELOPMENT | 20 |
+| ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 40 |
+| IMPLEMENTED — TESTING REQUIRED | 41 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
@@ -225,7 +225,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| VIS-STEPS-01 | Steps cut through rock need real step art | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-STEPS-01 | Steps cut through rock need real step art | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -536,7 +536,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (20)
+## ACTIVE DEVELOPMENT (19)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -552,7 +552,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `8eec56e`, `283ec55`; settlement_test 63, regional_test 67, caravan_compare 20/50; run_tests, world_test, start_test, parity_test, conservation_test, business_test; branch wip/expansion18-preparation |  |  |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`, `693e0c3`, `6615da4`, `1b05da0`, `e91d903`, `05adc9d`, `c4b10e4`; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
-| VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps | branch wip/b18-polish |  |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md | `4ce9927`, `4115b48`, `da4d610`, `3de7a8f`; experience_test | after Q18-11B; after PROS-18 | Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md | courier_test |  |  |
@@ -599,7 +598,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (40)
+## IMPLEMENTED — TESTING REQUIRED (41)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -630,7 +629,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need |  | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `afef91d`; stalls_test |  |  |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md | `f56e9bb`; world_test::_shop01_need | after SHOP-01 | Measure in the next four-seed runs; owner to set a stocking horizon and confirm the readings |
-| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | owner message 2026-10-22 with photos of the trade window and HUD | `9cc1db5`, `bc90e81`; start_test |  |  |
+| TRADE-AXE-01 | Playtest: cannot buy Clement Ward's axe (listed 45) holding 47 coins | owner message 2026-10-22 with photos of the trade window and HUD | `9cc1db5`, `bc90e81`, `c7df646`; start_test |  |  |
 | TRADE-UI-02 | Contract proposal's answer shown in view | owner message 2026-10-22 with a photo of the contract window | `1bbf0ab`; start_test |  |  |
 | UI-HUD-01 | HUD status panel too large: shrink and move the date line | owner message 2026-10-22 with a photo of the HUD | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
@@ -640,6 +639,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `3829098`; furniture_test, start_test; branch wip/b18-axe |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | docs/directives/2026-10-22_build18_master_integration.md | `a38eea9`; run_tests, start_test, play_test, wiki_test, farming_test; branch wip/b18-visual |  |  |
+| VIS-STEPS-01 | Steps cut through rock need real step art | owner message 2026-10-22 with a photo of cut steps | `8366315`; terrain_test; branch wip/b18-polish |  |  |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | `7c4d1ac`; tree_test, check_assets; branch wip/b18-trees |  |  |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |

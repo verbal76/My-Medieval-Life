@@ -6044,6 +6044,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "owner remark; scope not yet defined (observed: the 3-column goods grid runs off the right edge; long service labels clip)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "two interface defects fixed meanwhile (c7df646): the goods and work grids fit the window, refusal wording grammatical ('an axe'); the wider design idea stays with the owner"
     }
    ],
    "target_build": "18"
@@ -27727,7 +27732,8 @@
    "branch": "",
    "commits": [
     "9cc1db5",
-    "bc90e81"
+    "bc90e81",
+    "c7df646"
    ],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -27770,6 +27776,11 @@
      "date": "2026-10-22",
      "change": "commit bc90e81",
      "why": "second cause, from the owner's photo with room in the pack: the quantity box opened above a scrolled list (focus scrolled only to its Buy button; none on touch). Reproduced in engine; fixed bc90e81 (box scrolls itself into view), merged 403ade5; checked kbm, pad and touch; start_test passes"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit c7df646",
+     "why": "follow-up c7df646: the quantity box's scroll wait no longer runs outside the tree (removed 14 script errors in start_test); start 506, run_tests 3584 with 0 script errors"
     }
    ],
    "target_build": "18"
@@ -28318,7 +28329,7 @@
    "id": "VIS-STEPS-01",
    "title": "Steps cut through rock need real step art",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "I cut steps through the Rock. That's the best you can give me for an image of steps",
    "description": "Steps cut through rock need real step art",
    "source": "owner message 2026-10-22 with a photo of cut steps",
@@ -28327,10 +28338,12 @@
     "Cut steps read as stone steps in the rock at normal zoom, from art the project owns"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "terrain_test",
    "playtest": [],
    "branch": "wip/b18-polish",
-   "commits": [],
+   "commits": [
+    "8366315"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -28357,6 +28370,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "overnight polish worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 8366315; tests",
+     "why": "Puny World's own stone cliff-stair tile imported with provenance (8366315), merged into wip/build18 c7df646; north-south steps looked at in the world, east-west only as the tile (unverified in-world); terrain_test 34/0"
     }
    ],
    "target_build": "18"
