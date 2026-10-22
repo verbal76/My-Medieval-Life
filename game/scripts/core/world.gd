@@ -74,6 +74,7 @@ var last_reeve_day := -1           # the day the reeve's evening business last r
 var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
+var couriers: CourierService         # REG-COURIER-01 (Expansion 18): the five settlements' booths and the village's, regular routes and special deliveries; saved under "couriers" (optional key; absent: no deliveries on the road)
 var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-map settlements and their traders, who are the caravan (ECON-P1.3); saved under "regions" (optional key)
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
@@ -209,6 +210,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	quests.start_story()
 	manor_work = ManorWork.new(self)
 	discovery = Discovery.create(self)  # MIN-D: the mining capability the settlers start with (derived, no rng draw)
+	couriers = CourierService.create_live(self)     # REG-COURIER-01: a booth for each of the five settlements; the village's opens at the first dawn
+	couriers.daily()
 	note("Day 1 begins in the village.")
 
 
@@ -360,6 +363,8 @@ func _on_hour(h: int) -> void:
 		regions.step_hour(day(), h)   # SET-C-SIM: the settlements take their day's step one after another through the morning
 		if profiling:
 			_prof("neighbouring settlements (a step an hour, mornings)", tr)
+	if couriers != null:
+		couriers.step()               # REG-COURIER-01: couriers leave on their routes, arrive, hand over and come home
 	_grow_trees()
 	farm.hour()                        # the player's crops (PL2-015)
 	farm_plots.hour()                  # the households' farmland crops (FARM-03)
@@ -433,6 +438,8 @@ func _new_day() -> void:
 	property.relet_stalls()
 	brain.relet_pens()
 	business.daily()                   # the stall's rent (PL1-10)
+	if couriers != null:
+		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
 	chapel.dawn()                      # DVW-B3-CHAPEL: this morning's volunteers for the church plot, and its seed
@@ -726,6 +733,13 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
 	return true
+
+
+## REG-COURIER-01 HOOK (a record only): `actor` (an NPC or the player) really dealt with the trader of `settlement` on a caravan
+## day, so a courier may address that trader afterwards (X18-Q12-POST). Nothing moves and no rule changes.
+func note_settlement_trade(actor: Object, settlement: Object) -> void:
+	if couriers != null and settlement != null:
+		couriers.note_settlement_trade(PLAYER if actor == player else "npc:%d" % (actor as NPC).id, str(settlement.id))
 
 
 ## Move items between two inventories without money (gifts, deposits, pantry).
@@ -1054,6 +1068,8 @@ func total_coins() -> int:
 		n += business.tills()
 	if chapel != null:
 		n += chapel.coins                         # DVW-B3-CHAPEL: the offerings fund
+	if couriers != null:
+		n += couriers.held_coins()                # REG-COURIER-01: fees held at the booths until the work is done, and proceeds deposited
 	return n
 
 
@@ -3678,7 +3694,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 19          # Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 19          # Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -4033,7 +4049,7 @@ func to_dict() -> Dictionary:
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
-		"player": player.to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
+		"player": player.to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": player_level},
@@ -4165,6 +4181,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		var purse := int(d.caravan_purse) if d.has("caravan_purse") else 0
 		if purse > 0:
 			regions.add_migrated(purse)
+	# REG-COURIER-01: the couriers' booths, routes and deliveries on the road; a save from before them has none in flight (the
+	# settlements' booths stand, the village's opens at the next dawn)
+	couriers = CourierService.from_dict(self, d.couriers) if d.get("couriers") is Dictionary else CourierService.create_live(self)
 	log_lines = d.log
 	sage_id = int(d.sage_id)
 	reeve_id = int(d.reeve_id)

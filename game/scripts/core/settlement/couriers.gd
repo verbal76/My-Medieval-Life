@@ -1,10 +1,20 @@
 class_name CourierService
 extends RefCounted
-## PROSPECTIVE (Expansion 18, X18-Q12, X18-Q12-BOOTH, X18-Q12-POST; PROS-18): couriers, their booths, regular routes and
+## Expansion 18 (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, REG-COURIER-01): couriers, their booths, regular routes and
 ## special deliveries, by the owner's decisions of 2026-10-21 (Q18-12 decided; docs/directives/
 ## 2026-10-21_expansion18_capability_simulations_contracts.md, _courier_booths_known_recipients.md,
 ## _courier_contract_interface_pricing.md on staging). Rules live here; the courier window (ui/courier_window.gd) only
-## shows them and collects choices (DVW-A12 principle). Not wired into the live game loop: tests drive it.
+## shows them and collects choices (DVW-A12 principle).
+##
+## LIVE (REG-COURIER-01): `World.couriers` is `CourierService.create_live(world)`: one booth per neighbouring settlement kept by that
+## settlement's trader party (`region:<id>/trader`, resolved through `World.regions` so a loaded world needs no handles saved), the
+## village's booth by the stall rules (`daily`), a regular route each way between the village booth and each settlement's
+## (journey days from the settlement's miles in settlements.json, `Regions.village_route_table`), stepped every game hour by
+## `World._on_hour` and saved under the optional World key "couriers" (`to_dict`/`from_dict`). What crosses the village's boundary
+## (goods and coins handed to or taken from a settlement's party) is booked in the village's own ledgers (`imported_*`,
+## `exported_*`, `coin_sources`, `caravan_coins_in/out`) as well as the party's `outside_*` flow lines, so both audits balance.
+## Contacts: a villager who really traded with a settlement's trader (the caravan's purchases and sales) is recorded
+## (`note_settlement_trade`, saved) and may then address that trader.
 ##
 ## Booths (X18-Q12-BOOTH): a booth is an existing market stall (World.stalls) with no tenant, or a stall its keeper builds
 ## by the STALL rules (Stalls.build: three planks from the keeper's own pack), kept by a villager the existing job rule
@@ -25,12 +35,12 @@ extends RefCounted
 ## addresses. The same rules serve the player and villagers.
 ##
 ## Physical execution (tick): the goods leave the sender's pack when booked (handed over at the booth, or to the courier
-## for a special delivery) and ride in the courier's own pack; after the journey's days the courier hands them over, takes
+## for a special delivery) and ride in the delivery's `cargo` (the courier's load, held by the delivery: a villager courier's own trading would otherwise sell it); after the journey's days the courier hands them over, takes
 ## the payment or goods it was told to collect, and travels back to hand them to the sender or deposit them at the
 ## sender's booth. A contract is fulfilled only when every physical and financial obligation is done. A courier who dies
-## or is waylaid interrupts it: what it carried stays in its pack (and passes to its heir by World.kill, like any goods),
+## or is waylaid interrupts it: the load it carried is dropped where it fell as a loot pile,
 ## the special fee held at the booth goes back to the payer. Nothing is instant and nothing is invented: every good and
-## coin is always in exactly one holder (packs, purses, booth stores and booth coins, off-map ledgers).
+## coin is always in exactly one holder (packs, purses, booth stores and booth coins, loads on the road, off-map ledgers).
 
 const PATH := "res://data/couriers.json"
 static var _cfg := {}
@@ -42,6 +52,8 @@ var routes: Array = []     # {id, from, to, every_days, fee_per_load, load_units
 var links := {}            # "a>b" -> route dict from TradeRoutes (between settlements)
 var jobs: Array = []       # deliveries (see book_route / book_special)
 var next_id := 1
+var live := false           # the game's own service (World.couriers): parties come from World.regions, boundary crossings are booked
+var contacts: Array = []   # live: [sender ref, party id] pairs, a villager's real dealings with a settlement's trader (saved)
 
 
 static func cfg() -> Dictionary:
@@ -70,9 +82,47 @@ func inv_of(ref: String):
 		var n = _npc(ref)
 		return n.inv if n != null else null
 	if ref.begins_with("region:"):
-		var l = regions.get(ref.trim_prefix("region:"))
-		return l.stock if l != null else null
+		var l = _party(ref.trim_prefix("region:"))
+		if l == null:
+			return null
+		return _Edge.new(self, l) if live else l.stock
 	return null
+
+
+## The off-map party a "<settlement>/<holder>" key names: a fixture's (`regions`), else, in the live game, the settlement's own
+## holder (a handle on World.regions, so it is always the current books); null when there is none.
+func _party(key: String):
+	if regions.has(key):
+		return regions[key]
+	if live and w != null and w.regions != null:
+		return w.regions.party(key)
+	return null
+
+
+## A settlement party seen from the village: the Inventory-like hand-overs the service makes, each also booked as the good
+## crossing the village's boundary (an `exported_` or `imported_` count) beside the party's own `outside_*` flow line.
+class _Edge:
+	var cs: CourierService
+	var p
+	func _init(service: CourierService, party) -> void:
+		cs = service
+		p = party
+	func count(id: String) -> int:
+		return p.held(id)
+	func has(id: String, n := 1) -> bool:
+		return p.held(id) >= n
+	func can_add(id: String) -> bool:
+		return p.can_hold(id)
+	func add(id: String, n := 1) -> bool:
+		var ok: bool = p.add(id, n)
+		if ok and n > 0:
+			cs.w.stat("exported_" + id, float(n))
+		return ok
+	func remove(id: String, n := 1) -> bool:
+		var ok: bool = p.remove(id, n)
+		if ok and n > 0:
+			cs.w.stat("imported_" + id, float(n))
+		return ok
 
 
 func coins_of(ref: String) -> int:
@@ -82,7 +132,7 @@ func coins_of(ref: String) -> int:
 		var n = _npc(ref)
 		return n.coins if n != null else 0
 	if ref.begins_with("region:"):
-		var l = regions.get(ref.trim_prefix("region:"))
+		var l = _party(ref.trim_prefix("region:"))
 		return l.purse() if l != null else 0
 	return 0
 
@@ -98,10 +148,13 @@ func add_coins(ref: String, k: int) -> void:
 		else:
 			n.spent -= k
 	elif ref.begins_with("region:"):
-		var l = regions[ref.trim_prefix("region:")]
+		var l = _party(ref.trim_prefix("region:"))
 		if l is SettlementParty:
-			(l as SettlementParty).outside_coins(k)      # (a party never pays past empty: callers check coins_of first)
-		else:
+			var paid: bool = (l as SettlementParty).outside_coins(k)      # (a party never pays past empty: callers check coins_of first)
+			if paid and live and k != 0:                                  # the coins cross the village's boundary: its record of coins from outside moves
+				w.coin_sources -= k
+				w.stat("caravan_coins_out" if k > 0 else "caravan_coins_in", float(absi(k)))
+		elif l != null:
 			l.coins += k
 
 
@@ -111,7 +164,7 @@ func alive(ref: String) -> bool:
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
 		return n != null and n.alive
-	return ref.begins_with("region:") and regions.has(ref.trim_prefix("region:"))
+	return ref.begins_with("region:") and _party(ref.trim_prefix("region:")) != null
 
 
 func rel_id(ref: String) -> int:
@@ -159,7 +212,8 @@ func open_booth(keeper: String, stall_id := "") -> String:
 
 ## An off-map settlement's booth, kept by the settlement itself (its own party).
 func open_region_booth(region) -> void:
-	regions[region.id] = region
+	if not live:
+		regions[region.id] = region
 	booths.append({"id": "b%d" % next_id, "settlement": region.settlement, "stall": "", "keeper": "region:" + region.id,
 		"store": Inventory.new(), "coins": 0, "escrow": 0, "deposits": {}, "x": region.pos.x, "y": region.pos.y})
 	next_id += 1
@@ -228,12 +282,26 @@ func known_recipients(sender: String) -> Array:
 			var tp: Dictionary = w.relations.peek(me, Life.PLAYER_ID)
 			if int(tp.days_known) >= 1:
 				out.append(_entry("player", "person", "knows them"))
+	var seen := {}
 	for id in regions:
 		var l = regions[id]
 		if l.journal.any(func(e): return str(e.with) == sender or str(e.with).ends_with("/" + sender)):
 			out.append(_entry("region:" + id, "business", "has traded with them"))
+			seen[id] = true
+	for c in contacts:                    # live: the villager's real dealings with a settlement's trader (the caravan)
+		if str(c[0]) == sender and not seen.has(str(c[1])) and _party(str(c[1])) != null:
+			out.append(_entry("region:" + str(c[1]), "business", "has traded with them"))
+			seen[str(c[1])] = true
 	out.sort_custom(func(a, b): return a.name < b.name or (a.name == b.name and a.kind < b.kind))
 	return out
+
+
+## Record that `actor` ("player" or "npc:<id>") really dealt with the trader of settlement `settlement` (a caravan purchase or
+## sale): the trader becomes a party the actor may address. A record only; nothing moves.
+func note_settlement_trade(actor: String, settlement: String) -> void:
+	var pair := [actor, settlement + "/trader"]
+	if live and not contacts.has(pair):
+		contacts.append(pair)
 
 
 func is_known(sender: String, ref: String, kind := "") -> bool:
@@ -262,7 +330,7 @@ func _entry(ref: String, kind: String, why: String) -> Dictionary:
 		if kind == "business":
 			name = "%s's %s" % [n.name, str(w.brain.buy_role(n)).replace("merchant_", "").replace("_", " ")]
 	else:
-		name = regions[ref.trim_prefix("region:")].name
+		name = _party(ref.trim_prefix("region:")).name
 	return {"ref": ref, "kind": kind, "name": name, "owner": ref, "settlement": loc.settlement, "x": loc.x, "y": loc.y,
 		"where": loc.what, "why": why}
 
@@ -310,7 +378,8 @@ func locations(ref: String) -> Array:
 # ------------------------------------------------------------------------------ fees
 func capacity(courier: String) -> int:
 	if courier.begins_with("region:"):
-		return TradeRoutes.capacity(regions[courier.trim_prefix("region:")].transport)
+		var cp = _party(courier.trim_prefix("region:"))
+		return TradeRoutes.capacity(cp.transport) if cp != null else 0
 	var n = _npc(courier)
 	if n == null:
 		return 0
@@ -388,6 +457,11 @@ func refusal(order: Dictionary) -> String:
 		if r.is_empty():
 			return "There is no such route."
 		var to: Dictionary = booth(str(r.to))
+		var from: Dictionary = booth(str(r.from))
+		if str(from.settlement) != place_of(sender):
+			return "That route does not start where you are."
+		if not alive(str(from.keeper)):
+			return "Nobody is keeping the booth."
 		if str(order.get("settlement", place_of(recipient))) != str(to.settlement):
 			return "That route does not go where they are."
 		if units_of(items) > int(r.load_units) * int(cfg().routes.loads_per_departure):
@@ -468,7 +542,7 @@ func negotiate(order: Dictionary, offer: int) -> Dictionary:
 
 
 ## A special delivery, at an agreed fee: the fee is held at the sender's booth until the contract is fulfilled; the
-## goods go into the courier's own pack. Returns the job, or {error}.
+## goods go into the delivery's cargo. Returns the job, or {error}.
 func book_special(order: Dictionary, fee: int) -> Dictionary:
 	order.kind = "special"
 	order.fee = fee
@@ -479,17 +553,13 @@ func book_special(order: Dictionary, fee: int) -> Dictionary:
 	if b.is_empty():
 		return {"error": "There is no courier booth here to hold the fee."}
 	var q := quote(order)
-	var courier_inv = inv_of(str(order.courier))
 	var inv = inv_of(str(order.sender))
 	for id in order.items:
-		if not courier_inv.can_add(id):
-			return {"error": "The courier's pack is full."}
-	for id in order.items:
 		inv.remove(id, int(order.items[id]))
-		courier_inv.add(id, int(order.items[id]))
 	add_coins(str(order.sender), -fee)
 	b.escrow = int(b.escrow) + fee
 	var job := _job(order, q, str(order.courier))
+	job.cargo = (order.items as Dictionary).duplicate()          # the courier's load: held by the delivery, see the header
 	job.fee = fee
 	job.held_at = b.id
 	job.state = "in_transit"
@@ -504,7 +574,7 @@ func _job(order: Dictionary, q: Dictionary, courier: String) -> Dictionary:
 		"recipient_kind": str(order.get("recipient_kind", "person")), "settlement": str(order.get("settlement", place_of(str(order.recipient)))),
 		"items": (order.items as Dictionary).duplicate(), "courier": courier, "fee": int(q.fee), "days": float(q.days),
 		"collect": (order.get("collect", {}) as Dictionary).duplicate(), "proceeds": str(order.get("proceeds", "deliver")),
-		"carried_coins": 0, "carried_items": {}, "returned_items": {}, "state": "", "route": "", "held_at": "", "depart": -1.0,
+		"carried_coins": 0, "carried_items": {}, "returned_items": {}, "cargo": {}, "state": "", "route": "", "held_at": "", "depart": -1.0,
 		"arrive": -1.0, "back": -1.0, "outcome": "", "history": [], "notarise": bool(order.get("notarise", false))}
 	next_id += 1
 	jobs.append(j)
@@ -524,6 +594,9 @@ func tick(day: float) -> void:
 			_depart(r, float(r.next_day))
 			r.next_day = int(r.next_day) + int(r.every_days)
 	for j in jobs:
+		if str(j.state) in ["in_transit", "returning"] and not alive(str(j.courier)):
+			interrupt(j, "the courier died on the road")
+			continue
 		match str(j.state):
 			"in_transit":
 				if day >= float(j.arrive):
@@ -538,12 +611,13 @@ func _depart(r: Dictionary, day: float) -> void:
 	for j in jobs:
 		if str(j.route) != str(r.id) or str(j.state) != "at_booth":
 			continue
+		if not alive(str(j.courier)) and alive(str(b.keeper)):
+			j.courier = str(b.keeper)                  # the booth's keeper changed: the new keeper carries what waits there
 		if not alive(str(j.courier)):
 			continue                                   # no courier today: the goods wait at the booth
-		var cinv = inv_of(str(j.courier))
 		for id in j.items:
 			(b.store as Inventory).remove(id, int(j.items[id]))
-			cinv.add(id, int(j.items[id]))
+		j.cargo = (j.items as Dictionary).duplicate()
 		j.state = "in_transit"
 		j.depart = day
 		j.arrive = day + float(r.days)
@@ -555,7 +629,6 @@ func _arrive(j: Dictionary, day: float) -> void:
 	if not alive(courier):
 		interrupt(j, "the courier did not arrive")
 		return
-	var cinv = inv_of(courier)
 	j.back = day + float(j.days)
 	if not alive(str(j.recipient)):
 		j.returned_items = (j.items as Dictionary).duplicate()
@@ -581,17 +654,16 @@ func _arrive(j: Dictionary, day: float) -> void:
 			j.state = "returning"
 			return
 	for id in j.items:
-		cinv.remove(id, int(j.items[id]))
 		rinv.add(id, int(j.items[id]))
+	j.cargo = {}
 	if not col.is_empty():
 		if str(col.kind) == "coins":
 			add_coins(str(j.recipient), -int(col.amount))
-			add_coins(courier, int(col.amount))
-			j.carried_coins = int(col.amount)
+			j.carried_coins = int(col.amount)                  # the courier's takings: held by the delivery until home
 		else:
 			rinv.remove(str(col.item), int(col.amount))
-			cinv.add(str(col.item), int(col.amount))
 			j.carried_items = {str(col.item): int(col.amount)}
+			j.cargo = (j.carried_items as Dictionary).duplicate()
 	j.outcome = "delivered"
 	j.state = "returning"
 	j.history.append([day, "handed over%s" % (" and payment collected" if not col.is_empty() else "")])
@@ -602,20 +674,18 @@ func _home(j: Dictionary, day: float) -> void:
 	if not alive(courier):
 		interrupt(j, "the courier did not come back")
 		return
-	var cinv = inv_of(courier)
 	var sender := str(j.sender)
 	var b := booth_of(place_of(sender))
 	var deposit: bool = str(j.proceeds) == "deposit" or not alive(sender)
 	# goods that came back, and goods collected as payment
 	for src in [j.returned_items, j.carried_items]:
 		for id in src:
-			cinv.remove(id, int(src[id]))
-			if deposit:
+			if deposit or not inv_of(sender).can_add(id):           # (a full pack leaves it at the booth, never lost)
 				_deposit_item(b, sender, id, int(src[id]))
 			else:
 				inv_of(sender).add(id, int(src[id]))
+	j.cargo = {}
 	if int(j.carried_coins) > 0:
-		add_coins(courier, -int(j.carried_coins))
 		if deposit:
 			b.coins = int(b.coins) + int(j.carried_coins)
 			var dep: Dictionary = (b.deposits as Dictionary).get(sender, {"coins": 0, "items": {}})
@@ -638,22 +708,30 @@ func _deposit_item(b: Dictionary, sender: String, id: String, n: int) -> void:
 	b.deposits[sender] = dep
 
 
-## The sender takes out what was deposited for them at a booth (at the booth itself).
+## The sender takes out what was deposited for them at a booth (at the booth itself). Goods their pack has no room for stay
+## at the booth with the rest of their deposit. Returns what was taken: {coins, items}.
 func withdraw(booth_id: String, who: String) -> Dictionary:
 	var b := booth(booth_id)
 	var dep: Dictionary = (b.deposits as Dictionary).get(who, {})
 	if dep.is_empty():
 		return {}
-	for id in dep.items:
-		(b.store as Inventory).remove(id, int(dep.items[id]))
-		inv_of(who).add(id, int(dep.items[id]))
+	var inv = inv_of(who)
+	var took := {"coins": int(dep.coins), "items": {}}
+	for id in dep.items.keys():
+		if inv.can_add(id):
+			(b.store as Inventory).remove(id, int(dep.items[id]))
+			inv.add(id, int(dep.items[id]))
+			took.items[id] = int(dep.items[id])
+			dep.items.erase(id)
 	b.coins = int(b.coins) - int(dep.coins)
 	add_coins(who, int(dep.coins))
-	(b.deposits as Dictionary).erase(who)
-	return dep
+	dep.coins = 0
+	if dep.items.is_empty():
+		(b.deposits as Dictionary).erase(who)
+	return took
 
 
-## The journey stops: the courier died or was waylaid. What it carried stays in its pack (its estate's, if it died);
+## The journey stops: the courier died or was waylaid. The load it carried is dropped where it fell (a loot pile);
 ## a special fee held at the booth goes back to the payer; the contract is not fulfilled.
 func interrupt(j: Dictionary, why: String) -> void:
 	if str(j.state) in ["fulfilled", "returned", "interrupted"]:
@@ -662,9 +740,29 @@ func interrupt(j: Dictionary, why: String) -> void:
 		var hb := booth(str(j.held_at))
 		hb.escrow = int(hb.escrow) - int(j.fee)
 		add_coins(str(j.sender), int(j.fee))
+	if not (j.cargo as Dictionary).is_empty() or int(j.carried_coins) > 0:
+		_drop_load(j)
 	j.state = "interrupted"
 	j.outcome = why
 	j.history.append([_day(), "interrupted: " + why])
+
+
+## The load of a journey that stopped lies where the courier fell, for anyone to find (a loot pile: the world counts it): goods
+## and the takings it held. Nothing is lost or made.
+func _drop_load(j: Dictionary) -> void:
+	var bag := Inventory.new()
+	for id in j.cargo:
+		bag.add(id, int(j.cargo[id]))
+	var at := Vector2.ZERO
+	var n = _npc(str(j.courier))
+	if n != null:
+		at = n.pos
+	else:
+		var b := booth_of(place_of(str(j.sender)))
+		at = Vector2(float(b.get("x", 0)) + 0.5, float(b.get("y", 0)) + 0.5)
+	w.loot.append({"pos": at, "inv": bag, "coins": int(j.carried_coins), "from": "A courier's load", "t": w.minutes})
+	j.cargo = {}
+	j.carried_coins = 0
 
 
 ## Coins the courier service holds (booth coins and fees held), for conservation checks.
@@ -672,6 +770,9 @@ func held_coins() -> int:
 	var n := 0
 	for b in booths:
 		n += int(b.coins) + int(b.escrow)
+	for j in jobs:
+		if str(j.state) in ["in_transit", "returning"]:
+			n += int(j.carried_coins)                  # the takings on their way home
 	return n
 
 
@@ -680,4 +781,157 @@ func held_goods() -> Dictionary:
 	for b in booths:
 		for id in (b.store as Inventory).items:
 			out[id] = int(out.get(id, 0)) + int(b.store.items[id])
+	for j in jobs:
+		if str(j.state) in ["in_transit", "returning"]:
+			for id in j.cargo:                          # loads on the road
+				out[id] = int(out.get(id, 0)) + int(j.cargo[id])
+	return out
+
+
+# ------------------------------------------------------------------------------ the live game (REG-COURIER-01)
+const FORMAT := "mml-couriers-world/1"
+
+
+## The game's own service: a booth for each of the five settlements, served by that settlement's trader (its own party), and
+## the roads from the village to them. The village's booth is opened by `daily` (it needs a keeper and a stall).
+static func create_live(world) -> CourierService:
+	var cs := CourierService.new(world)
+	cs.live = true
+	cs.refresh_links()
+	cs._ensure_region_booths()
+	return cs
+
+
+## The roads the courier service travels, from the settlements' miles (settlements.json): village to each settlement and back, and
+## the settlements among themselves (Regions.village_route_table, Regions.route_table).
+func refresh_links() -> void:
+	if w != null and w.regions != null:
+		links = w.regions.route_table()
+		links.merge(w.regions.village_route_table())
+
+
+func _ensure_region_booths() -> void:
+	if w == null or w.regions == null:
+		return
+	for s: OffMapSettlement in w.regions.list:
+		if booth_of(s.id).is_empty():
+			var p = w.regions.party(s.id + "/trader")
+			if p != null:
+				open_region_booth(p)
+
+
+## The daily upkeep: each settlement has its booth, the village has one (a free market stall, else a stall its keeper builds by
+## the STALL rules; the keeper a villager the job rule lets be hired), a dead keeper is replaced by another such villager, and
+## each settlement is joined to the village by a regular route each way.
+func daily() -> void:
+	if w == null:
+		return
+	refresh_links()
+	_ensure_region_booths()
+	var vb := booth_of(SettlementFacts.VILLAGE)
+	if vb.is_empty():
+		for n: NPC in w.npcs:
+			if n.alive and w.construction.can_hire(n) == "" and not booths.any(func(b): return b.keeper == "npc:%d" % n.id):
+				var free := ""
+				for sid in w.stalls:
+					if str(w.stalls[sid].get("tenant", "")) == "" and not booths.any(func(b): return str(b.stall) == str(sid)):
+						free = str(sid)
+						break
+				if open_booth("npc:%d" % n.id, free) == "":
+					break
+				if free == "":
+					break                                   # nobody has the planks to build one: the next day tries again
+		vb = booth_of(SettlementFacts.VILLAGE)
+	elif not alive(str(vb.keeper)):
+		for n: NPC in w.npcs:
+			if n.alive and w.construction.can_hire(n) == "" and not booths.any(func(b): return b.keeper == "npc:%d" % n.id):
+				vb.keeper = "npc:%d" % n.id
+				break
+	if vb.is_empty():
+		return
+	for b in booths.duplicate():
+		if str(b.settlement) == SettlementFacts.VILLAGE:
+			continue
+		for pair in [[vb.id, b.id], [b.id, vb.id]]:
+			if not routes.any(func(r): return r.from == pair[0] and r.to == pair[1]):
+				add_route(str(pair[0]), str(pair[1]), -1.0, w.day() + 1)
+
+
+## Step to the world's present moment (every game hour).
+func step() -> void:
+	if w != null:
+		tick(float(w.minutes) / World.DAY)
+
+
+## The deposits waiting at `booth_id` for `who`: {coins, items}, empty when none.
+func waiting(booth_id: String, who: String) -> Dictionary:
+	return (booth(booth_id).get("deposits", {}) as Dictionary).get(who, {})
+
+
+## The booth nearest `at` within `reach` tiles, or {}.
+func booth_near(at: Vector2, reach: float) -> Dictionary:
+	var best := {}
+	var bd := reach
+	for b in booths:
+		if str(b.settlement) != SettlementFacts.VILLAGE:
+			continue
+		var d := Vector2(float(b.x) + 0.5, float(b.y) + 0.5).distance_to(at)
+		if d <= bd:
+			best = b
+			bd = d
+	return best
+
+
+# ------------------------------------------------------------------------------ saves
+func to_dict() -> Dictionary:
+	var bs := []
+	for b in booths:
+		var c: Dictionary = (b as Dictionary).duplicate(true)
+		c.store = (b.store as Inventory).to_dict()
+		bs.append(c)
+	return {"format": FORMAT, "next_id": next_id, "booths": bs, "routes": routes.duplicate(true), "jobs": jobs.duplicate(true), "contacts": contacts.duplicate(true)}
+
+
+## A saved service (JSON round trip: counts come back as numbers, made whole again here). The parties are not saved: they are
+## resolved from World.regions.
+static func from_dict(world, d: Dictionary) -> CourierService:
+	var cs := create_live(world)
+	cs.booths.clear()
+	cs.next_id = int(d.get("next_id", 1))
+	for b in d.get("booths", []):
+		var c: Dictionary = (b as Dictionary).duplicate(true)
+		c.store = Inventory.from_dict(b.store)
+		for k in ["x", "y", "coins", "escrow"]:
+			c[k] = int(c.get(k, 0))
+		for who in c.deposits:
+			c.deposits[who].coins = int(c.deposits[who].coins)
+			c.deposits[who].items = _whole(c.deposits[who].items)
+		cs.booths.append(c)
+	for r in d.get("routes", []):
+		var c: Dictionary = (r as Dictionary).duplicate(true)
+		for k in ["every_days", "fee_per_load", "load_units", "next_day"]:
+			c[k] = int(c.get(k, 0))
+		c.days = float(c.days)
+		cs.routes.append(c)
+	for j in d.get("jobs", []):
+		var c: Dictionary = (j as Dictionary).duplicate(true)
+		for k in ["fee", "carried_coins"]:
+			c[k] = int(c.get(k, 0))
+		for k in ["items", "carried_items", "returned_items", "cargo"]:
+			c[k] = _whole(c.get(k, {}))
+		var col: Dictionary = c.get("collect", {})
+		if not col.is_empty():
+			col.amount = int(col.amount)
+		for k in ["days", "depart", "arrive", "back"]:
+			c[k] = float(c.get(k, -1.0))
+		cs.jobs.append(c)
+	cs.contacts = (d.get("contacts", []) as Array).duplicate(true)
+	cs._ensure_region_booths()
+	return cs
+
+
+static func _whole(items: Dictionary) -> Dictionary:
+	var out := {}
+	for k in items:
+		out[str(k)] = int(items[k])
 	return out

@@ -4042,6 +4042,7 @@ func caravan() -> void:
 		best[2] = int(best[2]) - 1
 		var buyer: OffMapSettlement = w.regions.buyer_for(id, price, on_road)
 		buyer.buy_from_village(id, 1, price)             # the trader pays from its own till; the goods enter its stock
+		w.note_settlement_trade(o, buyer)                # REG-COURIER-01: a dealing with that trader (a record only)
 		o.inv.remove(id)
 		w.stat("exported_" + id)
 		o.coins += price
@@ -4103,6 +4104,7 @@ func _caravan_imports(on_road := []) -> int:
 				if seller == null:
 					break                          # no trader on the road carries any
 				seller.sell_to_village(id, 1, price)
+				w.note_settlement_trade(o, seller)
 				o.coins -= price
 				o.spent += price
 				o.inv.add(id)
@@ -4135,7 +4137,9 @@ func _caravan_apothecary(on_road := []) -> int:
 		if pick == "":
 			break
 		var price := GameData.value(pick)
-		w.regions.seller_for(pick, on_road).sell_to_village(pick, 1, price)
+		var from_trader: OffMapSettlement = w.regions.seller_for(pick, on_road)
+		from_trader.sell_to_village(pick, 1, price)
+		w.note_settlement_trade(sage, from_trader)
 		sage.coins -= price
 		sage.spent += price
 		sage.inv.add(pick)
@@ -4169,7 +4173,9 @@ func _caravan_seeds(on_road := []) -> int:
 			if pick == "":
 				break
 			var price := GameData.value(pick)
-			w.regions.seller_for(pick, on_road).sell_to_village(pick, 1, price)
+			var from_trader: OffMapSettlement = w.regions.seller_for(pick, on_road)
+			from_trader.sell_to_village(pick, 1, price)
+			w.note_settlement_trade(o, from_trader)
 			o.coins -= price
 			o.spent += price
 			o.inv.add(pick)
@@ -4367,6 +4373,7 @@ func _caravan_stone(on_road := []) -> int:
 			if seller == null:
 				break
 			seller.sell_to_village("stone", 1, price)
+			w.note_settlement_trade(o, seller)
 			o.coins -= price
 			o.spent += price
 			o.inv.add("stone")

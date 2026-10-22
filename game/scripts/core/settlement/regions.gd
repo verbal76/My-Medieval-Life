@@ -123,6 +123,18 @@ func route_table() -> Dictionary:
 	return out
 
 
+## The roads from the village to each settlement and back, for the courier service: {"village>a": route, "a>village": route}.
+## The length is the settlement's distance from the village in tiles (settlements.json: its miles times tiles_per_mile, and its
+## offset), hauled by a carrier along roads, the same rule as route_table (provisional: the village is at the map's origin).
+func village_route_table() -> Dictionary:
+	var out := {}
+	for a: OffMapSettlement in list:
+		var tiles := maxi(1, roundi(Vector2(a.pos).length()))
+		out[SettlementFacts.VILLAGE + ">" + a.id] = TradeRoutes.abstract_route(SettlementFacts.VILLAGE, a.id, tiles, {"road": 1.0}, "carrier")
+		out[a.id + ">" + SettlementFacts.VILLAGE] = TradeRoutes.abstract_route(a.id, SettlementFacts.VILLAGE, tiles, {"road": 1.0}, "carrier")
+	return out
+
+
 # ------------------------------------------------------------------ who is on the road ----------------
 ## Visits a settlement's trader makes: every `cadence` visit days of the caravan (the village's visit days are the odd
 ## days), the nearer sooner (a day's ride in 20 miles). Visit number v = day / 2, so day 0 and 1 are the first: everyone.
@@ -307,6 +319,7 @@ func net_paid_by_village() -> int:
 	var n := 0
 	for s: OffMapSettlement in list:
 		n += int(s.flows.coins_from_village) - int(s.flows.coins_to_village)
+		n += int(s.flows.outside_coins_in) - int(s.flows.outside_coins_out)     # REG-COURIER-01: coins the couriers carried across
 	return n
 
 

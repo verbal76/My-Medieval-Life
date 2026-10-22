@@ -166,7 +166,9 @@ the coins go) are in `docs/DECISIONS.md` and INT-250 to INT-252.
 
 Each settlement's trader, businesses, treasury and households are trading parties (`SettlementParty`, `DESIGN.md` section 12a) that
 the regional market and the couriers address as `region:<settlement>/<holder>`; they move the settlement's own coins and goods and
-leave flow lines its audit checks. Nothing calls the market from the daily loop yet.
+leave flow lines its audit checks. Nothing calls the market from the daily loop yet. The couriers are live (REG-COURIER-01): each
+settlement's booth is kept by its trader party, regular routes run from the village to each (days from the settlement's miles), and a
+villager who really dealt with the trader may send goods to it (`DESIGN.md` section 11a).
 
 ## 7. What is not done yet
 
@@ -174,6 +176,6 @@ Migration is separate (MIGRATE-18): nobody moves in or out of a settlement by ma
 and a settlement with few young people (Netherton) can shrink. Houses, partners from the village and elders at founding are not
 modelled.
 
-Barter and credit between the village and these settlements (TRADE-CREDIT), people moving between them (MIGRATE-18), courier booths
-(COURIER) and visiting a settlement in person (Build 20 or later, Q18-8) are separate registers; the seams for them are named in
+Barter and credit between the village and these settlements (TRADE-CREDIT), people moving between them (MIGRATE-18), shops' own courier
+booths (Q18-15) and visiting a settlement in person (Build 20 or later, Q18-8) are separate registers; the seams for them are named in
 `docs/expansion18/DESIGN.md` section 10.

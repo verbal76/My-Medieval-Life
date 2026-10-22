@@ -115,6 +115,7 @@ static func visit(w, on_road: Array) -> int:
 		var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
 		if not seller.sell_to_village(id, 1, p):
 			continue
+		w.note_settlement_trade(n, seller)              # REG-COURIER-01: a dealing with that trader (a record only)
 		n.coins -= p
 		n.spent += p
 		n.inv.add(id)
@@ -173,6 +174,7 @@ static func buy(w, p: PlayerState, id: String) -> String:
 	var cost := price(id)
 	if not seller.sell_to_village(id, 1, cost):
 		return "The trade fell through."
+	w.note_settlement_trade(p, seller)
 	p.coins -= cost
 	p.inv.add(id)
 	w.coin_sources -= cost

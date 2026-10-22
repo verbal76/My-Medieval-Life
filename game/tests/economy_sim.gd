@@ -702,6 +702,10 @@ func _regions(start: Dictionary) -> Dictionary:
 			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.from_village[k])
 		for k in st.flows.to_village:
 			out_v[k] = int(out_v.get(k, 0)) + int(st.flows.to_village[k])
+		for k in st.flows.outside_in:           # REG-COURIER-01: goods the couriers handed to a settlement's party, and took from it
+			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.outside_in[k])
+		for k in st.flows.outside_out:
+			out_v[k] = int(out_v.get(k, 0)) + int(st.flows.outside_out[k])
 	var now_goods := r.goods()
 	var bad_goods := {}
 	var ids := {}
@@ -781,7 +785,8 @@ func _coins() -> Dictionary:
 		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total(),
 		"contract_reserves": w.contracts.reserved_total(),   # CON-01: buyers' coins set aside for contracts
 		"stall_tills": w.business.tills(),
-		"chapel": w.chapel.coins}                  # DVW-B3-CHAPEL: the offerings fund; takings held in stall tills until settled (STALL-05)
+		"chapel": w.chapel.coins,
+		"courier_booths": w.couriers.held_coins() if w.couriers != null else 0}                  # DVW-B3-CHAPEL: the offerings fund; takings held in stall tills until settled (STALL-05)
 	for n: NPC in w.npcs:
 		out["dead" if not n.alive else ("bandits" if n.role == "bandit" else "villagers")] += n.coins
 	for l in w.loot:

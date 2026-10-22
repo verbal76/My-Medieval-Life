@@ -180,7 +180,7 @@ func test_route_delivery() -> void:
 	check(totals() == before, "booking moves goods and coins, creates none")
 	var e0 := east.held("wheat")
 	cs.tick(float(r.next_day))
-	check(str(j.state) == "in_transit", "the courier leaves on the route's day with the wheat in its pack")
+	check(str(j.state) == "in_transit", "the courier leaves on the route's day with the wheat in its load")
 	cs.tick(float(j.arrive) + 0.01)
 	check(east.held("wheat") - e0 == 30, "and hands it over at Wulstead after the journey")
 	check(str(j.state) == "returning", "then travels back (the contract is not fulfilled yet)")
@@ -206,14 +206,14 @@ func test_special_delivery() -> void:
 	var before := totals()
 	var a0 := a.coins
 	var j := cs.book_special(order, int(low.fee))
-	check(not j.has("error") and courier.inv.count("plank") >= 8 and int(cs.booth_of("village").escrow) >= int(low.fee),
-		"agreed: the planks go into the courier's own pack; the fee is held at the booth")
+	check(not j.has("error") and int(j.cargo.get("plank", 0)) == 8 and a.inv.count("plank") == 0 and int(cs.booth_of("village").escrow) >= int(low.fee),
+		"agreed: the planks leave the sender and ride in the courier's load (held by the delivery, counted); the fee is held at the booth")
 	check(totals() == before, "nothing created by booking")
 	cs.tick(float(j.arrive) + 0.01)
 	check(str(j.state) == "returning" and int(j.carried_coins) == 16, "delivered; the 16 coins collected ride back with the courier")
 	var c0 := courier.coins
 	cs.tick(float(j.back) + 0.01)
-	check(str(j.state) == "fulfilled" and a.coins - a0 == 16 - int(low.fee) and courier.coins - c0 == int(low.fee) - 16,
+	check(str(j.state) == "fulfilled" and a.coins - a0 == 16 - int(low.fee) and courier.coins - c0 == int(low.fee),
 		"back: the 16 coins handed to the sender, the held fee (%d) paid to the courier; fulfilled" % int(low.fee))
 	check(totals() == before, "every good and coin accounted for across sender, recipient, courier and booth")
 	var unknown: NPC = null
@@ -290,7 +290,7 @@ func test_unavailable_and_interrupted() -> void:
 	w.kill(c2, "waylaid on the road")
 	cs.tick(float(k.arrive) + 0.01)
 	check(str(k.state) == "interrupted" and a.coins == a0, "the courier waylaid: the contract is interrupted, not fulfilled; the held fee goes back to the sender")
-	check(totals() == before2, "the planks it carried passed with its estate (heir or loot), not lost or duplicated")
+	check(totals() == before2, "the planks it carried lie where it fell (a loot pile), not lost or duplicated")
 	var again := cs.book_special({"sender": ref(a), "recipient": ref(rec), "courier": ref(c2), "items": {"plank": 1}}, 25)
 	check(again.has("error"), "a dead courier cannot be booked (%s)" % str(again.get("error", "")))
 
