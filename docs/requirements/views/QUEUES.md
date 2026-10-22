@@ -2,11 +2,10 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (9)
+## Workers and task branches (8)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| DVW-B3-CHAPEL | 18 | IN DEVELOPMENT | chapel worker (Sonnet subagent, started 2026-10-23) | wip/b18-chapel |
 | ECON-P1.3 | 18 | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) | wip/b18-regions |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | REQ-CTRL-02 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |

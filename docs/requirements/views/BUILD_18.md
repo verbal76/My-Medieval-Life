@@ -9,25 +9,24 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 73 |
-| Integrated | 32 of 73 (44%) |
-| Automated tests passed | 33 of 73 (45%) |
-| Integration verified | 32 of 73 (44%) |
+| Integrated | 33 of 73 (45%) |
+| Automated tests passed | 34 of 73 (47%) |
+| Integration verified | 33 of 73 (45%) |
 | Gameplay verified | 0 of 73 (0%) |
 | Owner playtested | 0 of 73 (0%) |
 | Complete | 1 of 73 (1%) |
 | Open (release blockers) | 72 |
 | Open owner decisions (blocking) | 5 (2) |
 
-## In development (worker assigned) (4)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | OWNER APPROVED | IN DEVELOPMENT | chapel worker (Sonnet subagent, started 2026-10-23) / wip/b18-chapel | NOT TESTED |  |  | L |
 | ECON-P1.3 | Caravan as finite regional market (:73) | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | M |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | M |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) / wip/b18-regions | NOT TESTED |  |  | XL |
 
-## Integrated, awaiting gameplay or owner verification (31)
+## Integrated, awaiting gameplay or owner verification (32)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -37,6 +36,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; phone layout and cost of the runtime sprite not checked on a device; Build 18 release gate |  | verification only |
 | CON-UX-01 | Contract window needs design work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
+| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay and device check; wage, piety and seed numbers are provisional agent values in balance.json "chapel"; known: Chapel uses the plain house art (no steeple or sign); Player cannot volunteer on the church plot; Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed |  | verification only |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; Build 18 release gate; known: Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified) |  | verification only |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate |  | verification only |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
