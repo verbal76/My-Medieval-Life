@@ -269,11 +269,13 @@ func _ready() -> void:
 				ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female"})
 			"origin":
 				ui.show_origin()
-			"settings", "settings_display", "settings_interface", "settings_controls", "settings_wiki":
+			"settings", "settings_display", "settings_interface", "settings_controls":
 				ui.show_settings(ui.hide_all, shot_panel.trim_prefix("settings_") if shot_panel.begins_with("settings_") else "audio")
-			"wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
-				ui.show_settings(ui.hide_all, "wiki")
+			"settings_wiki", "wiki", "wiki_category", "wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
+				ui.show_wiki(ui.hide_all)        # the Village Encyclopedia (UI-WIKI-01); add --phone for a phone's layout
 				match shot_panel:
+					"wiki_category":
+						ui.wiki_win.show_category("items_tools")
 					"wiki_search":
 						ui.wiki_win.search_for("plank")
 					"wiki_item":

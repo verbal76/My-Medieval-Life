@@ -192,8 +192,8 @@ func _flow_tests() -> void:
 		_find("Controls").pressed.emit()
 		main._unhandled_input(_pad(JOY_BUTTON_B))
 		check(ui.is_open("pause"), "round %d: the pad's B in Controls returns to the pause menu" % round)
-		_find("Wiki").pressed.emit()
-		check(ui.is_open("settings") and ui.settings_tab == "wiki", "round %d: Wiki opens from the pause menu" % round)
+		_find("Encyclopedia").pressed.emit()
+		check(ui.is_open("wiki") and ui.title_label.text == "VILLAGE ENCYCLOPEDIA" and main.paused, "round %d: the Village Encyclopedia opens from the pause menu in its own window" % round)
 		main._unhandled_input(_key(KEY_ESCAPE))
 		check(ui.is_open("pause"), "round %d: Esc leaves the wiki" % round)
 		_find("Resume").pressed.emit()
@@ -206,7 +206,7 @@ func _flow_tests() -> void:
 	# tabs and persistence
 	ui.show_pause()
 	_find("Settings").pressed.emit()
-	for t in ["audio", "display", "interface", "controls", "wiki"]:
+	for t in ["audio", "display", "interface", "controls", "saves"]:
 		_tab(t)
 		await process_frame
 		check(ui.settings_tab == t and ui.is_open("settings"), "the %s tab opens" % t)
@@ -220,9 +220,11 @@ func _flow_tests() -> void:
 	check(again.ui_size == main.settings.ui_size, "settings persist")
 	main.settings.ui_size = "normal"
 	main.apply_settings()
-	# the wiki inside Settings: pages, then Back steps through them before leaving Settings
+	# the wiki from Settings: its own window; pages, then Back steps through them, then returns to Settings
 	_tab("wiki")
 	await process_frame
+	check(ui.is_open("wiki") and ui.settings_tab == "interface", "the Encyclopedia tab opens the encyclopedia window")
+	check(ui.panel_body.find_child("WikiNav", true, false) != null and ui.panel_body.find_child("WikiArticle", true, false) != null, "the encyclopedia has a navigation panel and an article panel")
 	var win_back: Callable = ui.inner_back
 	check(win_back.is_valid(), "the wiki tab has its own Back step")
 	ui.panel_body.find_child("WikiSearch", true, false).text_changed.emit("pickaxe")
@@ -233,17 +235,31 @@ func _flow_tests() -> void:
 	check(ui.panel_body.find_child("PageTitle", true, false).text == "Pickaxe", "a result opens its page")
 	main._unhandled_input(_pad(JOY_BUTTON_B))
 	await process_frame
-	check(ui.is_open("settings") and ui.panel_body.find_child("WikiResultsTitle", true, false) != null, "B steps back to the results, still in Settings")
+	check(ui.is_open("wiki") and ui.panel_body.find_child("WikiResultsTitle", true, false) != null, "B steps back to the results, still in the encyclopedia")
+	check(ui.panel_body.find_child("WikiSearch", true, false).text == "pickaxe", "the search box shows the search stepped back to")
 	ui.close_btn.pressed.emit()
 	await process_frame
-	check(ui.is_open("settings") and ui.panel_body.find_child("Cat_items_tools", true, false) != null, "X steps back to the wiki home")
+	check(ui.is_open("wiki") and ui.panel_body.find_child("Cat_items_tools", true, false) != null, "X steps back to the wiki home")
+	ui.close_btn.pressed.emit()
+	check(ui.is_open("settings"), "X then leaves the encyclopedia for Settings")
+	_tab("wiki")
+	await process_frame
+	ui.panel_body.find_child("Cat_items_tools", true, false).pressed.emit()
+	ui.panel_body.find_child("Link_item_pickaxe", true, false).pressed.emit()
+	await process_frame
+	ui.panel_body.find_child("WikiClose", true, false).pressed.emit()
+	check(ui.is_open("settings"), "Close leaves the encyclopedia at once, from any page")
 	ui.close_btn.pressed.emit()
 	check(ui.is_open("pause"), "X then leaves Settings for the pause menu")
+	_find("Encyclopedia").pressed.emit()
+	ui.panel_body.find_child("WikiResume", true, false).pressed.emit()
+	check(not ui.panel.visible and not main.paused, "Resume play goes straight back to the game")
+	ui.show_pause()
 	_find("Resume").pressed.emit()
 	check(not ui.panel.visible and not main.paused, "play resumes after Settings and Wiki")
 	# Start (Menu) closes a window of play too
 	ui.show_pause()
-	_find("Wiki").pressed.emit()
+	_find("Encyclopedia").pressed.emit()
 	main._unhandled_input(_pad(JOY_BUTTON_START))
 	check(ui.is_open("pause"), "the pad's Menu button steps back as well")
 	ui.hide_all()
@@ -252,9 +268,11 @@ func _flow_tests() -> void:
 	main.paused = true
 	ui.show_title(false)
 	check(ui.is_open("title") and main.paused, "the title screen pauses")
-	for entry in ["Controls", "Settings", "Wiki"]:
+	for entry in ["Controls", "Settings", "Encyclopedia"]:
 		_find(entry).pressed.emit()
-		check(ui.is_open("settings"), "%s opens from the title" % entry)
+		check(ui.is_open("wiki" if entry == "Encyclopedia" else "settings"), "%s opens from the title" % entry)
+		if entry == "Encyclopedia":
+			check(ui.panel_body.find_child("WikiResume", true, false) == null, "no Resume play on the title screen's encyclopedia")
 		ui.close_btn.pressed.emit()
 		check(ui.is_open("title") and main.paused, "X from %s returns to the title screen" % entry)
 		_find(entry).pressed.emit()

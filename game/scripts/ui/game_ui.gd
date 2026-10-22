@@ -36,7 +36,7 @@ var panel_kind := ""
 var panel_back := Callable()   # what X, Esc and the pad's B do in the open window (PL1-01); empty: close it
 var inner_back := Callable()   # a window's own step back first (the wiki's previous page); returns true when it stepped
 var settings_tab := "audio"
-var wiki_win: WikiWindow       # the open wiki, while Settings shows its tab
+var wiki_win: WikiWindow       # the open wiki (the Village Encyclopedia window, UI-WIKI-01)
 var panel_body: VBoxContainer
 var title_label: Label
 var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
@@ -1116,7 +1116,7 @@ func show_title(can_continue: bool) -> void:
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
 	_button("Controls", func(): show_controls(func(): show_title(main.can_continue())))
-	_button("Wiki", func(): show_settings(func(): show_title(main.can_continue()), "wiki"))
+	_button("Encyclopedia", func(): show_wiki(func(): show_title(main.can_continue())))
 	_button("Credits", show_credits)
 	_controls_list(scheme)
 	_scroll_to_top()                      # FR-05: the controls list must not scroll the menu out of view
@@ -1250,21 +1250,25 @@ func show_pause() -> void:
 	_button("Build", show_build_menu)
 	_button("Settings", func(): show_settings(show_pause, "audio"))
 	_button("Controls", func(): show_controls(show_pause))
-	_button("Wiki", func(): show_settings(show_pause, "wiki"))
+	_button("Encyclopedia", func(): show_wiki(show_pause))
 	_button("Save and quit to title", func():
 		main.save_game(false)
 		main.running = false
 		show_title(true))
 
 
-const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["saves", "Saves"], ["wiki", "Wiki"]]
+const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["saves", "Saves"], ["wiki", "Encyclopedia"]]
 
 
-## Settings: one screen with tabs (Audio, Display, Interface, Controls, Wiki) and a Back button. Each
-## change is applied and saved at once. `back` reopens the screen it came from (the title or the
-## pause menu, or closes to play); X, Esc and the pad's B do the same, after stepping back inside the
-## wiki. Opening it keeps the pause state it found, so closing restores play (PL1-01, PL1-02).
+## Settings: one screen with tabs (Audio, Display, Interface, Controls, Saves) and a Back button; its
+## Encyclopedia tab opens the wiki's own window (show_wiki), which returns here. Each change is applied
+## and saved at once. `back` reopens the screen it came from (the title or the pause menu, or closes to
+## play); X, Esc and the pad's B do the same. Opening it keeps the pause state it found, so closing
+## restores play (PL1-01, PL1-02).
 func show_settings(back: Callable, tab := "") -> void:
+	if tab == "wiki":
+		show_wiki(back)
+		return
 	var was_paused: bool = main.paused
 	_open("settings", "Settings", was_paused)
 	panel_back = back
@@ -1291,6 +1295,9 @@ func _settings_page() -> void:
 		b.button_pressed = id == settings_tab
 		b.custom_minimum_size = Vector2(120, 48)
 		b.pressed.connect(func():
+			if id == "wiki":         # the encyclopedia is its own window; leaving it returns to Settings
+				show_wiki(func(): show_settings(back))
+				return
 			settings_tab = id
 			_settings_page.call_deferred())
 		tabs.add_child(b)
@@ -1305,16 +1312,23 @@ func _settings_page() -> void:
 			_controls_tab()
 		"saves":
 			_settings_saves()
-		"wiki":
-			var wk := WikiWindow.new()
-			wk.open(self, panel_body)
-			wiki_win = wk
-			inner_back = wk.step_back
 	_button("Back", back if back.is_valid() else hide_all)
 	if scheme != "touch":
 		var tb: Button = tabs.get_node_or_null("Tab_" + settings_tab)
 		if tb:
 			(func(): if is_instance_valid(tb) and tb.is_inside_tree(): tb.grab_focus()).call_deferred()
+
+
+## The Village Encyclopedia (the wiki, PL2-009, UI-WIKI-01): its own window, from the pause menu, the
+## title screen and Settings. X, Esc and the pad's B step back through its pages, then return to `back`.
+## Like Settings it keeps the pause state it found.
+func show_wiki(back: Callable) -> void:
+	_open("wiki", "Village Encyclopedia", main.paused)
+	panel_back = back
+	var wk := WikiWindow.new()
+	wk.open(self, panel_body)
+	wiki_win = wk
+	inner_back = wk.step_back
 
 
 ## Saves (SAVE-05, owner 2026-10-20): copy the save to a file the player chooses, keep that copy up to date
