@@ -30,6 +30,7 @@ func _init() -> void:
 	test_relief_bought()
 	test_plot_work()
 	test_player()
+	test_player_volunteers()
 	test_law_and_claims()
 	test_save()
 	test_old_save()
@@ -277,6 +278,86 @@ func test_player() -> void:
 	var a := c.player_ask()
 	check(a.ok and p.inv.count("wheat") == 1 + 2, "a player with almost no coins is given what the church has (%s)" % a.text)
 	check(not c.player_ask().ok, "once a day")
+
+
+func act_of(w: World, c: Vector2i, task: String) -> Dictionary:
+	for t in w.farm.targets_at(c, w.player, true):
+		if str(t.get("act", "")) == "church" and str(t.task) == task:
+			return t
+	return {}
+
+
+## B18-DP-12: the player volunteers on the church field by the villagers' rules and work path: the same cells and store, no pay.
+func test_player_volunteers() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	var fp := w.farm_plots
+	var p := w.player
+	w.minutes = float(int(w.minutes / 1440.0)) * 1440.0 + 9.0 * 60.0
+	var cell := Vector2i(int(c.plot.x) + 2, int(c.plot.y) + 2)
+	check(fp.in_church_plot(cell) and not fp.in_church_plot(Vector2i(int(c.plot.x) - 3, int(c.plot.y))), "the church field is where the player may volunteer")
+	var coins0 := p.coins
+	var total0 := w.total_coins()
+	var seed0 := c.store.count("wheat_seed")
+	# till (the player's own time and stamina), then sow from the church's seed
+	var t := act_of(w, cell, "till")
+	check(not t.is_empty(), "the bare cell offers: %s" % str(t.get("label", "")))
+	p.stamina = 100.0
+	var pl: Dictionary = w.farm.plan(t, p)
+	check(pl.ok and float(pl.secs) > 0.0, "tilling is planned as a timed action")
+	pl.run.call()
+	check(fp.cells.has(cell) and str(fp.cells[cell].state) == "tilled" and str(fp.cells[cell].plot) == "church" and p.stamina < 100.0, "the cell is tilled as the villagers' (a church cell), at the player's stamina cost")
+	check(act_of(w, cell, "till").is_empty(), "a tilled cell is not tilled again")
+	t = act_of(w, cell, "sow")
+	check(not t.is_empty() and str(t.crop) == "wheat", "the tilled cell offers sowing: %s" % str(t.get("label", "")))
+	pl = w.farm.plan(t, p)
+	check(pl.ok, "sowing is planned")
+	pl.run.call()
+	check(str(fp.cells[cell].state) == "growing" and c.store.count("wheat_seed") == seed0 - 1 and p.inv.count("wheat_seed") == 0, "sown with the church's own seed")
+	# parity: a villager volunteer's work_cell gives the same state on a second cell
+	var cell2 := cell + Vector2i(1, 0)
+	var vol: NPC = w.npcs.filter(func(n): return n.alive and n.role == "elder")[0]
+	check(fp.work_cell(c.plot, cell2, "till", "", vol.inv, c.store) == "" and fp.work_cell(c.plot, cell2, "sow", "wheat", vol.inv, c.store) == "", "the villagers' work on the next cell")
+	check(str(fp.cells[cell2].state) == str(fp.cells[cell].state) and str(fp.cells[cell2].crop) == str(fp.cells[cell].crop) and float(fp.cells[cell2].progress) == float(fp.cells[cell].progress), "the player's cell and the villager's are in the same state (parity)")
+	check(not act_of(w, cell, "harvest").is_empty() == false, "a growing cell offers no harvest")
+	# ripe: the crop goes to the church's store, nothing to the player
+	fp.cells[cell].state = "ripe"
+	fp.cells[cell].progress = 1.0
+	var wheat0 := c.store.count("wheat")
+	var seeds1 := c.store.count("wheat_seed")
+	t = act_of(w, cell, "harvest")
+	check(not t.is_empty(), "a ripe cell offers: %s" % str(t.get("label", "")))
+	pl = w.farm.plan(t, p)
+	check(pl.ok, "harvest is planned")
+	var r: Dictionary = pl.run.call()
+	check(c.store.count("wheat") > wheat0 and c.store.count("wheat_seed") == seeds1 + 1 and str(fp.cells[cell].state) == "tilled", "the crop and the seed back go to the church's store (%s)" % str(r.text))
+	check(p.inv.count("wheat") == 0 and p.coins == coins0 and w.total_coins() == total0 and r.items.is_empty(), "the player gets no coin and no crop, and nothing is made")
+	check(int(w.stats.get("chapel_player_volunteered_harvest", 0)) == 1, "the volunteering is recorded")
+	# the same rules: a badly hurt player cannot, as a hurt villager cannot
+	p.hp = 1.0
+	check(act_of(w, cell, "sow").is_empty() and not w.farm.plan({"kind": "farm", "act": "church", "task": "sow", "cell": cell, "crop": "wheat"}, p).ok, "a badly hurt player is not offered the work, as a hurt villager would not go")
+	var vhp := vol.hp
+	vol.hp = 1.0
+	check(not fp.able(vol) and not fp.able_player(p), "a hurt villager and a hurt player are alike unable")
+	vol.hp = vhp
+	p.hp = p.max_hp
+	# a store without seed: nothing to sow, and the player's own seed may be used
+	c.store.items.erase("wheat_seed")
+	check(act_of(w, cell, "sow").is_empty(), "with no seed in the store or the pack there is nothing to sow")
+	p.inv.add("wheat_seed", 1)
+	t = act_of(w, cell, "sow")
+	check(not t.is_empty() and w.farm.plan(t, p).ok, "the player's own seed may be sown, as a villager's")
+	w.farm.plan(t, p).run.call()
+	check(p.inv.count("wheat_seed") == 0 and str(fp.cells[cell].state) == "growing", "taken from the pack first")
+	# a save keeps the player's work
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(w2.farm_plots.cells.has(cell) and str(w2.farm_plots.cells[cell].plot) == "church" and str(w2.farm_plots.cells[cell].state) == "growing" and w2.chapel.store.count("wheat") == c.store.count("wheat"), "the work and the store survive a save")
+	# the clergy and volunteers still work the same plot: the planner finds work for the assistant after the player's
+	c.volunteers.clear()
+	var asst: NPC = jobber(w, "church_assistant")[0]
+	check(c.plan_clergy(asst), "the clergy still plan work on the plot")
 
 
 func test_law_and_claims() -> void:

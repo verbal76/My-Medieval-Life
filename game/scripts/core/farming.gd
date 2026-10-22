@@ -904,6 +904,8 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 	var out := Terrain.targets_at(w, c, p)       # B14-07: a cliff's rim faced in the world outside: steps, stairs, walkways
 	if not out.is_empty():
 		return out
+	if w.farm_plots != null and w.farm_plots.in_church_plot(c):      # B18-DP-12: volunteering on the church's field
+		return w.farm_plots.church_targets(c, p)
 	if cells.has(c):
 		var cell: Dictionary = cells[c]
 		match str(cell.state):
@@ -956,6 +958,8 @@ func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 	var bad := func(text: String) -> Dictionary: return {"ok": false, "why": text}
 	if str(t.act) == "terrain":
 		return Terrain.plan(w, t, p)              # B14-07
+	if str(t.act) == "church":
+		return w.farm_plots.church_plan(t, p)     # B18-DP-12
 	match str(t.act):
 		"till":
 			var no := till_refusal(c, p)
