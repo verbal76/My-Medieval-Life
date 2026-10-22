@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 246 (126 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **316** = 195 still open from the baseline + 126 added and open |
+| Entries added since | | 247 (127 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **317** = 195 still open from the baseline + 127 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (246)
+## Added since the baseline (247)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -165,7 +165,7 @@ None.
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | COMPLETE AND VERIFIED | 15 |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | COMPLETE AND VERIFIED | 15 |
-| INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | ACTIVE DEVELOPMENT | 18 |
+| INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | INV-Q1 | INV-18 borderline item classifications | decision | COMPLETE AND VERIFIED | owner decision |
 | INV-Q2 | INV-18 upgrade acquisition and cost | decision | COMPLETE AND VERIFIED | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | COMPLETE AND VERIFIED | 20+ |
@@ -275,7 +275,8 @@ None.
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | approved | COMPLETE AND VERIFIED | 18 |
-| TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | ACTIVE DEVELOPMENT | 18 |
+| TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | PARTIALLY IMPLEMENTED | 18 |
+| TAILOR-Q | Where the tailor comes from | decision | BLOCKED | owner decision |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |

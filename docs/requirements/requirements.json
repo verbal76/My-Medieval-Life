@@ -15099,7 +15099,7 @@
    "id": "INV-18",
    "title": "Categorized inventory: eight capacity pools, separate equipment, two upgrade stages",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Eight categories. Three rows of nine per category. Eighteen starting positions per category. Five more with the first upgrade. Four more with the second. Six separate equipment slots.",
    "description": "Categorized inventory: eight capacity pools, separate equipment, two upgrade stages",
    "source": "docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md",
@@ -15108,10 +15108,12 @@
     "All 13 acceptance criteria of the directive section 13"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "inventory18_test, start_test, run_tests, play_test, wiki_test",
    "playtest": [],
    "branch": "wip/b18-inventory",
-   "commits": [],
+   "commits": [
+    "2e62c61"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -15138,6 +15140,11 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "owner decisions docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md: capacity 9/18/27 (replaces 18/23/27), lockpick/padlock to Tools, other borderline items as recommended; worker re-scoped"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 2e62c61; tests",
+     "why": "merged into wip/build18 5f82f0c (2e62c61, bf63118, 5f9ff33): 84/84 items categorised, capacity 9/18/27, gear outside the pack, category-named refusals on every player path, multi-output all-or-nothing, save 19 with migration (fixtures incl. over-capacity), conservation; inventory18_test 88/0; on the merge start 506, run_tests 3584, play 39, wiki, character_look, tree 45 all 0 failures (isolated XDG; the worker's 3+1 'timing' failures came from a shared user folder and do not reproduce); window screenshots looked at. Device check pending"
     }
    ],
    "target_build": "18"
@@ -27272,7 +27279,7 @@
    "id": "TAILOR-18",
    "title": "Tailor: a village NPC service selling the two backpack upgrades",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "A real tailor shop selling meaningful backpack upgrades. Clothing customization belongs at the tailor.",
    "description": "Tailor: a village NPC service selling the two backpack upgrades",
    "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
@@ -27282,10 +27289,12 @@
     "No clothing production, wardrobe or garment chain invented; barber and armourer stay separate"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "inventory18_test",
    "playtest": [],
    "branch": "wip/b18-inventory",
-   "commits": [],
+   "commits": [
+    "ba1369e"
+   ],
    "parent": "INV-18",
    "depends_on": [],
    "blockers": [],
@@ -27307,9 +27316,56 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
      "why": "assigned to the inventory worker after the capacity core (same files, one worker)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit ba1369e; tests",
+     "why": "purchase built and tested (ba1369e merged 5f82f0c: rows sold in order once, coins to the tailor's purse, saved; refusals tested); no villager is a tailor yet: every placement displaces, adds or merges (TAILOR-Q)"
     }
    ],
    "target_build": "18"
+  },
+  {
+   "id": "TAILOR-Q",
+   "title": "Where the tailor comes from",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "If introducing a new tailor NPC or shop requires displacing an existing worker, adding a building, or changing settlement economic balance, report the consequences",
+   "description": "Where the tailor comes from",
+   "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
+   "approval": "",
+   "acceptance": [
+    "Owner chooses: A add one tailor to the starting population (new worlds generate differently), B convert one existing worker (e.g. a merchant), C an existing trade offers it on the side (e.g. the tanner), D job-market place (effectively never taken: no unemployed adults at start)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "TAILOR-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "worker finding: all 56 starting adults employed; tailor has no income besides the two sales"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "TIME-01",
