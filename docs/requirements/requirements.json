@@ -15759,6 +15759,50 @@
    "acceptance_derived": true
   },
   {
+   "id": "LAW-SKILL",
+   "title": "Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "New Law skill",
+   "description": "Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_14_16.md",
+   "approval": "owner, 2026-10-23 (Q18-14)",
+   "acceptance": [
+    "A Law skill for player and villagers, saved and migrated (start 0); raised by witnessing and carrying documents and by teaching from the clergy or reeve; couriers.json notary check uses it; wiki updated"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-Q13",
+   "depends_on": [
+    "Q18-14"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_14_16.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Build 18 scope"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "LE-00",
    "title": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
    "kind": "approved",
@@ -23781,6 +23825,132 @@
    ],
    "target_build": "18",
    "owner_answer": "Ordinary small agreements need no notarization; formal commercial contracts and ownership transfers need signatures; parties meeting face to face may sign without a notary; when they cannot meet, a courier with legal skill may act as notary and physically carry the documents for signing and back; no remote instant signing."
+  },
+  {
+   "id": "Q18-14",
+   "title": "Q18-14: a new Law skill qualifies a courier to notarise",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "New Law skill",
+   "description": "Q18-14: a new Law skill qualifies a courier to notarise",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_14_16.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded; implementation under X18-Q12/X18-Q13"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_14_16.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "Add a Law skill, learned by witnessing and carrying documents and taught by the clergy or reeve; a courier needs some Law to notarise (level is an agent proposal)"
+  },
+  {
+   "id": "Q18-15",
+   "title": "Q18-15: any business with a shop may open its own courier booth",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Any business with a shop",
+   "description": "Q18-15: any business with a shop may open its own courier booth",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_14_16.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded; implementation under X18-Q12/X18-Q13"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_14_16.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "Every shop or workshop that trades regularly can open its own courier booth"
+  },
+  {
+   "id": "Q18-16",
+   "title": "Q18-16: with no free stall, the village courier builds a booth near the market",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Build one near the market",
+   "description": "Q18-16: with no free stall, the village courier builds a booth near the market",
+   "source": "docs/directives/2026-10-23_owner_answers_q18_14_16.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Owner answer recorded; implementation under X18-Q12/X18-Q13"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_q18_14_16.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer"
+    }
+   ],
+   "owner_answer": "The courier builds a small booth on open ground by the market under the normal stall rules (materials and rent)"
   },
   {
    "id": "Q18-2",

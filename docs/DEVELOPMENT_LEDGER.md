@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 71 |
+| APPROVED — NOT STARTED | 72 |
 | ACTIVE DEVELOPMENT | 18 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **495** |
-| Outstanding (not complete, superseded or canceled) | 246 |
+| **Total approved** | **496** |
+| Outstanding (not complete, superseded or canceled) | 247 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 100 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 67 | 61 |
+| Build 18: Settlement Advancement & Regional Economy | 68 | 62 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **322** | **246** |
+| **Total open** | **323** | **247** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (67)
+### Build 18: Settlement Advancement & Regional Economy (68)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -204,6 +204,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | APPROVED — NOT STARTED |  |  |
 | MAP-01 | Map shows where you are beyond the village | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | approved | APPROVED — NOT STARTED |  |  |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -480,7 +481,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (71)
+## APPROVED — NOT STARTED (72)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -509,6 +510,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
+| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | docs/directives/2026-10-23_owner_answers_q18_14_16.md |  | after Q18-14 |  |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
@@ -1025,7 +1027,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 34, status BLOCKED) (100)
+## Owner decisions, open and answered (open: 34, status BLOCKED) (103)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1091,6 +1093,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_master_directive.md |
 | Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | COMPLETE AND VERIFIED | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
+| Q18-14 | Q18-14: a new Law skill qualifies a courier to notarise | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_14_16.md |
+| Q18-15 | Q18-15: any business with a shop may open its own courier booth | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_14_16.md |
+| Q18-16 | Q18-16: with no free stall, the village courier builds a booth near the market | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_14_16.md |
 | Q18-2 | Q18-2: first industries are forestry, carpentry, masonry, smithing, farming, tanning, trade and mining | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md |
 | Q18-3 | Q18-3: off-map settlements are simulated economies like this one (money from their villagers, government and companies), same rules at lighter detail | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_2_q18_3.md |
 | Q18-4 | Q18-4: five off-map settlements of mixed kinds | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md |

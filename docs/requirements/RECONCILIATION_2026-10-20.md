@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 192 still open, 39 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 273 (135 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **322** = 192 still open from the baseline + 135 added and open |
+| Entries added since | | 277 (136 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **323** = 192 still open from the baseline + 136 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (39)
@@ -69,7 +69,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (273)
+## Added since the baseline (277)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -178,6 +178,7 @@ None.
 | INV-Q1 | INV-18 borderline item classifications | decision | COMPLETE AND VERIFIED | owner decision |
 | INV-Q2 | INV-18 upgrade acquisition and cost | decision | COMPLETE AND VERIFIED | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | COMPLETE AND VERIFIED | 20+ |
+| LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | APPROVED — NOT STARTED | 18 |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | COMPLETE AND VERIFIED | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | APPROVED — NOT STARTED | owner decision |
@@ -268,6 +269,9 @@ None.
 | Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) | decision | COMPLETE AND VERIFIED |  |
 | Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | decision | COMPLETE AND VERIFIED | 18 |
 | Q18-13 | Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant? | decision | COMPLETE AND VERIFIED | 18 |
+| Q18-14 | Q18-14: a new Law skill qualifies a courier to notarise | decision | COMPLETE AND VERIFIED |  |
+| Q18-15 | Q18-15: any business with a shop may open its own courier booth | decision | COMPLETE AND VERIFIED |  |
+| Q18-16 | Q18-16: with no free stall, the village courier builds a booth near the market | decision | COMPLETE AND VERIFIED |  |
 | Q18-2 | Q18-2: first industries are forestry, carpentry, masonry, smithing, farming, tanning, trade and mining | decision | COMPLETE AND VERIFIED |  |
 | Q18-3 | Q18-3: off-map settlements are simulated economies like this one (money from their villagers, government and companies), same rules at lighter detail | decision | COMPLETE AND VERIFIED |  |
 | Q18-4 | Q18-4: five off-map settlements of mixed kinds | decision | COMPLETE AND VERIFIED |  |
