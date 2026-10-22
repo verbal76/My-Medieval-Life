@@ -94,7 +94,7 @@ None.
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |
-| CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED | 18 |
+| CON-UX-01 | Contract window needs design work | approved | APPROVED — NOT STARTED | 18 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |

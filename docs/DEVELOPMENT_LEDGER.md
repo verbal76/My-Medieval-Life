@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 66 |
+| APPROVED — NOT STARTED | 67 |
 | ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **485** |
-| Outstanding (not complete, superseded or canceled) | 236 |
+| **Total approved** | **486** |
+| Outstanding (not complete, superseded or canceled) | 237 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 9 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 34 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 58 | 51 |
+| Build 18: Settlement Advancement & Regional Economy | 58 | 52 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **313** | **236** |
+| **Total open** | **313** | **237** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -190,7 +190,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED |  |  |
+| CON-UX-01 | Contract window needs design work | approved | APPROVED — NOT STARTED |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | DEFERRED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
@@ -465,7 +465,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (66)
+## APPROVED — NOT STARTED (67)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -475,6 +475,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | docs/directives/2026-10-23_owner_answers_bandits.md |  | after BANDIT-Q |  |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
+| CON-UX-01 | Contract window needs design work | docs/directives/2026-10-23_owner_answers_contract_window.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
@@ -1171,7 +1172,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | APPROVED — NOT STARTED | docs/directives/2026-10-21_master_expansion_roadmap.md (the pack's other documents on wip/roadmap-docs, docs/roadmap/) |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | COMPLETE AND VERIFIED | docs/directives/2026-10-20_od21_time_model.md |
 
-## Unapproved idea (9)
+## Unapproved idea (8)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1183,5 +1184,4 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B17F-PERF | Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93) | APPROVED — NOT STARTED | docs/directives/2026-10-22_build17_personal_playtest_release.md |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | APPROVED — NOT STARTED | docs/directives/2026-10-22_build17_personal_playtest_release.md |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | APPROVED — NOT STARTED | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md |
-| CON-UX-01 | Contract window needs design work | UNKNOWN — INVESTIGATION REQUIRED | owner message 2026-10-22 with a photo of the contract window |
 

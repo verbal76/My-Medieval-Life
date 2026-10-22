@@ -6077,12 +6077,12 @@
   {
    "id": "CON-UX-01",
    "title": "Contract window needs design work",
-   "kind": "idea",
-   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": "The contract setup really needs some design work",
    "description": "Contract window needs design work",
-   "source": "owner message 2026-10-22 with a photo of the contract window",
-   "approval": "",
+   "source": "docs/directives/2026-10-23_owner_answers_contract_window.md",
+   "approval": "owner, 2026-10-23",
    "acceptance": [
     "Scope agreed with the owner before any work (an idea, not approved work)"
    ],
@@ -6117,9 +6117,15 @@
      "date": "2026-10-22",
      "change": "note",
      "why": "two interface defects fixed meanwhile (c7df646): the goods and work grids fit the window, refusal wording grammatical ('an axe'); the wider design idea stays with the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "UNKNOWN — INVESTIGATION REQUIRED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build",
+     "why": "owner chose the redesign direction (2026-10-23)"
     }
    ],
-   "target_build": "18"
+   "target_build": "18",
+   "owner_answer": "Step-by-step form: what, how many, price, when, then a plain-English summary to confirm"
   },
   {
    "id": "CQ-01",
