@@ -1017,7 +1017,7 @@ func plan(n: NPC) -> bool:
 					t.claimed = n.id
 					var at := Vector2i(int(t.x), int(t.y))
 					n.doing = "felling a tree for %s" % w.ref_name(c.buyer)
-					n.plan = [w.brain.go(w.brain.beside(at, n.cell())), w.brain.work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0),
+					n.plan = [w.brain.go(w.brain.beside(at, n.cell())), w.brain.work(CapabilityHook.work_time(float(GameData.b("chop_minutes")), "forestry", Skills.value(n, "woodcutting", "chop_time", 1.0), n),   # X18 HOOK: off in the game
 							"chop", {"x": t.x, "y": t.y}, "work", at)]
 					return true
 			"craft":

@@ -848,6 +848,8 @@ func _t(act: String, c: Vector2i, label: String, extra := {}) -> Dictionary:
 
 ## A farm target as a timed action: {ok, why, label, secs, anim, tool, run: Callable -> {items: {id: n}, text}}.
 ## main.gd runs `run` when the action's time is up; the tests call it at once.
+## X18 HOOK (Expansion 18, X18-CAPNUM farming F1): tilling, sowing and harvesting take CapabilityHook.time of their
+## seconds: off in the game (exactly the configured seconds); stamina, seed and crop are unchanged, never more yield.
 func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 	var c: Vector2i = t.cell
 	var bad := func(text: String) -> Dictionary: return {"ok": false, "why": text}
@@ -859,18 +861,18 @@ func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 			if no != "":
 				return bad.call(no)
 			var plough := p.tool_of("plough")
-			return {"ok": true, "label": "Ploughing" if plough != "" else "Digging", "secs": float(till_cost(p).seconds), "anim": "swing" if plough != "" else "gather",
+			return {"ok": true, "label": "Ploughing" if plough != "" else "Digging", "secs": CapabilityHook.time(float(till_cost(p).seconds), "farming", p), "anim": "swing" if plough != "" else "gather",
 					"tool": plough, "run": func() -> Dictionary: return {"items": {}, "text": till(c, p)}}
 		"sow":
 			var no := sow_refusal(c, str(t.crop), p)
 			if no != "":
 				return bad.call(no)
-			return {"ok": true, "label": "Sowing", "secs": float(cfg().sow_seconds), "anim": "gather", "tool": "",
+			return {"ok": true, "label": "Sowing", "secs": CapabilityHook.time(float(cfg().sow_seconds), "farming", p), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": {}, "text": sow(c, str(t.crop), p)}}
 		"harvest":
 			if not p.inv.can_add_all(harvest_goods(c)):             # INV-18: crop and seed together, or neither
 				return bad.call(p.inv.full_text_all(harvest_goods(c)))
-			return {"ok": true, "label": "Harvesting", "secs": float(cfg().harvest_seconds), "anim": "gather", "tool": "",
+			return {"ok": true, "label": "Harvesting", "secs": CapabilityHook.time(float(cfg().harvest_seconds), "farming", p), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": harvest(c, p), "text": ""}}
 		"clear_tree":
 			var tr: Dictionary = t.tree

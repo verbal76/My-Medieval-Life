@@ -1,0 +1,127 @@
+{
+ "format": "mml-capabilities/1",
+ "_note": "TEST FIXTURE ONLY (Expansion 18, PROS-18, settlement_test.gd test_min_d_schema): a copy of the mining block of Build 17's game/data/capabilities.json as read at wip/build17 cd7439c (the SYNC-17 baseline; MIN-SKILLCAP: practitioners by skill and tool), to prove the settlement evaluator reads MIN-D's schema the same way (the one-evaluator plan, docs/expansion18/DESIGN.md section 8). The live mining level is MIN-D's, read through MiningCapabilityAdapter, never computed from this file. Refresh it when MIN-D's file changes.",
+ "industries": {
+  "mining": {
+   "levels": [
+    {
+     "level": 1,
+     "name": "Surface extraction",
+     "needs": [
+      {
+       "kind": "deposit_access",
+       "level": 0
+      },
+      {
+       "kind": "practitioners",
+       "skill": "mining",
+       "min_level": 1,
+       "tool": "pickaxe",
+       "count": 1,
+       "as": "miner"
+      },
+      {
+       "kind": "tool_stock",
+       "tool": "pickaxe",
+       "count": 1
+      },
+      {
+       "kind": "transport",
+       "any": [
+        "handcart",
+        "carry"
+       ]
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "name": "Prospecting and assay",
+     "needs": [
+      {
+       "kind": "practitioners",
+       "skill": "mining",
+       "min_level": 1,
+       "tool": "prospecting_kit",
+       "count": 1,
+       "as": "prospector"
+      },
+      {
+       "kind": "practitioners",
+       "jobs": [
+        "smith"
+       ],
+       "skill": "smithing",
+       "min_level": 1,
+       "count": 1,
+       "as": "assayer"
+      },
+      {
+       "kind": "station",
+       "type": "forge",
+       "count": 1
+      },
+      {
+       "kind": "tool_stock",
+       "tool": "prospecting_kit",
+       "count": 1
+      },
+      {
+       "kind": "records",
+       "what": "discovery",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "name": "Open-pit excavation",
+     "needs": [
+      {
+       "kind": "practitioners",
+       "skill": "mining",
+       "min_level": 1,
+       "tool": "shovel",
+       "count": 2,
+       "as": "excavator"
+      },
+      {
+       "kind": "structure",
+       "what": "pit_ramp",
+       "count": 1
+      },
+      {
+       "kind": "transport",
+       "any": [
+        "handcart"
+       ]
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "name": "Underground mining",
+     "needs": [
+      {
+       "kind": "portal",
+       "min_depth": -1
+      },
+      {
+       "kind": "structure",
+       "what": "timber_support",
+       "count": 1
+      },
+      {
+       "kind": "practitioners",
+       "skill": "mining",
+       "min_level": 3,
+       "tool": "pickaxe",
+       "count": 2,
+       "as": "skilled miner"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

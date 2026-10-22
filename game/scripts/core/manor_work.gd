@@ -238,7 +238,7 @@ func refresh() -> void:
 	var free := yard.total() - claimed
 	while free >= int(cfg("mend_load")) and not sites.is_empty():
 		var site: Array = sites[next_id % sites.size()]
-		_post({"kind": "mend", "qty": int(cfg("mend_load")), "site": [site[0].x, site[0].y], "place": site[1], "wage": int(cfg("mend_wage"))})
+		_post({"kind": "mend", "qty": int(cfg("mend_load")), "site": [site[0].x, site[0].y], "place": site[1], "wage": CapabilityHook.pay(int(cfg("mend_wage")), "carpentry")})   # X18 HOOK: off in the game
 		free -= int(cfg("mend_load"))
 
 
@@ -261,7 +261,7 @@ func post_quarry() -> void:
 		return
 	if _works_stock("stone") >= 2 * int(cfg("mend_load")):
 		return
-	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})
+	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": CapabilityHook.pay(int(cfg("quarry_wage")), "mining")})   # X18 HOOK: off in the game
 
 
 ## MIN-D, the reeve's evening: one survey of a clue the manor has heard nothing of, and one trial pit for the best

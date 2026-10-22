@@ -1692,6 +1692,8 @@ func _player_step(delta: float) -> void:
 		action.left -= delta
 		if action.left <= 0.0:
 			var done: Callable = action.done
+			if action.has("industry"):          # X18 HOOK (X18-CAPCOMP part 1): a record of the player's finished work, read by nothing
+				world.note_player_work(str(action.industry), float(action.total))
 			world.release_player_station(str(action.get("station", "")))
 			action = {}
 			done.call()                  # may begin the next blow of a felling
@@ -2610,6 +2612,7 @@ func _use() -> void:
 				ui.message(str(mp.why))
 				return
 			var pick: String = mp.tool
+			next_industry = "mining"
 			start_action("Mining", float(mp.secs), func():
 				var r := world.player_mine(dep, pick)                  # the same swing as a miner's (PAR-01)
 				if r.result == "out":
@@ -2686,6 +2689,7 @@ func _use() -> void:
 				ui.message(str(fp.why))
 				return
 			player_sprite.face(Vector2(target.cell) + Vector2(0.5, 0.5) - p.pos)
+			next_industry = WorkExperience.industry_of_step("fp_work", {"task": str(target.get("act", ""))})   # till, sow, harvest: farming
 			start_action(str(fp.label), float(fp.secs), func():
 				var r: Dictionary = fp.run.call()
 				for id in r.items:
@@ -2740,6 +2744,7 @@ func _use() -> void:
 			var step := mw.step(mj)
 			if step == "mend":
 				var secs := float(ManorWork.cfg("mend_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
+				next_industry = WorkExperience.industry_of_step("mj_step", {}, "mend")
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "sample":
 				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
@@ -3153,6 +3158,7 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	var cell := Vector2i(int(tr.x), int(tr.y))
 	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
+	next_industry = "forestry"
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
 		var r := world.player_chop(tr, side, axe)          # the same felling as a woodcutter's (PAR-01, DVW-A12 R2)
 		if r.result == "gone":
@@ -3236,8 +3242,14 @@ func plant_cutting(item: String) -> void:
 ## Begin a timed piece of work: `anim` is "swing" (with `tool`, the item held in the hand: the pickaxe
 ## for mining, the axe for felling) or "gather" (picking, harvesting, planting); it plays until the work ends
 ## or is cancelled (cancel_action), then the player is back to idle.
+var next_industry := ""   # X18 HOOK (X18-CAPCOMP part 1): the industry of the next started work, for the experience record
+
+
 func start_action(label: String, secs: float, done: Callable, anim := "gather", tool := "") -> void:
 	action = {"label": label, "left": secs, "total": secs, "done": done, "anim": anim, "tool": tool}
+	if next_industry != "":
+		action.industry = next_industry   # X18-CAPCOMP: the industry of this work, set just before (record only)
+		next_industry = ""
 	move_to = Vector2.INF
 	sprinting = false
 	player_sprite.hold(tool)
@@ -3269,6 +3281,7 @@ func craft(recipe: String, station := "") -> void:
 		return
 	station = str(cp.station)
 	ui.hide_all()
+	next_industry = CapabilityHook.recipe_industry(recipe)
 	start_action("Crafting", float(cp.secs), func():
 		var had := {}
 		for o in r.out:

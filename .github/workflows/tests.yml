@@ -120,6 +120,13 @@ jobs:
           $godot --headless --path game --script res://tests/services_test.gd
           $godot --headless --path game --script res://tests/underground_ext_test.gd
           $godot --headless --path game --script res://tests/underground_struct_test.gd
+          # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
+          $godot --headless --path game --script res://tests/settlement_test.gd
+          $godot --headless --path game --script res://tests/regional_test.gd
+          $godot --headless --path game --script res://tests/capability_test.gd
+          $godot --headless --path game --script res://tests/courier_test.gd
+          $godot --headless --path game --script res://tests/contract_sign_test.gd
+          $godot --headless --path game --script res://tests/experience_test.gd
 
       - name: Short economy simulation (FR-07)
         run: |
