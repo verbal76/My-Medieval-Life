@@ -52,7 +52,15 @@ extends RefCounted
 ## are told first: the person's last queued meeting and, walking back, every earlier one sharing someone with a meeting
 ## already taken (the dependency closure, _flush_for). Those left behind share nobody with them, so they commute. The
 ## result is the same as telling every meeting the moment it is queued (meet), whenever the pump runs (judgment_test:
-## same tellings, beliefs and end state). This is gossip.timing "hour" (the default): the hour's meetings count as told
+## same tellings, beliefs and end state).
+## A pure read of someone's ledger (net, disposition, ledger: what decisions read) need not tell their queued meetings
+## first when they provably cannot change it (_cu_read, 2026-10-22): a queued meeting can change X's ledger only by
+## telling X something; it can only pass on what someone in X's dependency chain holds now, at no more confidence than
+## they hold it (confidence only falls along a chain) and naming the same actors (when misattribution is off). So when X
+## already holds every such memory at least as surely, or judged it before, the read gives the same answer either way
+## and the meetings stay queued. A read of one entry (X's opinion of s: net, disposition, ledger) needs only that no
+## such memory names s among its actors (nor among the actors X believed before, for an upgrade): a telling changes X's
+## ledger only for the actors of the event told. Any change to X's records still tells them first. This is gossip.timing "hour" (the default): the hour's meetings count as told
 ## at the hour's start, as in rounds 1 and 2.
 ## gossip.timing "scheduled" (an alternative, off by default; it changes results, so it is a design choice): each
 ## meeting is told at its own minute of the hour (a seeded hash of the pair and the hour), when gossip_tick reaches that
@@ -92,11 +100,12 @@ var knowers := {}        # event id -> PackedInt64Array of everyone who has judg
 var by_day := {}         # day -> [event ids] (horizon expiry)
 var memories := {}       # observer -> {event id -> PackedInt64Array (M_*)}
 var contrib := {}        # observer -> {event id -> PackedInt64Array [actor, good, bad, ...] by actor}
-var ledgers := {}        # observer -> {subject -> PackedInt64Array [life good, life bad, n, fading good, fading bad, permanent good, permanent bad]}
+var ledgers := {}        # observer -> {subject -> PackedInt64Array [life good, life bad, n, fading good, fading bad, permanent good, permanent bad, the day decayed to]}
 var told_today := {}     # teller -> tellings today (gossip.daily_budget)
 var stats := {}          # counters for diagnostics and performance reports
 var unread := {}         # a saved section this version cannot read: kept and written back unchanged (CLAUDE.md s.7)
-var last_trace := {}     # the last interpretation's parts (diagnostics: "why was the theft rated 0.55 BAD?")
+var last_trace := {}     # the last interpretation's parts (diagnostics: "why was the theft rated 0.55 BAD?"), kept when trace is on
+var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
 var timing := {}         # microseconds spent, by part (measurement only: never saved, never read by the simulation)
 
 # the sliced daily update
@@ -149,6 +158,9 @@ var _gdone := PackedByteArray()          # 1 once told
 var _ghead := 0                          # the first meeting not yet told
 var _glast := {}                         # person -> their last queued meeting's index
 var _gflushing := false
+var _gver := 0                           # bumped by anything that changes what a queued meeting could tell (see _reach)
+var _reach_ver := -1
+var _reach_cache := {}                   # person -> [_gver, the actors whose entries queued meetings could change, any change at all, the closure]
 var _g_sched := false                    # gossip.timing "scheduled"
 var _sched := {}                         # minute -> PackedInt64Array [a, b, ...] in the order queued (scheduled timing)
 var _snext := -1                         # the next minute whose meetings are still to tell (-1: none queued yet)
@@ -310,6 +322,7 @@ func definition(type: String) -> Dictionary:
 ## keeps the original). Those who learn of it re-judge through correct().
 func revise_fact(ev: int, actors: Array) -> void:
 	flush_gossip()
+	_gver += 1
 	if not facts.has(ev):
 		return
 	var f: PackedInt64Array = facts[ev]
@@ -375,8 +388,14 @@ func _mem_permanent(observer: int, f: PackedInt64Array) -> bool:
 	var t := f[F_TYPE]
 	if _perm[t] == 1:
 		return true
-	if _sev[t] >= _perm_personal and (_fact_people(f, 0).has(observer) or _fact_people(f, 1).has(observer)):
-		return true
+	if _sev[t] < _perm_personal:
+		return false
+	var at := F_NA + 1 + 2 * f[F_NA]                 # victims, then beneficiaries, read in place
+	for k in 2:
+		for i in f[at]:
+			if f[at + 1 + i] == observer:
+				return true
+		at += 1 + f[at]
 	return false
 
 
@@ -432,6 +451,7 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 	var sal := JudgmentMath.scale(_sev[t], conf) if _pol[t] != 0 else int(c("memory").get("neutral_salience", 500))
 	var perm := _mem_permanent(observer, f)
 	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 1 if perm else 0)
+	_gver += 1
 	if perm and not had:
 		_perm_refs[ev] = int(_perm_refs.get(ev, 0)) + 1
 	_stat("beliefs")
@@ -459,6 +479,7 @@ func correct(observer: int, ev: int, new_actors: Array = []) -> void:
 	var m: PackedInt64Array = mem[ev]
 	var acts: Array = _fact_actors(facts[ev]) if new_actors.is_empty() else _shares(new_actors)
 	mem[ev] = _pack_mem(m[M_TYPE], m[M_DAY], m[M_SRC], m[M_BY], m[M_HOPS], maxi(m[M_CONF], int(c("belief").witnessed)), m[M_SAL], acts, m[M_FLAGS])
+	_gver += 1
 	_stat("corrections")
 	_judge(observer, ev)
 
@@ -491,6 +512,7 @@ func _bound(observer: int) -> void:
 ## only a held belief can be corrected, and the event's knowers keep the dedup key until the event retires, so hearing
 ## of it again adds nothing (memory use stays within capacity per person, not per event known).
 func _forget(observer: int, ev: int) -> void:
+	_gver += 1
 	var t: int = (memories[observer] as Dictionary)[ev][M_TYPE]
 	(memories[observer] as Dictionary).erase(ev)
 	_stat("forgotten")
@@ -506,57 +528,81 @@ func _forget(observer: int, ev: int) -> void:
 ## by their tie to the affected (kin, friend, a rival reverses it); loyalty to the actor softens condemnation; on
 ## ambiguous events only, prior judgment of the actor may bias the reading, capped (SJD-Q05).
 func interpret(observer: int, ev: int, actor: int, believed: Array) -> Dictionary:
-	var f: PackedInt64Array = facts[ev]
-	var good := _pol[f[F_TYPE]] == 1
-	var affected := _fact_people(f, 1 if good else 0)
 	var parts := {}
-	var p := 0
-	if affected.has(observer):
-		p = _i[0]
-		parts.role = "affected"
-	elif not good and _names(believed, observer):
-		p = _i[1]
-		parts.role = "accomplice"
-	else:
-		parts.role = "bystander"
-		p = _i[4]
-		var best := -1
-		for v in affected:
-			var pv := _i[4]
-			var why := "bystander"
-			if social.kin(observer, v):
-				pv = _i[2]
-				why = "kin"
-			elif social.friends(observer, v):
-				pv = _i[3]
-				why = "friend"
-			elif net(observer, v) <= _i[6]:
-				pv = _i[5]
-				why = "rival"
-			if best < 0 or absi(pv) > absi(p) or (absi(pv) == absi(p) and pv > p):
-				p = pv
-				parts.role = why
-				parts.of = v
-				best = 1
-	parts.base = p
-	if not good and p > 0 and parts.role != "affected":
-		if social.kin(observer, actor):
-			p = JudgmentMath.scale(p, _i[7])
-			parts.loyalty = "kin of actor"
-		elif social.friends(observer, actor):
-			p = JudgmentMath.scale(p, _i[8])
-			parts.loyalty = "friend of actor"
-	if _amb[f[F_TYPE]] == 1 and parts.role != "affected":
-		var bias := JudgmentMath.clampi_(JudgmentMath.mul_div(net(observer, actor), _i[9], 1000), -_i[10], _i[10])
-		p += bias if good else -bias
-		parts.prior_bias = bias if good else -bias
-	if _morality > 0 and parts.role != "affected":
-		var mor := morality(observer, f[F_TYPE])
-		p = JudgmentMath.scale(p, mor)
-		parts.morality = mor
-	p = JudgmentMath.clampi_(p, -JudgmentMath.ONE, JudgmentMath.ONE)
+	var p := _interpret_p(observer, ev, actor, believed, parts)
 	parts.p = p
 	return parts
+
+
+## The signed interpretation P (permille) of interpret(); its parts go into `parts` only when one is given (trace or a
+## direct interpret() call), so the usual path builds no dictionary. The same arithmetic either way.
+func _interpret_p(observer: int, ev: int, actor: int, believed: Array, parts = null) -> int:
+	var f: PackedInt64Array = facts[ev]
+	var good := _pol[f[F_TYPE]] == 1
+	var at := F_NA + 1 + 2 * f[F_NA]                 # the victims' count, then the beneficiaries' (read in place, not copied)
+	if good:
+		at += 1 + f[at]
+	var n_aff := f[at]
+	var is_aff := false
+	for i in n_aff:
+		if f[at + 1 + i] == observer:
+			is_aff = true
+			break
+	var p := 0
+	if is_aff:
+		p = _i[0]
+		if parts != null:
+			parts.role = "affected"
+	elif not good and _names(believed, observer):
+		p = _i[1]
+		if parts != null:
+			parts.role = "accomplice"
+	else:
+		if parts != null:
+			parts.role = "bystander"
+		p = _i[4]
+		var best := -1
+		for i in n_aff:
+			var v := f[at + 1 + i]
+			var pv := _i[4]
+			var why := 0                              # 0 bystander, 1 kin, 2 friend, 3 rival
+			if social.kin(observer, v):
+				pv = _i[2]
+				why = 1
+			elif social.friends(observer, v):
+				pv = _i[3]
+				why = 2
+			elif net(observer, v) <= _i[6]:
+				pv = _i[5]
+				why = 3
+			if best < 0 or absi(pv) > absi(p) or (absi(pv) == absi(p) and pv > p):
+				p = pv
+				if parts != null:
+					parts.role = ["bystander", "kin", "friend", "rival"][why]
+					parts.of = v
+				best = 1
+	if parts != null:
+		parts.base = p
+	if not good and p > 0 and not is_aff:
+		if social.kin(observer, actor):
+			p = JudgmentMath.scale(p, _i[7])
+			if parts != null:
+				parts.loyalty = "kin of actor"
+		elif social.friends(observer, actor):
+			p = JudgmentMath.scale(p, _i[8])
+			if parts != null:
+				parts.loyalty = "friend of actor"
+	if _amb[f[F_TYPE]] == 1 and not is_aff:
+		var bias := JudgmentMath.clampi_(JudgmentMath.mul_div(net(observer, actor), _i[9], 1000), -_i[10], _i[10])
+		p += bias if good else -bias
+		if parts != null:
+			parts.prior_bias = bias if good else -bias
+	if _morality > 0 and not is_aff:
+		var mor := morality(observer, f[F_TYPE])
+		p = JudgmentMath.scale(p, mor)
+		if parts != null:
+			parts.morality = mor
+	return JudgmentMath.clampi_(p, -JudgmentMath.ONE, JudgmentMath.ONE)
 
 
 ## Personal morality (Q08): how strongly `observer` feels about this family of deeds, permille, fixed per person and
@@ -584,19 +630,22 @@ func evaluate(observer: int, ev: int, actor: int, share: int, conf: int, believe
 		return [0, 0]
 	if _pol[t] == 0:
 		return _personal_points(observer, ev, share, conf)
-	var parts := interpret(observer, ev, actor, believed)
+	var parts = {} if trace else null
+	var p := _interpret_p(observer, ev, actor, believed, parts)
 	var impact := 0
 	if _b_policy != 0 and conf < _b_thr:
 		impact = 0
 	elif _b_policy == 1:
-		impact = JudgmentMath.scale(_sev[t], int(parts.p))
+		impact = JudgmentMath.scale(_sev[t], p)
 	else:
-		impact = JudgmentMath.mul_div(_sev[t] * int(parts.p), conf, 1000000)
+		impact = JudgmentMath.mul_div(_sev[t] * p, conf, 1000000)
 	impact = JudgmentMath.scale(impact, share)
-	parts.severity = _sev[t]
-	parts.confidence = conf
-	parts.impact = impact
-	last_trace = parts
+	if parts != null:
+		parts.p = p
+		parts.severity = _sev[t]
+		parts.confidence = conf
+		parts.impact = impact
+		last_trace = parts
 	if impact == 0:
 		return [0, 0]
 	if (impact > 0) == (_pol[t] == 1):
@@ -611,7 +660,8 @@ func _personal_points(observer: int, ev: int, share: int, conf: int) -> Array:
 	var f: PackedInt64Array = facts[ev]
 	var rule: Dictionary = _personal[f[F_TYPE]]
 	if rule.is_empty():
-		last_trace = {"role": "no personal meaning", "p": 0}
+		if trace:
+			last_trace = {"role": "no personal meaning", "p": 0}
 		return [0, 0]
 	var benef := _fact_people(f, 1)
 	var p := 0
@@ -632,7 +682,8 @@ func _personal_points(observer: int, ev: int, share: int, conf: int) -> Array:
 				p = int(rule.get("friend", 0))
 				role = "friend"
 	var impact := JudgmentMath.scale(JudgmentMath.mul_div(int(rule.get("severity", 0)) * p, conf, 1000000), share)
-	last_trace = {"role": role, "p": p, "impact": impact}
+	if trace:
+		last_trace = {"role": role, "p": p, "impact": impact}
 	if impact > 0:
 		return [impact, 0]
 	if impact < 0:
@@ -726,11 +777,26 @@ func contribution(observer: int, ev: int, actor: int) -> Array:
 ## [lifetime good, lifetime bad, contributions, fading good, fading bad, permanent good, permanent bad] (a copy; all 0
 ## when none). The lifetime totals never fade (history, spec s.5.2); NET uses the fading and permanent parts.
 func ledger(observer: int, subject: int) -> Array:
-	_cu(observer)
+	_cu_read(observer, subject)
 	var mine: Dictionary = ledgers.get(observer, {})
 	if not mine.has(subject):
 		return [0, 0, 0, 0, 0, 0, 0]
-	return Array(mine[subject])
+	return Array(_entry(mine, subject)).slice(0, 7)
+
+
+## A ledger entry with the decay it is due applied (2026-10-22, lazily): the fading parts lose _decay_step a day for
+## every day since it was last brought up to date, the same integer steps in the same order the daily update applied
+## to every ledger at each person's dawn, so every value read is the same; only entries nobody reads wait.
+func _entry(mine: Dictionary, subject) -> PackedInt64Array:
+	var l: PackedInt64Array = mine[subject]
+	if l[7] < day:
+		if _decay > 0 and (l[3] != 0 or l[4] != 0):
+			for i in day - l[7]:
+				l[3] = l[3] - _decay_step(l[3])
+				l[4] = l[4] - _decay_step(l[4])
+		l[7] = day
+		mine[subject] = l
+	return l
 
 
 func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int, perm := false) -> void:
@@ -740,9 +806,9 @@ func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int, perm :=
 	var mine: Dictionary = ledgers[observer]
 	var l: PackedInt64Array
 	if mine.has(subject):
-		l = mine[subject]
+		l = _entry(mine, subject)
 	else:
-		l = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
+		l = PackedInt64Array([0, 0, 0, 0, 0, 0, 0, day])
 		_stat("ledgers")
 	l[0] = maxi(0, l[0] + dg)
 	l[1] = maxi(0, l[1] + db)
@@ -756,10 +822,11 @@ func _ledger_add(observer: int, subject: int, dg: int, db: int, dn: int, perm :=
 ## Set a ledger's GOOD and BAD outright (tests and fixtures: an opinion formed before the scenario starts).
 func set_ledger(observer: int, subject: int, good_points: int, bad_points: int) -> void:
 	_cu(observer)
+	_gver += 1
 	if not ledgers.has(observer):
 		ledgers[observer] = {}
 		_add_person(observer)
-	var l: PackedInt64Array = (ledgers[observer] as Dictionary).get(subject, PackedInt64Array([0, 0, 0, 0, 0, 0, 0]))
+	var l: PackedInt64Array = _entry(ledgers[observer], subject) if (ledgers[observer] as Dictionary).has(subject) else PackedInt64Array([0, 0, 0, 0, 0, 0, 0, day])
 	l[0] = good_points
 	l[1] = bad_points
 	l[3] = good_points
@@ -772,11 +839,11 @@ func set_ledger(observer: int, subject: int, good_points: int, bad_points: int) 
 ## NET judgment of `subject` by `observer`, milli-points: GOOD - BAD over the fading parts (decayed, Q02) and the
 ## permanent parts (murder, never decayed).
 func net(observer: int, subject: int) -> int:
-	_cu(observer)
+	_cu_read(observer, subject)
 	var mine: Dictionary = ledgers.get(observer, {})
 	if not mine.has(subject):
 		return 0
-	var l: PackedInt64Array = mine[subject]
+	var l := _entry(mine, subject)
 	return l[3] + l[5] - l[4] - l[6]
 
 
@@ -802,7 +869,7 @@ func ambivalence(observer: int, subject: int) -> int:
 
 ## The subject `observer` thinks worst of (lowest NET, then lowest id), or -999 when they judge nobody below 0.
 func most_disliked(observer: int, besides := -999) -> int:
-	_cu(observer)
+	_cu_read(observer)
 	var best := -999
 	var best_net := 0
 	var mine: Dictionary = ledgers.get(observer, {})
@@ -840,6 +907,7 @@ func _meet_now(a: int, b: int) -> int:
 func meet_later(a: int, b: int) -> void:
 	if a == b:
 		return
+	_gver += 1
 	_glast[a] = _gq.size() / 2
 	_glast[b] = _gq.size() / 2
 	_gq.append(a)
@@ -916,6 +984,7 @@ func gossip_pump(k := -1) -> int:
 		return 0
 	var t := Time.get_ticks_usec()
 	var left := _g_pump if k < 0 else k
+	_gver += 1
 	var was := _gflushing
 	_gflushing = true
 	while _ghead < _gdone.size() and left > 0:
@@ -943,10 +1012,16 @@ func _flush_for(o: int) -> void:
 	var last := int(_glast[o])
 	if last < _ghead or _gdone[last] == 1:
 		return
-	var t := Time.get_ticks_usec()
 	var who := {o: true}
+	var take := _closure(o, who)
+	_tell_taken(take)
+
+
+## The queued meetings `o` depends on, newest first: their last one and every earlier one sharing someone with a meeting
+## already taken. `who` gathers the people they involve.
+func _closure(o: int, who: Dictionary) -> PackedInt64Array:
 	var take := PackedInt64Array()
-	var i := last
+	var i := int(_glast[o])
 	while i >= _ghead:
 		if _gdone[i] == 0:
 			var a := _gq[2 * i]
@@ -956,6 +1031,13 @@ func _flush_for(o: int) -> void:
 				who[a] = true
 				who[b] = true
 		i -= 1
+	return take
+
+
+## Tell the meetings of a closure (newest first in `take`) in queue order.
+func _tell_taken(take: PackedInt64Array) -> void:
+	_gver += 1
+	var t := Time.get_ticks_usec()
 	_gflushing = true
 	for j in range(take.size() - 1, -1, -1):
 		var m := take[j]
@@ -999,7 +1081,7 @@ func tell(teller: int, listener: int) -> int:
 		return 0
 	if int(told_today.get(teller, 0)) >= _g_budget or net(teller, listener) <= _g_share_at:
 		return 0
-	var cred := credibility(listener, teller)
+	var cred := -1                                 # the listener's trust in the teller, found when first needed
 	var heard: Dictionary = memories.get(listener, {})
 	var mine: Dictionary = contrib.get(listener, {})
 	var keys := PackedInt64Array()
@@ -1007,6 +1089,8 @@ func tell(teller: int, listener: int) -> int:
 		var m: PackedInt64Array = mem[ev]
 		if not facts.has(ev) or _mem_names(m, listener):
 			continue
+		if cred < 0:
+			cred = credibility(listener, teller)
 		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
 		if conf <= 0:
 			continue                               # a story nobody could believe at all is not passed on
@@ -1071,6 +1155,8 @@ func begin_day(d: int) -> void:
 		return
 	flush_gossip()                               # the day's meetings belong to it
 	finish_dawn()
+	_gver += 1
+	_reach_cache.clear()
 	_steps = d - day
 	day = d
 	told_today.clear()
@@ -1148,6 +1234,84 @@ func finish_dawn() -> void:
 	dawn_slice(1 << 40)
 
 
+## Catch-up for a pure read of `o`'s ledger (see the header), of the entry for `subject` (WHOLE: all of it): their
+## queued meetings are told first only if they could change what is read. The day's update is applied as on any touch.
+const WHOLE := -1099511627776        # no person has this id: the whole ledger
+
+
+func _cu_read(o: int, subject := WHOLE) -> void:
+	if not _gflushing and _ghead < _gdone.size() and _glast.has(o):
+		var last := int(_glast[o])
+		if last >= _ghead and _gdone[last] == 0:
+			var r := _reach(o)
+			var could: Dictionary = r[1]
+			if not bool(r[2]) or (subject != WHOLE and not could.has(WHOLE) and not could.has(subject)):
+				_stat("read_without_flush")
+			else:
+				_tell_taken(r[3])
+	if not _active or not pending(o):
+		return
+	_early[o] = true
+	_dawn_one(o)
+
+
+## What `o`'s queued meetings could change in `o`'s ledger: [version, {actor: true} whose entries could change, whether
+## anything could, the closure]. Kept while nothing that could change it has happened (_gver): any meeting queued or
+## told, any memory learned, corrected or forgotten, a revised fact, a new day. With misattribution, or retraction on
+## forgetting, every entry is treated as changeable.
+func _reach(o: int) -> Array:
+	if _reach_ver != _gver:
+		_reach_cache.clear()                     # every entry is out of date once anything has changed: keep none
+		_reach_ver = _gver
+	var r: Array = _reach_cache.get(o, [])
+	if not r.is_empty() and int(r[0]) == _gver:
+		return r
+	var who := {o: true}
+	var take := _closure(o, who)
+	var actors := {}
+	var any := _learnable(o, who, actors)
+	r = [_gver, actors, any, take]
+	_reach_cache[o] = r
+	return r
+
+
+## Gathers into `actors` the actors of every memory a queued meeting among `who` could still tell `o` (and, for a more
+## confident telling of something `o` holds, the actors `o` believed); true when there is any such memory, or always
+## when misattribution or retraction on forgetting make every entry changeable (then `actors` is not to be trusted).
+func _learnable(o: int, who: Dictionary, actors: Dictionary) -> bool:
+	if _g_mis > 0 or _retract:
+		actors[WHOLE] = true
+		return true
+	var held: Dictionary = memories.get(o, {})
+	var mine: Dictionary = contrib.get(o, {})
+	var any := false
+	for p in who:
+		if int(p) == o or not memories.has(p):
+			continue
+		var mem: Dictionary = memories[p]
+		for ev in mem:
+			var m: PackedInt64Array = mem[ev]
+			if not facts.has(ev) or _mem_names(m, o):
+				continue
+			if held.has(ev):
+				var h: PackedInt64Array = held[ev]
+				if h[M_CONF] >= m[M_CONF]:
+					continue
+				for i in h[M_NA]:
+					actors[h[M_NA + 1 + 2 * i]] = true
+			elif mine.has(ev):
+				continue
+			else:
+				var kn: PackedInt64Array = knowers.get(ev, PackedInt64Array())
+				var at := kn.bsearch(o)
+				if at < kn.size() and kn[at] == o:
+					continue
+			for i in m[M_NA]:
+				actors[m[M_NA + 1 + 2 * i]] = true
+			any = true
+	return any
+
+
 ## Catch-up on touch: apply today's update to `o` if it is still pending, before anything reads or changes their
 ## records.
 func _cu(o: int) -> void:
@@ -1160,7 +1324,8 @@ func _cu(o: int) -> void:
 
 
 ## One person's daily update: their ordinary memories fade (for each day the update covers) and the faint are
-## forgotten, then their records of retired events go, then the fading parts of their judgments decay (Q02).
+## forgotten, then their records of retired events go. The fading parts of their judgments decay (Q02) entry by entry
+## when next read or changed (_entry), the same steps; a murder's permanent part never decays.
 func _dawn_one(o: int) -> void:
 	var mem: Dictionary = memories.get(o, {})
 	if not mem.is_empty():
@@ -1184,16 +1349,7 @@ func _dawn_one(o: int) -> void:
 		for ev in mine.keys():
 			if _retiring.has(ev):
 				mine.erase(ev)
-	if _decay > 0 and ledgers.has(o):
-		var mine: Dictionary = ledgers[o]
-		for s in mine:
-			var l: PackedInt64Array = mine[s]
-			if l[3] == 0 and l[4] == 0:
-				continue
-			for i in _steps:                       # only the fading parts: a murder's permanent part never decays (Q02)
-				l[3] = l[3] - _decay_step(l[3])
-				l[4] = l[4] - _decay_step(l[4])
-			mine[s] = l
+	# the fading parts of the person's ledgers decay when each entry is next read or changed (_entry): the same steps
 
 
 ## One day's decay of a fading part: its share at the rate, rounded, and at least one milli-point while anything is
@@ -1268,7 +1424,7 @@ func to_dict() -> Dictionary:
 				cs.append([int(o), int(ev), row[i], row[i + 1], row[i + 2]])
 	for o in _sorted(ledgers):
 		for s in _sorted(ledgers[o]):
-			var l: PackedInt64Array = ledgers[o][s]
+			var l := _entry(ledgers[o], s)
 			ls.append([int(o), int(s), l[0], l[1], l[2], l[3], l[4], l[5], l[6]])
 	var tt := []
 	for t in _sorted(told_today):
@@ -1306,6 +1462,8 @@ func load_dict(d: Dictionary) -> String:
 	_ghead = 0
 	_glast.clear()
 	_perm_refs.clear()
+	_reach_cache.clear()
+	_gver += 1
 	_sched.clear()
 	_snext = -1
 	unread = {}
@@ -1364,7 +1522,7 @@ func load_dict(d: Dictionary) -> String:
 			ledgers[int(r[0])] = {}
 		var pg := int(r[7]) if (r as Array).size() > 8 else 0        # round-1..3 rows have no permanent part
 		var pb := int(r[8]) if (r as Array).size() > 8 else 0
-		ledgers[int(r[0])][int(r[1])] = PackedInt64Array([int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), pg, pb])
+		ledgers[int(r[0])][int(r[1])] = PackedInt64Array([int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), pg, pb, day])
 	for r in m.told_today:
 		told_today[int(r[0])] = int(r[1])
 	for r in m.get("scheduled", []):

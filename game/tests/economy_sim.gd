@@ -140,6 +140,7 @@ func _init() -> void:
 	if w.judgment != null:
 		print("judgment: %s; stats %s" % [JSON.stringify(w.judgment.counts()), JSON.stringify(w.judgment.stats)])
 		print("judgment time (us): %s" % JSON.stringify(w.judgment.timing))
+		print("judgment state hash: %d" % w.judgment.state_hash())       # byte-level comparison of every ledger, memory and fact
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,

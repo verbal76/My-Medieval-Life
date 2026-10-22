@@ -63,12 +63,16 @@ class Social extends JudgmentSocial:
 			return true
 		return Life.kin(a, int(pa.mother), int(pa.father), b, int(pb.mother), int(pb.father))
 
+	## Relations.friends and Relations.peek, read without building a blank tie on every call (peek's default argument is
+	## built even when the tie exists): a missing tie is not friends and regard 0, as the blank one says.
 	func friends(a: int, b: int) -> bool:
-		return w.relations.friends(a, b)
+		var t = w.relations.ties.get(Relations.key(a, b))
+		return t != null and bool(t.friends)
 
 	## Q06: trust in a teller reuses the existing relationship number, Relations' regard (one tie a pair), 0..100.
 	func regard(a: int, b: int) -> int:
-		return roundi(float(w.relations.peek(a, b).regard))
+		var t = w.relations.ties.get(Relations.key(a, b))
+		return 0 if t == null else roundi(float(t.regard))
 
 
 static func _ids(people: Array) -> Array:
@@ -119,6 +123,7 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 			return false
 	var wd := int(wt.get("disposition", 0))
 	var wo := int(wt.get("live_order", 0))
+	j._cu_read(seller)                          # the whole ledger is read below
 	var d0 := j.disposition(seller, first)
 	var best := int(dc.disposition_mid)
 	for s in (j.ledgers.get(seller, {}) as Dictionary):

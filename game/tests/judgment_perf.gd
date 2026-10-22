@@ -108,6 +108,8 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 	var worst_parts := [0, 0, 0, 0]         # the worst frame's update, events, gossip, decisions (us)
 	var frames := PackedInt64Array()        # every measured tick's cost (us): percentiles
 	var idle_max := 0                       # the worst tick that did no judgment work at all: the machine's noise floor
+	var max_tick_tellings := 0              # the most tellings in one tick, and the most beliefs taken in (deterministic
+	var max_tick_beliefs := 0               # workload counts, free of the shared machine's timing noise)
 	var ev_count := 0
 	for d in days:
 		var due := int(floor(per_day * (d + 1))) - int(floor(per_day * d))     # a fractional rate spread evenly over the days
@@ -119,6 +121,8 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 			var dec_from := n * (hr - 7) / 11 if hr >= 7 and hr < 18 else 0
 			var dec_to := n * (hr - 6) / 11 if hr >= 7 and hr < 18 else 0
 			for tick in TICKS:
+				var tell0 := int(j.stats.get("tellings", 0))
+				var bel0 := int(j.stats.get("beliefs", 0))
 				var t0 := Time.get_ticks_usec()
 				if tick == 0:
 					if hr == 6:
@@ -172,6 +176,8 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 					max_update = maxi(max_update, t1 - t0)
 					today_max = maxi(today_max, t1 - t0)
 					frames.append(t4 - t0)
+					max_tick_tellings = maxi(max_tick_tellings, int(j.stats.get("tellings", 0)) - tell0)
+					max_tick_beliefs = maxi(max_tick_beliefs, int(j.stats.get("beliefs", 0)) - bel0)
 					var busy: bool = (tick == 0) or (spread and j.call("gossip_queued") > 0) or dec_to > dec_from
 					if not busy:
 						idle_max = maxi(idle_max, t4 - t0)
@@ -228,6 +234,7 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 	var row := {"permanent_memories": permanent, "rate": rate, "n": n, "days": days, "events_day": int(round(per_day)), "ev_ms": ms.call(sums.ev), "gossip_ms": ms.call(sums.gossip),
 		"dec_ms": ms.call(sums.dec), "dawn_ms": ms.call(sums.dawn), "max_hour_ms": float(max_hour) / 1000.0, "max_update_ms": float(max_update) / 1000.0, "median_update_max_ms": _median(day_update_max) / 1000.0,
 		"max_frame_ms": float(max_frame) / 1000.0, "median_frame_max_ms": _median(day_frame_max) / 1000.0, "gossip": gossip if spread else "now", "worst_frame_parts_us": worst_parts,
+		"max_tick_tellings": max_tick_tellings, "max_tick_beliefs": max_tick_beliefs,
 		"p99_frame_ms": _pct(frames, 0.99) / 1000.0, "p999_frame_ms": _pct(frames, 0.999) / 1000.0, "idle_max_ms": float(idle_max) / 1000.0,
 		"us_per_choice": float(sums.dec) / maxf(1.0, float(choices)), "sliced": sliced,
 		"counts": counts, "mem_mb": mem_mb, "save_kb": float(text.length()) / 1024.0, "save_ms": float(save_us) / 1000.0,

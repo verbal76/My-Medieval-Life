@@ -296,6 +296,7 @@ func test_misattribution() -> void:
 
 func test_prior_bias() -> void:
 	var j := store()
+	j.trace = true                                      # developer diagnostics: keep each interpretation's parts
 	j.set_ledger(STRANGER, VERBAL, 0, 10000)                   # the stranger dislikes Verbal (-10)
 	var ev := j.publish("trade_fair", [VERBAL], [], [JOHN])
 	j.observe(ev, STRANGER)
@@ -574,9 +575,13 @@ func test_spread_gossip() -> void:
 					var b := j.belief(o, ev)
 					if not b.is_empty():
 						beliefs.append([o, ev, b.src, b.by, b.hops, b.conf])
-			out.append([j.state_hash(), log, beliefs, int(j.stats.get("tellings", 0)), queued_max, int(j.stats.get("gossip_flushes", 0))])
+			out.append([j.state_hash(), log, beliefs, int(j.stats.get("tellings", 0)), queued_max, int(j.stats.get("gossip_flushes", 0)), int(j.stats.get("read_without_flush", 0))])
 		var name := "with retraction, fading view and rumours" if v.has("retract") else "default settings"
 		check(out[1][4] > 0 and out[1][5] > 0, "spread gossip (%s): meetings really waited in the queue (up to %d) and reads flushed what they needed (%d times)" % [name, out[1][4], out[1][5]])
+		if v.has("mis"):
+			check(out[1][6] == 0, "spread gossip (%s): with misattribution possible, every read tells the queue first (%d skipped)" % [name, out[1][6]])
+		else:
+			check(out[1][6] > 0, "spread gossip (%s): reads that could not change were answered without telling the queue first (%d times)" % [name, out[1][6]])
 		check(out[0][3] == out[1][3], "spread gossip (%s): the same number of tellings (%d)" % [name, out[0][3]])
 		check(out[0][1] == out[1][1], "spread gossip (%s): every opinion, memory count and choice read between ticks is the same" % name)
 		check(out[0][2] == out[1][2], "spread gossip (%s): the same beliefs, provenance and confidence (%d beliefs)" % [name, out[0][2].size()])
@@ -593,6 +598,17 @@ func test_spread_gossip() -> void:
 	j.belief(FRIEND, ev)
 	check(j.gossip_queued() == 1, "...and only those: a meeting of other people stays queued")
 	check(j.gossip_pump() == 0, "the pump tells what is left")
+	# a read between two queued meetings, with no pump between: the second meeting must not be missed
+	var jq := store()
+	var jn := store()
+	for x in [jq, jn]:
+		x.observe(x.publish("theft", [THIEF], [BOB]), BOB)
+	jq.meet_later(STRANGER, JOHN)
+	jn.meet(STRANGER, JOHN)
+	check(jq.net(STRANGER, THIEF) == jn.net(STRANGER, THIEF) and jq.net(STRANGER, THIEF) == 0, "a read that nothing queued can change is answered at once")
+	jq.meet_later(STRANGER, BOB)
+	jn.meet(STRANGER, BOB)
+	check(jq.net(STRANGER, THIEF) == jn.net(STRANGER, THIEF) and jq.net(STRANGER, THIEF) < 0, "a meeting queued after that read is not missed: Bob's story reaches the stranger before the next read (%d)" % jq.net(STRANGER, THIEF))
 
 
 ## Round 3 option, gossip.timing "scheduled" (off by default; a design choice, since it changes when word passes): each
