@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 228 (112 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **303** = 195 still open from the baseline + 112 added and open |
+| Entries added since | | 229 (113 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 195 still open from the baseline + 113 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (228)
+## Added since the baseline (229)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -211,6 +211,7 @@ None.
 | OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | decision | BLOCKED | owner decision |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | decision | BLOCKED | owner decision |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | decision | BLOCKED | owner decision |
+| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | ACTIVE DEVELOPMENT | 18 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | COMPLETE AND VERIFIED | 16 |

@@ -18381,6 +18381,50 @@
    ]
   },
   {
+   "id": "ORE-PLACE-01",
+   "title": "Natural ore evidence and finds kept out of the developed village footprint",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "natural mining deposits belong outside the developed village",
+   "description": "Natural ore evidence and finds kept out of the developed village footprint",
+   "source": "docs/directives/2026-10-22_build18_ore_deposit_placement.md",
+   "approval": "owner playtest finding 2026-10-22",
+   "acceptance": [
+    "No prospecting stain, sample spot or mineral body inside the settlement footprint (buildings, roads, farms, pens, market) on representative seeds",
+    "Ore remains available outside the settlement; the mine yard's seams kept",
+    "No ore deleted, no ownership change, same depletion rules everywhere"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-ore",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-ore",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_ore_deposit_placement.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
+     "why": "lead investigating and fixing on wip/b18-ore"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "OVN-01",
    "title": "Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority",
    "kind": "approved",

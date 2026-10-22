@@ -12,7 +12,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 65 |
-| ACTIVE DEVELOPMENT | 27 |
+| ACTIVE DEVELOPMENT | 28 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 24 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -22,8 +22,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **473** |
-| Outstanding (not complete, superseded or canceled) | 224 |
+| **Total approved** | **474** |
+| Outstanding (not complete, superseded or canceled) | 225 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 78 owner decision (open or answered), 30 world design rule, 8 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 48 | 39 |
+| Build 18: Settlement Advancement & Regional Economy | 49 | 40 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **303** | **224** |
+| **Total open** | **304** | **225** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (48)
+### Build 18: Settlement Advancement & Regional Economy (49)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -200,6 +200,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OD-05 | Owner decisions: inner doorways, relaying survey plots | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
 | OD-08 | Owner decision: is honest arbitrage intended? | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
+| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | ACTIVE DEVELOPMENT |  |  |
 | PL1-10 | Player businesses, staged (1-4) | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
 | PL2-008 | Expandable property | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
 | PL2-014 | Modular house/workshop expansion | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
@@ -522,7 +523,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (27)
+## ACTIVE DEVELOPMENT (28)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -533,6 +534,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Owner decision on the FARM-08 yield and switches and on the remaining balance options (herd cost vs milk income, 4-day trough vs harvest gaps, household feed purse or granary sales, unsold milk and cheese); crop sharing decided (FARM-08-Q-CROP, option B) and implemented on wip/farm-cropshare (FARM-CROP-01) |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
+| ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | docs/directives/2026-10-22_build18_ore_deposit_placement.md | branch wip/b18-ore |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
