@@ -136,6 +136,7 @@ static func build() -> Wiki:
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
+	WikiChapel.add_pages(w)         # DVW-B3-CHAPEL: the chapel, offerings, asking for help, the church's plot
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
 	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks

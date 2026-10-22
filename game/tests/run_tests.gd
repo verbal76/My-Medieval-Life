@@ -114,7 +114,7 @@ func test_population() -> void:
 			villagers += 1
 			jobs[n.job] = int(jobs.get(n.job, 0)) + 1
 			check(w.buildings.has(n.home), "%s has a home" % n.name)
-	check(villagers == 100 + Population.SERVICE_JOBS.size(), "100 villagers and the tailor and barber (got %d)" % villagers)
+	check(villagers == 100 + Population.SERVICE_JOBS.size() + Population.CLERGY.size(), "100 villagers, the tailor and barber, the preacher and the church assistant (got %d)" % villagers)
 	check(w.alive_count("bandit") == int(GameData.b("bandits")), "bandits present")
 	print("population: ", jobs)
 
@@ -448,7 +448,7 @@ func test_households_and_work() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
 	var kids := w.alive_count("child")
-	check(w.granary.count("wheat") == ceili(((100 + Population.SERVICE_JOBS.size() - kids) + kids * float(GameData.b("child_food_factor"))) * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food, children weighted (%d)" % w.granary.count("wheat"))
+	check(w.granary.count("wheat") == ceili(((100 + Population.SERVICE_JOBS.size() + Population.CLERGY.size() - kids) + kids * float(GameData.b("child_food_factor"))) * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food, children weighted (%d)" % w.granary.count("wheat"))
 	check(w.households[5].pantry.count("wheat") == 2 * w.households[5].members.size(), "each household brought 2 wheat a head")
 	# inheritance: food to the pantry, coins and goods to the heir; nothing lost or made
 	var h := -1
@@ -1112,6 +1112,10 @@ func test_child_food() -> void:
 		meat += inv.count("meat")
 		logs += inv.count("log")
 	pts += mini(meat, logs) * 120.0
+	var all_wheat := 0
+	for inv: Inventory in invs:
+		all_wheat += inv.count("wheat")
+	pts -= float(all_wheat % NPCBrain.pottage_batch()) * (120.0 - float(GameData.item("wheat").food))      # an odd grain is eaten raw, not cooked in a pot (store_points)
 	for f in NPCBrain.FOOD:
 		pts += w.table_food(f) * (120.0 if f == "wheat" else float(GameData.item(f).food))
 	pts += w.manor_work.food_points()

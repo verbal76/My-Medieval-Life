@@ -213,6 +213,8 @@ func decide(n: NPC) -> void:
 	if n.role == "elder":
 		if w.farm_plots.plan_work(n):          # FARM-04: an elder's light work on the family's farmland, by day
 			return
+		if w.chapel.plan_volunteer(n):         # DVW-B3-CHAPEL: or on the church's plot, when they volunteered
+			return
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
 		n.doing = "taking the air"
 		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
@@ -807,7 +809,11 @@ func _plan_evening(n: NPC, h: float) -> void:
 		return
 	if _plan_buy_seed(n):
 		return
+	if w.chapel.plan_ask(n):                   # DVW-B3-CHAPEL: a household short of food asks the church first
+		return
 	if w.farm_plots.plan_work(n):              # FARM-04: the family's farmland, in the time the day leaves
+		return
+	if w.chapel.plan_volunteer(n):             # DVW-B3-CHAPEL: a volunteer on the church's plot
 		return
 	if _plan_home_work(n):
 		return
@@ -975,6 +981,8 @@ func _plan_job(n: NPC) -> bool:
 			if n.job == "merchant":
 				n.plan[1]["industry"] = "trade"      # X18-D4: the hours a trader keeps the stall open are trade experience
 			return true
+		"preacher", "church_assistant":
+			return w.chapel.plan_clergy(n)          # DVW-B3-CHAPEL: keeping the chapel; with no volunteers, the church's plot
 		"manor_hand":
 			for f in w.fields:
 				if w.field_workers(f).is_empty():
@@ -2121,6 +2129,8 @@ func _workplace_cell(o: NPC) -> Vector2i:
 		return Vector2i(int(s.use[0]), int(s.use[1]))
 	if o.workplace == "manor":
 		return w.building_door(o.home)
+	if o.workplace == "chapel" and w.chapel != null and w.chapel.present:
+		return w.chapel.door_cell()
 	return o.cell()
 
 
@@ -2586,6 +2596,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
+		"church_ask":                           # DVW-B3-CHAPEL: asking the church for food
+			return w.chapel.ask(n)
 		"fp_work", "fp_fence":                  # FARM-02..04: work on the family's farmland (FarmPlots)
 			return w.farm_plots.act(n, what, a)
 	return true
@@ -3496,6 +3508,8 @@ func job_market() -> Dictionary:
 	market["prospector"] = w.discovery.prospector_place(avg.call("prospector", 0.0))     # MIN-D: adoption by the job rules
 	for sj in Population.SERVICE_JOBS:
 		market[sj] = service_place(sj)
+	for cj in Population.CLERGY:
+		market[cj] = w.chapel.place(cj)             # DVW-B3-CHAPEL: the clergy's places, open when nobody holds them
 	return market
 
 
@@ -3537,7 +3551,7 @@ func seek_work() -> void:
 		var members := _members(h)
 		members.sort_custom(func(x: NPC, y: NPC) -> bool: return x.id < y.id)
 		for n: NPC in members:
-			if n.role != "adult" or n.job in ["guard", "reeve", "sage", "tailor", "barber"]:
+			if n.role != "adult" or n.job in ["guard", "reeve", "sage", "tailor", "barber", "preacher", "church_assistant"]:
 				continue
 			var unemployed := n.job == "" or tool_short(n) or (n.job == "hunter" and no_game)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
@@ -3551,7 +3565,7 @@ func seek_work() -> void:
 			var best := ""
 			var best_score := -1e9
 			var home := w.building_door(n.home)
-			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "tailor", "barber"]:
+			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "tailor", "barber", "preacher", "church_assistant"]:
 				var opt: Dictionary = market[job]
 				if int(opt.open) <= 0 or job == n.job:
 					continue
@@ -3619,6 +3633,8 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 			n.workplace = place                      # the workstation of the trade (succession)
 		"tailor", "barber":
 			Business.let_service_pitch(w, n, job)
+		"preacher", "church_assistant":
+			n.workplace = "chapel"                   # DVW-B3-CHAPEL
 		_:
 			n.workplace = ""
 	if job == "":

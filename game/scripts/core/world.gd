@@ -64,6 +64,7 @@ var construction: Construction     # building kinds, placement, hired helpers, h
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
+var chapel: Chapel                # DVW-B3-CHAPEL: the village chapel, its clergy's fund, store and farm plot (scripts/core/chapel.gd; saved in "chapel")
 var farm_plots: FarmPlots          # family farmland of any size, leased or bought, for every household (FARM-01..05, scripts/core/farm_plots.gd)
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
 var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
@@ -181,6 +182,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	fauna = Fauna.new(self)
 	farm = Farming.new(self)
 	farm_plots = FarmPlots.new(self)
+	chapel = Chapel.new(self)
+	chapel.found(true)                 # DVW-B3-CHAPEL: the chapel and its plot stand from the first day, the clergy placed by Population
 	fauna.populate()
 	_assign_keepers()
 	_init_ownership()
@@ -352,6 +355,8 @@ func _on_hour(h: int) -> void:
 	_grow_trees()
 	farm.hour()                        # the player's crops (PL2-015)
 	farm_plots.hour()                  # the households' farmland crops (FARM-03)
+	if h == 16:
+		chapel.evening()               # DVW-B3-CHAPEL: the weekly offerings and the clergy's wages, before the manor's evening business
 	_update_food_days()
 	serve_tables()
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
@@ -418,6 +423,7 @@ func _new_day() -> void:
 	business.daily()                   # the stall's rent (PL1-10)
 	construction.daily()               # helpers' days end; crowded households split; founders build
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
+	chapel.dawn()                      # DVW-B3-CHAPEL: this morning's volunteers for the church plot, and its seed
 	if profiling:
 		_prof("daily: manor, rents, business, construction", t)
 	var cold := 0
@@ -1034,6 +1040,8 @@ func total_coins() -> int:
 		n += int(l.coins)
 	if business:
 		n += business.tills()
+	if chapel != null:
+		n += chapel.coins                         # DVW-B3-CHAPEL: the offerings fund
 	return n
 
 
@@ -4012,6 +4020,7 @@ func to_dict() -> Dictionary:
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
+		"chapel": chapel.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
@@ -4186,6 +4195,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	farm.load_dict(d.get("farm", {}))          # PL2-015: older saves have no field and no pens of the player's
 	farm_plots = FarmPlots.new(self)
 	farm_plots.load_dict(d.get("farm_plots", {}))   # FARM-01..05: older saves have no farmland
+	chapel = Chapel.new(self)
+	chapel.load_dict(d.get("chapel", {}))        # DVW-B3-CHAPEL: a save from before the chapel has it founded now, on free ground (after the farmland, which it must not cover)
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save

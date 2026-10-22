@@ -897,6 +897,7 @@ func new_game(spec := {}) -> void:
 		p.heir_sprite = ""
 	_build_scene()
 	_show_plants()                            # SEED-03: berry bushes out of season are bare from the start
+	world.farm_plots.show_all()               # DVW-B3-CHAPEL: the church plot's fence stands from the first day
 	if spec.is_empty():
 		_start(true)
 	else:

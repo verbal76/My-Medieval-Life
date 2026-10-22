@@ -295,7 +295,7 @@ func _run() -> void:
 	main.continue_as_heir()
 	check(w.player.alive and w.player.generation == gen + 1, "continued as the heir (generation %d)" % w.player.generation)
 	check(w.player.home == "house_" + plot.id, "the heir keeps the house")
-	check(w.npcs.size() == 106 + Population.SERVICE_JOBS.size(), "the world was not reset")
+	check(w.npcs.size() == 106 + Population.SERVICE_JOBS.size() + Population.CLERGY.size(), "the world was not reset")
 
 	for s in steps:
 		print(s)

@@ -92,7 +92,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `boulder` · Boulder
 
 - **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "boulder", "ore": "stone"}`.
-- **Where:** Grey boulders standing alone, small and large: in the mine's highland and across the map outside the village (every boulder drawn there, mountain boulders included). **In the world:** 18 in the village (6 stone each), and the overworld's solid rocks.
+- **Where:** Grey boulders standing alone, small and large: in the mine's highland and across the map outside the village (every boulder drawn there, mountain boulders included). **In the world:** 14 in the village (6 stone each), and the overworld's solid rocks.
 - **Action:** Mining (interact): "Mine stone". **Range (tiles):** 1. The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).
 - **Tool:** pickaxe (required). You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
 - **Skill:** mining, level 1.
@@ -182,7 +182,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `flower_patch` · Wild flower
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "flower"}`.
-- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 148 plants on the map, each ripe again plant_regrow_seasons after it is picked.
+- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 136 plants on the map, each ripe again plant_regrow_seasons after it is picked.
 - **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -594,7 +594,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 
 | Node | In the world | Replacement once worked out |
 |---|---|---|
-| `boulder` | 18 in the village (6 stone each), and the overworld's solid rocks | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
+| `boulder` | 14 in the village (6 stone each), and the overworld's solid rocks | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `coal_seam` | 200 coal in 4 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `copper_seam` | 60 copper_ore in 2 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `gold_seam` | 8 gold_ore in 1 seams | **none** |

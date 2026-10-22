@@ -5,9 +5,9 @@ extends RefCounted
 ## everyone (no one is given a legal history), and it is raised two ways, with the numbers in couriers.json "law":
 ##   - by doing: a notary courier witnesses a signature (witness_xp) and carries a formal document home (carry_xp);
 ##     FormalAgreements calls `witnessed` and `carried` (X18-Q13, the courier-notary path);
-##   - by being taught: the reeve teaches the law up to a level (`teach`, one lesson a game day a pupil). The clergy do not
-##     exist yet: couriers.json law.teachers already lists "clergy" with a higher ceiling, and `teacher_cap` reads it by the
-##     teacher's job, so a clergy job that is added later teaches with no change here (agent decision, docs/DECISIONS.md).
+##   - by being taught: the reeve teaches the law up to a level (`teach`, one lesson a game day a pupil), and so does the chapel's
+##     preacher (job "preacher", DVW-B3-CHAPEL) with a higher ceiling: couriers.json law.teachers lists the jobs, and `teacher_cap` reads
+##     it by the teacher's job (agent decision, docs/DECISIONS.md).
 ## A courier qualifies as a notary when their Law reaches couriers.json notary (CourierService.cfg().notary), not before.
 ## The lessons given a day are kept in World.law_lessons (saved, optional key "law_lessons").
 

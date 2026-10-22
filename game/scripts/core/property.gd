@@ -556,6 +556,8 @@ func can_claim(rect: Rect2i) -> String:
 	for f in w.fields:
 		if Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).intersects(rect):
 			return "the manor's fields"
+	if w.chapel != null and w.chapel.present and w.chapel.plot_rect().intersects(rect):
+		return "the church's farm plot"
 	var pens: Array = w.fauna.pens.keys()
 	pens.sort()
 	for id in pens:

@@ -16,7 +16,7 @@ const MARKET_ROLES := ["merchant_raw", "merchant_food", "merchant_goods", "taver
 
 
 static func holders(w: World) -> Dictionary:
-	var g := {"npcs": {}, "markets": {}, "households": {}, "granary": {}, "troughs": {}, "sites": {}, "player": {}, "loot": {}, "manor_work": {}}
+	var g := {"npcs": {}, "markets": {}, "households": {}, "granary": {}, "troughs": {}, "sites": {}, "player": {}, "loot": {}, "manor_work": {}, "chapel": {}}
 	var add := func(to: Dictionary, inv: Inventory) -> void:
 		for id in inv.items:
 			to[id] = int(to.get(id, 0)) + int(inv.items[id])
@@ -28,6 +28,8 @@ static func holders(w: World) -> Dictionary:
 		if c.kind == "table":
 			add.call(g.markets, c.inv)
 	add.call(g.granary, w.granary)
+	if w.chapel != null:
+		add.call(g.chapel, w.chapel.store)           # DVW-B3-CHAPEL: food offered and grown, and the plot's seed
 	add.call(g.player, w.player.inv)
 	add.call(g.player, w.player.chest)
 	for l in w.loot:
@@ -83,7 +85,7 @@ static func total(g: Dictionary) -> Dictionary:
 ## manor's treasury, quest rewards and manor work set aside, villagers (market roles apart), loot and the
 ## player's tills. The caravan's purse is outside the village and is not here.
 static func coins(w: World) -> Dictionary:
-	var c := {"player": w.player.coins, "treasury": w.treasury, "reserved": 0, "npcs": 0, "markets": 0, "loot": 0, "tills": 0}
+	var c := {"player": w.player.coins, "treasury": w.treasury, "reserved": 0, "npcs": 0, "markets": 0, "loot": 0, "tills": 0, "chapel": w.chapel.coins if w.chapel != null else 0}
 	if w.quests:
 		c.reserved += w.quests.reserved_total()
 	if w.manor_work:
