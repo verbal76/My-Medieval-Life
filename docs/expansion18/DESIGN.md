@@ -21,7 +21,8 @@ the trade record for couriers).
 | `industries.gd` | `SettlementIndustries` | A/B | Validates `game/data/settlement_industries.json`; derives each industry's level from facts; names unmet needs; specialization and leaders across settlements; level history. |
 | `mining_adapter.gd` | `MiningCapabilityAdapter` | B (provisional) | The only way the model learns mining capability (MIN-D's `World.discovery`): fixture, live, none; also deposit access, records, portals and the village's own reachable ore. |
 | `report.gd` | `SettlementReport` | B/C | The village's goods by group (market, private, public, player, loot), coins by holder, outside money, food days, capabilities, transport; measured daily use from the World's stats; the village's parties to regional trade (traders, households, villagers, the manor) as read-only snapshots. |
-| `ledger.gd` | `SettlementLedger` | C | Books of one party to regional trade (an abstract settlement, or a buyer or seller in a place): stock, coins, needs, production (times the output factor), explicit income, transport, whether it can travel or carts for hire; every change a journal line; `balanced()` proves the books. |
+| `settlement_party.gd` | `SettlementParty` | C (REG-PARTY-01) | The one trading-party interface over the five settlements (section 12a): a handle on a trader, business, treasury or household of an `OffMapSettlement`; `RegionalMarket` and `CourierService` use it. |
+| `ledger.gd` | `SettlementLedger` | C | (Now the village-snapshot and test-fixture party only, section 12a.) Books of one party to regional trade (an abstract settlement, or a buyer or seller in a place): stock, coins, needs, production (times the output factor), explicit income, transport, whether it can travel or carts for hire; every change a journal line; `balanced()` proves the books. |
 | `regional.gd` | `RegionalMarket` | C (E rules) | Supply, demand, willingness to pay, purchasing power; `plan()` (any buyer; carriage by the buyer's own trip or a paid carter; competition, cooperation, capacity, unmet reasons, lost sales), `execute()` (atomic, matched, carriage fees apart), `matched()`, `to_contract_offer()` (CON-01 shape). |
 | `routes.gd` | `TradeRoutes` | C/E | Grid routes (Dijkstra over road/open/rough/solid; overworld classifier), abstract routes, carriage cost, carrying capacity (handcarts, packs). |
 | `settlement_save.gd` | `SettlementSave` | A | Provisional save section `x18_settlements` (`mml-settlements/0`). |
@@ -451,7 +452,8 @@ Reconciliation with Build 17:
 
 Live, not prospective: this section is in the game. `OffMapSettlement` and `Regions` (`game/scripts/core/settlement/offmap.gd`,
 `regions.gd`; data `game/data/settlements.json`, format `mml-offmap-settlements/1`) replace the daily caravan allowance. The earlier
-`SettlementLedger` and `RegionalMarket` remain the analysis tools of sections 3 to 4 (and the courier module's regional parties).
+`RegionalMarket` and the courier module now trade through the settlements' own holders (`SettlementParty`, section 12a); `SettlementLedger`
+remains for the village's read-only snapshots and the fixtures of the analysis tools and tests.
 
 Owner answers this implements (verbatim in `docs/directives/2026-10-23_*.md`): Q18-3 "Those settlements have simulated economies
 just like this one, it comes from their villagers, or village political structure or companies"; "Same rules, lighter detail";
@@ -522,9 +524,42 @@ traders' tills. Accumulators and prices are rounded to a millionth, so a saved a
 - MIGRATE-18 (Q18-7): households are the unit (`hh`, with `adults` and `children` and `trade`); a household arriving or leaving
   is a new `flows` line and a change of `population`; births and deaths of age are not played in the settlements yet.
 - Couriers (Q18-12, Q18-13): `Regions.list` and `OffMapSettlement.trader()` give a courier a party with a till and a stock;
-  `couriers.gd` still reads `SettlementLedger` parties.
+  `couriers.gd` reads `SettlementParty` handles (section 12a).
 - Not done: the village buying food from the settlements, longer trade chains among them, a productivity penalty for missing
   tools, newcomers decoupled from the caravan.
+
+### 12a. One trading-party interface over the five (REG-PARTY-01)
+
+Owner Q18-10 (2026-10-21): "Anyone may purchase goods from another settlement, including individual villagers, households,
+merchants, businesses, and settlement treasuries." `SettlementParty` (`settlement_party.gd`) is how: a **handle** on one holder
+of an `OffMapSettlement`, never a copy. `Regions.parties()` lists them (each trader, business, treasury and living household),
+`Regions.party("region:garton/trader")` makes one; unknown settlements, holders and dissolved households give `null`.
+
+| Interface | What it is |
+|---|---|
+| `id`, `ref`, `settlement`, `kind`, `name`, `pos` | `garton/trader`, `region:garton/trader`, the settlement id, trader / business / treasury / household, the place on the map |
+| `held(item)`, `held_items()`, `purse()`, `alive()`, `can_hold()` | read the holder's stock (business stock, pantry, granary), its till or purse |
+| `need_rate`, `need_items`, `local_yield`, `sale_cap` | what it uses a day, what the rest of its settlement holds of that (the region supplies only what the settlement as a whole lacks), the most it will sell (the keeps of the local market) |
+| `transport`, `can_travel`, `carts_for_hire` | a trader leads a handcart if its settlement has horses, else a pack; a household an adult's pack; businesses and treasuries cannot travel and hire a carter (Q18-12 open: nobody hires out carts unless a test sets `set_option("carts_for_hire", true)`) |
+| `can_deal(role, ...)`, `deal(role, other, item, n, coins, day)` | one side of an exchange (`sell`, `buy`, `carriage_paid`, `carriage_earned`) with its flow lines and journal line |
+| `add`, `remove`, `has`, `count`, `outside_coins` | the Inventory-like hand-overs the courier service makes |
+
+**Flow lines** (`OffMapSettlement.flows`, saved with the settlement, audit identity in `offmap.gd`'s header): a deal with a
+holder of another of the five writes `regional_in/out` (goods) and `regional_coins_in/out` (coins) on both settlements, which
+`Regions.audit` requires to cancel; a deal inside one settlement writes none; a deal with anything else (the courier service's
+booths and packs, the village's people, an analysis fixture) writes `outside_in/out` and `outside_coins_in/out`, whose other
+end is booked in that party's own books. A line is checked on every side and applied whole or refused whole. The exchange journal
+(`Regions.journal`, per party `journal`) is not saved. No save format changed: the new flow keys load as zero from older saves.
+
+**What changed.** `RegionalMarket` reads parties only through this interface (so it plans over `SettlementParty` and the fixture
+`SettlementLedger` alike), and `execute` is `deal` calls. `CourierService.regions` maps a party id to a `SettlementParty`;
+`place_of("region:garton/trader")` is `garton`, and a booth belongs to a settlement. `Regions.route_table()` gives the roads
+between the five. **`SettlementLedger` remains**, with the same interface, for exactly two things the settlements are not: the
+village's read-only snapshots (`SettlementReport.parties`, `caravan_compare.gd`) and the fixtures of tests that pin historical
+behaviour (a configured `income_per_day`, `reserves`, `recipes`: `regional_test`, `capability_test`, `settlement_test`). No live
+code makes one, and `SettlementSave`'s `x18_settlements.regions` list of ledgers is kept only so an earlier prospective save loads.
+Not done (REG-COURIER-01 and the later task that wires the market in): calling `RegionalMarket` from the daily loop, and wiring the courier service into the game.
+Tests: `party_test.gd`, `regional_test.gd`, `courier_test.gd`, `contract_sign_test.gd`.
 
 ### Cost
 

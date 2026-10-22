@@ -131,6 +131,12 @@ the coins go) are in `docs/DECISIONS.md` and INT-250 to INT-252.
 - **Hampton under Scaur, the Burg, Abundance, Whitwall, Swevenham**: beyond the Wood Perilous or the Downs (days, not a ride), in the Burg's and the Dry Tree's war in the first era, or far to the east. They suit later travel, not neighbours the caravan reaches every few days.
 - **Apthorp**: debateable ground between the Burg and the Dry Tree.
 
+## 6a. Anyone may buy from another settlement (REG-PARTY-01)
+
+Each settlement's trader, businesses, treasury and households are trading parties (`SettlementParty`, `DESIGN.md` section 12a) that
+the regional market and the couriers address as `region:<settlement>/<holder>`; they move the settlement's own coins and goods and
+leave flow lines its audit checks. Nothing calls the market from the daily loop yet.
+
 ## 7. What is not done yet
 
 Barter and credit between the village and these settlements (TRADE-CREDIT), people moving between them (MIGRATE-18), courier booths

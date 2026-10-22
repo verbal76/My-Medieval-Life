@@ -55,7 +55,9 @@ static func extract(save: Dictionary) -> Dictionary:
 	return out
 
 
-## Off-map settlements of a state as ledgers (their books opened at load).
+## LEGACY: the provisional "regions" list of ledger fixtures (REG-PARTY-01: the five settlements are OffMapSettlement, saved in the
+## save's "regions" key by Regions.to_dict, and trade through SettlementParty; this section is kept so an x18 save of the earlier
+## prospective model still loads). Off-map ledgers of a state (their books opened at load).
 static func regions(state: Dictionary) -> Array:
 	var out := []
 	for d in state.get("regions", []):

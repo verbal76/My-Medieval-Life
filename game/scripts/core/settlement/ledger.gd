@@ -7,6 +7,14 @@ extends RefCounted
 ## settlement treasuries"). `settlement` names the place a party belongs to (routes run between places); parties of
 ## the same place do not trade through the regional market (that is the local market's business).
 ##
+## REG-PARTY-01: the live trading parties are now the holders of the five off-map settlements (SettlementParty, over
+## OffMapSettlement's own books, checked by its audit). This class remains for the two things the settlements are not: the
+## village's read-only snapshots (SettlementReport.parties) and the hand-made fixtures of the capability and market tests
+## (a configured `income_per_day`, `reserves`, `recipes`: historical behaviour its tests still pin). No live code makes one.
+## It speaks the same party interface as SettlementParty (held, purse, held_items, can_hold, need_rate, need_items,
+## local_yield, sale_cap, can_deal, deal, plus id, settlement, kind, transport, can_travel, carts_for_hire, capabilities,
+## profile, journal), which is all RegionalMarket and CourierService use.
+##
 ## The live village is NOT one of these: its goods and coins stay in the World's own holders (no duplicated ledger);
 ## its parties enter regional calculations only as read-only snapshots (SettlementReport.parties), and in this
 ## prospective branch nothing writes back to the World.
@@ -185,6 +193,72 @@ func balanced() -> String:
 		if want != stock.count(k):
 			return "%s %s %d, books say %d" % [id, k, stock.count(k), want]
 	return ""
+
+
+# ------------------------------------------------------------------ the party interface (see SettlementParty) ----------------
+func held(item: String) -> int:
+	return stock.count(item)
+
+
+func held_items() -> Dictionary:
+	return stock.items.duplicate()
+
+
+func purse() -> int:
+	return coins
+
+
+func can_hold(item: String) -> bool:
+	return stock.can_add(item)
+
+
+func need_rate(item: String) -> float:
+	return float(needs.get(item, 0.0))
+
+
+func need_items() -> Array:
+	var out := needs.keys()
+	out.sort()
+	return out
+
+
+func local_yield(item: String) -> int:
+	return int(local_supply.get(item, 0))
+
+
+## The most it will sell of `item`; -1 is no cap of its own.
+func sale_cap(item: String) -> int:
+	return int(sale_limit.get(item, 0)) if sale_limit is Dictionary else -1
+
+
+func can_deal(role: String, item: String, n: int, coins_: int) -> bool:
+	match role:
+		"sell":
+			return stock.count(item) >= n
+		"buy":
+			return coins >= coins_ and stock.can_add(item)
+		"carriage_paid":
+			return coins >= coins_
+	return role == "carriage_earned"
+
+
+## This party's side of an exchange (see SettlementParty.deal): goods and coins move, one journal line.
+func deal(role: String, other, item: String, n: int, coins_: int, day := 0) -> bool:
+	if not can_deal(role, item, n, coins_):
+		return false
+	match role:
+		"sell":
+			stock.remove(item, n)
+			coins += coins_
+		"buy":
+			stock.add(item, n)
+			coins -= coins_
+		"carriage_paid":
+			coins -= coins_
+		"carriage_earned":
+			coins += coins_
+	_log(day, role, item, n, coins_, str(other.id))
+	return true
 
 
 func to_dict() -> Dictionary:

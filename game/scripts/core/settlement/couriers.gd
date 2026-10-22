@@ -20,7 +20,7 @@ extends RefCounted
 ## Recipients (X18-Q12-POST): only people and businesses the sender knows -- people from the existing acquaintance records
 ## (Relations ties with days_known >= 1) and businesses from a prior trade (Relations.trades, the commercial-contact
 ## record kept beside the ties; a trade with a business makes it a contact even with no personal tie to its owner; the
-## owner represents it), and off-map parties from the regional trade journals (SettlementLedger.journal). Locations come
+## owner represents it), and off-map parties from the regional trade journals (the party's journal, Regions.journal). Locations come
 ## from world records (a person's home door, a business's stall or workplace, an off-map party's booth): no typed
 ## addresses. The same rules serve the player and villagers.
 ##
@@ -36,7 +36,7 @@ const PATH := "res://data/couriers.json"
 static var _cfg := {}
 
 var w                      # World (or null in purely abstract tests)
-var regions := {}          # off-map party id -> SettlementLedger
+var regions := {}          # off-map party id ("<settlement>/<holder>") -> SettlementParty (a fixture ledger in older tests)
 var booths: Array = []     # {id, settlement, stall, keeper, store: Inventory, coins, escrow, deposits: {ref: {coins, items}}, x, y}
 var routes: Array = []     # {id, from, to, every_days, fee_per_load, load_units, days, next_day}
 var links := {}            # "a>b" -> route dict from TradeRoutes (between settlements)
@@ -61,14 +61,16 @@ func _npc(ref: String):
 	return w.npc(int(ref.trim_prefix("npc:")))
 
 
-func inv_of(ref: String) -> Inventory:
+## The holder of `ref` as an Inventory-like store (count, has, add, remove, can_add): a pack, or an off-map party (SettlementParty:
+## its goods move with `outside_*` flow lines, so the settlement's audit still balances).
+func inv_of(ref: String):
 	if ref == "player":
 		return w.player.inv
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
 		return n.inv if n != null else null
 	if ref.begins_with("region:"):
-		var l: SettlementLedger = regions.get(ref.trim_prefix("region:"))
+		var l = regions.get(ref.trim_prefix("region:"))
 		return l.stock if l != null else null
 	return null
 
@@ -80,8 +82,8 @@ func coins_of(ref: String) -> int:
 		var n = _npc(ref)
 		return n.coins if n != null else 0
 	if ref.begins_with("region:"):
-		var l: SettlementLedger = regions.get(ref.trim_prefix("region:"))
-		return l.coins if l != null else 0
+		var l = regions.get(ref.trim_prefix("region:"))
+		return l.purse() if l != null else 0
 	return 0
 
 
@@ -96,7 +98,11 @@ func add_coins(ref: String, k: int) -> void:
 		else:
 			n.spent -= k
 	elif ref.begins_with("region:"):
-		(regions[ref.trim_prefix("region:")] as SettlementLedger).coins += k
+		var l = regions[ref.trim_prefix("region:")]
+		if l is SettlementParty:
+			(l as SettlementParty).outside_coins(k)      # (a party never pays past empty: callers check coins_of first)
+		else:
+			l.coins += k
 
 
 func alive(ref: String) -> bool:
@@ -112,8 +118,9 @@ func rel_id(ref: String) -> int:
 	return Life.PLAYER_ID if ref == "player" else (int(ref.trim_prefix("npc:")) if ref.begins_with("npc:") else -1)
 
 
+## The settlement a party is in: "region:<settlement>/<holder>" is in <settlement> (a fixture "region:<id>" is its own place).
 func place_of(ref: String) -> String:
-	return ref.trim_prefix("region:") if ref.begins_with("region:") else SettlementFacts.VILLAGE
+	return ref.trim_prefix("region:").split("/")[0] if ref.begins_with("region:") else SettlementFacts.VILLAGE
 
 
 # ------------------------------------------------------------------------------ booths and routes
@@ -151,9 +158,9 @@ func open_booth(keeper: String, stall_id := "") -> String:
 
 
 ## An off-map settlement's booth, kept by the settlement itself (its own party).
-func open_region_booth(region: SettlementLedger) -> void:
+func open_region_booth(region) -> void:
 	regions[region.id] = region
-	booths.append({"id": "b%d" % next_id, "settlement": region.id, "stall": "", "keeper": "region:" + region.id,
+	booths.append({"id": "b%d" % next_id, "settlement": region.settlement, "stall": "", "keeper": "region:" + region.id,
 		"store": Inventory.new(), "coins": 0, "escrow": 0, "deposits": {}, "x": region.pos.x, "y": region.pos.y})
 	next_id += 1
 
@@ -222,7 +229,7 @@ func known_recipients(sender: String) -> Array:
 			if int(tp.days_known) >= 1:
 				out.append(_entry("player", "person", "knows them"))
 	for id in regions:
-		var l: SettlementLedger = regions[id]
+		var l = regions[id]
 		if l.journal.any(func(e): return str(e.with) == sender or str(e.with).ends_with("/" + sender)):
 			out.append(_entry("region:" + id, "business", "has traded with them"))
 	out.sort_custom(func(a, b): return a.name < b.name or (a.name == b.name and a.kind < b.kind))
@@ -255,7 +262,7 @@ func _entry(ref: String, kind: String, why: String) -> Dictionary:
 		if kind == "business":
 			name = "%s's %s" % [n.name, str(w.brain.buy_role(n)).replace("merchant_", "").replace("_", " ")]
 	else:
-		name = (regions[ref.trim_prefix("region:")] as SettlementLedger).name
+		name = regions[ref.trim_prefix("region:")].name
 	return {"ref": ref, "kind": kind, "name": name, "owner": ref, "settlement": loc.settlement, "x": loc.x, "y": loc.y,
 		"where": loc.what, "why": why}
 
@@ -264,8 +271,8 @@ func _entry(ref: String, kind: String, why: String) -> Dictionary:
 ## the player at their home or where they stand, an off-map party at its booth. {settlement, x, y, what}.
 func location(ref: String, kind := "person") -> Dictionary:
 	if ref.begins_with("region:"):
-		var b := booth_of(ref.trim_prefix("region:"))
-		return {"settlement": ref.trim_prefix("region:"), "x": int(b.get("x", 0)), "y": int(b.get("y", 0)), "what": "the booth of " + ref.trim_prefix("region:")}
+		var b := booth_of(place_of(ref))
+		return {"settlement": place_of(ref), "x": int(b.get("x", 0)), "y": int(b.get("y", 0)), "what": "the booth of " + place_of(ref)}
 	if ref == "player":
 		var at: Vector2 = w.player.pos
 		return {"settlement": SettlementFacts.VILLAGE, "x": int(at.x), "y": int(at.y), "what": "where you are"}
@@ -303,7 +310,7 @@ func locations(ref: String) -> Array:
 # ------------------------------------------------------------------------------ fees
 func capacity(courier: String) -> int:
 	if courier.begins_with("region:"):
-		return TradeRoutes.capacity((regions[courier.trim_prefix("region:")] as SettlementLedger).transport)
+		return TradeRoutes.capacity(regions[courier.trim_prefix("region:")].transport)
 	var n = _npc(courier)
 	if n == null:
 		return 0
@@ -368,7 +375,7 @@ func refusal(order: Dictionary) -> String:
 		return "You do not know them: a courier delivers only to people and businesses you know."
 	if not alive(recipient):
 		return "They cannot be found."
-	var inv := inv_of(sender)
+	var inv = inv_of(sender)
 	var items: Dictionary = order.get("items", {})
 	if items.is_empty():
 		return "There is nothing to send."
@@ -430,7 +437,7 @@ func book_route(order: Dictionary) -> Dictionary:
 	var r := route(str(order.route))
 	var b := booth(str(r.from))
 	var q := quote(order)
-	var inv := inv_of(str(order.sender))
+	var inv = inv_of(str(order.sender))
 	for id in order.items:
 		inv.remove(id, int(order.items[id]))
 		(b.store as Inventory).add(id, int(order.items[id]))
@@ -472,8 +479,8 @@ func book_special(order: Dictionary, fee: int) -> Dictionary:
 	if b.is_empty():
 		return {"error": "There is no courier booth here to hold the fee."}
 	var q := quote(order)
-	var courier_inv := inv_of(str(order.courier))
-	var inv := inv_of(str(order.sender))
+	var courier_inv = inv_of(str(order.courier))
+	var inv = inv_of(str(order.sender))
 	for id in order.items:
 		if not courier_inv.can_add(id):
 			return {"error": "The courier's pack is full."}
@@ -533,7 +540,7 @@ func _depart(r: Dictionary, day: float) -> void:
 			continue
 		if not alive(str(j.courier)):
 			continue                                   # no courier today: the goods wait at the booth
-		var cinv := inv_of(str(j.courier))
+		var cinv = inv_of(str(j.courier))
 		for id in j.items:
 			(b.store as Inventory).remove(id, int(j.items[id]))
 			cinv.add(id, int(j.items[id]))
@@ -548,7 +555,7 @@ func _arrive(j: Dictionary, day: float) -> void:
 	if not alive(courier):
 		interrupt(j, "the courier did not arrive")
 		return
-	var cinv := inv_of(courier)
+	var cinv = inv_of(courier)
 	j.back = day + float(j.days)
 	if not alive(str(j.recipient)):
 		j.returned_items = (j.items as Dictionary).duplicate()
@@ -556,7 +563,7 @@ func _arrive(j: Dictionary, day: float) -> void:
 		j.state = "returning"
 		j.history.append([day, "nobody to receive it: the goods come back"])
 		return
-	var rinv := inv_of(str(j.recipient))
+	var rinv = inv_of(str(j.recipient))
 	var col: Dictionary = j.collect
 	# a delivery that asks for payment is refused when the recipient cannot or will not pay
 	if not col.is_empty():
@@ -595,7 +602,7 @@ func _home(j: Dictionary, day: float) -> void:
 	if not alive(courier):
 		interrupt(j, "the courier did not come back")
 		return
-	var cinv := inv_of(courier)
+	var cinv = inv_of(courier)
 	var sender := str(j.sender)
 	var b := booth_of(place_of(sender))
 	var deposit: bool = str(j.proceeds) == "deposit" or not alive(sender)
