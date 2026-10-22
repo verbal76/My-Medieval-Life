@@ -12978,12 +12978,14 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "**Yes** | No row | `balance.json:390-398` still 12%/6%/0% at one threshold each | NOT-STARTED | ",
-   "tests": "On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+   "tests": "On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0; Settlements now step TaxPolicy on their own treasuries (tax_test 34 on 1daa61f)",
    "playtest": [],
    "branch": "wip/b18-taxes",
    "commits": [
     "a77cce0",
-    "724ffeb"
+    "724ffeb",
+    "e75b3f6",
+    "1daa61f"
    ],
    "parent": null,
    "depends_on": [],
@@ -13031,6 +13033,11 @@
      "date": "2026-10-23",
      "change": "tests: earlier evidence restored ahead of the conservation line",
      "why": "the previous update replaced the field instead of adding to it"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests: On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0 -> On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks; economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0; Settlements now step TaxPolicy on their own treasuries (tax_test 34 on 1daa61f); commits + e75b3f6; commits + 1daa61f; remaining_work",
+     "why": "The five settlements use the banded rule (migration worker, e75b3f6)"
     }
    ],
    "acceptance_derived": true,
@@ -13054,7 +13061,7 @@
     "The five settlements still use the single-threshold tax rule (offmap.gd _taxes_and_officials); SET-C-SIM requires the village's rules, so they are to use TaxPolicy too",
     "Announcements appear in the village log and wiki only (no tax panel exists)"
    ],
-   "remaining_work": "Apply TaxPolicy to the five settlements once REG-BUY-01 (which edits offmap.gd) is merged; band margin 0.2 and 3-day notice are provisional agent values; gameplay check"
+   "remaining_work": "Band margin 0.2 and 3-day notice are provisional agent values; gameplay check"
   },
   {
    "id": "DVW-B6",
@@ -22956,10 +22963,13 @@
     "Villagers leave and outsiders arrive for stated reasons (work, land, marriage, hunger); people, purses and goods move with them; conserved; deterministic; saved"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks",
    "playtest": [],
    "branch": "wip/b18-migration",
-   "commits": [],
+   "commits": [
+    "e75b3f6",
+    "1daa61f"
+   ],
    "parent": "SET-C",
    "depends_on": [
     "Q18-7"
@@ -22998,20 +23008,32 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> migration worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-migration",
      "why": "Dependencies met (REG-DEMO-01 integrated)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> On merge 1daa61f: migration_test 92, tax_test 34, settlement_life_test 54, regions_test 118, party_test 102, regional_food_test 47, courier_live_test 138, credit_test 68, luxury_test 233, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures; Python OK; worker economy_sim 30 days: seed 1 2 marriage moves in, seed 2 2 in and 1 out, no leaks; test_commit: None -> 1daa61f; commits + e75b3f6; commits + 1daa61f; integrated_in + 18; known_defects + In 30 days only marriage moves occurred; hunger, work and land moves are covered by tests only; known_defects + A leaver's open contract is cancelled with the text 'died'; experience hours do not travel (skills do); remaining_work",
+     "why": "Migration worker finished (e75b3f6); merged into wip/build18 at 1daa61f"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "L",
-   "remaining_work": "Needs settlement members with ages (REG-DEMO-01) so people who move carry an age, skills and a household",
-   "assigned_worker": "migration worker (Sonnet subagent, started 2026-10-23)"
+   "remaining_work": "Gameplay check; 30-day conservation on 1daa61f running; settlements have no housing model, so land-driven arrivals follow settlement marriages only (REG-DEMO-D1: housing as systems become available)",
+   "assigned_worker": "migration worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "1daa61f",
+   "known_defects": [
+    "In 30 days only marriage moves occurred; hunger, work and land moves are covered by tests only",
+    "A leaver's open contract is cancelled with the text 'died'; experience hours do not travel (skills do)"
+   ]
   },
   {
    "id": "MILE-01",

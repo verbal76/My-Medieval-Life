@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `a2ea741` (2026-10-23) | Build 18 integration; + courier completion (booths, notary, Law, villager posting, player wagon food) and barter/credit; conservation run due after the migration merge |
+| `wip/build18` | `1daa61f` (2026-10-23) | Build 18 integration; + migration and the settlements' banded taxes; 30-day conservation on 1daa61f running |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -40,7 +40,6 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 |---|---|---|---|---|
 | ECON-P3 | household-money worker (Sonnet subagent) | `wip/b18-econp3` | `wip/build18` a2ea741 | business and household money separate (shop tills) |
 | TRADE-CREDIT (parity) | credit-parity worker (Sonnet subagent) | `wip/b18-creditparity` | `wip/build18` a2ea741 | the player lends and barters as seller; the player's debts pass to the heir |
-| MIGRATE-18 (+ DVW-B5 settlement taxes) | migration worker (Sonnet subagent) | `wip/b18-migration` | `wip/build18` 840e0ed | people move between the village and the five; the settlements use TaxPolicy; owns offmap.gd |
 | X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 
 On their reports:

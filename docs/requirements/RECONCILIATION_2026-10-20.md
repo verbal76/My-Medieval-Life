@@ -249,7 +249,7 @@ None.
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
-| MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 16 |
 | MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 17 |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | decision | APPROVED | owner decision |
