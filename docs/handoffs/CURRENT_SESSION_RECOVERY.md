@@ -1,75 +1,66 @@
-# Current session recovery handoff (2026-10-21, evening UTC)
+# Current session recovery handoff (updated 2026-10-22, about 02:00 UTC)
 
-(Copy of the file on `wip/build17` at `4c68391`; that copy is kept current while Build 17 is integrated there.)
-
-A continuity checkpoint for the lead agent after a context compaction. The register
-(`docs/requirements/requirements.json`), `docs/DECISIONS.md`, `docs/directives/` and `docs/CURRENT_DEVELOPMENT_STATE.md`
-stay authoritative; this file says where things stand between them. **V** = verified by the lead from git, CI or a test
-run; **W** = reported by a worker, not yet re-checked by the lead.
+Continuity checkpoint for the lead agent after a context compaction. Authoritative records: the register
+(`docs/requirements/requirements.json`), `docs/DECISIONS.md`, `docs/directives/`, `docs/CURRENT_DEVELOPMENT_STATE.md` and
+CLAUDE.md (rules MSW-01, SIM-01, SIM-02, WIKI-01 in sections 3 and 5). **V** = verified by the lead; **W** = worker-reported.
 
 ## Branches (V, remote heads)
 
-| Branch | Head | What |
+| Branch | Head | State |
 |---|---|---|
-| `staging/my-medieval-life` (= local `wip/b16-integration`, main worktree) | `49cd86c` | Build 16 released (`b3bbb1c`, tag `build-16`); WIKI-01 rule in CLAUDE.md; Expansion 18/19 register entries (PROS-01/18/19, Q18-*, X18-*, SJD-*, X19-*) |
-| `wip/build17` (worktree `scratchpad/b17wt`) | `0a086af` | Build 17 integration: MIN-A..F, MIN-H, MIN-F2, CON-01, CON-02, crafts, DVW-A12, decay, terrain, OD-01 quest retirement, STONE-01, the first WIKI-B17 pass |
-| `wip/b17-equip` | `89f30d3` | Worker L: MIN-EQUIP + MIN-COLLAPSE; committed and pushed by the lead before compaction; worker had not yet reported |
-| `wip/b17-parity` (local `45554d8`) / `wip/b17-parity-snapshot` | `e28f621` | Worker N: MIN-D2, MIN-D3, MIN-SHOVEL, MIN-RIGHTS, MIN-SKILLCAP; the snapshot is the worker's uncommitted tree (40 files incl. 11 new), made without touching the worktree; the worker is still running |
-| `wip/b17-stone` | `d28503c` | STONE-01: merged into wip/build17 |
-| `wip/b17-wiki` | `0147066` | WIKI-B17 first pass: merged into wip/build17 |
-| `wip/expansion18-preparation` | `8a54ec8` | Expansion 18, isolated; worker running (capability simulations, Q18-12/13, courier booths/popup); 2 uncommitted files in its worktree |
-| `wip/expansion19-preparation` | `1b05da0` | Expansion 19, paused after rounds 1-4, awaiting owner questions |
-| `wip/multiplayer` | `d18d7d1` | Never merged into staging without the owner's explicit approval |
+| `staging/my-medieval-life` (local `wip/b16-integration`, main worktree; push both) | `aec7c6a` | Build 16 code + all records; Expansion 18/19/20/21 register entries |
+| `wip/build17` (worktree `scratchpad/b17wt`) | `dfec7ec` | **Build 17, FROZEN.** Released as a private playtest draft (release run 39706003658, commit `80e6b99`, packet `docs/release/BUILD_17_PACKET.md`); no gameplay change allowed |
+| `wip/farm-cropshare` (worktree `scratchpad/cropwt`) | `132960a` | FARM-CROP-01 (owner FARM-08-Q-CROP option B) implemented and tested; NOT merged; merge decision carried until after Build 17 (owner) |
+| `wip/expansion18-preparation` (worker `a5803847a53d8a4ff`) | `da4d610` (+ snapshot `wip/expansion18-snapshot` `d6b9254`) | Primary development; worker implementing D1 |
+| `wip/expansion19-preparation` (worker `a6cffdef98c095994`) | `05adc9d` (+ snapshot `wip/expansion19-snapshot` `239aa50`) | Worker on the gossip-timing proposal, worst-frame and memory investigation |
+| `wip/expansion20-preparation` (worktree `scratchpad/x20wt`) | `d82f173` | LE-00 audit done; hold (no implementation without authorization) |
+| `wip/expansion21-preparation` (worktree `scratchpad/x21wt`; worker `a4ecc05968f664a95`, idle) | `0eeb3df` | Preliminary plan done; planning only |
+| `wip/multiplayer` | unchanged | never merged into staging without explicit approval |
 
-## Active workers (agent ids for SendMessage)
+Snapshot branches are preservation copies only, never merged.
 
-| Worker | Id | Task | State |
-|---|---|---|---|
-| N (parity, shovels) | `a899252ff0eb35b0d` | MIN-D2, MIN-D3, MIN-SHOVEL, MIN-RIGHTS, MIN-SKILLCAP; wiki page `wiki_excavation.gd` | Running; told to merge `0a086af` before its final tests |
-| L (equipment, collapse) | `a7109d77c0920b842` | MIN-EQUIP, MIN-COLLAPSE (binary survive/die; no health system), `wiki_mine_equipment.gd`, collapse outcome on `sys:mine_stability` | Running (W: committed 89f30d3); told to merge `0a086af` |
-| Expansion 18 | `a5803847a53d8a4ff` | PROS-18: capability simulations (baseline/conservative/moderate/aggressive), Q18-12/13 smoke tests, courier booths and contract popup (X18-Q12-BOOTH, X18-Q12-POST) | Running; no completion report yet |
-| STONE-01 (M), wiki (O) | done | | Merged |
+## Workers (SendMessage ids)
 
-Do not restart or duplicate these; wait for each notification, then integrate (merge into b17wt, `--import`, the worker's suites + `wiki_test`, INT entries, register, decisions, `tests.yml` for new suites, push).
+- **Expansion 18** `a5803847a53d8a4ff`: implementing owner D1 (starting experience = cap × recorded skill ÷ 10, once,
+  new worlds and saves without records, never overwrite, farming from PAR-01A history, deterministic, hook OFF); then
+  report and finalise **D2 (facility limitations)** for the owner. Pending list D1-D9 in `docs/expansion18/DECISIONS_PENDING.md`
+  on its branch.
+- **Expansion 19** `a6cffdef98c095994`: written X19-Q-TIMING proposal (not implemented), byte-identical worst-frame
+  reduction investigation, heavy-rate memory breakdown (17.4 MB vs 16 MB).
+- **Expansion 20/21 planning worker** `a4ecc05968f664a95`: idle.
 
-## CI and test evidence (V)
+## Decisions taken this session (all recorded; do not reopen)
 
-- Tests run 39678592892 on `0a086af` (wip/build17): dispatched, in progress at checkpoint time.
-- Tests 39663123990 on `19efeb3`: success. Tests 39656594571 on `9f229f7`: success.
-- Determinism gate re-baselined after MIN-F/MIN-H at `3be45b5` (seed 1 d10 alive 102 coins 4580, d30 102/4897; seed 2 d10 109/4431, d30 114/4907); MIN-F2 left it identical. STONE-01 changes it (W: seed 1 d30 109 alive, 4918 coins, 0 leaks) → **re-baseline once after the parity and equipment merges**, not before.
-- On `0a086af` the lead ran: `wiki_test` all passed, `stone_test` 45 checks 0 failures; check_interactions 199/0, check_requirements 0 problems, check_materials 0 broken (21 open threshold findings, reported not failing), check_resources 0, check_assets 0.
-- W (worker M on its merge): quarry, openpit, crafts, farm_plots, housing, business, contracts, services, parity, conservation, world, start, play, run_tests (3544) all pass.
-- Build 16 save loads in Build 17 (`docs/build17/SAVE_MIGRATION.md`).
-- FARM-08 long run 39618523947 (long-sims group): partial results read (yield 2.0: cattle died out on seeds 2 and 3; 1.5 fine); remaining variants pending; no recommendation until the cattle decline is explained. Switches `shared_manor_farming`, `seasonal_village_farming`, `shared_wheat_yield` stay 0.
+STONE-Q1..Q3 (stone: materials by work; skill-based dressing STONE-04; Stoneworking skill STONE-05 and iron chisel STONE-06;
+X18-STONECUT; all Expansion 18); B7-006 closed (working as designed); FARM-08 diagnostic and FARM-08-Q-CROP (option B,
+proportional crop sharing, FARM-CROP-01 on its branch); SIM-01 (one longest run per seed, checkpoints), SIM-02 (never
+restart active runs, check-ins from measured runtimes), MSW-01 (Minimum Sufficient Work); SYNC-17 (one-way Build 17 ->
+18/19 at `cd7439c`, done); Q18-11B (people's experience capped by facilities; clarified: per-worker modifiers, the industry
+average is reporting only); Q18-11A (bounded profile, farming F1: +10% work rate, +4% pay at L10); X18-CAPCOMP part 1
+(experience by hours, caps 12/18/24, straight-line level, one-season average); X18-D1 (starting experience); Build 17
+personal playtest release; Expansions 18/19/20 directive; Expansion 21 preliminary authorization (Village Politics).
 
-## Owner decisions this session (all recorded; do not reopen)
+## Open owner decisions (present one at a time; never answer for the owner)
 
-Directives saved in `docs/directives/` (2026-10-21): Build 17 combined integration direction (B17-DIR), parallel prospective
-development 18/19 (PROS-01), Q18-9/Q18-10, Expansion 18 master directive, capability simulations, courier booths and the
-courier contract interface, CON-01 final decisions and service contracts (Q-C1..Q-C9, CON-02), Expansion 19 SJD
-decisions, MIN-F-Q1..Q5 (`build17_minf_q1_q5_decisions`), OD-01, REC-013, quarry stone vs blocks (STONE-01), the consolidated
-14 decisions (MIN-D-Q2/Q3, MIN-E-Q1..Q5, MIN-C-Q2, CON02-S-1..S-6), MIN-F2-Q1/Q2 (MIN-EQUIP, MIN-COLLAPSE, HEALTH-01), and
-the permanent wiki maintenance directive (WIKI-01 on staging, WIKI-B17 on wip/build17, section in CLAUDE.md on both).
-Register checked at checkpoint: every one of these ids is present with the right status.
+- Expansion 18: **D2 facility limitations (next)**, D3 thresholds, D4 unattributed activities' industries, D5 level
+  rounding, D6 wages fixed at posting, D7 crop shares by base-equivalent work (FARM-CROP-01 interaction), D8 whole-coin
+  fractions, D9 drop timing; also Q18-1..8, Q18-14..16, stoneworking values, mining 0-10 mapping, CAP-TOOLHOLDER (review only).
+- Expansion 19: X19-Q-TIMING (proposal coming), the four mechanics conflicts, Q03/04/05/09/12/13, decay rate.
+- Expansion 20: OD-LE-02..15 (first stage needs 02, 10, 07, 13, 15).
+- Expansion 21: decisions 1-9 in `docs/expansion21/PRELIMINARY_PLAN.md` (1: interim voter model vs waiting for 19; 2:
+  political structure; 3: office powers vs manor, joint with OD-LE-06).
+- FARM-08: yield and switches, balance options; merge timing of `wip/farm-cropshare`; whether the seed kept back is shared.
+- Build 17 test tooling: B17F-SIMREPORT (economy_sim counts open pits as sites; checkpoint lines not in job logs) deferred.
 
-## Open owner questions (BLOCKED decisions; never answer for the owner)
+## Evidence (V)
 
-STONE-Q (fittings/mending on blocks, dressing waste, mason trade; new), CON-08-Q (service signing threshold number),
-Q18-11A/B, X19-* questions incl. the timing question, placement of MAINT-01, LOG-01, JOB-02 and HEALTH-01.
+Build 17 `cd7439c`: CI 39689213264 success; determinism gate two identical runs; 365-day runs 39692107077 seeds 1-4 all
+passed (no leaks/errors/FATAL; `docs/build17/MIN_G_LONG_RUNS.md`); release run 39706003658 success. Deferred findings
+B17F-FOOD/JOBS/HENS (20+), B17F-DEPLETE/SIMREPORT (18), B17F-PERF (19) in the register.
 
-## Build 17 remaining, in order
+## Next steps
 
-1. Integrate Worker N, then Worker L when they report (watch `wiki.gd` provider list and JOB_TEXT conflicts).
-2. Small items: JOB-01 focused test (no priority, no double booking), LOG-01 narrow-change evaluation, B7-006 axe affordability.
-3. WIKI-B17 gaps: capability levels cap at 2 (no excavator job; with MIN-SKILLCAP), collapse outcome on `sys:mine_stability`
-   (Worker L), code names on non-mining node pages, prospector JOB_TEXT with no Population job, stale owner questions in
-   `docs/build17/MIN_F_UNDERGROUND.md` section 4.
-4. Re-baseline the determinism gate once; MIN-G long multi-seed runs on GitHub (after FARM-08 frees the `long-sims` group);
-   final CI; visual review; release documentation gate (WIKI-01); Build 17 readiness report.
-5. **No distributable without the owner's explicit approval** (B17-DIR). Report readiness and wait.
-
-## Boundaries
-
-Expansion 18/19 code stays on its branches until its reconciliation gate (18 after Build 17 is complete, 19 after Build
-18); never merge Build 17 or each other into them. Pushes only to staging and `wip/*`. Private `XDG_DATA_HOME` per
-Godot process. Commit trailers per the session reminder.
+1. When the Expansion 18 worker reports: record D1 (X18-CAPCOMP), present **D2** with options and a recommendation.
+2. When the Expansion 19 worker reports: record, present X19-Q-TIMING and any memory/worst-frame decisions.
+3. Expansions 20 and 21: hold at planning until the owner authorizes more.
+4. Build 17: frozen; nothing to do unless the owner reports a playtest defect.
