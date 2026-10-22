@@ -14,20 +14,32 @@ extends RefCounted
 ## - Workforce level of an industry: the hours-weighted average of the individual levels of the workers active in it in
 ##   the last season (`window_game_days`, 2 game days; active = any hours in the window). A REPORTING AND PLANNING metric
 ##   only, never applied to anyone's work or pay. With nobody active: "no active workers" (never 0).
-## NOT DECIDED by the owner, so not here: starting experience (new worlds and old saves start empty), facility caps on
-## the effective level, thresholds. Tracking starts empty and stays so until the starting-experience rule is approved.
+## Starting experience (owner D1, 2026-10-22, docs/directives/2026-10-22_x18_d1_starting_experience.md): once, for a
+## new world and for a save that has no experience section, each villager's (adult or elder, as PAR-01A) experience days
+## in an industry = cap x their recorded Skills level in the industry's skill / 10 (SKILL_OF), counted only where they
+## hold xp in that skill (a level-1 floor with no xp is no recorded history: requirement 4); farming, which has no
+## skill, from the PAR-01A working-history rule itself (farming_start_days). The player gets none (PAR-01A: "the player
+## gets none"). Seeding never touches saved experience, adds no hours to the season's window (it is not recent work)
+## and is marked done in the save (`seeded`); the days given are kept apart in `start` for the record.
+## NOT DECIDED by the owner, so not here: facility caps on the effective level, thresholds.
 ##
 ## Hours come from the game's own work steps, mapped to industries as the capability hook maps them (`industry_of_step`):
 ## the mining swing, felling, a recipe by its station, the farm tasks the owner listed, the manor's quarrying (a mining
 ## swing) and mending. Everything else is unattributed (DESIGN.md section 9b lists the open cases).
 
 const KEY := "x18_experience"              # optional save key: a save without it loads with empty tracking
-const FORMAT := "mml-x18-experience/0"
+const FORMAT := "mml-x18-experience/1"     # 1: D1 starting experience (seeded, start); 0: records only (read, never seeded)
+const FORMAT_0 := "mml-x18-experience/0"
+## The skill whose recorded level gives an industry's starting experience (owner D1; farming has none: farming_start_days).
+const SKILL_OF := {"mining": "mining", "forestry": "woodcutting", "smithing": "smithing", "carpentry": "crafting",
+	"tanning": "crafting", "trade": "trading"}
 const PLAYER := "player"
 
 var minutes := {}      # person key -> {industry: minutes worked, ever, in this settlement}
 var recent := {}       # game hour index -> {person key: {industry: minutes}} for the activity window
 var foreign := {}      # a loaded section of an unknown format, kept untouched (tracking then records nothing)
+var seeded := false    # owner D1: the one-time starting experience has been given (never again)
+var start := {}        # person key -> {industry: experience days given by D1}, for the record
 
 
 static func cfg() -> Dictionary:
@@ -120,9 +132,62 @@ func effective_level(who_key: String, industry: String, cap := -1.0) -> float:
 	return minf(level(who_key, industry), cap if cap >= 0.0 else facility_cap(industry))
 
 
+## Owner D1: a person's starting experience days in `industry` from their recorded skill (0 without xp in it).
+static func start_days(industry: String, who, w: World) -> float:
+	if industry == "farming":
+		return farming_start_days(who, w)
+	var xp := int(who.skills.get(str(SKILL_OF.get(industry, "")), 0))
+	if xp <= 0:
+		return 0.0
+	return cap_days(industry) * float(Skills.level_of(xp)) / 10.0
+
+
+## Owner D1 farming sub-option (a): farming's start from the PAR-01A working-history rule, exactly as PAR-01A gives a
+## trade skill (Skills.start_xp): a farmer's tenure = min(working years since skill_start.from_age x lerp(tenure_min, 1,
+## Skills.tenure_share), max_tenure_years); xp = round(tenure x xp_per_year); level = Skills.level_of(xp) on the skills'
+## own curve; days = cap x level / 10. Only for the farmer's trade (PAR-01A gives a trade's history to that trade only),
+## no history beyond what PAR-01A defines, no new random draw (the share is PAR-01A's id-and-seed hash).
+static func farming_start_days(who, w: World) -> float:
+	if not who is NPC or (who as NPC).job != "farmer":
+		return 0.0
+	var c: Dictionary = GameData.b("skill_start")
+	var working := maxf(0.0, Life.npc_age(w, who) - float(c.from_age))
+	var tenure := minf(working * lerpf(float(c.tenure_min), 1.0, clampf(Skills.tenure_share(w, who), 0.0, 1.0)), float(c.max_tenure_years))
+	var xp := roundi(tenure * float(c.xp_per_year))
+	if xp <= 0:
+		return 0.0
+	return cap_days("farming") * float(Skills.level_of(xp)) / 10.0
+
+
+## Owner D1: give the starting experience once. Does nothing when it was given before, when any experience is already
+## recorded (never overwritten, reset or regenerated) or when the section is of a format this code does not read.
+func seed_once(w: World) -> void:
+	if seeded or not minutes.is_empty() or not foreign.is_empty():
+		return
+	var per_day := float(cfg().get("minutes_per_day", 480))
+	var inds: Array = (cfg().get("caps_days", {}) as Dictionary).keys()
+	inds.sort()
+	for n: NPC in w.npcs:
+		if not n.alive or not n.role in ["adult", "elder"]:
+			continue
+		var k := World.npc_ref(n.id)
+		for ind in inds:
+			var dd := start_days(str(ind), n, w)
+			if dd <= 0.0:
+				continue
+			var m: Dictionary = minutes.get(k, {})
+			m[str(ind)] = dd * per_day
+			minutes[k] = m
+			var st: Dictionary = start.get(k, {})
+			st[str(ind)] = dd
+			start[k] = st
+	seeded = true
+
+
 ## The person leaves the settlement (death, emigration): their experience goes with them.
 func forget(who_key: String) -> void:
 	minutes.erase(who_key)
+	start.erase(who_key)
 	for h in recent:
 		(recent[h] as Dictionary).erase(who_key)
 
@@ -160,21 +225,23 @@ func workforce(industry: String, now: float) -> Dictionary:
 func to_dict() -> Dictionary:
 	if not foreign.is_empty():
 		return foreign.duplicate(true)            # a section of a format this code does not know is kept, never reinterpreted
-	if minutes.is_empty():
+	if minutes.is_empty() and not seeded:
 		return {}
 	var r := {}
 	for h in recent:
 		r[str(h)] = (recent[h] as Dictionary).duplicate(true)
-	return {"format": FORMAT, "minutes": minutes.duplicate(true), "recent": r}
+	return {"format": FORMAT, "seeded": seeded, "start": start.duplicate(true), "minutes": minutes.duplicate(true), "recent": r}
 
 
 func load_dict(d: Dictionary) -> void:
 	minutes = {}
 	recent = {}
 	foreign = {}
+	seeded = false
+	start = {}
 	if d.is_empty():
 		return
-	if str(d.get("format", "")) != FORMAT:
+	if not str(d.get("format", "")) in [FORMAT, FORMAT_0]:
 		foreign = d.duplicate(true)               # unknown format: kept as it is and written back, not read, never dropped
 		return
 	for k in d.get("minutes", {}):
@@ -190,3 +257,9 @@ func load_dict(d: Dictionary) -> void:
 				bw[str(ind)] = float(d.recent[h][k][ind])
 			b[str(k)] = bw
 		recent[int(h)] = b
+	seeded = bool(d.get("seeded", false))
+	for k in d.get("start", {}):
+		var st := {}
+		for ind in d.start[k]:
+			st[str(ind)] = float(d.start[k][ind])
+		start[str(k)] = st

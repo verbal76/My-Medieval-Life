@@ -8,7 +8,7 @@ caps, straight-line level, hours-weighted workforce report; each worker's own le
 and pay).
 
 Why the order: the per-worker modifiers cannot be switched on until every worker has an effective level, which needs
-D1 (where experience starts) and D2 (what limits it). D3 says what the levels are used for beyond pay and output. D4 to
+D1 (where experience starts; decided 2026-10-22) and D2 (what limits it). D3 says what the levels are used for beyond pay and output. D4 to
 D6 decide how hours and levels feed the modifiers. D7 to D9 are smaller follow-ons that become live when the hook is
 switched on.
 
@@ -18,57 +18,56 @@ yet). One day is a thin sample; the times to reach a cap below are rough.
 
 ---
 
-## D1. Starting experience (new worlds and existing saves)
+## D1. Starting experience: DECIDED (owner, 2026-10-22; implemented)
 
-**Facts.** Tracking starts empty: today every villager and the player is at experience level 0 in every industry until
-they work. The villagers already carry other records of their trade: their **Skills** (xp and levels per skill;
-seeded once at world creation by PAR-01A, e.g. the seed-1 smiths are smithing 8 and 6), their **job** and **job_since**
-(the day they took it up), and the PAR-01A tenure share. Skills map to industries as: mining -> mining, woodcutting ->
-forestry, smithing -> smithing, crafting -> carpentry and tanning, trading -> trade; farming has no skill (Q18-1).
-At about 5 hours of mining a day a miner reaches the 12-day cap (96 h) in about 20 game days; a smith at about 4.6 h a
-day reaches the 24-day cap (192 h) in about 42 days.
+Option 2 with farming sub-option (a), `docs/directives/2026-10-22_x18_d1_starting_experience.md`. Once, for a new world
+and for a save with no experience section: starting days = cap x recorded skill level / 10 in the industry's skill
+(mining, woodcutting -> forestry, smithing, crafting -> carpentry and tanning, trading -> trade), only where the person
+holds xp in that skill; farming from the PAR-01A working history (a farmer's PAR-01A tenure, xp_per_year, the skills'
+curve). The player gets none (PAR-01A). Seed 1: 30 person-industries seeded; the smiths start at experience levels 8 and
+6; the ten farmers at farming levels 3 to 8 (5.4 to 14.4 days of 18). Details: DESIGN.md section 9b.
 
-**Decision.** What experience do people have when tracking begins: in a new world, and when an existing save is loaded?
+## D2. Facility limitations (the effective level): FINAL FORM
 
-**Options.**
-1. **Start everyone at 0 (as now).** Simple and invents nothing. Effect: for the first few game weeks every worker is a
-   beginner, so once the hook is on the village's output and pay are at the base and rise together as people work;
-   the seed-1 master smiths are briefly no better than a new apprentice, which contradicts their Skills.
-2. **Seed once from each person's Skills level in the industry's skill** (for example experience days = cap x skill
-   level / 10, capped; farming from the farmers' job tenure, since it has no skill). Effect: established tradespeople
-   start with their advantage (the seed-1 smiths, Skills 8 and 6, would start at experience levels 8 and 6: with the
-   approved profile +13.8% and +11.9% faster work, +5.5% and +4.7% pay), newcomers start low; no sudden jump when the hook is switched on.
-3. **Seed once from job tenure** (days in the current job x the working hours a day the trade averages, capped).
-   Effect: rewards staying in a job; new worlds give everyone tenure 0 (as option 1) unless the world also seeds tenure.
+**Facts (after D1).**
+- Every established villager now starts with an experience level in their trade (seed 1: smiths 8 and 6, farmers 3-8,
+  miners and woodcutters by their Skills). With the live hook on and no facility limit, their approved gains apply
+  from the first day (e.g. +13.8% and +11.9% faster smithing, up to +9.5% farm work rate).
+- Each worker has an experience level and an effective level, kept apart by structure (effective is computed, never
+  stored; `facilities.caps` is empty, so effective = experience; tested).
+- What the game knows of facilities: stations by type and count, each with a number of places (a villager waits when
+  they are full, or when the player works there); fields, fences, pens, market stalls; mining structures (pit ramps,
+  timber supports with a condition); handcarts (wear); tools (durability, and a broken tool is gone).
+- A missing facility already stops the work itself: no forge, no smelting; no field, no sowing. No station or building
+  has a condition or quality: an existing station is always fully operational.
+- The settlement model's threshold steps mix facilities with people, stock and other industries (e.g. smithing 2
+  "toolmaking" needs a mine or iron bars in store), so they are not a facility measure as they stand.
 
-**Recommendation: option 2, for both new worlds and loaded saves, applied once** (the same "one-time allocation, never
-replacing recorded experience" rule as PAR-01A). It is the only option that agrees with what the game already says
-about its people, it has no transition shock, and it adds no new data. Farming needs a sub-choice (tenure, or 0 until
-Q18-1 gives it a skill).
+**Decision.** What lowers a worker's effective level below their experience, if anything, now?
 
-## D2. Facility limitations (the effective level)
+**Options and their effects on the village economy.**
+1. **No facility limit while the game's facilities have no degraded state** (effective = experience). A facility is
+   either there (the work happens at the worker's own level) or not (the work cannot happen at all), which is already
+   the "available, operational" limit at the only grain the game has. Effect: the D1 levels act in full from the start;
+   building a second forge or more stalls helps only through places and capacity, as today; no double penalty.
+2. **A capacity cap**: when more workers are active in an industry than its facilities have places, everyone's
+   effective level is scaled down (e.g. by places / workers). Effect: crowded trades lose speed twice (they already
+   wait for a place) and pay falls with it; discourages sharing a workshop; needs numbers.
+3. **Facility tiers per industry** (new data: e.g. a forge and anvil allow up to level 6, a forge, anvil and workbench
+   up to 8, more up to 10), the cap read from what the settlement has built. Effect: masters in a poorly equipped
+   village work below their experience (the seed-1 smiths would be held at 6 until a further facility is built), so
+   building pays off in output and wages; every tier and number is a new owner decision, and losing a facility lowers
+   everyone's effective level at once.
+4. **A condition cap, later**: once facilities gain wear or damage (a SET-D building-condition rule, or Build 17's
+   repair system extended to stations), a worn or damaged facility caps the effective level of whoever works at it.
+   Effect: individual and fair (a master at a good forge keeps the advantage); ties capability to upkeep; needs the
+   condition rule first.
 
-**Facts.** Each worker now has an experience level and an effective level, kept apart by structure (the effective level
-is computed, never stored; `facilities.caps` is empty, so effective = experience). Facilities the game knows: stations
-by type and count (forge, anvil, sawhorse, workbench, kitchen tables; each with a capacity of users), fields and their
-fences, pens, market stalls, mining structures (pit ramps; timber supports with a condition), handcarts (with wear), and
-tools (with durability). There is no condition or quality on stations and buildings.
-
-**Decision.** What, if anything, lowers a worker's effective level below their experience?
-
-**Options.**
-1. **No facility limits for now** (effective = experience). Effect: experience alone sets performance; no facility
-   matters beyond the existing needs (a smith still needs a forge to work at all). Simplest; invests nothing.
-2. **A cap from the settlement's facility tier per industry** (the existing threshold levels: e.g. smithy / toolmaking
-   / master smithy, each tier allowing up to a given effective level). Effect: a skilled smith in a village with only a
-   basic smithy works below their experience until the village builds more; ties capability to infrastructure and makes
-   building facilities pay off; numbers per tier needed.
-3. **A cap from the facility the worker actually uses** (crowding: more workers than station places, or a worn or
-   damaged facility where the game tracks condition, e.g. timber supports, carts, tools). Effect: local and fair to the
-   individual (a master at a good forge keeps the advantage), but limited to what the game tracks today.
-
-**Recommendation: option 1 now, option 2 as the long-term rule once SET-D adds building growth.** Option 2 gives the
-"facilities matter" behaviour the owner described with data the game already has; option 3 is fragmentary today.
+**Recommendation: option 1 now, with option 4 as the rule to adopt when facilities gain a condition.** It is the only
+option that uses facts the game already has without inventing tiers or numbers, it keeps D1's established differences
+intact, and it avoids the double penalty of option 2. Option 3 would make the owner set a table of tiers for seven
+industries before the hook can be switched on; option 4 gives "facilities limit effective capability, never experience"
+real meaning once a facility can be in poor repair.
 
 ## D3. Thresholds
 

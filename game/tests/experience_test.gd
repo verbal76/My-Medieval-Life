@@ -37,6 +37,11 @@ func _init() -> void:
 	test_production_compat()
 	test_contract_compat()
 	test_report()
+	test_d1_formula()
+	test_d1_farming()
+	test_d1_once()
+	test_d1_old_save()
+	test_d1_determinism()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -130,12 +135,15 @@ func test_live_world() -> void:
 	print("     one day of seed 1: %d people with hours, industries %s; workforce %s" % [a.experience.minutes.size(), str(inds.keys()),
 		str(["mining", "forestry", "farming", "smithing"].map(func(i): return a.experience.workforce(i, a.minutes)))])
 	check(a.experience.minutes.size() > 0 and inds.has("farming"), "a day of the village's work is recorded by person and industry")
-	var tot := 0.0
-	for k in a.experience.minutes:
-		for ind in a.experience.minutes[k]:
-			tot += float(a.experience.minutes[k][ind])
-	var people := a.npcs.filter(func(n): return n.alive).size()
-	check(tot <= float(people) * 1440.0 + 1e-6, "no one is credited more hours than the day has (%.0f minutes over %d people)" % [tot, people])
+	var per := {}
+	for h in a.experience.recent:
+		for k in a.experience.recent[h]:
+			for ind in a.experience.recent[h][k]:
+				per[k] = float(per.get(k, 0.0)) + float(a.experience.recent[h][k][ind])
+	var most := 0.0
+	for k in per:
+		most = maxf(most, float(per[k]))
+	check(not per.is_empty() and most <= 1440.0 + 1e-6, "no one is credited more hours than the day has (most %.0f minutes; %d workers)" % [most, per.size()])
 
 
 func test_leaving() -> void:
@@ -157,10 +165,11 @@ func test_leaving() -> void:
 
 func test_save() -> void:
 	var fresh := _fresh(2)
-	check(not fresh.to_dict().has(WorkExperience.KEY), "a world nobody has worked in saves without the section (as before)")
+	check(fresh.to_dict().has(WorkExperience.KEY) and bool(fresh.to_dict()[WorkExperience.KEY].seeded),
+		"a new world saves the section, marked seeded (owner D1)")
 	var w := _run(2, 0.5)
 	var d := w.to_dict()
-	check(d.has(WorkExperience.KEY) and str(d[WorkExperience.KEY].format) == WorkExperience.FORMAT, "once people work, the save carries the optional section")
+	check(d.has(WorkExperience.KEY) and str(d[WorkExperience.KEY].format) == WorkExperience.FORMAT, "the save carries the optional section")
 	var back: Dictionary = JSON.parse_string(JSON.stringify(d))
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), back)
@@ -168,7 +177,7 @@ func test_save() -> void:
 	back.erase(WorkExperience.KEY)
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), back)
-	check(w3.experience.minutes.is_empty() and w3.total_coins() == w.total_coins(), "a save without the section (every older save) loads, its tracking empty")
+	check(w3.experience.seeded and w3.total_coins() == w.total_coins(), "a save without the section (every older save) loads and is given its starting experience once (D1)")
 	back[WorkExperience.KEY] = {"format": "mml-x18-experience/99", "who": "knows"}
 	var w4 := World.new()
 	w4.load_dict(VillageMap.load_default(), back)
@@ -177,9 +186,8 @@ func test_save() -> void:
 
 func test_per_worker_path() -> void:
 	var w := _fresh(1)
-	var ad: Array = w.npcs.filter(func(o): return o.alive and o.role == "adult")
-	var master: NPC = ad[0]
-	var apprentice: NPC = ad[1]
+	var master: NPC = _novice(w, "smithing", 0)
+	var apprentice: NPC = _novice(w, "smithing", 1)
 	w.experience.credit(World.npc_ref(master.id), "smithing", 24.0 * DAY, 0.0)
 	CapabilityHook.off()
 	check(CapabilityHook.time(100.0, "smithing", master) == 100.0 and CapabilityHook.pay(100, "smithing", master) == 100,
@@ -192,6 +200,12 @@ func test_per_worker_path() -> void:
 		"on the prepared path each worker reads their own level: the master works 15%% faster and earns 6%% more; the apprentice beside them gets nothing of it")
 	check(CapabilityHook.time(100.0, "smithing") == 100.0, "with no worker named nothing changes (no settlement-wide level is applied)")
 	CapabilityHook.off()
+
+
+## The `i`-th living adult with no experience in `industry` (no starting experience: no xp in its skill).
+func _novice(w: World, industry: String, i: int) -> NPC:
+	var out: Array = w.npcs.filter(func(o): return o.alive and o.role == "adult" and w.experience.days(World.npc_ref(o.id), industry) == 0.0)
+	return out[i]
 
 
 func _fresh(s: int) -> World:
@@ -241,9 +255,8 @@ func test_effective_kept_apart() -> void:
 ## take each worker's own time; the seam and the forest give exactly what they held. Off, nothing changes.
 func test_production_compat() -> void:
 	var w := _fresh(1)
-	var ad: Array = w.npcs.filter(func(o): return o.alive and o.role == "adult")
-	var master: NPC = ad[0]
-	var apprentice: NPC = ad[1]
+	var master: NPC = _novice(w, "mining", 0)
+	var apprentice: NPC = _novice(w, "mining", 1)
 	w.experience.credit(World.npc_ref(master.id), "mining", 12.0 * DAY, 0.0)
 	var seam: Dictionary = {}
 	for d in w.deposits:
@@ -298,3 +311,121 @@ func test_report() -> void:
 		"the settlement report lists the seven industries' workforce; trade reports \"no active workers\" (no attributed trade hours)")
 	check(str(wf.mining.status) == "ok" and near(float(wf.mining.level), float(wf.mining.effective)),
 		"mining reports its workforce level %.3f, the effective average equal while no facility rule exists" % float(wf.mining.level))
+
+
+# ------------------------------------------------------------------ owner D1 (2026-10-22): starting experience
+## Starting days = cap x recorded skill level / 10, per industry, for each villager holding xp in the industry's skill.
+func test_d1_formula() -> void:
+	var w := _fresh(1)
+	var bad := []
+	var n_with := 0
+	for n: NPC in w.npcs:
+		if not n.alive or not n.role in ["adult", "elder"]:
+			continue
+		var k := World.npc_ref(n.id)
+		for ind in WorkExperience.SKILL_OF:
+			var xp := int(n.skills.get(str(WorkExperience.SKILL_OF[ind]), 0))
+			var want := 0.0 if xp <= 0 else WorkExperience.cap_days(str(ind)) * float(Skills.level_of(xp)) / 10.0
+			if not near(w.experience.days(k, str(ind)), want):
+				bad.append("%s %s %.2f/%.2f" % [k, ind, w.experience.days(k, str(ind)), want])
+			if want > 0.0:
+				n_with += 1
+	check(bad.is_empty() and n_with > 0, "every villager's starting days are cap x skill level / 10 in each industry (%d person-industries seeded) %s" % [n_with, str(bad.slice(0, 4))])
+	var smiths: Array = w.npcs.filter(func(o): return o.alive and o.job == "smith")
+	smiths.sort_custom(func(a, b): return Skills.level(a, "smithing") > Skills.level(b, "smithing"))
+	var s8: NPC = smiths[0]
+	var s6: NPC = smiths[1]
+	check(Skills.level(s8, "smithing") == 8 and Skills.level(s6, "smithing") == 6
+		and near(w.experience.days(World.npc_ref(s8.id), "smithing"), 19.2) and near(w.experience.days(World.npc_ref(s6.id), "smithing"), 14.4)
+		and near(w.experience.level(World.npc_ref(s8.id), "smithing"), 8.0) and near(w.experience.level(World.npc_ref(s6.id), "smithing"), 6.0),
+		"the seed-1 smiths (Skills 8 and 6) start with 19.2 and 14.4 smithing days: experience levels 8 and 6")
+	check(near(w.experience.days(World.npc_ref(s8.id), "carpentry"), 0.0 if int(s8.skills.get("crafting", 0)) <= 0 else WorkExperience.cap_days("carpentry") * Skills.level(s8, "crafting") / 10.0),
+		"industries are independent: a smith's carpentry start comes from their crafting record only")
+	check(not w.experience.minutes.has(WorkExperience.PLAYER), "the player gets no starting experience (PAR-01A: the player gets none)")
+	check(w.experience.recent.is_empty(), "the starting experience is not recent work: nobody is active in the season's report until they work")
+	var no_xp := true
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and int(n.skills.get("mining", 0)) <= 0 and w.experience.days(World.npc_ref(n.id), "mining") > 0.0:
+			no_xp = false
+	check(no_xp, "the level-1 floor of a skill never practised is no recorded history: no starting days (requirement 4)")
+
+
+## Farming from the PAR-01A working-history rule, exactly as PAR-01A gives a trade skill.
+func test_d1_farming() -> void:
+	var w := _fresh(1)
+	var c: Dictionary = GameData.b("skill_start")
+	var farmers: Array = w.npcs.filter(func(o): return o.alive and o.role in ["adult", "elder"] and o.job == "farmer")
+	var bad := []
+	var rows := []
+	for n: NPC in farmers:
+		var xp: int = Skills.start_xp("miner", Life.npc_age(w, n), Skills.tenure_share(w, n)).get("mining", 0)   # PAR-01A's own computation, read through a trade
+		var want := 0.0 if xp <= 0 else WorkExperience.cap_days("farming") * float(Skills.level_of(xp)) / 10.0
+		var got := w.experience.days(World.npc_ref(n.id), "farming")
+		rows.append("%.1f" % got)
+		if not near(got, want):
+			bad.append("%d %.2f/%.2f" % [n.id, got, want])
+	check(not farmers.is_empty() and bad.is_empty(), "each farmer's farming start is what PAR-01A's tenure gives a trade (days %s) %s" % [", ".join(rows), str(bad)])
+	var others := true
+	for n: NPC in w.npcs:
+		if n.alive and n.job != "farmer" and w.experience.days(World.npc_ref(n.id), "farming") > 0.0:
+			others = false
+	check(others, "only farmers get a farming start (PAR-01A gives a trade's history to that trade only)")
+
+
+## Once only; saved experience is never overwritten, reset or regenerated.
+func test_d1_once() -> void:
+	var w := _fresh(1)
+	var before := JSON.stringify(w.experience.to_dict())
+	w.experience.seed_once(w)
+	check(JSON.stringify(w.experience.to_dict()) == before, "seeding again does nothing (marked seeded)")
+	var k := World.npc_ref(_novice(w, "forestry", 0).id)
+	w.experience.credit(k, "forestry", 300.0, w.minutes)
+	var d := w.to_dict()
+	var back: Dictionary = JSON.parse_string(JSON.stringify(d))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), back)
+	check(near(w2.experience.days(k, "forestry"), 300.0 / DAY) and JSON.stringify(w2.experience.minutes) == JSON.stringify(w.experience.minutes),
+		"a saved world loads with exactly its experience: nothing re-seeded or reset")
+	var e := WorkExperience.new()
+	e.credit("npc:1", "mining", 60.0, 0.0)
+	e.seed_once(w)
+	check(not e.seeded and e.minutes.size() == 1, "a record already holding experience (an earlier branch save) is never seeded over")
+	var smith: NPC = w.npcs.filter(func(o): return o.alive and o.job == "smith")[0]
+	var sk := World.npc_ref(smith.id)
+	var sm := w.experience.days(sk, "smithing")
+	w.experience.credit(sk, "mining", 480.0, w.minutes)
+	check(near(w.experience.days(sk, "smithing"), sm), "starting experience is kept when the person works another industry")
+
+
+## An older save (no section): migrated once on load, the same as a new world's settlers would get.
+func test_d1_old_save() -> void:
+	var w := _fresh(3)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var want := JSON.stringify(d[WorkExperience.KEY].minutes)
+	d.erase(WorkExperience.KEY)
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(w2.experience.seeded and JSON.stringify(w2.experience.minutes) == want,
+		"an older save without experience records gets the same starting experience on load as at the world's creation")
+	var d2: Dictionary = JSON.parse_string(JSON.stringify(w2.to_dict()))
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), d2)
+	check(JSON.stringify(w3.experience.to_dict()) == JSON.stringify(w2.experience.to_dict()), "and once saved, it round-trips unchanged")
+	var d0 := {"format": WorkExperience.FORMAT_0, "minutes": {"npc:1": {"mining": 120.0}}, "recent": {}}
+	d2[WorkExperience.KEY] = d0
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), d2)
+	check(not w4.experience.seeded and w4.experience.minutes.size() == 1 and near(w4.experience.days("npc:1", "mining"), 0.25),
+		"a section written before D1 (format 0) keeps its records and is not seeded over")
+
+
+## Deterministic: the same seed gives the same starting experience; the world itself is unchanged by it.
+func test_d1_determinism() -> void:
+	var a := _fresh(4)
+	var b := _fresh(4)
+	check(JSON.stringify(a.experience.to_dict()) == JSON.stringify(b.experience.to_dict()), "the same seed gives the same starting experience")
+	var d := a.to_dict()
+	d.erase(WorkExperience.KEY)
+	var e := b.to_dict()
+	e.erase(WorkExperience.KEY)
+	check(JSON.stringify(d) == JSON.stringify(e), "and the rest of the saved world is the same")

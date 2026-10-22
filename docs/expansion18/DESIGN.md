@@ -285,9 +285,21 @@ only (`game/scripts/core/settlement/experience.gd`, `WorkExperience`; data `sett
 - **The Q18-11B effective level is now each worker's own effective level** (the owner's clarification): individual
   experience is the basis of individual performance and pay; facilities may later lower a worker's effective capability,
   never their experience. Until the facility rules are approved, effective = experience level; no cap is invented.
-- **Not decided, not implemented:** facility caps; starting experience for new worlds and existing saves (tracking starts
-  empty: nobody has experience until they work; nothing is seeded from `Skills.tenure_share` or PAR-01A history);
-  thresholds.
+- **Starting experience (owner D1, 2026-10-22, `docs/directives/2026-10-22_x18_d1_starting_experience.md`):** once, at a
+  new world's creation (after PAR-01A seeds the settlers' Skills) and when a save with no `x18_experience` section is
+  loaded, each living adult or elder villager gets, per industry, `cap x Skills.level / 10` experience days in the
+  industry's skill (`WorkExperience.SKILL_OF`: mining, woodcutting -> forestry, smithing, crafting -> carpentry and
+  tanning, trading -> trade), only where they hold xp in that skill (the level-1 floor of a skill never practised is no
+  recorded history, requirement 4). Farming (no skill) comes from PAR-01A's own working-history rule, exactly as PAR-01A
+  gives a trade skill (`WorkExperience.farming_start_days`): for a villager whose job is farmer, tenure =
+  min(max(0, age - skill_start.from_age) x lerp(tenure_min, 1, Skills.tenure_share), max_tenure_years), xp =
+  round(tenure x xp_per_year), level = Skills.level_of(xp), days = 18 x level / 10. The player gets none (PAR-01A's
+  "the player gets none"; an older save's player keeps only the skills, not experience). Newcomers and children coming of
+  age get none (PAR-01A). The seeding is marked in the section (`seeded`), the days given are kept in `start`, it adds
+  nothing to the season's activity window, never overwrites recorded experience, and a section written before D1
+  (format `mml-x18-experience/0`) is read and never seeded over. Deterministic (Skills, PAR-01A's id-and-seed share, ages);
+  touches no other state (the world's save is otherwise identical; fingerprint below).
+- **Not decided, not implemented:** facility caps (D2); thresholds (D3).
 
 Hours attribution (the capability hook's own mapping, `WorkExperience.industry_of_step`): villagers' work steps, credited
 per tick for the minutes actually worked (`World._run_plan` -> `_note_work`): `mine`/`mj_mine` (mining swings, the
@@ -319,8 +331,9 @@ hired for, never for a price, quantity, wage or deadline; contract felling and m
 mining; hired work other than the harvest keeps its stated wage. FARM-CROP-01's minute-based crop shares would give a
 faster cutter less grain on the per-worker path: DECISIONS_PENDING.md D7.
 
-Save: optional key `x18_experience` (`mml-x18-experience/0`: minutes per person and industry, the season's hour buckets),
-written only once someone has worked; a save without it (every older save) loads with empty tracking; a section of an
+Save: optional key `x18_experience` (`mml-x18-experience/1`: `seeded`, `start` days per person and industry, minutes per
+person and industry, the season's hour buckets; format 0 had no `seeded`/`start`), written once seeded (every world
+from D1 on); a save without it (every older save) loads with empty tracking; a section of an
 unknown format is kept and written back untouched. `SAVE_VERSION` is not bumped (this branch's practice: Build 17 owns
 the versions; the section joins the versioned save at integration).
 
