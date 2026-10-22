@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 255 (126 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **316** = 195 still open from the baseline + 126 added and open |
+| Entries added since | | 255 (125 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **315** = 195 still open from the baseline + 125 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -151,7 +151,7 @@ None.
 | FSE-B10 | The player's kills enter the wildlife ledger | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | approved | COMPLETE AND VERIFIED | 16 |
-| HORSE-Q | Plough horse: price and what it does | decision | BLOCKED | owner decision |
+| HORSE-Q | Plough horse: price and what it does | decision | COMPLETE AND VERIFIED | owner decision |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | COMPLETE AND VERIFIED | 15 |

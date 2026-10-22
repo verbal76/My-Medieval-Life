@@ -14273,10 +14273,10 @@
    "id": "HORSE-Q",
    "title": "Plough horse: price and what it does",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "A plough horse available for purchase from the visiting caravan.",
    "description": "Plough horse: price and what it does",
-   "source": "docs/directives/2026-10-22_build18_master_overnight_execution.md",
+   "source": "docs/directives/2026-10-23_owner_answers_horse.md",
    "approval": "",
    "acceptance": [
     "Owner sets the horse's price, upkeep (feed) and what it does for ploughing before B14-11 is built"
@@ -14307,9 +14307,15 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "recorded overnight: the requirement names the horse but not its price, feed or ploughing effect"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered the horse's role, price and ploughing values (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Bought at the visiting caravan for 120 coins; with the hand plough, tilling takes 1 s and 10 stamina a plot; eats 2 wheat a meal like a cow and dies if unfed"
   },
   {
    "id": "HOUSE-01",

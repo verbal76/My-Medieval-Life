@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **482** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 38 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 67 | 15 |
+| Waiting on an owner decision | 66 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **316** | **233** |
+| **Total open** | **315** | **233** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -328,7 +328,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (67)
+### Waiting on an owner decision (66)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -354,7 +354,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision first | part of the standalone Living Economy build EXP-D, whose number and placement the owner decides (OD-LE-01) |
-| HORSE-Q | Plough horse: price and what it does | decision | BLOCKED |  |  |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
@@ -1000,7 +999,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (93)
+## Owner decisions, open and answered (open: 38, status BLOCKED) (93)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1009,7 +1008,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | COMPLETE AND VERIFIED | docs/build18/PHASE_A_INVENTORY.md |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? | COMPLETE AND VERIFIED | docs/design/FARM08_YIELD_COMPARISON.md |
-| HORSE-Q | Plough horse: price and what it does | BLOCKED | docs/directives/2026-10-22_build18_master_overnight_execution.md |
+| HORSE-Q | Plough horse: price and what it does | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_horse.md |
 | INV-Q1 | INV-18 borderline item classifications | COMPLETE AND VERIFIED | docs/build18/INV18_PLAN.md |
 | INV-Q2 | INV-18 upgrade acquisition and cost | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md |
