@@ -85,7 +85,9 @@ func _draw_works(cc: Vector2i) -> void:
 	cells.sort()
 	for cell: Vector2i in cells:
 		var kind := str(overworld.works[cell])
-		var file := ("steps" if kind.begins_with("steps") else kind) + ".png"
+		var file := kind + ".png"
+		if kind.begins_with("steps") and not ResourceLoader.exists("res://assets/terrain/" + file):
+			file = "steps.png"                  # an older way of unknown run keeps the first stand-in tile
 		if not _works_tex.has(file):
 			_works_tex[file] = load("res://assets/terrain/" + file) if ResourceLoader.exists("res://assets/terrain/" + file) else null
 		if _works_tex[file] == null:

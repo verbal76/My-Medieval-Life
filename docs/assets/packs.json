@@ -7,7 +7,7 @@
    "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art).", "scale": "16 px tiles, 1:1 (the world's reference)"},
   {"id": "puny_world_free", "name": "Puny World (free)", "creator": "Shade", "sources": ["PUNY_WORLD_v1.zip"], "storage": "public", "licence": "free",
    "permissions": "Free tileset; Tiled terrain sets used for overworld cliffs.", "categories": ["tileset", "terrain"], "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json).", "scale": "16 px, 1:1"},
+   "used_for": "VIS-STEPS-01: its stone cliff-stair tile (96, 96) is the cut-steps tile drawn over a cliff rim (game/assets/terrain/steps_ns.png, steps_ew.png; tools/terrain_art.py). Overworld grass/cliff wangset (overworld_tiles.json).", "scale": "16 px, 1:1"},
   {"id": "puny_characters", "name": "Puny Characters (Editor + TDSM)", "creator": "Shade", "sources": ["PUNY_CHARACTERS_v2.1.zip", "PUNY_CHARACTERS_v2.1_tdsm-2026.zip"], "storage": "public", "licence": "paid",
    "permissions": "Use in the owner's games.", "categories": ["characters", "animations"], "status": "integrated",
    "used_for": "Every villager, bandit and guard (generated layered sheets in game/assets/characters); the player, drawn at run time from a recipe of the uncoloured layer sheets in game/assets/characters/layers (CC-01, CharacterLook, game/data/character_style.json).", "scale": "32 px frames, about 14 x 16 px visible: the reference human"},
