@@ -85,6 +85,12 @@ LEGACY_PLOTS = ((90, 20), (107, 20))
 PLOTS = ((73, 11), (91, 12))
 PLOT_LANES = (((77, 21), (77, 30), (68, 30)), ((95, 22), (95, 30)))
 MODULE_ROOM = 1
+# generator v9 (DVW-B3-CHAPEL, owner 2026-10-23): the village chapel and the church's own farm plot on the open ground east of Mill Road,
+# between the sawmill's yard and the smithy. The chapel is Shade's small house cleared of its beds and chest (like the
+# sawmill: no new art); its door step lies on a lane south to the east connector's crossing at (88, 43). The plot is fenced round (the gate on its south side). Everything else was generated first, so a world made before keeps every tree, boulder
+# and plant it had except those on this ground (World.load_dict clears them from a save as the generator does here).
+CHAPEL_AT = (79, 29)
+CHURCH_PLOT = (70, 32, 8, 7)                 # x, y, w, h; the gate is the middle of the south side
 STUMP = 459
 SAPLING = 4304
 # Field art is a 4x4 edge set per state, named by its top-left tile: columns are narrow / left / middle
@@ -148,7 +154,7 @@ CHEST_TILES = {355}
 KITCHEN_CELL = (52, 47)                     # a cell of the tavern's open-air kitchen (stove area)
 MAT = 593                                   # a straw pallet: a sleeping place on the floor (walkable)
 SLEEP_PLACES = 6                            # beds plus pallets in every home
-HOME_TYPES = ("house", "manor", "tavern", "hut")
+HOME_TYPES = ("house", "manor", "tavern", "hut", "chapel")      # generator v9: the clergy live at the chapel (straw pallets)
 # Beds added to the big homes so the family sleeps in beds (owner: villagers with homes sleep in their
 # own beds; straw pallets are for guards and cooks). (body, foot post) tiles of Shade's beds, head left.
 # The tavern has no room for more beds outside its dining hall: its keepers take Shade's two inn beds.
@@ -645,6 +651,9 @@ class Village:
         self.place_boulders()
         self.place_plants()
         self.relay_plots()
+        # the plants keep the ids they had before the chapel took ground (a save matches its plants by id)
+        self.plant_ids = {(x, y): f"pl{i}" for i, (x, y, t) in enumerate(self.plant_cells())}
+        self.add_chapel()
         self.draw_roads()
         self.containers()
         self.interiors()
@@ -912,6 +921,36 @@ class Village:
                 for i in range(6):
                     if self.get("below", i, x, y) == t:
                         self.put("below", i, x, y, -1)
+
+    def add_chapel(self):
+        """Generator v9 (DVW-B3-CHAPEL): the chapel (the small house, bed places cleared) with a lane
+        to the north lane, and the church's farm plot beside it. Draws no random numbers; takes away only the
+        trees, boulders and plants that stand on the new ground (and a ring round it)."""
+        E = self.ents
+        ox, oy = CHAPEL_AT
+        px, py, pw, ph = CHURCH_PLOT
+        lane = road_cells((ox + 4, oy + 9), (ox + 4, 43), (88, 43))
+        room = self.rect_cells(ox, oy, 9, 10, 1) | self.rect_cells(px, py, pw, ph, 1)
+        for c in lane:
+            room |= self.rect_cells(c[0], c[1], 1, 1, 1)
+        E["trees"] = [t for t in E["trees"] if (t["x"], t["y"]) not in room]
+        for (x, y) in sorted(room):
+            if 0 <= x < W and 0 <= y < H and self.get("below", 0, x, y) == tile_val(0, DEPLETED_ROCK):
+                self.put("below", 0, x, y, -1)               # a boulder
+        for (x, y, t) in self.plant_cells():
+            if (x, y) in room:
+                for i in range(6):
+                    if self.get("below", i, x, y) == t:
+                        self.put("below", i, x, y, -1)
+        for (x, y) in sorted(self.rect_cells(ox, oy, 9, 10)):    # nothing of the open ground stays under the chapel's walls
+            for i in range(6):
+                self.put("below", i, x, y, -1)
+        b = self.house(ox, oy, "chapel", name="Chapel")
+        for x, y in HOUSE_CLEAR:
+            for cat, i in (("below", 1), ("below", 3), ("below", 4), ("above", 0), ("above", 1)):
+                self.put(cat, i, ox + x, oy + y, -1)
+        self.road |= set(lane)
+        E["church_plot"] = [{"id": "church", "x": px, "y": py, "w": pw, "h": ph, "gate": [px + pw // 2, py + ph - 1]}]
 
     # ---- trees and plants --------------------------------------------------------------------------
     def rect_cells(self, x, y, w, h, grow=0):
@@ -1479,8 +1518,8 @@ class Village:
             "roof_layers": list(ROOF_LAYERS),
             "solid": ["".join("1" if s else "0" for s in row) for row in solid],
             "road": sorted([list(c) for c in self.road]),
-            "plants": [{"id": f"pl{i}", "x": x, "y": y, "kind": PLANTS[t], "tile": t}
-                       for i, (x, y, t) in enumerate(self.plant_cells())],
+            "plants": [{"id": self.plant_ids[(x, y)], "x": x, "y": y, "kind": PLANTS[t], "tile": t}
+                       for (x, y, t) in self.plant_cells()],
             **self.ents,
         }
 

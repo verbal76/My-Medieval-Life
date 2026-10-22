@@ -2233,6 +2233,8 @@ func show_talk(n: NPC) -> void:
 ## The quest choices with this villager: their offer, or the request the player took on.
 func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	var w: World = main.world
+	if Chapel.is_clergy(n):
+		_chapel_choices(n, choices)
 	var q: Dictionary = w.quests.active_from(n)
 	if not q.is_empty() and not Quests.template(q.id).get("story", false):
 		if w.quests.ready(q):
@@ -2273,6 +2275,37 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 				_talk_view(n, w.quests.no_work_line(n))
 			else:
 				_talk_view(n, w.quests.line({"id": job.id, "giver": n.id}, "offer"), true, job.id))
+
+
+## DVW-B3-CHAPEL: what the player may do with the chapel's clergy: give coins or food to the chapel (it goes first to feeding those
+## in need), ask the church for food when they have none of their own, and hear how to help on the church's plot.
+func _chapel_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	for amount in [5, 20]:
+		if w.player.coins >= amount:
+			var amt: int = amount
+			_talk_choice(choices, "Give %d coins to the chapel" % amt, func():
+				var r := w.chapel.player_offer_coins(amt)
+				if r.ok:
+					message(r.text)
+				_talk_view(n, r.text))
+	var shown := 0
+	for id in NPCBrain.EDIBLE:
+		if shown < 2 and w.player.inv.has(id):
+			shown += 1
+			var item: String = id
+			_talk_choice(choices, "Give 1 %s to the chapel" % GameData.item_name(item).to_lower(), func():
+				var r := w.chapel.player_offer_item(item, 1)
+				if r.ok:
+					message(r.text)
+				_talk_view(n, r.text))
+	_talk_choice(choices, "Ask the church for food", func():
+		var r := w.chapel.player_ask()
+		if r.ok:
+			message(r.text)
+		_talk_view(n, r.text))
+	_talk_choice(choices, "How can I help the church?", func():
+		_talk_view(n, "Whatever you can spare goes first to feeding those in need, coins or food. The church keeps its own small plot beside the chapel; villagers who have the time work it, and when none do, we work it ourselves."))
 
 
 ## The reeve's list of the manor's open jobs, each with its wage (paid when it is done), or why there

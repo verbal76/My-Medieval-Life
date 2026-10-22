@@ -586,6 +586,9 @@ later; each module is built by the machinery every building already uses. Nothin
   north-east of the village in new worlds (plot0 at 73,11 and plot1 at 91,12, each with a lane to the road),
   so rooms fit on all four sides (a treed side waits for the trees to be felled). A world saved before keeps
   its plots at the old sites (`legacy_plots`), with everything on them; see `docs/DECISIONS.md`.
+- **The chapel (DVW-B3-CHAPEL, village generator v9).** A chapel (the small house stamp, no new art) at (79, 29) east of
+  Mill Road, a lane to the crossing at (88, 43), and a fenced 8 x 7 church plot at (70, 32); see `docs/DECISIONS.md` and INT-225..227.
+  Where the first site (the open ground near (30, 30)) was needed by the fixtures that place a house there, the chapel stands elsewhere.
 - **Not done.** NPC households do not add modules (they split instead); modules are not drawn with
   their own sign or name beyond the building's name.
 - **Saves.** `estate` is a new optional key on parcels; saves from before load with each parcel its own

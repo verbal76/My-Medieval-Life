@@ -63,9 +63,29 @@ func gate_of(p: Dictionary) -> Vector2i:
 	return Vector2i(int(g[0]), int(g[1]))
 
 
-## Every farm plot, by registry order.
+## Every farm plot, by registry order, then the church's (DVW-B3-CHAPEL: the chapel's own plot, worked by volunteers or the
+## clergy by these same rules; it is no parcel of the land office and has no holder).
 func plots() -> Array:
-	return w.plots.filter(func(p): return is_farm(p))
+	var out: Array = w.plots.filter(func(p): return is_farm(p))
+	if w.chapel != null and w.chapel.present:
+		out.append(w.chapel.plot)
+	return out
+
+
+static func is_church(p: Dictionary) -> bool:
+	return bool(p.get("church", false))
+
+
+## The store a worker's seed, tools and harvest go to: the church's for its plot, else the household's pantry.
+func _store(n: NPC, p: Dictionary) -> Inventory:
+	return w.chapel.store if is_church(p) else _pantry(n)
+
+
+## The next piece of work on the church plot for `n` (a volunteer or one of the clergy), planned into n.plan. True when planned.
+func plan_church(n: NPC, light: bool) -> bool:
+	if w.chapel == null or not w.chapel.present or not able(n):
+		return false
+	return _plan_on(n, w.chapel.plot, light)
 
 
 func plots_of(ref: String) -> Array:
@@ -306,7 +326,7 @@ func till(p: Dictionary, c: Vector2i, n: NPC) -> String:
 	var no := till_refusal(p, c)
 	if no != "":
 		return no
-	for inv: Inventory in [n.inv, _pantry(n)]:
+	for inv: Inventory in [n.inv, _store(n, p)]:
 		var pl := plough_in(inv)
 		if pl != "":
 			if inv.wear(pl, 1):
@@ -445,7 +465,7 @@ func _sorted(cs: Array) -> Array:
 func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
 	var r := rect_of(p)
 	var inner := r.grow(-1)
-	var pantry := _pantry(n)
+	var pantry := _store(n, p)
 	# 1. harvest what is ripe
 	var ripe := []
 	var empty := []
@@ -462,7 +482,7 @@ func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
 		var crop := _seed_crop([n.inv, pantry])
 		if crop != "":
 			return _batch(n, p, "sow", _sorted(empty), false, crop)
-		if _plan_buy_seed(n, empty.size()):
+		if not is_church(p) and _plan_buy_seed(n, empty.size()):
 			return true
 	# 3. clear the ground (light: plants and saplings only)
 	var obst := []
@@ -616,11 +636,19 @@ func _first_try(n: NPC, item: String) -> bool:
 
 ## A member's farm steps (NPCBrain.act): the work on the cells, re-checked when it is done; the fence.
 func act(n: NPC, what: String, a: Dictionary) -> bool:
-	var p: Dictionary = w.plot(str(a.get("plot", "")))
-	if p.is_empty() or not is_farm(p) or n.household < 0 or not w.holds(World.hh_ref(n.household), p):
+	var church: bool = str(a.get("plot", "")) == "church" and w.chapel != null and w.chapel.present
+	var p: Dictionary = w.chapel.plot if church else w.plot(str(a.get("plot", "")))
+	if p.is_empty() or not is_farm(p) or n.household < 0:
 		return false
-	var pantry := _pantry(n)
+	if church:
+		if not w.chapel.may_work(n):
+			return false
+	elif not w.holds(World.hh_ref(n.household), p):
+		return false
+	var pantry := _store(n, p)
 	if what == "fp_fence":
+		if church:
+			return false
 		return build_fence(p, World.hh_ref(n.household), [n.inv, pantry]) == ""
 	var done := 0
 	for e in a.get("cells", []):
@@ -813,6 +841,8 @@ func _ground_ok(rect: Rect2i, axe: bool) -> bool:
 ## player's field cells (Farming.cells), and the player's on a plot a household now holds become the household's.
 func _follow_holders() -> void:
 	for p in plots():
+		if is_church(p):
+			continue                    # the church's plot has no holder: its cells stay its own
 		var holder: String = w.holder_of(p)
 		var r := rect_of(p)
 		if holder == World.PLAYER:

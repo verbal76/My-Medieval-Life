@@ -311,7 +311,7 @@ func _exposable(w: World) -> Dictionary:
 
 func _test_exposure() -> void:
 	var found := false
-	for sd in [1, 7]:
+	for sd in [1, 7, 2, 3, 4]:           # (the chapel took ground, so the hidden bodies lie elsewhere: any of these seeds with a reachable one)
 		var w := _world(sd)
 		var e := _exposable(w)
 		if e.is_empty():
@@ -354,14 +354,14 @@ func _test_exposure() -> void:
 		check(stand.x >= 0 and mr.result in ["ok", "gold"] and (mr.result == "gold" or (int(seam.amount) < a0 and _st(w, "mined_" + str(seam.ore)) == m0 + a0 - int(seam.amount))),
 				"the seam is mined by work_mine from the pit beside it, counted mined_ (%s)" % str(mr.result))
 		check(w.discovery.trial_dig(n, c, sc, "shovel").result == "refused", "the clue is opened: no trial pit finds it again")
-	check(found, "seed 1 or 7 has a body an open pit can reach")
+	check(found, "one of seeds 1, 7, 2, 3, 4 has a body an open pit can reach")
 
 
 # ---------------------------------------------------------------- the manor ------------------
 func _test_manor() -> void:
 	var w: World = null
 	var e := {}
-	for sd in [1, 7]:
+	for sd in [1, 7, 2, 3, 4]:           # (the chapel took ground, so the hidden bodies lie elsewhere: the first seed with a reachable one)
 		w = _world(sd)
 		e = _exposable(w)
 		if not e.is_empty():

@@ -110,6 +110,41 @@ class VillageTest(unittest.TestCase):
             lanes = {c for lane in build_village.PLOT_LANES for c in build_village.road_cells(*lane)}
             self.assertFalse((cells & roads) - lanes, "and free of roads but the new plots' lanes (the view clears those)")
 
+    def test_chapel_and_church_plot(self):
+        """Generator v9 (DVW-B3-CHAPEL): a chapel (the small house) and the church's plot lie on open ground, off every other
+        building, field, pen, plot and road; the chapel's door step has a lane to the north lane; the plot's gate opens onto
+        ground reached from the village; no tree stands on either."""
+        chapel = [b for b in D["buildings"] if b["type"] == "chapel"]
+        self.assertEqual(len(chapel), 1)
+        b = chapel[0]
+        self.assertEqual((b["x"], b["y"]), build_village.CHAPEL_AT)
+        plot = D["church_plot"][0]
+        self.assertEqual((plot["x"], plot["y"], plot["w"], plot["h"]), build_village.CHURCH_PLOT)
+        roads = {tuple(c) for c in D["road"]}
+        trees = {(t["x"], t["y"]) for t in D["trees"]}
+        cells = lambda e: {(x, y) for y in range(e["y"], e["y"] + e["h"]) for x in range(e["x"], e["x"] + e["w"])}
+        mine = cells(b) | cells(plot)
+        self.assertFalse(mine & trees)
+        self.assertFalse(cells(plot) & roads)
+        self.assertFalse(cells(b) & cells(plot))
+        for key in ("buildings", "fields", "pens", "plots", "legacy_plots"):
+            for e in D[key]:
+                if e["id"] != b["id"]:
+                    self.assertFalse(mine & cells(e), (key, e["id"]))
+        ring = {(x, y) for y in range(b["y"] - 1, b["y"] + b["h"] + 1) for x in range(b["x"] - 1, b["x"] + b["w"] + 1)}
+        for e in D["buildings"]:
+            if e["id"] != b["id"]:
+                self.assertFalse(ring & cells(e), "no roof touches the chapel's (%s): the roof fade treats touching roofs as one" % e["id"])
+        self.assertIn((b["door"][0], b["door"][1]), roads, "a lane runs to the chapel's door step")
+        solid = solid_grid()
+        gate = tuple(plot["gate"])
+        self.assertEqual(gate, (plot["x"] + plot["w"] // 2, plot["y"] + plot["h"] - 1))
+        start = tuple(D["spawns"]["player"])
+        seen = reach(solid, start)
+        self.assertIn((gate[0], gate[1] + 1), seen, "the plot's gate opens onto ground reached from the village")
+        self.assertIn((b["door"][0], b["door"][1]), seen)
+        self.assertEqual(len(b["interior"]["doors"]) >= 1, True)
+
     def test_the_four_exits_run_to_the_edge(self):
         roads = {tuple(c) for c in D["road"]}
         self.assertEqual([c for c in roads if c[0] == 0], [(0, 57)])
