@@ -11,11 +11,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 70 |
+| APPROVED — NOT STARTED | 69 |
 | ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 48 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 49 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
 | COMPLETE AND VERIFIED | 228 |
@@ -186,7 +186,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED |  |  |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED |  |  |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED |  |  |
-| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | APPROVED — NOT STARTED |  |  |
+| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -434,6 +434,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-012 | Gather mode | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B7-013 | Brown glyph icons | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B8-018 | Roof flicker indoors | windows | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -470,14 +471,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (70)
+## APPROVED — NOT STARTED (69)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | docs/directives/2026-10-22_build18_master_integration.md |  |  |  |
-| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | docs/directives/2026-10-23_owner_answers_bandits.md |  | after BANDIT-Q |  |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
 | CON-UX-01 | Contract window needs design work | docs/directives/2026-10-23_owner_answers_contract_window.md |  |  |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
@@ -651,7 +651,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | docs/directives/2026-10-22_q18_11a_conditional_decision.md | `b01e8f4`; capability_test | after Q18-11A; after X18-CAPCOMP | Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (48)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (49)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -670,6 +670,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-012 | Gather mode | docs/release/BUILD_7_ISSUES.md (audit inventory row 53) |  |  |  |
 | B7-013 | Brown glyph icons | docs/release/BUILD_7_ISSUES.md (audit inventory row 54) |  |  |  |
 | B8-018 | Roof flicker indoors | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 119) |  |  |  |
+| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | docs/directives/2026-10-23_owner_answers_bandits.md | `fefa2cb`; outlaw_return_test 24/0, run_tests 3587/0, start 506/0, play 39/0, combat 41/0, conservation 8/0, wiki passed, horse 54/0, tailor_barber PASS, Python OK (merged tree) | after BANDIT-Q |  |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | docs/directives/2026-10-22_build18_master_integration.md | `534cf7c`; run_tests 3,586, play 39, start 506, inventory18 88, tailor_barber 24 ok, wiki, character_look, terrain 34: 0 failures, 0 script errors (isolated XDG dirs); branch wip/b18-tailor |  |  |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | docs/directives/2026-10-19_sword_combat.md | `3e283b6`; combat_test (41) |  |  |
 | CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | docs/directives/2026-10-19_courtship_friendship.md | game/tests/relations_test.gd; aging_test | after DVW-B1 |  |

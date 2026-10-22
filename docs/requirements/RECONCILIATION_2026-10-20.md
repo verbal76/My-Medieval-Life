@@ -88,7 +88,7 @@ None.
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | APPROVED — NOT STARTED | 18 |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | COMPLETE AND VERIFIED | owner decision |
-| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | APPROVED — NOT STARTED | 18 |
+| BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | COMPLETE AND VERIFIED | owner decision |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |

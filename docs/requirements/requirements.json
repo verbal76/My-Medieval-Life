@@ -5734,7 +5734,7 @@
    "id": "BANDIT-RETURN",
    "title": "Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Outlaws drift in; 1 season later, 2-3",
    "description": "Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods",
    "source": "docs/directives/2026-10-23_owner_answers_bandits.md",
@@ -5743,10 +5743,12 @@
     "When no bandit lives, one season after the last died, 2 or 3 new adult outlaws enter from the map edge, make camp in the woods and act as the band; deterministic from the seed; saved; no other rescue"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "outlaw_return_test 24/0, run_tests 3587/0, start 506/0, play 39/0, combat 41/0, conservation 8/0, wiki passed, horse 54/0, tailor_barber PASS, Python OK (merged tree)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fefa2cb"
+   ],
    "parent": null,
    "depends_on": [
     "BANDIT-Q"
@@ -5770,6 +5772,11 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "Build 18 scope (owner answer during Build 18)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit fefa2cb; tests",
+     "why": "merged into wip/build18; one season is 2 game days on the current 8-day calendar"
     }
    ],
    "target_build": "18"
