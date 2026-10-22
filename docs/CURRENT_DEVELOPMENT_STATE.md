@@ -38,6 +38,13 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 None: the stone, competition and business workers reported and are merged.
 
+### Running processes (never restart or cancel; SIM-02)
+
+| What | Where | Code | Started |
+|---|---|---|---|
+| Build 18 365-day runs, seeds 1-4, checkpoints every 10 days (REL18-LONGRUN, SET-C, WDR-004-C; day 100 read from them) | GitHub Actions long-sims run 39874405723 | `wip/build18` 9a86f5c | 2026-10-22 23:50 UTC |
+| Determinism gate (REL18-DET): baseline written, then a second independent run (seeds 1 and 2, days 10 and 30) | lead's local worktree | 9a86f5c | 2026-10-22 23:52 UTC |
+
 On their reports:
 1. Review the work.
 2. Merge it into `wip/build18`.
