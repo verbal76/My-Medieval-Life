@@ -9038,15 +9038,13 @@
   {
    "id": "DVW-B8",
    "title": "Skills for farming, husbandry, hunting, healing",
-   "kind": "proposal",
-   "status": "BLOCKED",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": null,
    "description": "Skills for farming, husbandry, hunting, healing",
-   "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 280)",
-   "approval": "agent proposal; not approved",
-   "acceptance": [
-    "As recorded in the source document; evidence named in implementation and tests"
-   ],
+   "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": "Farming, Husbandry, Hunting and Healing skills, trained by doing the work; Farming starts from recorded experience; conserving; deterministic; saves migrate; wiki updated",
    "implementation": "No (\"Consider\") | — | — | PROPOSED | ",
    "tests": "",
    "playtest": [],
@@ -9073,12 +9071,18 @@
      "date": "2026-10-20",
      "change": "roadmap: owner decision (owner decision first)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build; acceptance",
+     "why": "owner approved (2026-10-23)"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "owner decision",
+   "target_build": "18",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "waiting on an owner decision, not development work"
+   "roadmap_reason": "waiting on an owner decision, not development work",
+   "owner_answer": "Farming, Husbandry, Hunting and Healing skills, trained by doing the work; Farming starts from recorded experience"
   },
   {
    "id": "DVW-B9",
@@ -9228,15 +9232,13 @@
   {
    "id": "ECON-P1.3",
    "title": "Caravan as finite regional market (:73)",
-   "kind": "proposal",
-   "status": "BLOCKED",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": null,
    "description": "Caravan as finite regional market (:73)",
-   "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 300)",
-   "approval": "agent proposal; not approved",
-   "acceptance": [
-    "As recorded in the source document; evidence named in implementation and tests"
-   ],
+   "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": "The caravan is the traders of the five simulated settlements: it carries only goods they have and pays with their coins; the daily allowance (CARAVAN-TMP) is removed; conserving; deterministic; saves migrate; wiki updated",
    "implementation": "Awaiting | **A different finite caravan purse is implemented** (INT-020, `9c13794`): allowance, float, ceiling per head, no raw-ore export | AWAIT-OWNER (recorded) / implemented variant — contradiction",
    "tests": "",
    "playtest": [],
@@ -9268,12 +9270,18 @@
      "date": "2026-10-20",
      "change": "roadmap: 18",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build; acceptance",
+     "why": "owner approved (2026-10-23)"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "",
-   "roadmap_reason": "caravan as a finite regional market; household versus business money"
+   "roadmap_reason": "caravan as a finite regional market; household versus business money",
+   "owner_answer": "The caravan is the traders of the five simulated settlements: it carries only goods they have and pays with their coins; the daily allowance (CARAVAN-TMP) is removed"
   },
   {
    "id": "ECON-P1.4",
@@ -9418,15 +9426,13 @@
   {
    "id": "ECON-P3",
    "title": "Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)",
-   "kind": "proposal",
-   "status": "BLOCKED",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": null,
    "description": "Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187)",
-   "source": "docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 304)",
-   "approval": "agent proposal; not approved",
-   "acceptance": [
-    "As recorded in the source document; evidence named in implementation and tests"
-   ],
+   "source": "docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md",
+   "approval": "owner, 2026-10-23",
+   "acceptance": "Business and household money separate: a shop has its own till, the owner pays themselves from it, and may choose to move money; conserving; deterministic; saves migrate; wiki updated",
    "implementation": "Awaiting | Owner rule 1 (B13-06) covers part of P3.2's spirit | AWAIT-OWNER",
    "tests": "",
    "playtest": [],
@@ -9453,12 +9459,18 @@
      "date": "2026-10-20",
      "change": "roadmap: 18",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> APPROVED — NOT STARTED; kind; owner_answer; approval; source; target_build; acceptance",
+     "why": "owner approved (2026-10-23)"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "",
-   "roadmap_reason": "caravan as a finite regional market; household versus business money"
+   "roadmap_reason": "caravan as a finite regional market; household versus business money",
+   "owner_answer": "Business and household money separate: a shop has its own till, the owner pays themselves from it, and may choose to move money"
   },
   {
    "id": "ENV-RTK",

@@ -12,7 +12,7 @@ entry leaves the register or changes without a history entry.
 | Other entries (rules; closed decisions and proposals) | 20 | |
 | Entries added since | | 277 (136 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **317** = 186 still open from the baseline + 136 added and open |
-| Open entries moved to another build | | 2 |
+| Open entries moved to another build | | 3 |
 
 ## Closed since the baseline (45)
 
@@ -64,12 +64,13 @@ entry leaves the register or changes without a history entry.
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: The world sustains itself without the player for 365 days (about 45 calendar years) on four seeds: food produced and distributed, families and births, houses built, posts filled, stone supplied (no site given up for stone), wildlife and herds breeding; WDR-022 outcomes only |
 | WDR-007-C | Comply with World Design Rule 7: Automated Compliance | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: tools/check_materials.py generates docs/systems/MATERIAL_INTERDEPENDENCY.md from the recipe data (uses, consuming professions, who each trade supplies, orphaned recipes, broken references, exceptions) and runs in CI; tests/test_check_materials.py has positive and negative fixtures (13 tests) |
 
-## Moved to another build since the baseline (2)
+## Moved to another build since the baseline (3)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 17 | 2026-10-21: Owner approved the refactor direction |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 18 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | BLOCKED | owner decision | APPROVED — NOT STARTED | 18 | 2026-10-22: owner approved (2026-10-23) |
 
 ## Reopened since the baseline (0)
 

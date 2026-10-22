@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 72 |
+| APPROVED — NOT STARTED | 75 |
 | ACTIVE DEVELOPMENT | 18 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 40 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **496** |
-| Outstanding (not complete, superseded or canceled) | 247 |
+| **Total approved** | **499** |
+| Outstanding (not complete, superseded or canceled) | 250 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 28 are open (status BLOCKED).
+Also in the register: 29 proposal awaiting an owner decision (not approved), 103 owner decision (open or answered), 31 world design rule, 8 unapproved idea; of the owner decisions, 28 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 68 | 62 |
+| Build 18: Settlement Advancement & Regional Economy | 69 | 65 |
 | Build 19: NPC Judgment System | 16 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 64 | 15 |
+| Waiting on an owner decision | 63 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **317** | **247** |
+| **Total open** | **317** | **250** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (68)
+### Build 18: Settlement Advancement & Regional Economy (69)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -197,8 +197,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | APPROVED — NOT STARTED |  |  |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | DEFERRED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
-| ECON-P1.3 | Caravan as finite regional market (:73) | proposal | BLOCKED |  | caravan as a finite regional market; household versus business money |
-| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | proposal | BLOCKED |  | caravan as a finite regional market; household versus business money |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | APPROVED — NOT STARTED | owner decision first | waiting on an owner decision, not development work |
+| ECON-P1.3 | Caravan as finite regional market (:73) | approved | APPROVED — NOT STARTED |  | caravan as a finite regional market; household versus business money |
+| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | approved | APPROVED — NOT STARTED |  | caravan as a finite regional market; household versus business money |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
 | F-1 | NPC workshop construction | approved | DEFERRED |  | NPCs building workshops is settlement development |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
@@ -332,7 +333,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (64)
+### Waiting on an owner decision (63)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -354,7 +355,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B11 | No instant fast travel (rule) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DVW-B12 | Ethics/lore: thralldom, Church, content note | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DVW-B13 | Story kept as sparks; audit `story: true` quests | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
-| DVW-B8 | Skills for farming, husbandry, hunting, healing | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision first | part of the standalone Living Economy build EXP-D, whose number and placement the owner decides (OD-LE-01) |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
@@ -475,7 +475,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (72)
+## APPROVED — NOT STARTED (75)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -494,7 +494,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276) |  |  |  |
 | DVW-B5 | Predictable taxes with hysteresis, announced | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 277) |  |  |  |
 | DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md |  |  |  |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
+| ECON-P1.3 | Caravan as finite regional market (:73) | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md |  |  |  |
+| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | docs/directives/2026-10-23_owner_answers_caravan_purses_skills.md |  |  |  |
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
@@ -1165,7 +1168,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | COMPLETE AND VERIFIED | docs/directives/2026-10-20_final_development_mandate.md sections 1-4, 11, 12 (text in docs/WORLD_DESIGN_RULES.md) |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | COMPLETE AND VERIFIED | docs/directives/2026-10-21_permanent_wiki_maintenance.md |
 
-## Proposal awaiting an owner decision (not approved) (32)
+## Proposal awaiting an owner decision (not approved) (29)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1187,14 +1190,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-B11 | No instant fast travel (rule) | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 283) |
 | DVW-B12 | Ethics/lore: thralldom, Church, content note | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 284) |
 | DVW-B13 | Story kept as sparks; audit `story: true` quests | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 285) |
-| DVW-B8 | Skills for farming, husbandry, hunting, healing | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 280) |
 | ECON-P1.1 | Demand-driven mining (:71) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 298) |
 | ECON-P1.2 | Manor mining rights, royalty, quota, stone reserve (:72) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 299) |
-| ECON-P1.3 | Caravan as finite regional market (:73) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 300) |
 | ECON-P1.4 | Prospecting new seams (:74) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 301) |
 | ECON-P1.5 | Distant quarry (:75) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 302) |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 303) |
-| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 304) |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | APPROVED — NOT STARTED | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | BLOCKED | docs/DECISIONS.md (audit inventory row 318) |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | BLOCKED | docs/DECISIONS.md (audit inventory row 345) |
