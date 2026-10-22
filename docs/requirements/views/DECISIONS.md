@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 52 |
+| OPEN | 53 |
 | APPROVED | 119 |
 | PROVISIONAL | 3 |
 | SUPERSEDED | 2 |
@@ -19,7 +19,7 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | OPEN | no |  | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 
-## Build 18: combined release (tracks A, B, C): open, reopened or provisional (24)
+## Build 18: combined release (tracks A, B, C): open, reopened or provisional (25)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -37,6 +37,7 @@ The decision register is the `decision` records of the register. A recommendatio
 | B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
 | B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
 | B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
+| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | OPEN | no |  | docs/requirements/DECISION_PACKAGE_B18_2026-10-23.md |
 | CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | OPEN | no | B18-DP-12 | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |

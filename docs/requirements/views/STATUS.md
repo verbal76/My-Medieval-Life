@@ -12,8 +12,8 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Design work still required | 6 | 2 | 0 | 0 |
 | Design unknown | 12 | 4 | 7 | 1 |
 | Not started (incl. READY) | 17 | 6 | 7 | 1 |
-| In development (worker assigned) | 7 | 0 | 0 | 0 |
-| Partially implemented | 7 | 3 | 0 | 0 |
+| In development (worker assigned) | 5 | 0 | 0 | 0 |
+| Partially implemented | 9 | 3 | 0 | 0 |
 | Implemented on a task branch | 0 | 3 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
 | Integrated | 50 of 81 (62%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
@@ -23,7 +23,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Owner playtested | 0 of 81 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Complete | 1 of 81 (1%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Release blockers (open in-scope requirements) | 80 | 12 | 7 | 1 |
-| Open owner decisions (of which blocking) | 24 (2) | 1 (0) | 14 (14) | 9 (9) |
+| Open owner decisions (of which blocking) | 25 (2) | 1 (0) | 14 (14) | 9 (9) |
 | Deferred with approval | 2 | 1 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 1 | 0 | 5 |
 | Integrated, awaiting gameplay or owner verification | 49 | 0 | 0 | 0 |
@@ -37,5 +37,5 @@ Build authority:
 - **Build 20 (Living Economy):** implementation **NOT AUTHORIZED**. OD-30, OD-LE-01: numbering and placement only; implementation not authorized
 - **Build 21 (Village Politics):** implementation **NOT AUTHORIZED**. OD-30: numbering only; implementation not authorized
 
-Future backlog and unassigned: 102 open records (`BACKLOG.md`). Open owner decisions: 55 (`DECISIONS.md`).
+Future backlog and unassigned: 102 open records (`BACKLOG.md`). Open owner decisions: 56 (`DECISIONS.md`).
 

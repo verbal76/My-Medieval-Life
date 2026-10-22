@@ -2,23 +2,21 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (9)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | ECON-P3 | 18 | IN DEVELOPMENT | household-money worker (Sonnet subagent, started 2026-10-23) | wip/b18-econp3 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
-| SET-A | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
-| SET-B | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
-| SET-C | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
+| SET-A | 18 | IN DEVELOPMENT | capability-wiring worker (Sonnet subagent, started 2026-10-23) | wip/b18-capwire |
+| SET-B | 18 | IN DEVELOPMENT | capability-wiring worker (Sonnet subagent, started 2026-10-23) | wip/b18-capwire |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | TRADE-CREDIT | 18 | IN DEVELOPMENT | credit-parity worker (Sonnet subagent, started 2026-10-23) | wip/b18-creditparity |
-| WDR-002-C | 18 | IN DEVELOPMENT | close-out worker (Sonnet subagent, started 2026-10-23) | wip/b18-closeout |
 | X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 
-## Implemented but not tested (44)
+## Implemented but not tested (46)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -53,7 +51,9 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | PL2-014 | 18 | PARTIALLY IMPLEMENTED |  |
 | PL2-015 | 18 | PARTIALLY IMPLEMENTED |  |
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
+| SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
+| WDR-002-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 9 of 10 professions pass; the sage supplies no profession (owner decision B18-DP-15) |
 | WDR-004-C | 18 | PARTIALLY IMPLEMENTED |  |
 | WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |

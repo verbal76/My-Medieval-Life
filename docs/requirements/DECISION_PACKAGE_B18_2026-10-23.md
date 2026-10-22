@@ -151,6 +151,13 @@ Answer in any form, e.g. "DP-01 recommended, DP-05 alternative B, DP-07 recommen
 4. **Alternative:** (A) a sturdier chisel (400, the hammer's durability): fewer chisels bought, a smaller smith trade.
 5. **Unblocks:** STONE-02, STONE-06, X18-STONECUT (with DP-09).
 
+### B18-DP-15 · WDR-002-C The sage supplies no other profession (added 2026-10-23, from the close-out audit)
+1. **Intent:** World Design Rule 2, Professional Interdependency (owner's rules): every profession depends on others and supplies others.
+2. **Issue:** nine of ten production professions pass; the sage (medicines) supplies nobody but end users (`tools/check_materials.py`: supplies_nobody). Fixing it needs another trade to genuinely depend on the sage's goods, which is a gameplay change.
+3. **Recommendation:** the guards keep healing goods bought from the sage (a poultice or tonic per guard, replaced when used in a fight), using the existing medicine items and guard wages; no new numbers beyond the stock kept (one per guard).
+4. **Alternatives:** (A) the tavernkeeper or cook buys herbs or tonics from the sage; (B) record the sage as a deliberate exception in `docs/systems/material_exceptions.json` (healers serve people, not trades).
+5. **Unblocks:** WDR-002-C.
+
 ## C. Other owner-level items for Build 18
 
 ### B18-DP-11 · CHAPEL-R5 Chapel artwork before release

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 414 (216 of them still open) |
-| **Open entries now** (rules excluded) | | **393** |
+| Entries added since | | 415 (217 of them still open) |
+| **Open entries now** (rules excluded) | | **394** |
 | Open entries moved to another build | | 4 |
 
 ## Closed since the baseline (54)
@@ -86,7 +86,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (414)
+## Added since the baseline (415)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -118,6 +118,7 @@ None.
 | B18-DP-12 | CHAPEL-R1: let the player volunteer on the church field by the villagers' rule? | decision | OPEN | 18 |
 | B18-DP-13 | X18-FEES and CON-08-Q: ship the provisional courier fees and the 50-coin signing threshold as Build 18 values? | decision | OPEN | 18 |
 | B18-DP-14 | Q18-6: confirm the reading that settlements develop different profiles because their resources, trades and people differ (Q18-3)? | decision | OPEN | 18 |
+| B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | decision | OPEN | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | APPROVED | owner decision |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
