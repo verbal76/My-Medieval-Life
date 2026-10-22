@@ -36047,9 +36047,9 @@
    "title": "When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs?",
    "description": "When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs?",
    "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "REG-BUY-D1: APPROVED IN PRINCIPLE. (docs/directives/2026-10-23_regional_economy_decisions.md)",
+   "owner_answer": "APPROVED IN PRINCIPLE. Settlements may sell food to the village and other settlements. Their willingness and quantity offered should account for household consumption, reserves, expected production, and economic necessity. Do not impose an absolute prohibition on selling needed food. Settlements must retain economic agency and may make unfavorable decisions when circumstances justify them. Use existing NPC economic decision mechanisms where applicable. Present any major new selling-policy rules for approval before implementing them.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -36062,6 +36062,37 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; owner_wording",
+     "why": "Owner answered 2026-10-23 (docs/directives/2026-10-23_regional_economy_decisions.md); any major new selling-policy rule comes back for approval"
+    }
+   ]
+  },
+  {
+   "id": "REG-BUY-P1",
+   "kind": "proposal",
+   "title": "Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them",
+   "description": "Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them",
+   "source": "docs/directives/2026-10-23_regional_economy_decisions.md",
+   "owner_wording": null,
+   "approval": "Agent proposal for the owner's approval (REG-BUY-D1: 'Present any major new selling-policy rules for approval before implementing them')",
+   "acceptance": [],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "PROPOSED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_decisions.md"
     }
    ]
   },
@@ -36072,8 +36103,8 @@
    "description": "Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome?",
    "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "DEFERRED. Do not artificially introduce finished goods or additional money circulation merely to prevent settlement decline. First complete the approved shared trading interface, reciprocal purchasing, couriers, and settlement demographics. Then evaluate whether the regional economy has genuine circulation failures.",
+   "disposition": "DEFERRED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -36087,6 +36118,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "disposition: OPEN -> DEFERRED; owner_answer",
+     "why": "Owner deferred 2026-10-23 (docs/directives/2026-10-23_regional_economy_decisions.md)"
     }
    ]
   },
@@ -36138,8 +36174,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -36152,10 +36188,85 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> demography worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-demography",
      "why": "Approved under SET-C-SIM; no open decision"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> settlement_life_test 54, regions_test 118, save_transfer_test 21, conservation_test 8 on merge 0b2b638 (0 failures); worker: run_tests 3591, economy_sim 30 days seed 1 no leaks; regions_sim 365 days seed 1: 261 -> 735 people, audit balanced at every sample, 14 ms a day; test_commit: None -> 0b2b638; commits + a837018; commits + 0b2b638; integrated_in + 18; known_defects + No housing or land limit on settlement births (REG-DEMO-D1); marriage only within a settlement until MIGRATE-18; remaining_work",
+     "why": "Demography worker finished (a837018); merged into wip/build18 at 0b2b638"
     }
    ],
    "assigned_worker": "demography worker (Sonnet subagent, started 2026-10-23)",
-   "branch": "wip/b18-demography"
+   "branch": "wip/b18-demography",
+   "tests": "settlement_life_test 54, regions_test 118, save_transfer_test 21, conservation_test 8 on merge 0b2b638 (0 failures); worker: run_tests 3591, economy_sim 30 days seed 1 no leaks; regions_sim 365 days seed 1: 261 -> 735 people, audit balanced at every sample, 14 ms a day",
+   "test_commit": "0b2b638",
+   "commits": [
+    "a837018",
+    "0b2b638"
+   ],
+   "integrated_in": [
+    "18"
+   ],
+   "known_defects": [
+    "No housing or land limit on settlement births (REG-DEMO-D1); marriage only within a settlement until MIGRATE-18"
+   ],
+   "remaining_work": "Conservation runs on 0b2b638 (running); owner answer REG-DEMO-D1; provisional choices recorded in DECISIONS.md"
+  },
+  {
+   "id": "REG-DEMO-D1",
+   "kind": "decision",
+   "title": "Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome?",
+   "description": "Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome?",
+   "source": "docs/investigations/2026-10-23_regional_economy.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "REG-DEMO-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/investigations/2026-10-23_regional_economy.md"
+    }
+   ]
+  },
+  {
+   "id": "REG-EVAL-01",
+   "kind": "approved",
+   "title": "After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence",
+   "description": "After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence",
+   "source": "docs/directives/2026-10-23_regional_economy_decisions.md",
+   "owner_wording": null,
+   "approval": "Owner 2026-10-23 (docs/directives/2026-10-23_regional_economy_decisions.md), REG-CIRC-D1 deferred",
+   "acceptance": [
+    "Report comparing the regional coin and population trends with the preserved baseline (docs/investigations/2026-10-23_regional_economy.md); genuine failures identified with evidence; no tuning of prices, starting money, wages or production"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [
+    "REG-PARTY-01",
+    "REG-BUY-01",
+    "REG-COURIER-01",
+    "REG-DEMO-01"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_decisions.md"
+    }
+   ]
   },
   {
    "id": "REG-INV-01",
@@ -36249,9 +36360,9 @@
    "title": "Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes.",
    "description": "Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes.",
    "source": "docs/directives/2026-10-23_regional_economy_investigation.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "REG-WAGE-D1: APPROVED. (docs/directives/2026-10-23_regional_economy_decisions.md)",
+   "owner_answer": "APPROVED. Merge the tested wage-reserve correction from wip/b18-wagefix into Build 18. The reserve exists to protect essential needs, not to prevent hungry worker households from receiving wages when their employer has available funds. Preserve conservation and the legitimate Higham trade deficit.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -36265,6 +36376,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; owner_wording",
+     "why": "Owner answered 2026-10-23 (docs/directives/2026-10-23_regional_economy_decisions.md)"
     }
    ]
   },
@@ -36616,6 +36732,34 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    }
+   ]
+  },
+  {
+   "id": "REL18-PACKAGE",
+   "kind": "approved",
+   "title": "Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds",
+   "description": "Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds",
+   "source": "docs/directives/2026-10-23_regional_economy_decisions.md",
+   "owner_wording": "Remember the Build 18 packaging gate: do not create a Build 18 test package until every item on its punch list is closed or explicitly accepted as permanently blocked. No early or partial builds.",
+   "approval": "Owner 2026-10-23 (docs/directives/2026-10-23_regional_economy_decisions.md)",
+   "acceptance": [
+    "No Build 18 APK, Windows or Linux package is produced while any Build 18 in-scope record is open, unless the owner has accepted it as permanently blocked"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_regional_economy_decisions.md"
     }
    ]
   },

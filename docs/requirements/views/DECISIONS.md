@@ -6,12 +6,12 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 41 |
-| APPROVED | 116 |
+| OPEN | 39 |
+| APPROVED | 118 |
 | PROVISIONAL | 3 |
 | SUPERSEDED | 2 |
 | REOPENED | 0 |
-| DEFERRED | 0 |
+| DEFERRED | 1 |
 
 ## Build 16: long-term equilibrium and validation: open, reopened or provisional (1)
 
@@ -19,7 +19,7 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | OPEN | no |  | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 
-## Build 18: combined release (tracks A, B, C): open, reopened or provisional (13)
+## Build 18: combined release (tracks A, B, C): open, reopened or provisional (11)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -30,9 +30,7 @@ The decision register is the `decision` records of the register. A recommendatio
 | CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | PROVISIONAL | no |  | expansion18/DECISIONS_PENDING.md on wip/build18; docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md |
-| REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | OPEN | no | REG-BUY-01 | docs/directives/2026-10-23_regional_economy_investigation.md |
-| REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | OPEN | no |  | docs/directives/2026-10-23_regional_economy_investigation.md |
-| REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | OPEN | no |  | docs/directives/2026-10-23_regional_economy_investigation.md |
+| REG-DEMO-D1 | Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome? | OPEN | no |  | docs/investigations/2026-10-23_regional_economy.md |
 | STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | OPEN | yes | STONE-02, STONE-03, STONE-04, X18-STONECUT | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items) |
 | STONE-D2 | Iron chisel wear and recipe (STONE-06) | OPEN | yes | STONE-02, STONE-06, X18-STONECUT | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items) |
 | X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | OPEN | no |  | expansion18/DESIGN.md on wip/build18 (owner questions: the fee coefficients and the small-agreement threshold need numbers) |

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 396 (202 of them still open) |
-| **Open entries now** (rules excluded) | | **379** |
+| Entries added since | | 400 (203 of them still open) |
+| **Open entries now** (rules excluded) | | **380** |
 | Open entries moved to another build | | 4 |
 
 ## Closed since the baseline (54)
@@ -86,7 +86,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (396)
+## Added since the baseline (400)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -372,13 +372,16 @@ None.
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) | decision | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | APPROVED | 18 |
 | REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | decision | OPEN | 18 |
-| REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | decision | OPEN | 18 |
+| REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | decision | APPROVED | 18 |
+| REG-BUY-P1 | Settlement food-selling policy (for REG-BUY-01), from the village's existing mechanisms: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less what their pantries hold and less the food its businesses expect to produce over those days (World.necessity and NPCBrain._sale_stock, local buyers first); (3) economic necessity: a food business whose till cannot pay its wages due may sell into the local claim up to that cash shortfall; prices stay the settlement's own floating prices, so scarcity raises them | proposal | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | decision | DEFERRED | 18 |
 | REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
+| REG-DEMO-D1 | Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome? | decision | OPEN | 18 |
+| REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
-| REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | decision | OPEN | 18 |
+| REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | decision | APPROVED | 18 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
@@ -386,6 +389,7 @@ None.
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
