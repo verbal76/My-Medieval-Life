@@ -30266,7 +30266,7 @@
     "Experience formula, facility caps, tenure rules and thresholds are presented to the owner before any is fixed; Build 17 unchanged"
    ],
    "implementation": "wip/expansion18-preparation 4ce9927: settlement/experience.gd (hours to experience days, caps, straight-line level, hours-weighted active-worker average as a report, no-active-workers), per-worker hook path prepared and off, optional save key x18_experience; tracking starts empty",
-   "tests": "experience 61 (17 new for D1), settlement 83, capability 72, world 339, conservation 8, run_tests 3544, start 499; 30-day seed 1 fingerprint 1c755f53 unchanged, no leaks",
+   "tests": "experience_test",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -30324,6 +30324,11 @@
      "date": "2026-10-22",
      "change": "commit 3de7a8f; tests; workstream",
      "why": "D1 implemented (3de7a8f): seeded once from recorded skills only where the person holds xp in the skill (unpractised level-1 skills give nothing - worker's reading of requirement 4, owner to confirm), farming by PAR-01A's tenure formula for farmers only, player none (PAR-01A), on new worlds and saves lacking the section, never overwriting (format mml-x18-experience/1 with seeded/start); seed 1: smiths 19.2 and 14.4 days, farmers levels 3-8. Next: owner D2 (facility limitations)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests",
+     "why": "readiness review wip/x18-readiness 0182466 (docs/expansion18/INTEGRATION_READINESS.md): experience recording complete and approved, experience_test 61/0; integrate into Build 18 after INV-18 (one npc_brain.gd conflict); effective-level use waits on D2, D3, D4, D9"
     }
    ],
    "target_build": "18"
@@ -30343,7 +30348,7 @@
     "Expansion 18 only; Build 17 unchanged; minimum validation after the full profile is approved and implemented"
    ],
    "implementation": "wip/expansion18-preparation b01e8f4: active profile 'approved' in settlement_industries.json; hooks for manor fields, household plots, pens, the player's farming and the harvest-hand wage; live hook OFF in the game until X18-CAPCOMP gives a real effective level",
-   "tests": "capability_test 72 (22 new: durations and pay at L0/5/10 for seven industries, farm sites, harvest wage 50->52, yield 100 wheat at L0 and L10, determinism), regional 71, settlement 83, farming 217, farm_plots 104, herd 19, world 339, conservation 8, run_tests 3544; economy_sim 30 days seed 1 hook off fingerprint 1c755f53 identical, forced L10 no leaks wheat unchanged",
+   "tests": "capability_test",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -30388,6 +30393,11 @@
      "date": "2026-10-22",
      "change": "workstream",
      "why": "Worker done"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests",
+     "why": "readiness review wip/x18-readiness 0182466 (docs/expansion18/INTEGRATION_READINESS.md): hook OFF by default, capability_test 72/0; integrate dormant; activation waits on D2, D4-D8"
     }
    ],
    "target_build": "18"
@@ -30447,7 +30457,7 @@
     "Payment and goods transfer correctly; no free transport; no currency created; smoke tests pass or the missing feature is named"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "courier_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -30472,6 +30482,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests",
+     "why": "readiness review wip/x18-readiness 0182466 (docs/expansion18/INTEGRATION_READINESS.md): couriers implemented but not wired, courier_test 44/0; not integrated yet: waits on Q18-14..16 and fee coefficients"
     }
    ],
    "target_build": "18"
@@ -30580,7 +30595,7 @@
     "Smoke tests pass or the missing feature is named; no remote instant signing anywhere"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "contract_sign_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -30605,6 +30620,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests",
+     "why": "readiness review wip/x18-readiness 0182466 (docs/expansion18/INTEGRATION_READINESS.md): formal contracts implemented but not wired, contract_sign_test 20/0; waits on Q18-14 and reconciliation with CON-01"
     }
    ],
    "target_build": "18"
