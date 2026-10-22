@@ -196,12 +196,14 @@ func _ready() -> void:
 					world.player.pos = shot_warp
 				_sync_levels(0.0)
 				follow_at = _in_view(world.player.pos * T)
-			"steps_ns", "steps_ew":
+			"steps_ns", "steps_ew", "steps_ns2", "steps_ew2":
 				# VIS-STEPS-01: steps cut through a rim, running north-south or east-west, drawn as the game draws them
-				var want := "_ns" if shot_panel == "steps_ns" else "_ew"
+				var want := "_ns" if shot_panel.begins_with("steps_ns") else "_ew"
+				var flip := shot_panel.ends_with("2")          # the other side: a way climbed north or west (ground at the south or east end)
+				var rise := Vector2i(0, -1) if want == "_ns" else Vector2i(1, 0)       # the climb's direction in the first panels
 				var o: Overworld = world.map.overworld
 				var found := false
-				for r in range(2, 9):
+				for r in range(2, 24):
 					for cy in range(-r, r + 1):
 						for cx in range(-r, r + 1):
 							if found or maxi(absi(cx), absi(cy)) != r:
@@ -213,11 +215,12 @@ func _ready() -> void:
 									continue
 								for d: Vector2i in Terrain.DIRS:
 									var sp := Terrain.span(o, c - d, d)
-									if not sp.is_empty() and str(sp.kind) == "steps" and not bool(sp.from_top) and Terrain.run_of(d) == want:
+									if not sp.is_empty() and str(sp.kind) == "steps" and not bool(sp.from_top) and Terrain.run_of(d) == want and d == (-rise if flip else rise) and (sp.cells as Array).size() >= 2 and _no_trees_near(o, c):
 										for rc: Vector2i in sp.cells:
 											o.note_work(rc, "steps" + want)
 											ow_view._draw_works(Overworld.chunk_of(rc))
-										world.player.pos = Vector2(c - d * 3) + Vector2(0.5, 0.5)
+										world.player.pos = Vector2(c - d * 2 + (Vector2i(0, -3) if want == "_ns" and d.y > 0 else Vector2i.ZERO)) + Vector2(0.5, 0.5)
+										print("steps shot at ", c, " climbing ", d, " cells ", sp.cells)
 										follow_at = _in_view(world.player.pos * T)
 										found = true
 										break
@@ -4764,6 +4767,15 @@ func _struct_shot(kind: String) -> void:
 	_sync_levels(0.0)
 	follow_at = _in_view(Vector2(focus) * T + Vector2(T, T) / 2.0)
 	camera.position = follow_at
+
+
+## VIS-STEPS-01 panel: no tree (or its canopy) within 4 cells of the way (more below it, where a canopy hangs over), so the steps are not hidden.
+func _no_trees_near(o: Overworld, c: Vector2i) -> bool:
+	for dy in range(-4, 9):
+		for dx in range(-5, 6):
+			if not o.tree_at(c + Vector2i(dx, dy)).is_empty():
+				return false
+	return true
 
 
 func _works_shot(cave: bool) -> void:

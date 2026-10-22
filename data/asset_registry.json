@@ -634,7 +634,9 @@
    ],
    "imported": [
     "assets/terrain/steps_ew.png",
+    "assets/terrain/steps_ew_mid.png",
     "assets/terrain/steps_ns.png",
+    "assets/terrain/steps_ns_mid.png",
     "assets/tiles/punyworld-overworld-tiles.png"
    ]
   },

@@ -93,7 +93,13 @@ def import_into(prov, record):
     for yy in range(13, 16):                    # the tile's last three rows are the grass below the stairs: left clear, so
         for xx in range(16):                    # a way two cells deep does not repeat a strip of grass
             stair.putpixel((xx, yy), (0, 0, 0, 0))
-    for run, tile, how in (("ns", stair, "the 16 x 16 stone cliff-stair tile at (%d, %d), 1:1, its bottom three rows (grass) made transparent" % (x, y)),
+    mid = stair.copy()                          # a cell with more steps below it: the last three rows go on with the treads (no seam)
+    for yy in range(13, 16):
+        for xx in range(16):
+            mid.putpixel((xx, yy), stair.getpixel((xx, yy - 4)))
+    for run, tile, how in (("ns_mid", mid, "the same tile at (%d, %d) with its bottom three rows continuing the treads, for a cell with steps below it" % (x, y)),
+                           ("ew_mid", mid.transpose(Image.ROTATE_90), "the same, turned a quarter, for a cell with steps beside it to the east"),
+                           ("ns", stair, "the 16 x 16 stone cliff-stair tile at (%d, %d), 1:1, its bottom three rows (grass) made transparent" % (x, y)),
                            ("ew", stair.transpose(Image.ROTATE_90), "the same tile at (%d, %d) turned a quarter, for steps running east-west" % (x, y))):
         dest = OUT / ("steps_%s.png" % run)
         tile.save(dest)
@@ -123,7 +129,7 @@ def import_into(prov, record):
 def main():
     prov_path = REPO / "game" / "assets" / "PROVENANCE.json"
     doc = json.loads(prov_path.read_text())
-    mine = {"assets/terrain/" + f for f in ["steps.png", "steps_ns.png", "steps_ew.png", "walkway_ns.png", "walkway_ew.png", "stairs_ns.png", "stairs_ew.png"]} | {"assets/icons/nails.png", "assets/icons/mallet.png"}
+    mine = {"assets/terrain/" + f for f in ["steps.png", "steps_ns.png", "steps_ew.png", "steps_ns_mid.png", "steps_ew_mid.png", "walkway_ns.png", "walkway_ew.png", "stairs_ns.png", "stairs_ew.png"]} | {"assets/icons/nails.png", "assets/icons/mallet.png"}
     prov = [e for e in doc["files"] if e["file"] not in mine]
 
     def record(dest, source, member, how):

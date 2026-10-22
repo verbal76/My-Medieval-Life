@@ -3201,6 +3201,20 @@
    "sha256": "891d24941af8f5a1c59b631b68cc2178748fe3c674eba53af2d4543e7d5f7cd4"
   },
   {
+   "file": "assets/terrain/steps_ns_mid.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
+   "transform": "the same tile at (96, 96) with its bottom three rows continuing the treads, for a cell with steps below it",
+   "sha256": "1fbb6fecea80b2c625897356ad8f4fb2486778404c0a9ce5a3cd5dbdae086c5b"
+  },
+  {
+   "file": "assets/terrain/steps_ew_mid.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
+   "transform": "the same, turned a quarter, for a cell with steps beside it to the east",
+   "sha256": "f62a3adae37ce68d4ae718014ebef192c2f9202058977a2af075c404025c5116"
+  },
+  {
    "file": "assets/terrain/steps_ns.png",
    "source": "PUNY_WORLD_v1.zip",
    "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
