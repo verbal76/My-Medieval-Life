@@ -18,7 +18,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Implementation blocked | 0 | 0 | 0 | 0 |
 | Integrated | 41 of 80 (51%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Automated tests passed (targeted or better) | 42 of 80 (52%) | 4 of 12 (33%) | 0 of 7 (0%) | 0 of 1 (0%) |
-| Integration verified (suite on the integrated build) | 39 of 80 (49%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
+| Integration verified (suite on the integrated build) | 40 of 80 (50%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Gameplay verified | 0 of 80 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Owner playtested | 0 of 80 (0%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
 | Complete | 1 of 80 (1%) | 0 of 12 (0%) | 0 of 7 (0%) | 0 of 1 (0%) |
