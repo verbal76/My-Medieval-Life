@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 383 (189 of them still open) |
-| **Open entries now** (rules excluded) | | **366** |
+| Entries added since | | 388 (194 of them still open) |
+| **Open entries now** (rules excluded) | | **371** |
 | Open entries moved to another build | | 4 |
 
 ## Closed since the baseline (54)
@@ -86,7 +86,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (383)
+## Added since the baseline (388)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -111,6 +111,11 @@ None.
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | decision | OPEN | 18 |
+| CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | decision | OPEN | 18 |
+| CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | decision | OPEN | 18 |
+| CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | decision | OPEN | 18 |
+| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | decision | OPEN | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
@@ -377,7 +382,7 @@ None.
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
-| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

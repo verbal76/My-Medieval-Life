@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 33 |
+| OPEN | 38 |
 | APPROVED | 116 |
 | PROVISIONAL | 3 |
 | SUPERSEDED | 2 |
@@ -19,10 +19,15 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | OPEN | no |  | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 
-## Build 18: combined release (tracks A, B, C): open, reopened or provisional (5)
+## Build 18: combined release (tracks A, B, C): open, reopened or provisional (10)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
+| CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
+| CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
+| CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
+| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 | Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | PROVISIONAL | no |  | expansion18/DECISIONS_PENDING.md on wip/build18; docs/directives/2026-10-23_owner_answers_q18_4_q18_8.md |
 | STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | OPEN | yes | STONE-02, STONE-03, STONE-04, X18-STONECUT | docs/directives/2026-10-22_msw01_outstanding_issues_x18_preparation.md; expansion18/DECISIONS_PENDING.md on wip/build18 (blocked items) |

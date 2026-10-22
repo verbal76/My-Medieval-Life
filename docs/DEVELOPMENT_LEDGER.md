@@ -454,7 +454,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | unassigned | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT APPLICABLE | OPEN |
-| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -646,7 +646,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (154)
+## Owner decisions (159)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -654,6 +654,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | 15 | SUPERSEDED |  |
+| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | 18 | OPEN |  |
+| CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | 18 | OPEN |  |
+| CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | 18 | OPEN |  |
+| CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | 18 | OPEN |  |
+| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | 18 | OPEN |  |
 | CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | owner decision | OPEN | yes |
 | CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | owner decision | APPROVED |  |
 | CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | owner decision | APPROVED |  |

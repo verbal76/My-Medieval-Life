@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23.
+**Updated:** 2026-10-23 (staging fast-forwarded to the reconciled register, REQ-CTRL-02).
 
 ## Read first (after a compaction or in a new session)
 
@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `83d3afc` (2026-10-23) | Build 18 integration; all 66 Godot suites and Python passed there |
+| `wip/build18` | `71b6285` (2026-10-23) | Build 18 integration; chapel merged (DVW-B3-CHAPEL); 67 Godot suites passed on the chapel code |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -38,19 +38,18 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| REQ-CTRL-02 | lead | `wip/requirements-control` | staging 7f45de4 | audit delivered (77a24e9, 3c86c05); waiting for the owner's go to fast-forward staging |
 | SET-C-SIM, SET-C-FIVE, ECON-P1.3 | regions worker (Sonnet subagent) | `wip/b18-regions` | `wip/build18` 83d3afc | uncommitted work at the reconciliation; settlements from the lore locations (`docs/directives/2026-10-23_lore_locations_basis.md`); merge onto `wip/build18` 71b6285 (chapel merged: watch `settlement/holdings.gd` "chapel" key and INT-225..227 numbering) |
 
 On their reports:
 1. Review the work.
 2. Merge it into `wip/build18`.
-3. Run the full suite on the merge commit.
+3. Run targeted integration and conservation checks on the merge commit (the suites the change touches, conservation runs); not broad suites without a specific reason (owner 2026-10-23, MSW-01). For the regions merge: the chapel and settlements share `settlement/holdings.gd` and the economy ledger.
 4. Update the records: INTEGRATED, `test_commit`.
 5. Regenerate the views.
 
 ## Next actions (lead)
 
-1. Merge the two workers above when they report.
+1. Merge the regions worker when it reports (the chapel is merged).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);
@@ -64,4 +63,5 @@ On their reports:
 Every open decision is in `docs/requirements/views/DECISIONS.md`. In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
+- chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
 - Builds 20 and 21 authorization.

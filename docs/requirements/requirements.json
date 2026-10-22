@@ -8021,6 +8021,126 @@
    "remaining_work": "owner playtest; phone layout and cost of the runtime sprite not checked on a device; Build 18 release gate"
   },
   {
+   "id": "CHAPEL-R1",
+   "kind": "decision",
+   "title": "Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.)",
+   "description": "Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.)",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R2",
+   "kind": "decision",
+   "title": "Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides.",
+   "description": "Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides.",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R3",
+   "kind": "decision",
+   "title": "Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)?",
+   "description": "Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)?",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R4",
+   "kind": "decision",
+   "title": "Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements?",
+   "description": "Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements?",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R5",
+   "kind": "decision",
+   "title": "Does the chapel need distinct artwork (steeple, sign) before the Build 18 release?",
+   "description": "Does the chapel need distinct artwork (steeple, sign) before the Build 18 release?",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
    "id": "CON-01",
    "title": "Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party)",
    "kind": "approved",
@@ -12247,6 +12367,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "Correct the remaining-work wording (stray quotes)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "Owner 2026-10-23 (docs/directives/2026-10-23_staging_ff_chapel_review.md): chapel matters flagged for later review; economic values provisional"
     }
    ],
    "target_build": "18",
@@ -12269,7 +12394,7 @@
     "Player cannot volunteer on the church plot",
     "Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed"
    ],
-   "remaining_work": "Gameplay and device check; wage, piety and seed numbers are provisional agent values in balance.json \"chapel\""
+   "remaining_work": "Gameplay and device check; owner review CHAPEL-R1..R5 (non-blocking); wage, piety, offering and seed numbers in balance.json \"chapel\" are provisional working values, not owner-approved balance"
   },
   {
    "id": "DVW-B3-FEAST",
@@ -36359,7 +36484,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -36378,11 +36503,19 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> tools/check_requirements.py (776 records, 0 problems; --against origin/staging 0); tests/test_requirements.py OK; requirements_migrate_v2.py --verify (775 rebuilt, 0 unexplained differences)",
      "why": "Audit, dry run and corrections done on wip/requirements-control; awaiting owner review of 30 build moves before integration into staging"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + staging",
+     "why": "Owner approved the staging fast-forward (docs/directives/2026-10-23_staging_ff_chapel_review.md); ancestry verified: staging 7f45de4 is an ancestor, no newer staging commits"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/requirements-control",
-   "tests": "tools/check_requirements.py (776 records, 0 problems; --against origin/staging 0); tests/test_requirements.py OK; requirements_migrate_v2.py --verify (775 rebuilt, 0 unexplained differences)"
+   "tests": "tools/check_requirements.py (776 records, 0 problems; --against origin/staging 0); tests/test_requirements.py OK; requirements_migrate_v2.py --verify (775 rebuilt, 0 unexplained differences)",
+   "integrated_in": [
+    "staging"
+   ]
   },
   {
    "id": "REQ-GRAVE",
