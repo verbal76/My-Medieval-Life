@@ -28531,7 +28531,7 @@
    "id": "X18-CAPNUM",
    "title": "Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "I approve the bounded capability model in Option A for mining, forestry, trade, tanning, carpentry, and smithing, using the proposed output and pay modifiers. ... For farming: Keep crop yield determined by the land ... Allow experience to reduce the labor time required for farming activities ... Do not implement the farming progression until I approve its numbers.",
    "description": "Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency",
    "source": "docs/directives/2026-10-22_q18_11a_conditional_decision.md",
@@ -28541,11 +28541,13 @@
     "Farming: crop yield from the land only; experience shortens farm labour time and raises farm pay per approved numbers; nothing created",
     "Expansion 18 only; Build 17 unchanged; minimum validation after the full profile is approved and implemented"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "wip/expansion18-preparation b01e8f4: active profile 'approved' in settlement_industries.json; hooks for manor fields, household plots, pens, the player's farming and the harvest-hand wage; live hook OFF in the game until X18-CAPCOMP gives a real effective level",
+   "tests": "capability_test 72 (22 new: durations and pay at L0/5/10 for seven industries, farm sites, harvest wage 50->52, yield 100 wheat at L0 and L10, determinism), regional 71, settlement 83, farming 217, farm_plots 104, herd 19, world 339, conservation 8, run_tests 3544; economy_sim 30 days seed 1 hook off fingerprint 1c755f53 identical, forced L10 no leaks wheat unchanged",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "b01e8f4"
+   ],
    "parent": "PROS-18",
    "depends_on": [
     "Q18-11A",
@@ -28555,9 +28557,9 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Switch the hook on at reconciliation with X18-CAPCOMP; then one SIM-01 run per required seed with a determinism pair. Open: whole-coin rounding of +4% on the 6-coin harvest wage; whether slaughter, clearing and fencing count as farm tasks",
    "priority": "",
-   "workstream": "wip/expansion18-preparation",
+   "workstream": "",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -28575,6 +28577,16 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "Farming F1 approved (docs/directives/2026-10-22_q18_11a_final_decision.md): work rate 0/2.5/4.4/5.9/7.0/7.8/8.5/9.1/9.5/9.8/10.0% and pay 0/1.0/1.8/2.4/2.8/3.1/3.4/3.6/3.8/3.9/4.0% at levels 0-10; mandatory rules: efficiency not yield; field productivity, growth, seed, animal production and conservation unchanged; durations from the effective level; pay only on paid farm labour, never crop prices; experience kept under facility limits; levels never block work; negotiated prices and contract terms never overridden, no mandatory wages. Implementation on the Expansion 18 branch by its worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit b01e8f4; tests; implementation; next_action",
+     "why": "Implemented on the Expansion 18 branch; hook off so the game is unchanged (identical fingerprint)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "workstream",
+     "why": "Worker done"
     }
    ],
    "target_build": "18"
