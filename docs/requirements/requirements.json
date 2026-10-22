@@ -14803,7 +14803,7 @@
    "acceptance": [
     "Owner decisions registered; no guessed policy"
    ],
-   "implementation": "wip/expansion20-preparation d82f173: docs/expansion20/LE00_ARCHITECTURE_AUDIT.md (read-only audit: today's economy by file::function, the five principles met/partly/not, integration and conflicts with Expansions 18 and 19, Build 17 findings as candidates, decision-to-stage map, proposed LE-01..07 sequence, risks)",
+   "implementation": "wip/expansion20-preparation d82f173: the read-only LE-00 architecture audit (expansion20/LE00_ARCHITECTURE_AUDIT.md on that branch): today's economy by file and function, the five principles met/partly/not, integration and conflicts with Expansions 18 and 19, Build 17 findings as candidates, decision-to-stage map, proposed LE-01..07 sequence, risks",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -14841,6 +14841,11 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit d82f173; implementation; workstream",
      "why": "LE-00 read-only architecture audit delivered; no code changed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation",
+     "why": "Path note: the audit lives on its branch"
     }
    ],
    "target_build": "20+",
