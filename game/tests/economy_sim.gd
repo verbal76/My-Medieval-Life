@@ -1113,6 +1113,15 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("manor work: %s" % JSON.stringify(s.manor_work))
 	print("contracts: %s" % JSON.stringify(_contracts_summary()))
 	print("couriers: %s" % JSON.stringify(_couriers_summary()))
+	var cr := {}                       # TRADE-CREDIT: barter and credit over the run, and the debts on record
+	for k in w.stats:
+		if str(k).begins_with("credit_") or str(k).begins_with("barter_"):
+			cr[str(k)] = int(w.stats[k])
+	var open_debts := 0
+	for d in w.credit.debts:
+		open_debts += 1 if Credit.standing(d) else 0
+	cr["standing_debts_now"] = open_debts
+	print("credit: %s" % JSON.stringify(cr))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
 	print("events: %s" % JSON.stringify(s.events))

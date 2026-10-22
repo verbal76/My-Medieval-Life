@@ -95,6 +95,7 @@ var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
 var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP part 1): hours worked by industry, a record only; optional save key
+var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
 var prospecting: Prospecting  # MIN-C: clues, samples and assays (scripts/core/prospecting.gd); clues generated from the seed, the rest saved in "prospecting"
@@ -122,6 +123,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	experience = WorkExperience.new()            # X18-CAPCOMP: seeded once below (owner D1), after PAR-01A
 	CapabilityHook.bind(experience)              # X18 HOOK ON (owner D1-D9, 2026-10-23): each worker's own level reads this record
 	contracts = Contracts.new(self)
+	credit = Credit.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -657,6 +659,7 @@ func give_start_kit(p: PlayerState) -> void:
 ## starting kit (owner rule); its coins are new to the village, counted in coin_sources.
 func continue_as_heir() -> void:
 	var p := player
+	credit.on_player_died()                # TRADE-CREDIT: the player's debts are written off
 	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
 	var bag := Inventory.new()
 	for id in p.inv.items:
@@ -2112,6 +2115,7 @@ func kill(n: NPC, cause: String) -> void:
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
 	var heir := _heir(n)
+	credit.on_death(n, heir if not cause.begins_with("slain") else null)     # TRADE-CREDIT: its debts pass to the heir, else are written off
 	if heir != null and not cause.begins_with("slain"):
 		_inherit(n, heir)
 	elif n.inv.total() > 0 or n.coins > 0:
@@ -3694,7 +3698,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 19          # Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 19          # Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -4058,7 +4062,7 @@ func to_dict() -> Dictionary:
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.debts.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -4077,6 +4081,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	experience = WorkExperience.new()
 	CapabilityHook.bind(experience)
 	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it is seeded once below (D1)
+	credit = Credit.new(self)
+	credit.load_dict(d.get("credit", {}))         # TRADE-CREDIT: saves before it have no debts
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	property = Property.new(self)
