@@ -1,7 +1,8 @@
 class_name AnimalSprite
 extends Sprite2D
 ## An animal sheet. Two layouts:
-##  - "cozy" (Cozy Farm): 4 frames x 5 rows of square frames: down, up, left, right, sleep;
+##  - "cozy" (Cozy Farm): 4 frames x 5 rows of square frames: down, up, left, right, sleep (imported with a 1 px
+##    transparent gutter round each frame, VIS-ANIMAL-01, so a frame never samples its neighbour);
 ##  - "puny" (Puny Monsters): 12 x 8 frames of 32 px, rows S, SE, E, NE, N, NW, W, SW; frames 0-3
 ##    are used as the walk (the sheet has no frame notes, so this choice is marked uncertain in
 ##    docs/BUILD_DECISIONS.md).

@@ -36,7 +36,7 @@ Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E
 SW), columns as listed in tools/puny_chargen.py ANIMS.
 
 Cozy Farm animal sheets are 4 frames x 5 rows (down, up, left, right, sleep), square frames of the size
-in the pack's info.txt; Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
+in the pack's info.txt, each given a 1 px transparent gutter (cells 2 px larger, VIS-ANIMAL-01); Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
 
 The flat UI pack is Illustrator files; they are rasterised with pdftoppm (poppler-utils), which
 must be installed.
@@ -117,6 +117,7 @@ PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
 PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
                                                                 "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"
+COZY_GUTTER = 1   # transparent px around each Cozy Farm animal frame (VIS-ANIMAL-01; see _gutter)
 # MiniFolks forest animals (B14, LYASeeK; a loose folder, the owner's .7z extracted byte for byte): skin -> the
 # outlined side-view sheet (32 px frames, the bird's 16 px; one row per animation, facing right)
 FOREST_DIR = "MiniFolks Forest Animals"
@@ -227,6 +228,24 @@ HATS = {
     "bandit": ["thief-bandana", "assassin-bandana", "rogue-hood"],
     "guard": ["soldier-helm", "knight-helm", "novice-helm"],
 }
+
+
+def _gutter(sheet, cols, rows, gutter):
+    """A copy of an unpadded frame grid with every frame centred in a cell 2 x `gutter` px larger. VIS-ANIMAL-01:
+    Cozy Farm's animal frames touch their cells' edges (feet on the bottom edge, noses and tails at the sides), so a
+    frame drawn at a fractional zoom or a snapped sub-pixel position could sample its neighbour's edge row: the
+    stray strips seen over pigs, sheep and chickens. With transparent gutters nothing of a neighbour is in reach.
+    The frames' pixels and their centres are unchanged, so AnimalSprite's grid counts and feet offset still hold."""
+    from PIL import Image
+    fw, fh = sheet.width // cols, sheet.height // rows
+    assert fw * cols == sheet.width and fh * rows == sheet.height, f"{sheet.size} is not a {cols} x {rows} grid"
+    sheet = sheet.convert("RGBA")
+    out = Image.new("RGBA", ((fw + 2 * gutter) * cols, (fh + 2 * gutter) * rows))
+    for r in range(rows):
+        for c in range(cols):
+            frame = sheet.crop((c * fw, r * fh, (c + 1) * fw, (r + 1) * fh))
+            out.paste(frame, (c * (fw + 2 * gutter) + gutter, r * (fh + 2 * gutter) + gutter))
+    return out
 
 
 def sha(path):
@@ -558,6 +577,12 @@ def main():
     animals.mkdir(parents=True, exist_ok=True)
     for species, (zname, member) in sorted(ANIMALS.items()):
         dest = animals / f"{species}.png"
+        if zname == COZY_ZIP:
+            sheet = _gutter(AssetZip(zname).image(member), 4, 5, COZY_GUTTER)
+            sheet.save(dest)
+            record(dest, zname, member, f"each frame of the 4 x 5 grid moved into a cell {2 * COZY_GUTTER} px larger, centred "
+                   f"({COZY_GUTTER} px of transparent gutter on every side), pixels unchanged")
+            continue
         dest.write_bytes(AssetZip(zname).read(member))
         record(dest, zname, member, "copied unchanged")
     for skin, name in sorted(FOREST.items()):
