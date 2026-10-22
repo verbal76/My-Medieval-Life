@@ -32462,10 +32462,10 @@
    "id": "X19-GUARD",
    "title": "A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine?",
-   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md",
    "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
    "acceptance": [
     "Owner decides"
@@ -32496,18 +32496,24 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Reduce, never waive: friendship may lower a guard's fine but never waives it"
   },
   {
    "id": "X19-HARMED",
    "title": "Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)?",
-   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md",
    "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
    "acceptance": [
     "Owner decides"
@@ -32538,18 +32544,24 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Keep instant: a victim's kin and friends lower their standing of the culprit immediately"
   },
   {
    "id": "X19-Q-TIMING",
    "title": "Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)?",
-   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md",
    "approval": "open owner question from PROS-19 round 3",
    "acceptance": [
     "Owner chooses"
@@ -32580,18 +32592,24 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Gossip spreads organically by contact and closeness, like a real rumour: each passing happens at the meeting itself (the scheduled model), weighted by how close the two are"
   },
   {
    "id": "X19-REGARD",
    "title": "Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard?",
-   "source": "docs/directives/2026-10-21_expansion19_sjd_final_decisions.md",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md",
    "approval": "open owner question raised by PROS-19 round 4 (1b05da0)",
    "acceptance": [
     "Owner decides"
@@ -32622,9 +32640,15 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer; source",
+     "why": "owner answered (2026-10-23)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Separate trust (believing what someone says) from regard (liking)"
   }
  ]
 }
