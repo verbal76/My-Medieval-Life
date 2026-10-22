@@ -376,7 +376,7 @@ None.
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

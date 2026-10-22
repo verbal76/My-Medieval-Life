@@ -36189,10 +36189,10 @@
    "target_build": "unassigned",
    "workstream": "project management",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "assigned_worker": "lead",
-   "branch": "wip/requirements-control",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "assigned_worker": "",
+   "branch": "",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT APPLICABLE",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -36202,8 +36202,22 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "this directive"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: lead -> ; branch: wip/requirements-control -> ; tests: None -> tools/check_requirements.py 0 problems (also --against origin/staging fd4990d, wip/build18, wip/build17, wip/expansion19-preparation, wip/expansion20-preparation); tests/test_requirements.py 22 OK; python3 -m unittest discover -s tests 108 OK; test_commit: None -> 1ac79f5; commits + 1ac79f5; integrated_in + staging/my-medieval-life 1ac79f5; remaining_work",
+     "why": "merged to staging 1ac79f5; validator 0 problems against staging, build18, build17, expansion19/20 registers; tests/test_requirements 22 OK; Python suite 108 OK; no game code changed"
     }
-   ]
+   ],
+   "tests": "tools/check_requirements.py 0 problems (also --against origin/staging fd4990d, wip/build18, wip/build17, wip/expansion19-preparation, wip/expansion20-preparation); tests/test_requirements.py 22 OK; python3 -m unittest discover -s tests 108 OK",
+   "test_commit": "1ac79f5",
+   "commits": [
+    "1ac79f5"
+   ],
+   "integrated_in": [
+    "staging/my-medieval-life 1ac79f5"
+   ],
+   "remaining_work": "owner review of the reconciliation's flagged items (RECONCILIATION_2026-10-23.md 'Needs review'); synchronize the build branches' copies at their next integration"
   },
   {
    "id": "REQ-GRAVE",

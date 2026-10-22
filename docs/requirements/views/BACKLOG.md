@@ -59,7 +59,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
-| REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | IN DEVELOPMENT |
+| REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | OWNER APPROVED | NOT STARTED |
 | WDR-018-C | Comply with World Design Rule 18: Protected Ecological Continuity | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | OWNER APPROVED | NOT STARTED |

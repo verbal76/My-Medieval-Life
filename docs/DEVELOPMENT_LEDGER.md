@@ -453,7 +453,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
-| REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT APPLICABLE | OPEN |
+| REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | unassigned | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT APPLICABLE | OPEN |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
