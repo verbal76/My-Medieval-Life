@@ -10,7 +10,7 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 242 (125 of them still open) |
+| Entries added since | | 244 (125 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **316** = 195 still open from the baseline + 125 added and open |
 | Open entries moved to another build | | 2 |
 
@@ -66,13 +66,14 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (242)
+## Added since the baseline (244)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | COMPLETE AND VERIFIED | 16 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | APPROVED — NOT STARTED | 18 |
+| ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | BLOCKED | owner decision |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
 | B16-READY | Build 16 development audit and release-readiness report | approved | ACTIVE DEVELOPMENT | 16 |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED | 18 |
@@ -163,8 +164,8 @@ None.
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | COMPLETE AND VERIFIED | 15 |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | COMPLETE AND VERIFIED | 15 |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | approved | ACTIVE DEVELOPMENT | 18 |
-| INV-Q1 | INV-18 borderline item classifications | decision | BLOCKED | owner decision |
-| INV-Q2 | INV-18 upgrade acquisition and cost | decision | BLOCKED | owner decision |
+| INV-Q1 | INV-18 borderline item classifications | decision | COMPLETE AND VERIFIED | owner decision |
+| INV-Q2 | INV-18 upgrade acquisition and cost | decision | COMPLETE AND VERIFIED | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | COMPLETE AND VERIFIED | 20+ |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | COMPLETE AND VERIFIED | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision |
@@ -272,6 +273,7 @@ None.
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | COMPLETE AND VERIFIED | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | approved | COMPLETE AND VERIFIED | 18 |
+| TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | ACTIVE DEVELOPMENT | 18 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | COMPLETE AND VERIFIED | 16 |

@@ -426,6 +426,48 @@
    "target_build": "18"
   },
   {
+   "id": "ARMOR-Q",
+   "title": "Armour scope: Option A (exact text to be presented)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": "Present the precise wording and implications of Option A before implementing any additional armor mechanics requiring owner approval.",
+   "description": "Armour scope: Option A (exact text to be presented)",
+   "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
+   "approval": "",
+   "acceptance": [
+    "Owner approves or rejects the stated Option A"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "ARMOR-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "target_build",
+     "why": "Option A restated with implications in the lead's report 2026-10-22"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "B12A-01",
    "title": "1-11 fixed (B13-01..10); 12 → B13-14",
    "kind": "approved",
@@ -14996,6 +15038,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream; notes",
      "why": "Phase A done (docs/build18/INV18_PLAN.md); implementation started on wip/b18-inventory; borderline classifications put to the owner"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "owner decisions docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md: capacity 9/18/27 (replaces 18/23/27), lockpick/padlock to Tools, other borderline items as recommended; worker re-scoped"
     }
    ],
    "target_build": "18"
@@ -15004,7 +15051,7 @@
    "id": "INV-Q1",
    "title": "INV-18 borderline item classifications",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Provide the owner with any genuine ambiguous classifications rather than silently inventing new item semantics.",
    "description": "INV-18 borderline item classifications",
    "source": "docs/build18/INV18_PLAN.md",
@@ -15038,15 +15085,21 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "presented with recommendations"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Rings and amulets: crafted goods and valuables; wheat: raw materials; raw meat: food and drink; seeds, saplings, cuttings: raw materials; herbal tonic: medicine and consumables; lockpicks and padlocks: TOOLS"
   },
   {
    "id": "INV-Q2",
    "title": "INV-18 upgrade acquisition and cost",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Do not invent these rules.",
    "description": "INV-18 upgrade acquisition and cost",
    "source": "docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md",
@@ -15080,9 +15133,15 @@
      "date": "2026-10-22",
      "change": "target_build",
      "why": "recorded; presented after INV-Q1"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md); supersedes 18/23/27"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Per category 3 rows x 9: start 9 (first row), upgrade 1 unlocks the whole second row (18), upgrade 2 the third (27), each global across all eight categories, two purchases only, persisted, not repeatable; sold by a tailor (TAILOR-18) at about 150 and 450 coins (provisional targets, checked against earning evidence)"
   },
   {
    "id": "JUICE-00",
@@ -27110,6 +27169,49 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 283ec55; commit e91d903; tests; implementation",
      "why": "Both expansions synced one way at cd7439c: Expansion 19 e91d903 (merge 93c107f), Expansion 18 283ec55; focused tests pass on both; nothing merged into Build 17; no Build 17 defects found"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "TAILOR-18",
+   "title": "Tailor: a village NPC service selling the two backpack upgrades",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "A real tailor shop selling meaningful backpack upgrades. Clothing customization belongs at the tailor.",
+   "description": "Tailor: a village NPC service selling the two backpack upgrades",
+   "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "A tailor exists in the village as a real NPC service provider; the player buys upgrade 1 then 2 there, coins move to the tailor, no repeat purchase, saved",
+    "No clothing production, wardrobe or garment chain invented; barber and armourer stay separate"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-inventory",
+   "commits": [],
+   "parent": "INV-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-inventory",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
+     "why": "assigned to the inventory worker after the capacity core (same files, one worker)"
     }
    ],
    "target_build": "18"
