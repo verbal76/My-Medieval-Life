@@ -5722,7 +5722,7 @@
    "id": "BARBER-01",
    "title": "Barber service: change hairstyle in the village through the economy",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Add a barber shop service that allows the player to change their hairstyle after character creation.",
    "description": "Barber service: change hairstyle in the village through the economy",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -5731,10 +5731,12 @@
     "A real barber, preview and confirm, persists; prices, wages and resource rules only as the owner approves"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "run_tests 3,586, play 39, start 506, inventory18 88, tailor_barber 24 ok, wiki, character_look, terrain 34: 0 failures, 0 script errors (isolated XDG dirs)",
    "playtest": [],
    "branch": "wip/b18-tailor",
-   "commits": [],
+   "commits": [
+    "534cf7c"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -5761,6 +5763,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream; target_build",
      "why": "BARBER-Q answered; same worker as the tailor (same files), on wip/b18-tailor"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 534cf7c; tests",
+     "why": "barber villager at a manor service pitch; hair style, beard and hair colour for 5 coins, coins conserved; look saved; merged into wip/build18"
     }
    ],
    "target_build": "18"
@@ -27355,7 +27362,7 @@
    "id": "TAILOR-18",
    "title": "Tailor: a village NPC service selling the two backpack upgrades",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "A real tailor shop selling meaningful backpack upgrades. Clothing customization belongs at the tailor.",
    "description": "Tailor: a village NPC service selling the two backpack upgrades",
    "source": "docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md",
@@ -27365,11 +27372,12 @@
     "No clothing production, wardrobe or garment chain invented; barber and armourer stay separate"
    ],
    "implementation": "",
-   "tests": "inventory18_test",
+   "tests": "run_tests 3,586, play 39, start 506, inventory18 88, tailor_barber 24 ok, wiki, character_look, terrain 34: 0 failures, 0 script errors (isolated XDG dirs)",
    "playtest": [],
    "branch": "wip/b18-tailor",
    "commits": [
-    "ba1369e"
+    "ba1369e",
+    "534cf7c"
    ],
    "parent": "INV-18",
    "depends_on": [],
@@ -27402,6 +27410,11 @@
      "date": "2026-10-22",
      "change": "PARTIALLY IMPLEMENTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "TAILOR-Q answered: add a tailor villager at a rented pitch; worker on wip/b18-tailor"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit 534cf7c; tests",
+     "why": "tailor villager added to every new world at a manor service pitch (rent-free like merchants' stalls); old saves open the place in the labour market; merged into wip/build18"
     }
    ],
    "target_build": "18"
