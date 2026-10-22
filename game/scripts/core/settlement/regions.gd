@@ -158,6 +158,21 @@ func seller_for(item: String, from: Array) -> OffMapSettlement:
 	return best
 
 
+## The trader, among `from`, who sells `item` food at the lowest price of its settlement (then the most stock, the nearer, by
+## id); null if none holds any. Settlements' food prices float, so the village's buyers take the cheapest on the road
+## (REG-BUY-01).
+func food_seller(item: String, from: Array) -> OffMapSettlement:
+	var best: OffMapSettlement = null
+	for s: OffMapSettlement in from:
+		if s.trader_has(item) <= 0:
+			continue
+		if best == null or s.food_price(item) < best.food_price(item) \
+				or (s.food_price(item) == best.food_price(item) and (s.trader_has(item) > best.trader_has(item)
+				or (s.trader_has(item) == best.trader_has(item) and s.miles < best.miles))):
+			best = s
+	return best
+
+
 ## The trader, among `from`, who takes one `item` at `unit` coins: its settlement still wants it and its till pays (the
 ## one that wants it most, then the nearer, then by id).
 func buyer_for(item: String, unit: int, from: Array) -> OffMapSettlement:

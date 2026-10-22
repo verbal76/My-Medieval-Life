@@ -601,6 +601,17 @@ code makes one, and `SettlementSave`'s `x18_settlements.regions` list of ledgers
 Not done (REG-COURIER-01 and the later task that wires the market in): calling `RegionalMarket` from the daily loop, and wiring the courier service into the game.
 Tests: `party_test.gd`, `regional_test.gd`, `courier_test.gd`, `contract_sign_test.gd`.
 
+
+### 12b. Food from the settlements to the village (REG-BUY-01, REG-BUY-P1)
+
+The traders carry food from their settlement's farms, herds and cookshop under the owner's approved policy: only food above the
+settlement's local claim (its households' need over `reserve_days`, less pantries, less expected production), plus, for a business
+with a demonstrated cash shortfall for wages and the inputs it lacks, food worth no more than that shortfall; at the settlement's
+own floating prices. The village's existing buyers (households with no food to be had here, the treasury's granary, the food
+trades) buy it on visit days. Detail and the mapping to the code: `docs/expansion18/SETTLEMENTS.md` section 4a, INT-290 and INT-291.
+This does not go through `SettlementParty`/`RegionalMarket` (the village is not one of the five); the party interface is for the
+trade between the settlements.
+
 ### Cost
 
 One settlement steps each game hour from six, so a frame carries a fifth of the work; measured costs are in `PROGRESS.md`.
