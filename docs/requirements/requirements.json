@@ -12978,7 +12978,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "**Yes** | No row | `balance.json:390-398` still 12%/6%/0% at one threshold each | NOT-STARTED | ",
-   "tests": "On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks",
+   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "playtest": [],
    "branch": "wip/b18-taxes",
    "commits": [
@@ -13021,6 +13021,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks; test_commit: None -> a77cce0; commits + a77cce0; commits + 724ffeb; integrated_in + 18; known_defects + The five settlements still use the single-threshold tax rule (offmap.gd _taxes_and_officials); SET-C-SIM requires the village's rules, so they are to use TaxPolicy too; known_defects + Announcements appear in the village log and wiki only (no tax panel exists); remaining_work",
      "why": "Tax worker finished (a77cce0); merged into wip/build18 at 724ffeb"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests: On a77cce0 (merged unchanged at 724ffeb): tax_test 23, run_tests 3591, treasury_test 23, save_transfer_test 21, conservation_test 8, 0 failures; wiki_test passed; Python unittest OK; check_interactions 240 / 0; economy_sim 30 days seed 1 no FATAL, no leaks -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation runs on the combined merge 840e0ed finished clean"
     }
    ],
    "acceptance_derived": true,
@@ -36435,7 +36440,7 @@
    ],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -36453,11 +36458,16 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks; test_commit: None -> 840e0ed; commits + 150f0b7; commits + 840e0ed; integrated_in + 18; known_defects + The player cannot buy food at the caravan wagon yet (parity with villagers, Q18-10); known_defects + Food flow is small: traders stock food only with coins above their trading capital (the existing trader rule); remaining_work",
      "why": "Buying worker finished (150f0b7); merged at 840e0ed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation runs on the combined merge 840e0ed finished clean"
     }
    ],
    "assigned_worker": "buying worker (Sonnet subagent, started 2026-10-23)",
    "branch": "wip/b18-buying",
-   "tests": "regional_food_test 47 and the merge suites (regional_food_test 47, tax_test 23, regions_test 118, party_test 102, luxury_test 219, courier tests, save_transfer_test 21, conservation_test 8, run_tests 3591, 0 failures); worker 30-day runs: seed 1 village bought 65 pottage, seed 2 none; no leaks",
+   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "test_commit": "840e0ed",
    "commits": [
     "150f0b7",
@@ -36521,7 +36531,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT APPLICABLE",
    "completion": "OPEN",
    "history": [
@@ -36544,9 +36554,14 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save); test_commit: None -> 840e0ed; commits + 150f0b7; commits + 840e0ed; integrated_in + 18",
      "why": "Implemented with REG-BUY-01 (offmap.gd food_claim_pts, cash_shortfall, stock_trader_food)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save) -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation runs on the combined merge 840e0ed finished clean"
     }
    ],
-   "tests": "regional_food_test 47 (claim, release, shortfall cap, floating prices, buyers, conservation, determinism, save)",
+   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "test_commit": "840e0ed",
    "commits": [
     "150f0b7",
@@ -36605,7 +36620,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -36628,12 +36643,17 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths); test_commit: None -> 840e0ed; commits + 5da89d8; commits + 840e0ed; integrated_in + 18; known_defects + Villagers never book a courier (no NPC decision path yet; X18-Q12-POST: same rules for NPCs); known_defects + Shop booths (Q18-15) and the courier-notary path (X18-Q13, LAW-SKILL) are not wired; courier window not yet looked at rendered; remaining_work",
      "why": "Courier worker finished (5da89d8); merged at 840e0ed"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths) -> economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
+     "why": "Conservation runs on the combined merge 840e0ed finished clean"
     }
    ],
    "remaining_work": "Completed under X18-Q12-BOOTH, X18-Q12-POST, X18-Q13 and LAW-SKILL; settlement carriage per Q18-10 (a willing carter, negotiated and paid) is approved, to be wired with them; 30-day conservation on 840e0ed running",
    "assigned_worker": "courier worker (Sonnet subagent, started 2026-10-23)",
    "branch": "wip/b18-couriers",
-   "tests": "courier_live_test 65, courier_test 45, contract_sign_test 21 and the merge suites on 840e0ed; worker 30-day runs seeds 1 and 2 no leaks (idle booths)",
+   "tests": "economy_sim 30 days on 840e0ed (taxes, buying, couriers merged): seed 1 114 alive, seed 2 122 alive, 0 starved, no FATAL, currency and item leaks 0",
    "test_commit": "840e0ed",
    "commits": [
     "5da89d8",
