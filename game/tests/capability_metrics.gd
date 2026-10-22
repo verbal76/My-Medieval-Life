@@ -2,7 +2,8 @@ extends RefCounted
 ## PROSPECTIVE (Expansion 18, X18-SIM; PROS-18): the capability-analysis switch and measurements for economy_sim.gd.
 ## Analysis only; changes nothing unless its arguments are given.
 ##   --capability L          force capability level L (0-10) on the implemented industries (CapabilityHook)
-##   --cap-profile NAME      the profile those levels read (UNAPPROVED candidates: conservative, moderate, aggressive, ...)
+##   --cap-profile NAME      the profile those levels read (default the active one, "approved", X18-CAPNUM; UNAPPROVED
+##                           candidates: conservative, moderate, aggressive, ...)
 ##   --cap-industries a,b    the industries forced (default: mining, forestry, farming, smithing, carpentry, tanning)
 ##   --cap-scenario NAME     a start-state change made with existing data and systems:
 ##        resource_poor   the village's seams and boulders hold 40% of their ore and stone; fields yield 2/3 (field_yield)

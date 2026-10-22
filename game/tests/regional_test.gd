@@ -235,8 +235,9 @@ func test_buyers_and_carriage() -> void:
 ## neutral (1.0), and an output multiplier never creates raw materials in an abstract settlement either: it speeds up
 ## work only where the work has a finite source (a deposit, recipe inputs).
 func test_levels_scale_never_gate() -> void:
-	check(SettlementIndustries.output_multiplier("farming", 0) == 1.0 and SettlementIndustries.pay_multiplier("smithing", 10) == 1.0,
-		"the active profile is neutral: every pay and output multiplier is 1.0 (Q18-11A open)")
+	check(SettlementIndustries.output_multiplier("farming", 0) == 1.0 and SettlementIndustries.active_profile() == "approved"
+		and absf(SettlementIndustries.pay_multiplier("smithing", 10) - 1.06) < 1e-9,
+		"the active profile is the owner's approved one (Q18-11A closed): level 0 is 1.0, smithing's pay at level 10 is 1.06")
 	var a := farm()
 	a.capabilities = {"farming": 0}
 	var b := farm()
@@ -245,7 +246,7 @@ func test_levels_scale_never_gate() -> void:
 		a.tick(day)
 		b.tick(day)
 	check(int(a.totals().produce.get("wheat", 0)) == 100 and a.totals().produce == b.totals().produce,
-		"at level 0 a settlement still produces, and with the active profile exactly as at level 10")
+		"at level 0 a settlement still produces, and with the approved profile a farming town at level 10 grows exactly as much (F1: work rate, never yield)")
 	# a candidate profile (analysis only): the crop is the land's, so farming's quantity does not rise
 	var c := farm()
 	c.profile = "owner_candidate"

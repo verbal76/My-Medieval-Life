@@ -10,8 +10,15 @@ extends RefCounted
 ##   ore from the seam, the inputs from the pack, the crop from the field: capability never creates a resource.
 ## pay(base, industry): an existing wage times PayMultiplier(industry, level), paid from the same purse by the same rule.
 ## Industries with no level forced keep their base. A forced level is on the 0-10 scale, so mining (MIN-D's own stage
-## scale, unmapped in the game) is forced like the others in analysis runs. Profiles come from settlement_industries.json; the game's active
-## profile is neutral and the analysis profiles are UNAPPROVED (Q18-11A).
+## scale, unmapped in the game) is forced like the others in analysis runs. Profiles come from settlement_industries.json;
+## the active profile is the owner's "approved" one (Q18-11A closed, X18-CAPNUM, 2026-10-22).
+## STAYS OFF IN THE GAME until the reconciliation (agent decision, X18-CAPNUM): the multipliers apply to the EFFECTIVE level
+## (Q18-11B), and no live 0-10 level exists until the owner approves how workforce and effective levels are composed
+## (X18-CAPCOMP); the settlement model's own levels are threshold steps (0-3), and reading them as 0-10 would invent a
+## rule. A forced level stands for both the workforce and the effective level (no facility cap is invented).
+## Farming (F1) is a work rate only: its hook sites shorten tilling, sowing, cutting, pen feeding and collecting (milk,
+## wool, eggs); the field, seed, growth, crop and animal produce are untouched (yield_fixed). Its pay applies to paid farm
+## labour at a game-set base rate (the harvest hand's wage, Quests.promised), never to crop prices or negotiated terms.
 
 static var forced := {}           # industry -> level 0..10 (analysis only); empty = off
 static var profile := ""          # the profile the forced levels read; "" = the active one (neutral)

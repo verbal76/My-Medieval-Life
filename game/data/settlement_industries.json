@@ -309,9 +309,9 @@
     }
   },
   "effects": {
-    "_note": "Owner Q18-9 and Q18-11 (2026-10-21, docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md and _expansion18_master_directive.md): capability levels 0-10 affect pay and production output only, never permission. AdjustedPay = BasePay x PayMultiplier(industry, level); AdjustedOutput = BaseOutput x OutputMultiplier(industry, level), the bases from the existing systems. OutputMultiplier is applied as less time per unit (faster work), never as more units from the same inputs: every unit still consumes its full recipe inputs or depletes its deposit (DESIGN.md section 9). Multiplier at level L = 1 + output_max[industry] x shape[L] for output, 1 + output_max[industry] x pay_ratio x shape[L] for pay. ACTIVE PROFILE = neutral (every multiplier 1.0). Every other profile is an UNAPPROVED candidate for analysis only (docs/expansion18/CAPABILITY_CURVES.md), selectable by tests and the analysis harness, never by the game: the numbers are the owner's to approve (Q18-11A); the composition of a level is Q18-11B.",
+    "_note": "Owner Q18-9 and Q18-11 (2026-10-21) and Q18-11A closed (2026-10-22, docs/directives/2026-10-22_q18_11a_conditional_decision.md and 2026-10-22_q18_11a_final_decision.md; X18-CAPNUM): capability levels 0-10 affect pay and production output only, never permission. AdjustedPay = BasePay x PayMultiplier(industry, level); AdjustedOutput = BaseOutput x OutputMultiplier(industry, level), the bases from the existing systems. OutputMultiplier is applied as less time per unit (faster work), never as more units from the same inputs: every unit still consumes its full recipe inputs or depletes its deposit (DESIGN.md section 9). Multiplier at level L = 1 + output_max[industry] x shape[L] for output, 1 + output_max[industry] x pay_ratio x shape[L] for pay. ACTIVE PROFILE = approved (the owner's numbers). The level is the EFFECTIVE level (Q18-11B, 2026-10-22); until the owner approves its composition (X18-CAPCOMP) there is no live 0-10 level in the game, so the live hook (CapabilityHook) stays off and only analysis runs force a level. Every other profile is an UNAPPROVED candidate or a SUPERSEDED hypothesis, kept for analysis and the record (docs/expansion18/CAPABILITY_CURVES.md, CAPABILITY_SIMULATIONS.md).",
     "max_level": 10,
-    "active_profile": "neutral",
+    "active_profile": "approved",
     "shapes": {
       "_note": "Share of the full bonus reached at each level 0..10 (0 = baseline). owner_candidate: the owner's example table (master directive section 5, production bonus / 20 percent). front_loaded: (1 - e^(-kL)) / (1 - e^(-10k)) with k = 0.3812, 80 percent of the gain by level 4 (the research's ~80 percent of the gain by ~40 percent of the span, RESEARCH_DIGEST.md (b)). intermediate: their mean.",
       "owner_candidate": [
@@ -356,7 +356,7 @@
     },
     "profiles": {
       "neutral": {
-        "label": "ACTIVE: no effect (every multiplier 1.0) until the owner approves numbers (Q18-11A)",
+        "label": "No effect (every multiplier 1.0): the baseline for comparisons; the game's active profile until 2026-10-22",
         "shape": "owner_candidate",
         "output_max": {},
         "pay_ratio": 0.0
@@ -468,7 +468,7 @@
         "pay_ratio": 0.428571
       },
       "revised_bounded": {
-        "label": "UNAPPROVED revised test hypothesis (X18-SIM, agent proposal): small output gains where the work draws on a finite natural source (mining +5%, forestry +5%), none on farming output (the crop is the land's; faster work only frees time), moderate gains in the crafts limited by their inputs (smithing +15%, carpentry +15%, tanning +10%); pay at 0.4 of output (research 0.33-0.45); front-loaded for the simple trades, the owner's shape for the crafts",
+        "label": "SUPERSEDED by `approved` (2026-10-22): the agent's revised hypothesis (X18-SIM). The owner approved its six non-farming industries as Option A and replaced its farming 0.0 by F1. Kept for the record of the X18-SIM runs. UNAPPROVED revised test hypothesis (X18-SIM, agent proposal): small output gains where the work draws on a finite natural source (mining +5%, forestry +5%), none on farming output (the crop is the land's; faster work only frees time), moderate gains in the crafts limited by their inputs (smithing +15%, carpentry +15%, tanning +10%); pay at 0.4 of output (research 0.33-0.45); front-loaded for the simple trades, the owner's shape for the crafts",
         "shape": {
           "mining": "front_loaded",
           "forestry": "front_loaded",
@@ -482,6 +482,28 @@
           "mining": 0.05,
           "forestry": 0.05,
           "farming": 0.0,
+          "trade": 0.1,
+          "tanning": 0.1,
+          "carpentry": 0.15,
+          "smithing": 0.15
+        },
+        "pay_ratio": 0.4
+      },
+      "approved": {
+        "label": "APPROVED (owner, 2026-10-22; Q18-11A closed; X18-CAPNUM): Option A for mining and forestry (+5% output, +2% pay at level 10, front-loaded), trade and tanning (+10%, +4%, intermediate), carpentry and smithing (+15%, +6%, the owner's shape); farming F1: +10% work rate and +4% pay on paid farm labour at level 10, intermediate (work rate 0/2.5/4.4/5.9/7.0/7.8/8.5/9.1/9.5/9.8/10.0%, pay 0/1.0/1.8/2.4/2.8/3.1/3.4/3.6/3.8/3.9/4.0%), labour time only, never yield (yield_fixed)",
+        "shape": {
+          "mining": "front_loaded",
+          "forestry": "front_loaded",
+          "farming": "intermediate",
+          "trade": "intermediate",
+          "tanning": "intermediate",
+          "carpentry": "owner_candidate",
+          "smithing": "owner_candidate"
+        },
+        "output_max": {
+          "mining": 0.05,
+          "forestry": 0.05,
+          "farming": 0.1,
           "trade": 0.1,
           "tanning": 0.1,
           "carpentry": 0.15,
@@ -528,7 +550,11 @@
         "leather"
       ],
       "trade": []
-    }
+    },
+    "yield_fixed": [
+      "farming"
+    ],
+    "_yield_fixed_note": "Owner Q18-11A F1 (2026-10-22): in these industries the multiplier is a WORK RATE only (labour time of tilling, sowing, cutting, pen feeding, milking, shearing); it never raises a production rate or yield: the crop is the land's, the animals' produce is theirs (SettlementLedger.tick applies 1.0 to their production)."
   },
   "transport": {
     "_note": "Route planning (TradeRoutes). Capacity in units of goods a trip; speed in tiles a day; a carter is paid the manor's day wage (balance helper_wage), so a route's cost is labour paid to the party that hauls, never coins destroyed. terrain: tiles of each kind cost this many tiles of travel (solid is impassable). Agent proposals, provisional.",

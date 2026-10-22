@@ -99,7 +99,9 @@ func tick(day: int) -> void:
 	for k in ids:
 		var ind := SettlementIndustries.industry_of(k)
 		var bounded: bool = reserves.has(k) or recipes.has(k)
-		var f := SettlementIndustries.output_multiplier(ind, int(capabilities.get(ind, 0)), profile) if bounded and ind != "" else 1.0
+		# a yield-fixed industry (farming, Q18-11A F1) works faster but never yields more: its production keeps factor 1.0
+		var f := SettlementIndustries.output_multiplier(ind, int(capabilities.get(ind, 0)), profile) \
+			if bounded and ind != "" and not SettlementIndustries.yield_fixed(ind) else 1.0
 		var n := _due(float(production[k]) * f, day)
 		if reserves.has(k):
 			n = mini(n, int(reserves[k]))

@@ -176,7 +176,9 @@ Decisions (verbatim in `docs/directives/2026-10-21_expansion18_decisions_q18_9_q
 production output only, never permission (Q18-9); every productive industry uses levels 0-10, 0 = baseline, never
 inability; AdjustedPay = BasePay x PayMultiplier(industry, level) and AdjustedOutput = BaseOutput x
 OutputMultiplier(industry, level), with the bases from the existing systems; diminishing returns; different industries
-may differ (Q18-11, structure APPROVED). The numbers (Q18-11A) are OPEN. **The composition of a level (Q18-11B) is
+may differ (Q18-11, structure APPROVED). **The numbers (Q18-11A) are APPROVED and closed (owner, 2026-10-22,
+`docs/directives/2026-10-22_q18_11a_conditional_decision.md` and `2026-10-22_q18_11a_final_decision.md`; X18-CAPNUM),
+implemented as the `approved` profile (section 9a).** **The composition of a level (Q18-11B) is
 APPROVED (owner, 2026-10-22, option 2, `docs/directives/2026-10-22_q18_11b_decision.md` on staging; X18-CAPCOMP):
 people's experience, capped by facilities.** Each industry keeps two values on 0-10: a *workforce* level (the relevant
 experience of the settlement's people) and an *effective* level (the workforce level within the limits of available,
@@ -187,14 +189,16 @@ rules and thresholds. Not implemented; Build 17 unchanged.
 
 - **Data** (`settlement_industries.json` `effects`): `max_level` 10; `shapes` (share of the full bonus at each level:
   `owner_candidate`, the owner's example table; `front_loaded`, 80% of the gain by level 4; `intermediate`, their mean);
-  `profiles` (`neutral`, ACTIVE, every multiplier 1.0; `owner_candidate`, `front_loaded`, `intermediate`,
-  `differentiated`, all labelled UNAPPROVED); each profile has `output_max` per industry, a `shape` (one, or one per
+  `profiles` (`approved`, ACTIVE, the owner's numbers; `neutral`, every multiplier 1.0, the comparison baseline;
+  `owner_candidate`, `front_loaded`, `intermediate`, `differentiated`, `conservative`, `moderate`, `aggressive`, labelled
+  UNAPPROVED; `revised_bounded`, labelled SUPERSEDED by `approved`); `yield_fixed` (industries whose multiplier is a work
+  rate only, never a production rate: farming); each profile has `output_max` per industry, a `shape` (one, or one per
   industry) and a `pay_ratio`. Output multiplier = 1 + output_max x shape[L]; pay multiplier = 1 + output_max x
   pay_ratio x shape[L]. `outputs` names the goods each industry's output multiplier speeds.
 - **Code**: `SettlementIndustries.pay_multiplier` / `output_multiplier(industry, level, profile = active)`; levels clamp to
   0-10; the validator refuses a defined level above 10 (the industries' defined levels so far stop at 3: what raises a
   level beyond is Q18-11B). Candidate profiles are selectable only by naming them (tests, `caravan_compare --profiles`);
-  the game reads the active one.
+  analysis runs read the active one unless they name another.
 - **Output safeguard** (`SettlementProductivity`): the output multiplier is less time per unit on the existing work
   times (mine_minutes, chop_minutes, recipe minutes, the farmers' field work). Every unit still takes its full recipe
   inputs, one unit of its seam, or one unit of the grown crop; at the end of the inputs, the seam or the crop a faster
@@ -209,9 +213,59 @@ rules and thresholds. Not implemented; Build 17 unchanged.
   pay multiplier never touches prices (`price_bonus` is the trading skill's).
 - **Mining**: its level is MIN-D's stage (1-4) read through the adapter; its multipliers stay 1.0 until the stage-to-0-10
   mapping is decided at the reconciliation (section 8, step 8).
-- Tests: `capability_test.gd` (levels 0-10, neutral active profile, the owner's table reproduced, pay and output separate,
+- Tests: `capability_test.gd` (levels 0-10, the approved profile active and its values, the owner's table reproduced, pay and output separate,
   industries differ, mining/smithing/carpentry/farming safeguards on real recipes and work times, carter pay conserved,
   no double counting, never blocks, determinism); `regional_test.gd` `test_levels_scale_never_gate`.
+
+## 9a. The approved capability modifier profile (X18-CAPNUM; owner Q18-11A closed 2026-10-22)
+
+| Industry | Shape | Output (work rate for farming) at L10 | Pay at L10 | Where the live hook reaches (X18 HOOK) |
+|---|---|---|---|---|
+| Mining | front-loaded | +5% | +2% | `NPCBrain.seam_steps` swing time; the manor's quarry wage. Unmapped in the game (MIN-D stages 1-4; section 8 step 8) |
+| Forestry | front-loaded | +5% | +2% | felling time (`npc_brain`, `construction`, `contracts`) |
+| Trade | intermediate | +10% | +4% | the regional model's carter fee (abstract); no live trade time |
+| Tanning | intermediate | +10% | +4% | workbench recipes on hides (`CapabilityHook.recipe_industry`) |
+| Carpentry | owner's shape | +15% | +6% | sawhorse recipes, the handcart; the manor's mending wage |
+| Smithing | owner's shape | +15% | +6% | forge and anvil recipes |
+| Farming (F1) | intermediate | +10% **work rate** | +4% | manor fields: cutting and sowing (`NPCBrain._farmer`); household plots: tilling, sowing, cutting (`FarmPlots._batch`); pens: feeding, collecting eggs, milk, wool (`NPCBrain._keeper`); the player's tilling, sowing and harvesting seconds (`Farming.plan`); pay: the harvest hand's wage (`Quests.promised`) |
+
+Pay = 0.4 x the output gain. Farming F1 levels 0-10: work rate 0/2.5/4.4/5.9/7.0/7.8/8.5/9.1/9.5/9.8/10.0%, pay
+0/1.0/1.8/2.4/2.8/3.1/3.4/3.6/3.8/3.9/4.0%: the `intermediate` shape times 10% (and 4%). At level 5 the shape gives
+7.853% (the table shows 7.8); every other level matches the table at 0.1 (tested within 0.06).
+
+The owner's mandatory rules and how they hold:
+1. **Efficiency, not yield.** Farming's multiplier only divides a task's minutes (`CapabilityHook.time`); every hooked
+   act ends in the existing rule that takes the crop from the field, the seed from the pack, the produce from the pen.
+   In the regional model farming is `yield_fixed`: its production keeps factor 1.0 (`SettlementLedger.tick`).
+2. **Field productivity, growth, seed, animal production, conservation unchanged.** No hook touches `field_yield`,
+   growth, `cell_yield`, seed rules, `daily_need`, pen products or breeding. Tested: the same harvest goods at levels 0
+   and 10; the same crop in the regional model.
+3. **Durations by the effective level.** The hook's level is the effective level. Slaughter, clearing ground and fencing
+   are not among the owner's listed tasks and keep their times.
+4. **Pay on paid farm labour only.** The one wage the game sets from a base rate for farm work is the harvest hand's
+   (`work_the_harvest`, 6 coins): `Quests.promised` takes `CapabilityHook.pay(wage, "farming")`, set aside and paid as
+   one amount. Grain prices are untouched (tested).
+5. **Experience kept under facility limits.** Until X18-CAPCOMP's numbers are approved the split is a concept only: one
+   level stands for both the workforce and the effective level, and no facility cap is invented.
+6. **Levels never prevent work.** No hook refuses or delays a task beyond the base time; level 0 is the base.
+7. **Negotiated prices and contracts untouched; no mandatory wages.** The hooks touch no negotiated price, no CON-01/02
+   term and no contract wage; they create no wage. Farmers selling their grain at the market price earn no modifier.
+
+**The live hook stays OFF in this branch's game (agent decision, X18-CAPNUM).** The modifiers read the effective 0-10
+level, and the live game has none: its composition (workforce from experience, effective from facilities) awaits the
+owner's numbers (X18-CAPCOMP, Q18-11B follow-up). The settlement model's current levels are threshold steps (0-3) of
+another meaning; reading them as 0-10 would invent a rule. So the game behaves exactly as Build 17 (`cd7439c`): the same
+fingerprint with the hook off (economy_sim seed 1, 30 days, before and after this change); analysis runs force a level
+(`economy_sim --capability L --cap-profile approved`). Switching it on is a reconciliation step once X18-CAPCOMP supplies
+the level, with a fresh determinism comparison.
+
+**Watch for the reconciliation: FARM-CROP-01 / FARM-08-Q-CROP (`wip/farm-cropshare` `132960a`, not in this baseline).**
+There a field's crop is split among its cutters in proportion to the minutes each cut (`Farming.split_crop`), the
+finisher's share from `args.min` (the planned cutting minutes) and the others' from the minutes worked. Faster cutting
+never creates or moves grain if, at the merge, `args.min` carries the hooked minutes (the same units as the others'
+worked minutes): the level is the settlement's, so every cutter's minutes scale by the same factor and the proportions,
+and `take_crop`'s total, are unchanged. The pen feed step that branch adds inside the harvest act (15 minutes) should take
+the same farming hook. Not merged here.
 
 ## 10. Regional purchasing and carriage (owner Q18-10, 2026-10-21)
 

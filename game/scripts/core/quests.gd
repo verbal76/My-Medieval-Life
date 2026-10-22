@@ -148,8 +148,13 @@ func _wants(n: NPC, t: Dictionary) -> bool:
 
 
 ## The coins a quest promises: the wage for work, else the reward.
+## X18 HOOK (Expansion 18, X18-CAPNUM farming F1): the harvest hand's wage is paid agricultural labour at a base rate the
+## game sets, so it takes CapabilityHook.pay (off in the game: exactly the template's wage). Set aside and paid as one
+## amount; never a crop price, a negotiated term or a new wage.
 static func promised(t: Dictionary) -> int:
-	return int(t.get("wage", 0)) if t.get("hire", false) else int(t.get("reward", 0))
+	if t.get("hire", false):
+		return CapabilityHook.pay(int(t.get("wage", 0)), "farming") if t.has("harvest") else int(t.get("wage", 0))
+	return int(t.get("reward", 0))
 
 
 ## Whether this giver can set the promised coins aside now, from their own purse.
@@ -309,7 +314,7 @@ func accept(n: NPC, hire := "") -> Dictionary:
 		offers.erase(n.id)
 	w.player.quests.append(q)
 	if hire != "":
-		w.note("%s %s hired %s %s for a day's work: %s, for %d coins." % [n.name, n.family, w.player.name, w.player.family, str(t.title).to_lower(), int(t.wage)])
+		w.note("%s %s hired %s %s for a day's work: %s, for %d coins." % [n.name, n.family, w.player.name, w.player.family, str(t.title).to_lower(), promised(t)])
 		w.stat("hired_jobs_taken")
 	else:
 		w.note("%s %s agreed to help %s %s: %s." % [w.player.name, w.player.family, n.name, n.family, str(t.title).to_lower()])
@@ -469,7 +474,8 @@ func line(q_or_t: Dictionary, key: String) -> String:
 	var need := []
 	for id in t.get("need", {}):
 		need.append("%d %s" % [int(t.need[id]), GameData.item_name(id).to_lower()])
-	s = s.replace("{need}", " and ".join(need)).replace("{wage}", NUMBER_WORDS[int(t.get("wage", 0))] if int(t.get("wage", 0)) < NUMBER_WORDS.size() else str(int(t.get("wage", 0))))
+	var wage := promised(t) if t.get("hire", false) else int(t.get("wage", 0))
+	s = s.replace("{need}", " and ".join(need)).replace("{wage}", NUMBER_WORDS[wage] if wage < NUMBER_WORDS.size() else str(wage))
 	var target: NPC = w.npc(int(q_or_t.get("target", -1))) if q_or_t.has("target") else null
 	if target == null and t.get("kill", "") == "robber":
 		var giver: NPC = w.npc(int(q_or_t.get("giver", -1)))

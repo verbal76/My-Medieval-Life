@@ -1460,7 +1460,8 @@ func _keeper(n: NPC) -> bool:
 	# the pen's eggs, milk and wool (Build 13): collected at the gate, then sold to the cook and the tanner
 	if not w.farm.products_in(pen).is_empty():
 		n.doing = "collecting from the %s" % GameData.b("animals")[pen.kind].name.to_lower()
-		n.plan = [go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))), work(10, "collect_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+		# X18 HOOK (X18-CAPNUM farming F1): off in the game (exactly 10); collecting eggs, milking, shearing: faster, the same products
+		n.plan = [go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))), work(CapabilityHook.time(10.0, "farming"), "collect_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 		return true
 	var sells := ["meat", "hide", "feather", "egg", "milk", "wool"].filter(func(i): return n.inv.has(i))
 	if not sells.is_empty():
@@ -1479,7 +1480,8 @@ func _keeper(n: NPC) -> bool:
 			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cut.id, "why": "famine"}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 			return true
 	if int(pen.trough) < need * 2:
-		var feed_step := work(15, "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
+		# X18 HOOK (X18-CAPNUM F1): off in the game (exactly 15); the same feed
+		var feed_step := work(CapabilityHook.time(15.0, "farming"), "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
 		n.doing = "feeding the %s" % GameData.b("animals")[pen.kind].name.to_lower()
 		if n.inv.has("wheat"):
 			n.plan = [go(at), feed_step]

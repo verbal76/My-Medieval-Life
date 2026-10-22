@@ -279,8 +279,10 @@ static func specialization(profiles: Dictionary) -> Dictionary:
 ## only, never permission. AdjustedPay = BasePay x pay_multiplier(industry, level); AdjustedOutput = BaseOutput x
 ## output_multiplier(industry, level), the bases from the existing systems (wages, recipe and work times). From the data's
 ## profiles (effects.profiles): multiplier = 1 + output_max[industry] x shape[level] (output), and 1 + output_max x pay_ratio
-## x shape[level] (pay). The game uses the ACTIVE profile, "neutral" (every multiplier 1.0) until the owner approves numbers
-## (Q18-11A); every other profile is an unapproved candidate, selectable only by passing its name (tests, analysis).
+## x shape[level] (pay). The ACTIVE profile is "approved", the owner's numbers (Q18-11A closed 2026-10-22, X18-CAPNUM);
+## "neutral" (every multiplier 1.0) is the comparison baseline; every other profile is an unapproved candidate or a
+## superseded hypothesis, selectable only by passing its name (tests, analysis). The level is the effective level
+## (Q18-11B); the live game has none on 0-10 until X18-CAPCOMP, so only analysis runs supply one (CapabilityHook).
 ## Nothing in the settlement model refuses or blocks an activity because of a level.
 static func max_level() -> int:
 	return int((data().get("effects", {}) as Dictionary).get("max_level", 10))
@@ -321,6 +323,12 @@ static func _bonus(industry: String, level: int, profile: String, pay: bool, on_
 	var shape: Array = (e.shapes as Dictionary)[shape_name]
 	var share := float(shape[clampi(level, 0, shape.size() - 1)])
 	return top * share * (float(p.get("pay_ratio", 0.0)) if pay else 1.0)
+
+
+## Whether an industry's output multiplier is a work rate only, never a production rate (owner Q18-11A F1, 2026-10-22:
+## farming experience shortens labour, the crop is the land's): effects.yield_fixed.
+static func yield_fixed(industry: String) -> bool:
+	return ((data().get("effects", {}) as Dictionary).get("yield_fixed", []) as Array).has(industry)
 
 
 ## Back-compatible names (Q18-9 round): the active profile's multipliers.
