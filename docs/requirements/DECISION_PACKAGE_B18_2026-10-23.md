@@ -202,5 +202,39 @@ saved world must not change, and new worlds may.
 4. **Alternative:** none.
 5. **Unblocks:** Q18-6.
 
-Not included, because it is not needed yet: Q18-11 (capability pay and output factors) waits for the X18-SIM report,
-which is running now.
+Q18-11 (capability pay and output factors) was held back until the X18-SIM report; it is now B18-DP-19 below.
+
+## Added after the Build 18 integration (2026-10-23)
+
+### B18-DP-17 · STONECUT-R1 The stonecutter under Rule 002 (blocks WDR-002-C closing)
+1. **Intent:** X18-STONECUT (approved): a professional stonecutter dresses and sells building blocks. WDR-002: every
+   profession depends on and supplies others; B18-DP-15 approved a documented, evidence-checked exception for the sage.
+2. **Issue:** the stonecutter's blocks (and rubble) are bought by the raw-goods merchant and built into houses and
+   workshops by households and the manor. The game has no builder trade, so the checker finds that the stonecutter
+   "supplies nobody", as it did for the sage.
+3. **Recommendation:** (A) the same treatment as the sage: a documented exception whose evidence the checker verifies
+   (the code path, a test showing a household or the manor building with blocks bought from the stonecutter's trade, and
+   the goods), with no global weakening. Effort S.
+4. **Alternatives:** (B) make the labourer the builder trade that buys blocks for the sites it builds, which the checker
+   would then count (a change to who buys construction materials; effort M); (C) leave the finding open and WDR-002-C
+   unfinished in Build 18.
+5. **Unblocks:** WDR-002-C closing.
+
+### B18-DP-18 · COMP-R1 The hiring-competition wage ceiling (non-blocking)
+1. **Intent:** B18-DP-08: employers short of labour may offer higher wages within the established wage system.
+2. **Issue:** the manor's offer for an unfilled hand's place rises 1 coin after 3 unfilled mornings, at most 3 coins over
+   the day wage (6 to 9), and eases back once filled. The ceiling and steps are provisional working values (no rule set
+   one). Construction helpers and business attendants have no unfilled-place signal, so they do not compete yet.
+3. **Recommendation:** keep the provisional values for Build 18 and revisit after playtesting; leave helpers and
+   attendants as they are (EMP-PERM-01, Build 20, covers employment terms).
+4. **Alternatives:** you set a different ceiling or tie it to local incomes; or extend the raise to helpers and attendants
+   now (effort M).
+5. **Unblocks:** nothing blocked; settles the provisional values.
+
+### B18-DP-19 · Q18-11 Capability pay and output factors (non-blocking)
+1. **Intent:** Q18-11: no permanent capability constants before your review of the simulations (X18-SIM).
+2. **Issue:** the X18-SIM report is in (`docs/expansion18/CAPABILITY_SIMULATIONS_90DAY.md` on `wip/build18`, merged at b196303) but covers 9 of about 46
+   planned runs; every factor is 1.0 (no effect) until you choose.
+3. **Recommendation:** ship Build 18 with every factor at 1.0 and decide after a fuller simulation set.
+4. **Alternative:** adopt the report's per-industry recommendation now, as provisional values.
+5. **Unblocks:** nothing blocked; Q18-11 stays PROVISIONAL either way.
