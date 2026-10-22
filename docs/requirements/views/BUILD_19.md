@@ -18,32 +18,27 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Open (release blockers) | 12 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## Open, partially implemented (3)
+## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
-| ID | Requirement | Design | Effort | Verification | Worker / branch | Remaining work | Decisions / depends on |
-|---|---|---|---|---|---|---|---|
-| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | PARTIAL | M | NOT TESTED |  | harms lower regard; gossip spreads deeds |  |
-| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | SPECIFIED | L | TARGETED TESTS PASSED | wip/expansion19-preparation | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) | after SJD-D |
-| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | UNKNOWN | UNKNOWN | NOT TESTED |  | GM-01 |  |
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Open, implemented on task branch (3)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (11)
 
-| ID | Requirement | Design | Effort | Verification | Worker / branch | Remaining work | Decisions / depends on |
-|---|---|---|---|---|---|---|---|
-| SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | SPECIFIED | XS | TARGETED TESTS PASSED | wip/expansion19-preparation |  | after SJD-A |
-| SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | SPECIFIED | M | TARGETED TESTS PASSED | wip/expansion19-preparation |  | after SJD-B |
-| SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | SPECIFIED | M | TARGETED TESTS PASSED | wip/expansion19-preparation |  | after SJD-C |
-
-## Open, not started (6)
-
-| ID | Requirement | Design | Effort | Verification | Worker / branch | Remaining work | Decisions / depends on |
-|---|---|---|---|---|---|---|---|
-| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | UNKNOWN | L | NOT TESTED |  |  |  |
-| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| GM-01 | Generational memory and historical consequences (the 30-planks chain) | UNKNOWN | L | NOT TESTED |  |  | after DVW-B1 |
-| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | SPECIFIED | XL | NOT TESTED |  |  | after SJD-E |
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | PARTIAL | L | NOT TESTED |  |  | X19-DECAY, after SJD-F |
-| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | SPECIFIED | XS | NOT TESTED |  |  | after SJD-G |
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
+| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | OWNER DECISION REQUIRED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | DVW-B1, design: UNKNOWN | L |
+| SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/expansion19-preparation | TARGETED TESTS PASSED |  | SJD-A | XS |
+| SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/expansion19-preparation | TARGETED TESTS PASSED |  | SJD-B | M |
+| SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/expansion19-preparation | TARGETED TESTS PASSED |  | SJD-C | M |
+| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) | SJD-D | L |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-E | XL |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X19-DECAY, SJD-F | L |
+| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-G | XS |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (1)
 

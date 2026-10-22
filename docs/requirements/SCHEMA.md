@@ -13,6 +13,8 @@ Owner directives: 2026-10-19 (requirements preservation) and 2026-10-23 (master 
   - A build or task branch carries a copy, synchronized from staging, and never edits it.
   - The pre-push hook refuses a push that changes the register on any other branch, unless the new copy is a version
     that already exists on staging.
+  - The one exception is `wip/requirements-control`, the isolated consolidation branch the owner required for
+    REQ-CTRL-02: register corrections are made and validated there, then staging is fast-forwarded to it.
 - **Generated, never edited:**
   - `docs/DEVELOPMENT_LEDGER.md` (every record);
   - `docs/requirements/views/STATUS.md` (scorecard for Builds 18–21);

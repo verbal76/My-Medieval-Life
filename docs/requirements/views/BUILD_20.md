@@ -18,17 +18,17 @@ Readiness: **NOT AUTHORIZED for implementation**
 | Open (release blockers) | 7 |
 | Open owner decisions (blocking) | 14 (14) |
 
-## Open, not started (7)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (7)
 
-| ID | Requirement | Design | Effort | Verification | Worker / branch | Remaining work | Decisions / depends on |
-|---|---|---|---|---|---|---|---|
-| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
-| LE-07 | Living Economy stage LE-07: Release readiness and platform builds | UNKNOWN | UNKNOWN | NOT TESTED |  |  |  |
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (14)
 

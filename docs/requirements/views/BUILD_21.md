@@ -18,11 +18,11 @@ Readiness: **NOT AUTHORIZED for implementation**
 | Open (release blockers) | 1 |
 | Open owner decisions (blocking) | 9 (9) |
 
-## Open, not started (1)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (1)
 
-| ID | Requirement | Design | Effort | Verification | Worker / branch | Remaining work | Decisions / depends on |
-|---|---|---|---|---|---|---|---|
-| VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | UNKNOWN | UNKNOWN | NOT TESTED | wip/expansion21-preparation |  | after GM-01, after DVW-B1 |
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | OWNER APPROVED | NOT STARTED | wip/expansion21-preparation | NOT TESTED |  | GM-01, DVW-B1, design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (9)
 

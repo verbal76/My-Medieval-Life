@@ -588,6 +588,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -601,7 +606,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "ARMOR-Q",
@@ -2677,7 +2683,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "implement the caravan's plough horse",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -2712,6 +2718,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + the caravan's wagon is a stand-in sprite (mine cart tile); remaining_work; next_action",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "acceptance_derived": true,
@@ -2728,7 +2739,11 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "known_defects": [
+    "the caravan's wagon is a stand-in sprite (mine cart tile)"
+   ],
+   "remaining_work": "owner playtest on a device; Build 18 release gate"
   },
   {
    "id": "B14-12",
@@ -5192,7 +5207,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "REQ-CTRL-02: code touched by 9c13794 (economy WIP); needs a human review of whether the merchants-at-zero issue is addressed",
    "history": [
     {
      "date": "2026-10-19",
@@ -5208,6 +5223,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> approval OWNER APPROVED; implementation IMPLEMENTATION BLOCKED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes",
+     "why": "REQ-CTRL-02 audit (code for records tracked as not started): 9c13794 integrated economy work in progress naming B7-014..B7-016 while this record is blocked; whether it addresses this record is unknown"
     }
    ],
    "acceptance_derived": true,
@@ -7626,6 +7646,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -7639,7 +7664,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "BARBER-01",
@@ -7707,6 +7733,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: aliases BARBER-18",
      "why": "docs/SYSTEM_INTERACTION_MANIFEST.md names it BARBER-18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -7723,7 +7754,8 @@
    "aliases": [
     "BARBER-18"
    ],
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "BARBER-Q",
@@ -7967,6 +7999,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -7980,7 +8017,128 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest; phone layout and cost of the runtime sprite not checked on a device; Build 18 release gate"
+  },
+  {
+   "id": "CHAPEL-R1",
+   "kind": "decision",
+   "title": "Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.)",
+   "description": "Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.)",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R2",
+   "kind": "decision",
+   "title": "Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides.",
+   "description": "Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides.",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R3",
+   "kind": "decision",
+   "title": "Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)?",
+   "description": "Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)?",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R4",
+   "kind": "decision",
+   "title": "Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements?",
+   "description": "Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements?",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-R5",
+   "kind": "decision",
+   "title": "Does the chapel need distinct artwork (steeple, sign) before the Build 18 release?",
+   "description": "Does the chapel need distinct artwork (steeple, sign) before the Build 18 release?",
+   "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "18",
+   "related": [
+    "DVW-B3-CHAPEL"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    }
+   ]
   },
   {
    "id": "CON-01",
@@ -8558,6 +8716,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -8572,7 +8735,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "CON02-S-1",
@@ -12140,10 +12304,13 @@
    "approval": "owner, 2026-10-23",
    "acceptance": "A chapel stands in the village with a preacher and an assistant (low-paid); villagers and the player give offerings; donations are spent first on food relief before any other relief source; the church has a small farm plot worked by volunteers or else the clergy, its crop going to relief; villagers in need ask at the church; coins and goods conserved; deterministic; wiki page",
    "implementation": "",
-   "tests": "",
+   "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge",
    "playtest": [],
    "branch": "wip/b18-chapel",
-   "commits": [],
+   "commits": [
+    "1b1b2f5",
+    "71b6285"
+   ],
    "parent": "DVW-B3",
    "depends_on": [],
    "blockers": [],
@@ -12190,20 +12357,44 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IN DEVELOPMENT; assigned_worker=chapel worker (Sonnet subagent, started 2026-10-23); branch=wip/b18-chapel",
      "why": "chapel worker started 2026-10-23 from wip/build18 83d3afc; uncommitted work in progress"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; test_commit: None -> 71b6285; commits + 1b1b2f5; commits + 71b6285; integrated_in + 18; known_defects + Chapel uses the plain house art (no steeple or sign); known_defects + Player cannot volunteer on the church plot; known_defects + Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed; remaining_work",
+     "why": "Chapel worker finished (1b1b2f5); merged into wip/build18 at 71b6285"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "Correct the remaining-work wording (stray quotes)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "Owner 2026-10-23 (docs/directives/2026-10-23_staging_ff_chapel_review.md): chapel matters flagged for later review; economic values provisional"
     }
    ],
    "target_build": "18",
    "owner_answer": "Priest + alms. Clergy: one preacher and one church assistant, paid low-wage professions. All donations to the chapel are the first funds used for food relief. The church has its own small farm plot; villagers can volunteer to farm it for the church, and when nobody volunteers the clergy work it themselves; the church's donations and crops are the first form of relief; villagers can go to the church and ask for help",
-   "integrated_in": [],
+   "integrated_in": [
+    "18"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "chapel worker (Sonnet subagent, started 2026-10-23)",
    "design": "SPECIFIED",
-   "effort": "L"
+   "effort": "L",
+   "test_commit": "71b6285",
+   "known_defects": [
+    "Chapel uses the plain house art (no steeple or sign)",
+    "Player cannot volunteer on the church plot",
+    "Old saves lose 22 wild plants on the chapel ground; hidden-ore layout shifts for every seed"
+   ],
+   "remaining_work": "Gameplay and device check; owner review CHAPEL-R1..R5 (non-blocking); wage, piety, offering and seed numbers in balance.json \"chapel\" are provisional working values, not owner-approved balance"
   },
   {
    "id": "DVW-B3-FEAST",
@@ -12617,6 +12808,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified); remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "acceptance_derived": true,
@@ -12634,7 +12830,11 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "known_defects": [
+    "Farming, Husbandry and Hunting train but give no gameplay effect yet (no perks were specified)"
+   ],
+   "remaining_work": "owner playtest; Build 18 release gate"
   },
   {
    "id": "DVW-B9",
@@ -12944,6 +13144,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IN DEVELOPMENT; assigned_worker=regions worker (Sonnet subagent, started 2026-10-23); branch=wip/b18-regions",
      "why": "regions worker started 2026-10-23 from wip/build18 83d3afc; uncommitted work in progress"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "REQ-CTRL-02 conflict review: the copies diverged (build line: proposal, 'APPROVED — NOT STARTED' by the owner's OD-01 of 2026-10-21, 'EXPANSION 18 OWNS THIS WORK'; staging: kind approved by the owner's answer of 2026-10-23, the caravan becomes the settlements' traders). Both are owner approvals for Build 18 and do not contradict: no owner review needed beyond the record"
     }
    ],
    "acceptance_derived": true,
@@ -16671,7 +16876,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Owner: authorize merging into Build 17 now, or carry it to the next build",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -16706,6 +16911,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work; next_action",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports; the Build 17 merge question was overtaken: merged into Build 18 (9cb011d)"
     }
    ],
    "target_build": "18",
@@ -16719,7 +16929,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate"
   },
   {
    "id": "FARM-CROP-SEED",
@@ -16777,6 +16988,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -16790,7 +17006,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "FR-01",
@@ -20778,6 +20995,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -20791,7 +21013,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "INV-Q1",
@@ -21974,6 +22197,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -21987,7 +22215,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "MEM-01",
@@ -27636,6 +27865,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: aliases WORLD-ORE-01",
      "why": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md names it WORLD-ORE-01"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -27652,7 +27886,8 @@
    "aliases": [
     "WORLD-ORE-01"
    ],
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest; the determinism gate must be re-recorded on Build 18 (REL18-DET) because clue placement changed"
   },
   {
    "id": "OVN-01",
@@ -31063,7 +31298,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "c132b31"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -31090,6 +31327,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> approval OWNER APPROVED; implementation IMPLEMENTATION BLOCKED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IMPLEMENTATION BLOCKED -> PARTIALLY IMPLEMENTED; commits + c132b31; remaining_work",
+     "why": "REQ-CTRL-02 audit (code for records tracked as not started): c132b31 implemented stage 1 (each save carries its world identity, for portable saves; start_test covers it); cloud saves (Google Drive) remain blocked on the owner"
     }
    ],
    "acceptance_derived": true,
@@ -31099,10 +31341,11 @@
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTATION BLOCKED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "remaining_work": "stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11)"
   },
   {
    "id": "PL1-12",
@@ -34878,6 +35121,11 @@
      "date": "2026-10-23",
      "change": "schema v2: UNKNOWN — INVESTIGATION REQUIRED -> approval OWNER DECISION REQUIRED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; remaining_work",
+     "why": "REQ-CTRL-02 audit (code for records tracked as not started): 2642887 records that the Android builds already target API 36; the policy's owner confirmation and the aapt2 check of a built APK are not recorded"
     }
    ],
    "target_build": "15",
@@ -34886,10 +35134,11 @@
    "integrated_in": [],
    "migrated_from_status": "UNKNOWN — INVESTIGATION REQUIRED",
    "approval_status": "OWNER DECISION REQUIRED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "remaining_work": "owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK"
   },
   {
    "id": "REC-004",
@@ -36220,6 +36469,55 @@
    "remaining_work": "owner review of the reconciliation's flagged items (RECONCILIATION_2026-10-23.md 'Needs review'); synchronize the build branches' copies at their next integration"
   },
   {
+   "id": "REQ-CTRL-02",
+   "kind": "approved",
+   "title": "Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status",
+   "description": "Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status",
+   "source": "docs/directives/2026-10-23_requirements_recovery_audit.md",
+   "owner_wording": null,
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Section 12 of the directive: reconciled register and evidence on an isolated branch, readable Build 18-21 reports, unresolved conflicts for owner review, branch and commit references, a recommended next integration step"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_requirements_recovery_audit.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
+     "why": "work on the isolated branch wip/requirements-control"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> tools/check_requirements.py (776 records, 0 problems; --against origin/staging 0); tests/test_requirements.py OK; requirements_migrate_v2.py --verify (775 rebuilt, 0 unexplained differences)",
+     "why": "Audit, dry run and corrections done on wip/requirements-control; awaiting owner review of 30 build moves before integration into staging"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + staging",
+     "why": "Owner approved the staging fast-forward (docs/directives/2026-10-23_staging_ff_chapel_review.md); ancestry verified: staging 7f45de4 is an ancestor, no newer staging commits"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/requirements-control",
+   "tests": "tools/check_requirements.py (776 records, 0 problems; --against origin/staging 0); tests/test_requirements.py OK; requirements_migrate_v2.py --verify (775 rebuilt, 0 unexplained differences)",
+   "integrated_in": [
+    "staging"
+   ]
+  },
+  {
    "id": "REQ-GRAVE",
    "title": "Graveyards, ancestry and NPC legacy",
    "kind": "approved",
@@ -36453,6 +36751,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + no doorway on a house's east wall (furniture) or between rooms stacked north-south; known_defects + the old-world (legacy plots) view is untested by screenshot; remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -36466,7 +36769,12 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "known_defects": [
+    "no doorway on a house's east wall (furniture) or between rooms stacked north-south",
+    "the old-world (legacy plots) view is untested by screenshot"
+   ],
+   "remaining_work": "owner playtest on a device; Build 18 release gate"
   },
   {
    "id": "SAVE-00",
@@ -39629,6 +39937,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -39642,7 +39955,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "STALL-01",
@@ -40457,6 +40771,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=INTEGRATED; integrated_in=…; commits=…; verification_status=INTEGRATION VERIFIED; test_commit=83d3afc; tests=trade_skills_test 96/0; all 66 Godot suites (exit 0, 0 SCRIPT ERROR, 0 FAIL) and the Python suite at wip/build18 83d3afc, run by the lead 2026-10-23; related=…; playtest=…",
      "why": "the owner's Q18-1 answer added 'Masonry (stoneworking)' as a skill of its own; Masonry governs dress_stone (72e6c3e, trade_skills_test 96/0), so this requirement is met by SKILL-TRADES-18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -40473,7 +40792,8 @@
    "related": [
     "SKILL-TRADES-18"
    ],
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "STONE-06",
@@ -40939,6 +41259,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -40952,7 +41277,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "TAILOR-Q",
@@ -41447,6 +41773,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -41460,7 +41791,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "TRADE-CREDIT",
@@ -41570,6 +41902,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -41583,7 +41920,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "TREAS-01",
@@ -41729,6 +42067,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -41742,7 +42085,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "UI-HUNGER-01",
@@ -41805,6 +42149,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -41818,7 +42167,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "UI-PROGRESS-01",
@@ -41881,6 +42231,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -41894,7 +42249,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "UI-WIKI-01",
@@ -41957,6 +42313,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -41970,7 +42331,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "VIS-ANIMAL-01",
@@ -42033,6 +42395,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -42046,7 +42413,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "VIS-AXE-01",
@@ -42105,6 +42473,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -42118,7 +42491,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "VIS-CROP-01",
@@ -42181,6 +42555,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -42194,7 +42573,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "VIS-DOOR-01",
@@ -42257,6 +42637,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -42270,7 +42655,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "VIS-STEPS-01",
@@ -42339,6 +42725,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + a thin seam at one join between two step cells (north-south, ground to the north); remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -42352,7 +42743,11 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "known_defects": [
+    "a thin seam at one join between two step cells (north-south, ground to the north)"
+   ],
+   "remaining_work": "owner playtest on a device; Build 18 release gate"
   },
   {
    "id": "VIS-TREE-02",
@@ -42411,6 +42806,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -42424,7 +42824,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "VP-01",
@@ -45134,6 +45535,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "known_defects + countryside animals are ambient only: they cannot be hunted; known_defects + travellers stop at the village gate; remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -45148,7 +45554,12 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "known_defects": [
+    "countryside animals are ambient only: they cannot be hunted",
+    "travellers stop at the village gate"
+   ],
+   "remaining_work": "owner playtest on a device (performance on a phone); Build 18 release gate"
   },
   {
    "id": "WR-01",
@@ -45395,6 +45806,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -45408,7 +45824,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
    "id": "X18-CAPNUM",
@@ -45491,6 +45908,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: verification INTEGRATION VERIFIED (test_commit 83d3afc); owner playtest outstanding",
      "why": "the full automated suite passed on the integrated build; no device or owner playtest recorded"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
     }
    ],
    "target_build": "18",
@@ -45504,7 +45926,8 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
-   "design": "SPECIFIED"
+   "design": "SPECIFIED",
+   "remaining_work": "final percentages after X18-SIM (Q18-11); MIN-D mining stages mapped to 0-10 (reconciliation item); owner playtest"
   },
   {
    "id": "X18-D1",
@@ -46259,7 +46682,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "dad51a5"
+   ],
    "parent": "PROS-18",
    "depends_on": [],
    "blockers": [],
@@ -46291,18 +46716,26 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=READY",
      "why": "no simulation campaign has been run; no worker"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: READY -> PARTIALLY IMPLEMENTED; commits + dad51a5; integrated_in + Build 18 wip/build18; remaining_work",
+     "why": "REQ-CTRL-02 audit (code for records tracked as not started): dad51a5 added the X18-SIM capability switch to the production systems (on wip/build18); the comparative campaign itself has not been run"
     }
    ],
    "target_build": "18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18"
+   ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "remaining_work": "run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11)"
   },
   {
    "id": "X18-STONECUT",

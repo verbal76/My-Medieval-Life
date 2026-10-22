@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 382 (188 of them still open) |
-| **Open entries now** (rules excluded) | | **365** |
+| Entries added since | | 388 (194 of them still open) |
+| **Open entries now** (rules excluded) | | **371** |
 | Open entries moved to another build | | 4 |
 
 ## Closed since the baseline (54)
@@ -86,7 +86,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (382)
+## Added since the baseline (388)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -111,6 +111,11 @@ None.
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | decision | OPEN | 18 |
+| CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | decision | OPEN | 18 |
+| CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | decision | OPEN | 18 |
+| CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | decision | OPEN | 18 |
+| CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | decision | OPEN | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
@@ -131,7 +136,7 @@ None.
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
-| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
@@ -377,6 +382,7 @@ None.
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
+| REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
@@ -463,7 +469,7 @@ None.
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
-| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | READY / NOT TESTED / OPEN | 18 |
+| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | APPROVED | 19 |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | APPROVED | 19 |

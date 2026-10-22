@@ -12,7 +12,9 @@ verification and release dimensions; owner decisions with a disposition), applie
 Kept so the reconciliation can be re-run and checked against the same branch heads; not part of normal work (the
 register is maintained with tools/requirements_update.py from now on).
 
-    python3 tools/requirements_migrate_v2.py            # writes both files
+    python3 tools/requirements_migrate_v2.py            # writes both files (the 2026-10-23 run)
+    python3 tools/requirements_migrate_v2.py --verify   # dry run: rebuild from the pinned source copies recorded in
+                                                        # the ledger, write nothing, compare with the canonical register
 """
 import json
 import subprocess
@@ -85,9 +87,13 @@ def merge_variants(vs):
     return best, action, reason
 
 
-def main():
-    cp = copies()
-    staging_blob = git("rev-parse", "origin/staging/my-medieval-life:" + REG).stdout.strip()
+def main(verify=False):
+    if verify:
+        led = json.loads((REPO / "docs/requirements/reconciliation_2026-10-23.json").read_text())
+        cp, staging_blob = led["copies"], led["staging_blob"]
+    else:
+        cp = copies()
+        staging_blob = git("rev-parse", "origin/staging/my-medieval-life:" + REG).stdout.strip()
     var = defaultdict(list)
     for blob, branches in cp.items():
         d = json.loads(git("cat-file", "-p", blob).stdout)
@@ -123,6 +129,8 @@ def main():
     for n in notes:
         ledger.append(n)
     d["requirements"].sort(key=lambda r: r["id"])
+    if verify:
+        return d, ledger
     (REPO / REG).write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n")
     (REPO / "docs/requirements/reconciliation_2026-10-23.json").write_text(json.dumps(
         {"format": "mml-reconciliation/1", "date": DATE, "copies": {b: sorted(v) for b, v in cp.items()},
@@ -179,5 +187,34 @@ def summary_md(cp, ledger, d):
     return "\n".join(L) + "\n"
 
 
+def verify():
+    """Dry run against the canonical register: the rebuilt register must equal it record for record, except for
+    history lines the lead added after the migration (later work recorded with requirements_update.py)."""
+    d, ledger = main(verify=True)
+    canon = {r["id"]: r for r in json.loads((REPO / REG).read_text())["requirements"]}
+    rebuilt = {r["id"]: r for r in d["requirements"]}
+    report = {"rebuilt": len(rebuilt), "canonical": len(canon), "only_rebuilt": sorted(set(rebuilt) - set(canon)),
+              "only_canonical": sorted(set(canon) - set(rebuilt)), "identical": 0, "changed_after_migration": [], "differs": []}
+    for rid, r in rebuilt.items():
+        c = canon.get(rid)
+        if c is None:
+            continue
+        if json.dumps(r, sort_keys=True) == json.dumps(c, sort_keys=True):
+            report["identical"] += 1
+            continue
+        n = len(r["history"])
+        if c["history"][:n] == r["history"] and len(c["history"]) > n:
+            report["changed_after_migration"].append(rid)
+        else:
+            report["differs"].append(rid)
+    ids = [r["id"] for r in d["requirements"]]
+    report["duplicate_ids_in_rebuild"] = sorted({i for i in ids if ids.count(i) > 1})
+    return report
+
+
 if __name__ == "__main__":
+    if "--verify" in sys.argv:
+        rep = verify()
+        print(json.dumps(rep, indent=1))
+        sys.exit(1 if rep["differs"] or rep["only_rebuilt"] or rep["only_canonical"] or rep["duplicate_ids_in_rebuild"] else 0)
     main()

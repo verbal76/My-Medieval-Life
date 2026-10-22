@@ -2,11 +2,10 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (8)
+## Workers and task branches (7)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| DVW-B3-CHAPEL | 18 | IN DEVELOPMENT | chapel worker (Sonnet subagent, started 2026-10-23) | wip/b18-chapel |
 | ECON-P1.3 | 18 | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) | wip/b18-regions |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | SET-C-FIVE | 18 | IN DEVELOPMENT | regions worker (Sonnet subagent, started 2026-10-23) | wip/b18-regions |
@@ -15,7 +14,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 
-## Implemented but not tested (49)
+## Implemented but not tested (52)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -42,12 +41,14 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | PERF-01 | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | PL1-07 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL1-10 | 18 | PARTIALLY IMPLEMENTED |  |
+| PL1-11 | owner decision | PARTIALLY IMPLEMENTED | stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11) |
 | PL1-13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-008 | 18 | PARTIALLY IMPLEMENTED |  |
 | PL2-010 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-013 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-014 | 18 | PARTIALLY IMPLEMENTED |  |
 | PL2-015 | 18 | PARTIALLY IMPLEMENTED |  |
+| REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
 | SET-A | 18 | PARTIALLY IMPLEMENTED | close-out against the specification's acceptance criteria |
 | SET-B | 18 | PARTIALLY IMPLEMENTED | close-out against the specification's acceptance criteria |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | lands with SET-C-SIM and SET-C-FIVE |
@@ -68,6 +69,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X18-Q12-BOOTH | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
 | X18-Q12-POST | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
 | X18-Q13 | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
+| X18-SIM | 18 | PARTIALLY IMPLEMENTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |
 
 ## Awaiting owner playtest or device check (51)
 
