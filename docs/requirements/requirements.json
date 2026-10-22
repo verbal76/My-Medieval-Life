@@ -12630,7 +12630,7 @@
    "implementation": "**Yes** | No row | `balance.json:390-398` still 12%/6%/0% at one threshold each | NOT-STARTED | ",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-taxes",
    "commits": [],
    "parent": null,
    "depends_on": [],
@@ -12658,6 +12658,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> tax worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-taxes",
+     "why": "Approved, specified, unblocked; Build 18 five-hour push (owner 2026-10-23)"
     }
    ],
    "acceptance_derived": true,
@@ -12667,12 +12672,13 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "assigned_worker": "tax worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "DVW-B6",
@@ -36233,6 +36239,11 @@
      "date": "2026-10-22",
      "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: settlement_life_test 54, regions_test 118, save_transfer_test 21, conservation_test 8 on merge 0b2b638 (0 failures); worker: run_tests 3591, economy_sim 30 days seed 1 no leaks; regions_sim 365 days seed 1: 261 -> 735 people, audit balanced at every sample, 14 ms a day -> settlement_life_test 54, regions_test 118, save_transfer_test 21, conservation_test 8 on merge 0b2b638; run_tests 3591 / 0 on 0b2b638; economy_sim 30 days on 0b2b638 (with the wage correction): seed 1 114 alive, seed 2 117 alive, 0 starved, no FATAL, currency and item leaks 0; regions_sim 365 days seed 1: 261 -> 735 people, audit balanced at every sample; remaining_work",
      "why": "Conservation runs on 0b2b638 finished clean"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "remaining_work",
+     "why": "REG-DEMO-D1 answered: no cap"
     }
    ],
    "assigned_worker": "demography worker (Sonnet subagent, started 2026-10-23)",
@@ -36249,7 +36260,7 @@
    "known_defects": [
     "No housing or land limit on settlement births (REG-DEMO-D1); marriage only within a settlement until MIGRATE-18"
    ],
-   "remaining_work": "Owner answer REG-DEMO-D1 (settlement population limit); provisional choices recorded in DECISIONS.md; gameplay check"
+   "remaining_work": "Gameplay check; provisional choices recorded in DECISIONS.md; no population cap (REG-DEMO-D1, owner)"
   },
   {
    "id": "REG-DEMO-D1",
@@ -36257,9 +36268,9 @@
    "title": "Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome?",
    "description": "Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome?",
    "source": "docs/investigations/2026-10-23_regional_economy.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "REG-DEMO-D1 (docs/directives/2026-10-23_reg_demo_d1_and_build18_target.md)",
+   "owner_answer": "Do not impose an arbitrary population cap on the five settlements. Their populations should grow or decline according to the existing demographic and economic rules, including births, deaths, food, housing, employment, and migration as those systems become available. Use the approved lightweight off-map simulation. Preserve determinism and reasonable performance. Do not invent new population-balancing mechanics or change existing demographic rates. This is clarification of the approved settlement simulation, not an expansion of Build 18.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -36272,6 +36283,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/investigations/2026-10-23_regional_economy.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; owner_wording",
+     "why": "Owner answered 2026-10-23 (docs/directives/2026-10-23_reg_demo_d1_and_build18_target.md)"
     }
    ]
   },
@@ -47261,7 +47277,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/b18-capsim",
    "commits": [
     "dad51a5"
    ],
@@ -47301,6 +47317,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: READY -> PARTIALLY IMPLEMENTED; commits + dad51a5; integrated_in + Build 18 wip/build18; remaining_work",
      "why": "REQ-CTRL-02 audit (code for records tracked as not started): dad51a5 added the X18-SIM capability switch to the production systems (on wip/build18); the comparative campaign itself has not been run"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> capability-sim worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-capsim",
+     "why": "Approved, specified, unblocked; analysis only"
     }
    ],
    "target_build": "18",
@@ -47309,13 +47330,14 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
-   "remaining_work": "run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11)"
+   "remaining_work": "run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11)",
+   "assigned_worker": "capability-sim worker (Sonnet subagent, started 2026-10-23)"
   },
   {
    "id": "X18-STONECUT",

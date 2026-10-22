@@ -40,6 +40,8 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 |---|---|---|---|---|
 | REG-COURIER-01 | courier worker (Sonnet subagent) | `wip/b18-couriers` | `wip/build18` 421525c | couriers on the five settlements, wired into the live game and saves |
 | REG-BUY-01, REG-BUY-P1 | buying worker (Sonnet subagent) | `wip/b18-buying` | `wip/build18` 421525c | the village buys food and goods from the five; the approved selling policy; stays out of couriers.gd and the courier window |
+| DVW-B5 | tax worker (Sonnet subagent) | `wip/b18-taxes` | `wip/build18` 421525c | predictable announced taxes with hysteresis; manor treasury only |
+| X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 
 On their reports:
 1. Review the work.
@@ -64,7 +66,7 @@ On their reports:
 Every open decision is in `docs/requirements/views/DECISIONS.md`. In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
-- regional economy: REG-DEMO-D1 (settlement population limit) (REG-BUY-P1 approved 2026-10-23); REG-CIRC-D1 deferred until REG-EVAL-01;
+- Build 18 target (owner 2026-10-23, `docs/directives/2026-10-23_reg_demo_d1_and_build18_target.md`): playable within five hours; punch list fixed; blockers to the owner promptly; REG-CIRC-D1 deferred until REG-EVAL-01;
 - Build 18 packaging gate (REL18-PACKAGE): no test package until every Build 18 punch-list item is closed or accepted as permanently blocked;
 - chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
 - Builds 20 and 21 authorization.

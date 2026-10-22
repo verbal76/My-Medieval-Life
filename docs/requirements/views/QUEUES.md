@@ -2,18 +2,20 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (6)
+## Workers and task branches (8)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| DVW-B5 | 18 | IN DEVELOPMENT | tax worker (Sonnet subagent, started 2026-10-23) | wip/b18-taxes |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | REG-BUY-01 | 18 | IN DEVELOPMENT | buying worker (Sonnet subagent, started 2026-10-23) | wip/b18-buying |
 | REG-COURIER-01 | 18 | IN DEVELOPMENT | courier worker (Sonnet subagent, started 2026-10-23) | wip/b18-couriers |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
+| X18-SIM | 18 | IN DEVELOPMENT | capability-sim worker (Sonnet subagent, started 2026-10-23) | wip/b18-capsim |
 
-## Implemented but not tested (52)
+## Implemented but not tested (51)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -68,7 +70,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X18-Q12-BOOTH | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
 | X18-Q12-POST | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
 | X18-Q13 | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
-| X18-SIM | 18 | PARTIALLY IMPLEMENTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |
 
 ## Awaiting owner playtest or device check (51)
 
