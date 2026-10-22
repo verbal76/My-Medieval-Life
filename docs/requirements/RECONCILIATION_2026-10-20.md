@@ -72,7 +72,7 @@ None.
 |---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | COMPLETE AND VERIFIED | 16 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | ACTIVE DEVELOPMENT | 18 |
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | COMPLETE AND VERIFIED | owner decision |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
 | B16-READY | Build 16 development audit and release-readiness report | approved | ACTIVE DEVELOPMENT | 16 |
@@ -88,7 +88,7 @@ None.
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | BLOCKED | owner decision |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED | 18 |
-| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | PARTIALLY IMPLEMENTED | 18 |
+| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED | 18 |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | APPROVED — NOT STARTED | 17 |
 | CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED | 18 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 16 |

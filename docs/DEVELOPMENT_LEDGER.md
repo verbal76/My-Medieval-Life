@@ -12,9 +12,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 65 |
-| ACTIVE DEVELOPMENT | 20 |
-| PARTIALLY IMPLEMENTED | 34 |
-| IMPLEMENTED — TESTING REQUIRED | 38 |
+| ACTIVE DEVELOPMENT | 19 |
+| PARTIALLY IMPLEMENTED | 33 |
+| IMPLEMENTED — TESTING REQUIRED | 40 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 11 |
@@ -181,14 +181,14 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | ACTIVE DEVELOPMENT |  |  |
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | B14-11 | Animal Farm pack: the horse and farm animals | approved | APPROVED — NOT STARTED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | idea | APPROVED — NOT STARTED |  |  |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | idea | APPROVED — NOT STARTED |  |  |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | approved | APPROVED — NOT STARTED |  |  |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | APPROVED — NOT STARTED |  |  |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | APPROVED — NOT STARTED |  |  |
-| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | PARTIALLY IMPLEMENTED |  |  |
+| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | CON-UX-01 | Contract window needs design work | idea | UNKNOWN — INVESTIGATION REQUIRED |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
 | DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
@@ -536,11 +536,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (20)
+## ACTIVE DEVELOPMENT (19)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-armour |  |  |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | B16-READY | Build 16 development audit and release-readiness report | docs/directives/2026-10-21_build16_audit_release_readiness.md |  |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
@@ -561,7 +560,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md | contract_sign_test |  |  |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (34)
+## PARTIALLY IMPLEMENTED (33)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -569,7 +568,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
-| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | docs/directives/2026-10-22_build18_master_integration.md | `5c9689f`; character_look_test, start_test, equip_test, save_transfer_test; branch wip/b18-character |  |  |
 | CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd |  | friends vote with the player once elections exist |
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
@@ -600,12 +598,14 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (38)
+## IMPLEMENTED — TESTING REQUIRED (40)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | docs/directives/2026-10-22_build18_master_integration.md | `9f3a237`; character_look_test, equip_test, start_test, wiki_test; branch wip/b18-armour |  |  |
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
+| CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | docs/directives/2026-10-22_build18_master_integration.md | `5c9689f`, `9f3a237`; character_look_test, start_test, equip_test, save_transfer_test; branch wip/b18-character |  |  |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
 | EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | docs/release/LONG_RUN_SIMULATION.md | `5cce264`; od16_test::test_caravan_buys_by_need |  | Owner to confirm the reading of need (the seller's need to sell); measure in the four-seed runs |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |

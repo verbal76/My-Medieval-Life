@@ -386,7 +386,7 @@
    "id": "ARMOR-01",
    "title": "Armour is acquired in play, physical, and visible when worn",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Equipping armor changes the visible appearance of the character.",
    "description": "Armour is acquired in play, physical, and visible when worn",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -396,10 +396,12 @@
     "Classification framework and values presented to and approved by the owner before assignment"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "character_look_test, equip_test, start_test, wiki_test",
    "playtest": [],
    "branch": "wip/b18-armour",
-   "commits": [],
+   "commits": [
+    "9f3a237"
+   ],
    "parent": "B18-DIR",
    "depends_on": [],
    "blockers": [],
@@ -426,6 +428,11 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Option A approved; implementation on wip/b18-armour"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9f3a237; tests",
+     "why": "Option A merged into wip/build18 609635d (9f3a237): iron armour as the metal-armour layer, iron helmet as novice-helm (agent choice), leather pieces draw nothing extra, redraw on gear change, load and heir; montage looked at; on the merge character_look, equip 51, inventory18 88, start 506, wiki all 0 failures. Awaits owner playtest"
     }
    ],
    "target_build": "18"
@@ -5892,7 +5899,7 @@
    "id": "CC-01",
    "title": "Character creator replaces the eight preset looks (appearance only, civilian)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "The existing eight-character selection system must be replaced with the character creator.",
    "description": "Character creator replaces the eight preset looks (appearance only, civilian)",
    "source": "docs/directives/2026-10-22_build18_master_integration.md",
@@ -5907,7 +5914,8 @@
    "playtest": [],
    "branch": "wip/b18-character",
    "commits": [
-    "5c9689f"
+    "5c9689f",
+    "9f3a237"
    ],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -5940,6 +5948,11 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit 5c9689f; tests",
      "why": "runtime recipe sprite, civilian-only creator, save v18 with migration merged into wip/build18 (ec10e48); character_look_test (24), start_test, equip_test pass; screenshots looked at. Remaining: redraw on gear change belongs to ARMOR-01; phone layout and device cost unmeasured"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit 9f3a237",
+     "why": "the remaining gear redraw landed with ARMOR-01 (609635d); creator, recipe saves and migration as before. Device check (phone layout, cost) still outstanding"
     }
    ],
    "target_build": "18"
