@@ -3,10 +3,12 @@
 # staging/my-medieval-life). Installed by: git config core.hooksPath tools/git_hooks
 # REQ-CTRL-01 (owner, 2026-10-23): the requirements register is edited on staging only; on any other branch a push may
 # not change it to a version that staging has never had (sync from staging instead).
+# REQ-CTRL-02 (owner, 2026-10-23): wip/requirements-control is the isolated register-consolidation branch, merged into
+# staging only after validation; it may carry register edits staging has not yet had.
 zero=0000000000000000000000000000000000000000
 reg=docs/requirements/requirements.json
 while read local_ref local_sha remote_ref remote_sha; do
-  if [ "$remote_ref" != "refs/heads/staging/my-medieval-life" ]; then
+  if [ "$remote_ref" != "refs/heads/staging/my-medieval-life" ] && [ "$remote_ref" != "refs/heads/wip/requirements-control" ]; then
     [ "$local_sha" = "$zero" ] && continue
     new=$(git rev-parse -q --verify "$local_sha:$reg" 2>/dev/null) || continue
     old=""
