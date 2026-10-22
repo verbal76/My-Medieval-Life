@@ -18427,6 +18427,11 @@
      "date": "2026-10-22",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 1ac0b0b; tests; next_action",
      "why": "fixed on wip/b18-ore 1ac0b0b, merged into wip/build18 ff8749f; prospecting (8-seed footprint checks), discovery, openpit, parity_mining, services, contracts, job_board, wiki tests pass; awaits the owner's playtest and the Build 18 integration gate"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "note",
+     "why": "owner's later directive names this finding WORLD-ORE-01 (docs/directives/2026-10-22_build18_world_axe_tree_corrections.md); same defect, recorded here rather than duplicated"
     }
    ],
    "target_build": "18"
@@ -27386,6 +27391,49 @@
    "target_build": "18"
   },
   {
+   "id": "VIS-AXE-01",
+   "title": "Lumberjack axe: believable chop, blade never through the head",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Axe blades do not swing through characters' heads.",
+   "description": "Lumberjack axe: believable chop, blade never through the head",
+   "source": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Grip in the hands, windup behind or over the head without crossing it, edge to the trunk, recovery; every applicable facing",
+    "Chopping duration, yield, durability, productivity and jobs unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-axe",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-axe",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
+     "why": "lead: swing reconstructed, fixing on wip/b18-axe"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "VIS-CROP-01",
    "title": "Ripe wheat recognizable; planted, growing, mature, harvested look distinct",
    "kind": "approved",
@@ -27475,6 +27523,49 @@
      "date": "2026-10-22",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; workstream",
      "why": "Build 18 visual worker started"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "VIS-TREE-02",
+   "title": "Tree fragments: no stray old tree pieces; stages and stumps draw correctly",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "No unexplained fragments should remain.",
+   "description": "Tree fragments: no stray old tree pieces; stages and stumps draw correctly",
+   "source": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md",
+   "approval": "owner directive 2026-10-22",
+   "acceptance": [
+    "Cause confirmed; grown, growing, chopped, felled, stump, cleared ground and trees by fences, farms, roads and buildings verified visually",
+    "Forestry behaviour unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/b18-trees",
+   "commits": [],
+   "parent": "B18-DIR",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "b18-trees",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-22_build18_world_axe_tree_corrections.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; branch; workstream",
+     "why": "worker investigating on wip/b18-trees (static map shows no leftover tree tiles; runtime drawing next)"
     }
    ],
    "target_build": "18"

@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 195 still open, 36 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 229 (113 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 195 still open from the baseline + 113 added and open |
+| Entries added since | | 231 (115 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **306** = 195 still open from the baseline + 115 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (36)
@@ -66,7 +66,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (229)
+## Added since the baseline (231)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -276,8 +276,10 @@ None.
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | ACTIVE DEVELOPMENT | 18 |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | ACTIVE DEVELOPMENT | 18 |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | ACTIVE DEVELOPMENT | 18 |
+| VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | ACTIVE DEVELOPMENT | 18 |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT | 18 |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT | 18 |
+| VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT | 18 |
 | WDR-020 | World Design Rule 20: Autonomous Housing | rule | COMPLETE AND VERIFIED |  |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |

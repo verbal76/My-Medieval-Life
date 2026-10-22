@@ -12,7 +12,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 65 |
-| ACTIVE DEVELOPMENT | 27 |
+| ACTIVE DEVELOPMENT | 29 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 25 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -22,8 +22,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **474** |
-| Outstanding (not complete, superseded or canceled) | 225 |
+| **Total approved** | **476** |
+| Outstanding (not complete, superseded or canceled) | 227 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 78 owner decision (open or answered), 30 world design rule, 8 unapproved idea; of the owner decisions, 37 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -42,13 +42,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 15: simulation stabilization | 52 | 50 |
 | Build 16: long-term equilibrium and validation | 34 | 33 |
 | Build 17: Mining & Industrial Development | 26 | 21 |
-| Build 18: Settlement Advancement & Regional Economy | 49 | 40 |
+| Build 18: Settlement Advancement & Regional Economy | 51 | 42 |
 | Build 19: NPC Judgment System | 22 | 15 |
 | Build 20 or later (outside the five builds) | 48 | 43 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 15 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **304** | **225** |
+| **Total open** | **306** | **227** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -177,7 +177,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
 
-### Build 18: Settlement Advancement & Regional Economy (49)
+### Build 18: Settlement Advancement & Regional Economy (51)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -216,8 +216,10 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | ACTIVE DEVELOPMENT |  |  |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | ACTIVE DEVELOPMENT |  |  |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | ACTIVE DEVELOPMENT |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | ACTIVE DEVELOPMENT |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | approved | ACTIVE DEVELOPMENT |  |  |
+| VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | approved | ACTIVE DEVELOPMENT |  |  |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
@@ -523,7 +525,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (27)
+## ACTIVE DEVELOPMENT (29)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -545,8 +547,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-wiki |  |  |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
+| VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | branch wip/b18-axe |  |  |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | docs/directives/2026-10-22_build18_master_integration.md | branch wip/b18-visual |  |  |
+| VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | docs/directives/2026-10-22_build18_world_axe_tree_corrections.md | branch wip/b18-trees |  |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md | `4ce9927`, `4115b48`, `da4d610`, `3de7a8f`; experience 61 (17 new for D1), settlement 83, capability 72, world 339, conservation 8, run_tests 3544, start 499; 30-day seed 1 fingerprint 1c755f53 unchanged, no leaks | after Q18-11B; after PROS-18 | Owner: facility caps, starting experience, thresholds; open: industry for unattributed work (trade at stall, slaughter, hunting, foraging, clearing, fencing, building, manor survey/trial/excavation/tunnel/shoring/backfill/haul), level rounding for modifiers, wages fixed at posting, drop timing on death/emigration |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md |  |  |  |
