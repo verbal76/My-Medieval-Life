@@ -29,6 +29,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
+| `wip/b18-wagefix` | `cf76ed2` | necessity-wage correction for off-map businesses (REG-INV-01); held for the owner (REG-WAGE-D1), not merged |
 | `wip/multiplayer` | `d18d7d1` | MP-01, excluded from Build 18; never merge without the owner |
 | `main` | | changes only when the owner merges |
 
@@ -40,7 +41,6 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 |---|---|---|---|---|
 | DVW-B3-FEAST | feast worker (Sonnet subagent) | `wip/b18-feast` | `wip/build18` 2e059fa (merge onto 3704bfe; the regions merge also changed `World.load_dict`) | wedding and seasonal feasts at the tavern (`docs/directives/2026-10-23_owner_answers_coin_sinks.md`); stays out of the settlement scripts (the regions worker owns them) |
 | DVW-B3-LUX | luxury worker (Sonnet subagent) | `wip/b18-luxury` | `wip/build18` 36beb67 | luxury imports sold by the settlement traders (caravan); stays out of the tavern and feast code |
-| REG-INV-01 | lead | `wip/build18` | `wip/build18` 36beb67 | regional economy investigation (`docs/directives/2026-10-23_regional_economy_investigation.md`); read-only on code unless a broken mechanism is found |
 
 On their reports:
 1. Review the work.
@@ -65,5 +65,6 @@ On their reports:
 Every open decision is in `docs/requirements/views/DECISIONS.md`. In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
+- regional economy (REG-INV-01 report `docs/investigations/2026-10-23_regional_economy.md`): REG-WAGE-D1 (merge the wage correction), REG-BUY-D1, REG-CIRC-D1;
 - chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
 - Builds 20 and 21 authorization.

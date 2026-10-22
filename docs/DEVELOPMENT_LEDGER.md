@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (549)
+## Approved requirement (553)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -442,7 +442,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REC-015 | NPC competition and economic rivalry (as a game system) |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REC-016 | NPC self-improvement and prosperity (as a game system) |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
-| REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | 15 | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | 15 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -647,7 +651,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (159)
+## Owner decisions (162)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -771,6 +775,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons |  | APPROVED |  |
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) |  | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | 18 | APPROVED |  |
+| REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | 18 | OPEN |  |
+| REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | 18 | OPEN |  |
+| REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | 18 | OPEN |  |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | 15 | APPROVED |  |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | 19 | APPROVED |  |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | 19 | APPROVED |  |

@@ -8,25 +8,24 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 74 |
-| Integrated | 36 of 74 (49%) |
-| Automated tests passed | 37 of 74 (50%) |
-| Integration verified | 36 of 74 (49%) |
-| Gameplay verified | 0 of 74 (0%) |
-| Owner playtested | 0 of 74 (0%) |
-| Complete | 1 of 74 (1%) |
-| Open (release blockers) | 73 |
-| Open owner decisions (blocking) | 10 (2) |
+| Approved requirements in scope | 78 |
+| Integrated | 37 of 78 (47%) |
+| Automated tests passed | 38 of 78 (49%) |
+| Integration verified | 36 of 78 (46%) |
+| Gameplay verified | 0 of 78 (0%) |
+| Owner playtested | 0 of 78 (0%) |
+| Complete | 1 of 78 (1%) |
+| Open (release blockers) | 77 |
+| Open owner decisions (blocking) | 13 (2) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | OWNER APPROVED | IN DEVELOPMENT | feast worker (Sonnet subagent, started 2026-10-23) / wip/b18-feast | NOT TESTED |  |  | M |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | OWNER APPROVED | IN DEVELOPMENT | luxury worker (Sonnet subagent, started 2026-10-23) / wip/b18-luxury | NOT TESTED |  |  | S |
-| REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | OWNER APPROVED | IN DEVELOPMENT | lead / wip/build18 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (35)
+## Integrated, awaiting gameplay or owner verification (36)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -44,6 +43,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | MAP-01 | Map shows where you are beyond the village | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; the determinism gate must be re-recorded on Build 18 (REL18-DET) because clue placement changed |  | verification only |
+| REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | OWNER APPROVED | INTEGRATED | staging | TARGETED TESTS PASSED | Owner review of the report (docs/investigations/2026-10-23_regional_economy.md) and decisions REG-WAGE-D1, REG-BUY-D1, REG-CIRC-D1 |  | verification only |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: no doorway on a house's east wall (furniture) or between rooms stacked north-south; the old-world (legacy plots) view is untested by screenshot |  | verification only |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; owner may review the lore choices in docs/expansion18/SETTLEMENTS.md; known: Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open) |  | verification only |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned); known: No births or old-age deaths in the settlements yet; Village cannot buy food from the settlements yet; no tool-shortage productivity penalty |  | verification only |
@@ -73,7 +73,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | DVW-B5 | Predictable taxes with hysteresis, announced | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | TARGETED TESTS PASSED | courier-notary path not live; villagers do not take lessons; clergy teaching waits on DVW-B3-CHAPEL |  | S |
-| MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | L |
+| MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Needs settlement members with ages (REG-DEMO-01) so people who move carry an age, skills and a household |  | L |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
@@ -91,7 +91,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |  | L |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11) |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (15)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -99,6 +99,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | PL2-008 | Expandable property | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | PL2-014 | Modular house/workshop expansion | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | PL2-015 | Farming, livestock, hand plough | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-BUY-D1, REG-PARTY-01, design: UNKNOWN | UNKNOWN |
+| REG-COURIER-01 | Connect courier booths, routes and special deliveries to the five settlements and wire couriers into the live game loop and saves | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | REG-PARTY-01, design: UNKNOWN | UNKNOWN |
+| REG-DEMO-01 | Off-map settlement demographics under the village's life rules: member ages, births, age-related deaths, children growing up into workers, household formation and dissolution, inheritance | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | close-out against the specification's acceptance criteria | SET-A | S |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | lands with SET-C-SIM and SET-C-FIVE | SET-B | UNKNOWN |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SET-C, design: DESIGN WORK REQUIRED | XL |
@@ -117,7 +121,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (10)
+## Open owner decisions (13)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -128,6 +132,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | CHAPEL-R5 | Does the chapel need distinct artwork (steeple, sign) before the Build 18 release? | OPEN | no |  |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B |
 | Q18-6 | Q18-6: may abstract regions show 'two settlements develop different profiles' | PROVISIONAL | no |  |
+| REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | OPEN | no | REG-BUY-01 |
+| REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | OPEN | no |  |
+| REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | OPEN | no |  |
 | STONE-D1 | Stone dressing efficiency values by skill (STONE-04) and the materials rule's numbers | OPEN | yes | STONE-02, STONE-03, STONE-04, X18-STONECUT |
 | STONE-D2 | Iron chisel wear and recipe (STONE-06) | OPEN | yes | STONE-02, STONE-06, X18-STONECUT |
 | X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | OPEN | no |  |
