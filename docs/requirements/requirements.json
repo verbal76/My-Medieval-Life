@@ -36106,7 +36106,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -36115,8 +36115,15 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> demography worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-demography",
+     "why": "Approved under SET-C-SIM; no open decision"
     }
-   ]
+   ],
+   "assigned_worker": "demography worker (Sonnet subagent, started 2026-10-23)",
+   "branch": "wip/b18-demography"
   },
   {
    "id": "REG-INV-01",
@@ -36185,7 +36192,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -36194,8 +36201,15 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_investigation.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> party worker (Sonnet subagent, started 2026-10-23); branch: None -> wip/b18-party",
+     "why": "Engineering prerequisite of REG-BUY-01 and REG-COURIER-01; no open decision"
     }
-   ]
+   ],
+   "assigned_worker": "party worker (Sonnet subagent, started 2026-10-23)",
+   "branch": "wip/b18-party"
   },
   {
    "id": "REG-WAGE-D1",
