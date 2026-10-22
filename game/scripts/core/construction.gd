@@ -394,7 +394,7 @@ func plan_helper(n: NPC) -> bool:
 	var own := _own_builder(n, c)
 	if own:
 		for id in ids:                         # what the builder holds goes in first (HOUSE-04)
-			if n.inv.count(id) > 0:
+			if n.inv.count(id) + (n.inv.count("rubble") if id == "stone" else 0) > 0:
 				n.doing = "bringing %s for the building site" % GameData.item_name(id).to_lower()
 				n.plan = [b.doit("helper_own", {"item": id})]
 				return true
@@ -553,6 +553,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return got > 0
 		"helper_own":                          # the builder's own goods go to the site (HOUSE-04)
 			var id := str(a.item)
+			if id == "stone":
+				w.rubble_cover(n.inv, int(p.site.need.get(id, 0)) - load.count(id) - n.inv.count(id))       # STONE-04: the builder's rubble, as stone
 			var k := mini(int(p.site.need.get(id, 0)) - load.count(id), n.inv.count(id))
 			if k <= 0:
 				return false

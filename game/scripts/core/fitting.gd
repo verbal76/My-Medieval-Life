@@ -224,7 +224,7 @@ func why_not(b: Dictionary, kind: String, cell: Vector2i) -> String:
 			return "it would block the way to part of the room"
 	var c := cost(kind)
 	for id in c:
-		if w.player.inv.count(id) < int(c[id]):
+		if w.player.inv.count(id) + (w.player.inv.count("rubble") if id == "stone" else 0) < int(c[id]):      # STONE-04: rubble serves as stone
 			return "you need %s" % cost_text(kind)
 	return ""
 
@@ -237,6 +237,8 @@ func place(b: Dictionary, kind: String, cell: Vector2i) -> String:
 	var use := find_use(b, cell)
 	var c := cost(kind)
 	for id in c:
+		if id == "stone":
+			w.rubble_cover(w.player.inv, int(c[id]) - w.player.inv.count("stone"))      # STONE-04
 		w.player.inv.remove(id, int(c[id]))
 		w.stat("used_building_" + id, float(c[id]))
 	var fit := list(b).duplicate()

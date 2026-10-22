@@ -6,7 +6,7 @@ extends SceneTree
 ## them through the existing trade; no block is ever made from nothing; sites from before keep their raw-stone cost;
 ## saves keep it all; the same seed gives the same course.
 ## Build 18 (owner B18-DP-09, B18-DP-10; STONE-02, STONE-03, STONE-04, STONE-06, X18-STONECUT): dressing is three raw stone
-## to two blocks and one fragment (raw stone), with a mallet AND an iron chisel (forge_chisel), by the Masonry tiers; any
+## to two blocks and one unit of rubble (never an input to dressing, usable as raw stone for raw-stone work), with a mallet AND an iron chisel (forge_chisel), by the Masonry tiers; any
 ## villager may dress for their own use; the stonecutter is an independent trade in the ordinary economy. Run headless:
 ##   godot --headless --path game --script res://tests/stone_test.gd
 
@@ -34,6 +34,8 @@ func _init() -> void:
 	_test_chisel()
 	_test_personal_use()
 	_test_stonecutter()
+	_test_rubble()
+	_test_contract()
 	_test_villager_to_demand()
 	_test_construction()
 	_test_older_site()
@@ -65,9 +67,9 @@ func _test_data() -> void:
 	var it: Dictionary = GameData.item("building_block")
 	check(not it.is_empty() and str(it.name) == "Building block" and GameData.item("stone").name == "Stone", "a building block is its own item, apart from raw stone")
 	var r: Dictionary = GameData.recipes.get("dress_stone", {})
-	check(not r.is_empty() and r["in"].size() == 1 and int(r["in"].stone) == 3 and r.out.size() == 2 and int(r.out.building_block) == 2 and int(r.out.stone) == 1
+	check(not r.is_empty() and r["in"].size() == 1 and int(r["in"].stone) == 3 and r.out.size() == 2 and int(r.out.building_block) == 2 and int(r.out.rubble) == 1 and not r["in"].has("rubble") and str(r.conserve.to) == "building_block"
 			and str(r.station) == "workbench" and r.tool == ["mallet", "chisel"] and int(r.minutes) == 30 and str(r.skill) == "masonry" and not r.has("exact"),
-			"dress_stone: three raw stone to two blocks and one stone, at a workbench, with a mallet and an iron chisel, half an hour, Masonry")
+			"dress_stone: three raw stone to two blocks and one rubble, at a workbench, with a mallet and an iron chisel, half an hour, Masonry")
 	var f: Dictionary = GameData.recipes.get("forge_chisel", {})
 	var ch: Dictionary = GameData.item("chisel")
 	check(not f.is_empty() and str(f.station) == "anvil" and f["in"].size() == 1 and int(f["in"].iron_bar) == 1 and f.out.size() == 1 and int(f.out.chisel) == 1 and int(f.minutes) == 30 and str(f.skill) == "smithing" and int(f.level) == 1,
@@ -112,13 +114,15 @@ func _test_recipe_parity() -> void:
 	check(not bool(begin.ok) or float(begin.secs) > 0.0, "the work takes time (%s)" % str(begin))
 	var made0 := int(w.stats.get("made_building_block", 0))
 	var r := w.work_craft(p, "dress_stone", p.inv)
-	check(r.result == "ok" and p.inv.count("stone") == 1 and p.inv.count("building_block") == 2, "three stone became two blocks and one fragment, kept as raw stone")
-	check(int(w.stats.get("made_building_block", 0)) - made0 == 2 and int(w.stats.get("used_stone", 0)) == 3 and int(w.stats.get("made_stone", 0)) == 1,
-			"the ledger: 3 stone used, 2 blocks and 1 stone made")
+	check(r.result == "ok" and p.inv.count("stone") == 0 and p.inv.count("rubble") == 1 and p.inv.count("building_block") == 2, "three stone became two blocks and one rubble")
+	check(int(w.stats.get("made_building_block", 0)) - made0 == 2 and int(w.stats.get("used_stone", 0)) == 3 and int(w.stats.get("made_rubble", 0)) == 1,
+			"the ledger: 3 stone used, 2 blocks and 1 rubble made")
 	check(int(p.skills.get("masonry", 0)) >= 4, "and earned Masonry experience")
 	check(int(p.inv.durability.get("mallet", mfull)) == mdur0 - 1 and int(p.inv.durability.get("chisel", cfull)) == cdur0 - 1,
 			"the mallet and the chisel each wore a use (%d, %d left)" % [int(p.inv.durability.get("mallet", mfull)), int(p.inv.durability.get("chisel", cfull))])
-	check(p.inv.has_all({"stone": 1}) and not p.inv.has_all({"stone": 3}), "the fragment is raw stone: it counts towards the next batch")
+	p.inv.add("stone", 2)
+	check(not p.inv.has_all({"stone": 3}) and w.work_craft(p, "dress_stone", p.inv).result == "materials", "the rubble is no input to dressing: 2 stone and 1 rubble make nothing")
+	p.inv.remove("stone", 2)
 	var v := _first(w, func(n: NPC) -> bool: return n.role == "adult" and n.job == "laborer")
 	check(v != null, "the village has a labourer")
 	if v == null:
@@ -131,7 +135,7 @@ func _test_recipe_parity() -> void:
 	v.inv.add("chisel")
 	check(w.brain._can_make(v, "dress_stone"), "with both they can")
 	var r2 := w.work_craft(v, "dress_stone", v.inv)
-	check(r2.result == "ok" and v.inv.count("stone") == 1 and v.inv.count("building_block") == 2, "the villager's three stone became two blocks and a fragment, the same rule")
+	check(r2.result == "ok" and v.inv.count("stone") == 0 and v.inv.count("rubble") == 1 and v.inv.count("building_block") == 2, "the villager's three stone became two blocks and a rubble, the same rule")
 	check(int(v.inv.durability.get("chisel", cfull)) == cfull - 1 and int(v.inv.durability.get("mallet", mfull)) == mfull - 1, "and wore both tools a use")
 	v.skills["masonry"] = 0
 	var low := {"skill": "masonry", "level": 1}
@@ -152,7 +156,7 @@ func _test_no_free_blocks() -> void:
 	p.inv.add("stone", 97)
 	var made0 := int(w.stats.get("made_building_block", 0))
 	var used0 := int(w.stats.get("used_stone", 0))
-	var frag0 := int(w.stats.get("made_stone", 0))
+	var frag0 := int(w.stats.get("made_rubble", 0))
 	var n := 0
 	while p.inv.count("stone") >= 3:
 		if w.work_craft(p, "dress_stone", p.inv).result != "ok":
@@ -162,9 +166,9 @@ func _test_no_free_blocks() -> void:
 		n += 1
 	var made := int(w.stats.get("made_building_block", 0)) - made0
 	var used := int(w.stats.get("used_stone", 0)) - used0
-	var frag := int(w.stats.get("made_stone", 0)) - frag0
-	check(p.inv.count("building_block") == 2 * n and made == 2 * n and used == 3 * n and frag == n and p.inv.count("stone") == 99 - used + frag,
-			"at Masonry 1 %d batches: %d blocks, %d stone used, %d fragments, %d stone left" % [n, made, used, frag, p.inv.count("stone")])
+	var frag := int(w.stats.get("made_rubble", 0)) - frag0
+	check(p.inv.count("building_block") == 2 * n and made == 2 * n and used == 3 * n and frag == n and p.inv.count("rubble") == n and p.inv.count("stone") == 99 - used,
+			"at Masonry 1 %d batches: %d blocks, %d stone used, %d rubble, %d stone left" % [n, made, used, frag, p.inv.count("stone")])
 	check(int(w.stats.get("made_building_block", 0)) == _blocks_everywhere(w), "every block in the world was made from stone")
 
 
@@ -186,10 +190,10 @@ func _test_masonry_tiers() -> void:
 	# a master over many batches: sometimes the stone is spared, sometimes an extra block; the ledger stays exact
 	p.skills["masonry"] = Skills.xp_for_level(10)
 	p.inv.remove("stone", p.inv.count("stone"))
-	p.inv.add("stone", 300)
+	p.inv.add("stone", 400)
 	var made0 := int(w.stats.get("made_building_block", 0))
 	var used0 := int(w.stats.get("used_stone", 0))
-	var frag0 := int(w.stats.get("made_stone", 0))
+	var frag0 := int(w.stats.get("made_rubble", 0))
 	var stone0 := p.inv.count("stone")
 	var batches := 0
 	while batches < 120:
@@ -200,9 +204,9 @@ func _test_masonry_tiers() -> void:
 		batches += 1
 	var made := int(w.stats.get("made_building_block", 0)) - made0
 	var used := int(w.stats.get("used_stone", 0)) - used0
-	var frag := int(w.stats.get("made_stone", 0)) - frag0
-	check(made > 2 * batches and used < 3 * batches, "a master mason's batches gave more than the base (%d blocks for %d batches, %d stone used of %d)" % [made, batches, used, 3 * batches])
-	check(frag == batches and p.inv.count("building_block") == made and p.inv.count("stone") == stone0 - used + frag,
+	var frag := int(w.stats.get("made_rubble", 0)) - frag0
+	check(made > 2 * batches and made <= 3 * batches and used == 3 * batches, "a master mason's hits turned rubble into a third block, never past it (%d blocks for %d batches, %d stone used)" % [made, batches, used])
+	check(made <= used and made + frag == used and frag < batches and frag >= 0 and p.inv.count("building_block") == made and p.inv.count("stone") == stone0 - used and p.inv.count("rubble") == frag,
 			"and every stone and block is accounted for in the ledger (blocks %d, stone %d)" % [p.inv.count("building_block"), p.inv.count("stone")])
 	check(not bool(GameData.recipes.dress_stone.get("exact", false)) and GameData.skills.masonry.tiers["5"].effects.save_chance == 0.15, "dress_stone uses the Masonry tiers as they are")
 
@@ -264,13 +268,13 @@ func _test_personal_use() -> void:
 	check(not w.brain._can_make(f, "dress_stone"), "without the tools a farmer cannot dress stone, as the player cannot")
 	f.inv.add("mallet")
 	f.inv.add("chisel")
-	check(w.brain._can_make(f, "dress_stone") and w.work_craft(f, "dress_stone", f.inv).result == "ok" and f.inv.count("building_block") == 2 and f.inv.count("stone") == 1,
-			"with the player's tools and Masonry a farmer dresses 3 stone into 2 blocks and a fragment")
+	check(w.brain._can_make(f, "dress_stone") and w.work_craft(f, "dress_stone", f.inv).result == "ok" and f.inv.count("building_block") == 2 and f.inv.count("rubble") == 1,
+			"with the player's tools and Masonry a farmer dresses 3 stone into 2 blocks and a rubble")
 	# a builder of their own household's house, no blocks on sale: dresses for it (STONE-02)
 	for o: NPC in w.npcs:
 		o.inv.remove("building_block", o.inv.count("building_block"))
 	f.inv.remove("building_block", f.inv.count("building_block"))
-	f.inv.add("stone", 2)
+	f.inv.add("stone", 3)
 	var c := {"load": Inventory.new(), "employer": World.hh_ref(f.household), "worker": f.id}
 	f.plan.clear()
 	check(w.construction._dress_own(f, c, {"building_block": 6}) and f.plan.any(func(s): return str(s.get("act", "")) == "craft" and str(s.get("args", {}).get("recipe", "")) == "dress_stone"),
@@ -368,6 +372,88 @@ func _test_stonecutter() -> void:
 	sc2.plan.clear()
 	check(not w2.brain._mason(sc2) and w2.brain._stonecutter(sc2) and sc2.doing.begins_with("waiting"), "with no customer it dresses nothing and waits (%s)" % sc2.doing)
 	check(sc2.coins == c2 and int(w2.stats.get("made_building_block", 0)) == made2, "and earns and spends nothing")
+
+
+## STONE-04 (coordinator ruling on B18-DP-09): the dressing's by-product is rubble, a separate item: never an input to
+## dressing, usable as raw stone for raw-stone work only; a batch never yields more blocks than the stone used.
+func _test_rubble() -> void:
+	var w := _world(14)
+	var it: Dictionary = GameData.item("rubble")
+	check(str(it.name) == "Rubble" and str(it.category) == "raw" and ManorWork.MATERIALS.has("rubble") and NPCBrain.OUTLETS.rubble == ["merchant_raw"]
+			and int(NPCBrain.BUYS.merchant_raw.rubble) > 0 and NPCBrain.NOT_EXPORTED.has("rubble"), "rubble is its own item: the raw-goods merchant takes it, the manor's mending uses it, the caravan does not carry it")
+	# every batch of every skill: blocks + rubble == 3 == the stone used; blocks never exceed it
+	var p := w.player
+	p.inv.add("mallet", 5)
+	p.inv.add("chisel", 5)
+	var worst := 0
+	var ok := true
+	for lvl in [1, 5, 7, 10]:
+		p.skills["masonry"] = Skills.xp_for_level(lvl)
+		for k in 150:
+			p.inv.remove("stone", p.inv.count("stone"))
+			p.inv.add("stone", 3)
+			p.inv.remove("rubble", p.inv.count("rubble"))
+			var b0 := p.inv.count("building_block")
+			if w.work_craft(p, "dress_stone", p.inv).result != "ok":
+				p.inv.add("mallet")
+				p.inv.add("chisel")
+				continue
+			var blocks := p.inv.count("building_block") - b0
+			worst = maxi(worst, blocks)
+			ok = ok and blocks <= 3 and blocks >= 2 and blocks + p.inv.count("rubble") == 3 and p.inv.count("stone") == 0
+	check(ok and worst == 3, "over 600 batches at Masonry 1, 5, 7 and 10: always 3 outputs from 3 stone, never more than 3 blocks, a hit makes the rubble a block (worst %d)" % worst)
+	# raw-stone work takes rubble: an older site's stone, one for one, in the ledger
+	var pl: Dictionary = w.plots[0]
+	p.coins += 200
+	w.buy_plot(pl)
+	w.start_site(pl)
+	pl.site.cost = {"plank": 30, "stone": 20, "log": 10}
+	pl.site.need = {"plank": 30, "stone": 12, "log": 10}
+	p.inv.remove("stone", p.inv.count("stone"))
+	p.inv.remove("rubble", p.inv.count("rubble"))
+	p.inv.add("stone", 4)
+	p.inv.add("rubble", 3)
+	var used0 := int(w.stats.get("used_rubble", 0))
+	var made0 := int(w.stats.get("made_stone", 0))
+	w.deliver(pl, p.inv)
+	check(int(pl.site.need.stone) == 5 and p.inv.count("stone") == 0 and p.inv.count("rubble") == 0, "an older site takes the stone and the rubble alike (need 12 -> 5)")
+	check(int(w.stats.get("used_rubble", 0)) - used0 == 3 and int(w.stats.get("made_stone", 0)) - made0 == 3, "and the ledger shows rubble used and stone made, 3 for 3")
+	# the farmland gate and a shop fitting count rubble as stone, but only at the moment of use
+	check(FarmPlots.have([p.inv], "stone") == 0, "nothing left over")
+	p.inv.add("rubble", 2)
+	check(FarmPlots.have([p.inv], "stone") == 2 and p.inv.count("stone") == 0, "rubble counts as stone for the gate, yet stays rubble in the pack")
+	# a dresser cannot turn rubble back into blocks, nor sell it as stone
+	p.inv.remove("rubble", 2)
+	p.inv.add("rubble", 6)
+	check(w.work_craft(p, "dress_stone", p.inv).result == "materials" and p.inv.count("building_block") == 0 or p.inv.count("building_block") > 0 and p.inv.count("stone") == 0,
+			"six rubble make no block")
+	# the stonecutter takes its rubble to the raw-goods merchant
+	var raw := _first(w, func(n: NPC) -> bool: return w.brain.buy_role(n) == "merchant_raw")
+	var sc := _free_adult(w)
+	w.brain._change_job(sc, "stonecutter", "test")
+	sc.inv.add("rubble", 4)
+	raw.coins = maxi(raw.coins, 100)
+	sc.plan.clear()
+	check(w.brain._stonecutter(sc) and sc.plan.any(func(s): return str(s.get("act", "")) == "sell_to" and str(s.args.item) == "rubble"), "a stonecutter with rubble sells it to the raw-goods merchant (%s)" % sc.doing)
+
+
+## X18-STONECUT: a goods contract for building blocks can be placed with the stonecutter as the seller, through the existing
+## contracts (CON-01): it answers from its stock of stone and tools, by the same recipe.
+func _test_contract() -> void:
+	var w := _world(15)
+	var sc := _free_adult(w)
+	w.brain._change_job(sc, "stonecutter", "test")
+	sc.inv.add("mallet")
+	sc.inv.add("chisel")
+	sc.inv.add("stone", 9)
+	sc.coins = 100
+	w.player.coins = 1000
+	var m: Dictionary = w.contracts.means(sc, "building_block", 5)
+	check(str(m.route) == "craft" and str(m.recipe) == "dress_stone" and int(m.cap) >= 4, "the stonecutter's means for blocks: it can craft them by dress_stone (%s)" % str(m))
+	var r: Dictionary = w.contracts.propose(World.PLAYER, sc, "building_block", 4, 12, 6)
+	check(str(r.answer) in ["accept", "meet"], "a contract for 4 blocks is put to it and answered (%s: %s)" % [str(r.answer), str(r.get("say", ""))])
+	if str(r.answer) == "accept" and r.has("contract"):
+		check(str((r.contract as Dictionary).seller) == World.npc_ref(sc.id) and str((r.contract as Dictionary).item) == "building_block", "it is placed with the stonecutter as seller")
 
 
 ## An adult with no trade or a manor hand, free to take up the stonecutter's.
@@ -530,7 +616,7 @@ func _test_old_save() -> void:
 	check(w2.player_craft_refusal("dress_stone") == "You need an iron chisel." and w2.work_craft(p2, "dress_stone", p2.inv).result == "tool" and p2.inv.count("stone") == 4,
 			"dressing now needs the chisel, and until it is had nothing changes")
 	p2.inv.add("chisel")
-	check(w2.work_craft(p2, "dress_stone", p2.inv).result == "ok" and p2.inv.count("building_block") == 7 and p2.inv.count("stone") == 2 and int(p2.inv.durability.get("mallet", 0)) == 76,
+	check(w2.work_craft(p2, "dress_stone", p2.inv).result == "ok" and p2.inv.count("building_block") == 7 and p2.inv.count("stone") == 1 and p2.inv.count("rubble") == 1 and int(p2.inv.durability.get("mallet", 0)) == 76,
 			"with one the work is the new rule on the old stock (the mallet's wear goes on from 77)")
 	var d3: Dictionary = JSON.parse_string(JSON.stringify(w2.to_dict()))
 	var w3 := World.new()

@@ -521,6 +521,12 @@
       "value": 1,
       "category": "crafted"
     },
+    "rubble": {
+      "name": "Rubble",
+      "type": "resource",
+      "value": 1,
+      "category": "raw"
+    },
     "chisel": {
       "name": "Iron chisel",
       "type": "tool",

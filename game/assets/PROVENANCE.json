@@ -1150,6 +1150,13 @@
    "sha256": "de18287ebf5a766d0a64872b6fe931340e979bcd42ec2bac4be383adb9abf98f"
   },
   {
+   "file": "assets/icons/rubble.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-05.png",
+   "transform": "copied unchanged",
+   "sha256": "15d7a8811e610701638e22a24c4b0a87a01022a8b9a3feadb7f014045a9654ff"
+  },
+  {
    "file": "assets/icons/shovel.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Tools/Shovel-05.png",

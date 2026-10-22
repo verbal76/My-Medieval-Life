@@ -75,7 +75,7 @@ func _run() -> void:
 	check(seller != null and w.trade(p, seller, "axe", 1, w.sell_price(seller, "axe")), "bought an axe")
 
 	# 2. mine iron, coal and stone at real deposits
-	for want in [["iron_ore", 8], ["coal", 4], ["stone", 20]]:
+	for want in [["iron_ore", 8], ["coal", 4], ["stone", 30]]:
 		var got := 0
 		var tries := 0
 		while p.inv.count(want[0]) < want[1] and tries < 80:

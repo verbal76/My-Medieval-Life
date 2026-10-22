@@ -1355,24 +1355,50 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	if not inv.remove_all(r["in"]):
 		return {"result": "materials"}
 	var exact := bool(r.get("exact", false))
-	if not exact and rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
+	var conserve: Dictionary = r.get("conserve", {})
+	var out: Dictionary = (r.out as Dictionary).duplicate()
+	if not conserve.is_empty():
+		# STONE-04 (B18-DP-09: the Masonry tiers inside conservation): a practised hand's saving or extra unit turns this
+		# batch's by-product into more of the main product (dressing: the rubble into a third block), so a batch never
+		# yields more blocks than the stone used; the inputs are always used up
+		var saved := rng.randf() < Skills.value(who, str(r.skill), "save_chance")
+		var extra := rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+		for id in r["in"]:
+			stat("used_" + id, float(r["in"][id]))
+		if saved or extra:
+			out[str(conserve.to)] = int(out.get(str(conserve.to), 0)) + int(out.get(str(conserve["from"]), 0))
+			out.erase(str(conserve["from"]))
+	elif not exact and rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
 		for id in r["in"]:
 			inv.add(id, int(r["in"][id]))                  # a practised hand wastes nothing
 	else:
 		for id in r["in"]:
 			stat("used_" + id, float(r["in"][id]))
-	var bonus := not exact and rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
-	var first := true
-	for id in r.out:
-		# a bonus unit is one extra of the recipe's main (first) product, never of a by-product (dressing: the fragments)
-		_work_goods(who, inv, id, int(r.out[id]) + (1 if bonus and first and not Skills.is_gear(str(id)) else 0), "made_")
-		first = false
+	var bonus := conserve.is_empty() and not exact and rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+	for id in out:
+		_work_goods(who, inv, id, int(out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0), "made_")
 	if str(r.station) == "anvil":
 		_work_wear(who, "hammer", 2, str(r.skill), "")
 	for t in craft_tool_items(who, recipe):                # STONE-06: every tool the recipe names wears a use a batch
 		if _work_wear(who, t, 1, str(r.skill), "") and who is PlayerState and player.tool == t and not player.inv.has(t):
 			player.tool = ""                               # (the player's last one broke)
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
+
+
+## STONE-04 (owner coordinator ruling, B18-DP-09): rubble, the by-product of dressing, is usable as raw stone for raw-stone
+## work (fittings, the farmland gate, the manor's mending, older building sites) but is never an input to dressing. At the
+## moment such work uses stone, up to `qty` of the stone `inv` lacks is made from its rubble, one for one, counted in the
+## ledger (used_rubble, made_stone); the stone is used at once by the caller, so no rubble ever becomes stone to dress.
+## Returns the stone `inv` then holds beyond what it had.
+func rubble_cover(inv: Inventory, qty: int) -> int:
+	var k := mini(qty, inv.count("rubble"))
+	if k <= 0:
+		return 0
+	inv.remove("rubble", k)
+	inv.add("stone", k)
+	stat("used_rubble", float(k))
+	stat("made_stone", float(k))
+	return k
 
 
 ## STONE-01: the item `who` works `recipe` with when the recipe names a tool kind ("" when it needs none, "-" when they
@@ -2648,6 +2674,8 @@ func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 		return false
 	var need: Dictionary = p.site.need
 	var given := 0
+	if need.has("stone"):
+		rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
 	for id in need.keys():
 		var n := mini(int(need[id]), inv.count(id))
 		if n > 0:

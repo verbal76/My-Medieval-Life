@@ -18,7 +18,7 @@ const BUYS := {
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
 	"stonecutter": {"stone": 12},      # X18-STONECUT: raw stone to dress, bought with its own coins; only while it holds a mallet and an iron chisel (batch_unit)
-	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20,
+	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "rubble": 20, "log": 20, "plank": 20,
 		"building_block": 20},        # STONE-01: dressed blocks kept for builders, as the stone was
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
 		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
@@ -46,7 +46,7 @@ const KEEPS := {"sage": ["flower"], "miner": ["pickaxe", "shovel"], "prospector"
 # who to sell each item to, in order of preference
 const OUTLETS := {
 	"iron_ore": ["smith", "merchant_raw"], "copper_ore": ["smith", "merchant_raw"], "gold_ore": ["smith", "merchant_goods"],
-	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
+	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "rubble": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
@@ -72,7 +72,7 @@ const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese
 const EDIBLE := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple", "egg", "milk", "carrot", "potato"]
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
-const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block"]     # STONE-01: blocks are the village's stone, dressed
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "rubble", "building_block"]     # STONE-01: blocks are the village's stone, dressed
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -702,6 +702,8 @@ func _fetch_dress_stone(n: NPC) -> bool:
 ## Masonry) only while someone will buy blocks, and sells them to the raw-goods merchant and to builders. No free stone, no
 ## customer guaranteed: with none it waits, earns nothing and, as any villager, in time looks for other work (seek_work).
 func _stonecutter(n: NPC) -> bool:
+	if n.inv.count("rubble") > 0 and _buyer_for(n, "rubble") != null:
+		return _plan_sell(n, "rubble")                   # the dressing's rubble goes to the raw-goods merchant, for the manor's mending
 	if _mason(n):
 		return true
 	n.doing = "waiting for stone to dress and customers for blocks"
@@ -2771,11 +2773,11 @@ func reeve_day() -> void:
 	w.mine_works.supply.procure()                    # MIN-EQUIP: the supports, repair goods, ladders and mallet its shore work needs
 	w.manor_work.post_shore()                        # MIN-EQUIP: set up, repair or ladder below ground, with the yard's goods
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
-	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
+	for id in ["plank", "stone", "rubble", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths; rubble (STONE-04) mends as stone does
 		if id == "stone" and quarrying:
 			continue                          # the manor's own stone is being quarried
 		for o: NPC in w.npcs:
-			if not o.alive or not (o.job in ["carpenter", "laborer", "smith"] or buy_role(o) == "merchant_raw"):
+			if not o.alive or not (o.job in ["carpenter", "laborer", "smith", "stonecutter"] or buy_role(o) == "merchant_raw"):
 				continue
 			while o.inv.count(id) > 6 + w.construction.open_need(id) and budget > 0 and bought < 40 and w.manor_work.works_want():
 				var price := w.buy_price(o, id)
@@ -3020,9 +3022,9 @@ func _public_works(obligations: float) -> int:
 	var budget := int(maxf(0.0, excess) * float(GameData.b("public_works_share")))
 	var keep: Dictionary = GameData.b("public_works_seller_keeps")
 	var used := 0
-	for id in ["plank", "iron_bar", "stone"]:
+	for id in ["plank", "iron_bar", "stone", "rubble"]:
 		for o: NPC in w.npcs:
-			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer"] or w.asleep(o):
+			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer", "stonecutter"] or w.asleep(o):
 				continue
 			# what open building sites still need stays on sale for their builders (audit: public
 			# works would starve builders)

@@ -19,9 +19,9 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | Standard crafting materials | 25 |
 | Production professions | 11 |
 | Recipes | 49 |
-| Threshold findings | 37 |
+| Threshold findings | 38 |
 | ... with a recorded exception | 18 |
-| ... open (no exception) | 19 |
+| ... open (no exception) | 20 |
 | Orphaned recipes | 0 |
 | Broken references | 0 |
 | Stale or invalid exceptions | 0 |
@@ -51,7 +51,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `rabbit_pelt` | 1 | `tan_pelts` (tanner) | none | tanner | none | hunter | few uses: exception; few professions: exception |
 | `shovel_blade` | 1 | `assemble_shovel` (player only) | none | none | `forge_shovel_blade` | none | few uses: exception; few professions: exception |
 | `shovel_haft` | 1 | `assemble_shovel` (player only) | none | none | `make_shovel_haft` | none | few uses: exception; few professions: exception |
-| `stone` | 3 | `dress_stone` (laborer, stonecutter) | shop fittings | laborer, stonecutter | `dress_stone` | laborer, miner | pass |
+| `stone` | 3 | `dress_stone` (laborer, stonecutter) | shop fittings | laborer, stonecutter | none | laborer, miner | pass |
 | `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook) | none | cook | none | farmer | few professions: **open** |
 | `wool` | 1 | `weave_cloth` (tanner) | none | tanner | none | none | few uses: **open**; few professions: **open** |
 | `wool_cloth` | 1 | `sew_bandages` (tanner) | none | tanner | `weave_cloth` | none | few uses: **open**; few professions: **open** |
@@ -73,11 +73,11 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | cook | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | sage: ale (recipe brew_strong_tonic); tavernkeeper: ale (buys it), bread (buys it), cheese (buys it), pottage (buys it), roast_meat (buys it) | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | pass |
 | farmer | `feather`, `hide`, `meat`, `wheat` | cook: meat (recipe roast_meat), wheat (recipe cook_pottage); tanner: hide (recipe tan_leather) | `feather`, `hide`, `meat`, `wheat` | pass |
 | hunter | `feather`, `hide`, `meat`, `rabbit_pelt` | cook: meat (recipe roast_meat); tanner: hide (recipe tan_leather), rabbit_pelt (recipe tan_pelts) | `feather`, `hide`, `meat`, `rabbit_pelt` | pass |
-| laborer | `building_block`, `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `spoil`, `stone`, `topsoil` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron); stonecutter: stone (recipe dress_stone) | `building_block`, `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
+| laborer | `building_block`, `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `rubble`, `spoil`, `stone`, `topsoil` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron); stonecutter: stone (recipe dress_stone) | `building_block`, `coal`, `copper_ore`, `iron_ore`, `rubble`, `stone` | pass |
 | miner | `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `spoil`, `stone`, `topsoil` | laborer: stone (recipe dress_stone); smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron); stonecutter: stone (recipe dress_stone) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
 | sage | `healing_tonic`, `herbal_poultice`, `herbal_tonic`, `strong_healing_tonic` | nobody | `herbal_poultice` | supplies nobody: **open** |
 | smith | `amulet`, `axe`, `cart_axle`, `cart_ironwork`, `chisel`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `lockpick`, `nails`, `padlock`, `pickaxe`, `shovel_blade` | carpenter: cart_axle (recipe build_handcart), cart_ironwork (recipe build_handcart), iron_bar (recipe craft_plough), shovel_blade (buys it); guard: iron_sword (keeps it for its work); laborer: chisel (keeps it for its work), pickaxe (keeps it for its work); miner: pickaxe (keeps it for its work); stonecutter: chisel (keeps it for its work); woodcutter: axe (keeps it for its work) | `amulet`, `axe`, `chisel`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `nails`, `pickaxe` | pass |
-| stonecutter | `building_block`, `stone` | laborer: stone (recipe dress_stone) | `building_block`, `stone` | pass |
+| stonecutter | `building_block`, `rubble` | nobody | `building_block`, `rubble` | supplies nobody: **open** |
 | tanner | `leather`, `leather_armor`, `leather_cap`, `linen_bandage`, `wool_cloth` | guard: leather_armor (keeps it for its work); sage: linen_bandage (buys it); smith: leather (recipe forge_iron_sword) | `leather`, `leather_armor`, `leather_cap`, `wool_cloth` | pass |
 | woodcutter | `apple_sapling`, `log`, `oak_sapling`, `pine_sapling` | carpenter: log (recipe make_mallet); cook: log (recipe roast_meat) | `log` | pass |
 
@@ -96,7 +96,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `build_minecart` | workbench | 2 cart_axle, 2 cart_ironwork, 4 cart_wheel, 6 plank | 1 minecart | player only |
 | `cook_pottage` | stove | 2 wheat | 6 pottage | cook, households |
 | `craft_plough` | workbench | 2 iron_bar, 4 plank | 1 plough | carpenter |
-| `dress_stone` | workbench | 3 stone | 2 building_block, 1 stone | laborer, stonecutter, households |
+| `dress_stone` | workbench | 3 stone | 2 building_block, 1 rubble | laborer, stonecutter, households |
 | `forge_amulet` | anvil | 1 copper_bar, 1 leather | 1 amulet | smith |
 | `forge_axe` | anvil | 2 iron_bar, 1 plank | 1 axe | smith |
 | `forge_cart_axle` | anvil | 1 iron_bar, 1 plank | 1 cart_axle | smith |
@@ -180,6 +180,7 @@ None.
 | material `wool_cloth` | few_professions | consumed by 1 professions (tanner), fewer than 2 | **none: open** |
 | material `wool_cloth` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice, herbal_tonic, strong_healing_tonic is needed by another profession | **none: open** |
+| profession `stonecutter` | supplies_nobody | none of building_block, rubble is needed by another profession | **none: open** |
 
 ## Broken references
 

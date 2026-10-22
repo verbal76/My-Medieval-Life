@@ -194,6 +194,8 @@ ICONS = {
     "building_block": "Blocks/Stone-Block-02",
     # STONE-06: the grey iron-bladed knife stands in for the iron chisel (the pack has no chisel)
     "chisel": "Tools/Knife-05",
+    # STONE-04: pale grey rock fragments for the rubble a dressing leaves
+    "rubble": "Stone/Rocks-05",
     # MIN-F2: a bundle of sticks stands in for the ladder (the pack has none)
     "ladder": "Wood/Sticks-01",
     # MIN-SHOVEL: the grey iron-headed shovel as the shovel; the plain wooden shovel as the carpenter's haft (a

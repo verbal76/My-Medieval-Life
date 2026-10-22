@@ -181,8 +181,8 @@ round trip of blocks and stone; determinism of one seed.
 
 ## Build 18 update (B18-DP-09, B18-DP-10)
 
-`dress_stone` is now **3 stone to 2 blocks and 1 stone (a fragment, raw stone), a mallet and an iron chisel held (each worn
-1 a batch), the Masonry tiers applied** (no `exact`); the chisel is forged from an iron bar (`forge_chisel`); any villager
+`dress_stone` is now **3 stone to 2 blocks and 1 rubble (a by-product, raw stone for raw-stone work only), a mallet and an iron chisel held (each worn
+1 a batch), the Masonry tiers applied inside conservation** (`conserve`: never more blocks than stone); the chisel is forged from an iron bar (`forge_chisel`); any villager
 may dress for their own house (`Construction._dress_own`) and the stonecutter is a trade of the job market. The sections
 above describe the Build 17 rule that these supersede; see the Build 18 row of `docs/DECISIONS.md` and INT-198, INT-360 to
 INT-362.
