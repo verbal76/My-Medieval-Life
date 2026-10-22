@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **482** |
 | Outstanding (not complete, superseded or canceled) | 233 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 87 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 93 owner decision (open or answered), 31 world design rule, 10 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -997,7 +997,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (87)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (93)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -1081,6 +1081,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | TAILOR-Q | Where the tailor comes from | COMPLETE AND VERIFIED | docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) | COMPLETE AND VERIFIED | docs/directives/2026-10-22_x18_d1_starting_experience.md |
 | X18-D3 | Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_tailor_barber_d2_d3.md |
+| X18-D4 | Expansion 18 D4: industry for unattributed work (stall trade to trade; slaughter, clearing, fencing to farming; survey and digging work to mining; hunting, foraging, building, hauling none; player's cancelled actions credit seconds worked) | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
+| X18-D5 | Expansion 18 D5: real-valued levels interpolate between whole-level table values | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
+| X18-D6 | Expansion 18 D6: posted manor job wages are fixed when the job is taken, at the taker's effective level | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
+| X18-D7 | Expansion 18 D7: crop shares split by work done (minutes x the cutter's own work rate) | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
+| X18-D8 | Expansion 18 D8: wages with skill modifiers round to the nearest whole coin | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
+| X18-D9 | Expansion 18 D9: experience is dropped at the next dawn after death or departure | COMPLETE AND VERIFIED | docs/directives/2026-10-23_owner_answers_x18_d4_d9.md |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | BLOCKED | docs/directives/2026-10-21_expansion19_sjd_final_decisions.md |

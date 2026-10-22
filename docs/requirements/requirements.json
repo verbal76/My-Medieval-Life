@@ -30663,6 +30663,258 @@
    "owner_answer": "Option 1: no thresholds on the 0-10 levels (levels scale pay and output only, never a gate, Q18-9); option 2's band names (novice/journeyman/master) used when reports reach the player"
   },
   {
+   "id": "X18-D4",
+   "title": "Expansion 18 D4: industry for unattributed work (stall trade to trade; slaughter, clearing, fencing to farming; survey and digging work to mining; hunting, foraging, building, hauling none; player's cancelled actions credit seconds worked)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Use the table",
+   "description": "Expansion 18 D4: industry for unattributed work (stall trade to trade; slaughter, clearing, fencing to farming; survey and digging work to mining; hunting, foraging, building, hauling none; player's cancelled actions credit seconds worked)",
+   "source": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md",
+   "approval": "owner, 2026-10-23, chose 'Use the table (Recommended)'",
+   "acceptance": [
+    "The capability hook's mapping credits each listed activity to the industry in the D4 table; activities marked none earn no experience"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_tailor_barber_d2_d3.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner D4 answer recorded"
+    }
+   ],
+   "owner_answer": "The D4 table as proposed: trade at a stall to trade (hours the stall is kept open); slaughter, clearing ground, fencing farmland to farming; survey, trial pits, excavation, tunnelling, shoring, backfill, service-contract digging to mining; hunting, foraging, picking, building, hauling and carting to none; the player's cancelled actions credit the seconds actually worked"
+  },
+  {
+   "id": "X18-D5",
+   "title": "Expansion 18 D5: real-valued levels interpolate between whole-level table values",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Blend between levels (Recommended)",
+   "description": "Expansion 18 D5: real-valued levels interpolate between whole-level table values",
+   "source": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md",
+   "approval": "owner, 2026-10-23, chose 'Blend between levels (Recommended)'",
+   "acceptance": [
+    "A level of 7.3 takes 30% of the way from level 7's modifier to level 8's; no floor or rounding of levels"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer recorded"
+    }
+   ],
+   "owner_answer": "Option 3, interpolate"
+  },
+  {
+   "id": "X18-D6",
+   "title": "Expansion 18 D6: posted manor job wages are fixed when the job is taken, at the taker's effective level",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Set wage when taken (Recommended)",
+   "description": "Expansion 18 D6: posted manor job wages are fixed when the job is taken, at the taker's effective level",
+   "source": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md",
+   "approval": "owner, 2026-10-23, chose 'Set wage when taken (Recommended)'",
+   "acceptance": [
+    "The manor job board sets the wage and the treasury check at acceptance, from the taker's level; one payment, no new money"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer recorded"
+    }
+   ],
+   "owner_answer": "Option 2, wage set at acceptance"
+  },
+  {
+   "id": "X18-D7",
+   "title": "Expansion 18 D7: crop shares split by work done (minutes x the cutter's own work rate)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "By ground cut (Recommended)",
+   "description": "Expansion 18 D7: crop shares split by work done (minutes x the cutter's own work rate)",
+   "source": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md",
+   "approval": "owner, 2026-10-23, chose 'By ground cut (Recommended)'",
+   "acceptance": [
+    "FARM-CROP-01 shares use base-minute equivalents; total grain unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer recorded"
+    }
+   ],
+   "owner_answer": "Option 2, share by work done"
+  },
+  {
+   "id": "X18-D8",
+   "title": "Expansion 18 D8: wages with skill modifiers round to the nearest whole coin",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Round to nearest",
+   "description": "Expansion 18 D8: wages with skill modifiers round to the nearest whole coin",
+   "source": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md",
+   "approval": "owner, 2026-10-23, chose 'Round to nearest'",
+   "acceptance": [
+    "Modified wages round to the nearest coin as now; no fractional carry, no round-up"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer recorded"
+    }
+   ],
+   "owner_answer": "Option 1, round to the nearest coin (not the agent's recommendation)"
+  },
+  {
+   "id": "X18-D9",
+   "title": "Expansion 18 D9: experience is dropped at the next dawn after death or departure",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Drop it, as now (Recommended)",
+   "description": "Expansion 18 D9: experience is dropped at the next dawn after death or departure",
+   "source": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md",
+   "approval": "owner, 2026-10-23, chose 'Drop it, as now (Recommended)'",
+   "acceptance": [
+    "No emigrant record is kept; behaviour unchanged"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-CAPCOMP",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x18_d4_d9.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "owner_answer",
+     "why": "owner answer recorded"
+    }
+   ],
+   "owner_answer": "Option 1, as now"
+  },
+  {
    "id": "X18-Q12",
    "title": "Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests",
    "kind": "approved",
