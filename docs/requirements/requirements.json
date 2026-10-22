@@ -21304,7 +21304,8 @@
     "693e0c3",
     "6615da4",
     "1b05da0",
-    "e91d903"
+    "e91d903",
+    "05adc9d"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -21352,6 +21353,11 @@
      "date": "2026-10-21",
      "change": "commit e91d903",
      "why": "SYNC-17: Expansion 19 merged Build 17 cd7439c one way (merge 93c107f, head e91d903): conflicts only where both sides added lines (world.gd, economy_sim.gd, tests.yml), kept both; judgment hooks fire on Build 17's level-aware witness and shared-hours paths; collapse deaths publish no judged event (accidents); contract breach/acceptance feeds and collapse-death memory deferred to reconciliation. judgment_test 164, judgment_live 53, decay_demo 24, world 339, run_tests 3544, equip 51, contracts 138, conservation 8, wiki all 0 failures; 30-day seed 1 judgment on: leaks 0; gossip ~24 ms per day (not worse); frame p99 1.41 ms. Determinism gate not rerun on the branch. Ready to resume"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commit 05adc9d",
+     "why": "Gossip performance round (b2eb3f9 code, 05adc9d docs): reads skip flushes that cannot change them (cached by a version counter), lazy ledger decay, no idle interpretation dictionary, direct tie reads. 500 people: live p99 1.27->1.05 ms, p99.9 3.35->1.81 ms, update 11.6->4.0 ms/day, flushes 391->29; heavy p99 8.19->6.20 ms, p99.9 15.77->13.82, update 38.4->11.3. Worst single frame unchanged (live ~6 ms desktop, ~25 ms phone estimate; heavy ~26 ms, ~105 ms phone) - an identical-result dependency flush; only the scheduled timing (owner X19-Q-TIMING, pending) bounds it. Heavy memory 17.4 MB over the proposed 16 MB budget (17.2 before). Determinism: judgment state hashes and 30-day seed-1 fingerprint 1c755f53 identical; no leaks; judgment suites pass"
     }
    ],
    "target_build": "19"
