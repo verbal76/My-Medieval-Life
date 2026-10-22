@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 429 (207 of them still open) |
-| **Open entries now** (rules excluded) | | **384** |
+| Entries added since | | 430 (208 of them still open) |
+| **Open entries now** (rules excluded) | | **385** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (429)
+## Added since the baseline (430)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -455,6 +455,7 @@ None.
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) | decision | APPROVED |  |
 | STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 | decision | APPROVED |  |
 | STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 | decision | APPROVED |  |
+| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | decision | OPEN | 18 |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 18 |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | TAILOR-Q | Where the tailor comes from | decision | APPROVED | owner decision |
@@ -507,7 +508,7 @@ None.
 | X18-D8 | Expansion 18 D8: wages with skill modifiers round to the nearest whole coin | decision | APPROVED |  |
 | X18-D9 | Expansion 18 D9: experience is dropped at the next dawn after death or departure | decision | APPROVED |  |
 | X18-FEES | Courier fee coefficients and the small-agreement threshold (X18-Q12, X18-Q13) | decision | APPROVED | 18 |
-| X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 18 |
+| X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

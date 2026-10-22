@@ -11,7 +11,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 
-## Implemented but not tested (43)
+## Implemented but not tested (42)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -57,7 +57,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WDR-021-C | unassigned | PARTIALLY IMPLEMENTED | compliance audit against the rule's verification scenario (human review) |
 | WDR-022-C | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
-| X18-Q12 | 18 | PARTIALLY IMPLEMENTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |
 
 ## Awaiting owner playtest or device check (51)
 

@@ -9,16 +9,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 81 |
-| Integrated | 66 of 81 (81%) |
-| Automated tests passed | 64 of 81 (79%) |
-| Integration verified | 49 of 81 (60%) |
+| Integrated | 67 of 81 (83%) |
+| Automated tests passed | 65 of 81 (80%) |
+| Integration verified | 50 of 81 (62%) |
 | Gameplay verified | 0 of 81 (0%) |
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 1 of 81 (1%) |
 | Open (release blockers) | 80 |
-| Open owner decisions (blocking) | 5 (0) |
+| Open owner decisions (blocking) | 6 (1) |
 
-## Integrated, awaiting gameplay or owner verification (65)
+## Integrated, awaiting gameplay or owner verification (66)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -82,13 +82,14 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device (performance on a phone); Build 18 release gate; known: countryside animals are ambient only: they cannot be hunted; travellers stop at the village gate |  | verification only |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | final percentages after X18-SIM (Q18-11); MIN-D mining stages mapped to 0-10 (reconciliation item); owner playtest |  | verification only |
+| X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | gameplay check; Build 18 release gate |  | verification only |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | INTEGRATION VERIFIED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |  | verification only |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | INTEGRATION VERIFIED | Gameplay and device check of the courier window (rendered with xvfb and looked at: scratchpad courier2_review.png, courier2_form.png); known: Villagers post only small payments by regular route to settlement traders; no villager special deliveries to people or debt collection yet |  | verification only |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | INTEGRATION VERIFIED | Gameplay check; houses, land and manor sales stay in person only (not every remote path traced) |  | verification only |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 18 wip/build18 b196303 | TARGETED TESTS PASSED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11); known: covers 9 of about 46 planned runs; no capability constants adopted |  | verification only |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (12)
+## Ready to proceed now (approved, specified, nothing open blocks it) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -103,7 +104,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | UNKNOWN |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | fc25af7 | NOT TESTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | M |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |  | M |
-| X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL) |  | L |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (3)
 
@@ -119,7 +119,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (5)
+## Open owner decisions (6)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -128,6 +128,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  |
 | COMP-R1 | Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review | OPEN | no |  |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B |
+| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | OPEN | yes |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (9)
 

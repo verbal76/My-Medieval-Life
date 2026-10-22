@@ -43156,6 +43156,32 @@
    "blocks_implementation": false
   },
   {
+   "id": "STONECUT-R1",
+   "kind": "decision",
+   "title": "WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy?",
+   "description": "WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy?",
+   "source": "docs/systems/MATERIAL_INTERDEPENDENCY.md (profession stonecutter: supplies nobody, open) on wip/build18 9932b1d",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "18",
+   "related": [
+    "WDR-002-C",
+    "X18-STONECUT",
+    "B18-DP-15"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/systems/MATERIAL_INTERDEPENDENCY.md (profession stonecutter: supplies nobody, open) on wip/build18 9932b1d"
+    }
+   ]
+  },
+  {
    "id": "SYNC-17",
    "title": "Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c",
    "kind": "approved",
@@ -48571,11 +48597,12 @@
     "Payment and goods transfer correctly; no free transport; no currency created; smoke tests pass or the missing feature is named"
    ],
    "implementation": "",
-   "tests": "courier_test",
+   "tests": "courier_test; as its parts: courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, conservation_test 8, run_tests 3591",
    "playtest": [],
    "branch": "",
    "commits": [
-    "d63d8d7"
+    "d63d8d7",
+    "a2ea741"
    ],
    "parent": "PROS-18",
    "depends_on": [],
@@ -48618,6 +48645,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; integrated_in=…; commits=…; remaining_work=wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
      "why": "courier and formal-contract code merged into wip/build18 with Expansion 18 (d63d8d7) but not wired into play (inert); no worker; Q18-14..16 answered 2026-10-23"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: courier_test -> courier_test; as its parts: courier_live_test 138, courier_test 45, contract_sign_test 21, contracts_test 154, conservation_test 8, run_tests 3591; commits + a2ea741; remaining_work",
+     "why": "its parts X18-Q12-BOOTH, X18-Q12-POST, X18-Q13 and REG-COURIER-01 are integrated and verified (booths, postage window, fees, notary path wired into play); remaining-work note was stale"
     }
    ],
    "target_build": "18",
@@ -48626,11 +48658,11 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "remaining_work": "wire into play: booths (any shop, Q18-15; built near the market, Q18-16), the postage-style window, fees (X18-FEES), Law notary path (LAW-SKILL)",
+   "remaining_work": "gameplay check; Build 18 release gate",
    "design": "PARTIAL",
    "effort": "L"
   },
