@@ -24,6 +24,7 @@ var roofs: RoofFade            # fades the roof of the building the player is in
 var blankets := {}             # bed tile -> its blanket (AtlasTexture), drawn over a sleeper
 var camera: Camera2D
 var ui: GameUI
+var courier_window: CourierWindow         # REG-COURIER-01: the open courier window, if any
 var sprites := {}              # npc id -> ActorSprite
 var animal_sprites := {}       # animal id -> AnimalSprite
 var countryside: Countryside   # WORLD-LIFE-01: ambient animals and travellers outside the village (drawn only; never saved)
@@ -2307,6 +2308,10 @@ func _find_target() -> void:
 					if spare != null:
 						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
 					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
+	if world.couriers != null:                                # REG-COURIER-01: the village's courier booth (a stall kept by a villager)
+		var cb: Dictionary = world.couriers.booth_near(p.pos, 1.8)
+		if not cb.is_empty():
+			here.append({"kind": "courier_booth", "booth": str(cb.id), "label": "Courier booth: send goods by the regular route or a special delivery"})
 	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # B14-11: the visiting caravan sells a plough horse
 		var no_horse := world.farm.buy_horse_refusal(p)
 		here.append({"kind": "caravan_horse", "label": ("Buy a plough horse from the caravan (%d coins)" if no_horse == "" else "The caravan's plough horse (%d coins): " + no_horse) % int(Farming.cfg().caravan_horse.price)})
@@ -2911,6 +2916,10 @@ func _use() -> void:
 				ui.message(world.pack_full_text(world.farm.products_in(target.pen).keys()))
 			for id in got:
 				_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
+		"courier_booth":
+			courier_window = CourierWindow.new(ui, world.couriers)
+			courier_window.booth_id = str(target.booth)
+			courier_window.show()
 		"caravan_horse":
 			var why_not: String = world.farm.buy_horse(p)
 			ui.message(why_not if why_not != "" else "You pay the caravan and walk the horse into your pen. With it, the hand plough does a cell in %.0f second." % float(Farming.cfg().till.horse.seconds))

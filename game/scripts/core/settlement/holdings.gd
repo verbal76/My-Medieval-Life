@@ -55,6 +55,11 @@ static func holders(w: World) -> Dictionary:
 	var cg: Dictionary = w.contracts.goods()       # CON-02 (Build 17): goods dug for buyers and still carried on service contracts
 	for id in cg:
 		g.contracts[id] = int(cg[id])
+	g["booths"] = {}
+	if w.couriers != null:                         # REG-COURIER-01: goods waiting at the courier booths (for a departure, or deposited for a sender)
+		var bg: Dictionary = w.couriers.held_goods()
+		for id in bg:
+			g.booths[id] = int(bg[id])
 	g["pits"] = {}
 	if w.pits != null:                             # MIN-E (Build 17): earth lying on the open pits' spoil heaps
 		var pg: Dictionary = w.pits.goods()
@@ -101,6 +106,8 @@ static func coins(w: World) -> Dictionary:
 		c.loot += int(l.coins)
 	if w.business:
 		c.tills += w.business.tills()
+	if w.couriers != null:
+		c["booths"] = w.couriers.held_coins()      # REG-COURIER-01: fees held at the booths until the work is done, and proceeds deposited
 	return c
 
 

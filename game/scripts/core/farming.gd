@@ -511,6 +511,7 @@ func buy_horse(p: PlayerState) -> String:
 	var dst := pen_with_room("horse")
 	var dealer: OffMapSettlement = w.regions.horse_dealer(w.day())
 	dealer.sell_horse(price)
+	w.note_settlement_trade(p, dealer)          # REG-COURIER-01: a dealing with that trader (a record only)
 	p.coins -= price
 	w.coin_sources -= price
 	var a: Animal = w.fauna.spawn(dst.id, "horse", "m", null)

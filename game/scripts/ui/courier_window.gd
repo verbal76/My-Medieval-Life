@@ -1,12 +1,13 @@
 class_name CourierWindow
 extends RefCounted
-## PROSPECTIVE (Expansion 18, X18-Q12-POST; PROS-18): the courier contract window, "like online postage": choose the
+## Expansion 18 (X18-Q12-POST, REG-COURIER-01): the courier contract window, "like online postage": choose the
 ## service (regular route or special delivery), item and quantity, a recipient you know (a person or a business), where to
 ## deliver (from the world's records), whether the courier collects payment (money or an item and how much) and whether
 ## the proceeds come back to you or wait at your booth; for a special delivery, the courier and your offer. "Review"
 ## shows the delivery instruction and the fee, worked out by CourierService (the rules are in core; this window only shows
 ## them and collects the choices, DVW-A12); "Confirm" books it. Built from GameUI's own widgets, like the other windows.
-## Not reachable from the live game yet (no menu entry until integration); tests/courier_window_shot.gd opens it.
+## In the live game it opens from the village's courier booth (main.gd, the action beside the booth; `booth_id`);
+## tests/courier_window_shot.gd opens it too.
 
 var ui: GameUI
 var service: CourierService
@@ -14,6 +15,7 @@ var sender := "player"
 var choice := {"kind": 1, "item": 0, "qty": 1, "recipient": 0, "where": 0, "collect": false, "pay_kind": 0, "pay_amount": 0,
 	"proceeds": 0, "courier": 0, "offer": 0}
 var review := ""
+var booth_id := ""                 # the booth the player stands at (deposits waiting there are collected from it)
 
 
 func _init(game_ui: GameUI, courier_service: CourierService) -> void:
@@ -62,7 +64,8 @@ func order() -> Dictionary:
 		o.courier = cs[clampi(int(choice.courier), 0, cs.size() - 1)]
 	if o.kind == "route":
 		for r in service.routes:
-			if str(service.booth(str(r.to)).settlement) == str(o.get("settlement", "")):
+			if str(service.booth(str(r.to)).settlement) == str(o.get("settlement", "")) \
+					and str(service.booth(str(r.from)).settlement) == service.place_of(sender):
 				o.route = r.id
 	return o
 
@@ -72,6 +75,17 @@ func show() -> void:
 	if review != "":                                 # the assembled instruction first, where it is seen, then the form
 		ui._label(review, 18, Color(1, 0.9, 0.6))
 		ui._button("Confirm", func(): _confirm())
+	var dep: Dictionary = service.waiting(booth_id, sender) if booth_id != "" else {}
+	if not dep.is_empty():                           # proceeds left for you at this booth
+		var parts := []
+		if int(dep.coins) > 0:
+			parts.append("%d coins" % int(dep.coins))
+		for id in dep.items:
+			parts.append("%d %s" % [int(dep.items[id]), GameData.item_name(str(id))])
+		ui._button("Collect what waits for you here (%s)" % ", ".join(parts), func():
+			service.withdraw(booth_id, sender)
+			review = "You take what was left for you."
+			show())
 	var grid := GridContainer.new()
 	grid.columns = 2
 	ui.panel_body.add_child(grid)

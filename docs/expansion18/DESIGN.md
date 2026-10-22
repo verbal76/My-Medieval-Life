@@ -379,13 +379,13 @@ Gaps that need the owner (not invented here):
 
 Rules in core: `couriers.gd` (`CourierService`) and `formal_contracts.gd` (`FormalAgreements`). Data in `game/data/couriers.json`
 (`mml-couriers/0`); every number in it is an UNAPPROVED provisional default. The window is `ui/courier_window.gd`. It only shows
-the rules and collects choices (DVW-A12). It has no menu entry in the live game until integration.
+the rules and collects choices (DVW-A12). **Live since REG-COURIER-01** (section 11a): it opens from the village's courier booth.
 
 Booths (X18-Q12-BOOTH):
 - A booth is an existing market stall with no tenant. If none is free, it is a stall its keeper builds by the STALL rules
   (`Stalls.build`, three planks from the keeper's own pack).
 - The keeper is hired by the existing job rule (`Construction.can_hire`).
-- Each off-map settlement has a booth of its own, kept by that settlement as a party.
+- Each off-map settlement has a booth of its own, kept by that settlement's trader party (`region:<id>/trader`).
 - Regular-route fees are paid at the booth, and goods for a route are handed over there.
 - Booths hold three things: deposits for senders, goods waiting for a departure, and the fees of special deliveries until
   they are fulfilled. All three are counted holders.
@@ -412,14 +412,14 @@ Recipients (X18-Q12-POST):
 - The same rules serve the player and villagers.
 
 Physical execution (`tick`):
-- The goods leave the sender's pack when the order is booked. They ride in the courier's own pack, with the journey's
-  days on the road.
+- The goods leave the sender's pack when the order is booked. They ride in the courier's load (held by the delivery, section 11a),
+  with the journey's days on the road.
 - On arrival the courier hands the goods over, and collects payment (coins or an item) when instructed. A recipient who
   cannot or will not pay refuses the delivery, and the goods come back.
 - The courier then travels back. It hands the proceeds to the sender, or deposits them at the sender's booth.
 - The contract is **fulfilled** only when every physical and financial obligation is done.
-- **Interrupted:** a courier who dies or is waylaid interrupts the journey. Its pack passes with its estate (heir or loot,
-  `World.kill`). The held special fee goes back to the payer.
+- **Interrupted:** a courier who dies or is waylaid interrupts the journey. The load lies where it fell (a loot pile, section 11a).
+  The held special fee goes back to the payer.
 
 Formal contracts (Q18-13):
 - Small agreements, at or under `small_value` (UNAPPROVED), are binding without signatures.
@@ -445,8 +445,43 @@ Owner questions from this section:
 Reconciliation with Build 17:
 - Special deliveries and formal goods contracts become CON-01 contracts (service terms per Q18-12).
 - The booths' stores and held coins join the census (`SettlementHoldings`) and `World.total_coins`.
-- The CourierService and FormalAgreements state goes into the versioned save.
-- The courier window gets its menu entry.
+- The CourierService state goes into the save (done, section 11a); FormalAgreements' is still to do.
+- The courier window opens from the village booth (done, section 11a).
+
+### 11a. Couriers in the live game (REG-COURIER-01)
+
+`World.couriers` is `CourierService.create_live(world)` (`couriers.gd`); `tests/courier_live_test.gd` proves the following on a real seeded
+village (the fixture tests `courier_test.gd` and `contract_sign_test.gd` still drive a separate service).
+- **Booths.** One per settlement, kept by that settlement's trader party; the parties are resolved from `World.regions` each time
+  (`CourierService._party`), so a loaded world holds no handles. The village booth opens at the first dawn after a keeper and a
+  place exist: a free market stall (`World.stalls` with no tenant), else a stall the keeper builds from planks of their own
+  (`Stalls.build`, Q18-16). If nobody can open one it is tried again at the next dawn. A dead keeper is replaced at dawn by the
+  lowest-id villager `Construction.can_hire` allows.
+- **Routes.** A regular route each way joins the village booth to each settlement's (10 in all, made at dawn, first departure the
+  next day). Journey days are `Regions.village_route_table`: the settlement's distance from the village (miles times
+  `tiles_per_mile`, plus its offset, from `settlements.json`) hauled by a carrier along roads (`TradeRoutes.abstract_route`, the same
+  rule as `Regions.route_table`); about 0.5 day for Wulstead (20 miles) to 1.8 days for Bourton Abbas (72). A route is bookable only
+  by someone in the place it starts from, and only while its booth has a keeper.
+- **Time.** `World._on_hour` calls `CourierService.step` (departures, hand-overs, returns, fulfilment), `World._new_day` calls `daily`.
+- **Recipients.** A villager or the player who really dealt with a settlement's trader (a caravan sale or purchase: the imports, stone,
+  medicine, seed and surplus rounds, the luxury buys, the plough horse) may address that trader (`World.note_settlement_trade`, a record
+  only, saved in `contacts`). The old journal path (`Regions.journal`, fixtures) still counts.
+- **Loads.** A route's goods wait in the booth's store until the courier leaves, then ride in the delivery's `cargo`; a special
+  delivery's goods go into `cargo` at booking. The takings collected from a recipient are `carried_coins`. Both are held by the delivery
+  (counted by `held_goods`/`held_coins`, so by the census and `World.total_coins`), not in the courier's own pack and purse: a courier
+  is an ordinary villager whose own trading would otherwise sell or spend what it carries (found when the first live run created six
+  rings at Wulstead). A courier who dies drops the cargo and takings as a loot pile where they fell (`interrupt`), the held special fee
+  returns to the payer, and a courier found dead is noticed at the next hour, not only on arrival.
+- **Boundary.** Goods handed to a settlement's party count `exported_<item>`, taken from it `imported_<item>`; coins paid to it lower
+  `World.coin_sources` (`caravan_coins_out`), coins it pays raise it (`caravan_coins_in`); the party writes `outside_*` flow lines.
+  `Regions.net_paid_by_village` and the economy simulation's `_regions` goods check include them. See INT-280 to INT-283.
+- **Saves.** Optional World key `couriers` (booths with their stores and deposits, routes, deliveries, contacts, id counter); no
+  save-version change; an older save loads with the five booths and nothing in flight, and the village booth opens at the next dawn.
+- **Player.** A context action beside the village booth opens the courier window (`main.gd`); the window offers deposits waiting there.
+- **Not done.** Villagers never book a courier themselves (no existing NPC decision path does); shops cannot open booths of their own
+  (Q18-15, "any business with a shop"); `FormalAgreements` (the notary path) is not wired in the loop and not saved; a settlement
+  party hires out no carts or couriers (Q18-12 left that open; `carts_for_hire` stays false); the fee coefficients stay the provisional
+  X18-FEES values.
 
 ## 12. The five neighbouring settlements and their traders (SET-C-SIM, SET-C-FIVE, ECON-P1.3; owner 2026-10-23)
 
@@ -598,7 +633,7 @@ between the five. **`SettlementLedger` remains**, with the same interface, for e
 village's read-only snapshots (`SettlementReport.parties`, `caravan_compare.gd`) and the fixtures of tests that pin historical
 behaviour (a configured `income_per_day`, `reserves`, `recipes`: `regional_test`, `capability_test`, `settlement_test`). No live
 code makes one, and `SettlementSave`'s `x18_settlements.regions` list of ledgers is kept only so an earlier prospective save loads.
-Not done (REG-COURIER-01 and the later task that wires the market in): calling `RegionalMarket` from the daily loop, and wiring the courier service into the game.
+Not done (the later task that wires the market in): calling `RegionalMarket` from the daily loop. The courier service is wired into the game (REG-COURIER-01, section 11a).
 Tests: `party_test.gd`, `regional_test.gd`, `courier_test.gd`, `contract_sign_test.gd`.
 
 ### Cost

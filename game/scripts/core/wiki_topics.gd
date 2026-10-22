@@ -32,6 +32,7 @@ static func add_pages(w: Wiki) -> void:
 	_causes(sys)
 	_caravan(sys)
 	_neighbours(sys)
+	_couriers(sys)
 	_bandits(sys)
 
 
@@ -142,8 +143,34 @@ static func _neighbours(sys: Callable) -> void:
 		Wiki.h("What can go wrong"),
 		Wiki.p("Nothing is made for them. A place with a poor harvest, or whose workshops sell little, has little money to spend, and its traders buy less. A household that cannot buy food goes hungry, and one that stays hungry loses people; the council gives day labour and buys food for the hungry while it has money to spare. A place can shrink: one with few young people may dwindle as its old die, and one whose families grow faster than its harvests may lose people to hunger. Nothing rescues it, and what the village sells it or buys from it can matter."),
 		Wiki.h("Not in the game yet"),
-		Wiki.p("You cannot visit them in person, swap goods for goods, owe or be owed money, or send word by courier, and people do not move between them and the village or from one place to another, so they marry within their own place."),
-		Wiki.links(["sys:caravan", "sys:trading", "sys:manor_treasury", "animal:horse"])], "neighbouring settlements towns Wulstead Netherton Garton Higham Bourton Abbas trade traders caravan")
+		Wiki.p("You cannot visit them in person, swap goods for goods or owe or be owed money, and people do not move between them and the village or from one place to another, so they marry within their own place. Goods and word go between you only by the caravan and by courier (see Couriers and the courier booth)."),
+		Wiki.links(["sys:caravan", "sys:couriers", "sys:trading", "sys:manor_treasury", "animal:horse"])], "neighbouring settlements towns Wulstead Netherton Garton Higham Bourton Abbas trade traders caravan")
+
+
+# game/data/couriers.json, CourierService (couriers.gd), CourierWindow (ui/courier_window.gd), main.gd (the booth action),
+# Regions.village_route_table; REG-COURIER-01, X18-Q12, X18-Q12-BOOTH, X18-Q12-POST.
+static func _couriers(sys: Callable) -> void:
+	var r: Dictionary = CourierService.cfg().routes
+	var names := []
+	for sp in OffMapSettlement.data().settlements:
+		names.append(str(sp.name))
+	sys.call("couriers", "Couriers and the courier booth", [
+		Wiki.p("A courier carries your goods to someone you know, here or in one of the neighbouring settlements (%s), and can bring back payment. Every settlement has a courier booth kept by its own trader, and the village has one at a market stall, kept by a villager. Stand beside the village booth and choose the courier option to open the courier form." % Wiki._and_list(names)),
+		Wiki.h("Sending something"),
+		Wiki.p("Fill in the form like a parcel slip: the service, the item and how many, whom to deliver to, where, whether the courier should collect payment (coins or an item, and how much), and whether the payment comes back to you or waits for you at your booth. Review shows the instruction in plain words and the fee before you confirm. Nothing is sent until you confirm."),
+		Wiki.bullets([
+			"Regular route: the courier leaves the booth every %d days for the settlement and takes up to %d goods a load for a flat fee of %d coins a load, paid when you book. Your goods wait at the booth until it leaves." % [int(r.every_days), int(r.load_units), int(r.fee_per_load)],
+			"Special delivery: a courier carries it at once, for a fee you agree. You offer a price; the courier accepts it if it covers the work (the days there and back, the loads, the stops) and otherwise names the least it will take. The fee is held at the booth and paid to the courier only when the work is done.",
+		]),
+		Wiki.h("Whom you can send to"),
+		Wiki.p("Only people and businesses you know: villagers you have come to know, and shops or traders you have really dealt with. A settlement's trader is someone you know once you have bought from or sold to the caravan's trader from that place. There are no typed addresses and no strangers; the form lists only those you may send to."),
+		Wiki.h("The road"),
+		Wiki.p("Nothing is instant. The courier takes your goods on the road, and the days it takes depend on how many miles lie between the places. At the end it hands the goods over, takes the payment you asked for if the other side can and will pay (if not, the goods come back to you), and returns. The delivery counts as done only when the courier is home and every part is settled. Proceeds come back to your pack, or wait at the village booth if you asked, or if your pack was full; go to the booth and collect them there."),
+		Wiki.h("What can go wrong"),
+		Wiki.p("A courier who dies on the road drops the load where they fell; it can be found by anyone, and the fee that was held goes back to you. A recipient who has died, cannot take the goods or refuses the payment sends the goods back. Without a keeper, the village booth waits until another villager takes it over at dawn. You need the goods and the fee in hand when you book. A settlement whose trader is gone cannot be reached."),
+		Wiki.h("Not in the game yet"),
+		Wiki.p("Villagers do not yet send goods by courier on their own, shops cannot yet keep booths of their own, and signing formal contracts through a travelling notary is not in play."),
+		Wiki.links(["sys:neighbours", "sys:caravan", "sys:trading"])], "courier couriers booth deliver delivery send post parcel route special delivery fee regular route settlements")
 
 
 ## The settlements whose traders carry luxuries from the start (settlements.json "start", DVW-B3-LUX).
