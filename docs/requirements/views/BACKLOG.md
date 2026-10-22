@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (46)
+## Build 20 or later (backlog) (52)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -36,6 +36,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | PL1-13 | Recognisable stove | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | PL2-010 | Recognisable sawhorse | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | PL2-013 | Usable furniture | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
+| PL2-015-BUYANIMALS | Farming: caravan animals other than the horse (deferred from PL2-015; fits LE-05) | approved | OWNER APPROVED | NOT STARTED |
+| PL2-015-COOPS | Farming: coops and animal shelters (deferred from PL2-015; goes with weather) | approved | OWNER APPROVED | NOT STARTED |
+| PL2-015-HIRED | Farming: hired farmhands (deferred from PL2-015; fits LE-03) | approved | OWNER APPROVED | NOT STARTED |
+| PL2-015-OTHER | Farming: oxen, per-crop art and the rest of the deferred-on-purpose list in docs/BUILD_DECISIONS.md (deferred from PL2-015) | approved | OWNER APPROVED | NOT STARTED |
+| PL2-015-TRAP | Farming: trapping (deferred from PL2-015; fits LE-05) | approved | OWNER APPROVED | NOT STARTED |
+| PL2-015-WATER | Farming: weather and expanded watering, crop and animal loss (deferred from PL2-015) | approved | OWNER APPROVED | NOT STARTED |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | approved | OWNER APPROVED | NOT STARTED |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | approved | OWNER APPROVED | NOT STARTED |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | approved | OWNER APPROVED | NOT STARTED |

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 422 (200 of them still open) |
-| **Open entries now** (rules excluded) | | **377** |
+| Entries added since | | 428 (206 of them still open) |
+| **Open entries now** (rules excluded) | | **383** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (422)
+## Added since the baseline (428)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -347,6 +347,12 @@ None.
 | PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
+| PL2-015-BUYANIMALS | Farming: caravan animals other than the horse (deferred from PL2-015; fits LE-05) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| PL2-015-COOPS | Farming: coops and animal shelters (deferred from PL2-015; goes with weather) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| PL2-015-HIRED | Farming: hired farmhands (deferred from PL2-015; fits LE-03) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| PL2-015-OTHER | Farming: oxen, per-crop art and the rest of the deferred-on-purpose list in docs/BUILD_DECISIONS.md (deferred from PL2-015) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| PL2-015-TRAP | Farming: trapping (deferred from PL2-015; fits LE-05) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| PL2-015-WATER | Farming: weather and expanded watering, crop and animal loss (deferred from PL2-015) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | PROS-01 | Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 19 |
@@ -504,7 +510,7 @@ None.
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
 | X19-ASSAULT | Should being assaulted oneself be a permanent memory (the proposed threshold makes it so; at the stress rate victims accumulate many)? | decision | APPROVED | 19 |
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | APPROVED | 19 |

@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23 (staging fast-forwarded to the reconciled register, REQ-CTRL-02).
+**Updated:** 2026-10-23 (SET-D, the farming audit and the capability simulations merged into `wip/build18` 9f44bbd).
 
 ## Read first (after a compaction or in a new session)
 
@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `84bf5f0` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile |
+| `wip/build18` | `9f44bbd` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -41,9 +41,6 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | PL1-10 (+ ECON-P3 trade-counter tills) | business worker (Sonnet subagent) | `wip/b18-business` | `wip/build18` 84bf5f0 | attendants at workshop stations, produce stocked and sold, stall display, shops in leased houses (B18-DP-01) |
 | WDR-012-C | competition worker (Sonnet subagent) | `wip/b18-competition` | `wip/build18` 84bf5f0 | specialization, hiring competition, relocation (B18-DP-08) |
 | STONE-02, STONE-03, STONE-04, STONE-06, X18-STONECUT | stone worker (Sonnet subagent) | `wip/b18-stone` | `wip/build18` 027d742 | dressing 3->2+1 rubble, the iron chisel, the stonecutter trade (B18-DP-09/10) |
-| PL2-015 (audit), DVW-B3-CHAPEL (player volunteering) | farming worker (Sonnet subagent) | `wip/b18-farming` | `wip/build18` 027d742 | retained vs deferred farming features with later-build records; the player on the church field (B18-DP-04, DP-12) |
-| SET-D | settlement-development worker (Sonnet subagent) | `wip/b18-setd` | `wip/build18` 027d742 | trades open and close by existing rules (B18-DP-05) |
-| X18-SIM | capability-sim worker (Sonnet subagent) | `wip/b18-capsim` | `wip/build18` 421525c | comparative capability simulations and report; no constants adopted (Q18-11) |
 
 On their reports:
 1. Review the work.
@@ -54,7 +51,11 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Merge the courier and buying workers when they report (targeted checks; one 30-day conservation run per seed on the combined result), then REG-EVAL-01 against the preserved baseline (`docs/investigations/evidence_2026-10-23_regional/`).
+1. Merge the stone, business and competition workers when they report (targeted checks); then one 30-day conservation run per seed on the combined Build 18 code (none yet since credit parity, ECON-P3 and the capability wiring).
+   Then the release verification on the final code: 365-day runs per seed (100-day read from the same runs), determinism,
+   Build 17 save into Build 18, full suites, wiki gate, three-platform export, WDR-004-C, REG-EVAL-01 against the preserved
+   baseline (`docs/investigations/evidence_2026-10-23_regional/`), SET-C long runs, VER-CON-50ORE; SET-D's multi-generation
+   check stays outstanding unless a run with a sufficient horizon is shown (B18-DP-05).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);
@@ -65,7 +66,7 @@ On their reports:
 
 ## Waiting on the owner
 
-Every open decision is in `docs/requirements/views/DECISIONS.md`. The decision package B18-DP-01..14 was answered 2026-10-23 (`docs/directives/2026-10-23_build18_decision_package_answers.md`); B18-DP-15 (the sage) is open. In this session:
+Every open decision is in `docs/requirements/views/DECISIONS.md`. The decision package B18-DP-01..14 was answered 2026-10-23 (`docs/directives/2026-10-23_build18_decision_package_answers.md`); B18-DP-15 and DP-16 were answered (`docs/directives/2026-10-23_dp15_dp16_con02_empperm.md`). In this session:
 - the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
 - the stone values (STONE-D1, STONE-D2);
 - Build 18 target (owner 2026-10-23, `docs/directives/2026-10-23_reg_demo_d1_and_build18_target.md`): playable within five hours; punch list fixed; blockers to the owner promptly; REG-CIRC-D1 deferred until REG-EVAL-01;

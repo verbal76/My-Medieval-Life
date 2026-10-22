@@ -4528,7 +4528,15 @@
      "date": "2026-10-23",
      "change": "disposition OPEN -> APPROVED",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commits + 69990cb",
+     "why": "implemented (69990cb, merged 9f44bbd)"
     }
+   ],
+   "commits": [
+    "69990cb"
    ]
   },
   {
@@ -4615,7 +4623,15 @@
      "date": "2026-10-23",
      "change": "disposition OPEN -> APPROVED",
      "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "commits + fc25af7",
+     "why": "implemented as approved: evidence-checked exception, checker not weakened globally (fc25af7)"
     }
+   ],
+   "commits": [
+    "fc25af7"
    ]
   },
   {
@@ -12833,12 +12849,13 @@
     "A chapel stands in the village with a preacher and an assistant (low-paid); villagers and the player give offerings; donations are spent first on food relief before any other relief source; the church has a small farm plot worked by volunteers or else the clergy, its crop going to relief; villagers in need ask at the church; coins and goods conserved; deterministic; wiki page"
    ],
    "implementation": "",
-   "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge",
+   "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd",
    "playtest": [],
    "branch": "wip/b18-farming",
    "commits": [
     "1b1b2f5",
-    "71b6285"
+    "71b6285",
+    "69990cb"
    ],
    "parent": "DVW-B3",
    "depends_on": [],
@@ -12916,6 +12933,11 @@
      "date": "2026-10-22",
      "change": "assigned_worker: chapel worker (Sonnet subagent, started 2026-10-23) -> farming worker (Sonnet subagent, started 2026-10-23); branch: wip/b18-chapel -> wip/b18-farming",
      "why": "B18-DP-04 audit and B18-DP-12 player volunteering assigned"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests: chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge -> chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd; commits + 69990cb",
+     "why": "B18-DP-12: the player volunteers on the church field by the villagers' rule (shared FarmPlots.work_cell), merged 9f44bbd"
     }
    ],
    "target_build": "18",
@@ -33133,10 +33155,13 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": ":29 | PARTIALLY COMPLETED (:42) | PARTIAL | `1ba0c08`, `50219b7` | Deferred: coops, hired help, draught animals, trapping, water, per-crop art; open owner Qs BUILD_DECISIONS:709-710",
-   "tests": "",
+   "tests": "on 9f44bbd: farming 224, farm_plots 104, horse 56, chapel 91, conservation 8, save_transfer 21, run_tests 3591, wiki passed, Python OK",
    "playtest": [],
    "branch": "wip/b18-farming",
-   "commits": [],
+   "commits": [
+    "69990cb",
+    "9f44bbd"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -33178,23 +33203,199 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT",
      "why": "Audit and minimum retained work in progress"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 9f44bbd: farming 224, farm_plots 104, horse 56, chapel 91, conservation 8, save_transfer 21, run_tests 3591, wiki passed, Python OK; test_commit: None -> 9f44bbd; commits + 69990cb; commits + 9f44bbd; integrated_in + Build 18 wip/build18 9f44bbd",
+     "why": "dependency audit (B18-DP-04) done: retained elements verified working, nothing missing; deferred elements moved to child records PL2-015-COOPS/-TRAP/-BUYANIMALS/-WATER/-HIRED/-OTHER (Build 20+). Report docs/build18/FARMING_RETAINED_DEFERRED.md"
     }
    ],
    "acceptance_derived": true,
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 9f44bbd"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
    "effort": "UNKNOWN",
    "remaining_work": "Audit dependencies; retain the minimum working farming and livestock behaviour; deferred items become open records with a later build (B18-DP-04)",
-   "assigned_worker": "farming worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "farming worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "9f44bbd"
+  },
+  {
+   "id": "PL2-015-BUYANIMALS",
+   "kind": "approved",
+   "title": "Farming: caravan animals other than the horse (deferred from PL2-015; fits LE-05)",
+   "description": "Farming: caravan animals other than the horse (deferred from PL2-015; fits LE-05)",
+   "source": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23, B18-DP-04: deferred after the dependency audit, stays open with a later build",
+   "acceptance": [
+    "implemented and verified in a later build per the PL2-015 farming scope"
+   ],
+   "target_build": "20+",
+   "parent": "PL2-015",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
+  },
+  {
+   "id": "PL2-015-COOPS",
+   "kind": "approved",
+   "title": "Farming: coops and animal shelters (deferred from PL2-015; goes with weather)",
+   "description": "Farming: coops and animal shelters (deferred from PL2-015; goes with weather)",
+   "source": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23, B18-DP-04: deferred after the dependency audit, stays open with a later build",
+   "acceptance": [
+    "implemented and verified in a later build per the PL2-015 farming scope"
+   ],
+   "target_build": "20+",
+   "parent": "PL2-015",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
+  },
+  {
+   "id": "PL2-015-HIRED",
+   "kind": "approved",
+   "title": "Farming: hired farmhands (deferred from PL2-015; fits LE-03)",
+   "description": "Farming: hired farmhands (deferred from PL2-015; fits LE-03)",
+   "source": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23, B18-DP-04: deferred after the dependency audit, stays open with a later build",
+   "acceptance": [
+    "implemented and verified in a later build per the PL2-015 farming scope"
+   ],
+   "target_build": "20+",
+   "parent": "PL2-015",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
+  },
+  {
+   "id": "PL2-015-OTHER",
+   "kind": "approved",
+   "title": "Farming: oxen, per-crop art and the rest of the deferred-on-purpose list in docs/BUILD_DECISIONS.md (deferred from PL2-015)",
+   "description": "Farming: oxen, per-crop art and the rest of the deferred-on-purpose list in docs/BUILD_DECISIONS.md (deferred from PL2-015)",
+   "source": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23, B18-DP-04: deferred after the dependency audit, stays open with a later build",
+   "acceptance": [
+    "implemented and verified in a later build per the PL2-015 farming scope"
+   ],
+   "target_build": "20+",
+   "parent": "PL2-015",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
+  },
+  {
+   "id": "PL2-015-TRAP",
+   "kind": "approved",
+   "title": "Farming: trapping (deferred from PL2-015; fits LE-05)",
+   "description": "Farming: trapping (deferred from PL2-015; fits LE-05)",
+   "source": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23, B18-DP-04: deferred after the dependency audit, stays open with a later build",
+   "acceptance": [
+    "implemented and verified in a later build per the PL2-015 farming scope"
+   ],
+   "target_build": "20+",
+   "parent": "PL2-015",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
+  },
+  {
+   "id": "PL2-015-WATER",
+   "kind": "approved",
+   "title": "Farming: weather and expanded watering, crop and animal loss (deferred from PL2-015)",
+   "description": "Farming: weather and expanded watering, crop and animal loss (deferred from PL2-015)",
+   "source": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23, B18-DP-04: deferred after the dependency audit, stays open with a later build",
+   "acceptance": [
+    "implemented and verified in a later build per the PL2-015 farming scope"
+   ],
+   "target_build": "20+",
+   "parent": "PL2-015",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "entered in the register",
+     "why": "docs/build18/FARMING_RETAINED_DEFERRED.md; B18-DP-04 (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    }
+   ]
   },
   {
    "id": "PROS-01",
@@ -39698,10 +39899,13 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on 66a5d4c: settlement_development_test 32, regions 118, settlement_life 54, migration 92, tax 34, party 102, save_transfer 21, conservation 8, run_tests 3591, wiki_test passed, Python OK",
    "playtest": [],
    "branch": "wip/b18-setd",
-   "commits": [],
+   "commits": [
+    "089cd5c",
+    "66a5d4c"
+   ],
    "parent": "EXP-B",
    "depends_on": [
     "SET-C"
@@ -39750,22 +39954,33 @@
      "date": "2026-10-22",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> settlement-development worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-setd",
      "why": "B18-DP-05 approved"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 66a5d4c: settlement_development_test 32, regions 118, settlement_life 54, migration 92, tax 34, party 102, save_transfer 21, conservation 8, run_tests 3591, wiki_test passed, Python OK; test_commit: None -> 66a5d4c; commits + 089cd5c; commits + 66a5d4c; integrated_in + Build 18 wip/build18 66a5d4c; known_defects + multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only",
+     "why": "SET-D worker finished (089cd5c), merged into Build 18 as 66a5d4c; targeted suites passed on the merge. Multi-generation verification stays outstanding (B18-DP-05): a 365-day run is not multi-generation verification"
     }
    ],
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "the Settlement Advancement & Regional Economy expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 66a5d4c"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "XL",
    "remaining_work": "Trades opening with sustained unmet demand and closing without workers, capacity following labour (existing rules); 100- and 365-day checks; multi-generation verification outstanding unless a sufficient horizon is shown (B18-DP-05)",
-   "assigned_worker": "settlement-development worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "settlement-development worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "66a5d4c",
+   "known_defects": [
+    "multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only"
+   ]
   },
   {
    "id": "SET-E",
@@ -44972,10 +45187,12 @@
     "Rule 002's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Chains exist (farmer>cook, woodcutter>carpenter, miner>smith, hunter>tanner, keeper>cook); not audited per profession",
-   "tests": "interdependency_test 22 checks (Rule 002 verification scenario) on 027d742",
+   "tests": "interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fc25af7"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -45024,6 +45241,11 @@
      "date": "2026-10-23",
      "change": "B18-DP-15 approved: the sage is a documented exception backed by a verified cross-profession relationship",
      "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "tests: interdependency_test 22 checks (Rule 002 verification scenario) on 027d742 -> interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale; test_commit: None -> b196303; commits + fc25af7",
+     "why": "B18-DP-15 done: the checker requires code, test and goods evidence for a supplies-nobody exception; sage exception evidenced by test_sage_medicine (fc25af7, merged b196303)"
     }
    ],
    "target_build": "18",
@@ -45039,7 +45261,8 @@
    "design": "SPECIFIED",
    "effort": "M",
    "assigned_worker": "",
-   "remaining_work": "Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains"
+   "remaining_work": "Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains",
+   "test_commit": "b196303"
   },
   {
    "id": "WDR-003",
@@ -48576,11 +48799,13 @@
     "Report with seeds, durations, assumptions and the section 5 metrics table per model; recommendation per industry; no constants adopted"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on b196303: caravan_compare 20, capability_test 72, Python OK",
    "playtest": [],
    "branch": "wip/b18-capsim",
    "commits": [
-    "dad51a5"
+    "dad51a5",
+    "a2dc30f",
+    "b196303"
    ],
    "parent": "PROS-18",
    "depends_on": [],
@@ -48623,22 +48848,32 @@
      "date": "2026-10-22",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> capability-sim worker (Sonnet subagent, started 2026-10-23); branch:  -> wip/b18-capsim",
      "why": "Approved, specified, unblocked; analysis only"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on b196303: caravan_compare 20, capability_test 72, Python OK; test_commit: None -> b196303; commits + a2dc30f; commits + b196303; integrated_in + Build 18 wip/build18 b196303; known_defects + covers 9 of about 46 planned runs; no capability constants adopted",
+     "why": "90-day round 2 report merged into Build 18 (b196303). Limitation: 9 of about 46 planned runs; recommendation per industry; no constants adopted"
     }
    ],
    "target_build": "18",
    "integrated_in": [
-    "Build 18 wip/build18"
+    "Build 18 wip/build18",
+    "Build 18 wip/build18 b196303"
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
    "remaining_work": "run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11)",
-   "assigned_worker": "capability-sim worker (Sonnet subagent, started 2026-10-23)"
+   "assigned_worker": "capability-sim worker (Sonnet subagent, started 2026-10-23)",
+   "test_commit": "b196303",
+   "known_defects": [
+    "covers 9 of about 46 planned runs; no capability constants adopted"
+   ]
   },
   {
    "id": "X18-STONECUT",
