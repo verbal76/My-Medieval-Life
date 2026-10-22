@@ -28483,7 +28483,7 @@
    "id": "X18-CAPCOMP",
    "title": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "Maintain separate workforce capability and effective settlement capability values for each industry, on the established 0–10 scale. ... Facility shortages must not erase accumulated worker experience. Pay and output modifiers use the effective capability level.",
    "description": "Capability composition: workforce capability from local experience, effective capability capped by operational facilities",
    "source": "docs/directives/2026-10-22_q18_11b_decision.md",
@@ -28510,7 +28510,7 @@
    "wiki": [],
    "next_action": "Expansion 18: design proposal for the experience measure (tenure record), facility caps and thresholds, for owner approval; implementation after its dependencies",
    "priority": "",
-   "workstream": "",
+   "workstream": "wip/expansion18-preparation",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -28523,6 +28523,11 @@
      "date": "2026-10-22",
      "change": "target_build; next_action",
      "why": "Placed in Expansion 18"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "Owner approved part 1 (docs/directives/2026-10-22_x18_capcomp_experience_decision.md): per-person, per-industry experience from hours worked (1 experience day per 8 game hours), caps mining/forestry 12, farming/trade/tanning 18, carpentry/smithing 24; individual level = 10 x min(exp, cap)/cap; industry workforce level = hours-weighted average of workers active in the last season (2 days) - a REPORTING AND PLANNING metric only. Clarification: individual experience drives each worker's own performance and pay (a master keeps the advantage over an apprentice; nobody inherits another's experience); facilities may lower each worker's effective capability, never their experience. This refines Q18-11B's 'modifiers use the effective level' to each worker's own effective level. Hook stays off until the facility and starting-experience rules are approved. Implementing the tracking only"
     }
    ],
    "target_build": "18"

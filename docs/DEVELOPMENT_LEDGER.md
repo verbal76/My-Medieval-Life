@@ -11,8 +11,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 64 |
-| ACTIVE DEVELOPMENT | 18 |
+| APPROVED — NOT STARTED | 63 |
+| ACTIVE DEVELOPMENT | 19 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 24 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
@@ -207,7 +207,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
-| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | APPROVED — NOT STARTED |  |  |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-CAPNUM | Capability modifiers: the bounded model (revised_bounded) for six industries, farming as labour efficiency | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT |  |  |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | ACTIVE DEVELOPMENT |  |  |
@@ -436,7 +436,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (64)
+## APPROVED — NOT STARTED (63)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -502,10 +502,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
-| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md |  | after Q18-11B; after PROS-18 | Expansion 18: design proposal for the experience measure (tenure record), facility caps and thresholds, for owner approval; implementation after its dependencies |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | docs/directives/2026-10-21_stone_q1_and_stonecutting_trade.md |  | after PROS-18; after Q18-9 |  |
 
-## ACTIVE DEVELOPMENT (18)
+## ACTIVE DEVELOPMENT (19)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -522,6 +521,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | docs/directives/2026-10-21_parallel_prospective_development_18_19.md | `e05d367`, `693e0c3`, `6615da4`, `1b05da0`, `e91d903`; judgment_test 164, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 23; run_tests, world_test, relations_test, parity_test, conservation_test, save_transfer_test; sim_gate identical when off; branch wip/expansion19-preparation |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
+| X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | docs/directives/2026-10-22_q18_11b_decision.md |  | after Q18-11B; after PROS-18 | Expansion 18: design proposal for the experience measure (tenure record), facility caps and thresholds, for owner approval; implementation after its dependencies |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md |  |  |  |
 | X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | docs/directives/2026-10-21_courier_booths_known_recipients.md |  |  |  |
 | X18-Q12-POST | Courier contract popup like online postage (dropdowns: quantity, item, recipient, location, collect payment, deliver or deposit proceeds, money/item type and amount, route or special) assembled into a readable instruction; recipients from known people and businesses incl. prior trading contacts (owner represents the business; location from world records); fee computed from route type, distance, burden, capacity, stops, return/deposit, labour, notarial service; physical execution; fulfilled only when obligations are done | docs/directives/2026-10-21_courier_contract_interface_pricing.md |  |  |  |
