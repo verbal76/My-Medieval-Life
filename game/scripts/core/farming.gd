@@ -711,6 +711,32 @@ func seed_price(crop: String) -> int:
 	return seed_item_price(str(crops()[crop].seed), w.player)
 
 
+## FARM-08-Q-CROP (owner, 2026-10-22): `total` whole units shared in proportion to `shares` (id -> work), by largest
+## remainder, ties to the smaller id: equal work gets equal shares, no work no share, and the parts add up to `total`
+## exactly. {} when there is nothing to share or no work.
+static func split_crop(total: int, shares: Dictionary) -> Dictionary:
+	var out := {}
+	var ids := shares.keys().filter(func(i): return float(shares[i]) > 0.0)
+	ids.sort()
+	var sum := 0.0
+	for id in ids:
+		sum += float(shares[id])
+	if total <= 0 or ids.is_empty() or sum <= 0.0:
+		return out
+	var given := 0
+	var rems := []
+	for id in ids:
+		var exact := float(total) * float(shares[id]) / sum
+		var q := int(floor(exact))
+		out[id] = q
+		given += q
+		rems.append([exact - float(q), id])
+	rems.sort_custom(func(x, y): return x[0] > y[0] + 1e-9 or (absf(x[0] - y[0]) <= 1e-9 and int(x[1]) < int(y[1])))
+	for i in total - given:
+		out[rems[i][1]] = int(out[rems[i][1]]) + 1
+	return out
+
+
 ## The planting material a seed seller deals in besides crop seed (MERCH-01): berry cuttings and wild flower seed
 ## (balance.json propagation.kinds), in a fixed order.
 static func propagule_items() -> Array:

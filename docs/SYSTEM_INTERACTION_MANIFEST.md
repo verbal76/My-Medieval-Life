@@ -115,8 +115,8 @@ Rules:
 - **Trigger:** A farmer's plan reaches a ripe field.
 - **Source:** `game/scripts/core/npc_brain.gd::_farmer`, `game/scripts/core/world.gd::take_crop`, `game/scripts/core/world.gd::_on_hour`
 - **Affects:** Fields, Inventory, Livestock, Ledger
-- **Expected:** The farmer takes what crop is left. A field ripens hourly once grown and holds `field_yield`. Whoever harvests a keeper's field carries feed to the pen first. A field whose farmer hired the player to cut it is left to the player while that work is open (INT-046).
-- **Tests:** `game/tests/run_tests.gd::test_food_rules`, `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_hiring`
+- **Expected:** A field ripens hourly once grown and holds `field_yield`. When a farmer's cutting completes, the seed kept back goes to that farmer as before and the feed for the pen of any keeper of the field is carried there first; the rest of the crop is shared among the field's farmers cutting it at that moment in proportion to the minutes each has cut (FARM-08-Q-CROP, `Farming.split_crop`: largest remainder, ties to the smaller id), whoever finishes first; the others stop cutting with their share, and a farmer not cutting gets none. Each share tops up its own household pantry to 10. A field whose farmer hired the player to cut it is left to the player while that work is open (INT-046).
+- **Tests:** `game/tests/run_tests.gd::test_food_rules`, `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_hiring`, `game/tests/crop_share_test.gd`
 
 ### INT-010 · Eating
 - **Trigger:** The player eats from the inventory; a villager eats in its plan.
