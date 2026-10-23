@@ -43,7 +43,7 @@ Fires should be able to spread through towns if they come from a forest fire. Th
 - Player: **"Same as everyone (Recommended)"**: the player can be burned, injured, chilled or swept away (washing up
   downstream and walking back) and can die; the heir continues.
 
-## Owner answers, third round (same day, on docs/design/EXPANSION25_WEATHER_DESIGN.md section 4)
+## Owner answers, third round (same day, on docs/design/EXPANSION25_WILD_WORLD_DESIGN.md section 4)
 
 - E25-OD-01 Rivers: **"River and creek (Recommended)"**: a river along one side of the village and a creek crossing it,
   with a bridge on the road; made with the existing map tools; other settlements get their own streams; new worlds get

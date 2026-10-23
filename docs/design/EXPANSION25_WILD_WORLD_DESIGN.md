@@ -1,6 +1,6 @@
-# Expansion 25: Weather and Natural Disasters — design specification and audit (draft, 2026-10-23)
+# Expansion 25: Wild World — weather, disasters, monsters, pets and bounties: design specification and audit (draft, 2026-10-23)
 
-Register WEATHER-01, Build 25 (design only; **no code until the owner approves this document**). Owner idea, details and
+Register WEATHER-01, MON-01, PET-01 (with B14-09 skeletons and FR-01 lizards and spiders), Build 25 (design only; **no code until the owner approves this document**). Owner idea, details and
 answers verbatim in `docs/directives/2026-10-23_dynamic_weather_idea.md`. Facts below come from a read-only audit of the
 released Build 18 code (`origin/wip/build18`, paths relative to `game/`). Build 19 stays the priority; nothing here
 delays it. Founding principle WDR-022: a village may fail, the simulation may not; disasters are real outcomes, never
@@ -73,6 +73,41 @@ can.
 
 **The player** is caught like anyone: burned, injured, chilled or swept away (washing up downstream, walking back), and
 can die; the heir continues.
+
+## 2b. Monsters, pets and bounties (owner, 2026-10-23; merged into this expansion by the owner)
+
+Verbatim sources: `docs/directives/2026-10-23_animal_domestication_idea.md`, `docs/directives/2026-10-23_monsters_bounties_companions_idea.md`.
+
+**Pets and companions (PET-01).** With an animal's liked food in hand the player gets an action to try taming a fox, wolf
+or rabbit; a few feedings tame it (rabbits easiest, wolves hardest; about three unskilled, one or two with husbandry, a
+master tames a rabbit at once but a wolf takes at least two); an animal already tried shows a marker. A tame animal
+follows, waits at home when told and must be fed or slowly turns wild. A fox or wolf can be the player's companion: it
+follows on missions, defends the player against animals and bandits, hunts for them, and can be hurt or killed. A tame
+animal follows the player into their pen, where a prompt makes it stay; young born in the pen are tame. Penned rabbits
+give meat and pelts; pen-bred wolves grow into guard dogs that bark at bandits near home; tame young can be sold to
+villagers; foxes are pets (agent reading of the answers, to confirm). Villagers notice and react (Expansion 19), and
+villagers with husbandry tame pets too.
+
+**Monsters (MON-01, B14-09, FR-01).** Skeletons underground and in uncleared woods; spiders in the caves; bosses: a giant
+crab by the new river, Buwaya (the crocodile-like "lizard") in the marshes and on the banks, a minotaur in the hills, a
+yeti that comes down in winter, a necromancer in the caves raising skeletons, and dragons as the rarest and deadliest. Art:
+`Skeletons_Free_Pack.zip`, `MiniWorldSprites.zip` Monsters, `PUNY_MYTH-CREATURES-RPGMAKER_v1.zip`, `PunyMonsters.zip`
+(all in the repository, unused until now).
+
+**Village defence.** Rarely, a monster attacks the village: guards go first, then able adults form a line with what they
+hold, each deciding by courage, family duty and personality; the family-protection rule keeps parents between the danger
+and their children; elders and children shelter indoors.
+
+**Bounties and rewards.** The reeve posts bounties paid from the treasury, claimed with proof (a pelt, a claw); defending
+the town or killing a boss makes the player a hero (admiration, trust, stories through Expansion 19 gossip); monsters give
+rare goods only they provide (for example crab shell, Buwaya hide, yeti fur, bone dust) sold to craftsmen for special
+armour, tools and medicine; brave villagers can take up monster hunting as a trade and compete for bounties. All of it
+moves villagers' emotions, their view of the player and their sense of safety (Expansion 19 judgment and personality).
+
+**Open for the design pass (agent proposals to bring to the owner):** monster spawning and respawn (B14-09 approved 3-day
+respawn for skeletons, guarding by day and roaming at night), boss rarity and whether a boss returns after it is killed,
+how weather and monsters interact (the yeti in snow, Buwaya after floods), bounty prices and who funds them when the
+treasury is empty, the special goods' recipes, and the companion's combat numbers.
 
 ## 3. Proposed architecture (for approval)
 

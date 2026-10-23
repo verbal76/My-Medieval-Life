@@ -67,10 +67,10 @@
    "authority": "OD-30 renumbered 2026-10-23: numbering only"
   },
   "25": {
-   "name": "Weather and Natural Disasters",
+   "name": "Wild World: weather, disasters, monsters, pets and bounties",
    "implementation_authorized": false,
    "released": "",
-   "authority": "WEATHER-01 (owner 2026-10-23): design only, no code"
+   "authority": "WEATHER-01, MON-01, PET-01 (owner 2026-10-23): design only, no code"
   }
  },
  "requirements": [
@@ -2589,7 +2589,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "After B14-07",
+   "next_action": "built with MON-01 when the owner places it",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -2609,10 +2609,20 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner asked after the skeletons (2026-10-23); grouped under MON-01"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 20+ -> 25",
+     "why": "owner 2026-10-23: monsters, pets and bounties merge with weather into Expansion 25, Wild World (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "20+",
+   "target_build": "25",
    "roadmap_gate": "",
    "roadmap_reason": "bandit factions, skeletons, castles, dungeons: combat content outside the five builds",
    "integrated_in": [],
@@ -18574,13 +18584,11 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "no lizard or spider pack supplied"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "built with MON-01 when the owner places it",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -18600,16 +18608,31 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> approval OWNER APPROVED; implementation IMPLEMENTATION BLOCKED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "blockers; next_action",
+     "why": "blocker was wrong: spiders (PunyMonsters.zip) and a crocodile-like Buwaya (PUNY_MYTH-CREATURES) are in the repository; the owner also names a crab (MiniWorldSprites GiantCrab); grouped under MON-01"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IMPLEMENTATION BLOCKED -> NOT STARTED",
+     "why": "the art blocker is cleared (spiders and a crocodile-like creature were supplied); not started"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 20+ -> 25",
+     "why": "owner 2026-10-23: monsters, pets and bounties merge with weather into Expansion 25, Wild World (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "20+",
+   "target_build": "25",
    "roadmap_gate": "owner assets",
    "roadmap_reason": "enemies and sound need asset uploads from the owner",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTATION BLOCKED",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN"
@@ -26701,6 +26724,45 @@
    "blocks_implementation": false
   },
   {
+   "id": "MON-01",
+   "kind": "approved",
+   "title": "Monsters, village defence, bounties and monster goods: skeletons underground and in the woods, lizards, a crab monster and boss monsters in forests and hills; rare attacks on the village where guards go first and villagers form a defensive line; the player can become a hero of the town; bounties to hunt monsters and bring back their pelts, building prestige; villagers may choose to become monster hunters; a market for specialty goods only monsters give; all of it moving villagers' emotions, their view of the player and their sense of safety",
+   "description": "Monsters, village defence, bounties and monster goods: skeletons underground and in the woods, lizards, a crab monster and boss monsters in forests and hills; rare attacks on the village where guards go first and villagers form a defensive line; the player can become a hero of the town; bounties to hunt monsters and bring back their pelts, building prestige; villagers may choose to become monster hunters; a market for specialty goods only monsters give; all of it moving villagers' emotions, their view of the player and their sense of safety",
+   "source": "docs/directives/2026-10-23_monsters_bounties_companions_idea.md",
+   "owner_wording": "I put in a few boss monsters including lizards, some crab monster thing and a boss monster ... they should also attack The villages every now and then which would be rare but the villagers would have to band together ... The guards would go first then the villagers would form like a picket line ... If you help defend the town you can become one of the heroes of the Town and there should be bounties on these monsters ... bring their pelts back and this would build your prestige ... some of the villagers decide they want to be a hunter ... There should be a market for the specialty goods that only come from these monsters",
+   "approval": "owner idea 2026-10-23; build placement and authorization pending",
+   "acceptance": [
+    "Build placement and design questions answered by the owner"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_monsters_bounties_companions_idea.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: unassigned -> 25",
+     "why": "owner 2026-10-23: monsters, pets and bounties merge with weather into Expansion 25, Wild World (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner answered bosses (crab, Buwaya, minotaur, yeti, necromancer, dragons), defence (guards then volunteers), rewards (bounty coin, hero prestige, monster goods market, villager hunters)"
+    }
+   ],
+   "next_action": "add to the Expansion 25 Wild World design; no code before approval"
+  },
+  {
    "id": "MP-01",
    "title": "Player-hosted multiplayer: two-player LAN milestone, host-authoritative",
    "kind": "approved",
@@ -32795,7 +32857,7 @@
    "acceptance": [
     "Build placement and open questions answered by the owner"
    ],
-   "target_build": "unassigned",
+   "target_build": "25",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -32824,9 +32886,24 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "agent reading recorded: foxes pets only; to confirm in the design note"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner added companions: the player can pick a pet fox or wolf as a companion that follows on missions, defends and hunts for the player (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: unassigned -> 25",
+     "why": "owner 2026-10-23: monsters, pets and bounties merge with weather into Expansion 25, Wild World (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "moved from a small add-on after Build 19 into Expansion 25 by the owner's choice"
     }
    ],
-   "next_action": "short design note and implementation after Build 19 ships (does not delay Build 19)"
+   "next_action": "part of the Expansion 25 Wild World design; no code before approval"
   },
   {
    "id": "PICK-01",
@@ -49675,7 +49752,7 @@
     {
      "date": "2026-10-23",
      "change": "next_action",
-     "why": "design specification and audit drafted (docs/design/EXPANSION25_WEATHER_DESIGN.md); seven questions for the owner (E25-OD-01..07)"
+     "why": "design specification and audit drafted (docs/design/EXPANSION25_WILD_WORLD_DESIGN.md); seven questions for the owner (E25-OD-01..07)"
     },
     {
      "date": "2026-10-23",

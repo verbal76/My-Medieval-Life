@@ -4,14 +4,13 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (54)
+## Build 20 or later (backlog) (52)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | idea | PROPOSED | NOT STARTED |
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | B12A-08 | Deferred features from the Build 12 audit (umbrella; each child item tracked on its own) | approved | DEFERRED | NOT STARTED |
-| B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | approved | OWNER APPROVED | NOT STARTED |
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | B17F-FOOD | Build 17 finding: missed meals for want of money (606-5,417 a year across seeds) | idea | PROPOSED | NOT STARTED |
 | B17F-HENS | Build 17 finding: chickens died out early on seeds 2 and 3 | idea | PROPOSED | NOT STARTED |
@@ -23,7 +22,6 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | DVW-B7 | Life chronicle, titles, memorial | approved | OWNER APPROVED | NOT STARTED |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | approved | OWNER APPROVED | NOT STARTED |
 | FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | approved | OWNER APPROVED | NOT STARTED |
-| FR-01 | Lizards and spiders as enemies | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | FR-02 | Forgotten Memories waterfalls, fences and props | approved | OWNER APPROVED | NOT STARTED |
 | FR-03 | A campfire for cooking raw meat outside the village | approved | OWNER APPROVED | NOT STARTED |
 | FR-08 | Music and sound | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
@@ -63,13 +61,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 
-## Approved, no build assigned (13)
+## Approved, no build assigned (12)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
 | ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | IN DEVELOPMENT |
-| PET-01 | Taming small wild animals as pets (foxes, wolves, rabbits): with their liked food in hand the player gets an action to try; a few feedings tame the animal and it follows; a marker over an animal already tried; husbandry skill makes it quicker (about three feedings unskilled, one or two when skilled) | approved | OWNER APPROVED | NOT STARTED |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | OWNER APPROVED | INTEGRATED |
