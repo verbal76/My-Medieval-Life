@@ -39,6 +39,7 @@ func _init() -> void:
 	test_q14_court()
 	test_q14_buy_from()
 	test_q14_hiring()
+	test_event_feeds()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -398,3 +399,159 @@ func test_q14_hiring() -> void:
 		j.set_ledger(boss.id, o.id, 0, 0)
 	check(JudgmentLive.pick_helper(w, h, wage) != hirable[0], "someone who would turn the work down is not hired")
 	w.dispose()
+
+
+# ---------------------------------------------------------------- the event feeds (PROS-19, SJD-Q12) ----------------
+## The latest event of `type` in the store (as j.fact says it), or {}.
+func last_fact(j: JudgmentStore, type: String) -> Dictionary:
+	var best := {}
+	for ev in j.facts:
+		var f := j.fact(int(ev))
+		if str(f.type) == type and (best.is_empty() or int(f.id) > int(best.id)):
+			best = f
+	return best
+
+
+func count_of(j: JudgmentStore, type: String) -> int:
+	var k := 0
+	for ev in j.facts:
+		if str(j.fact(int(ev)).type) == type:
+			k += 1
+	return k
+
+
+## Each live act that now feeds the store reaches it with the right people; trivia stays out; the same act twice in two
+## worlds gives the same state. Acts with no live source are listed in docs/expansion19/DESIGN.md section 9.3.
+func test_event_feeds() -> void:
+	var hashes := []
+	for run in 2:
+		var w := new_world(5)
+		var j := JudgmentLive.attach(w)
+		var people := adults(w)
+		var a: NPC = people[0]
+		var b: NPC = people[1]
+		var onlooker: NPC = people[2]
+		var far: NPC = people[-1]
+		w.player.pos = a.pos
+		for o in [b, onlooker]:
+			o.pos = a.pos + Vector2(1, 0)
+			o.anim = "idle"
+		far.pos = a.pos + Vector2(200, 0)
+		var n0: int = j.facts.size()
+		# gift: the first one that earns regard; a second the same day and a non-gift are trivia
+		w.player.inv.add("bread", 3)
+		w.player.inv.add("rotten_apple", 1)
+		w.relations.give(ME, a, "bread")
+		var g := last_fact(j, "gift")
+		check(not g.is_empty() and g.actors[0][0] == ME and g.beneficiaries == [a.id] and int(g.value) == GameData.value("bread"), "a gift is a gift event: giver the actor, receiver the beneficiary, worth in coins")
+		check(str(j.belief(a.id, int(g.id)).src) == "participant" and str(j.belief(onlooker.id, int(g.id)).src) == "witnessed" and j.belief(far.id, int(g.id)).is_empty(), "...the receiver is a participant, a bystander sees it, someone far away does not")
+		w.relations.give(ME, a, "bread")
+		w.relations.give(ME, a, "rotten_apple")
+		check(count_of(j, "gift") == 1, "a second gift the same day and a rotten apple are trivia: no more events")
+		# help: a quest done is a kindness; a paid hire is not
+		var smith: NPC = null
+		for n: NPC in w.npcs:
+			if n.job == "smith":
+				smith = n
+		if smith != null:
+			smith.coins = 200
+			smith.inv.remove("iron_ore", smith.inv.count("iron_ore"))
+			w.quests.offers[smith.id] = "ore_for_the_forge"
+			var q: Dictionary = w.quests.accept(smith)
+			var need: Dictionary = Quests.template("ore_for_the_forge").need
+			for id in need:
+				w.player.inv.add(id, int(need[id]))
+			w.quests.complete(q)
+			var h := last_fact(j, "help_minor")
+			check(not h.is_empty() and h.actors[0][0] == ME and h.beneficiaries == [smith.id], "a quest done is a help_minor event: the player the actor, the giver the beneficiary")
+		# help_build: relatives' money toward a home
+		JudgmentLive.on_help(w, b.id, a, "help_build", 40)
+		var hb := last_fact(j, "help_build")
+		check(not hb.is_empty() and hb.actors[0][0] == b.id and hb.beneficiaries == [a.id] and int(hb.value) == 40, "a relative's help toward a home is help_build (family help, Construction)")
+		# rescue: someone digs another out of a cave-in; digging yourself out is no rescue
+		var cell := Vector2i(3, 3)
+		w.mine_works.trapped[World.npc_ref(a.id)] = MineWorks.key(0, cell)
+		w.mine_works.trapped[World.PLAYER] = MineWorks.key(1, cell)
+		w.mine_works._free_trapped(0, cell, w.player)
+		var r := last_fact(j, "rescue")
+		check(not r.is_empty() and r.actors[0][0] == ME and r.beneficiaries == [a.id], "freeing a trapped villager is a rescue: the digger the actor, the freed the beneficiary")
+		w.mine_works._free_trapped(1, cell, w.player)
+		check(count_of(j, "rescue") == 1, "...the player digging themself out is not")
+		var crowd: NPC = b
+		w.player.pos = a.pos
+		w.relations.defended(a.pos)
+		var df := last_fact(j, "rescue")
+		check(int(df.id) > int(r.id) and df.actors[0][0] == ME and df.beneficiaries.has(a.id) and df.beneficiaries.has(b.id) and not df.beneficiaries.has(far.id), "putting down a bandit or beast among villagers is a rescue of those near (not those far off)")
+		check(str(j.belief(crowd.id, int(df.id)).src) == "participant", "...and they know who did it")
+		# contracts and debts: a promise kept is a fair deal, a promise broken a cheat
+		var seller_ref := World.npc_ref(a.id)
+		var buyer_ref := World.npc_ref(b.id)
+		var c: Dictionary = w.contracts._new_record(buyer_ref, seller_ref, "bread", 2, 3, 5, [])
+		c.state = "accepted"
+		c.reserved = 6
+		w.contracts._pay_units(c, 2)
+		var tf := last_fact(j, "trade_fair")
+		check(not tf.is_empty() and tf.actors[0][0] == a.id and tf.beneficiaries == [b.id] and int(tf.value) == 6, "a contract fulfilled is trade_fair: the seller the actor, the buyer the beneficiary, coins paid")
+		check(j.trust_of(b.id, a.id) > 0, "...and the buyer now trusts the seller more (X19-REGARD)")
+		var c2: Dictionary = w.contracts._new_record(buyer_ref, seller_ref, "bread", 4, 3, 1, [])
+		c2.state = "accepted"
+		c2.reserved = 12
+		w.contracts._lapse(c2)
+		var tc := last_fact(j, "trade_cheat")
+		check(not tc.is_empty() and tc.actors[0][0] == a.id and tc.victims == [b.id] and int(tc.value) == 12, "a contract let lapse is trade_cheat: the seller the actor, the buyer the victim, the coins' worth undelivered")
+		var d := {"id": 900, "creditor": seller_ref, "debtor": buyer_ref, "item": "bread", "qty": 1, "value": 7, "made": 0, "due": 0, "state": "open", "ended": -1}
+		w.credit.debts.append(d)
+		b.coins = 100
+		check(w.credit.repay(900, true), "(a debt is repaid)")
+		var tf2 := last_fact(j, "trade_fair")
+		check(int(tf2.id) > int(tf.id) and tf2.actors[0][0] == b.id and tf2.beneficiaries == [a.id] and int(tf2.value) == 7, "a debt repaid on time is trade_fair: the debtor the actor")
+		var d2 := {"id": 901, "creditor": seller_ref, "debtor": buyer_ref, "item": "bread", "qty": 1, "value": 9, "made": 0, "due": 0, "state": "open", "ended": -1}
+		w.credit.debts.append(d2)
+		w.credit._default(d2)
+		var tc2 := last_fact(j, "trade_cheat")
+		check(int(tc2.id) > int(tc.id) and tc2.actors[0][0] == b.id and tc2.victims == [a.id] and int(tc2.value) == 9, "a debt not repaid is trade_cheat: the debtor the actor, the creditor the victim")
+		# the player in a deal: no deal with a party who is not a person
+		var before: int = j.facts.size()
+		JudgmentLive.on_deal(w, "trade_fair", -1, a.id, 10)
+		check(j.facts.size() == before, "a party that is not a person (a household) publishes nothing")
+		# an unseen pickpocket is a fact nobody learns
+		var vic: NPC = onlooker
+		vic.coins = 50
+		w.player.pos = vic.pos
+		var got := false
+		for i in 60:
+			var res := w.pickpocket(vic)
+			if bool(res.get("ok", false)) and str(res.get("what", "")) != "":
+				got = true
+				break
+		if got:
+			var pp := last_fact(j, "pickpocket")
+			check(not pp.is_empty() and pp.victims == [vic.id] and int(pp.value) > 0, "an unseen pickpocket is published as a fact (the victim knows only that something is missing)")
+		# a bandit's robbery: theft by an NPC, seen as the attack is
+		var bandit: NPC = a
+		var aware := w.aware_of_attack(far.pos, b)
+		aware.seen = [onlooker]
+		JudgmentLive.on_robbery(w, bandit, b, 25, aware)
+		var th := last_fact(j, "theft")
+		check(not th.is_empty() and th.actors[0][0] == bandit.id and th.victims == [b.id] and int(th.value) == 25, "a robbery is a theft by the robber (a villager's theft, not only the player's)")
+		check(str(j.belief(onlooker.id, int(th.id)).src) == "witnessed" and str(j.belief(b.id, int(th.id)).src) == "participant", "...the victim and those who saw it know")
+		# a villager kills a villager
+		JudgmentLive.on_killing(w, b, a.id)
+		var k := last_fact(j, "killing")
+		check(not k.is_empty() and k.actors[0][0] == a.id and k.victims == [b.id], "a villager's killing is the same killing event as the player's")
+		# a partnership: a neutral fact for the two
+		var single: NPC = null
+		for n in adults(w):
+			if n != a and n.partner == -1 and Life.partner_refusal(w, n) == "":
+				single = n
+				break
+		if single != null:
+			var net0: int = j.net(single.id, ME)
+			Life.partner_player(w, single)
+			JudgmentLive.on_marriage(w, ME, single.id)
+			var m := last_fact(j, "marriage")
+			check(not m.is_empty() and j.net(single.id, ME) == net0 and not j.belief(single.id, int(m.id)).is_empty(), "a marriage is a recorded neutral fact for the two of them, and means nothing morally (Q01)")
+		hashes.append(j.state_hash())
+		check(j.facts.size() > n0, "(events were published)")
+		w.dispose()
+	check(hashes[0] == hashes[1], "the same acts in two worlds give the same judgment state")

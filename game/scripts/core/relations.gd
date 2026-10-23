@@ -192,6 +192,8 @@ func give(giver: int, n: NPC, id: String) -> String:
 		(t.recent as Array).pop_front()
 	_raise(t, float(e.regard), float(e.attraction))
 	w.stat("gifts_given")
+	if w.judgment != null and first_today and float(e.regard) > 0.0:
+		JudgmentLive.on_gift(w, giver, n, id)                      # PROSPECTIVE (PROS-19)
 	if not first_today:
 		return "Another? You're kind, but you've given me something already today."
 	if float(e.attraction) >= float(cfg().gift_attraction.food) * float(cfg().favourite_factor):
@@ -336,6 +338,8 @@ func defended(at: Vector2) -> void:
 			continue
 		t.defend_day = w.day()
 		_raise(t, float(cfg().defend_regard), float(cfg().defend_regard) * 0.3 if can_court(Life.PLAYER_ID, n.id) else 0.0)
+	if w.judgment != null:
+		JudgmentLive.on_defence(w, at)                             # PROSPECTIVE (PROS-19)
 
 
 # ---------------------------------------------------------------- the player's closeness ------
@@ -477,12 +481,16 @@ func propose(a: int, n: NPC) -> String:
 		var pwhy := Life.partner_player(w, n)
 		if pwhy == "":
 			w.feast.on_partnered(a, n.id)            # DVW-B3-FEAST: the wedding feast is owed
+			if w.judgment != null:
+				JudgmentLive.on_marriage(w, a, n.id)               # PROSPECTIVE (PROS-19)
 		return pwhy
 	var o: NPC = w.npc(a)
 	var together := Life._move_in(w, o, n)
 	Life._link_partners(o, n)
 	w.stat("partnerships")
 	w.feast.on_partnered(a, n.id)                    # DVW-B3-FEAST: the wedding feast is owed
+	if w.judgment != null:
+		JudgmentLive.on_marriage(w, a, n.id)                       # PROSPECTIVE (PROS-19)
 	if not together:
 		w.stat("partners_apart")
 	w.note("%s %s and %s %s are to be partners%s." % [o.name, o.family, n.name, n.family,

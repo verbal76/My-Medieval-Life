@@ -390,6 +390,8 @@ func complete(q: Dictionary) -> int:
 			w.stat("quests_taught")
 	n.remember(("hired %s" if hired else "helped by %s") % w.player.name)
 	w.relations.helped(Life.PLAYER_ID, n, float(Relations.cfg().help_regard) * (0.5 if hired else 1.0))   # help earns regard (CRT-02)
+	if w.judgment != null and not hired:
+		JudgmentLive.on_help(w, Life.PLAYER_ID, n, "help_minor", pay)       # PROSPECTIVE (PROS-19): paid hire is work, not a kindness
 	if hired:
 		w.stat("hired_jobs_done")
 		w.stat("hired_wages", pay)

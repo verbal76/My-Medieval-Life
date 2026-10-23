@@ -3437,6 +3437,8 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 		player.crimes.append({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0,
 				"items": got, "qty": maxi(1, got.size()), "value": worth})
 		stat("player_pickpocket")
+		if judgment != null:
+			JudgmentLive.on_unseen_pickpocket(self, n, worth)          # PROSPECTIVE (PROS-19)
 		return {"ok": true, "what": what, "text": "You lift %s from %s unseen." % [what, who]}
 	wake(n)                             # a fumble wakes a sleeper: now they know
 	n.remember("caught %s %s picking my pocket" % [player.name, player.family])

@@ -2737,7 +2737,10 @@ func fight(n: NPC, dt: float) -> void:
 				stolen = id
 				break
 		tnpc.remember("robbed by %s" % n.name)
-		w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)       # who sees it; the victim reports it (PAR-05)
+		var aware: Dictionary = w.aware_of_attack(n.pos, tnpc)
+		if w.judgment != null:
+			JudgmentLive.on_robbery(w, n, tnpc, take + (GameData.value(stolen) if stolen != "" else 0), aware)    # PROSPECTIVE (PROS-19)
+		w.raise_alarm(aware, n.id)       # who sees it; the victim reports it (PAR-05)
 		w.note("%s robbed %s %s of %d coins%s." % [n.name, tnpc.name, tnpc.family, take,
 			(" and a " + GameData.item_name(stolen).to_lower()) if stolen != "" else ""])
 		n.target = -1
@@ -2758,6 +2761,8 @@ func fight(n: NPC, dt: float) -> void:
 			w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)   # who sees it; the victim reports it (PAR-05)
 		if tnpc.hp <= 0.0:
 			w.kill(tnpc, "slain by %s" % n.name)
+			if w.judgment != null and tnpc.role != "bandit":
+				JudgmentLive.on_killing(w, tnpc, n.id)         # PROSPECTIVE (PROS-19): a villager's killing
 			n.target = -1
 
 

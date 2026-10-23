@@ -319,6 +319,8 @@ func repay(id: int, force := false) -> bool:
 	if cre is NPC:
 		cre.earned += int(d.value)
 	_end(d, LATE if late else REPAID)
+	if w.judgment != null and not late:
+		JudgmentLive.on_deal(w, "trade_fair", _rid(str(d.debtor)), _rid(str(d.creditor)), int(d.value))    # PROSPECTIVE (PROS-19): a debt repaid on time
 	var reg: float = float(cfg().repay_regard) * (0.5 if late else 1.0)
 	var t: Dictionary = w.relations.tie(_rid(str(d.creditor)), _rid(str(d.debtor)))
 	w.relations._raise(t, reg, 0.0)
@@ -344,6 +346,8 @@ func _default(d: Dictionary) -> void:
 		for o: NPC in w.npcs:                                      # (the player's friends too: PAR-02)
 			if o.alive and o.id != _rid(deb) and o.id != _rid(cre) and w.relations.friends(o.id, _rid(cre)):
 				w.relations._raise(w.relations.tie(o.id, _rid(deb)), -amount * share, 0.0, false)
+	if w.judgment != null:
+		JudgmentLive.on_deal(w, "trade_cheat", _rid(deb), _rid(cre), int(d.value))      # PROSPECTIVE (PROS-19): a debt not repaid
 	w.stat("credit_defaulted")
 	w.stat("credit_default_coins", float(d.value))
 	if deb == World.PLAYER or cre == World.PLAYER:

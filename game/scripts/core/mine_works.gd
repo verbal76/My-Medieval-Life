@@ -252,7 +252,7 @@ func dig(who, c: Vector2i, into: Inventory, tool := "pickaxe") -> Dictionary:
 		w._work_goods(who, into, item, 1, "cut_")
 		if fill + rubble < cell_units() and _map(level, c).is_solid(c):
 			_map(level, c).set_solid(c, false)
-			_free_trapped(level, c)
+			_free_trapped(level, c, who)
 			done = true
 	else:
 		var u := cut_at(level, c)
@@ -680,12 +680,14 @@ func is_trapped(who) -> bool:
 
 
 ## A cave-in cell dug open again frees whoever was trapped in it.
-func _free_trapped(level: int, c: Vector2i) -> void:
+func _free_trapped(level: int, c: Vector2i, who = null) -> void:
 	var k := key(level, c)
 	for ref in trapped.keys():
 		if str(trapped[ref]) == k:
 			trapped.erase(ref)
 			w.stat("collapse_freed")
+			if w.judgment != null and who != null:
+				JudgmentLive.on_rescue(w, who, str(ref))      # PROSPECTIVE (PROS-19): digging someone else out
 
 
 # ---------------------------------------------------------------- shafts (Q4) ----------------

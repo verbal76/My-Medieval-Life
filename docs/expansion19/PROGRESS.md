@@ -4,7 +4,7 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-23 (X19-Q-TIMING implemented; SYNC-18 baseline). Earlier: 2026-10-22 (the investigation round on `05adc9d`: timing proposal, worst frame, memory).
+Updated 2026-10-23 (round 8: event feeds from the live acts, DESIGN.md section 9.3; X19-Q-TIMING implemented; SYNC-18 baseline). Earlier: 2026-10-22 (the investigation round on `05adc9d`: timing proposal, worst frame, memory).
 
 **SYNC-18 baseline (2026-10-23):** Build 18 (`wip/build18` at `239bdff`) is merged into this branch at `c2ece16`. The
 determinism gate (`tools/sim_gate.py`, seeds 1 and 2, days 10 and 30) is identical to the baseline both at `c2ece16` and
@@ -131,6 +131,7 @@ gameplay: everything below is on the isolated branch, and all of it is off in th
 | Round 2: daily update sliced over the day's hours, catch-up on touch | `JudgmentStore.begin_day/dawn_hour/dawn_slice`, World hooks | `judgment_test.gd` (105 in all): sliced and whole updates agree on every telling, choice, opinion and the end state hash over twelve days with newcomers, also with retraction, a fading view and rumours on; largest update hour at 500 people live: 11.38 ms (one call) -> 0.55 ms median day |
 | Round 4: the owner's rules Q01, Q02, Q06, Q07, Q08, Q10, Q11 | `JudgmentStore`, `JudgmentSocial.regard`, `judgment.json` | `judgment_test.gd` 164 checks (one test per decision); `judgment_decay_demo.gd` 24 |
 | Round 5 (2026-10-23 owner answers): Q05 no prior bias, Q09 near-best, X19-ASSAULT permanent | `judgment_store.gd`, `judgment_weighting.gd`, `judgment.json` | `judgment_test.gd` 189 checks (rewritten: prior bias; changed: selection, q07 line test now theft, q11 assault; new: `test_x19_assault_permanent`) |
+| Round 8 (2026-10-23): event feeds from the live acts (gift, help_minor, help_build, rescue, trade_fair, trade_cheat, bandit theft, villagers' killings, unseen pickpocket, marriage) | `JudgmentLive.on_*`, one guarded call each in `Relations`, `Quests`, `Construction`, `MineWorks`, `Contracts`, `Credit`, `NPCBrain`, `World` | `judgment_live_test.gd` 98 checks (`test_event_feeds`: actor, victim, beneficiary, witnesses, trivia, determinism); sources and the events with no source: DESIGN.md section 9.3. 30-day `economy_sim --judgment` seed 1: 192 events (assault 61, gift 62, theft 59, trade_fair 7, marriage 3), no leaks, no script errors; `judgment_perf` 500 people live scheduled worst frame 6.95 ms; `sim_gate` identical |
 | Round 4: Q14 integrations (buyer, timber seller, helper hire, taking work, befriending, courting) | `JudgmentLive`, one guarded line each in `NPCBrain`, `Construction`, `Business`, `Relations` | `judgment_live_test.gd` 53 checks: judgment changes the choice, need or closeness or attraction outweighs it, feasibility never overridden, neutral judgment = the live choice |
 | Round 3: word of mouth queued and told a few a tick; reads first tell the meetings they depend on | `JudgmentStore.meet_hourly/meet_later/gossip_tick/_flush_for` | `judgment_test.gd` (129 in all): same tellings, every read along the way, beliefs and end state as telling at once (also with retraction, a fading view and rumours), and the test fails if the flush is removed; perf: spread = told at once = round 2's end state at every size and rate; at 500 people live, frame p99 1.03 -> 0.87 ms and p99.9 5.66 -> 2.15 ms |
 | Round 3: cheaper telling (cached settings, no formatting, packed sort, "nothing new" shortcut) | `JudgmentStore.tell/interpret/evaluate/_post` | results unchanged (same state hashes as round 2 at every size and rate) |
@@ -209,8 +210,7 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
   the lead or the owner. A device check should decide.
 - The daily update's worst single hour at 500 people varies with machine load (1.09 to 4.54 ms across runs; median day
   0.55 ms); a device check decides whether `dawn_slice` must run every frame. 2000 people is over the budget.
-- Missing event feeds (DESIGN.md section 7): help, gifts, rescue, fair and cheating trade, villagers' thefts and
-  killings, discovered thefts, legal facts, neutral facts. Listed only; wiring them changes live behaviour when on.
+- Event feeds: wired in round 8 (DESIGN.md section 9.3); `self_defence`, `hoard_in_famine`, `false_accusation`, `meeting`, legal facts and ordinary market sales have no source (listed there).
 - `Relations.harmed` already spreads harm to the player instantly to kin and friends: with judgment live there would be
   two channels for the same harm until the owner decides (SJD-Q07) whether word of mouth replaces it.
 - CRT-12's notoriety threshold remains the live courtship refusal (recorded conflict, EXP-C).

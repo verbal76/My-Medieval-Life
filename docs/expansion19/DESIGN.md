@@ -317,19 +317,11 @@ hash of the pair and the hour), and nothing has to be told early, so a frame hol
 - **Memory:** the store measured 6.1 MB at 500 people live, against 4.0 in round 2. The extra is the shortcut cache
   (capped at 20,000 pairs) and the queue.
 
-### Event feeds not yet wired (listed, not added: they would change live behaviour once judgment is on)
+### Event feeds: wired in round 8 (see section 9.3)
 
-Live code publishes today: the player's thefts and caught pickpocketing (`World.witness`), anyone's attacks including
-bandit robberies (`World.raise_alarm`), the player killing a villager (`World.kill`). Missing:
-- help: quests done and favours (`Relations.helped`), gifts (`Relations.give`), defending villagers from bandits and
-  beasts (`Relations.defended`, the catalog's `rescue`);
-- trade: fair dealing and cheating (`World.trade`; `trade_fair`, `trade_cheat`), and the player selling stolen goods
-  back to its owner (`World.player_sell`);
-- villagers' crimes other than attacks: there is no record of a villager's theft (DVW-B2);
-- killings by villagers or bandits (`World.kill` with a villager's name in the cause);
-- an unseen theft discovered later ("found missing": no actor is known, so it fits the evidence-discovery path, spec s.6);
-- guards' fines as legal facts (SJD-Q08), hoarding in famine, false accusations, and the NEUTRAL meetings and
-  marriages (SJD-Q01).
+Round 1 published the player's thefts and caught pickpocketing (`World.witness`), anyone's attacks including bandit
+robberies as assaults (`World.raise_alarm`) and the player killing a villager (`World.kill`). The other catalog events are
+now fed from the live acts that perform them (section 9.3); what has no act is listed there.
 
 ## 8. Integration notes
 
@@ -366,8 +358,48 @@ With judgment on for 10 village days (`economy_sim --judgment`, seed 1) there we
 | Courtship proposals and marriage acceptance between villagers | not wired | conflicts with CRT-12's fixed regard threshold (section 10): needs the owner's choice first |
 | Player's courtship, gifts, quests | not wired | player-facing; Q10 words and CRT rules |
 | Crime reporting, testimony | deliberately not wired | Q08: law is separate; reporting stays World's |
-| Villagers' thefts | no record exists | DVW-B2 (no villager crime record): nothing to observe |
-| Help, gifts, rescue, fair or cheating trade as judged events | feeds not wired (round 2 list) | wiring them changes live behaviour when on; staged after Gate E |
+| Villagers' thefts | bandit robberies fed (section 9.3); other villager thefts have no act | DVW-B2 |
+| Help, gifts, rescue, fair or cheating trade as judged events | wired in round 8 (section 9.3) | - |
+
+### 9.3 Event feeds (round 8, PROS-19, SJD-Q12: events that help or harm them, their kin or property, plus witnessed crimes and kindnesses; trivia ignored)
+
+Every feed is one guarded call in the live act (`if judgment != null`, a no-op with no store attached) into `JudgmentLive`
+(`_event`, `on_*`). Nothing in the act changes: same arguments, same order, same random draws. Witnesses are the people
+`World.near` finds within `witness_radius` (the one channel the world has for seeing, PAR-05), as for the existing feeds;
+victims and beneficiaries are participants; an actor gets no memory of their own deed (as for assaults).
+
+| Catalog event | Live act that performs it (the feed) | Actor / victim / beneficiary | Who learns | Trivia rule |
+|---|---|---|---|---|
+| `gift` | `Relations.give` (player or villager gives) | giver / - / receiver | receiver, those near the receiver | only the first gift of the day that earns regard (`gift_effect`); a second the same day, a non-gift (rotten apple) or a worthless item publish nothing |
+| `help_minor` | `Quests.complete`, a quest done for a villager | player / - / the giver | giver, those near | paid hire jobs are work for pay, not a kindness: no event |
+| `help_build` | `Construction._family_help`, relatives' coins toward a home | family household's responsible adult / - / builder | the two only | - |
+| `rescue` | `Relations.defended`: the player puts down a bandit or dangerous beast near villagers; `MineWorks._free_trapped`: digging someone out of a cave-in | player or digger / - / those awake near, or the freed | the beneficiaries (and the digger's act) | digging yourself out is no rescue; nobody near, no event |
+| `trade_fair` | `Contracts._maybe_finish` (a contract fulfilled), `Credit.repay` (a debt repaid on time) | seller or debtor / - / buyer or creditor | the two only | only between two people (a household party publishes nothing); under 1 coin ignored; a late repayment is not scored |
+| `trade_cheat` | `Contracts._lapse` (a contract let lapse), `Credit._default` (a debt unpaid) | seller or debtor / buyer or creditor / - | the two only | same; value is the coins' worth undelivered, or the debt |
+| `theft` (villager) | `NPCBrain` bandit robbery (beside the existing assault) | bandit / victim / - | victim, the people who saw (the same `aware` as the assault) | - |
+| `killing` (villager) | `NPCBrain` after `World.kill` for a blow by a villager or bandit | killer / victim / - | victim's neighbours as for the player's killing | a bandit killed is not a killing, as for the player |
+| `pickpocket` (unseen) | `World.pickpocket` success | player / victim / - | nobody: the victim knows only that something is missing | the fact is kept, nobody learns it (no actor is known to them) |
+| `marriage` (NEUTRAL) | `Relations.propose` accepted (villagers), `Life.partner_player` via the player's proposal | both / - / - | the two | recorded and told like any fact; means nothing morally (Q01) |
+
+No source in the game, so nothing is published (and nothing was invented):
+- `self_defence`: the game does not tell a blow in self-defence from an attack (`target == -2` is also set by the
+  player's own assault).
+- `hoard_in_famine`, `false_accusation`: no act hoards or accuses.
+- `meeting` (NEUTRAL): meetings happen every hour between everyone; each one would be a fact, and neutral facts take memory
+  slots (24 a person) from help and harm. Left out as trivia (SJD-Q12); first acquaintance could be added if the owner
+  wants it.
+- Ordinary market sales: a sale at the going price is not an event (trivia, and about 3,000 a village day); fair and
+  cheating dealing are the kept and broken contract and credit promises above. Selling stolen goods is already the
+  theft's.
+- Legal facts (a guard's fine, a conviction): the catalog has no legal event type and SJD-Q08 keeps law separate;
+  `World.guard_confront` publishes nothing. The theft it fines is already a fact.
+- A villager's theft other than a bandit's robbery: no act exists (DVW-B2).
+- Discovered thefts: an unseen container theft already reaches the victim as a participant (`World.witness` with nobody
+  seen); an unseen pickpocket is the new fact above. A "found missing" with an unknown thief stays a fact nobody has
+  the actor of.
+
+Open for the owner: whether a guard's killing of an assaulter should count as `killing` (today it does, as `World.kill`
+cannot tell); whether first acquaintance should be a `meeting` fact; whether late repayments should score.
 
 ## 10. Conflicts between the owner's decisions and existing mechanics (not resolved here; live behaviour unchanged)
 

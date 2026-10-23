@@ -835,6 +835,8 @@ func _maybe_finish(c: Dictionary) -> void:
 	if not is_open(c) or left(c) > 0 or (is_service(c) and not ContractServices.finished(c)):
 		return
 	_end(c, "fulfilled", "")
+	if w.judgment != null:
+		JudgmentLive.on_deal(w, "trade_fair", rel_id(c.seller), rel_id(c.buyer), int(c.paid))      # PROSPECTIVE (PROS-19): a promise kept
 	var s := _npc_of(c.seller)
 	var rid := rel_id(c.seller)
 	var other := _npc_of(c.buyer)
@@ -950,6 +952,8 @@ func _lapse(c: Dictionary) -> void:
 	c.history.append({"day": w.day(), "by": "", "what": "lapse", "qty": int(c.delivered), "price_each": int(c.price_each), "days": 0})
 	_end(c, "lapsed", "the deadline passed")
 	w.stat("contracts_lapsed")
+	if w.judgment != null:
+		JudgmentLive.on_deal(w, "trade_cheat", rel_id(c.seller), rel_id(c.buyer), maxi(1, int(c.qty) - int(c.delivered)) * int(c.price_each))   # PROSPECTIVE (PROS-19): a promise broken
 	var a := rel_id(c.buyer)
 	var b := rel_id(c.seller)
 	if a != -1 and b != -1:

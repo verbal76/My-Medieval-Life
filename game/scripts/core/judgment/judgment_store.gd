@@ -280,6 +280,7 @@ func publish(type: String, actors: Array, victims: Array = [], beneficiaries: Ar
 		by_day[day] = []
 	by_day[day].append(id)
 	_stat("events")
+	_stat("event_" + type)                  # a diagnostics counter per kind (reports)
 	return id
 
 

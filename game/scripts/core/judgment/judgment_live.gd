@@ -108,6 +108,91 @@ static func on_killing(w, n: NPC, killer: int) -> void:
 		w.judgment.observe_all(ev, _ids(seen))
 
 
+## Publish one event whose participants are the named people; everyone awake near `at` (World.near within
+## witness_radius, the one channel the world has for seeing) also saw it. Actors are not given a memory of their own
+## deed (as for an attack); victims and beneficiaries are participants. Returns the event id (-1 when the catalog
+## refuses it: unknown, or under its min_value).
+static func _event(w, type: String, actors: Array, victims: Array, beneficiaries: Array, value := 0, at = null) -> int:
+	var ev: int = w.judgment.publish(type, actors, victims, beneficiaries, value)
+	if ev > 0:
+		var seen := []
+		if at != null:
+			seen = _ids(w.near(at, float(GameData.b("witness_radius"))))
+			for a in actors:
+				seen.erase(int(a))
+		w.judgment.observe_all(ev, seen)
+	return ev
+
+
+## A gift (Relations.give): the first of the day that earns the receiver's regard; a second the same day, or something
+## that is no gift at all, is trivia and never reaches here. Seen by those near the receiver.
+static func on_gift(w, giver: int, n: NPC, id: String) -> void:
+	if GameData.value(id) < 1:
+		return                                  # worth nothing: trivia (SJD-Q12)
+	_event(w, "gift", [giver], [], [n.id], GameData.value(id), n.pos)
+
+
+## Help given: a quest done (help_minor), a relative's money toward a home (help_build). `helper` a person id.
+static func on_help(w, helper: int, n: NPC, type: String, value: int) -> void:
+	_event(w, type, [helper], [], [n.id], value, n.pos if type == "help_minor" else null)
+
+
+## A deal kept or broken between two people (ids; -1 for a party that is not a person: nothing is published). A contract
+## fulfilled or a debt repaid on time is trade_fair, a contract lapsed or a debt defaulted is trade_cheat; `seller` is
+## the one who owed the goods, work or coin. Private: only the two know.
+static func on_deal(w, type: String, owed_by: int, owed_to: int, value: int) -> void:
+	if owed_by == -1 or owed_to == -1 or owed_by == owed_to or value < 1:
+		return                                  # not between two people, or under a coin: trivia (SJD-Q12)
+	if type == "trade_fair":
+		_event(w, type, [owed_by], [], [owed_to], value)
+	else:
+		_event(w, type, [owed_by], [owed_to], [], value)
+
+
+## `who` (PlayerState or NPC) dug the trapped `ref` ("player" or "npc:<id>") out of a cave-in; digging yourself out is no rescue.
+static func on_rescue(w, who, ref: String) -> void:
+	var rescuer: int = Life.PLAYER_ID if who is PlayerState else int(who.id)
+	var saved: int = Life.PLAYER_ID if ref == World.PLAYER else World.ref_id(ref)
+	if saved == rescuer:
+		return
+	_event(w, "rescue", [rescuer], [], [saved])
+
+
+## The player put down a bandit or a dangerous beast near villagers (Relations.defended): a rescue of those awake nearby,
+## who all saw it. Nobody near, nothing to rescue.
+static func on_defence(w, at: Vector2) -> void:
+	var saved := []
+	for n: NPC in w.near(at, float(GameData.b("witness_radius"))):
+		if n.role != "bandit" and not w.asleep(n):
+			saved.append(n.id)
+	if saved.is_empty():
+		return
+	saved.sort()
+	var ev: int = w.judgment.publish("rescue", [Life.PLAYER_ID], [], saved)
+	if ev > 0:
+		w.judgment.observe_all(ev, saved)
+
+
+## A pocket picked and nobody saw: a fact, but the victim only knows something is missing (not by whom) and nobody saw,
+## so nobody learns it.
+static func on_unseen_pickpocket(w, victim: NPC, value: int) -> void:
+	w.judgment.publish("pickpocket", [Life.PLAYER_ID], [victim.id], [], value)
+
+
+## A bandit's robbery of a villager: a theft by an NPC, seen as the attack is (the same `aware`).
+static func on_robbery(w, thief: NPC, victim: NPC, value: int, aware: Dictionary) -> void:
+	var ev: int = w.judgment.publish("theft", [thief.id], [victim.id], [], value)
+	if ev > 0:
+		w.judgment.observe_all(ev, _ids(aware.seen))
+
+
+## A partnership made (Relations.propose accepted, the player's included): a neutral fact for the two of them.
+static func on_marriage(w, a: int, b: int) -> void:
+	var ev: int = w.judgment.publish("marriage", [a, b])
+	if ev > 0:
+		w.judgment.observe_all(ev, [a, b])
+
+
 ## Round 2 (cost): whether the live rule's first pick must win whatever the other candidates are, so the full scan can
 ## be skipped with the same result. True only under the shipped trade_sell form (argmax, no per-person spread, only
 ## live_order, necessity and disposition weighed; necessity is the same for every candidate): another buyer can win

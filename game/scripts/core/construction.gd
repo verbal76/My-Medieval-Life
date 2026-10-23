@@ -1348,6 +1348,8 @@ func _family_help(h: int) -> void:
 		short -= give
 		w.stat("family_help_coins", give)
 		w.stat("family_help_gifts")
+		if w.judgment != null:
+			JudgmentLive.on_help(w, (responsible_adult(f) if responsible_adult(f) != null else members[0]).id, builder, "help_build", give)    # PROSPECTIVE (PROS-19)
 		w.brain.once("family_help_%d_%d" % [f, h], "The %s family helps %s %s build a home (%d coins)." % [fh.family, builder.name, builder.family, give])
 
 
