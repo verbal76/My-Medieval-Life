@@ -28,7 +28,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Proposals and ideas (not counted) | 3 | 1 | 2 | 5 |
 | Integrated, awaiting gameplay or owner verification | 78 | 0 | 0 | 0 |
 | Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | XS 2, M 3, L 5, XL 1, UNKNOWN 2 | UNKNOWN 8 | UNKNOWN 1 |
-| Readiness | IN DEVELOPMENT (not feature complete) | PROTOTYPE ONLY (isolated branch; not integrated) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
+| Readiness | RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23)) | PROTOTYPE ONLY (isolated branch; not integrated) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
 
 Build authority:
 

@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23 night (owner asleep; overnight Build 18 completion and private release authorized: docs/directives/2026-10-23_build18_overnight_completion_release.md).
+**Updated:** 2026-10-23 (Build 18 delivered as a private draft; Expansions 19-21 progress directive: docs/directives/2026-10-23_expansions_19_20_21_progress.md).
 
 ## Read first (after a compaction or in a new session)
 
@@ -36,7 +36,11 @@ Never reconstruct state from a conversation summary: these files are the record.
 
 Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
-None in flight (chapel audit done: docs/build18/CHAPEL_AUDIT.md).
+| Record | Worker | Branch | Started from | Notes |
+|---|---|---|---|---|
+| PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c4b10e4 | merge the released Build 18 (wip/build18) into Expansion 19; the judgment stays switched off; then the owner's 2026-10-23 answers (gossip at each meeting first) |
+
+Expansions 20 and 21: implementation not authorized (register `builds` map: OD-30, OD-LE-01); no worker.
 
 ### Running processes (never restart or cancel; SIM-02)
 

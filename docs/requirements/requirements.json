@@ -22,7 +22,7 @@
    "name": "Combined release (tracks A, B, C)",
    "implementation_authorized": true,
    "integration_branch": "wip/build18",
-   "released": "",
+   "released": "private playtest draft (code 61ec528, run 39935635926, 2026-10-23)",
    "authority": "B18-DIR, B18-SCOPE; no distributable without the owner's approval"
   },
   "19": {
@@ -33840,6 +33840,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: umbrella=True; implementation_status=IMPLEMENTED ON TASK BRANCH; assigned_worker=; verification_status=TARGETED TESTS PASSED; tests=judgment_test 168, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 9 checks, 0 failures (expansion19/PROGRESS.md on wip/expansion19-preparation, c4b10e4); remaining_work=rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c); test_commit=c4b10e4",
      "why": "prototype on wip/expansion19-preparation (c4b10e4), switched off, not integrated; the worker is idle since 2026-10-22"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker:  -> X19 sync worker (Sonnet subagent)",
+     "why": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansions_19_20_21_progress.md): resume Expansion 19; first task: synchronize wip/expansion19-preparation with the released Build 18"
     }
    ],
    "target_build": "19",
@@ -33849,12 +33854,12 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "umbrella": true,
-   "assigned_worker": "",
+   "assigned_worker": "X19 sync worker (Sonnet subagent)",
    "remaining_work": "rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c)",
    "test_commit": "c4b10e4"
   },

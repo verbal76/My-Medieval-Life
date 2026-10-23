@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Authority: B18-DIR, B18-SCOPE; no distributable without the owner's approval
 
-Readiness: **IN DEVELOPMENT (not feature complete)**
+Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23))**
 
 | Count | Value |
 |---|---|
