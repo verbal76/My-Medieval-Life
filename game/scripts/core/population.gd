@@ -11,6 +11,11 @@ const JOBS := {
 }
 # A guard's training: health, blow and guard (the starting watch; one who takes up a guard's post later, EQ-04)
 const GUARD_STATS := {"hp": 45.0, "damage": 8.0, "armor": 3.0}
+# TAILOR-18, BARBER-18 (owner, 2026-10-23): every new world starts with one extra adult of each, working from a manor pitch
+const SERVICE_JOBS := ["tailor", "barber"]
+# DVW-B3-CHAPEL (owner, 2026-10-23): the chapel's clergy, one preacher and one church assistant, paid low-wage villagers; a new world
+# starts with both, a household of their own living at the chapel, made from a stream of their own after the service trades (nobody else's id, name or place moves)
+const CLERGY := ["preacher", "church_assistant"]
 const CHILDREN := 26
 const ELDERS := 18
 
@@ -45,6 +50,11 @@ static func populate(w: World) -> void:
 	for i in all_homes.size():
 		w.households.append({"id": i, "family": fam[i % fam.size()], "home": all_homes[i], "members": [], "pantry": Inventory.new()})
 	w.households[2].family = "Lorekeeper"
+	var manse := -1                    # DVW-B3-CHAPEL: the clergy are a household of their own, living at the chapel (nobody else's household changes)
+	for b in w.buildings.values():
+		if str(b.type) == "chapel":
+			manse = w.households.size()
+			w.households.append({"id": manse, "family": fam[manse % fam.size()], "home": str(b.id), "members": [], "pantry": Inventory.new()})
 
 	# job list in a fixed order, then spread over homes
 	var jobs := []
@@ -78,6 +88,12 @@ static func populate(w: World) -> void:
 		placed[hi].append("elder")
 		hi = 3 + (hi - 2) % (all_homes.size() - 3)
 
+	for sj in SERVICE_JOBS:         # housed where there is most room (fewest members, the later house on a tie, never the last), after the village is placed
+		var room := all_homes.size() - 2
+		for h in range(all_homes.size() - 2, 2, -1):
+			if placed.get(h, []).size() < placed.get(room, []).size():
+				room = h
+		placed[room] = placed.get(room, []) + [sj]
 	var next_id := 1
 	var counters := {}
 	var fields := w.fields
@@ -89,6 +105,8 @@ static func populate(w: World) -> void:
 		var hh: Dictionary = w.households[h]
 		var door := w.building_door(hh.home)
 		for what in placed.get(h, []):
+			if SERVICE_JOBS.has(what) or CLERGY.has(what):
+				continue                  # made after the bandits, from their own stream, so nobody else's id, name or place moves
 			var n := NPC.new()
 			n.id = next_id
 			next_id += 1
@@ -147,6 +165,51 @@ static func populate(w: World) -> void:
 		b.inv.add("copper_sword")
 		b.hunger = 100.0
 		w.npcs.append(b)
+	var srng := RandomNumberGenerator.new()          # TAILOR-18, BARBER-18: the extra villagers, from a stream of their own
+	srng.seed = w.seed * 7919 + 29
+	for h in range(all_homes.size()):
+		for what in placed.get(h, []):
+			if not SERVICE_JOBS.has(what):
+				continue
+			var hh: Dictionary = w.households[h]
+			var n := NPC.new()
+			n.id = next_id
+			next_id += 1
+			n.household = h
+			n.family = hh.family
+			n.home = hh.home
+			n.name = FIRST[srng.randi() % FIRST.size()]
+			n.pos = Vector2(w.building_door(hh.home)) + Vector2(0.5, 0.5)
+			n.coins = srng.randi_range(int(GameData.b("start_coins_villager")[0]), int(GameData.b("start_coins_villager")[1]))
+			n.job = what
+			_equip(w, n, what, 0, fields, stall_ids)
+			n.sprite = "res://assets/characters/villager_%02d.png" % ((vsheet + SERVICE_JOBS.find(what)) % 48)
+			n.hunger = srng.randf_range(60.0, 100.0)
+			hh.members.append(n.id)
+			hh.pantry.add("wheat", int(GameData.b("start_household_wheat_per_member")))
+			w.npcs.append(n)
+	var crng := RandomNumberGenerator.new()          # DVW-B3-CHAPEL: the clergy, from a stream of their own, after the service trades
+	crng.seed = w.seed * 7919 + 41
+	if manse >= 0:
+		var hh: Dictionary = w.households[manse]
+		for what in CLERGY:
+			var n := NPC.new()
+			n.id = next_id
+			next_id += 1
+			n.household = manse
+			n.family = hh.family
+			n.home = hh.home
+			n.name = FIRST[crng.randi() % FIRST.size()]
+			n.pos = Vector2(w.building_door(hh.home)) + Vector2(0.5, 0.5)
+			n.coins = crng.randi_range(int(GameData.b("start_coins_villager")[0]), int(GameData.b("start_coins_villager")[1]))
+			n.job = what
+			n.workplace = "chapel"
+			n.sprite = "res://assets/characters/villager_%02d.png" % ((vsheet + SERVICE_JOBS.size() + CLERGY.find(what)) % 48)
+			n.hunger = crng.randf_range(60.0, 100.0)
+			hh.members.append(n.id)
+			w.npcs.append(n)
+		hh.pantry.add("pottage", 3)
+		hh.pantry.add("wheat", int(GameData.b("start_household_wheat_per_member")) * hh.members.size())
 	Life.seed_population(w)          # B8-029: sexes, ages and the explicit family links
 
 
@@ -216,6 +279,8 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 			n.damage = float(GUARD_STATS.damage)
 			n.armor = float(GUARD_STATS.armor)
 			n.workplace = "day" if idx % 2 == 0 else "night"
+		"tailor", "barber":
+			Business.let_service_pitch(w, n, job)       # the manor's pitch beside the market, rent-free like a merchant's stall
 		"reeve":
 			n.coins = 300
 			n.workplace = "manor"

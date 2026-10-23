@@ -1,0 +1,715 @@
+# Expansion 18 (Settlement Advancement & Regional Economy): prospective design note
+
+Branch `wip/expansion18-preparation`. **Build 17 baseline: `cd7439c`** (`origin/wip/build17`, merged one way at SYNC-17,
+`docs/directives/2026-10-21_sync_expansions_with_build17.md`, on 2026-10-21; before it the branch stood on `b721616`, the
+released Build 16 plus records). The last pre-sync commit was `842ca59`.
+Authority: owner directive 2026-10-21, `docs/directives/2026-10-21_parallel_prospective_development_18_19.md`
+(register PROS-01, PROS-18). Specification: `docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf`
+(cited "spec s.N"); engineering plan `origin/wip/roadmap-docs:docs/roadmap/18_SETTLEMENTS_ENGINEERING_PLAN.md`.
+
+**Status: PROSPECTIVE.** Nothing here is live gameplay, nothing is integrated, and no phase (SET-A..D) is complete. The code
+runs only in its own tests and the shadow harness. Live behaviour of the single village is unchanged (the touches of
+existing code are listed in section 6, "Hooks": the census delegation, the analysis-only X18 HOOKs, off in the game, and
+the trade record for couriers).
+
+## 1. Modules (`game/scripts/core/settlement/`)
+
+| File | Class | Phase | What it does |
+|---|---|---|---|
+| `holdings.gd` | `SettlementHoldings` | B/C | The census of goods by holder (moved unchanged from `tests/census.gd`) and coins by holder (sums to `World.total_coins`). Read-only. |
+| `facts.gd` | `SettlementFacts` | B | A settlement's facts read from the World: the residents as Build 17 counts them (`Discovery.residents()`: living adult villagers, then the player while resident, MIN-D-Q2), each with job, skill levels, the tools of each kind in their own pack and the key of the store they share (household pantry, the resident player's chest); the shared stores' tools; tools as MIN-D counts them (villagers' packs, households, the manor's yard, the resident player's pack and chest), goods held (not the player's, not loot), stations, structures (fields, stalls), transport (handcarts, carrying), deposit access, records, portals and the mining level from the adapter, and for the live village the `Discovery` itself (`plain()` drops it for JSON). |
+| `industries.gd` | `SettlementIndustries` | A/B | Validates `game/data/settlement_industries.json`; derives each industry's level from facts; names unmet needs; specialization and leaders across settlements; level history. |
+| `mining_adapter.gd` | `MiningCapabilityAdapter` | B (provisional) | The only way the model learns mining capability (MIN-D's `World.discovery`): fixture, live, none; also deposit access, records, portals and the village's own reachable ore. |
+| `report.gd` | `SettlementReport` | B/C | The village's goods by group (market, private, public, player, loot), coins by holder, outside money, food days, capabilities, transport; measured daily use from the World's stats; the village's parties to regional trade (traders, households, villagers, the manor) as read-only snapshots. |
+| `settlement_party.gd` | `SettlementParty` | C (REG-PARTY-01) | The one trading-party interface over the five settlements (section 12a): a handle on a trader, business, treasury or household of an `OffMapSettlement`; `RegionalMarket` and `CourierService` use it. |
+| `ledger.gd` | `SettlementLedger` | C | (Now the village-snapshot and test-fixture party only, section 12a.) Books of one party to regional trade (an abstract settlement, or a buyer or seller in a place): stock, coins, needs, production (times the output factor), explicit income, transport, whether it can travel or carts for hire; every change a journal line; `balanced()` proves the books. |
+| `regional.gd` | `RegionalMarket` | C (E rules) | Supply, demand, willingness to pay, purchasing power; `plan()` (any buyer; carriage by the buyer's own trip or a paid carter; competition, cooperation, capacity, unmet reasons, lost sales), `execute()` (atomic, matched, carriage fees apart), `matched()`, `to_contract_offer()` (CON-01 shape). |
+| `routes.gd` | `TradeRoutes` | C/E | Grid routes (Dijkstra over road/open/rough/solid; overworld classifier), abstract routes, carriage cost, carrying capacity (handcarts, packs). |
+| `settlement_save.gd` | `SettlementSave` | A | Provisional save section `x18_settlements` (`mml-settlements/0`). |
+| `offmap.gd` | `OffMapSettlement` | C (SET-C-SIM) | ONE off-map settlement as a small economy of its own: households, businesses, treasury, a market; stepped once a day (section 12). In the live game |
+| `regions.gd` | `Regions` | C (SET-C-FIVE) | The five settlements, their traders' visits to the village, the traders' wholesale round, saving (section 12). In the live game |
+
+Data: `game/data/settlement_industries.json` (`mml-capabilities/1`), test fixture `game/tests/fixtures/x18_regions.json`
+(`mml-regions/0`).
+
+## 2. Capability model (SET-B; spec s.3, s.4, s.9)
+
+- Schema: Build 17's SET-A sketch (`MIN_A_ARCHITECTURE.md` s.9): industries -> levels -> needs. Need kinds:
+  `practitioners` (job and/or skill at a minimum level, a count), `tool_stock`, `stock`, `structure`, `transport`,
+  `records`, `portal`, `industry` (cross-industry), and `any` (alternatives, e.g. toolmaking needs a working mine *or*
+  iron bars in store, so imports can substitute for a mine).
+- **Derived, never stored as truth.** A level holds when every need of it and of each level below it holds; it falls the
+  moment one stops holding. The save keeps only the levels last seen and the day each changed (history).
+- **Never a gate (owner Q18-9, 2026-10-21).** A level moves no coin and no item, gives no villager a skill, and never
+  refuses or blocks an activity: a settlement at mining 0 can still mine with the resources, tools and access. Its only
+  effects are on pay and production output, as data-driven factors (section 9), all 1.0 until the owner sets them.
+- **Population plays no part** (spec s.3): tested; a 12-person mining hamlet leads a 90-person farming town in mining.
+- **Mining is external.** The data file marks mining `external`; its level is read from `MiningCapabilityAdapter`,
+  which since SYNC-17 reads the live MIN-D (`source "min-d"`, the level `Discovery.evaluate("mining")` gives). The model
+  never derives mining from `World.deposits` (a test empties every seam and checks the level is still MIN-D's). The
+  adapter uses MIN-D's interface (`World.discovery`: `evaluate("mining")` for the level now, `level("mining")` for the
+  last dawn's, `history`, `manor_finds()`, `practitioners()`; portals from `World.underground`; reachable seams from
+  `World._quarry_sources` and `villagers_reach`), tested on the live World and against a fake World for its edges.
+- **Vocabulary aligned with MIN-D.** `settlement_industries.json` uses MIN-D's need kinds (`practitioners` with `skill`,
+  `min_level`, `tool`, `jobs`, `as`; `station {type}`, `structure {what}`, `transport` with `carry`, `deposit_access`).
+- **Practitioners by Build 17's rule (SYNC-17, PROS-18 correction; MIN-SKILLCAP, MIN-D2, `docs/build17/MIN_PARITY_SHOVELS.md`).**
+  A practitioner is a resident whose Skills level in the need's `skill` is at least `min_level`, holding a tool of the
+  need's `tool` kind in their own pack or in their shared store (household pantry; the resident player's home chest), a
+  shared tool serving one member only; never a job title, except where the game's own rule makes a trade the sole
+  performer (`jobs`: MIN-D's assayer is a smith; here farming, because only farmers work the manor's fields). The resident
+  player counts by the villagers' rule. In the live village `SettlementIndustries.practitioner_count` calls
+  `Discovery.practitioners` itself (and `tool_stock` calls `Discovery.tool_stock`); for an abstract settlement's facts the
+  same rule runs on the snapshot, and `settlement_test` `test_rule_parity` proves the two give Discovery's counts for all
+  18 practitioners needs of both data files, with a shared household tool and the resident player. No new eligibility
+  rule or job privilege is added.
+- First industries (provisional, Q18-2): forestry (woodcutting + axe), carpentry (crafting; joinery with a hammer),
+  smithing (smithing + hammer), farming (farmers; a plough for ploughland), tanning (crafting), trade (trading), plus
+  external mining. Carpentry, masonry and tanning are skills of their own (Q18-1, `game/data/skills.json`, seeded from Crafting); the data file names them.
+
+## 3. Regional economy (SET-C; spec s.5-s.7, s.9, s.11)
+
+Trade is between **parties** (`SettlementLedger`): a whole abstract settlement, or one buyer or seller inside a place
+(owner Q18-10: villagers, households, merchants, businesses, treasuries). Routes run between places (`settlement`);
+parties of the same place do not trade here (that is the local market).
+
+- **Demand** = a party's daily need times `reserve_days`, less what it holds and what its own workings can still yield
+  (`local_supply`). **Supply** = what it holds beyond its own reserve, within its sale limit (a household's pantry and
+  the granary are not for sale; members' and traders' packs beyond what they keep are).
+- **Willingness to pay** = the item's value, raised up to `scarcity_premium` x value as the buyer's store runs out, for
+  the goods and their carriage together; a party pays nothing for what it does not need.
+- **Purchasing power** = coins above `cash_floor`. Need never creates coins: a cash-poor buyer's unmet need is recorded
+  with reason `funds` (spec s.11 "trade failure is observable").
+- **Allocation** (deterministic): goods in id order; buyers neediest first (share of horizon lacking; ties by id); each
+  buyer takes from the seller with the cheapest delivered cost (price at the seller's door + carriage fee), then the
+  shorter trip, then the lower id; limited by the seller's supply, the carriage capacity (the buyer's own or the
+  carter's) left this round and the buyer's coins. Unmet reasons: `no supplier`, `no carriage`, `price`, `funds`.
+- **No resale in the round** (spec s.9 "prevent circular money printing via ... resale"): supply is fixed at the start
+  of a round; goods bought in it cannot be sold on in it.
+- **Execution** moves goods seller -> buyer and the price buyer -> seller, and any carriage fee buyer -> carter, each as
+  an atomic, matched pair of journal lines; a line that no longer holds is refused whole.
+- **Off-map settlements** change only by journaled lines: production (times the output factor, section 9), use (with
+  recorded shortages), explicit income (default 0, a closed purse; Q18-3) and matched trade and carriage.
+- **The village's parties** (`SettlementReport.parties`): each trader (the villagers whose trade buys in
+  `NPCBrain.BUYS`; demand from the live `NPCBrain.wants`), each household (members' purses and packs, the pantry;
+  demand = its share of the village's measured food use), each villager of no household, and the manor (treasury and
+  granary; cannot travel; no demand rule yet). Every purse and good is in exactly one party (tested). The player buys by
+  hand and is not a party. Snapshots only: nothing is written back to the World on this branch.
+
+### Ore demand (the overstatement fixed)
+
+The first shadow runs counted the village's daily use of ore and coal as import demand, though its own seams supply them.
+Now `MiningCapabilityAdapter.local_supply("village")` gives what the village's own reachable seams still hold (MIN-D:
+`_quarry_sources` filtered by `villagers_reach`; on this branch the Build 16 seams in `World.deposits` stand in), when
+someone can really dig it: a living adult villager with a pickaxe to hand (pack, household store or the manor's yard, as
+MIN-D counts tools). Owner Q18-9: the level never decides this (a level-0 village with ore, a miner and a pickaxe still
+counts its own ore, tested); it only scales the expected output through the mining output factor (1.0 until Q18-11),
+never past what the seams hold; `SettlementReport.parties` gives it to the traders whose
+trade buys that ore, and `RegionalMarket.demand` subtracts it. It is never stock and never for sale: ore still in the
+ground is not goods. The settlement model itself still reads no deposit.
+
+### Transport cost (owner Q18-10)
+
+Carriage is never free and never folded into the price of the goods. Either the **buyer fetches the goods itself**
+(`self`: no coin; as much as its own transport carries a round: 60 units a handcart, else 12 a carrier; a party that
+cannot travel, such as the treasury, cannot), or it **pays a willing carter** (`carter`: a party with
+`carts_for_hire`, based at either end of the route, with room left; fee = the carters' day wage, `helper_wage`, for the
+round trip spread over a full load, rounded up, times the carter's pay factor; paid buyer -> carter as its own matched
+transfer). No coin is destroyed by distance and none is created. Terrain lengthens a route (road 1, open 1.6, rough 2.5
+tiles of travel a tile; solid is impassable).
+
+## 4. Competition and cooperation (spec s.6 row 5, s.7 mature phase)
+
+- Competition: the cheapest delivered cost wins (then the shorter trip); the losers' lost sales are recorded (for
+  reports and later merchant AI). Carriage capacity spills the remainder to the next cheapest (or to a carter).
+- Cooperation: an agreement `[place_a, place_b, "preferred"]` lets a partner's seller win a sale when its delivered cost
+  is within `preferred_margin_pct` of the cheapest. It is paid its own price: no discount, gift, loan or barter (no
+  hidden rescue, WDR-022; credit and barter are Q18-5).
+
+## 5. Persistence (provisional)
+
+`SettlementSave` keeps `{format, capabilities: {id: {levels, since, history}}, regions: [ledger], agreements, day}` in the
+save dictionary under `x18_settlements`. `World.load_dict` ignores unknown keys, so saves with the section load in the
+live game, and every existing save (14-16) gives the default state. `SAVE_VERSION` is not bumped: Build 17 owns the next
+versions; the section becomes part of the versioned save (with a migration fixture from Build 17's last version) at
+integration. An unknown section format is refused, never reinterpreted.
+
+**Maintained and saved in the live game (SET-A, SET-B; INT-350).** `SettlementProfile` (`settlement/profile.gd`) is called by
+`World._new_day` at dawn, when a world is made and when a save is loaded. It recomputes the village's level in every industry
+(`SettlementFacts` + `SettlementIndustries.evaluate`, the same as `SettlementReport`), its effective level (level within
+`WorkExperience.facility_cap`) and each industry's workforce level (`WorkExperience.workforce`), and keeps the level history with
+`SettlementIndustries.record`. World keeps the history in `settlement_caps` and the day's snapshot in `settlement_profile` (shown as
+`profile` in the settlement report). `World.to_dict` saves the history through `SettlementSave` under `x18_settlements` (no version
+bump); levels and workforce are derived from the world and the saved experience record, so an older save derives them on load with no
+invented history, and an unknown section format is kept and written back. It changes no pay, output or level: the hooks keep reading
+each worker's own effective level (INT-216) and a facility shortage lowers `effective` here and never the workforce experience
+(X18-CAPCOMP). Farming progression is not implemented (numbers not approved). Test: `game/tests/profile_test.gd`.
+
+## 6. Hooks into existing code
+
+| Hook | Where | Why |
+|---|---|---|
+| `tests/census.gd` delegates to `SettlementHoldings` | test infrastructure | one census for `economy_sim`, the conservation test and the settlement report; `tests/` is not exported, so the walk had to move into `core/` to run in the game. No behaviour change (run_tests, conservation_test, economy_sim 30 days run). At SYNC-17 Build 17's new holders came with it: contract escrow goods (`w.contracts.goods()`) and open-pit spoil (`w.pits.goods()`), and the contracts' reserved coins in the coins by holder (as `World.total_coins` now counts them). |
+| X18 HOOK: `CapabilityHook.work_time` / `.pay` | `NPCBrain.seam_steps` (mining; Build 17 moved the mining step there, so the hook moved with it), chop/craft/handcart/harvest/sow in `npc_brain.gd`, `construction.gd` chop, `contracts.gd` chop (Build 17's contract felling), `manor_work.gd` mine, quarry and mend wages | analysis only (X18-SIM): off in the game, exactly the base value times the Skills factor; the fingerprints with it off are identical. |
+| `Relations.trades` / `note_trade` | `relations.gd`, `World.trade` | Q18-12: recipients a courier may reach come from known records, prior trades included. |
+
+Planned for integration, not made here: `World.to_dict/load_dict` calling `SettlementSave.attach/extract`; a dawn
+recompute of levels in `World._new_day`; a wiki page from the report; `NPCBrain.caravan()` replaced (see
+`CARAVAN_REPLACEMENT.md`).
+
+## 7. Determinism
+
+No randomness is used. Every iteration over settlements, goods and industries is sorted; route search breaks ties by
+cell order. Tests run the same scenarios twice and compare JSON fingerprints.
+
+## 8. One capability file and one evaluator at the Build 18 reconciliation (plan)
+
+Today there are two files and two evaluation loops: MIN-D's `game/data/capabilities.json` with `Discovery.evaluate`
+(Build 17, mining only, reads the World directly in `need_holds`) and this branch's `settlement_industries.json` with
+`SettlementIndustries.evaluate` (every other industry, reads a facts snapshot). Until the reconciliation the settlement
+model only **consumes** MIN-D's mining level (adapter; mining is `external`), so mining is never derived twice. At the
+reconciliation they become one file and one evaluator:
+
+| Step | What moves | Where |
+|---|---|---|
+| 1. File | The non-mining industries (forestry, carpentry, smithing, farming, tanning, trade), `need_kinds`, `transport` and `market` blocks move from `settlement_industries.json` into MIN-D's `game/data/capabilities.json` (it keeps its name, format `mml-capabilities/1` and MIN-D's mining block unchanged). `settlement_industries.json` is deleted. | `capabilities.json` |
+| 2. Schema | Already aligned on this branch: `practitioners {jobs, skill, min_level, count, as}`, `station {type}`, `structure {what}`, `transport {any: handcart, carry}`, `deposit_access`, `records`, `portal` are MIN-D's; this branch adds `stock {item}`, `industry {id, min}` and `any {of}` (additive: MIN-D's block needs none of them). MIN-D's `note` key and this branch's `_note` both stay comments. | — |
+| 3. Algorithm | One level-climbing loop: `SettlementIndustries.evaluate(facts, data)` (sequential levels, unmet needs per level, cross-industry order). MIN-D's `Discovery.evaluate(industry)` becomes a thin call: `SettlementIndustries.evaluate(SettlementFacts.from_world(w)).levels[industry]`, keeping its return shape `{level, holds, unmet}` for its callers (dawn, prospector place, manor postings). | `industries.gd` |
+| 4. Need readers | MIN-D's World readers move into the one facts builder, `SettlementFacts.from_world`: `deposit_access` (`_quarry_sources`, `villagers_reach`, `level_of`), `records` (`manor_finds`), `portal` (`underground.portals`), `structure` (`Discovery.structures`: pit ramps, timber supports), `transport.carry` (`carry_ore`). They are already the adapter's methods; at integration the adapter's live mode is folded into `from_world` and only the fixture mode remains (for abstract settlements and tests). **Partly realised at SYNC-17:** practitioners and tool stock already delegate to `Discovery.practitioners` and `Discovery.tool_stock` in the live village (one rule, `test_rule_parity`). | `facts.gd` |
+| 5. Mining no longer external | Remove `"external": "mining"`; mining is evaluated by the one evaluator from MIN-D's block. `test_min_d_schema` (settlement_test) already proves the evaluator gives MIN-D's documented levels from MIN-D's block. MIN-D's `discovery_test` must still pass unchanged (its gate). | `capabilities.json`, tests |
+| 6. History | One history: MIN-D's `Discovery.history` `{day, industry, from, to, why}` and its dawn notes, extended to every industry by iterating `caps().industries` (it already does). `SettlementIndustries.record` and the provisional `x18_settlements.capabilities` save key are dropped in its favour (no second history in the save). | `discovery.gd` (dawn), `settlement_save.gd` |
+| 7. Effects | Levels gate nothing (owner Q18-9, 2026-10-21): their only effects are data-driven pay and output multipliers on the 0-10 scale (section 9); the `effects` block moves into `capabilities.json` with the industries. | — |
+| 8. Mining's scale | MIN-D's mining capability is a 1-4 stage scale (`capabilities.json` mining levels); Q18-11 puts every productive industry on 0-10. **Reconciliation item, not decided here:** how MIN-D's stages map to 0-10 (for example stages as fixed points on 0-10 with sub-levels from people and practice between them, or a separate 0-10 rating for mining with the stages kept as MIN-D's descriptive milestones). Until decided, the adapter keeps reading the stage read-only and mining's multipliers stay 1.0. Depends on Q18-11B (what a level is made of). | `capabilities.json`, `mining_adapter.gd` |
+
+Order: after Build 17 is complete and its baseline is merged into this branch (directive's reconciliation gate). Owner of
+the change: the Build 18 integration; MIN-D's files are not edited before then.
+
+## 9. Capability effects: levels 0-10, pay and output only (owner Q18-9 and Q18-11, 2026-10-21)
+
+Decisions (verbatim in `docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md` and
+`docs/directives/2026-10-21_expansion18_master_directive.md`, both on staging): capability levels affect pay scales and
+production output only, never permission (Q18-9); every productive industry uses levels 0-10, 0 = baseline, never
+inability; AdjustedPay = BasePay x PayMultiplier(industry, level) and AdjustedOutput = BaseOutput x
+OutputMultiplier(industry, level), with the bases from the existing systems; diminishing returns; different industries
+may differ (Q18-11, structure APPROVED). **The numbers (Q18-11A) are APPROVED and closed (owner, 2026-10-22,
+`docs/directives/2026-10-22_q18_11a_conditional_decision.md` and `2026-10-22_q18_11a_final_decision.md`; X18-CAPNUM),
+implemented as the `approved` profile (section 9a).** **The composition of a level (Q18-11B) is
+APPROVED (owner, 2026-10-22, option 2, `docs/directives/2026-10-22_q18_11b_decision.md` on staging; X18-CAPCOMP):
+people's experience, capped by facilities.** Each industry keeps two values on 0-10: a *workforce* level (the relevant
+experience of the settlement's people) and an *effective* level (the workforce level within the limits of available,
+operational facilities). A facility shortage lowers only the effective level and never erases accumulated experience; the
+pay and output modifiers read the effective level; no level permits or forbids anyone's work (Q18-9). Not yet decided and
+to be proposed to the owner: the experience measure (a tenure record per worker and industry), the facility caps, tenure
+rules and thresholds. Not implemented; Build 17 unchanged.
+
+- **Data** (`settlement_industries.json` `effects`): `max_level` 10; `shapes` (share of the full bonus at each level:
+  `owner_candidate`, the owner's example table; `front_loaded`, 80% of the gain by level 4; `intermediate`, their mean);
+  `profiles` (`approved`, ACTIVE, the owner's numbers; `neutral`, every multiplier 1.0, the comparison baseline;
+  `owner_candidate`, `front_loaded`, `intermediate`, `differentiated`, `conservative`, `moderate`, `aggressive`, labelled
+  UNAPPROVED; `revised_bounded`, labelled SUPERSEDED by `approved`); `yield_fixed` (industries whose multiplier is a work
+  rate only, never a production rate: farming); each profile has `output_max` per industry, a `shape` (one, or one per
+  industry) and a `pay_ratio`. Output multiplier = 1 + output_max x shape[L]; pay multiplier = 1 + output_max x
+  pay_ratio x shape[L]. `outputs` names the goods each industry's output multiplier speeds.
+- **Code**: `SettlementIndustries.pay_multiplier` / `output_multiplier(industry, level, profile = active)`; levels clamp to
+  0-10; the validator refuses a defined level above 10 (the industries' defined levels so far stop at 3: what raises a
+  level beyond is Q18-11B). Candidate profiles are selectable only by naming them (tests, `caravan_compare --profiles`);
+  analysis runs read the active one unless they name another.
+- **Output safeguard** (`SettlementProductivity`): the output multiplier is less time per unit on the existing work
+  times (mine_minutes, chop_minutes, recipe minutes, the farmers' field work). Every unit still takes its full recipe
+  inputs, one unit of its seam, or one unit of the grown crop; at the end of the inputs, the seam or the crop a faster
+  worker makes nothing more. The settlement has no waste term of its own: the only existing one is the worker's Skill
+  `save_chance`. Abstract settlements follow the same rule (`SettlementLedger.tick`): the multiplier speeds production
+  only where it has a finite source (`reserves` depleted, `recipes` inputs used); a farm's crop is not raised.
+- **No double counting** (RESEARCH_DIGEST.md (e)): settlement capability = the place-specific component; a worker's own
+  Skills = the portable component. The settlement acts only on unit time and pay, never on the Skills' quantity effects
+  (`ore_extra_chance`, `save_chance`, `bonus_chance`, `log_bonus`, `sapling_bonus`); where a Skill shortens the same work
+  (`mine_time`, `chop_time`, `craft_time`), the gains add over the base time once each: time = base / (1 + g_skill +
+  g_place). The settlement curves are to be calibrated as the place-specific share only (CAPABILITY_CURVES.md). The
+  pay multiplier never touches prices (`price_bonus` is the trading skill's).
+- **Mining**: its level is MIN-D's stage (1-4) read through the adapter; its multipliers stay 1.0 until the stage-to-0-10
+  mapping is decided at the reconciliation (section 8, step 8).
+- Tests: `capability_test.gd` (levels 0-10, the approved profile active and its values, the owner's table reproduced, pay and output separate,
+  industries differ, mining/smithing/carpentry/farming safeguards on real recipes and work times, carter pay conserved,
+  no double counting, never blocks, determinism); `regional_test.gd` `test_levels_scale_never_gate`.
+
+## 9a. The approved capability modifier profile (X18-CAPNUM; owner Q18-11A closed 2026-10-22)
+
+| Industry | Shape | Output (work rate for farming) at L10 | Pay at L10 | Where the live hook reaches (X18 HOOK) |
+|---|---|---|---|---|
+| Mining | front-loaded | +5% | +2% | `NPCBrain.seam_steps` swing time; the manor's quarry wage. Unmapped in the game (MIN-D stages 1-4; section 8 step 8) |
+| Forestry | front-loaded | +5% | +2% | felling time (`npc_brain`, `construction`, `contracts`) |
+| Trade | intermediate | +10% | +4% | the regional model's carter fee (abstract); no live trade time |
+| Tanning | intermediate | +10% | +4% | workbench recipes on hides (`CapabilityHook.recipe_industry`) |
+| Carpentry | owner's shape | +15% | +6% | sawhorse recipes, the handcart; the manor's mending wage |
+| Smithing | owner's shape | +15% | +6% | forge and anvil recipes |
+| Farming (F1) | intermediate | +10% **work rate** | +4% | manor fields: cutting and sowing (`NPCBrain._farmer`); household plots: tilling, sowing, cutting (`FarmPlots._batch`); pens: feeding, collecting eggs, milk, wool (`NPCBrain._keeper`); the player's tilling, sowing and harvesting seconds (`Farming.plan`); pay: the harvest hand's wage (`Quests.promised`) |
+
+Pay = 0.4 x the output gain. Farming F1 levels 0-10: work rate 0/2.5/4.4/5.9/7.0/7.8/8.5/9.1/9.5/9.8/10.0%, pay
+0/1.0/1.8/2.4/2.8/3.1/3.4/3.6/3.8/3.9/4.0%: the `intermediate` shape times 10% (and 4%). At level 5 the shape gives
+7.853% (the table shows 7.8); every other level matches the table at 0.1 (tested within 0.06).
+
+The owner's mandatory rules and how they hold:
+1. **Efficiency, not yield.** Farming's multiplier only divides a task's minutes (`CapabilityHook.time`); every hooked
+   act ends in the existing rule that takes the crop from the field, the seed from the pack, the produce from the pen.
+   In the regional model farming is `yield_fixed`: its production keeps factor 1.0 (`SettlementLedger.tick`).
+2. **Field productivity, growth, seed, animal production, conservation unchanged.** No hook touches `field_yield`,
+   growth, `cell_yield`, seed rules, `daily_need`, pen products or breeding. Tested: the same harvest goods at levels 0
+   and 10; the same crop in the regional model.
+3. **Durations by the effective level.** The hook's level is the effective level. Slaughter, clearing ground and fencing
+   are not among the owner's listed tasks and keep their times.
+4. **Pay on paid farm labour only.** (Since X18-CAPCOMP part 1 the level these read will be each worker's own; section 9b.) The one wage the game sets from a base rate for farm work is the harvest hand's
+   (`work_the_harvest`, 6 coins): `Quests.promised` takes `CapabilityHook.pay(wage, "farming")`, set aside and paid as
+   one amount. Grain prices are untouched (tested).
+5. **Experience kept under facility limits.** Until X18-CAPCOMP's numbers are approved the split is a concept only: one
+   level stands for both the workforce and the effective level, and no facility cap is invented.
+6. **Levels never prevent work.** No hook refuses or delays a task beyond the base time; level 0 is the base.
+7. **Negotiated prices and contracts untouched; no mandatory wages.** The hooks touch no negotiated price, no CON-01/02
+   term and no contract wage; they create no wage. Farmers selling their grain at the market price earn no modifier.
+
+**The live hook stays OFF in this branch's game (agent decision, X18-CAPNUM).** The modifiers read the effective 0-10
+level, and the live game has none: its composition (workforce from experience, effective from facilities) awaits the
+owner's numbers (X18-CAPCOMP, Q18-11B follow-up). The settlement model's current levels are threshold steps (0-3) of
+another meaning; reading them as 0-10 would invent a rule. So the game behaves exactly as Build 17 (`cd7439c`): the same
+fingerprint with the hook off (economy_sim seed 1, 30 days, before and after this change); analysis runs force a level
+(`economy_sim --capability L --cap-profile approved`). Switching it on is a reconciliation step once X18-CAPCOMP supplies
+the level, with a fresh determinism comparison.
+
+**Watch for the reconciliation: FARM-CROP-01 / FARM-08-Q-CROP (`wip/farm-cropshare` `132960a`, not in this baseline).**
+There a field's crop is split among its cutters in proportion to the minutes each cut (`Farming.split_crop`), the
+finisher's share from `args.min` (the planned cutting minutes) and the others' from the minutes worked. Faster cutting
+never creates or moves grain if, at the merge, `args.min` carries the hooked minutes (the same units as the others'
+worked minutes): the level is the settlement's, so every cutter's minutes scale by the same factor and the proportions,
+and `take_crop`'s total, are unchanged. The pen feed step that branch adds inside the harvest act (15 minutes) should take
+the same farming hook. Not merged here.
+
+## 9b. Workforce experience (X18-CAPCOMP part 1; owner, 2026-10-22)
+
+Decision verbatim in `docs/directives/2026-10-22_x18_capcomp_experience_decision.md` (staging). Implemented as a record
+only (`game/scripts/core/settlement/experience.gd`, `WorkExperience`; data `settlement_industries.json` `experience`):
+
+- **Experience** per person (villager or player) and industry, from actual hours worked in that industry in this
+  settlement: 1 experience day per 8 game hours. It never decays and is never reduced by facilities, other workers or
+  time away. It leaves with the person: at each dawn `World._new_day` forgets every villager who is no longer alive
+  (death; a departure that removes or ends the villager).
+- **Caps** (experience days): mining, forestry 12; farming, trade, tanning 18; carpentry, smithing 24.
+- **Individual level** = 10 x min(days, cap) / cap, straight-line, real-valued 0-10, each worker's own. A level-10 master
+  beside a level-0 apprentice keeps the advantage; the apprentice inherits nothing.
+- **Workforce level** of an industry = the hours-weighted average of the individual levels of the workers active in it in
+  the last season (2 game days, hour buckets; active = any hours in the window). A **reporting and planning metric
+  only**, never a modifier applied to every worker. With nobody active: `"no active workers"`, never 0.
+- **The Q18-11B effective level is now each worker's own effective level** (the owner's clarification): individual
+  experience is the basis of individual performance and pay; facilities may later lower a worker's effective capability,
+  never their experience. Until the facility rules are approved, effective = experience level; no cap is invented.
+- **Starting experience (owner D1, 2026-10-22, `docs/directives/2026-10-22_x18_d1_starting_experience.md`):** once, at a
+  new world's creation (after PAR-01A seeds the settlers' Skills) and when a save with no `x18_experience` section is
+  loaded, each living adult or elder villager gets, per industry, `cap x Skills.level / 10` experience days in the
+  industry's skill (`WorkExperience.SKILL_OF`: mining, woodcutting -> forestry, smithing, crafting -> carpentry and
+  tanning, trading -> trade), only where they hold xp in that skill (the level-1 floor of a skill never practised is no
+  recorded history, requirement 4). Farming (no skill) comes from PAR-01A's own working-history rule, exactly as PAR-01A
+  gives a trade skill (`WorkExperience.farming_start_days`): for a villager whose job is farmer, tenure =
+  min(max(0, age - skill_start.from_age) x lerp(tenure_min, 1, Skills.tenure_share), max_tenure_years), xp =
+  round(tenure x xp_per_year), level = Skills.level_of(xp), days = 18 x level / 10. The player gets none (PAR-01A's
+  "the player gets none"; an older save's player keeps only the skills, not experience). Newcomers and children coming of
+  age get none (PAR-01A). The seeding is marked in the section (`seeded`), the days given are kept in `start`, it adds
+  nothing to the season's activity window, never overwrites recorded experience, and a section written before D1
+  (format `mml-x18-experience/0`) is read and never seeded over. Deterministic (Skills, PAR-01A's id-and-seed share, ages);
+  touches no other state (the world's save is otherwise identical; fingerprint below).
+- **Not decided, not implemented:** facility caps (D2); thresholds (D3).
+
+Hours attribution (the capability hook's own mapping, `WorkExperience.industry_of_step`): villagers' work steps, credited
+per tick for the minutes actually worked (`World._run_plan` -> `_note_work`): `mine`/`mj_mine` (mining swings, the
+manor's quarrying) mining; `chop` forestry; `craft` by the recipe's station (`CapabilityHook.recipe_industry`: forge and
+anvil smithing, sawhorse carpentry, workbench on hides tanning; cooking, brewing, weaving none); `harvest`, `sow`,
+`feed_pen`, `collect_pen`, household plots' `fp_work` till/sow/harvest farming; the manor's `mend` job carpentry. The
+player's finished actions (`main.gd` `start_action`, `World.note_player_work`): mining, chopping, tilling/sowing/
+harvesting, crafting by recipe, mending. **Not attributed (open questions):** trade (a trader's time at the stall has no
+work act; selling and buying are instant), slaughter, hunting, foraging and picking, clearing ground, fencing, building
+(construction sites, stalls), the manor's survey, trial pits, open-pit excavation, tunnelling, shoring, backfill and
+hauling, carting, the player's cancelled (unfinished) actions, sampling and assays.
+
+Per-worker hook path (prepared, NOT enabled): `CapabilityHook.time/work_time/pay(base, industry, who)` take the worker,
+and every hook site passes them; `level_for(industry, who)` reads a forced analysis level, else, only when
+`CapabilityHook.per_worker` and `CapabilityHook.experience` are set (nothing in the game sets them), the worker's own
+whole EFFECTIVE level (floor of `WorkExperience.effective_level`; the rounding is open, DECISIONS_PENDING.md D5). A wage
+posted before a worker is known (the manor's quarry and mending jobs) keeps the old path (D6). The live hook stays off
+until the facility and starting-experience rules are approved.
+
+Workforce and effective kept apart (structure only, no rule invented): `WorkExperience.effective_level(who, industry)` =
+min(experience level, `facility_cap(industry)`), computed and never stored, so nothing a facility does can write the
+experience record; `facilities.caps` in `settlement_industries.json` is empty (no rule approved, D2), so effective =
+experience. The workforce report gives both averages; `SettlementReport.village` carries `workforce` for the seven
+industries.
+
+Compatibility (tested in `experience_test`): mining and felling on the per-worker path take each worker's own time and
+the seam gives no more ore; the contract code (CON-01, CON-02) calls the hook only for the work time of a felling it was
+hired for, never for a price, quantity, wage or deadline; contract felling and mining earn experience as any felling and
+mining; hired work other than the harvest keeps its stated wage. FARM-CROP-01's minute-based crop shares would give a
+faster cutter less grain on the per-worker path: DECISIONS_PENDING.md D7.
+
+Save: optional key `x18_experience` (`mml-x18-experience/1`: `seeded`, `start` days per person and industry, minutes per
+person and industry, the season's hour buckets; format 0 had no `seeded`/`start`), written once seeded (every world
+from D1 on); a save without it (every older save) loads with empty tracking; a section of an
+unknown format is kept and written back untouched. `SAVE_VERSION` is not bumped (this branch's practice: Build 17 owns
+the versions; the section joins the versioned save at integration).
+
+## 10. Regional purchasing and carriage (owner Q18-10, 2026-10-21)
+
+Decision (verbatim, same file): anyone may buy from another settlement; the buyer travels, collects and carries the goods,
+or negotiates and pays a willing carter or delivery service; no free delivery, no merchant-only buying, nothing created;
+use the existing negotiation, contract, inventory, transportation and conservation systems; no duplicates.
+
+What exists and is reused (audit of this branch, Build 16 code, and of `origin/wip/build17` for CON-01, read only):
+
+| Need | Existing system | Used here |
+|---|---|---|
+| Purses and goods of each buyer | NPC `coins`/`inv`, household `pantry`, `World.treasury`, `granary` (`SettlementHoldings`) | `SettlementReport.parties` snapshots them, each once |
+| What a trader wants | `NPCBrain.wants`, `BUYS`, `keeps` | trader demand and what it keeps from sale |
+| Carrying goods | packs (`carry_ore` and the carrier load), B14 handcarts (`Carts`: owner, family or hired help may pull) | self-collection capacity (carts owned by the household count) |
+| Negotiated purchase | CON-01 `Contracts` (Build 17: goods procurement, offer/accept/counter, reserved coins, delivery pack to pack) | `RegionalMarket.to_contract_offer` maps each line to a CON-01 offer; `execute` stands in until integration |
+| Delivery inside the village | B14-06 cart stops and the attendant's unloading (`Carts.hour`, the player's stall only); household market runs | not a carrier between settlements; not reused for that, not duplicated |
+| Hiring someone to carry | `Construction.hire` (a helper for the day at `helper_wage`, carrying the employer's goods **to its own building site**) | its wage is the carter's day rate; the rule itself covers only building sites |
+| Conservation | journal, `balanced()`, `matched()`; the World ledger stays untouched | carriage fees are matched transfers |
+
+Gaps that need the owner (not invented here):
+
+- **Q18-12 (owner):** CON-01 covers goods only, and `Construction.hire` hires a carrier only to one's own building site.
+  May a party hire a willing villager or carter to haul goods between settlements, and on what terms (a day wage as
+  `helper_wage`, a fee per load, or negotiated like a CON-01 contract with service terms)? It overlaps OD-LE-03 (service
+  contracts in the Living Economy) and MIN-D's open question 1 (commissioning a survey by CON-01). Until answered, carters
+  exist only as fixtures in tests (`carts_for_hire`); in the live shadow no carter is offered, so a party that cannot
+  travel (the treasury) buys nothing, recorded as `no carriage`.
+- **Q18-13 (owner):** CON-01 parties are "player", "npc:<id>" and "manor"; a household, an off-map settlement or its
+  people have no CON-01 reference. Should CON-01 gain household and off-map party references, or should regional buying
+  be done by a named member (a household's responsible adult) and a named regional merchant?
+- Travel time: a buyer who fetches its own goods is away for the route's days. The shadow records the days on each line
+  but does not take the villager out of the village; at integration this is the live trip (villagers walk), not a model.
+
+> Update 2026-10-21: the owner decided Q18-12 and Q18-13 (`docs/directives/2026-10-21_expansion18_capability_simulations_contracts.md`,
+> with `_courier_booths_known_recipients.md` and `_courier_contract_interface_pricing.md`, on staging). Section 11 implements them.
+
+## 11. Couriers, booths and formal contracts (owner Q18-12 and Q18-13 decided, 2026-10-21)
+
+Rules in core: `couriers.gd` (`CourierService`) and `formal_contracts.gd` (`FormalAgreements`). Data in `game/data/couriers.json`
+(`mml-couriers/0`); every number in it is an UNAPPROVED provisional default. The window is `ui/courier_window.gd`. It only shows
+the rules and collects choices (DVW-A12). **Live since REG-COURIER-01** (section 11a): it opens from the village's courier booth.
+
+Booths (X18-Q12-BOOTH):
+- A booth is an existing market stall with no tenant. If none is free, it is a stall its keeper builds by the STALL rules
+  (`Stalls.build`, three planks from the keeper's own pack).
+- The keeper is hired by the existing job rule (`Construction.can_hire`).
+- Each off-map settlement has a booth of its own, kept by that settlement's trader party (`region:<id>/trader`).
+- Regular-route fees are paid at the booth, and goods for a route are handed over there.
+- Booths hold three things: deposits for senders, goods waiting for a departure, and the fees of special deliveries until
+  they are fulfilled. All three are counted holders.
+
+Regular routes and special deliveries (Q18-12):
+- **Regular route:** a flat fee a load, paid at the booth (`fee_per_load` up to `load_units`). The courier leaves every
+  `every_days`.
+- **Special delivery:** negotiated in the shape of a CON-01 contract, through a provisional adapter until CON-01 is
+  reconciled. The sender offers. The courier accepts if the offer covers its least fee, or counters with that fee.
+- **The least fee** is computed from the work:
+  - the carriers' day wage (`helper_wage`) × journey days × two legs (there and back: home, with payment, or to deposit proceeds) × loads;
+  - plus extra loads and stops;
+  - plus the notarial fee when the courier also notarises.
+- **Self-collection** needs no courier (RegionalMarket's "self").
+
+Recipients (X18-Q12-POST):
+- **People** the sender has come to know (`Relations` ties with `days_known` ≥ 1).
+- **Businesses** the sender has traded with. `Relations.trades` is the minimal commercial-contact record, kept with the
+  acquaintance records. `World.trade` writes it through one marked hook. Nothing in the game reads it yet; the fingerprint
+  is unchanged. The owner of a business represents it.
+- **Off-map parties** found in the regional trade journals.
+- Locations come from world records: a person's home door, a business's stall or workplace, an off-map party's booth.
+  There are no typed addresses.
+- The same rules serve the player and villagers.
+
+Physical execution (`tick`):
+- The goods leave the sender's pack when the order is booked. They ride in the courier's load (held by the delivery, section 11a),
+  with the journey's days on the road.
+- On arrival the courier hands the goods over, and collects payment (coins or an item) when instructed. A recipient who
+  cannot or will not pay refuses the delivery, and the goods come back.
+- The courier then travels back. It hands the proceeds to the sender, or deposits them at the sender's booth.
+- The contract is **fulfilled** only when every physical and financial obligation is done.
+- **Interrupted:** a courier who dies or is waylaid interrupts the journey. The load lies where it fell (a loot pile, section 11a).
+  The held special fee goes back to the payer.
+
+Formal contracts (Q18-13):
+- Small agreements, at or under `small_value` (UNAPPROVED), are binding without signatures.
+- Formal commercial contracts and ownership transfers need every party's signature.
+- Parties standing together (the same place, within `face_to_face_tiles`) sign without a notary.
+- Otherwise a courier with legal standing carries the document:
+  - the sender signs before the notary as it leaves;
+  - the notary travels; the other party signs or refuses before it;
+  - the notary travels back with the document.
+- The document must be where the signer is. There is no remote or instant signing.
+- The notarial fee is held at the sender's booth. It is paid when the document is back, whether signed or refused. It is
+  returned if the notary is waylaid.
+- **The game has no "law" skill.** The notary's standing is a provisional data check (`couriers.json` `notary`:
+  `trading` 5) until the owner decides (**Q18-14**).
+
+Owner questions from this section:
+- **Q18-14:** which skill (an existing one, or a new "law" skill) gives a courier the standing to notarise, and at what level?
+- **Q18-15:** answered 2026-10-23: any business with a shop (section 11b).
+- **Q18-16:** answered 2026-10-23: a stall the keeper builds near the market by the STALL rules (section 11b).
+- The fee coefficients and the small-agreement threshold need numbers (Q18-11A-style review).
+
+Reconciliation with Build 17:
+- Special deliveries and formal goods contracts become CON-01 contracts (service terms per Q18-12).
+- The booths' stores and held coins join the census (`SettlementHoldings`) and `World.total_coins`.
+- The CourierService state goes into the save (done, section 11a); FormalAgreements' records are saved with it (done, section 11b).
+- The courier window opens from the village booth (done, section 11a).
+
+### 11a. Couriers in the live game (REG-COURIER-01)
+
+`World.couriers` is `CourierService.create_live(world)` (`couriers.gd`); `tests/courier_live_test.gd` proves the following on a real seeded
+village (the fixture tests `courier_test.gd` and `contract_sign_test.gd` still drive a separate service).
+- **Booths.** One per settlement, kept by that settlement's trader party; the parties are resolved from `World.regions` each time
+  (`CourierService._party`), so a loaded world holds no handles. The village booth opens at the first dawn after a keeper and a
+  place exist: a free market stall (`World.stalls` with no tenant), else a stall the keeper builds from planks of their own
+  (`Stalls.build`, Q18-16). If nobody can open one it is tried again at the next dawn. A dead keeper is replaced at dawn by the
+  lowest-id villager `Construction.can_hire` allows.
+- **Routes.** A regular route each way joins the village booth to each settlement's (10 in all, made at dawn, first departure the
+  next day). Journey days are `Regions.village_route_table`: the settlement's distance from the village (miles times
+  `tiles_per_mile`, plus its offset, from `settlements.json`) hauled by a carrier along roads (`TradeRoutes.abstract_route`, the same
+  rule as `Regions.route_table`); about 0.5 day for Wulstead (20 miles) to 1.8 days for Bourton Abbas (72). A route is bookable only
+  by someone in the place it starts from, and only while its booth has a keeper.
+- **Time.** `World._on_hour` calls `CourierService.step` (departures, hand-overs, returns, fulfilment), `World._new_day` calls `daily`.
+- **Recipients.** A villager or the player who really dealt with a settlement's trader (a caravan sale or purchase: the imports, stone,
+  medicine, seed and surplus rounds, the luxury buys, the plough horse) may address that trader (`World.note_settlement_trade`, a record
+  only, saved in `contacts`). The old journal path (`Regions.journal`, fixtures) still counts.
+- **Loads.** A route's goods wait in the booth's store until the courier leaves, then ride in the delivery's `cargo`; a special
+  delivery's goods go into `cargo` at booking. The takings collected from a recipient are `carried_coins`. Both are held by the delivery
+  (counted by `held_goods`/`held_coins`, so by the census and `World.total_coins`), not in the courier's own pack and purse: a courier
+  is an ordinary villager whose own trading would otherwise sell or spend what it carries (found when the first live run created six
+  rings at Wulstead). A courier who dies drops the cargo and takings as a loot pile where they fell (`interrupt`), the held special fee
+  returns to the payer, and a courier found dead is noticed at the next hour, not only on arrival.
+- **Boundary.** Goods handed to a settlement's party count `exported_<item>`, taken from it `imported_<item>`; coins paid to it lower
+  `World.coin_sources` (`caravan_coins_out`), coins it pays raise it (`caravan_coins_in`); the party writes `outside_*` flow lines.
+  `Regions.net_paid_by_village` and the economy simulation's `_regions` goods check include them. See INT-280 to INT-283.
+- **Saves.** Optional World key `couriers` (booths with their stores and deposits, routes, deliveries, contacts, id counter); no
+  save-version change; an older save loads with the five booths and nothing in flight, and the village booth opens at the next dawn.
+- **Player.** A context action beside the village booth opens the courier window (`main.gd`); the window offers deposits waiting there.
+- **Done since (section 11b).** Shop booths (Q18-15), the villagers' own postings, the notary path with Law, the Law lessons for booth
+  keepers, settlement carters and the player's food at the wagon (REG-BUY-01 parity). The fee coefficients stay the provisional
+  X18-FEES values.
+
+### 11b. Shop booths, villagers' postings, signing and carters (X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL, Q18-10, Q18-15)
+
+All of this is in `couriers.gd`, `formal_contracts.gd`, `law.gd` and the courier window; `tests/courier_live_test.gd` proves it
+(`test_shop_booths`, `test_near_market_booth`, `test_notary_live`, `test_law_lessons`, `test_villagers_post`,
+`test_settlement_carriage`). Agent decisions are provisional and listed in `docs/DECISIONS.md` (2026-10-23, courier items).
+- **Shop booths (Q18-15, "any business with a shop").** `open_shop_booth(owner)`: a business (`is_business`: a trade that buys and sells,
+  or one that keeps a stall) or the player with a market stall they built opens a booth at its shop (its market stall or workplace),
+  kept by its owner, with its own route to each of the five settlements. The route is carried by the village booth's keeper
+  (`route.carrier`), who is paid the flat fee: the owner never pays himself and nobody carries for nothing. Goods wait in the shop
+  booth's store, deposits wait at it (`job.booth`). A dead owner's booth passes to the stall's new tenant, else closes with its
+  routes once it holds nothing and no delivery waits on it (`_tidy_shop_booths`). Booths are opened when wanted (a business's first
+  posting, the player's action beside their stall), not for every shop at once; older saves load as before.
+- **Near the market (Q18-16).** The village booth is a free market stall, else a stall its keeper builds near the market
+  (`Stalls.find_site`, the STALL rules), the keeper being the first hireable villager who holds the planks.
+- **Villagers use couriers.** `villagers_post` (daily): a merchant or smith (the caravan's own rule, `NPCBrain.export_caps`: what is held
+  beyond half of the most they stock; never food, never the village's own tools) that has dealt with a settlement's trader and holds
+  surplus the settlement lacks now (`OffMapSettlement.wants`, net of what is in flight), within what the trader's till pays, sends it
+  from its own booth by the regular route, asking the price the caravan pays on arrival, and pays the flat fee. One delivery in flight
+  a business. Only small payments (a payment above the line is a formal contract and a route cannot carry one). Deterministic.
+- **Signing (X18-Q13).** A delivery that asks for a payment above `contracts.small_value` is formal (`is_formal`): it is refused on a
+  regular route and by a courier with no Law (`Law.qualified`); a special delivery carries a document (`CourierService.agreements`,
+  `FormalAgreements` records, saved): the sender signs before the notary at booking, the recipient on arrival
+  (`sign_before_notary`, only while the notary holds it), the notary brings it home (`bring_home`) and only then it binds. A
+  recipient who will not sign (cannot pay, refuses) leaves it rejected and the goods return; a notary who dies interrupts it
+  and the fee goes back. The notarial fee is part of the special fee (X18-FEES `notary_fee`). CON-01's formal contracts (all between
+  villagers) stay face to face. Land, house and manor sales are in person only (talk and deal windows). A small payment needs no
+  document.
+- **Law (LAW-SKILL).** Witnessing and carrying (`Law.witnessed`, `Law.carried`) raise it; the reeve and the preacher teach
+  (`Law.teach`, one lesson a day); the village booth's keeper takes the lessons (`keepers_learn`, daily) until Law 2, the notary
+  level (provisional); the courier form shows each courier's Law. The player can learn it from the reeve and the preacher; the player
+  does not yet carry documents (there is no player courier job).
+- **Carters (Q18-10, "a willing carter, negotiated and paid; never free").** `carriers(sender, settlement)`: the village booths' keepers
+  and the trader of a settlement the sender has dealt with, which carries to its own settlement on its way home, or anywhere if its
+  party has `carts_for_hire` (the hook stays off in the live game: nothing is turned on globally, the regional market is
+  unchanged). Its fee is the special fee worked out from the work and is paid when the work is done; a trader has no Law and
+  so cannot notarise.
+- **Food at the wagon (REG-BUY-01 parity).** `CaravanFood` (`caravan_food.gd`): the player buys the settlements' foods and raw meat
+  one unit at a time from the cheapest trader on the road, at its floating price, from what it holds (the settlement's selling
+  policy REG-BUY-P1 has already decided what its businesses released); the coins go into its till and out of the village
+  (`coin_sources`, `caravan_coins_out`, `imported_<item>`).
+- **Saves.** Optional `agreements` in the courier service's dict, and `shop`, `carrier`, `booth`, `agreement` keys on booths, routes
+  and deliveries; no version change.
+- **Not done.** A player courier job (carrying documents oneself); a settlement's trader carrying a document; villagers sending by
+  special delivery or to people (not only settlement traders) or buying from a settlement through a courier; coins owed;
+  CON-01 contracts with a party in another settlement.
+
+## 12. The five neighbouring settlements and their traders (SET-C-SIM, SET-C-FIVE, ECON-P1.3; owner 2026-10-23)
+
+Live, not prospective: this section is in the game. `OffMapSettlement` and `Regions` (`game/scripts/core/settlement/offmap.gd`,
+`regions.gd`; data `game/data/settlements.json`, format `mml-offmap-settlements/1`) replace the daily caravan allowance. The earlier
+`RegionalMarket` and the courier module now trade through the settlements' own holders (`SettlementParty`, section 12a); `SettlementLedger`
+remains for the village's read-only snapshots and the fixtures of the analysis tools and tests.
+
+Owner answers this implements (verbatim in `docs/directives/2026-10-23_*.md`): Q18-3 "Those settlements have simulated economies
+just like this one, it comes from their villagers, or village political structure or companies"; "Same rules, lighter detail";
+Q18-4 "5 of mixed kinds"; "Their traders": the caravan is merchants from those settlements, carrying only what they actually have
+and paying with their actual coins, and the daily allowance goes away; and base the places on the lore locations document.
+
+**The places** are Wulstead (market town), Netherton (hamlet), Garton (village), Higham-on-the-Way (abbey town) and Bourton
+Abbas (abbey village): `docs/expansion18/SETTLEMENTS.md` gives the gazetteer's words, paragraph ids and labels (CANON,
+CANON-INFERRED, GAME EXPANSION) and why these five.
+
+### The settlement (one step a day)
+
+State (plain dictionaries, saved as they are): households `{id, trade, adults, children, coins, pantry, credit, hungry, acc, inc,
+stay, alive}`; businesses `{type, workers, till, stock, reserves, out, acc, reserve, horses, ...}`; the treasury
+`{coins, granary, officials, acc}`; prices; flow lines; the opening books. A day, in order:
+
+1. **Market.** Offers: each business's stock above what it keeps for its own recipes and tools; the trader's carried goods above
+   `carry_keep`. Buyers in turn: households on their market days (every other day), then the treasury's relief and upkeep, then
+   businesses, then the trader collects what is left of the goods it carries. One price a good, whole coins, `price_min` to
+   `price_max` of value (the village's own band), moved by yesterday's paying demand against offers (`price_step`). A sale moves
+   goods and coins as one line; a toll (6% of sales, a tithe at the abbeys and the canons') goes to the treasury.
+2. **Production.** Natural output (fields, herds, woods, herbs; the Garton diggings and the Bourton quarry draw down finite
+   `reserves`) and the village's real recipes (`recipes.json`) from inputs held, to a stock target. Tools wear (a plough, an axe,
+   a pickaxe, a mallet, a hammer) and are bought like inputs; nothing slows for want of one (a limitation).
+3. **Wages and profit.** A business keeps its working `reserve` and pays out, of what is above it, at least the day wages and up to
+   half the surplus, equally among its worker households.
+4. **Tax and the treasury.** The village's rule (`tax_rate_*`, `tax_exemption_*`, `treasury_reserve_days`) on households and on tills
+   above their reserve; officials paid (`official_wage`); day labour (`day_labour_wage`) to a household nearly out of coins while the
+   treasury keeps three days of wages.
+5. **Eating.** Foods by points as the village counts them (`NPCBrain.food_points`); a household under 60% fed for six days loses
+   a member (the youngest child first, else the oldest); a household with no one left passes its coins and food by the inheritance
+   rule of item 8 (to kin, else the treasury).
+6. **Horses.** The farms' working horses eat their own wheat; a fed pair breeds every 45 days up to six.
+7. **Prices** move; **jobs** move once a week: a household whose trade paid it next to nothing joins the business that paid most,
+   never emptying a trade.
+
+8. **People** (REG-DEMO-01; `_life`, run after eating). The village's life rules (`balance.json` "life" and "relations") at household
+   level; see "The people" below.
+
+Founding draws the households' makeup and purses from `(world seed, settlement index)` once; the step then uses no random numbers
+(the daily rolls of item 8 are a reproducible function of the settlement, the day and the person, so nothing needs saving).
+
+### The people (REG-DEMO-01; approved by SET-C-SIM "same rules, lighter detail", B8-029 and OD-21)
+
+Every household carries its members: `mem`, a list of `[born, sex, partnered, unwilling]`. `born` is a settlement day number (negative
+before the first step), so age in years is `(day - born) / Life.year_days()` and nothing is updated daily; the 8-day year (OD-21) is
+read through `Life`, never written here. `adults` and `children` stay as they were (what food, tax and the market read) and are
+recounted from the ages: a child is under `life.adolescent_until` (16); elders count as adults, as they always did here.
+Each household also records `parents` (the households its couple came from) and `kids` (households founded by its members).
+
+- **Founding** (own random stream, so no founding number changes): ages as `Life.seed_population` draws them from `start_adult_age`
+  and `start_child_age`: a household of two adults is a woman and a man (partnered; his age follows hers), a single adult is a woman
+  or a man by a coin, the mother of children is 28 to 42, children are 16 or more years younger than their mother. No elders at
+  founding (the village's elders come from household makeup, which the off-map households do not have); they arrive by growing old.
+- **Old age:** each day each member of 60 or more rolls `Life.death_chance(age)` (the village's curve, 0.8 a year at the top, certain at 80).
+- **Births:** a partnered woman of 18 to 42 whose household has no one under `birth_min_gap_years`, with `birth_min_food_days` of
+  food in the pantry, gives birth with chance `1 / (birth_interval_years * year_days)` a day; sex by a coin; `unwilling_percent`
+  of the children will never marry.
+- **Children become workers:** at 16 a child counts as an adult. At 18 (`partner_min_age`) and after `marry_min_days`, an unwilling-free
+  person up to `partner_max_age` marries an unrelated person of the opposite sex from another household, within `partner_max_gap` years of
+  age; at most one marriage a day in a settlement. The couple founds a household that takes the man's trade (an official's household, or
+  a trade the settlement lacks, takes the farm) and joins that business as a worker household, which is how a grown child adds to the
+  settlement's work. Each leaver takes an equal share of their household's coins and pantry (all of it when they are its last member);
+  the only adult of a household with children does not leave, and a one-person household of an official or of the last worker of a
+  business does not leave. The off-map has no houses, so a new household needs none (lighter detail, provisional).
+- **Inheritance:** a household with no adult left closes. Its coins, pantry and any children pass to the nearest living kin household: the
+  households its members founded (eldest first), then those its couple came from, then their other offspring (the order of `Life.heir_of`:
+  child, parent, sibling). With no kin and children left, the children and goods go to the smallest living household (the village's
+  Guardianship); with no kin and no children the coins and food go to the treasury, as before. Counted in `inheritances` and
+  `orphans_fostered`. These are transfers between holders: no coin or good is made or lost, and `audit()` is unchanged.
+- **Saves:** `mem`, `parents` and `kids` are saved with the household; a save without them (made before REG-DEMO-01) gets ages on load
+  from the households' adults and children, drawn from the settlement's own id and saved day with the founding rule (deterministic).
+  No `save_version` change: the optional key is absent-means-assign.
+- **Cost:** about 2 ms a day for all five (of 14 to 16), measured over 365 days.
+Outcomes are recorded, not tuned (WDR-022): a settlement with no one of marrying age shrinks (Netherton), one that breeds faster than its
+harvests feeds loses people to hunger (Higham, Wulstead); nothing rescues either.
+
+### Money and goods (WDR-022)
+
+There is no income line and no closed purse that refills: a settlement's coins change only by trade with the village or with the
+other settlements' traders. Goods change only by natural output, use, and trade. `audit()` checks every settlement every day; the
+whole world's coins are `village + settlements`, changing only by what is created outside (outlaws, heirs, newcomers). A village that
+fails is an outcome: a settlement can starve and shrink, and nothing rescues it. Isolated, four of the five hold for 200 days; the
+largest, Higham-on-the-Way, has the thinnest margins and starts to lose its poorest households after about day 150 (measured in
+`PROGRESS.md`).
+
+### The traders are the caravan
+
+The merchants are the settlement's trader. On a visit day (`caravan_every_days`) the traders whose turn it is come
+(`Regions.visiting`: every `ceil(miles / 20)` visits, all on the first). Imports (ore, coal, copper, stone, medicine, seed,
+cuttings) come out of a trader's stock; exports (EQ-22's allocation by need, 0.8 x value, the village's food and tool keeps all
+unchanged) go to a trader whose settlement still `wants` the good (its few days of use, less what its own workers make; food only
+under three days of it) and whose till pays above its floor. The old stand-ins are gone: `caravan_allowance`, `caravan_float`,
+`caravan_ceiling_per_head`, `caravan_coins`, `World.caravan_purse`. Every `road_trade_every_days` the traders sell one another what
+their settlements do not need, at base value. The plough horse is led by the dealer-trader of Wulstead or Higham (nearest with a
+horse); none on the road means none for sale.
+
+### Saves
+
+`regions` is an optional key of the save dictionary (`mml-regions-world/1`); no save-version bump. A save without it founds the
+settlements from its seed, steps them to the saved day with no trade with the village, and gives the old `caravan_purse` to the
+traders' tills. Accumulators and prices are rounded to a millionth, so a saved and reloaded settlement is identical.
+
+### Seams left for the other registers
+
+- TRADE-CREDIT (barter and debt, Q18-5): `OffMapSettlement.sell_to_village` and `buy_from_village` are the two places a swap or a
+  debt would replace coins; a debt would need a ledger line type the audit knows.
+- MIGRATE-18 (Q18-7): done (Build 18), `Migration`, SETTLEMENTS.md section 6b, INT-310 to INT-312. Households are still the unit
+  (`hh`, with `adults`, `children`, `trade`); a member who came from the village carries a fifth entry `{n, f, sk}` (name, family,
+  skills); an arrival or departure is `outside_*` flow lines plus `migrants_in/out`; the log and counts are in `Regions` (`moves`,
+  `move_counts`, `suits`), saved as optional keys.
+- Couriers (Q18-12, Q18-13): `Regions.list` and `OffMapSettlement.trader()` give a courier a party with a till and a stock;
+  `couriers.gd` reads `SettlementParty` handles (section 12a).
+- SET-D (B18-DP-05): done (Build 18), `OffMapSettlement._develop`, SETTLEMENTS.md section 6c, INT-380 and INT-381. Once a week, after
+  `_move_jobs`: a business with no living worker household for `switch_stay_days` closes (till to the treasury, stock to the traders at
+  market price as far as their till above reserve reaches, the rest to the granary; the place is kept in `closed`), and a missing trade
+  opens when its goods' unmet demand (the `flows.unmet` weekly delta, priced) reaches `switch_to_at_least` a day two weeks running and a
+  settled household earning under half that has its working reserve in savings. No random numbers, no cap, no new rule values. Saved as
+  optional keys `closed`, `dev` and a business's `idle`; counts in `flows.biz_opened` and `flows.biz_closed`.
+- Not done: the village buying food from the settlements, longer trade chains among them, a productivity penalty for missing
+  tools, newcomers decoupled from the caravan.
+
+### 12a. One trading-party interface over the five (REG-PARTY-01)
+
+Owner Q18-10 (2026-10-21): "Anyone may purchase goods from another settlement, including individual villagers, households,
+merchants, businesses, and settlement treasuries." `SettlementParty` (`settlement_party.gd`) is how: a **handle** on one holder
+of an `OffMapSettlement`, never a copy. `Regions.parties()` lists them (each trader, business, treasury and living household),
+`Regions.party("region:garton/trader")` makes one; unknown settlements, holders and dissolved households give `null`.
+
+| Interface | What it is |
+|---|---|
+| `id`, `ref`, `settlement`, `kind`, `name`, `pos` | `garton/trader`, `region:garton/trader`, the settlement id, trader / business / treasury / household, the place on the map |
+| `held(item)`, `held_items()`, `purse()`, `alive()`, `can_hold()` | read the holder's stock (business stock, pantry, granary), its till or purse |
+| `need_rate`, `need_items`, `local_yield`, `sale_cap` | what it uses a day, what the rest of its settlement holds of that (the region supplies only what the settlement as a whole lacks), the most it will sell (the keeps of the local market) |
+| `transport`, `can_travel`, `carts_for_hire` | a trader leads a handcart if its settlement has horses, else a pack; a household an adult's pack; businesses and treasuries cannot travel and hire a carter (Q18-12 open: nobody hires out carts unless a test sets `set_option("carts_for_hire", true)`) |
+| `can_deal(role, ...)`, `deal(role, other, item, n, coins, day)` | one side of an exchange (`sell`, `buy`, `carriage_paid`, `carriage_earned`) with its flow lines and journal line |
+| `add`, `remove`, `has`, `count`, `outside_coins` | the Inventory-like hand-overs the courier service makes |
+
+**Flow lines** (`OffMapSettlement.flows`, saved with the settlement, audit identity in `offmap.gd`'s header): a deal with a
+holder of another of the five writes `regional_in/out` (goods) and `regional_coins_in/out` (coins) on both settlements, which
+`Regions.audit` requires to cancel; a deal inside one settlement writes none; a deal with anything else (the courier service's
+booths and packs, the village's people, an analysis fixture) writes `outside_in/out` and `outside_coins_in/out`, whose other
+end is booked in that party's own books. A line is checked on every side and applied whole or refused whole. The exchange journal
+(`Regions.journal`, per party `journal`) is not saved. No save format changed: the new flow keys load as zero from older saves.
+
+**What changed.** `RegionalMarket` reads parties only through this interface (so it plans over `SettlementParty` and the fixture
+`SettlementLedger` alike), and `execute` is `deal` calls. `CourierService.regions` maps a party id to a `SettlementParty`;
+`place_of("region:garton/trader")` is `garton`, and a booth belongs to a settlement. `Regions.route_table()` gives the roads
+between the five. **`SettlementLedger` remains**, with the same interface, for exactly two things the settlements are not: the
+village's read-only snapshots (`SettlementReport.parties`, `caravan_compare.gd`) and the fixtures of tests that pin historical
+behaviour (a configured `income_per_day`, `reserves`, `recipes`: `regional_test`, `capability_test`, `settlement_test`). No live
+code makes one, and `SettlementSave`'s `x18_settlements.regions` list of ledgers is kept only so an earlier prospective save loads.
+Not done (the later task that wires the market in): calling `RegionalMarket` from the daily loop. The courier service is wired into the game (REG-COURIER-01, section 11a).
+Tests: `party_test.gd`, `regional_test.gd`, `courier_test.gd`, `contract_sign_test.gd`.
+
+
+### 12b. Food from the settlements to the village (REG-BUY-01, REG-BUY-P1)
+
+The traders carry food from their settlement's farms, herds and cookshop under the owner's approved policy: only food above the
+settlement's local claim (its households' need over `reserve_days`, less pantries, less expected production), plus, for a business
+with a demonstrated cash shortfall for wages and the inputs it lacks, food worth no more than that shortfall; at the settlement's
+own floating prices. The village's existing buyers (households with no food to be had here, the treasury's granary, the food
+trades) buy it on visit days. Detail and the mapping to the code: `docs/expansion18/SETTLEMENTS.md` section 4a, INT-290 and INT-291.
+This does not go through `SettlementParty`/`RegionalMarket` (the village is not one of the five); the party interface is for the
+trade between the settlements.
+
+### Cost
+
+One settlement steps each game hour from six, so a frame carries a fifth of the work; measured costs are in `PROGRESS.md`.

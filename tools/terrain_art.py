@@ -8,6 +8,9 @@ OverworldView over a rim cell made passable) and game/assets/icons/:
                              its laid-stone paving reduced 1/2 (box; an integer reduction, so a few stones show in one
                              world tile), with a darker line every 4 rows so the cut stone reads as steps. If the private zip is missing,
                              the file already imported is kept.
+    terrain/steps_ns.png     Puny World (PUNY_WORLD_v1.zip, punyworld-overworld-tileset.png): the pack's own stone cliff-stair tile at
+    terrain/steps_ew.png     (96, 96), 1:1, as it is for steps running north-south; the east-west file is the same tile turned a
+                             quarter (VIS-STEPS-01; these replace steps.png in the game, which stays as the stand-in it was).
     terrain/walkway_ns.png   16x16 Miniworld (MiniWorldSprites.zip, Miscellaneous/Bridge.png): the middle 16 x 16 of the
     terrain/walkway_ew.png   north-south bridge's planks (frame 0) and of the east-west bridge's (frame 1), 1:1.
     terrain/stairs_ns.png    the same planks with a darker riser line every 4 rows (or columns), so a stair reads apart
@@ -35,6 +38,9 @@ FM_PACKAGE = "ForgottenMemories.zip"
 FM_DIR = REPO / "private-assets"
 FM_SHEET = "TileSet.png"
 FM_STONE = (1472, 608)                  # top-left of a 32 x 32 piece inside the laid-stone block (1440-1568, 576-704)
+PW_ZIP = "PUNY_WORLD_v1.zip"
+PW_SHEET = "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png"
+PW_STAIRS = (96, 96)                    # the cliff's stone stairs, rising north-south (tile column 6, row 6)
 MW_ZIP = "MiniWorldSprites.zip"
 MW_BRIDGE = "MiniWorldSprites/Miscellaneous/Bridge.png"
 PLANKS = {"ns": (8, 12), "ew": (48, 20)}   # top-left of the 16 x 16 middle of each bridge frame
@@ -81,6 +87,24 @@ def import_into(prov, record):
         record(dest, MW_ZIP, MW_BRIDGE, "frame %d's planks at (%d, %d), 1:1, a riser line darkened to %.2f every 4 %s"
                % (0 if run == "ns" else 1, x, y, SHADOW, "columns" if run == "ew" else "rows"))
         n += 2
+    sheet = Image.open(io.BytesIO(zipfile.ZipFile(REPO / PW_ZIP).read(PW_SHEET))).convert("RGBA")
+    x, y = PW_STAIRS
+    stair = sheet.crop((x, y, x + 16, y + 16))
+    for yy in range(13, 16):                    # the tile's last three rows are the grass below the stairs: left clear, so
+        for xx in range(16):                    # a way two cells deep does not repeat a strip of grass
+            stair.putpixel((xx, yy), (0, 0, 0, 0))
+    mid = stair.copy()                          # a cell with more steps below it: the last three rows go on with the treads (no seam)
+    for yy in range(13, 16):
+        for xx in range(16):
+            mid.putpixel((xx, yy), stair.getpixel((xx, yy - 4)))
+    for run, tile, how in (("ns_mid", mid, "the same tile at (%d, %d) with its bottom three rows continuing the treads, for a cell with steps below it" % (x, y)),
+                           ("ew_mid", mid.transpose(Image.ROTATE_90), "the same, turned a quarter, for a cell with steps beside it to the east"),
+                           ("ns", stair, "the 16 x 16 stone cliff-stair tile at (%d, %d), 1:1, its bottom three rows (grass) made transparent" % (x, y)),
+                           ("ew", stair.transpose(Image.ROTATE_90), "the same tile at (%d, %d) turned a quarter, for steps running east-west" % (x, y))):
+        dest = OUT / ("steps_%s.png" % run)
+        tile.save(dest)
+        record(dest, PW_ZIP, PW_SHEET, how)
+        n += 1
     icons = zipfile.ZipFile(REPO / ICON_ZIP)
     for item, member in ICON_SRC.items():
         dest = ICONS / ("%s.png" % item)
@@ -105,7 +129,7 @@ def import_into(prov, record):
 def main():
     prov_path = REPO / "game" / "assets" / "PROVENANCE.json"
     doc = json.loads(prov_path.read_text())
-    mine = {"assets/terrain/" + f for f in ["steps.png", "walkway_ns.png", "walkway_ew.png", "stairs_ns.png", "stairs_ew.png"]} | {"assets/icons/nails.png", "assets/icons/mallet.png"}
+    mine = {"assets/terrain/" + f for f in ["steps.png", "steps_ns.png", "steps_ew.png", "steps_ns_mid.png", "steps_ew_mid.png", "walkway_ns.png", "walkway_ew.png", "stairs_ns.png", "stairs_ew.png"]} | {"assets/icons/nails.png", "assets/icons/mallet.png"}
     prov = [e for e in doc["files"] if e["file"] not in mine]
 
     def record(dest, source, member, how):

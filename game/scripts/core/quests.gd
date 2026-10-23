@@ -142,28 +142,40 @@ func _wants(n: NPC, t: Dictionary) -> bool:
 		var f := field_of(n)
 		if f.is_empty() or f.state != "ripe" or int(f.get("crop", 0)) < int(g.field_ripe):
 			return false
-	if promised(t) > 0 and not can_fund(n, t):
+	if promised(t, w.player) > 0 and not can_fund(n, t):
 		return false
 	return true
 
 
 ## The coins a quest promises: the wage for work, else the reward.
-static func promised(t: Dictionary) -> int:
-	return int(t.get("wage", 0)) if t.get("hire", false) else int(t.get("reward", 0))
+## X18 HOOK (Expansion 18, X18-CAPNUM farming F1): the harvest hand's wage is paid agricultural labour at a base rate the
+## game sets, so it takes CapabilityHook.pay (off in the game: exactly the template's wage). Set aside and paid as one
+## amount; never a crop price, a negotiated term or a new wage.
+## Owner D6/D8 (2026-10-23): the harvest hand's wage is fixed when the player accepts (`q.wage`, from `who`, the hand's own
+## effective farming level, rounded to the nearest coin); `who` null is the template's base wage.
+static func promised(t: Dictionary, who = null) -> int:
+	if t.get("hire", false):
+		return CapabilityHook.pay(int(t.get("wage", 0)), "farming", who) if t.has("harvest") else int(t.get("wage", 0))
+	return int(t.get("reward", 0))
+
+
+## The coins quest `q` of template `t` promises: the wage fixed at acceptance, else what the player's level gives now.
+func wage_of(q: Dictionary, t: Dictionary) -> int:
+	return int(q.wage) if q.has("wage") else promised(t, w.player)
 
 
 ## Whether this giver can set the promised coins aside now, from their own purse.
 func can_fund(n: NPC, t: Dictionary) -> bool:
-	return n != null and n.coins >= promised(t)
+	return n != null and n.coins >= promised(t, w.player)
 
 
 ## Set the promised coins aside for this accepted quest. False if the giver cannot.
 func _reserve(q: Dictionary, n: NPC, t: Dictionary) -> bool:
-	var pay := promised(t)
+	var pay := wage_of(q, t)
 	q.reserved = 0
 	if pay <= 0:
 		return true
-	if not can_fund(n, t):
+	if n == null or n.coins < pay:
 		return false
 	n.coins -= pay
 	q.reserved = pay
@@ -297,6 +309,8 @@ func accept(n: NPC, hire := "") -> Dictionary:
 		last_refusal = "You have too many tasks already (%d)." % int(GameData.b("quest_max_active"))
 		return {}
 	var q := {"id": t.id, "giver": n.id, "day": w.day(), "target": -1}
+	if t.get("hire", false) and t.has("harvest"):
+		q["wage"] = promised(t, w.player)         # X18-D6: fixed now, at the hand's own level
 	if not _reserve(q, n, t):
 		# the giver spent what they meant to pay since offering it: the offer is withdrawn
 		offers.erase(n.id)
@@ -309,7 +323,7 @@ func accept(n: NPC, hire := "") -> Dictionary:
 		offers.erase(n.id)
 	w.player.quests.append(q)
 	if hire != "":
-		w.note("%s %s hired %s %s for a day's work: %s, for %d coins." % [n.name, n.family, w.player.name, w.player.family, str(t.title).to_lower(), int(t.wage)])
+		w.note("%s %s hired %s %s for a day's work: %s, for %d coins." % [n.name, n.family, w.player.name, w.player.family, str(t.title).to_lower(), wage_of(q, t)])
 		w.stat("hired_jobs_taken")
 	else:
 		w.note("%s %s agreed to help %s %s: %s." % [w.player.name, w.player.family, n.name, n.family, str(t.title).to_lower()])
@@ -330,9 +344,10 @@ func ready(q: Dictionary) -> bool:
 ## save) the giver can set them aside now.
 func can_pay(q: Dictionary) -> bool:
 	var t := template(q.id)
-	if int(q.get("reserved", 0)) >= promised(t):
+	if int(q.get("reserved", 0)) >= wage_of(q, t):
 		return true
-	return can_fund(w.npc(int(q.giver)), t)
+	var g: NPC = w.npc(int(q.giver))
+	return g != null and g.coins >= wage_of(q, t)
 
 
 ## What the last completed quest taught ("Crafting is now level 2. Unlocked: ..."), or "".
@@ -349,7 +364,7 @@ func complete(q: Dictionary) -> int:
 	last_learned = ""
 	if n == null or not n.alive or not ready(q):
 		return -1
-	if int(q.get("reserved", 0)) < promised(t):
+	if int(q.get("reserved", 0)) < wage_of(q, t):
 		_release(q)
 		if not _reserve(q, n, t):
 			return -2
@@ -469,7 +484,8 @@ func line(q_or_t: Dictionary, key: String) -> String:
 	var need := []
 	for id in t.get("need", {}):
 		need.append("%d %s" % [int(t.need[id]), GameData.item_name(id).to_lower()])
-	s = s.replace("{need}", " and ".join(need)).replace("{wage}", NUMBER_WORDS[int(t.get("wage", 0))] if int(t.get("wage", 0)) < NUMBER_WORDS.size() else str(int(t.get("wage", 0))))
+	var wage := (wage_of(q_or_t, t) if q_or_t.has("giver") else promised(t, w.player)) if t.get("hire", false) else int(t.get("wage", 0))
+	s = s.replace("{need}", " and ".join(need)).replace("{wage}", NUMBER_WORDS[wage] if wage < NUMBER_WORDS.size() else str(wage))
 	var target: NPC = w.npc(int(q_or_t.get("target", -1))) if q_or_t.has("target") else null
 	if target == null and t.get("kill", "") == "robber":
 		var giver: NPC = w.npc(int(q_or_t.get("giver", -1)))

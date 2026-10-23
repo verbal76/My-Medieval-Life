@@ -22,7 +22,8 @@ var body_scroll: ScrollContainer   # the window body's scroller (follows focus)
 var bar_labels := {}             # meter key -> the words drawn on its bar ("Health 80/100")
 var bar_danger := {}             # meter key -> true while that meter is low (B8-019)
 var coins_label: Label
-var clock_label: Label
+var clock_label: Label         # the time of day ("07:00")
+var date_label: Label          # the season, year and day ("Spring, Year 1  Day 3")
 var prompt_label: Label
 var prompt_box: PanelContainer
 var prompt_icon: TextureRect
@@ -31,12 +32,13 @@ var toast: Label
 var toast_t := 0.0
 var toast_bottom := -160.0     # where the toast's bottom edge sits (above the prompt and the placing bar)
 var action_bar: ProgressBar
+var action_label: Label        # the work's name inside the action bar ("Mining")
 var panel: PanelContainer
 var panel_kind := ""
 var panel_back := Callable()   # what X, Esc and the pad's B do in the open window (PL1-01); empty: close it
 var inner_back := Callable()   # a window's own step back first (the wiki's previous page); returns true when it stepped
 var settings_tab := "audio"
-var wiki_win: WikiWindow       # the open wiki, while Settings shows its tab
+var wiki_win: WikiWindow       # the open wiki (the Village Encyclopedia window, UI-WIKI-01)
 var panel_body: VBoxContainer
 var title_label: Label
 var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
@@ -80,11 +82,17 @@ const LOG_SECONDS := 3.0       # how long each stays before fading
 const HUNGER_MAX := 100.0       # the food meter's top (PlayerState caps hunger at 100)
 const DANGER_AT := 0.25        # a meter below this fraction of its cap turns red and blinks
 const DANGER_COLOUR := Color8(228, 52, 36)
+# progress bars over the map (the player's work, building frames): one pixel-art look (UI-PROGRESS-01)
+const PROGRESS_TRACK := Color(0.17, 0.11, 0.07, 0.92)    # dark wood, so the bar reads on pale sand and floors
+const PROGRESS_FILL := Color(0.47, 0.72, 0.29)            # the green of a filling bar
+const PROGRESS_EDGE := Color8(16, 10, 6)                   # a thin near-black outline, so it reads on dark ground too
+const ACTION_BAR_W := 96.0
+const ACTION_BAR_RISE := 22.0  # world pixels above the player's feet: just over the head
 const PROMPT_MAX_W := 360.0    # the contextual prompt and the message toast wrap at this width
 const TOAST_MAX_W := 460.0
 const METERS := {
 	"hp": ["Health", "health", "Health: how much you can take. Rest at home, eat food that heals, or drink a tonic. At 0 you die."],
-	"hunger": ["Food", "bread", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
+	"hunger": ["Food", "hud_hunger", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
 	"stamina": ["Stamina", "stamina", "Stamina: spent by sprinting, tilling, clearing land and casting Fireball. It refills by itself."],
 }
 const GAIN_SECONDS := 1.5      # a gain line ("+2 red berries") stays this long, then fades
@@ -291,6 +299,19 @@ func _theme() -> Theme:
 	return t
 
 
+## The pixel-art progress bar (UI-PROGRESS-01): a dark track and a solid fill, each inside a one-pixel
+## near-black outline, square corners and no smoothing, so it reads on light and dark ground alike. The
+## player's action bar and the building frames' bars both use it; `edge` is the outline's width.
+static func style_progress(bar: ProgressBar, fill_colour: Color, edge := 1) -> void:
+	for part in ["background", "fill"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = PROGRESS_TRACK if part == "background" else fill_colour
+		sb.border_color = PROGRESS_EDGE
+		sb.set_border_width_all(edge)
+		sb.anti_aliasing = false
+		bar.add_theme_stylebox_override(part, sb)
+
+
 func _style(color: Color, border := SLATE) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = color
@@ -332,7 +353,7 @@ func _build_hud() -> void:
 	for key in ["hp", "hunger", "stamina"]:
 		var m: Array = METERS[key]
 		var h := HBoxContainer.new()
-		var ic := _ui_icon(m[1], 24) if key != "hunger" else _item_icon_rect("bread", 24)
+		var ic := _ui_icon(m[1], 24)                 # the food bar's is a 16 px roast drumstick (UI-HUNGER-01)
 		ic.tooltip_text = m[2]
 		ic.mouse_filter = Control.MOUSE_FILTER_PASS
 		h.add_child(ic)
@@ -361,20 +382,25 @@ func _build_hud() -> void:
 		v.add_child(h)
 		bars[key] = pb
 		bar_labels[key] = vl
+	# UI-HUD-01 (owner, 2026-10-22): the box is only as wide as the bars. Coins and the time of day share the
+	# bottom row (the time at its right end); the date sits under them in smaller words, so it no longer
+	# widens the box.
 	var row := HBoxContainer.new()
 	row.add_child(_ui_icon("coins", 24))
 	coins_label = Label.new()
-	coins_label.custom_minimum_size = Vector2(56, 0)
 	coins_label.tooltip_text = "Coins in your purse"
 	coins_label.mouse_filter = Control.MOUSE_FILTER_PASS
-	coins_label.add_theme_font_size_override("font_size", 18)
+	coins_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	coins_label.add_theme_font_size_override("font_size", 16)
 	row.add_child(coins_label)
 	clock_label = Label.new()
-	clock_label.custom_minimum_size = Vector2(104, 0)
-	clock_label.add_theme_font_size_override("font_size", 18)
+	clock_label.add_theme_font_size_override("font_size", 16)
 	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(clock_label)
 	v.add_child(row)
+	date_label = Label.new()
+	date_label.add_theme_font_size_override("font_size", 14)
+	v.add_child(date_label)
 
 	log_box = VBoxContainer.new()
 	log_box.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -426,12 +452,25 @@ func _build_hud() -> void:
 	toast.add_theme_constant_override("outline_size", 6)
 	hud.add_child(toast)
 
+	# the player's own timed work (mining, felling, harvesting, crafting...): a small dark bar over the
+	# player's head (placed each frame in update_hud), naming the work (UI-PROGRESS-01)
 	action_bar = ProgressBar.new()
-	action_bar.set_anchors_preset(Control.PRESET_CENTER)
-	action_bar.position = Vector2(-90, -70)       # above the player's head, clear of the prompt
-	action_bar.custom_minimum_size = Vector2(180, 18)
+	action_bar.custom_minimum_size = Vector2(ACTION_BAR_W, 14)
+	action_bar.size = action_bar.custom_minimum_size
 	action_bar.show_percentage = false
 	action_bar.visible = false
+	action_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	style_progress(action_bar, PROGRESS_FILL)
+	action_label = Label.new()
+	action_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	action_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	action_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	action_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	action_label.add_theme_font_size_override("font_size", 11)
+	action_label.add_theme_color_override("font_color", Color.WHITE)
+	action_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	action_label.add_theme_constant_override("outline_size", 4)
+	action_bar.add_child(action_label)
 	hud.add_child(action_bar)
 
 	touch_bar = HBoxContainer.new()
@@ -778,7 +817,10 @@ func update_hud() -> void:
 	_meter_text("hunger", bar_words(p.hunger, HUNGER_MAX), p.hunger / HUNGER_MAX)
 	_meter_text("stamina", bar_words(p.stamina, p.stamina_cap()), p.stamina / maxf(1.0, p.stamina_cap()))
 	coins_label.text = " %d" % p.coins
-	clock_label.text = w.clock_text()
+	var when: String = w.clock_text()                 # "Spring, Year 1  Day 3  07:00": the date, then the time
+	var cut := when.rfind(" ")
+	date_label.text = when.left(cut).strip_edges()
+	clock_label.text = when.substr(cut + 1)
 	# the prompt and toast follow their own size (a container's minimum size settles a frame late)
 	if prompt_box.visible:
 		_place_bottom(prompt_box, _prompt_bottom())
@@ -789,6 +831,14 @@ func update_hud() -> void:
 	if not a.is_empty():
 		action_bar.max_value = a.total
 		action_bar.value = a.total - a.left
+		action_label.text = str(a.get("label", ""))
+		var f := action_label.get_theme_font("font")
+		var tw := f.get_string_size(action_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x + 12.0
+		action_bar.size = Vector2(maxf(ACTION_BAR_W, tw), action_bar.custom_minimum_size.y)
+		# over the player's head wherever the camera is (at the map's edges the player is not centred)
+		var at: Transform2D = main.player_sprite.get_global_transform_with_canvas()
+		var head: Vector2 = at * Vector2(0, -ACTION_BAR_RISE)
+		action_bar.global_position = head - Vector2(action_bar.size.x / 2.0, action_bar.size.y)
 	if toast_t > 0.0:
 		toast_t -= get_process_delta_time()
 		if toast_t <= 0.0:
@@ -1060,6 +1110,19 @@ func _label(text: String, size := 18, color := Color8(246, 236, 214)) -> Label:
 	return l
 
 
+## How many equal columns (up to `most`) of buttons with these labels fit the window's width without any label being
+## cut: each column must hold the longest label on one line; a label wider than a single column wraps (autowrap).
+func _fit_columns(labels: Array, most: int) -> int:
+	var font := panel.get_theme_font("font", "Button")
+	var size := panel.get_theme_font_size("font_size", "Button")
+	var widest := 0.0
+	for l in labels:
+		widest = maxf(widest, font.get_string_size(str(l), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x)
+	var avail := panel.get_viewport_rect().size.x - 16.0 - 2.0 * 24.0 - 16.0     # window margin, its padding, scrollbar
+	var per := widest + 2.0 * 24.0 + 8.0                                          # a button's padding and the gap
+	return clampi(int(avail / per), 1, most)
+
+
 func _button(text: String, cb: Callable, enabled := true, parent: Control = null) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -1116,7 +1179,7 @@ func show_title(can_continue: bool) -> void:
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
 	_button("Controls", func(): show_controls(func(): show_title(main.can_continue())))
-	_button("Wiki", func(): show_settings(func(): show_title(main.can_continue()), "wiki"))
+	_button("Encyclopedia", func(): show_wiki(func(): show_title(main.can_continue())))
 	_button("Credits", show_credits)
 	_controls_list(scheme)
 	_scroll_to_top()                      # FR-05: the controls list must not scroll the menu out of view
@@ -1141,15 +1204,28 @@ func show_credits() -> void:
 	_button("Back", func(): show_title(main.can_continue()))
 
 
-## Character creation: name, family, male or female, and a look (face and clothes) from
-## game/data/appearances.json, with a preview of the sprite the player will walk around as.
+## Character creation: name, family, male or female, and an appearance (CC-01, owner 2026-10-22): a recipe of the
+## PUNY CHARACTERS layers drawn by CharacterLook, chosen feature by feature or at random, within what an ordinary
+## medieval villager wears (game/data/character_style.json "creation": human, natural skin, hair and eyes, plain
+## clothes or a tunic, leather boots or none; no headwear, armour or gloves). Appearance only: the starting kit
+## and coins are the same for everyone. The preview is drawn from the live recipe.
+const CREATION_FEATURES := [
+	["Skin", "swatch", "skin"], ["Hair", "pick", "hair"], ["Hair colour", "swatch", "hair"],
+	["Beard", "pick", "facial-hair"], ["Eyes", "swatch", "eyes"], ["Eyelashes", "pick", "eyelashes"],
+	["Clothes", "pick", "clothes"], ["Clothes colour", "swatch", "clothes"], ["Boots", "pick", "shoes"],
+	["Boots colour", "swatch", "leather_shoes"],
+]
+const CREATION_NAMES := {"basic": "Plain clothes", "tunic": "Tunic", "leather-boots": "Leather boots",
+	"beard1": "Beard", "beard2": "Full beard", "mustache": "Moustache"}
+
+
 func show_creation(spec: Dictionary) -> void:
-	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
 	var sx: String = spec.get("sex", "male")
-	var look: String = spec.get("look", "")
-	var mine := looks.filter(func(l): return l.sex == sx and l.outfit == "basic") + looks.filter(func(l): return l.sex == sx and l.outfit != "basic")
-	if look == "" or mine.filter(func(l): return l.id == look).is_empty():
-		look = mine[0].id
+	var recipe: Dictionary = CharacterLook.normalize(spec.get("appearance", {}))
+	if recipe.is_empty():
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		recipe = CharacterLook.random_recipe(rng, sx)
 	_open("creation", "Who are you?", false)
 	panel_back = func(): show_title(main.can_continue())
 	var names := HBoxContainer.new()
@@ -1169,16 +1245,16 @@ func show_creation(spec: Dictionary) -> void:
 	fam_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	names.add_child(fam_edit)
 	var current := func() -> Dictionary:
-		return {"name": name_edit.text.strip_edges(), "family": fam_edit.text.strip_edges(), "sex": sx, "look": look}
+		return {"name": name_edit.text.strip_edges(), "family": fam_edit.text.strip_edges(), "sex": sx, "appearance": recipe.duplicate(true)}
+	var redo := func(change: Callable) -> void:      # rebuild the window with a changed spec
+		var nxt: Dictionary = current.call()
+		change.call(nxt)
+		show_creation(nxt)
 	var sexes := HBoxContainer.new()
 	panel_body.add_child(sexes)
 	for choice in ["male", "female"]:
 		var c: String = choice
-		var b := _button(("> " if c == sx else "") + c.capitalize(), func():
-			var nxt: Dictionary = current.call()
-			nxt.sex = c
-			nxt.look = ""
-			show_creation(nxt), true, sexes)
+		var b := _button(("> " if c == sx else "") + c.capitalize(), func(): redo.call(func(n): n.sex = c), true, sexes)
 		b.custom_minimum_size = Vector2(150, 52)
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1191,35 +1267,179 @@ func show_creation(spec: Dictionary) -> void:
 			return
 		if spec2.family == "":
 			spec2.family = "Wanderer"
-		spec2.sprite = looks.filter(func(l): return l.id == look)[0].sprite
 		main.new_game(spec2), true, sexes)
 	begin.custom_minimum_size = Vector2(160, 52)
 	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
 	panel_body.add_child(row)
+	# the preview: facing you large, and the four sides it walks
+	var left := VBoxContainer.new()
+	row.add_child(left)
+	var sheet := CharacterLook.texture(recipe)
 	var preview := TextureRect.new()
-	preview.custom_minimum_size = Vector2(128, 128)
+	preview.name = "Preview"
+	preview.custom_minimum_size = Vector2(160, 160)
 	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	preview.texture = _look_frame(looks.filter(func(l): return l.id == look)[0].sprite)
-	row.add_child(preview)
+	preview.texture = _sheet_frame(sheet, 0)
+	left.add_child(preview)
+	var sides := HBoxContainer.new()
+	left.add_child(sides)
+	for d in [2, 4, 6]:                          # east, north, west (ActorSprite.DIRS)
+		var t := TextureRect.new()
+		t.custom_minimum_size = Vector2(52, 52)
+		t.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		t.texture = _sheet_frame(sheet, d)
+		sides.add_child(t)
+	var rnd := _button("Randomize", func():
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		redo.call(func(n): n.appearance = CharacterLook.random_recipe(rng, sx)), true, left)
+	rnd.custom_minimum_size = Vector2(160, 52)
+	# one row per feature: < its value >
 	var grid := GridContainer.new()
 	grid.columns = 4
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(grid)
-	for l in mine:
-		var lid: String = l.id
-		var b := Button.new()
-		b.icon = _look_frame(l.sprite)
-		b.expand_icon = true
-		b.custom_minimum_size = Vector2(72, 72)
-		b.tooltip_text = "%s clothes" % ("plain" if l.outfit == "basic" else "tunic")
-		b.modulate = Color(1, 1, 1) if lid == look else Color(0.75, 0.75, 0.75)
-		b.pressed.connect(func():
-			var nxt: Dictionary = current.call()
-			nxt.look = lid
-			show_creation(nxt))
-		grid.add_child(b)
-	_label("Top row: plain clothes. Bottom row: a tunic.", 16)
+	for f in CREATION_FEATURES:
+		var label: String = f[0]
+		var kind: String = f[1]
+		var key: String = f[2]
+		if kind == "swatch" and key == "clothes" and recipe.picks.get("clothes", "") == "tunic":
+			key = "tunic"                        # a tunic has its own ramp of colours
+		if kind == "swatch" and key == "leather_shoes" and recipe.picks.get("shoes", "") == "":
+			continue                             # no boots, no boot colour
+		var opts: Array = CharacterLook.options(key) if kind == "pick" else CharacterLook.rows(key)
+		if opts.size() < 2:
+			continue
+		var now = recipe.picks.get(key, "") if kind == "pick" else int(recipe.swatches.get(key, opts[0]))
+		var at := maxi(opts.find(now), 0)
+		var name_l := Label.new()
+		name_l.text = label
+		name_l.add_theme_font_size_override("font_size", 16)
+		name_l.add_theme_color_override("font_color", Color8(246, 236, 214))
+		grid.add_child(name_l)
+		for step in [-1, 1]:
+			var nxt_v = opts[(at + step + opts.size()) % opts.size()]
+			var k := key
+			var b := Button.new()
+			b.text = "<" if step < 0 else ">"
+			b.name = "%s %s" % [label, b.text]
+			b.custom_minimum_size = Vector2(48, 44)
+			b.pressed.connect(func(): redo.call(func(n):
+				if kind == "pick":
+					n.appearance.picks[k] = nxt_v
+				else:
+					CharacterLook.set_swatch(n.appearance, k, int(nxt_v))))
+			grid.add_child(b)
+			if step < 0:
+				grid.add_child(_creation_value(kind, key, now, at, opts.size()))
+	_label("Your looks only: everyone starts with the same clothes, tools and coins.", 15)
+
+
+## BARBER-18: the barber's chair: the creator's hair, beard and hair colour pickers with a preview from the live recipe;
+## confirming pays the visit (World.player_barber_visit). `draft` is the recipe being tried.
+func show_barber(n: NPC, draft: Dictionary) -> void:
+	var w: World = main.world
+	var recipe: Dictionary = CharacterLook.normalize(draft)
+	_open("barber", "%s %s, barber  ·  you have %d coins" % [n.name, n.family, w.player.coins], main.paused)
+	panel_back = func(): _talk_view(n, "Come again.")
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	panel_body.add_child(row)
+	var left := VBoxContainer.new()
+	row.add_child(left)
+	var sheet := CharacterLook.texture(recipe, [w.player.armor, w.player.head])
+	var preview := TextureRect.new()
+	preview.name = "Preview"
+	preview.custom_minimum_size = Vector2(160, 160)
+	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.texture = _sheet_frame(sheet, 0)
+	left.add_child(preview)
+	var grid := GridContainer.new()
+	grid.columns = 4
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(grid)
+	for f in World.BARBER_FEATURES:
+		var label: String = f[0]
+		var kind: String = f[1]
+		var key: String = f[2]
+		var opts: Array = CharacterLook.options(key) if kind == "pick" else CharacterLook.rows(key)
+		var now = recipe.picks.get(key, "") if kind == "pick" else int(recipe.swatches.get(key, opts[0]))
+		var at := maxi(opts.find(now), 0)
+		var name_l := Label.new()
+		name_l.text = label
+		name_l.add_theme_font_size_override("font_size", 16)
+		name_l.add_theme_color_override("font_color", Color8(246, 236, 214))
+		grid.add_child(name_l)
+		for step in [-1, 1]:
+			var nxt_v = opts[(at + step + opts.size()) % opts.size()]
+			var b := Button.new()
+			b.text = "<" if step < 0 else ">"
+			b.name = "%s %s" % [label, b.text]
+			b.custom_minimum_size = Vector2(48, 44)
+			b.pressed.connect(func():
+				var d: Dictionary = recipe.duplicate(true)
+				if kind == "pick":
+					d.picks[key] = nxt_v
+				else:
+					CharacterLook.set_swatch(d, key, int(nxt_v))
+				show_barber(n, d))
+			grid.add_child(b)
+			if step < 0:
+				grid.add_child(_creation_value(kind, key, now, at, opts.size()))
+	var why := w.barber_refusal(n, recipe)
+	var ok := _button("Pay %d coins" % int(GameData.b("barber").price), func():
+		var r: Dictionary = w.player_barber_visit(n, recipe)
+		if r.ok:
+			main.player_worn = "reset"           # redraw the player's sprite from the new recipe
+			message("%s trims and dresses your hair (%d coins paid)." % [n.name, int(r.paid)])
+			_talk_view(n, "There. A new man, or woman. Mind the wind.")
+		else:
+			message(str(r.why)), why == "" or why.begins_with("A visit costs"), left)
+	ok.name = "Pay"
+	ok.custom_minimum_size = Vector2(160, 52)
+	if why != "":
+		_label(why, 15)
+	_button("Leave as it is", func(): _talk_view(n, "Come again."), true, left).custom_minimum_size = Vector2(160, 52)
+
+
+## A feature's current value in character creation: a colour swatch, or the option's name.
+func _creation_value(kind: String, key: String, now, at: int, count: int) -> Control:
+	if kind == "swatch":
+		var c := ColorRect.new()
+		c.color = CharacterLook.swatch_color(key, int(now))
+		c.custom_minimum_size = Vector2(120, 32)
+		c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		return c
+	var l := Label.new()
+	l.custom_minimum_size = Vector2(120, 0)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", 16)
+	l.add_theme_color_override("font_color", Color8(246, 236, 214))
+	if str(now) == "":
+		l.text = "None"
+	elif CREATION_NAMES.has(str(now)):
+		l.text = CREATION_NAMES[str(now)]
+	else:
+		var has_none := 1 if CharacterLook.options(key).has("") else 0
+		l.text = "Style %d of %d" % [at + 1 - has_none, count - has_none]
+	return l
+
+
+## One direction's standing frame (row `d` of ActorSprite.DIRS) of a character sheet, head to feet.
+func _sheet_frame(sheet: Texture2D, d: int) -> AtlasTexture:
+	var at := AtlasTexture.new()
+	at.atlas = sheet
+	at.region = Rect2(4, 4 + d * 32, 24, 24)
+	return at
 
 
 func _look_frame(sheet: String) -> AtlasTexture:
@@ -1250,21 +1470,25 @@ func show_pause() -> void:
 	_button("Build", show_build_menu)
 	_button("Settings", func(): show_settings(show_pause, "audio"))
 	_button("Controls", func(): show_controls(show_pause))
-	_button("Wiki", func(): show_settings(show_pause, "wiki"))
+	_button("Encyclopedia", func(): show_wiki(show_pause))
 	_button("Save and quit to title", func():
 		main.save_game(false)
 		main.running = false
 		show_title(true))
 
 
-const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["saves", "Saves"], ["wiki", "Wiki"]]
+const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["saves", "Saves"], ["wiki", "Encyclopedia"]]
 
 
-## Settings: one screen with tabs (Audio, Display, Interface, Controls, Wiki) and a Back button. Each
-## change is applied and saved at once. `back` reopens the screen it came from (the title or the
-## pause menu, or closes to play); X, Esc and the pad's B do the same, after stepping back inside the
-## wiki. Opening it keeps the pause state it found, so closing restores play (PL1-01, PL1-02).
+## Settings: one screen with tabs (Audio, Display, Interface, Controls, Saves) and a Back button; its
+## Encyclopedia tab opens the wiki's own window (show_wiki), which returns here. Each change is applied
+## and saved at once. `back` reopens the screen it came from (the title or the pause menu, or closes to
+## play); X, Esc and the pad's B do the same. Opening it keeps the pause state it found, so closing
+## restores play (PL1-01, PL1-02).
 func show_settings(back: Callable, tab := "") -> void:
+	if tab == "wiki":
+		show_wiki(back)
+		return
 	var was_paused: bool = main.paused
 	_open("settings", "Settings", was_paused)
 	panel_back = back
@@ -1291,6 +1515,9 @@ func _settings_page() -> void:
 		b.button_pressed = id == settings_tab
 		b.custom_minimum_size = Vector2(120, 48)
 		b.pressed.connect(func():
+			if id == "wiki":         # the encyclopedia is its own window; leaving it returns to Settings
+				show_wiki(func(): show_settings(back))
+				return
 			settings_tab = id
 			_settings_page.call_deferred())
 		tabs.add_child(b)
@@ -1305,16 +1532,23 @@ func _settings_page() -> void:
 			_controls_tab()
 		"saves":
 			_settings_saves()
-		"wiki":
-			var wk := WikiWindow.new()
-			wk.open(self, panel_body)
-			wiki_win = wk
-			inner_back = wk.step_back
 	_button("Back", back if back.is_valid() else hide_all)
 	if scheme != "touch":
 		var tb: Button = tabs.get_node_or_null("Tab_" + settings_tab)
 		if tb:
 			(func(): if is_instance_valid(tb) and tb.is_inside_tree(): tb.grab_focus()).call_deferred()
+
+
+## The Village Encyclopedia (the wiki, PL2-009, UI-WIKI-01): its own window, from the pause menu, the
+## title screen and Settings. X, Esc and the pad's B step back through its pages, then return to `back`.
+## Like Settings it keeps the pause state it found.
+func show_wiki(back: Callable) -> void:
+	_open("wiki", "Village Encyclopedia", main.paused)
+	panel_back = back
+	var wk := WikiWindow.new()
+	wk.open(self, panel_body)
+	wiki_win = wk
+	inner_back = wk.step_back
 
 
 ## Saves (SAVE-05, owner 2026-10-20): copy the save to a file the player chooses, keep that copy up to date
@@ -1384,6 +1618,12 @@ func _short_path(p: String) -> String:
 	return p.uri_decode().get_file() if p != "" else ""
 
 
+## MUSIC-18, SFX-18: an effect for something the player did (nothing in tests, where there is no Main audio).
+func sfx(id: String) -> void:
+	if main != null and main.get("audio") != null:
+		main.audio.play_sfx(id)
+
+
 func _settings_audio() -> void:
 	var st: GameSettings = main.settings
 	for row in [["Master volume", "master"], ["Music", "music"], ["Sound effects", "sfx"]]:
@@ -1398,7 +1638,7 @@ func _settings_audio() -> void:
 			st.set(key, v / 100.0)
 			main.apply_settings())
 		_setting_row(row[0], sl)
-	_label("Sound volumes take effect once the game has sounds.", 14)
+	_label("Music follows the time of day, the ambience follows where you are, and effects answer what you do. Each slider changes it at once.", 14)
 
 
 func _settings_display() -> void:
@@ -1542,7 +1782,7 @@ func _quest_items() -> Array:
 		out.append({"day": true, "text": ("%s (story)" % t.title) if t.get("story", false) else str(t.title)})
 		var who := "%s %s" % [giver.name, giver.family] if giver else "someone"
 		if t.get("hire", false):
-			out.append({"day": false, "text": "Work for %s, taken on day %d, for %d coins. It lapses if not done by the end of day %d." % [who, int(q.day), int(t.wage), int(q.day) + int(t.get("days", 1))]})
+			out.append({"day": false, "text": "Work for %s, taken on day %d, for %d coins. It lapses if not done by the end of day %d." % [who, int(q.day), int(q.get("wage", t.wage)), int(q.day) + int(t.get("days", 1))]})
 		else:
 			out.append({"day": false, "text": "Asked by %s on day %d." % [who, int(q.day)]})
 		var want: String
@@ -1564,7 +1804,7 @@ func _quest_items() -> Array:
 	var mj: Dictionary = w.manor_work.job_of("player")
 	if not mj.is_empty():
 		out.append({"day": true, "text": "Work for the manor"})
-		out.append({"day": false, "text": "%s, for %d coins (taken on day %d; it lapses if not done by the next morning)." % [w.manor_work.describe(mj), int(mj.wage), int(mj.day)]})
+		out.append({"day": false, "text": "%s, for %d coins (taken on day %d; it lapses if not done by the next morning)." % [w.manor_work.describe(mj), int(mj.reserved), int(mj.day)]})
 		out.append({"day": false, "text": _manor_next(mj)})
 	if out.is_empty():
 		out.append({"day": false, "text": "No quests. Look for people with a marker over their head."})
@@ -1999,6 +2239,10 @@ func show_talk(n: NPC) -> void:
 ## The quest choices with this villager: their offer, or the request the player took on.
 func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	var w: World = main.world
+	if Chapel.is_clergy(n):
+		_chapel_choices(n, choices)
+	if n.job == "tavernkeeper":
+		_feast_choices(n, choices)
 	var q: Dictionary = w.quests.active_from(n)
 	if not q.is_empty() and not Quests.template(q.id).get("story", false):
 		if w.quests.ready(q):
@@ -2009,6 +2253,7 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 				if paid == -2:
 					_talk_view(n, w.quests.line(q, "unpaid"))
 					return
+				sfx("jingle_quest_complete")
 				var learned: String = w.quests.last_learned
 				if t.get("hire", false):
 					message("Work done: %s (+%d coins wage)" % [t.title, paid])
@@ -2025,6 +2270,12 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	# the manor's work (owner, 2026-10-18): the reeve offers its list of real jobs
 	if n.job == "reeve":
 		_talk_choice(choices, "Any work for me?", func(): show_manor_jobs(n))
+	if Law.teaches(n):
+		_talk_choice(choices, "Teach me about the law", func():       # LAW-SKILL: the reeve's lesson (the clergy's, later)
+			var r := Law.teach(w, World.PLAYER, n)
+			if r.ok:
+				message(r.text)
+			_talk_view(n, r.text))
 	# paid work (owner: the player can work and earn money): asked for, never marked
 	if w.quests.hires(n):
 		_talk_choice(choices, "Any work for me?", func():
@@ -2033,6 +2284,51 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 				_talk_view(n, w.quests.no_work_line(n))
 			else:
 				_talk_view(n, w.quests.line({"id": job.id, "giver": n.id}, "offer"), true, job.id))
+
+
+## DVW-B3-CHAPEL: what the player may do with the chapel's clergy: give coins or food to the chapel (it goes first to feeding those
+## in need), ask the church for food when they have none of their own, and hear how to help on the church's plot.
+func _chapel_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	for amount in [5, 20]:
+		if w.player.coins >= amount:
+			var amt: int = amount
+			_talk_choice(choices, "Give %d coins to the chapel" % amt, func():
+				var r := w.chapel.player_offer_coins(amt)
+				if r.ok:
+					message(r.text)
+				_talk_view(n, r.text))
+	var shown := 0
+	for id in NPCBrain.EDIBLE:
+		if shown < 2 and w.player.inv.has(id):
+			shown += 1
+			var item: String = id
+			_talk_choice(choices, "Give 1 %s to the chapel" % GameData.item_name(item).to_lower(), func():
+				var r := w.chapel.player_offer_item(item, 1)
+				if r.ok:
+					message(r.text)
+				_talk_view(n, r.text))
+	_talk_choice(choices, "Ask the church for food", func():
+		var r := w.chapel.player_ask()
+		if r.ok:
+			message(r.text)
+		_talk_view(n, r.text))
+	_talk_choice(choices, "How can I help the church?", func():
+		_talk_view(n, "Whatever you can spare goes first to feeding those in need, coins or food. The church keeps its own small plot beside the chapel; villagers who have the time work it, and when none do, we work it ourselves."))
+
+
+## DVW-B3-FEAST: the feasts the player may pay the tavern keeper for in the evening: their wedding feast (when the family has come)
+## and a table for the room. The keeper lays out food and ale from the tavern's own stock; the guests eat and drink it.
+func _feast_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	for opt in w.feast.player_choices():
+		var kind: String = opt.kind
+		var size: int = opt.size
+		_talk_choice(choices, str(opt.label), func():
+			var r := w.feast.player_feast(kind, size)
+			if r.ok:
+				message(r.text)
+			_talk_view(n, r.text))
 
 
 ## The reeve's list of the manor's open jobs, each with its wage (paid when it is done), or why there
@@ -2056,7 +2352,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 	var lines := []
 	var seen := {}
 	for j in open:
-		var key := "%s|%d" % [mw.describe(j), int(j.wage)]
+		var key := "%s|%d" % [mw.describe(j), mw.wage_for(j, World.PLAYER)]
 		if seen.has(key):
 			seen[key].n += 1
 		else:
@@ -2066,7 +2362,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 		var j: Dictionary = line.job
 		var h := HBoxContainer.new()
 		var l := Label.new()
-		l.text = "%s  ·  %d coins%s" % [mw.describe(j), int(j.wage), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
+		l.text = "%s  ·  %d coins%s" % [mw.describe(j), mw.wage_for(j, World.PLAYER), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.add_theme_font_size_override("font_size", 18)
@@ -2096,6 +2392,7 @@ func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 			message(w.quests.last_refusal if w.quests.last_refusal != "" else "That is no longer on offer.")
 			_talk_view(n, Dialogue.opening(w, n))
 			return
+		sfx("jingle_quest_accepted")
 		if hire != "":
 			message("Hired: %s. It is written in your journal." % Quests.template(q.id).title)
 			_talk_view(n, "Good. Come and find me when it's done, and you'll have your wage.")
@@ -2205,6 +2502,19 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 					hide_all()
 			else:
 				message(str(learned.why)), not known)
+	if w.is_tailor(n):
+		# TAILOR-18: the pack's rows, sold as a service in order (World.player_buy_pack_row); future clothing services go here
+		var row_price: int = w.pack_row_price()
+		var row_text := ("Backpack: unlock the %s row (%d coins)" % ["second" if w.player.pack_level == 0 else "third", row_price]) if row_price >= 0 else "Backpack: every row is open"
+		_talk_choice(choices, row_text, func():
+			var r: Dictionary = w.player_buy_pack_row(n)
+			if r.ok:
+				message("%s lets out your pack: every tab now holds %d kinds (%d coins paid)." % [n.name, w.player.pack_cap(), int(r.paid)])
+				hide_all()
+			else:
+				message(str(r.why)), row_price >= 0)
+	if w.is_barber(n):
+		_talk_choice(choices, "Hair, beard and colour (%d coins a visit)" % int(GameData.b("barber").price), func(): show_barber(n, w.player.appearance))
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
@@ -2264,8 +2574,8 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 ## CON-01: the contract window with a villager. Open contracts and the villager's standing offers to the player, each
 ## with what can be done now (collect or deliver what is in hand, cancel; agree to or decline an offer); the villager's
 ## last answer (a counteroffer can be agreed to); and a new proposal: the goods (those the villager can come by first,
-## or all goods), then quantity, price per unit and days with - and + buttons (touch, pad and keyboard alike), the
-## total and Propose. The rules are Contracts'; this only shows them. `t`: the terms being drawn up; `reply`: the answer.
+## or all goods), then step by step the quantity, price per unit and days with - and + buttons (touch, pad and keyboard
+## alike), and a one-sentence summary to Propose (CON-UX-01). The rules are Contracts'; this only shows them. `t`: the terms being drawn up; `reply`: the answer.
 func show_contract(n: NPC, t := {}, reply := {}) -> void:
 	var w: World = main.world
 	var k: Contracts = w.contracts
@@ -2305,8 +2615,10 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			var held := mini(n.inv.count(cc.item), Contracts.left(cc))
 			_button("Collect %d" % held, func():
 				var got := k.deliver(cc, held)
-				done.call(("%s hands over %d %s; %d coins paid." % [n.name, got, item, got * int(cc.price_each)]) if got > 0 else "You have no room for it."),
+				done.call(("%s hands over %d %s; %d coins paid." % [n.name, got, item, got * int(cc.price_each)]) if got > 0 else p.inv.full_text(cc.item)),
 					held > 0 and p.inv.can_add(cc.item), h)
+			if held > 0 and not p.inv.can_add(cc.item):
+				l.text += "  " + p.inv.full_text(cc.item)         # INV-18: why Collect is off, the category named
 			_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
 		else:
 			l.text = "You supply %d %s at %d each: %d delivered, due by the end of day %d." % [int(cc.qty), item, int(cc.price_each),
@@ -2319,6 +2631,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
+		_scroll_to_top()                  # TRADE-UI-02: the answer is drawn first; a window scrolled down to Propose would hide it
 		if str(reply.answer) == "counter" and not reply.get("from_buyer", false):     # a buyer's counter is its standing offer, above
 			var ct: Dictionary = t.duplicate()
 			ct.qty = int(reply.qty)
@@ -2331,13 +2644,43 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 					show_contract(n, {}, r2)
 				else:
 					show_contract(n, ct, r2))
-	if t.has("counter"):
-		_counter_terms(n, t)
+	var step := _contract_step(t)
+	if step != "item":
+		_contract_term_step(n, t, step)
 		return
-	_label("Propose a contract: what you want from %s, how many, the price for each and how many days they have. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
+	_contract_item_step(n, t)
+
+
+## CON-UX-01: the steps of drawing up a contract, in order. A proposal of goods or work takes all five; a counter to a
+## villager's standing offer has the goods fixed, so it starts at the quantity.
+const CONTRACT_STEPS := ["item", "qty", "price", "days", "sum"]
+const CONTRACT_STEP_TITLES := {"item": "What do you want?", "qty": "How many?", "price": "What will you pay for each?", "days": "How many days do they have?",
+		"sum": "Is this right?"}
+
+
+## The step being shown: the one named in the terms, else the summary once goods or work are chosen, else the first.
+func _contract_step(t: Dictionary) -> String:
+	if t.has("step"):
+		return str(t.step)
+	if t.has("counter"):
+		return "qty"
+	return "sum" if (str(t.get("item", "")) != "" or t.has("svc")) else "item"
+
+
+func _contract_steps_for(t: Dictionary) -> Array:
+	return CONTRACT_STEPS.slice(1) if t.has("counter") else CONTRACT_STEPS
+
+
+## Step one: the goods (those the villager can come by first, or all goods) or work to hire them for. Choosing one
+## moves on to the quantity, with the terms the villager's pace allows already filled in.
+func _contract_item_step(n: NPC, t: Dictionary) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	_scroll_to_top()                      # the focused first button must not scroll the step's heading out of view
+	_label("Step 1 of 5: %s" % CONTRACT_STEP_TITLES.item, 20, Color(1, 0.85, 0.5))
+	_label("Propose a contract to %s: choose the goods you want. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
 	var all: bool = t.get("all", false)
 	var grid := GridContainer.new()
-	grid.columns = 3
 	grid.add_theme_constant_override("h_separation", 8)
 	grid.add_theme_constant_override("v_separation", 8)
 	panel_body.add_child(grid)
@@ -2348,10 +2691,12 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 		var m: Dictionary = k.means(n, id, 3)
 		if int(m.stock) + int(m.cap) > 0:
 			able.append(id)
-	for id in (ids if all else able):
+	var shown: Array = ids if all else able
+	grid.columns = _fit_columns(shown.map(func(i): return ("★ " if able.has(i) else "") + GameData.item_name(i)), 3)
+	for id in shown:
 		var iid: String = id
 		var b := _button(("★ " if able.has(iid) else "") + GameData.item_name(iid), func():
-			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3}
+			var nt := {"item": iid, "all": all, "qty": 10, "price": GameData.value(iid), "days": 3, "step": "qty"}
 			var m3: Dictionary = k.means(n, iid, 3)
 			nt.qty = clampi(int(m3.stock) + int(m3.cap), 1, 10)
 			for d in range(1, int(Contracts.cfg().max_days) + 1):        # the deadline the seller's pace allows
@@ -2361,8 +2706,8 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 					break
 			show_contract(n, nt), true, grid)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		if str(t.get("item", "")) == iid:
-			b.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.custom_minimum_size = Vector2(0, 56)
 	_button(("Only what %s can supply" % n.name) if all else "All goods", func():
 		var nt: Dictionary = t.duplicate()
 		nt.all = not all
@@ -2372,86 +2717,144 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 	if not opts.is_empty():
 		_label("Or hire %s for work: paid for each unit of the work as it is done." % n.name, 16)
 		var sgrid := GridContainer.new()
-		sgrid.columns = 2
+		sgrid.columns = _fit_columns(opts.map(func(o): return str(o.label)), 2)
+		sgrid.add_theme_constant_override("h_separation", 8)
 		panel_body.add_child(sgrid)
 		for o in opts:
 			var oo: Dictionary = o
 			var sb := _button(str(oo.label), func():
 				var svc := {"service": oo.service, "site": oo.site}
 				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
-				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3}), true, sgrid)
+				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3,
+						"step": "qty"}), true, sgrid)
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			if t.has("svc") and str(t.get("label", "")) == str(oo.label):
-				sb.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
-	if t.has("svc"):
-		_term_steppers(n, t)
-		var stotal := int(t.qty) * int(t.price)
-		_label("%s: %d units at %d each = %d coins, by the end of day %d." % [str(t.label), int(t.qty), int(t.price), stotal, w.day() + int(t.days)], 18)
-		_button("Propose", func():
-			var r := k.propose(World.PLAYER, n, "", int(t.qty), int(t.price), int(t.days), [], t.svc)
-			if r.has("contract"):
-				message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
-				show_contract(n, {}, r)
-			else:
-				show_contract(n, t, r), p.coins >= stotal)
-	if str(t.get("item", "")) != "":
-		_term_steppers(n, t)
-		var total := int(t.qty) * int(t.price)
-		_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), int(t.price), total,
-				w.day() + int(t.days)], 18)
-		_button("Propose", func():
-			var r := k.propose(World.PLAYER, n, str(t.item), int(t.qty), int(t.price), int(t.days))
-			if r.has("contract"):
-				message("Contract made: %d %s from %s." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), n.name])
-				show_contract(n, {}, r)
-			else:
-				show_contract(n, t, r), p.coins >= total)
+			sb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			sb.custom_minimum_size = Vector2(0, 56)
 	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
 
 
-## The quantity, price-each and days rows of the contract window, each with - and + buttons (touch, pad, keyboard).
-func _term_steppers(n: NPC, t: Dictionary) -> void:
-	var step := func(key: String, by: int, hi: int) -> void:
-		var nt: Dictionary = t.duplicate()
-		nt[key] = clampi(int(nt[key]) + by, 1, hi)
-		show_contract(n, nt)
-	for row in [["Quantity", "qty", 999, [-10, -1], [1, 10]], ["Price each", "price", 999, [-1], [1]], ["Days", "days", int(Contracts.cfg().max_days), [-1], [1]]]:
-		var h := HBoxContainer.new()
-		h.alignment = BoxContainer.ALIGNMENT_CENTER
-		panel_body.add_child(h)
-		var key: String = row[1]
-		var hi: int = row[2]
-		for by in row[3]:
-			var bb: int = by
-			_button(str(bb), func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
-		var l := Label.new()
-		l.text = "%s: %d" % [row[0], int(t[key])]
-		l.custom_minimum_size = Vector2(200, 0)
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		l.add_theme_font_size_override("font_size", 20)
-		h.add_child(l)
-		for by in row[4]:
-			var bb: int = by
-			_button("+%d" % bb, func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
-
-
-## CON-01: the player's counter to a villager's standing offer (the player supplies): the goods are the villager's to
-## name, the quantity, price and days the player's to put back. The villager answers by Contracts.counter_offer.
-func _counter_terms(n: NPC, t: Dictionary) -> void:
+## Steps two to four (quantity, price each, days) and the summary. Each step shows one question with large - and +
+## buttons, Next and Back; the summary says the whole agreement in a sentence and Propose (or, for a counter, Put
+## these terms) sends it. Back goes to the step before; on the first step it leaves the contract being drawn up.
+func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 	var w: World = main.world
 	var k: Contracts = w.contracts
-	var oc := k.get_contract(int(t.counter))
-	var item := GameData.item_name(str(t.item)).to_lower() if not Contracts.is_service(oc) else "units of work (%s)" % k.describe(oc)
-	_label("Your terms for supplying %s with %s: how many, the price for each and the days you need." % [n.name, item], 16)
-	_term_steppers(n, t)
-	_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), item, int(t.price), int(t.qty) * int(t.price), w.day() + int(t.days)], 18)
-	_button("Put these terms to %s" % n.name, func():
-		var r := k.counter_offer(k.get_contract(int(t.counter)), int(t.qty), int(t.price), int(t.days))
-		r.from_buyer = true
-		if r.has("contract"):
-			message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
-		show_contract(n, {}, r))
-	_button("Back", func(): show_contract(n))
+	var p := w.player
+	var counter := t.has("counter")
+	var steps := _contract_steps_for(t)
+	var at := steps.find(step)
+	var go := func(to: String) -> void:
+		var nt: Dictionary = t.duplicate()
+		nt.step = to
+		show_contract(n, nt)
+	var back := func() -> void:
+		if at > 0:
+			go.call(steps[at - 1])
+		elif counter:
+			show_contract(n)
+		else:
+			show_contract(n, {"all": t.get("all", false)})
+	_label("Step %d of %d: %s" % [at + 1, steps.size(), CONTRACT_STEP_TITLES[step] if not (counter and step == "price") else "What price do you ask for each?"], 20, Color(1, 0.85, 0.5))
+	var what := ""
+	if counter:
+		var oc := k.get_contract(int(t.counter))
+		what = GameData.item_name(str(t.item)).to_lower() if not Contracts.is_service(oc) else "units of work (%s)" % k.describe(oc)
+	elif t.has("svc"):
+		what = str(t.label)
+	else:
+		what = GameData.item_name(str(t.item)).to_lower()
+	var qty := int(t.qty)
+	var price := int(t.price)
+	var days := int(t.days)
+	var total := qty * price
+	var by_day := w.day() + days
+	var next_btn: Button = null
+	if step == "sum":
+		var sentence := ""
+		if counter:
+			sentence = "You deliver %s to %s by the end of day %d for %d coins (%d each)." % [Contracts.counted(qty, what), n.name, by_day, total, price]
+		elif t.has("svc"):
+			sentence = "%s does this work for you, %s: %d units by the end of day %d for %d coins (%d each)." % [n.name, what, qty, by_day, total, price]
+		else:
+			sentence = "%s delivers %s by the end of day %d for %d coins (%d each)." % [n.name, Contracts.counted(qty, what), by_day, total, price]
+		var sl := _label(sentence, 24)
+		sl.name = "Summary"
+		if not counter:
+			_label("Your coins for it are set aside when %s agrees, and paid as the goods come. You have %d coins." % [n.name, p.coins], 16)
+			if p.coins < total:
+				_label("You do not have %d coins for this: lower the quantity or the price." % total, 16, Color(1, 0.6, 0.5))
+		if counter:
+			next_btn = _button("Put these terms to %s" % n.name, func():
+				var r := k.counter_offer(k.get_contract(int(t.counter)), qty, price, days)
+				r.from_buyer = true
+				if r.has("contract"):
+					message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
+				show_contract(n, {}, r))
+		else:
+			next_btn = _button("Propose to %s" % n.name, func():
+				var r: Dictionary
+				if t.has("svc"):
+					r = k.propose(World.PLAYER, n, "", qty, price, days, [], t.svc)
+				else:
+					r = k.propose(World.PLAYER, n, str(t.item), qty, price, days)
+				if r.has("contract"):
+					message(("Contract made with %s: %s." % [n.name, k.describe(r.contract)]) if t.has("svc") else
+							"Contract made: %d %s from %s." % [qty, what, n.name])
+					show_contract(n, {}, r)
+				else:
+					var nt: Dictionary = t.duplicate()
+					nt.step = "sum"
+					show_contract(n, nt, r), p.coins >= total)
+	else:
+		var hint := ""
+		match step:
+			"qty":
+				hint = "How many do you want?" if not counter else "How many %s can you supply %s with?" % [what, n.name]
+			"price":
+				hint = "The price for each. %s" % ("" if counter or t.has("svc") else "Usual value: %d coins." % GameData.value(str(t.item)))
+			"days":
+				hint = "The days %s has to finish: the deadline is the end of day %d." % [n.name if not counter else "you have", by_day]
+		_label(hint, 16)
+		_term_stepper(n, t, step)
+		next_btn = _button("Next", func(): go.call(steps[at + 1]))
+		next_btn.custom_minimum_size = Vector2(280, 64)
+	next_btn.custom_minimum_size = Vector2(280, 64)
+	_focus_if_open.call_deferred(next_btn)      # pad and keyboard land on Next, not on a - button
+	_button("Back", back).custom_minimum_size = Vector2(280, 56)
+	inner_back = func() -> bool:        # Esc, X and the pad's B step back before they close the window
+		back.call()
+		return true
+
+
+func _focus_if_open(b: Control) -> void:
+	if is_instance_valid(b) and b.is_inside_tree() and b.is_visible_in_tree():
+		b.grab_focus()
+
+
+## One of the quantity, price-each or days rows of the contract window, with - and + buttons (touch, pad, keyboard).
+func _term_stepper(n: NPC, t: Dictionary, key: String) -> void:
+	var step := func(by: int) -> void:
+		var nt: Dictionary = t.duplicate()
+		var hi := int(Contracts.cfg().max_days) if key == "days" else 999
+		nt[key] = clampi(int(nt[key]) + by, 1, hi)
+		show_contract(n, nt)
+	var row: Array = {"qty": ["Quantity", [-10, -1], [1, 10]], "price": ["Price each", [-5, -1], [1, 5]], "days": ["Days", [-1], [1]]}[key]
+	var h := HBoxContainer.new()
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_theme_constant_override("separation", 8)
+	panel_body.add_child(h)
+	for by in row[1]:
+		var bb: int = by
+		_button(str(bb), func(): step.call(bb), true, h).custom_minimum_size = Vector2(72, 64)
+	var l := Label.new()
+	l.text = "%s: %d" % [row[0], int(t[key])]
+	l.custom_minimum_size = Vector2(220, 0)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", 24)
+	h.add_child(l)
+	for by in row[2]:
+		var bb: int = by
+		_button("+%d" % bb, func(): step.call(bb), true, h).custom_minimum_size = Vector2(72, 64)
 
 
 ## CON-02: a service contract's row in the contract window: a villager's offer to hire the player (Agree, Counter,
@@ -2618,12 +3021,21 @@ func show_trade(n: NPC, pick := {}) -> void:
 	_label("They sell:", 20, Color(1, 0.85, 0.5))
 	if sale.is_empty():
 		_label("Nothing right now.", 15)
+	# TRADE-AXE-01, INV-18: each category of the pack full for something on sale is named, with its places
+	var full_cats := []
+	for i in sale:
+		var cat := GameData.category(i)
+		if not p.inv.can_add(i) and not full_cats.has(cat):
+			full_cats.append(cat)
+	for cat in full_cats:
+		_label("%s inventory full: %d of %d slots. You can buy more of what you already carry there; for another kind, sell, drop or store one of them first. Other categories have their own room." % [GameData.category_name(cat), p.inv.used(cat), p.pack_cap()], 17, Color(1, 0.7, 0.55))
 	for id in sale:
 		var price := w.deal_price(w.sell_price(n, id), w.player, n)
 		var nn := n
 		var bid: String = id
-		_item_row(id, n.inv.count(id), "%d coins each%s" % [price, effect_suffix(id)], "Buy", func():
-			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price)
+		var room := p.inv.can_add(id)
+		_item_row(id, n.inv.count(id), "%d coins each%s%s" % [price, effect_suffix(id), "" if room else "  ·  %s full" % GameData.category_name(GameData.category(id)).to_lower()], "Buy", func():
+			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price and room)
 	var seeds: Array = w.farm.seed_offers(n)               # PL2-015: a farmer or the food merchant sells seed for your own field
 	if not seeds.is_empty():
 		_label("Seed for your own field:", 20, Color(1, 0.85, 0.5))
@@ -2666,6 +3078,8 @@ func show_trade(n: NPC, pick := {}) -> void:
 	if not any:
 		_label("Nothing you carry (they want: %s)." % ", ".join(buys.keys().map(func(k): return GameData.item_name(k))) if not buys.is_empty() else "They are not buying.", 15)
 	if n.role != "bandit":
+		var lender := n
+		_button("Credit and barter" + (" (%s asks you)" % n.name if main.world.credit.request_for(n.id).size() > 0 else ""), func(): CreditWindow.show(self, lender))       # TRADE-CREDIT
 		var talker := n
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
 
@@ -2705,7 +3119,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		var stock := n.inv.count(id)
 		mx = QuantityPicker.buy_max_priced(prices, p.coins, p.inv.can_add(id))
 		info = "%s  ·  %d in stock  ·  you have %d coins%s" % [each, stock, p.coins, effect_suffix(id)]
-		why = "Your pack is full." if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
+		why = p.inv.full_text(id) if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
 	else:
 		var owned := p.inv.count(id)
 		mx = w.purchase_qty(n, p, id, owned)        # TRADE-01: the villagers' rule, need and reserve (OD-19)
@@ -2721,6 +3135,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		if buying:
 			var b: Dictionary = w.player_buy_many(n, id, q)
 			if b.result == "bought":                    # (its Trading xp is core's, DVW-A12 R13)
+				sfx("coin")
 				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
 			else:
 				message(b.text)
@@ -2728,6 +3143,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 			return
 		var r: Dictionary = w.player_sell_many(n, id, q)
 		if r.sold > 0:                                  # (its Trading xp is core's, DVW-A12 R13)
+			sfx("coin")
 			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
 		if r.result == "sold":
 			show_trade(n)
@@ -2778,7 +3194,7 @@ func toggle_inventory() -> void:
 
 ## The pack window (scripts/ui/inventory_window.gd): Cozy Farm's inventory panel with the tabs, the
 ## character and gear slots and the bag grid, over the darkened game. `tab` is the tab to open.
-func show_inventory(tab := "all") -> void:
+func show_inventory(tab := "general") -> void:
 	_open("inventory", "Pack")
 	top_row.visible = false
 	hud.visible = false               # the pack window shows the coins itself
@@ -3069,7 +3485,7 @@ func _farm_options(pl: Dictionary) -> void:
 		var planks: int = w.farm.pen_planks(rect)
 		_button("Fence a %s pen in front of you (%d planks)%s" % [kind, planks, "" if no == "" else ": " + no], func():
 			var pen: Dictionary = w.farm.build_pen(k, rect, p)
-			message("The pen is fenced. Buy %s from the keeper at their pen's gate." % GameData.b("animals")[k].name.to_lower() if not pen.is_empty() else w.farm.pen_why)
+			message(("The pen is fenced. " + ("Buy a plough horse from the caravan when it visits." if k == "horse" else "Buy %s from the keeper at their pen's gate." % GameData.b("animals")[k].name.to_lower())) if not pen.is_empty() else w.farm.pen_why)
 			if not pen.is_empty():
 				hide_all(), no == "")
 
@@ -3240,6 +3656,7 @@ func show_home(pick := {}, focus := {}) -> void:
 
 ## PL2-002: the storage window for a chest, crate or barrel (see ChestWindow).
 func show_chest(uid: String, pick := {}, focus := {}) -> void:
+	sfx("chest_open")
 	ChestWindow.new(self).show(uid, pick, focus)
 
 
@@ -3286,7 +3703,7 @@ func _home_picker(pick: Dictionary) -> void:
 	var nm := GameData.item_name(id)
 	var qp := QuantityPicker.new().setup(("Take " if from_chest else "Store ") + nm,
 		"%d in the %s  ·  %d in the %s" % [have, "chest" if from_chest else "pack", dst.count(id), "pack" if from_chest else "chest"],
-		mx, "Take" if from_chest else "Store", -1, "Your pack is full." if from_chest else "The chest is full.")
+		mx, "Take" if from_chest else "Store", -1, p.inv.full_text(id) if from_chest else "The chest is full.")
 	qp.cancelled.connect(func(): show_home({}, {"key": ("chest:" if from_chest else "pack:") + id, "idx": src.ids().find(id)}))
 	qp.confirmed.connect(func(q: int):
 		var list := src.ids()

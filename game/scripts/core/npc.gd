@@ -61,6 +61,7 @@ var clan := ""               # "bandit": an orphan no household could take, a de
 var father := -1
 var partner := -1            # npc id, Life.PLAYER_ID for the player, -1 none
 var children: Array = []     # npc ids
+var away := ""               # MIGRATE-18: the settlement this villager moved to (alive is false then; Migration); "" otherwise
 
 
 func cell() -> Vector2i:
@@ -118,6 +119,8 @@ func to_dict() -> Dictionary:
 	}
 	if depth != 0:
 		d.level = depth                  # MIN-A: written only below the surface
+	if away != "":
+		d.away = away                    # MIGRATE-18: written only for a villager who moved away
 	return d
 
 
@@ -133,6 +136,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	# save_version 1-3 had "hidden" (at home on the door step): World._move_indoors puts them inside
 	n.inv = Inventory.from_dict(d.inv)
 	n.pos = Vector2(float(d.pos[0]), float(d.pos[1]))
+	n.away = str(d.get("away", ""))                           # MIGRATE-18: older saves: nobody has moved away
 	n.depth = int(d.get("level", 0))                          # MIN-A: older saves and the surface: none
 	n.memory = d.memory.duplicate()
 	n.income_days = d.get("income_days", []).duplicate()         # older saves: no history yet

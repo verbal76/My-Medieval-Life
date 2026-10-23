@@ -37,6 +37,7 @@ func _init() -> void:
 	test_perennials()
 	test_household_seed()
 	test_seed_seller()
+	test_crop_view()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -846,3 +847,53 @@ func test_seed_seller() -> void:
 	check(farmer.inv.count("wheat_seed") == keep and food.inv.count("wheat_seed") == ws0 - keep, "%d wheat seed moved from the merchant's stock to the farmer" % keep)
 	check(farmer.coins == f0 - sp * keep and food.coins == m0 + sp * keep and w.total_coins() == total, "the farmer paid %d coins to the merchant; coins conserved" % (sp * keep))
 	check(not w.brain._plan_buy_seed(farmer), "with seed_keep in hand the farmer buys no more")
+
+
+## VIS-CROP-01: what the fields look like is read from their state and never changes it. Every cell of a field has the
+## same ground (the tilled-soil set) whatever its state, so a part-sown field joins cleanly; CropView draws each sown
+## cell's plant by its growth (four stages), the ripe plant when ripe, and stubble on a manor field cut since it was
+## ripe and not sown again; bare tilled soil shows no plant.
+func test_crop_view() -> void:
+	var w := new_world()
+	var pl := farm_land(w)
+	var p := w.player
+	p.inv.add("wheat_seed", 5)
+	p.inv.add("carrot_seed", 5)
+	var a := cell_in(pl, 2, 2)
+	var b := cell_in(pl, 3, 2)
+	var c := cell_in(pl, 4, 2)
+	for x in [a, b, c]:
+		p.stamina = p.stamina_cap()
+		w.farm.till(x, p)
+	var ground := []
+	for x in [a, b, c]:
+		ground.append(w.farm.tile_for(x))
+	w.farm.sow(a, "wheat", p)
+	w.farm.sow(b, "carrot", p)
+	check(w.farm.tile_for(a) == ground[0] and w.farm.tile_for(b) == ground[1], "a sown cell keeps the same ground tile as when it was only tilled")
+	var cv := CropView.new()
+	cv.setup(w)
+	var by_cell := func() -> Dictionary:
+		var d := {}
+		for e in cv.plants():
+			d[Vector2i(int(e[0]), int(e[1]))] = [int(e[2]), int(e[3])]
+		return d
+	var now: Dictionary = by_cell.call()
+	check(now.get(a) == [CropView.ROWS.wheat, 0] and now.get(b) == [CropView.ROWS.carrot, 0] and not now.has(c), "just sown: each crop's first plant; the tilled cell shows bare soil (%s)" % [now])
+	w.farm.cells[a].progress = 0.6
+	w.farm.cells[b].state = "ripe"
+	now = by_cell.call()
+	check(now.get(a) == [CropView.ROWS.wheat, 2] and now.get(b) == [CropView.ROWS.carrot, CropView.RIPE], "growth 0.6 shows the third stage, ripe the grown plant")
+	var snap := JSON.stringify(w.farm.cells.values())
+	cv.refresh()
+	check(JSON.stringify(w.farm.cells.values()) == snap, "drawing changes nothing in the field's state")
+	var f: Dictionary = w.fields[0]
+	w.set_field(f, "growing")
+	var stage0: int = cv.field_column(f)
+	w.set_field(f, "ripe")
+	var ripe: int = cv.field_column(f)
+	w.set_field(f, "tilled")
+	check(stage0 == 0 and ripe == CropView.RIPE and cv.field_column(f) == CropView.STUBBLE, "a manor field: first stage when sown, ripe wheat, then stubble once cut (%d, %d, %d)" % [stage0, ripe, cv.field_column(f)])
+	var fresh := {"state": "tilled"}
+	check(cv.field_column(fresh) == -1, "a field never yet ripe shows bare soil")
+	cv.free()

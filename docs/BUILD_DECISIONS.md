@@ -562,11 +562,15 @@ later; each module is built by the machinery every building already uses. Nothin
   site open on it; one room of each kind; the module's footprint (9x10) must touch a building of the
   property along at least 3 cells, must not cover any of its door steps, and its own door step must be
   clear and reachable (the existing check). No demolition: nothing earlier is changed.
-- **Connected = attached, not walk-through.** Rooms are separate buildings that stand against one
-  another (a party wall), each with its own street door, walls, roof (the one you are in fades) and
-  inside; navigation is the village A* through the doors. An interior doorway through the party wall is
-  not built: the stamps' furniture leaves no free cell on both sides, and cutting a wall needs new
-  art. Open question for the owner (see below).
+- **Connected = attached, with an inner doorway where the walls allow (ROOMS-18, owner OD-05).** Rooms are
+  separate buildings that stand against one another (a party wall), each with its own street door, walls,
+  roof (the one you are in fades) and inside. Where two rooms of the property stand side by side, a
+  doorway is cut through both walls (`Doorways`, derived from the buildings, never saved): the wall tile
+  goes and the room's own floor tile shows, so no new art is drawn. It needs the plain side wall and a free,
+  reachable floor cell just inside it on both sides, so it is made only where nothing is in the way, and
+  nothing earlier moves. A house's east wall is lined with furniture in every stamp (no doorway there; the
+  suggested slot for a room goes to the house's west side instead, `DOORWAY_PREFERENCE`), and rooms stacked
+  north and south have a yard between them and no shared wall.
 - **Costs, rent, footprint.** Materials: `workshop_cost` per kind (new kinds added, agent proposals).
   Ground: bought or leased per module at the land price by area (a 9x10 module is `plot_price`); a
   leased module pays its own weekly rent, `weekly_rent_share` of its worth (`module_price` per kind,
@@ -578,15 +582,19 @@ later; each module is built by the machinery every building already uses. Nothin
   them. Other modules have stations only.
 - **No profession lock-in.** No code ties a building kind to a job or skill; stations are used by
   type, so a house can hold a smithy, kitchen and bakehouse together.
+- **Survey plots (ROOMS-18, village generator v8).** The two plots the manor sells lie on open ground
+  north-east of the village in new worlds (plot0 at 73,11 and plot1 at 91,12, each with a lane to the road),
+  so rooms fit on all four sides (a treed side waits for the trees to be felled). A world saved before keeps
+  its plots at the old sites (`legacy_plots`), with everything on them; see `docs/DECISIONS.md`.
+- **The chapel (DVW-B3-CHAPEL, village generator v9).** A chapel (the small house stamp, no new art) at (79, 29) east of
+  Mill Road, a lane to the crossing at (88, 43), and a fenced 8 x 7 church plot at (70, 32); see `docs/DECISIONS.md` and INT-225..227.
+  Where the first site (the open ground near (30, 30)) was needed by the fixtures that place a house there, the chapel stands elsewhere.
 - **Not done.** NPC households do not add modules (they split instead); modules are not drawn with
-  their own sign or name beyond the building's name. The two survey plots are boxed in by roads and
-  houses (plot 0 has room for one module to its west or north, plot 1 for none), so modules want open
-  ground: place the first house in the open. Moving the plots or widening the lanes belongs to village
-  polish (`tools/build_village.py`), not done here.
+  their own sign or name beyond the building's name.
 - **Saves.** `estate` is a new optional key on parcels; saves from before load with each parcel its own
   property, so `SAVE_VERSION` stays 14 (tested with an estate-less save).
-- **Open question for the owner:** interior doorways between rooms (needs a wall-opening art tile or a
-  redrawn stamp), and whether the survey plots should be relaid to leave room for rooms.
+- **Answered (owner 2026-10-23, OD-05):** inner doorways between joined rooms, built from the existing wall
+  art, and the two survey plots relaid onto open ground for new worlds (existing saves keep theirs).
 
 ## Player businesses: the market stall and real demand (PL1-10 stages 1 and 2)
 
@@ -709,13 +717,13 @@ The optional path of the owner's living-world intent: the player can farm on gro
 - **Tilling.** One cell a Use, any shape: each tilled cell is a record in `Farming.cells`, not a rectangle of `World.fields`, so the farmers' fields, their owners and theft rules are untouched and nothing of the player's can be cut or stolen by a villager. By hand: 7 s and 80 stamina a cell (a very tiring crawl: it needs 80 stamina to begin, about 10 s of regeneration between cells); with the hand plough: 2.5 s and 25 stamina. Stamina regenerates 8 a second, so only a cost this large is felt. The plough is the item `plough` (tool `plough`, 150 cells of wear), crafted at the workbench from 4 planks and 2 iron bars (`craft_plough`, Crafting 1; the carpenter's workbench in the village, or a workshop's). It pulls by the player: no horse or ox exists in the game, so **draught animals are deferred** (a cow from a pen could be one later). Its icon is the survival pack's hoe: the pack has no plough.
 - **Drawing.** A field cell is drawn with the pack's tilled, growing or ripe field tile, closed at the edges of the field's shape (a 4-neighbour version of the edge rule the village generator uses). All crops look alike (wheat-like): the paid atlas has one crop tile set. Cozy Farm's crop sheets are not used yet.
 - **Crops and seasons.** Wheat (the existing item), carrots, potatoes and herbs (the herb crop yields the wild flower the sage buys; its seed is "herb seed") because their icons exist (Cozy Farm `items.png` and `seeds.png`, cut by `tools/import_game_assets.py`). A sown cell grows by 1 / (days x 24) an hour times the season's rate (`season_rate`: spring and summer 1, autumn 0.5, winter 0), ripe at 1, so a spring crop is ripe in `days` days, an autumn one in twice that and a late autumn one waits for spring; sowing in winter is refused. The calendar's seasons are 2 game days (24 real minutes) long, so a season holds one wheat crop. The manor's fields keep `field_grow_days` on purpose: making the village's grain seasonal would risk its food supply (the season hook in `World.field_grow_days` is left for the economy work). No watering, weather or pests: they add no decision the seasons do not, so **watering is not built**.
-- **Harvest and seed.** A ripe cell gives its yield (wheat, carrots, potatoes 3, herbs 2) and 1 seed back (seed saving), so a field replants itself. Seeds are bought from the farmers and the food stall's merchant at a standing offer of 2 coins each in the trade window (the seller gets the coins, the seed is not taken from their stock: a deliberate simplification, recorded in `resources.json`). A starting player can till by hand with no tool, buy five seeds for 10 coins and begin.
+- **Harvest and seed.** A ripe cell gives its yield (wheat, carrots, potatoes 3, herbs 2) and 1 seed back (seed saving), so a field replants itself. Seeds are bought from the farmers and the food stall's merchant at 2 coins each in the trade window, **from the seller's own stock** (since Build 13, MERCH-01: `Farming.buy_seed_item`; a seller with less than asked sells nothing, the coins go to the seller; the earlier "standing offer, not taken from their stock" simplification is gone; corrected B18-DP-04, `docs/build18/FARMING_RETAINED_DEFERRED.md`). A starting player can till by hand with no tool, buy five seeds for 10 coins and begin.
 - **Animals.** The player fences a pen of one species on held ground from planks (1 plank per 3 fence cells: 5 for a chicken pen, 8 for a cow pen) with the plot window's "Fence a ... pen" (in front of the player, gate in the middle of the top side, the village pens' layout and the Cozy Farm fence tiles). The pen is a `Fauna.pens` entry flagged `player` (owner the player), so hunger, the trough, breeding, the life stages and old age are the village's own rules unchanged. Stock is bought at a manor pen's gate (`Buy a young female hen`...): the animal comes out of the keeper's pen (never a newborn, never below the breeding stock `keep`) into the player's, and the coins go to the keeper: real stock, real coins. Prices: chicken 8, sheep 20, pig 18, cow 40, a juvenile 60 percent. Buying from the caravan and trapping rabbits are **deferred** (trapping does not fit yet: wild rabbits are hunted with weapons, and a trap needs its own item and a place to set it). Water is not a separate need: the trough is the feed, as in the village.
 - **Products.** Each morning a well-fed adult hen (an egg a day), cow (2 milk a day) or sheep (1 wool every 4 days) in the player's pens makes its product, kept in the pen up to 8 of each until the player collects it at the gate. Slaughter gives meat and hide as before. Eggs, milk, cheese, carrots and potatoes are bought by the cook and the food merchant, wool and cloth by the goods merchant (`NPCBrain.BUYS`/`OUTLETS`), so they sell at the market and, through the same needs, at the player's stall (INT-129); the sage already bought flowers. New recipes: `press_cheese` (3 milk to cheese), `bake_egg_bread` (2 wheat and an egg to 2 bread), `weave_cloth` (2 wool to cloth) and `sew_bandages` (cloth to 3 bandages: bandages are now craftable, so their `start_kit_only` exception is gone from `resources.json`). No villager makes any of it, so the village's economy is unchanged until the player sells; the economy simulations were not re-run for this change (agent proposal: a later balance pass should look at egg and milk prices).
 - **Persistence.** `World.to_dict()["farm"]` holds the cells (crop, state, progress) and the pen counter; the player's pens are saved whole in `Fauna.to_dict()["player_pens"]` (they are not map data) and `Animal.next_product` with each animal. Old saves have none of these and load with no farm; no `SAVE_VERSION` bump, because nothing earlier is reinterpreted.
 - **Interface.** Targets in `main._find_target` through the existing Use and cycle (Q/Tab, D-pad, tap): harvest and sow (one choice a seed kind carried), dig out, grub up, and tilling (the last choice, or the first with the plough in hand), plus Collect and Buy at the pen gates; a growing cell is an info line. The wiki has "Farming: your own field", "How do I start a farm?" and "How do I keep animals?" (`wiki_farming.gd`); the old "Hand plough and farming by the player" not-yet entry is now "Draught animals, coops, watering, trapping and hired farmhands".
 - **Deferred, on purpose.** Draught animals; coops and shelters as separate roofed buildings (a pen's fence is the shelter); hired farmhands; watering and weather; trapping rabbits; buying animals from the caravan; a Farming skill; per-crop art; harvesting several cells at once or in Gather mode; taking a pen down. None is needed for the loop (clear, till, sow, harvest, keep, sell), and each would add a rule or art the owner has not decided.
-- **Open questions for the owner.** Should the economy numbers (a cell of wheat is worth about 9 coins a spring against a villager farmer's much larger manor fields) be balanced against wages? Should a Farming skill gate or speed the work? Should seed be taken from the sellers' stock?
+- **Open questions for the owner.** Should the economy numbers (a cell of wheat is worth about 9 coins a spring against a villager farmer's much larger manor fields) be balanced against wages? Should a Farming skill gate or speed the work? Should seed be taken from the sellers' stock? (Answered by Build 13: it is.) Owner B18-DP-04 (2026-10-23): no Farming skill gate; skills may only speed work. The retained and deferred list of PL2-015 is `docs/build18/FARMING_RETAINED_DEFERRED.md`.
 
 
 ## Wildlife breeding refuges (WR-01; owner directive 2026-10-19 Part II, rule 018; the numbers are agent proposals, provisional)

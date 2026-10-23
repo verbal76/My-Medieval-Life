@@ -74,14 +74,14 @@ class ResourceRegistryTest(unittest.TestCase):
         s = cr.summary(self.ctx)
         self.assertEqual(s["no_source"], [])                # Build 13: the gold seam gives gold ore a source; B14: apple trees give apples
         self.assertEqual(s["missing_recipes"], [])          # so smelt_gold and forge_gold_ring can be made
-        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "iron_seam", "open_pit", "prospect_clue", "stone_seam", "tunnel_rock"])
+        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "horse_pen", "iron_seam", "open_pit", "prospect_clue", "stone_seam", "tunnel_rock"])
         # Build 13: scarce by design; the caravan brings no gold. MIN-C: a clue's samples are finite by design (new
         # ground to read is MIN-D's). MIN-E: a pit's earth is its finite ground; nothing brings topsoil, dirt or spoil
-        self.assertEqual(s["finite_no_replacement"], ["gold_seam", "open_pit", "prospect_clue", "tunnel_rock"])
+        self.assertEqual(s["finite_no_replacement"], ["gold_seam", "horse_pen", "open_pit", "prospect_clue", "tunnel_rock"])
         self.assertIn(("log", "plank", "pickaxe"), s["chains"])
         # PL2-013: the home food table makes bread (knead_flatbread, 3 wheat), so bread is a chain now
         self.assertIn(("wheat", "bread"), s["chains"])
-        self.assertEqual(s["not_gather"], ["chicken_pen", "cow_pen", "pig_pen", "player_field", "player_pen", "sheep_pen"])   # PL2-015: the player's field and pens are worked by Use, not Gather mode
+        self.assertEqual(s["not_gather"], ["chicken_pen", "cow_pen", "horse_pen", "pig_pen", "player_field", "player_pen", "sheep_pen"])   # PL2-015: the player's field and pens are worked by Use, not Gather mode
 
     def test_both_directions_agree_with_recipes(self):
         for r, rec in self.ctx["recipes"].items():

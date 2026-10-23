@@ -59,6 +59,7 @@ func _init() -> void:
 	test_polish_work_looks()
 	test_polish_game_leftovers()
 	test_field_edges()
+	test_door_view()
 	test_work_has_purpose()
 	test_no_child_pickpocket()
 	test_credits()
@@ -113,7 +114,7 @@ func test_population() -> void:
 			villagers += 1
 			jobs[n.job] = int(jobs.get(n.job, 0)) + 1
 			check(w.buildings.has(n.home), "%s has a home" % n.name)
-	check(villagers == 100, "100 villagers (got %d)" % villagers)
+	check(villagers == 100 + Population.SERVICE_JOBS.size() + Population.CLERGY.size(), "100 villagers, the tailor and barber, the preacher and the church assistant (got %d)" % villagers)
 	check(w.alive_count("bandit") == int(GameData.b("bandits")), "bandits present")
 	print("population: ", jobs)
 
@@ -299,6 +300,7 @@ func test_government() -> void:
 	payer.coins = exempt + 1000
 	for case in [[ob * 5.0, 0.12], [ob * 20.0, 0.06], [ob * 40.0, 0.0]]:
 		w.treasury = int(case[0])
+		w.tax_state = {}                 # DVW-B5: each case is a settled band (a change otherwise waits for its announcement)
 		payer.coins = exempt + 1000
 		var t0 := w.treasury
 		w.last_reeve_day = -1
@@ -308,6 +310,7 @@ func test_government() -> void:
 		check(payer.coins == exempt + 1000 - int(1000 * float(case[1])), "tax rate %d%% when the treasury holds %d days (paid %d)" % [int(float(case[1]) * 100), int(float(case[0]) / ob), exempt + 1000 - payer.coins])
 	# no double business in one day
 	w.treasury = int(ob * 5.0)
+	w.tax_state = {}
 	payer.coins = exempt + 1000
 	w.minutes = floor(w.minutes / 1440.0) * 1440.0 + 16.9 * 60.0
 	w.last_hour = int(w.minutes / 60.0)
@@ -332,6 +335,7 @@ func test_government() -> void:
 	w.kill(reeve, "test")
 	check(w.treasury == tr, "the treasury is untouched when the reeve dies")
 	w.last_reeve_day = -1
+	w.tax_state = {}
 	payer.coins = exempt + 1000
 	b.reeve_day()
 	check(payer.coins < exempt + 1000, "taxes are still collected after the reeve's death")
@@ -447,7 +451,7 @@ func test_households_and_work() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
 	var kids := w.alive_count("child")
-	check(w.granary.count("wheat") == ceili(((100 - kids) + kids * float(GameData.b("child_food_factor"))) * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food, children weighted (%d)" % w.granary.count("wheat"))
+	check(w.granary.count("wheat") == ceili(((100 + Population.SERVICE_JOBS.size() + Population.CLERGY.size() - kids) + kids * float(GameData.b("child_food_factor"))) * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food, children weighted (%d)" % w.granary.count("wheat"))
 	check(w.households[5].pantry.count("wheat") == 2 * w.households[5].members.size(), "each household brought 2 wheat a head")
 	# inheritance: food to the pantry, coins and goods to the heir; nothing lost or made
 	var h := -1
@@ -1111,6 +1115,10 @@ func test_child_food() -> void:
 		meat += inv.count("meat")
 		logs += inv.count("log")
 	pts += mini(meat, logs) * 120.0
+	var all_wheat := 0
+	for inv: Inventory in invs:
+		all_wheat += inv.count("wheat")
+	pts -= float(all_wheat % NPCBrain.pottage_batch()) * (120.0 - float(GameData.item("wheat").food))      # an odd grain is eaten raw, not cooked in a pot (store_points)
 	for f in NPCBrain.FOOD:
 		pts += w.table_food(f) * (120.0 if f == "wheat" else float(GameData.item(f).food))
 	pts += w.manor_work.food_points()
@@ -1128,6 +1136,7 @@ func test_child_food() -> void:
 	for c in w.containers:
 		if c.kind == "table":
 			c.inv.items.clear()
+	_starve_neighbours(w)                  # the traders buy food only for settlements that lack it
 	var reserve_days := float(GameData.b("caravan_food_reserve_days"))
 	var people := w.alive_count() - w.alive_count("bandit")
 	var between := (b.village_day_food() * reserve_days + people * 72.0 * reserve_days) / 2.0
@@ -1142,6 +1151,21 @@ func test_child_food() -> void:
 	b.caravan()
 	check(int(w.stats.get("exported_pottage", 0)) == 0, "and holds the food back below it")
 	w.dispose()
+
+
+## The neighbouring settlements without a crumb of food, their books reopened: their traders then want food (a test of the
+## village's own food-reserve rule needs a buyer).
+func _starve_neighbours(w: World) -> void:
+	for s: OffMapSettlement in w.regions.list:
+		for h in s.hh:
+			for f in OffMapSettlement.rules().foods:
+				h.pantry.erase(f)
+		for k in s.biz:
+			for f in OffMapSettlement.rules().foods:
+				s.biz[k].stock.erase(f)
+		for f in OffMapSettlement.rules().foods:
+			s.gov.granary.erase(f)
+		s.reopen_books()
 
 
 ## Paid work for the player: a villager with work and the wage offers it when asked; the player
@@ -1247,7 +1271,7 @@ func test_hiring() -> void:
 	w2.dispose()
 
 
-## A side quest that teaches a skill: the tanner shows the scroll, and two hides raise Crafting to
+## A side quest that teaches a skill: the tanner shows the scroll, and two hides raise Tanning to
 ## level 2, which unlocks leather armour.
 func test_skill_quest() -> void:
 	var w := new_world()
@@ -1259,21 +1283,21 @@ func test_skill_quest() -> void:
 	check(w.quests.offer_of(tanner).get("id", "") == "the_tanners_craft", "a tanner short of hides offers to teach")
 	check(w.quests.marker(tanner) == "skill", "the teacher shows the skill scroll")
 	var rec: Dictionary = GameData.recipes["leather_armor"]
-	check(p.level("crafting") < int(rec.level), "leather armour is out of reach before")
+	check(p.level("tanning") < int(rec.level), "leather armour is out of reach before")
 	var q: Dictionary = w.quests.accept(tanner)
 	p.inv.add("hide", 2)
 	var coins0 := w.total_coins()
 	var hides0 := tanner.inv.count("hide")
 	check(w.quests.complete(q) == 0 and tanner.inv.count("hide") == hides0 + 2 and not p.inv.has("hide"), "the hides go to the tanner")
-	check(p.level("crafting") == 2 and p.level("crafting") >= int(rec.level), "the player's Crafting is now level 2: leather armour can be made")
-	check(w.quests.last_learned.contains("Crafting is now level 2") and w.quests.last_learned.contains("leather armour"), "what was learned is said: %s" % w.quests.last_learned)
+	check(p.level("tanning") == 2 and p.level("tanning") >= int(rec.level), "the player's Tanning is now level 2: leather armour can be made")
+	check(w.quests.last_learned.contains("Tanning is now level 2") and w.quests.last_learned.contains("leather armour"), "what was learned is said: %s" % w.quests.last_learned)
 	check(w.total_coins() == coins0, "teaching makes no coins")
 	# a player who already knows it is not offered it
 	w.quests.offers.clear()
 	tanner.inv.remove("hide", tanner.inv.count("hide"))
 	w.quests.refresh()
 	check(w.quests.offer_of(tanner).is_empty(), "a player at level 2 is not offered the lesson")
-	check(not p.raise_to("crafting", 2) and p.raise_to("smithing", 3) and p.level("smithing") == 3 and p.xp_into_level("smithing").x == 0, "teaching raises a skill to the start of a level, never down")
+	check(not p.raise_to("tanning", 2) and p.raise_to("smithing", 3) and p.level("smithing") == 3 and p.xp_into_level("smithing").x == 0, "teaching raises a skill to the start of a level, never down")
 	w.dispose()
 
 
@@ -1964,7 +1988,7 @@ func test_helpers() -> void:
 	var house := _player_house(w)
 	p.home = str(house.id)
 	p.coins = 400
-	var rect := _cleared(w, "smithy", Vector2i(80, 15))
+	var rect := _cleared(w, "smithy", _wood_spot(w, "smithy"))   # ground clear of the plots, wherever the layout puts it
 	var site := c.place("smithy", rect, World.PLAYER)
 	var cost: Dictionary = site.site.cost
 	for id in cost:
@@ -2626,7 +2650,7 @@ func test_save_round_trip() -> void:
 	lay.player.home = "house_plot0"
 	lay.player.plots = ["plot0"]
 	lay.player.pos = [98.5, 80.5]
-	lay.trees.append({"x": 91, "y": 23, "trunk": 459, "top": 1562, "bottom": 1782, "state": "grown", "regrow": 0.0})
+	lay.trees.append({"x": 75, "y": 13, "trunk": 459, "top": 1562, "bottom": 1782, "state": "grown", "regrow": 0.0})
 	var w8 := World.new()
 	var m8 := VillageMap.load_default()
 	w8.load_dict(m8, lay)
@@ -2637,7 +2661,7 @@ func test_save_round_trip() -> void:
 	check(int(h0.x) == int(mp0.x) and int(h0.y) == int(mp0.y) and int(h0.door[1]) == int(mp0.door[1]) and w8.player.home == "house_plot0", "the house built on it moves with it and stays the player's home")
 	check(Rect2(float(p0.x), float(p0.y), 9.0, 10.0).has_point(w8.player.pos), "the player standing in it moves with it")
 	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.property.for_sale(w8.plot("plot1")), "an unsold plot moves too (the manor's, for sale)")
-	check(not w8.trees.any(func(t): return int(t.x) == 91 and int(t.y) == 23), "trees the generator cleared from the new plots are gone from the old save")
+	check(not w8.trees.any(func(t): return int(t.x) == 75 and int(t.y) == 13), "trees the generator cleared from the new plots are gone from the old save")
 	check(m8.is_solid(Vector2i(91, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
 	var w9 := World.new()
 	w9.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w8.to_dict())))
@@ -3070,24 +3094,26 @@ func test_long_run_economy() -> void:
 	var step: Dictionary = wc.plan.filter(func(s): return s.k == "do")[0]
 	check(int(step.args.vendor) == gm.id and wc.doing == "buying a new axe", "B7-016: a woodcutter without an axe buys it from the goods merchant first")
 	w.dispose()
-	test_caravan_purse()
+	test_caravan_traders()
 
 
-## B7-014: the caravan is a finite regional market. It holds a purse (`caravan_float` at the start, plus
-## `caravan_allowance` a day up to the float, plus what the village pays it for ore and stone) and never
-## pays out a coin it does not hold.
-func test_caravan_purse() -> void:
+## B7-014 (ECON-P1.3, owner 2026-10-23): the caravan is the neighbouring settlements' traders. They hold coins in their own
+## tills (no purse of the caravan's, no allowance, no float, no ceiling) and never pay out a coin they do not hold.
+func test_caravan_traders() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
 	w.player.pos = FAR_GUARDS
-	var float_coins := int(GameData.b("caravan_float"))
-	# what one visit adds to the purse: the allowance for the days between visits, less as the village's coins near the ceiling
-	var visit := func() -> int:
-		var ceiling := float(GameData.b("caravan_ceiling_per_head")) * float(w.alive_count() - w.alive_count("bandit"))
-		return roundi(float(GameData.b("caravan_allowance")) * int(GameData.b("caravan_every_days")) * clampf(1.0 - float(w.total_coins()) / ceiling, 0.0, 1.0))
+	var all := func() -> int: return w.total_coins() + w.regions.coins() - (w.coin_sources + w.regions.net_paid_by_village())       # the world's coins less what came from outside it
+	var tills := func() -> int:
+		var n := 0
+		for s: OffMapSettlement in w.regions.list:
+			n += int(s.trader().till)
+		return n
 	var smiths: Array = w.npcs.filter(func(o): return o.alive and o.job == "smith")
-	var base := w.total_coins() - w.coin_sources
-	check(w.caravan_purse == float_coins, "B7-014: a new world's caravan holds its float (%d)" % float_coins)
+	var base: int = all.call()
+	var tills0: int = tills.call()
+	check(tills0 > 0 and w.get("caravan_purse") == null, "B7-014: a new world's caravan is the traders, with %d coins in their tills and no purse of its own" % tills0)
+	check(not GameData.balance.has("caravan_allowance") and not GameData.balance.has("caravan_coins"), "B7-014: no allowance and no per-visit cap in the data")
 	# surplus to sell: every smith holds 12 iron bars (cap 8, so 8 for sale at 11 coins each)
 	var stock := func() -> void:
 		for s: NPC in smiths:
@@ -3100,83 +3126,68 @@ func test_caravan_purse() -> void:
 	var coins0 := w.total_coins()
 	b.caravan()
 	var paid := w.total_coins() - coins0
-	check(paid > 0 and paid <= int(GameData.b("caravan_coins")) and w.caravan_purse == float_coins - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins) out of its purse" % paid)
-	check(w.total_coins() - w.coin_sources == base, "B7-014: coins are conserved")
+	var lux := int(w.stats.get("luxury_coins", 0))          # DVW-B3-LUX: what villagers paid the traders for luxuries on the same visit
+	check(paid + lux > 0 and paid <= tills0 and int(tills.call()) == tills0 - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins, %d of them taken back for luxuries) out of the traders' tills" % [paid + lux, lux])
+	check(all.call() == base, "B7-014: coins are conserved, the settlements' included")
 	# B7-007: the mine's raw output is not carried away, whatever the merchants hold above half their caps
 	var raws: Array = w.npcs.filter(func(o): return o.alive and b.buy_role(o) == "merchant_raw")
 	for o: NPC in raws:
 		for id in NPCBrain.NOT_EXPORTED:
 			o.inv.add(id, 20)
 		o.inv.add("plank", 20)
-	w.caravan_purse = float_coins
+	w.regions.fund_only("higham", 400)
+	base = all.call() + 0
 	var raw0 := NPCBrain.NOT_EXPORTED.map(func(id): return int(w.stats.get("exported_" + id, 0)))
 	var plank0 := int(w.stats.get("exported_plank", 0))
 	b.caravan()
 	var raw1 := NPCBrain.NOT_EXPORTED.map(func(id): return int(w.stats.get("exported_" + id, 0)))
 	check(raw0 == raw1 and int(w.stats.get("exported_plank", 0)) > plank0, "B7-007: the caravan buys the merchants' planks but none of the mine's ore, coal or stone")
-	w.caravan_purse = float_coins - paid
-	# an empty purse buys nothing; the allowance refills it a little each visit
-	w.caravan_purse = 0
+	# an empty till buys nothing
+	w.regions.fund_only("higham", 0)
 	stock.call()
 	var exp0 := int(w.stats.get("exported_iron_bar", 0))
 	var src0 := w.coin_sources
-	var added: int = visit.call()
+	var lux0 := int(w.stats.get("luxury_coins", 0))
 	b.caravan()
+	var lux1 := int(w.stats.get("luxury_coins", 0)) - lux0         # DVW-B3-LUX: villagers' luxury purchases are the only coins that moved
+	check(int(w.stats.get("exported_iron_bar", 0)) == exp0 and w.coin_sources == src0 - lux1, "B7-014: traders with nothing in their tills buy nothing (no allowance refills them)")
+	# a till for two bars is shared by two smiths, not given to the first
 	var each := maxi(1, roundi(GameData.value("iron_bar") * 0.8))
-	var bought := int(w.stats.get("exported_iron_bar", 0)) - exp0
-	check(added > 0 and bought == added / each and w.coin_sources - src0 == bought * each and w.caravan_purse == added - bought * each, "B7-014: with an empty purse it buys only what one visit's allowance (%d) pays for (%d bars)" % [added, bought])
-	# at the ceiling the region adds nothing: the village's coins cannot pass it
-	w.caravan_purse = 0
-	w.treasury += int(GameData.b("caravan_ceiling_per_head")) * 100
-	stock.call()
-	exp0 = int(w.stats.get("exported_iron_bar", 0))
-	b.caravan()
-	check(int(visit.call()) == 0 and w.caravan_purse == 0 and int(w.stats.get("exported_iron_bar", 0)) == exp0, "B7-014: at the ceiling the caravan adds nothing to its purse and buys nothing")
-	w.treasury -= int(GameData.b("caravan_ceiling_per_head")) * 100
-	# the allowance fills the purse no higher than the float
-	w.caravan_purse = float_coins - 1
+	w.regions.fund_only("higham", 2 * each)
 	for s: NPC in smiths:
 		s.inv.remove("iron_bar", s.inv.count("iron_bar"))
-	b.caravan()
-	check(w.caravan_purse == float_coins, "B7-014: the purse never fills past the float")
-	# a purse for two bars is shared by two smiths, not given to the first
-	added = visit.call()
-	w.caravan_purse = 2 * each - added
 	stock.call()
 	b.caravan()
 	var sold := smiths.map(func(s): return 12 - s.inv.count("iron_bar"))
-	check(smiths.size() >= 2 and sold.all(func(n): return n <= 1) and sold.reduce(func(a, c): return a + c, 0) == 2, "B7-014: a purse for two bars is shared by two smiths (%s)" % str(sold))
-	# what it sells the village comes back to its purse first
+	check(smiths.size() >= 2 and sold.all(func(n): return n <= 1) and sold.reduce(func(a, c): return a + c, 0) == 2, "B7-014: a till for two bars is shared by two smiths (%s)" % str(sold))
+	# what it sells the village comes back to the traders' tills
 	for d in w.deposits:
 		d.amount = 0
 	for s: NPC in smiths:
 		s.inv.remove("iron_ore", s.inv.count("iron_ore"))
 		s.coins = 120
-	w.caravan_purse = 0
-	stock.call()
+	w.regions.fund_only("higham", 0)
+	var all1: int = all.call()
 	var cs0 := w.coin_sources
-	var all1 := w.total_coins() - w.coin_sources
 	var out0 := int(w.stats.get("caravan_coins_out", 0))
 	var in0 := int(w.stats.get("caravan_coins_in", 0))
-	added = visit.call()
 	b.caravan()
 	var spent: int = int(w.stats.get("caravan_coins_out", 0)) - out0
 	var got: int = int(w.stats.get("caravan_coins_in", 0)) - in0
-	check(spent > 0 and got <= spent + added and w.coin_sources - cs0 == got - spent and w.total_coins() - w.coin_sources == all1, "B7-014: imports (%d coins) refill the purse and pay for the smiths' bars first (%d); conserved" % [spent, got])
-	check(w.caravan_purse == spent + added - got, "B7-014: the purse is what it took in and was allowed, less what it paid")
-	# saving: the purse is kept, and an older save's caravan arrives with its float
-	w.caravan_purse = 321
+	check(spent > 0 and w.coin_sources - cs0 == got - spent and all.call() == all1, "B7-014: imports (%d coins) go into the traders' tills before they pay for the bars (%d); conserved" % [spent, got])
+	# saving: the settlements are kept, and an older save's caravan purse becomes the traders' coins
 	var saved: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
-	check(int(saved.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 9 and int(saved.caravan_purse) == 321, "B7-014: the purse is saved (save_version %d)" % World.SAVE_VERSION)
+	check(int(saved.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 9 and saved.has("regions") and not saved.has("caravan_purse"), "B7-014: the traders' tills are saved with the settlements (save_version %d)" % World.SAVE_VERSION)
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), saved)
-	check(w2.caravan_purse == 321 and w2.total_coins() == w.total_coins(), "B7-014: and loaded, no coin changed")
+	check(w2.regions.coins() == w.regions.coins() and w2.total_coins() == w.total_coins(), "B7-014: and loaded, no coin changed")
 	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 	old.save_version = 8
-	old.erase("caravan_purse")
+	old.erase("regions")
+	old["caravan_purse"] = 1500
 	var w8 := World.new()
 	w8.load_dict(VillageMap.load_default(), old)
-	check(w8.caravan_purse == float_coins and w8.total_coins() == w.total_coins(), "B7-014: a version 8 save's caravan arrives with its float; every village coin kept")
+	check(w8.regions.migrated_coins == 1500 and w8.total_coins() == w.total_coins(), "B7-014: a version 8 save's caravan purse becomes the traders' own; every village coin kept")
 	w2.dispose()
 	w8.dispose()
 	w.dispose()
@@ -3634,10 +3645,66 @@ func test_doorways() -> void:
 	check(cut_st.is_empty(), "every workstation can be reached %s" % [cut_st])
 
 
+## VIS-DOOR-01: nobody walks under a closed door. Every wooden doorway is found with the cell outside it; no tile
+## of the layers drawn over the characters is left on a doorway; a door opens (dark) while someone steps through it,
+## stays open while several pass and for a moment after, then shows closed again; someone going into a building
+## whose inside is hidden darkens more the further in, and is back to normal outside; and all of it only reads the
+## world: nobody's position, path or the map's walkable cells change.
+func test_door_view() -> void:
+	var w := new_world()
+	var view := MapView.new()
+	var above := Node2D.new()
+	view.build(w.map, above, null)
+	var dv := DoorView.new()
+	view.add_child(dv)
+	dv.setup(w, view, null)
+	check(dv.doors.size() >= 20, "the wooden doorways are found (%d)" % dv.doors.size())
+	var left := []
+	for d in dv.doors:
+		for layer in view.above_layers:
+			if view.tile_value(layer, d.cell) >= 0:
+				left.append(d.cell)
+		check(not w.map.is_solid(d.step) and not w.map.is_solid(d.cell) and w.place_of(Vector2(d.step) + Vector2(0.5, 0.5)) != d.building,
+			"%s's doorway %s opens onto %s, outside and walkable" % [d.building, d.cell, d.step])
+	check(left.is_empty(), "no door is drawn over the people in its doorway (%s)" % [left])
+	var d: Dictionary = dv.doors[0]
+	var outer: Vector2 = Vector2(d.step) + Vector2(0.5, 0.5) + (d.out as Vector2) * 0.5
+	var at := func(depth: float) -> Vector2: return outer - (d.out as Vector2) * depth
+	check(is_equal_approx(DoorView.depth(d, at.call(1.0)), 1.0) and DoorView.depth(d, at.call(1.0) + Vector2(d.out.y, d.out.x) * 2.0) < 0.0, "depth: 1 on the threshold; off to the side is not in the doorway")
+	var npc_pos := []
+	for n: NPC in w.npcs:
+		npc_pos.append(n.pos)
+	var solid0 := w.map.is_solid(d.cell)
+	var s := Sprite2D.new()
+	dv.update([[at.call(0.3), s]], 0.1)
+	check(not dv.is_open(d.cell) and s.self_modulate == Color.WHITE, "someone only on the step: the door stays closed, they look as ever")
+	dv.update([[at.call(0.8), s]], 0.1)
+	var half: Color = s.self_modulate
+	dv.update([[at.call(0.95), s]], 0.1)
+	check(dv.is_open(d.cell) and half.v < 1.0 and s.self_modulate.v < half.v and s.self_modulate.a < half.a, "stepping in: the door opens dark and they darken and fade the further in")
+	var s2 := Sprite2D.new()
+	dv.update([[at.call(1.5), null], [at.call(0.7), s2]], 0.1)
+	check(dv.is_open(d.cell), "one inside, another following: the door stays open")
+	dv.update([[at.call(-1.0), s], [at.call(-1.0), s2]], 0.1)
+	check(dv.is_open(d.cell) and s.self_modulate == Color.WHITE and s2.self_modulate == Color.WHITE, "both back outside: they look normal, the door is not shut on them at once")
+	for k in 5:
+		dv.update([], 0.1)
+	check(not dv.is_open(d.cell), "nobody there for %.1f s: the door shows closed again" % DoorView.HOLD)
+	var same := w.map.is_solid(d.cell) == solid0
+	for i in w.npcs.size():
+		same = same and w.npcs[i].pos == npc_pos[i]
+	check(same, "the doorways change nothing in the world: positions and walkable cells as they were")
+	s.free()
+	s2.free()
+	view.free()
+	above.free()
+
+
 ## Crops end cleanly inside every field (B8-017: the right and bottom edges showed half plants because
 ## one left-edge tile was drawn on every cell). No field art lies outside a field rectangle, each
-## field cell draws from its state's 4x4 edge set, and the edge cells use the edge tiles: for the
-## village's fields and for fields of other sizes, in every state.
+## field cell draws its ground from the tilled-soil 4x4 edge set whatever its state (VIS-CROP-01: the
+## plants are drawn over it by CropView), and the edge cells use the edge tiles: for the village's
+## fields and for fields of other sizes, in every state.
 func test_field_edges() -> void:
 	var w := new_world()
 	var m: VillageMap = w.map
@@ -3661,8 +3728,12 @@ func test_field_edges() -> void:
 			if not rects.any(func(r: Rect2i): return r.has_point(cell)):
 				stray += 1
 	check(stray == 0 and painted == rects.reduce(func(a, r: Rect2i): return a + r.size.x * r.size.y, 0), "generated field art lies exactly on the field rectangles (%d stray of %d)" % [stray, painted])
+	var ground := {}                    # tile id -> true: the tilled-soil set every field cell's ground is drawn from
+	for row in 4:
+		for col in 4:
+			ground[int(m.data.tiles.field.tilled) + row * cols + col] = true
 	for state in ["tilled", "growing", "ripe"]:
-		var base := int(m.data.tiles.field[state])
+		var base := int(m.data.tiles.field.tilled)
 		var cells := {}
 		var on_tile := func(cell: Vector2i, kind: String, value: int):
 			if kind == "field":
@@ -3678,7 +3749,7 @@ func test_field_edges() -> void:
 					var got := int(cells.get(cell, -1))
 					var col := (got - base) % cols
 					var row := (got - base) / cols
-					check(sets.get(got, "") == state, "%s %s cell %s draws from the %s set" % [state, f.id, cell, state])
+					check(ground.has(got), "%s %s cell %s draws its ground from the tilled-soil set" % [state, f.id, cell])
 					check((i == 0) == (col == 1) and (i == int(f.w) - 1) == (col == 3) and (j == 0) == (row == 0) and (j == int(f.h) - 1) == (row == 2), "%s %s cell %s: edge tiles exactly on the edges" % [state, f.id, cell])
 	# any size: one cell, a strip, a block
 	for size in [Vector2i(1, 1), Vector2i(1, 5), Vector2i(7, 1), Vector2i(2, 2), Vector2i(3, 3), Vector2i(11, 6)]:

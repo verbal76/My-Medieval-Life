@@ -43,7 +43,7 @@ func _world(seed_value := 1) -> World:
 
 
 func _coins(w: World) -> int:
-	return w.total_coins() - w.coin_sources + w.caravan_purse
+	return w.total_coins() - w.coin_sources + w.regions.coins()
 
 
 func _st(w: World, k: String) -> int:
@@ -415,9 +415,17 @@ func _test_commissioned() -> void:
 
 # ---------------------------------------------------------------- saves ----------------------
 func _test_saves() -> void:
-	var w := _world(2)
+	var w: World = null
+	var h := {}
+	for sv in [2, 1, 3, 4]:                # ORE-PLACE-01 left seed 2 one body: the first seed with a clue to hit and miss
+		w = _world(sv)
+		h = _hit_clue(w)
+		if not h.is_empty():
+			break
+	check(not h.is_empty(), "a seed with a clue to hit and to miss for the save test")
+	if h.is_empty():
+		return
 	var dv := w.discovery
-	var h := _hit_clue(w)
 	var n := _miner(w)
 	dv.trial_dig(n, h.clue, h.miss, "shovel")
 	var d: Dictionary = dv.trial_dig(n, h.clue, h.hit, "shovel").found
@@ -426,7 +434,7 @@ func _test_saves() -> void:
 	w.treasury = 5000
 	w.manor_work.post_discovery()
 	var sd := w.to_dict()
-	check(int(sd.save_version) == 17, "no new save version (17)")
+	check(int(sd.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(sd)))
 	var d2 := w2.discovery.opened(str(h.clue.id))

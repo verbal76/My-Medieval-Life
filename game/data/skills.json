@@ -1,9 +1,10 @@
 {
   "format": "mml-skills/2",
-  "note": "The laid-out skill tree (PL2-005). Levels 1 to max_level; the xp to climb from level L to L+1 is step_base * L * (1 + step_growth * (L - 1)) (Skills.xp_for_level), so level 2 comes early and the top tiers take long play. A tier is {text, effects}: `text` is flavour or a plain unlock, `effects` are numbers the code reads through Skills.value (the highest tier reached that defines a key wins); the skills window and the wiki print the numbers from here, and recipes unlock by their own skill and level in recipes.json (listed under the tier automatically). Every key is read by game code (tests/skills_test.gd checks it). Saved xp keys are unchanged.",
+  "note": "The laid-out skill tree (PL2-005). Levels 1 to max_level; the xp to climb from level L to L+1 is step_base * L * (1 + step_growth * (L - 1)) (Skills.xp_for_level), so level 2 comes early and the top tiers take long play. A tier is {text, effects}: `text` is flavour or a plain unlock, `effects` are numbers the code reads through Skills.value (the highest tier reached that defines a key wins); the skills window and the wiki print the numbers from here, and recipes unlock by their own skill and level in recipes.json (listed under the tier automatically). Every key is read by game code (tests/skills_test.gd checks it). Saved xp keys are unchanged. `starts_from` (SKILL-TRADES-18): a skill that starts from another's experience once, for everyone, when a world is made or an older save is loaded (Skills.seed_trades); Carpentry, Masonry and Tanning start from Crafting, so no one loses progress. Law starts at 0 for everyone (LAW-SKILL).",
   "max_level": 10,
   "step_base": 100,
   "step_growth": 0.25,
+  "work_xp": {"note": "DVW-B8 (owner, 2026-10-23): Farming, Husbandry, Hunting and Healing are trained by doing the work, the same for the player and villagers (agent decision, docs/DECISIONS.md). Experience points per finished action (the player) or per work step (a villager, by its act in act_skill; Skills.work_xp).", "act_skill": {"harvest": "farming", "sow": "farming", "fp_work": "farming", "fp_fence": "farming", "feed_pen": "husbandry", "collect_pen": "husbandry", "slaughter": "husbandry"}, "xp": {"till": 4, "sow": 3, "harvest": 5, "fp_work": 4, "fp_fence": 3, "feed_pen": 3, "collect_pen": 3, "slaughter": 6, "hunt": 6, "treat": 4}},
   "ranks": {"1": "Novice", "3": "Apprentice", "5": "Journeyman", "7": "Expert", "9": "Master"},
   "skills": {
     "mining": {"name": "Mining", "tiers": {
@@ -39,16 +40,40 @@
       "8": {"effects": {"save_chance": 0.25}},
       "10": {"text": "Master smith", "effects": {"bonus_chance": 0.2, "craft_time": 0.5}}
     }},
-    "crafting": {"name": "Crafting", "tiers": {
-      "1": {"text": "Saw planks; tan leather"},
+    "crafting": {"name": "Crafting", "about": "Crafting is the general craft: weaving cloth, sewing bandages and building ploughs. Woodwork, stone dressing and leatherwork have skills of their own: Carpentry, Masonry and Tanning.", "tiers": {
+      "1": {"text": "Weave cloth; sew bandages; build ploughs"},
       "3": {"effects": {"craft_time": 0.85}},
       "5": {"effects": {"save_chance": 0.15}},
       "7": {"effects": {"bonus_chance": 0.1, "craft_time": 0.7}},
       "9": {"effects": {"save_chance": 0.25}},
       "10": {"text": "Master artisan", "effects": {"bonus_chance": 0.2}}
     }},
+    "carpentry": {"name": "Carpentry", "starts_from": "crafting", "about": "Carpentry is woodwork and joinery: sawing planks, making wheels, carts, ladders, supports, mallets and shovel hafts, and building wooden stairs and walkways through a cliff, and the supports, track and ladders of a mine. Everyone who already had Crafting experience began with the same in Carpentry, so nothing was lost.", "tiers": {
+      "1": {"text": "Saw planks; make carts, ladders, mallets and shovel hafts"},
+      "3": {"effects": {"craft_time": 0.85}},
+      "5": {"effects": {"save_chance": 0.15}},
+      "7": {"effects": {"bonus_chance": 0.1, "craft_time": 0.7}},
+      "9": {"effects": {"save_chance": 0.25}},
+      "10": {"text": "Master carpenter", "effects": {"bonus_chance": 0.2}}
+    }},
+    "masonry": {"name": "Masonry", "starts_from": "crafting", "about": "Masonry is stoneworking: dressing raw stone into building blocks at a workbench with a mallet and an iron chisel. Everyone who already had Crafting experience began with the same in Masonry, so nothing was lost.", "tiers": {
+      "1": {"text": "Dress stone into building blocks with a mallet and an iron chisel"},
+      "3": {"effects": {"craft_time": 0.85}},
+      "5": {"effects": {"save_chance": 0.15}},
+      "7": {"effects": {"bonus_chance": 0.1, "craft_time": 0.7}},
+      "9": {"effects": {"save_chance": 0.25}},
+      "10": {"text": "Master mason", "effects": {"bonus_chance": 0.2}}
+    }},
+    "tanning": {"name": "Tanning", "starts_from": "crafting", "about": "Tanning turns hides and pelts into leather and leather into caps and armour. Everyone who already had Crafting experience began with the same in Tanning, so nothing was lost.", "tiers": {
+      "1": {"text": "Tan hides and pelts; stitch leather caps and armour"},
+      "3": {"effects": {"craft_time": 0.85}},
+      "5": {"effects": {"save_chance": 0.15}},
+      "7": {"effects": {"bonus_chance": 0.1, "craft_time": 0.7}},
+      "9": {"effects": {"save_chance": 0.25}},
+      "10": {"text": "Master tanner", "effects": {"bonus_chance": 0.2}}
+    }},
     "cooking": {"name": "Cooking", "tiers": {
-      "1": {"text": "Cook pottage; roast meat; brew tonics"},
+      "1": {"text": "Cook pottage; roast meat; bake and brew"},
       "4": {"effects": {"craft_time": 0.8}},
       "6": {"effects": {"save_chance": 0.15}},
       "8": {"effects": {"bonus_chance": 0.15, "craft_time": 0.65}},
@@ -87,6 +112,30 @@
       "7": {"effects": {"price_bonus": 0.13}},
       "9": {"effects": {"price_bonus": 0.16}},
       "10": {"text": "Master merchant", "effects": {"price_bonus": 0.20}}
+    }},
+    "farming": {"name": "Farming", "about": "Farming grows with the field work: tilling, sowing and harvesting. A farmer's Farming began from the farming experience the village already had recorded for them.", "tiers": {
+      "1": {"text": "Till, sow and harvest fields"},
+      "10": {"text": "Master farmer"}
+    }},
+    "husbandry": {"name": "Husbandry", "about": "Husbandry grows with the care of penned animals: feeding them, gathering their milk, eggs and wool, and slaughtering them for meat.", "tiers": {
+      "1": {"text": "Feed penned animals, gather their milk, eggs and wool, and slaughter them for meat"},
+      "10": {"text": "Master herdsman"}
+    }},
+    "hunting": {"name": "Hunting", "about": "Hunting grows with every wild animal you or a hunter brings down. Fighting still trains Combat as well.", "tiers": {
+      "1": {"text": "Hunt wild game"},
+      "10": {"text": "Master hunter"}
+    }},
+    "healing": {"name": "Healing", "starts_from": "cooking", "about": "Healing grows by dressing wounds with medicine and by brewing tonics and poultices. Those who already brewed with Cooking began with the same experience in Healing.", "tiers": {
+      "1": {"text": "Brew tonics and poultices; dress wounds"},
+      "4": {"effects": {"craft_time": 0.8}},
+      "6": {"effects": {"save_chance": 0.15}},
+      "8": {"effects": {"bonus_chance": 0.15, "craft_time": 0.65}},
+      "10": {"text": "Master healer", "effects": {"save_chance": 0.3, "bonus_chance": 0.25}}
+    }},
+    "law": {"name": "Law", "about": "Law starts at nothing for everyone. You learn it from the reeve, who will teach you one lesson a day up to level 3, and from the chapel's preacher, who teaches further (ask for a lesson when you talk to them). A courier learns it by witnessing signatures and carrying signed documents home, and the village's booth keepers take lessons until they know enough to notarise: a courier needs Law 2 to carry a formal contract.", "tiers": {
+      "1": {"text": "Witness and carry formal documents"},
+      "2": {"text": "Notarise formal contracts for parties who cannot meet"},
+      "3": {"text": "The reeve teaches the law up to here"}
     }},
     "stealth": {"name": "Stealth", "tiers": {
       "1": {"text": "Pick pockets"},

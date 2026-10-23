@@ -148,12 +148,26 @@ func _run() -> void:
 	_press("New game")
 	check(ui.is_open("creation"), "character creation opens")
 	_press("Female")
-	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
-	var tunic: Dictionary = looks.filter(func(l): return l.sex == "female" and l.outfit != "basic")[1]
-	ui.show_creation({"name": "", "family": "", "sex": "female", "look": tunic.id})
+	# CC-01: the look is chosen feature by feature (or at random) and previewed from the recipe
+	check(_press("Randomize"), "a Randomize button")
+	var tunic: Dictionary = CharacterLook.normalize({"picks": {"race": "human", "hair": "f2", "facial-hair": "", "eyelashes": "f1", "clothes": "tunic", "shoes": "leather-boots"},
+		"swatches": {"skin": 3, "hair": 1, "facial_hair": 1, "eyes": 8, "clothes": 0, "tunic": 2, "leather_shoes": 0}})
+	ui.show_creation({"name": "", "family": "", "sex": "female", "appearance": tunic})
+	var prev_tex: Texture2D = (ui.panel_body.find_child("Preview", true, false) as TextureRect).texture.atlas
+	check(prev_tex == CharacterLook.texture(tunic), "the preview is drawn from the recipe")
+	var hair_next: Button = ui.panel_body.find_child("Hair >", true, false)
+	hair_next.pressed.emit()
+	var prev2: Texture2D = (ui.panel_body.find_child("Preview", true, false) as TextureRect).texture.atlas
+	var t2: Dictionary = tunic.duplicate(true)
+	t2.picks.hair = "f3"
+	check(prev2 != prev_tex and prev2 == CharacterLook.texture(t2),
+		"the next hair style (f2 to f3) redraws the preview")
+	var labels := _texts(ui.panel_body)
+	check(not labels.contains("Hat") and not labels.contains("Armour") and not labels.contains("Gloves"), "no headwear, armour or gloves to choose")
+	ui.show_creation({"name": "", "family": "", "sex": "female", "appearance": tunic})
 	_press("Begin")
 	check(ui.is_open("creation") and main.world == null, "a character needs a name")
-	ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female", "look": tunic.id})
+	ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female", "appearance": tunic})
 	var edits: Array = ui.panel_body.find_children("*", "LineEdit", true, false)
 	check(edits.size() == 2, "name and family fields")
 	# typing into the family field stays there (a phone keyboard sends key events)
@@ -175,7 +189,8 @@ func _run() -> void:
 	var w: World = main.world
 	var p := w.player
 	check(w != null and p.name == "Ada" and p.family == "Thorne" and p.sex == "female", "created Ada Thorne (female)")
-	check(p.look == tunic.id and p.sprite == tunic.sprite and main.player_sprite != null, "the chosen look is the player's sprite (%s)" % p.sprite.get_file())
+	check(p.appearance == tunic and p.heir_appearance == tunic and main.player_sprite != null and main.player_sprite.texture == CharacterLook.texture(tunic, [p.armor, p.head]),
+		"the chosen look is the player's sprite, drawn from its recipe")
 	# 4-5. the origin story, then the village
 	check(ui.is_open("origin") and main.paused, "the origin story is shown and the world waits")
 	check(_texts(ui.panel_body).contains("%d coins" % int(GameData.b("start_coins_player"))) and not _texts(ui.panel_body).contains("five coins"), "the origin story names the real starting coins")
@@ -210,32 +225,37 @@ func _run() -> void:
 	ui.show_inventory()
 	check(ui.is_open("inventory"), "the inventory opens")
 	var pack_win: InventoryWindow = ui.inventory_window()
-	check(pack_win != null and pack_win.cells.size() == 27 and pack_win.tab_buttons.size() == 8 and pack_win.gear_buttons.size() == 6, "a 9 x 3 bag grid, 8 tabs and 6 gear slots")
-	check(p.inv.max_stacks == 24 and pack_win.cells.slice(0, 24).all(func(b): return not b.disabled) \
-		and pack_win.cells.slice(24).all(func(b): return b.disabled and b.focus_mode == Control.FOCUS_NONE), "24 cells can be used; the last 3 are locked")
+	check(pack_win != null and pack_win.cells.size() == 27 and pack_win.tab_buttons.size() == 8 and pack_win.side_buttons.size() == 2 and pack_win.gear_buttons.size() == 6,
+		"a 9 x 3 grid, 8 category tabs, Skills and Journal buttons and 6 gear slots (INV-18)")
+	check(p.inv.category_cap == 9 and pack_win.cells.slice(0, 9).all(func(b): return not b.disabled) \
+		and pack_win.cells.slice(9).all(func(b): return b.disabled and b.focus_mode == Control.FOCUS_NONE), "the first row (9 cells) can be used; the second and third rows are locked")
 	check(not _press("Wield") and not _press("Drop"), "no actions until a slot is chosen")
+	pack_win.choose_tab("weapons")
 	pack_win.cells[pack_win.shown.find("rusty_sword")].pressed.emit()
 	check(pack_win.selected == "rusty_sword", "tapping a cell chooses its item")
 	check(_press("Wield"), "a Wield button for the sword")
 	check(p.weapon == "rusty_sword", "the rusty sword is in hand")
 	pack_win.choose("rusty_pickaxe")
 	check(_press("Use") and p.tool == "rusty_pickaxe", "the rusty pickaxe is the tool")
-	var tab_shows := {"food": ["bread", "linen_bandage", "rotten_apple"], "materials": [], "tools": ["rusty_pickaxe"], "weapons": ["rusty_sword"],
-		"armour": ["plain_clothes"], "all": ["bread", "linen_bandage", "plain_clothes", "rotten_apple", "rusty_pickaxe", "rusty_sword"]}
+	# INV-18: each tab its own category; worn and wielded things are in their gear slots, not the grid
+	var tab_shows := {"food": ["bread", "rotten_apple"], "raw": [], "tools": [], "weapons": [], "armour": [] if p.armor == "plain_clothes" else ["plain_clothes"],
+		"medicine": ["linen_bandage"], "general": [], "crafted": []}
 	for t in tab_shows:
 		pack_win.tab_buttons[pack_win.TABS.map(func(x): return x[0]).find(t)].pressed.emit()
 		check(pack_win.tab == t and pack_win.items_shown() == tab_shows[t], "the %s tab shows %s" % [t, pack_win.items_shown()])
-	pack_win.tab_buttons[6].pressed.emit()
-	check(ui.is_open("skills"), "the Skills tab opens the skills window")
+	pack_win.side_buttons[0].pressed.emit()
+	check(ui.is_open("skills"), "the Skills button opens the skills window")
 	ui.show_inventory()
-	ui.inventory_window().tab_buttons[7].pressed.emit()
-	check(ui.is_open("journal"), "the Journal tab opens the journal")
-	# the new gear: a cap on the head, an amulet and a ring, from the Armour tab
+	ui.inventory_window().side_buttons[1].pressed.emit()
+	check(ui.is_open("journal"), "the Journal button opens the journal")
+	# the new gear: a cap on the head (Armour), an amulet and a ring (Crafted goods and valuables, owner INV-Q1)
 	for id in ["leather_cap", "copper_ring", "amulet"]:
 		p.inv.add(id)
 	ui.show_inventory("armour")
 	pack_win = ui.inventory_window()
-	check(pack_win.tab == "armour" and pack_win.items_shown() == ["amulet", "copper_ring", "leather_cap", "plain_clothes"], "the Armour tab shows worn gear and jewellery")
+	check(pack_win.tab == "armour" and pack_win.items_shown().has("leather_cap") and not pack_win.items_shown().has("copper_ring"), "the Armour tab holds the cap")
+	pack_win.choose_tab("crafted")
+	check(pack_win.items_shown() == ["amulet", "copper_ring"], "the Crafted goods tab holds the jewellery")
 	var def0 := p.defense()
 	var stam0 := p.stamina_cap()
 	var hpcap0 := p.hp_cap()
@@ -266,7 +286,7 @@ func _run() -> void:
 	if pad_focus is Button:
 		(pad_focus as Button).pressed.emit()          # A again
 	check(p.armor == "plain_clothes", "A on Wear puts the clothes on")
-	check(main.get_viewport().gui_get_focus_owner() == pack_win.cells[pack_win.items_shown().find("plain_clothes")], "and focus returns to the item")
+	check(main.get_viewport().gui_get_focus_owner() == pack_win.gear_buttons["armor"], "and focus follows the item to its gear slot")
 	ui.set_scheme(scheme0)
 	ui.hide_all()
 	pack_win.choose("copper_ring")
@@ -756,9 +776,9 @@ func _run() -> void:
 	check(pack.get_viewport().gui_get_focus_owner() == pack.cells[0], "the pack's first bag cell has the pad's focus")
 	var inside := Rect2(Vector2.ZERO, pack.size).grow(0.5)
 	check(pack.cells.all(func(c): return inside.encloses(Rect2(c.position, c.size))) and inside.encloses(Rect2(pack.details.position, pack.details.size)), "the panel and the details fit the window")
-	check(pack.cells[0].find_valid_focus_neighbor(SIDE_RIGHT) == pack.cells[1] and pack.cells[0].find_valid_focus_neighbor(SIDE_BOTTOM) == pack.cells[9] \
-		and pack.cells[0].find_valid_focus_neighbor(SIDE_TOP) in pack.tab_buttons, "the pad moves right and down the grid, and up to the tabs")
-	check(pack.cells[23].find_valid_focus_neighbor(SIDE_RIGHT) != pack.cells[24], "focus skips the locked cells")
+	check(pack.cells[0].find_valid_focus_neighbor(SIDE_RIGHT) == pack.cells[1] \
+		and pack.cells[0].find_valid_focus_neighbor(SIDE_TOP) in pack.tab_buttons, "the pad moves right along the grid, and up to the tabs")
+	check(pack.cells[0].find_valid_focus_neighbor(SIDE_BOTTOM) != pack.cells[9] and pack.cells[8].find_valid_focus_neighbor(SIDE_RIGHT) != pack.cells[9], "focus skips the locked rows")
 	var pad_b := InputEventJoypadButton.new()
 	pad_b.button_index = JOY_BUTTON_B
 	pad_b.pressed = true
@@ -880,7 +900,7 @@ func _run() -> void:
 	check(int(held_q.get("reserved", 0)) == 6 and _press("Here you are") and p.coins == wage0 + 6 and farmer_h.coins == purse_h and w.total_coins() == coins_all,
 			"handing in the wheat pays the wage the farmer set aside from their purse")
 	ui.hide_all()
-	# a skill quest: the tanner teaches Crafting for two hides, under the scroll marker
+	# a skill quest: the tanner teaches Tanning for two hides, under the scroll marker
 	var tanner: NPC = null
 	for n: NPC in w.npcs:
 		if n.alive and n.job == "tanner":
@@ -901,17 +921,17 @@ func _run() -> void:
 	var note: Label = null
 	check(_press("Here you are"), "handing in the hides")
 	note = ui.panel_body.find_child("Note", true, false)
-	check(p.level("crafting") == 2 and note != null and note.text.contains("Crafting is now level 2") and note.text.contains("leather armour"), "the talk window says what was learned: %s" % (note.text if note else "no note"))
+	check(p.level("tanning") == 2 and note != null and note.text.contains("Tanning is now level 2") and note.text.contains("leather armour"), "the talk window says what was learned: %s" % (note.text if note else "no note"))
 	ui.hide_all()
 
 	# 19-20. save, reload, and the state is the same
-	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
+	var snap := {"name": p.name, "look": p.appearance, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
 		"weapon": p.weapon, "tool": p.tool, "armor": p.armor, "head": p.head, "amulet": p.amulet, "ring": p.ring, "wheat": p.inv.count("wheat"), "crimes": p.crimes.size(),
 		"minutes": int(w.minutes), "pos": Vector2i(p.pos)}
 	main.save_game(false)
 	main.continue_game()
 	var q: PlayerState = main.world.player
-	var now := {"name": q.name, "look": q.look, "sprite": q.sprite, "coins": q.coins, "hp": int(q.hp),
+	var now := {"name": q.name, "look": q.appearance, "sprite": q.sprite, "coins": q.coins, "hp": int(q.hp),
 		"weapon": q.weapon, "tool": q.tool, "armor": q.armor, "head": q.head, "amulet": q.amulet, "ring": q.ring, "wheat": q.inv.count("wheat"), "crimes": q.crimes.size(),
 		"minutes": int(main.world.minutes), "pos": Vector2i(q.pos)}
 	check(main.world != w, "a fresh world was loaded from the save")
@@ -1717,7 +1737,7 @@ func _save_safety_tests() -> void:
 	main.save_game(false)
 	var old := _raw(TEST_SAVE)
 	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
-	main.new_game({"name": "Ada", "family": "Test", "sex": looks[0].sex, "look": looks[0].id, "sprite": looks[0].sprite})
+	main.new_game({"name": "Ada", "family": "Test", "sex": looks[0].sex, "appearance": looks[0].recipe})
 	var prev: String = TEST_SAVE.get_basename() + main.PREVIOUS_SUFFIX
 	check(_raw(prev) == old, "starting a new character keeps the previous game, unchanged, as %s" % prev.get_file())
 	main.resume_after_origin()

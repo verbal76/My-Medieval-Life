@@ -1,132 +1,163 @@
 {
-  "format": "mml-material-exceptions/1",
-  "note": "Recorded exceptions to World Design Rules 001 and 002 for tools/check_materials.py (WDR-007-C). Each names one material, profession or recipe, the finding it excuses (few_uses, few_professions, supplies_nobody, orphan), the reason and the rule. An exception whose finding no longer occurs is stale and fails the check. Hand-kept: only genuinely specialized materials are excepted (a feedstock refined by one recipe into a material that at least three recipes consume, or a component of one assembly); every other finding stays open in docs/systems/MATERIAL_INTERDEPENDENCY.md.",
-  "exceptions": [
-    {
-      "material": "iron_ore",
-      "finding": "few_uses",
-      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "iron_ore",
-      "finding": "few_professions",
-      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "copper_ore",
-      "finding": "few_uses",
-      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet).",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "copper_ore",
-      "finding": "few_professions",
-      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet).",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "hide",
-      "finding": "few_uses",
-      "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "hide",
-      "finding": "few_professions",
-      "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "rabbit_pelt",
-      "finding": "few_uses",
-      "reason": "Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "rabbit_pelt",
-      "finding": "few_professions",
-      "reason": "Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "cart_wheel",
-      "finding": "few_uses",
-      "reason": "Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "cart_wheel",
-      "finding": "few_professions",
-      "reason": "Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "cart_axle",
-      "finding": "few_uses",
-      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "cart_axle",
-      "finding": "few_professions",
-      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "cart_ironwork",
-      "finding": "few_uses",
-      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "cart_ironwork",
-      "finding": "few_professions",
-      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
-      "rule": "WDR-001",
-      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-    },
-    {
-      "material": "shovel_blade",
-      "finding": "few_uses",
-      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21: a shovel from a carpenter-made wooden part and a smith-made metal part): forged by the smith only to be fitted to a haft (assemble_shovel) by the carpenter; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
-      "rule": "WDR-001",
-      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
-    },
-    {
-      "material": "shovel_blade",
-      "finding": "few_professions",
-      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21: a shovel from a carpenter-made wooden part and a smith-made metal part): forged by the smith only to be fitted to a haft (assemble_shovel) by the carpenter; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
-      "rule": "WDR-001",
-      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
-    },
-    {
-      "material": "shovel_haft",
-      "finding": "few_uses",
-      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
-      "rule": "WDR-001",
-      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
-    },
-    {
-      "material": "shovel_haft",
-      "finding": "few_professions",
-      "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
-      "rule": "WDR-001",
-      "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
-    }
-  ]
+ "format": "mml-material-exceptions/1",
+ "note": "Recorded exceptions to World Design Rules 001 and 002 for tools/check_materials.py (WDR-007-C). Each names one material, profession or recipe, the finding it excuses (few_uses, few_professions, supplies_nobody, orphan), the reason and the rule. An exception whose finding no longer occurs is stale and fails the check. Hand-kept: only genuinely specialized materials are excepted (a feedstock refined by one recipe into a material that at least three recipes consume, or a component of one assembly); every other finding stays open in docs/systems/MATERIAL_INTERDEPENDENCY.md.",
+ "exceptions": [
+  {
+   "material": "iron_ore",
+   "finding": "few_uses",
+   "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "iron_ore",
+   "finding": "few_professions",
+   "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "copper_ore",
+   "finding": "few_uses",
+   "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet).",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "copper_ore",
+   "finding": "few_professions",
+   "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet).",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "hide",
+   "finding": "few_uses",
+   "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "hide",
+   "finding": "few_professions",
+   "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "rabbit_pelt",
+   "finding": "few_uses",
+   "reason": "Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "rabbit_pelt",
+   "finding": "few_professions",
+   "reason": "Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "cart_wheel",
+   "finding": "few_uses",
+   "reason": "Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "cart_wheel",
+   "finding": "few_professions",
+   "reason": "Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "cart_axle",
+   "finding": "few_uses",
+   "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "cart_axle",
+   "finding": "few_professions",
+   "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "cart_ironwork",
+   "finding": "few_uses",
+   "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "cart_ironwork",
+   "finding": "few_professions",
+   "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+   "rule": "WDR-001",
+   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+  },
+  {
+   "material": "shovel_blade",
+   "finding": "few_uses",
+   "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21: a shovel from a carpenter-made wooden part and a smith-made metal part): forged by the smith only to be fitted to a haft (assemble_shovel) by the carpenter; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+   "rule": "WDR-001",
+   "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+  },
+  {
+   "material": "shovel_blade",
+   "finding": "few_professions",
+   "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21: a shovel from a carpenter-made wooden part and a smith-made metal part): forged by the smith only to be fitted to a haft (assemble_shovel) by the carpenter; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+   "rule": "WDR-001",
+   "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+  },
+  {
+   "material": "shovel_haft",
+   "finding": "few_uses",
+   "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
+   "rule": "WDR-001",
+   "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+  },
+  {
+   "material": "shovel_haft",
+   "finding": "few_professions",
+   "reason": "Shovel component (MIN-SHOVEL, owner MIN-E-Q4 2026-10-21): made by the carpenter only to be assembled with the smith's blade into a shovel (assemble_shovel); by design a one-use part.",
+   "rule": "WDR-001",
+   "approval": "agent decision 2026-10-21 (MIN-SHOVEL, docs/build17/MIN_PARITY_SHOVELS.md), owner review pending"
+  },
+  {
+   "profession": "sage",
+   "finding": "supplies_nobody",
+   "reason": "The sage's medicines are not a production input of another trade: they are bought by people of every profession when hurt (a guard hurt on duty, a miner, a hunter), from the sage with their own coins, to recover and keep working (NPCBrain._plan_heal). A functioning cross-profession relationship, not an isolated menu; no stockpile or artificial dependency is added.",
+   "rule": "WDR-002",
+   "approval": "owner B18-DP-15, 2026-10-23 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md): APPROVE A, with verification",
+   "evidence": {
+    "code": "game/scripts/core/npc_brain.gd::_plan_heal",
+    "goods": [
+     "herbal_poultice",
+     "healing_tonic",
+     "strong_healing_tonic"
+    ],
+    "test": "game/tests/interdependency_test.gd::test_sage_medicine"
+   }
+  },
+  {
+   "profession": "stonecutter",
+   "finding": "supplies_nobody",
+   "reason": "The stonecutter's dressed blocks are construction material, not a production input of another trade: the raw-goods merchant buys them and households and the manor build them into the houses, workshops and repairs that people of every profession live and work in, and the rubble goes to the manor's mending (NPCBrain._blocks_wanted opens the trade only while building sites or the merchant need blocks). The game has no builder trade; none is created and no artificial purchase is added.",
+   "rule": "WDR-002",
+   "approval": "owner B18-DP-17, 2026-10-23 (docs/directives/2026-10-23_dp17_chapel_r2_longrun.md): APPROVED, Option A, consistent with the sage exception (B18-DP-15)",
+   "evidence": {
+    "code": "game/scripts/core/npc_brain.gd::_blocks_wanted",
+    "goods": [
+     "building_block",
+     "rubble"
+    ],
+    "test": "game/tests/stone_test.gd::_test_stonecutter"
+   }
+  }
+ ]
 }

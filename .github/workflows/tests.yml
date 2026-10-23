@@ -67,6 +67,7 @@ jobs:
           $godot --headless --path game --import
           $godot --headless --path game --script res://tests/run_tests.gd
           $godot --headless --path game --script res://tests/start_test.gd
+          $godot --headless --path game --script res://tests/character_look_test.gd
           $godot --headless --path game --script res://tests/furniture_test.gd
           $godot --headless --path game --script res://tests/play_test.gd
           $godot --headless --path game --script res://tests/overworld_test.gd
@@ -74,15 +75,38 @@ jobs:
           $godot --headless --path game --script res://tests/world_test.gd
           $godot --headless --path game --script res://tests/aging_test.gd
           $godot --headless --path game --script res://tests/wiki_test.gd
+          $godot --headless --path game --script res://tests/audio_test.gd
           $godot --headless --path game --script res://tests/stone_test.gd
           $godot --headless --path game --script res://tests/job_board_test.gd
           $godot --headless --path game --script res://tests/early_game_test.gd
           $godot --headless --path game --script res://tests/parity_mining_test.gd
           $godot --headless --path game --script res://tests/equip_test.gd
+          $godot --headless --path game --script res://tests/inventory18_test.gd
+          $godot --headless --path game --script res://tests/crop_share_test.gd
           $godot --headless --path game --script res://tests/skills_test.gd
           $godot --headless --path game --script res://tests/chests_test.gd
           $godot --headless --path game --script res://tests/property_test.gd
           $godot --headless --path game --script res://tests/business_test.gd
+          $godot --headless --path game --script res://tests/business_money_test.gd
+          $godot --headless --path game --script res://tests/business_works_test.gd
+          # Build 18 suites (REL18-SUITES: every suite runs in CI)
+          $godot --headless --path game --script res://tests/chapel_test.gd
+          $godot --headless --path game --script res://tests/competition_test.gd
+          $godot --headless --path game --script res://tests/countryside_test.gd
+          $godot --headless --path game --script res://tests/courier_live_test.gd
+          $godot --headless --path game --script res://tests/credit_test.gd
+          $godot --headless --path game --script res://tests/feast_test.gd
+          $godot --headless --path game --script res://tests/horse_test.gd
+          $godot --headless --path game --script res://tests/luxury_test.gd
+          $godot --headless --path game --script res://tests/migration_test.gd
+          $godot --headless --path game --script res://tests/outlaw_return_test.gd
+          $godot --headless --path game --script res://tests/party_test.gd
+          $godot --headless --path game --script res://tests/regional_food_test.gd
+          $godot --headless --path game --script res://tests/regions_test.gd
+          $godot --headless --path game --script res://tests/settlement_development_test.gd
+          $godot --headless --path game --script res://tests/tailor_barber_test.gd
+          $godot --headless --path game --script res://tests/tax_test.gd
+          $godot --headless --path game --script res://tests/trade_skills_test.gd
           $godot --headless --path game --script res://tests/farming_test.gd
           $godot --headless --path game --script res://tests/health_jobs_test.gd
           $godot --headless --path game --script res://tests/home_test.gd
@@ -106,6 +130,7 @@ jobs:
           $godot --headless --path game --script res://tests/farm_place_test.gd
           $godot --headless --path game --script res://tests/herd_test.gd
           $godot --headless --path game --script res://tests/contracts_test.gd
+          $godot --headless --path game --script res://tests/contract_50ore_test.gd
           $godot --headless --path game --script res://tests/decay_test.gd
           $godot --headless --path game --script res://tests/terrain_test.gd
           $godot --headless --path game --script res://tests/underground_test.gd
@@ -117,6 +142,16 @@ jobs:
           $godot --headless --path game --script res://tests/services_test.gd
           $godot --headless --path game --script res://tests/underground_ext_test.gd
           $godot --headless --path game --script res://tests/underground_struct_test.gd
+          # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
+          $godot --headless --path game --script res://tests/interdependency_test.gd   # WDR-002-C: Rule 2 verification scenario
+          $godot --headless --path game --script res://tests/settlement_test.gd
+          $godot --headless --path game --script res://tests/settlement_life_test.gd
+          $godot --headless --path game --script res://tests/regional_test.gd
+          $godot --headless --path game --script res://tests/capability_test.gd
+          $godot --headless --path game --script res://tests/courier_test.gd
+          $godot --headless --path game --script res://tests/contract_sign_test.gd
+          $godot --headless --path game --script res://tests/experience_test.gd
+          $godot --headless --path game --script res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
 
       - name: Short economy simulation (FR-07)
         run: |

@@ -1,0 +1,106 @@
+{
+ "format": "mml-offmap-settlements/1",
+ "_luxury_note": "DVW-B3-LUX (owner 2026-10-23, 'luxury imports, costly caravan goods (spices, fine cloth, jewellery) bought for status, the coins leaving with the caravan'): the market town Wulstead and the rich abbey town Higham-on-the-Way hold luxuries in their traders' stock from the start (GAME EXPANSION and provisional; lore basis BTWO-C14-P002, the chapman's booth of 'fine cloth plumbed with the seal of the greatest of the cities; and silk of Babylon, and spices of the hot burning islands, and wonders of the silversmith's and the goldsmith's fashioning', and BONE-C3-P031, Higham's 'no better market betwixt this and Babylon'). They come from beyond the map, are part of the settlement's opening books like any stock and are not made, restocked or wanted by the settlement: what the village buys leaves the trader's stock for good, its coins stay in the trader's till.",
+ "_note": "Expansion 18 SET-C-SIM / SET-C-FIVE (owner 2026-10-23, Q18-3, Q18-4, ECON-P1.3): the five off-map settlements, each a simulated economy 'just like this one' at lighter detail (real households with members, purses and pantries; a manor or council treasury; businesses with their own tills, stocks and workers), stepped once a day by Regions/OffMapSettlement without walking anyone. The PLACES are lore (docs/world/B_GAZETTEER.md; docs/expansion18/SETTLEMENTS.md cites paragraph ids and labels each claim); the trades, deposits, sizes and every number below are GAME EXPANSION and agent proposals (provisional). Money enters a settlement only through trade with the village or another settlement and leaves the same way; nothing is created.",
+ "tiles_per_mile": 12,
+ "rules": {
+  "_note": "Prices float with yesterday's imbalance inside the village's own price band (balance.json price_min and price_max). Food, tax and wage rules follow the village's (balance.json hunger_per_hour, child_food_factor, tax_rate_*, tax_exemption_*, treasury_reserve_days).",
+  "price_step": 0.15,
+  "hungry_below": 0.6,
+  "hungry_days_to_death": 6,
+  "food_days_ahead": 3,
+  "shop_every_days": 2,
+  "input_days_ahead": 2,
+  "trader_pays_share": 0.9,
+  "trader_reserve_floor": 20,
+  "want_days": 6,
+  "business_tax_exempt": 30,
+  "official_wage": 6,
+  "gov_budget_share": 0.4,
+  "gov_reserve_days": 10,
+  "road_trade_every_days": 6,
+  "foods": ["wheat", "pottage", "roast_meat", "bread", "cheese"],
+  "wish": ["roast_meat", "ale", "wool_cloth", "leather", "linen_bandage", "hammer", "axe", "building_block", "plank"],
+  "spend_rate": 0.4,
+  "keep_cash_base": 15,
+  "keep_cash_per_member": 5,
+  "wishes_a_day": 6,
+  "payout_share": 0.5,
+  "household_coins": [30, 80],
+  "toll_rate": 0.06,
+  "day_labour_wage": 6,
+  "day_labour_below": 12,
+  "business_till": 70,
+  "switch_every_days": 7,
+  "switch_below": 4.0,
+  "switch_to_at_least": 8.0,
+  "switch_stay_days": 14,
+  "basket": {"plank": 0.04, "building_block": 0.02, "leather": 0.025, "iron_bar": 0.012, "ale": 0.3, "linen_bandage": 0.02, "herbal_poultice": 0.008, "axe": 0.003, "hammer": 0.002},
+  "gov_upkeep": {"plank": 0.04, "building_block": 0.02},
+  "carry": {"iron_ore": 40, "coal": 30, "copper_ore": 20, "stone": 40, "iron_bar": 12, "wheat_seed": 12, "carrot_seed": 12, "potato_seed": 8, "herb_seed": 8, "flower_seed": 4, "red_berry_cutting": 4, "blue_berry_cutting": 4, "linen_bandage": 10, "herbal_poultice": 8, "healing_tonic": 6, "strong_healing_tonic": 4},
+  "carry_keep": {"iron_ore": 0, "coal": 0, "copper_ore": 0, "stone": 0, "iron_bar": 0, "wheat_seed": 4, "carrot_seed": 4, "potato_seed": 2, "herb_seed": 2, "flower_seed": 0, "red_berry_cutting": 0, "blue_berry_cutting": 0, "linen_bandage": 3, "herbal_poultice": 3, "healing_tonic": 2, "strong_healing_tonic": 1}
+ },
+ "business_types": {
+  "farm": {"name": "fields", "out": {"wheat": 9, "wheat_seed": 0.5, "carrot_seed": 0.4, "potato_seed": 0.3, "herb_seed": 0.3, "flower_seed": 0.1, "red_berry_cutting": 0.06, "blue_berry_cutting": 0.06}, "tools": {"plough": 0.012}, "horses_max": 6, "foal_days": 45, "feed": 0.4, "wage": 8, "cap": 220},
+  "herd": {"name": "flocks and herds", "out": {"meat": 1.5, "hide": 1.0, "wool": 1.5}, "wage": 8, "cap": 120},
+  "forest": {"name": "woodcutting", "out": {"log": 8}, "tools": {"axe": 0.02}, "wage": 8, "cap": 200},
+  "quarry": {"name": "quarry and diggings", "out": {}, "tools": {"pickaxe": 0.03}, "wage": 9, "cap": 200},
+  "sawyer": {"name": "sawpit", "reserve": 40, "runs": {"saw_planks": 6, "make_mallet": 0.3}, "targets": {"plank": 80, "mallet": 3}, "tools": {"axe": 0.01}, "wage": 8},
+  "mason": {"name": "masons' yard", "reserve": 40, "tools": {"mallet": 0.03}, "runs": {"dress_stone": 4}, "targets": {"building_block": 60}, "wage": 8},
+  "smith": {"name": "forge", "reserve": 40, "tools": {"hammer": 0.015}, "runs": {"smelt_iron": 3, "smelt_copper": 1, "forge_axe": 1, "forge_hammer": 1, "forge_pickaxe": 0.5, "craft_plough": 0.3}, "targets": {"iron_bar": 24, "copper_bar": 8, "axe": 4, "hammer": 3, "pickaxe": 3, "plough": 3}, "wage": 9},
+  "tanner": {"name": "tannery", "reserve": 40, "runs": {"tan_leather": 5}, "targets": {"leather": 50}, "wage": 8},
+  "cook": {"name": "cookshop and alehouse", "reserve": 40, "runs": {"cook_pottage": 4, "roast_meat": 3, "brew_ale": 2}, "targets": {"pottage": 60, "roast_meat": 40, "ale": 40}, "wage": 8},
+  "weaver": {"name": "weavers", "reserve": 40, "runs": {"weave_cloth": 4, "sew_bandages": 3}, "targets": {"wool_cloth": 20, "linen_bandage": 20}, "wage": 8},
+  "healer": {"name": "herb garden and infirmary", "reserve": 40, "out": {"flower": 6}, "runs": {"brew_poultice": 2, "brew_healing_tonic": 1, "brew_strong_tonic": 0.5}, "targets": {"herbal_poultice": 16, "healing_tonic": 10, "strong_healing_tonic": 6}, "wage": 8, "cap": 40},
+  
+  "merchant": {"name": "traders", "wage": 10, "reserve": 80}
+ },
+ "settlements": [
+  {
+   "id": "wulstead", "name": "Wulstead", "kind": "market town", "miles": 20, "x": 18,
+   "government": {"name": "the mayor and council", "officials": 3, "coins": 320},
+   "trades": {"farmer": 5, "herder": 2, "forester": 2, "sawyer": 2, "tanner": 2, "cook": 3, "weaver": 1, "healer": 1, "merchant": 2, "official": 3},
+   "start": {"merchant": {"wheat_seed": 8, "carrot_seed": 8, "potato_seed": 4, "herb_seed": 4, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2, "linen_bandage": 4, "herbal_poultice": 3, "spice": 12, "fine_cloth": 8, "jewellery": 3}},
+   "tills": {"merchant": 300},
+   "horses": 3,
+   "industries": ["trade", "carpentry", "tanning", "farming", "forestry"]
+  },
+  {
+   "id": "netherton", "name": "Netherton", "kind": "hamlet", "miles": 30, "x": -24,
+   "government": {"name": "the canons' steward", "officials": 1, "coins": 110},
+   "trades": {"farmer": 3, "herder": 1, "healer": 1, "merchant": 1, "official": 1},
+   "start": {"merchant": {"wheat_seed": 6, "carrot_seed": 6, "herb_seed": 4, "linen_bandage": 6, "herbal_poultice": 6, "healing_tonic": 4, "strong_healing_tonic": 2}},
+   "tills": {"merchant": 130},
+   "industries": ["farming", "trade"]
+  },
+  {
+   "id": "garton", "name": "Garton", "kind": "village", "miles": 50, "x": -40,
+   "government": {"name": "the elders of the street cross", "officials": 1, "coins": 140},
+   "trades": {"farmer": 4, "herder": 3, "forester": 1, "miner": 3, "smith": 1, "merchant": 1, "official": 1},
+   "quarry": {"iron_ore": 2.5, "coal": 2.0, "copper_ore": 0.6, "stone": 3.0},
+   "reserves": {"iron_ore": 1500, "coal": 1100, "copper_ore": 300, "stone": 1500},
+   "start": {"smith": {"plank": 4}, "merchant": {"iron_ore": 40, "coal": 30, "copper_ore": 12, "stone": 40, "wheat_seed": 4, "carrot_seed": 4, "potato_seed": 4}},
+   "tills": {"merchant": 200},
+   "industries": ["mining", "smithing", "farming", "forestry"]
+  },
+  {
+   "id": "higham", "name": "Higham-on-the-Way", "kind": "abbey town", "miles": 60, "x": 6,
+   "government": {"name": "the Abbot's reeve and the burgesses", "officials": 3, "coins": 520},
+   "trades": {"farmer": 8, "herder": 3, "forester": 2, "sawyer": 2, "mason": 2, "smith": 1, "tanner": 2, "cook": 3, "weaver": 2, "healer": 1, "merchant": 3, "official": 3},
+   "start": {"mason": {"stone": 40}, "smith": {"iron_ore": 30, "coal": 20, "plank": 8}, "merchant": {"wheat_seed": 8, "carrot_seed": 8, "flower_seed": 2, "red_berry_cutting": 2, "blue_berry_cutting": 2, "linen_bandage": 4, "healing_tonic": 3, "spice": 20, "fine_cloth": 12, "jewellery": 8}},
+   "tills": {"merchant": 360},
+   "horses": 2,
+   "industries": ["trade", "masonry", "smithing", "tanning", "carpentry", "farming", "forestry"]
+  },
+  {
+   "id": "bourton", "name": "Bourton Abbas", "kind": "abbey village", "miles": 72, "x": 30,
+   "government": {"name": "the abbey's bailiff", "officials": 1, "coins": 160},
+   "trades": {"farmer": 3, "forester": 2, "miner": 3, "mason": 1, "cook": 1, "merchant": 1, "official": 1},
+   "quarry": {"stone": 8.0},
+   "reserves": {"stone": 2500},
+   "start": {"merchant": {"stone": 40, "wheat_seed": 4, "carrot_seed": 4}},
+   "tills": {"merchant": 160},
+   "industries": ["masonry", "forestry", "farming", "trade"]
+  }
+ ]
+}

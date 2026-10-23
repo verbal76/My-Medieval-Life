@@ -216,7 +216,7 @@ func take(u: Dictionary, id: String, qty: int) -> Dictionary:
 	if i.store == null or qty < 1 or not goods(u).has(id) or i.store.count(id) < qty:
 		return {"ok": false, "text": "There is not that much.", "seen": 0}
 	if not p.inv.can_add(id):
-		return {"ok": false, "text": "Your pack is full.", "seen": 0}
+		return {"ok": false, "text": p.inv.full_text(id), "seen": 0}
 	w.transfer(i.store, p.inv, id, qty)
 	if i.access == "own":
 		p.take_marks(id, qty)

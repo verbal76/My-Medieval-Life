@@ -47,6 +47,26 @@ static func item_name(id: String) -> String:
 	return item(id).get("name", id)
 
 
+## INV-18: the eight pack categories (items.json "categories"), in tab order. Each item names exactly one
+## ("category"); it is the tab it is carried in and the capacity pool it counts against (Inventory.category_cap).
+const CATEGORIES := ["general", "food", "raw", "tools", "weapons", "armour", "medicine", "crafted"]
+const CATEGORY_NAMES := {
+	"general": "General", "food": "Food", "raw": "Raw materials", "tools": "Tools", "weapons": "Weapons",
+	"armour": "Armour", "medicine": "Medicine", "crafted": "Crafted goods",
+}
+
+
+## The category `id` is carried in; an id the registry does not know is "general" (never seen in play: every
+## registered item names one, checked by tests).
+static func category(id: String) -> String:
+	var c := str(item(id).get("category", "general"))
+	return c if c in CATEGORIES else "general"
+
+
+static func category_name(cat: String) -> String:
+	return CATEGORY_NAMES.get(cat, cat.capitalize())
+
+
 ## What eating or drinking `id` does, read from the item's own data (the same fields World.player_eat
 ## applies: "heal" health, "food" hunger, "stamina"; "harm" is the damage it does). Medicines have "heal"
 ## and no "food" (World.player_use_medicine). [] for a non-consumable.

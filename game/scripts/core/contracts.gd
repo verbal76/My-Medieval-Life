@@ -463,7 +463,8 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	if int(ob.contracts) >= int(cfg().max_open_per_seller):
 		r.say = "I've promised all the work I can take on already."
 		return r
-	var item := GameData.item_name(id).to_lower() if svc.is_empty() else "that work"
+	var bare := GameData.item_name(id).to_lower() if svc.is_empty() else "that work"
+	var item := _phrase(bare)
 	var m := _means(n, id, days, price_each, svc)
 	var can := int(m.stock) + int(m.cap)
 	r.route = m.route
@@ -487,7 +488,7 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 			"coins":
 				r.say = "I'd have to buy %s, and I can't spare the coins to." % item
 			"source":
-				r.say = "There's no %s to be had where I could get it." % item
+				r.say = "There's no %s to be had where I could get it." % bare
 			_:
 				r.say = "I've no way to come by %s." % item
 		return r
@@ -534,6 +535,29 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	var said := "; ".join(parts) + "."
 	r.say = said.substr(0, 1).to_upper() + said.substr(1)
 	return r
+
+
+## A noun phrase for an item name in a refusal: plural and mass goods stand bare ("coal", "nails"), the rest take
+## "a"/"an" ("an axe"). Wording only.
+static func _phrase(name: String) -> String:
+	if name == "that work" or name in ["ale", "coal", "cheese", "dirt", "leather", "milk", "pottage", "spoil", "stone", "topsoil", "wheat", "wool", "feathers", "nails"]:
+		return name
+	for tail in [" ore", " meat", " cloth", " clothes", "berries"]:
+		if name.ends_with(tail):
+			return name
+	return ("an " if name.substr(0, 1) in ["a", "e", "i", "o", "u"] else "a ") + name
+
+
+## `qty` of an item name, counted ("3 axes", "1 axe", "10 coal"): mass and plural goods stand bare as in _phrase.
+## Wording only.
+static func counted(qty: int, name: String) -> String:
+	if qty == 1 or _phrase(name) == name:
+		return "%d %s" % [qty, name]
+	if name.ends_with("s") or name.ends_with("x") or name.ends_with("ch") or name.ends_with("sh"):
+		return "%d %ses" % [qty, name]
+	if name.ends_with("y") and not name.substr(name.length() - 2, 1) in ["a", "e", "i", "o", "u"]:
+		return "%d %sies" % [qty, name.substr(0, name.length() - 1)]
+	return "%d %ss" % [qty, name]
 
 
 # ---------------------------------------------------------------- making a contract ----------
@@ -1017,7 +1041,7 @@ func plan(n: NPC) -> bool:
 					t.claimed = n.id
 					var at := Vector2i(int(t.x), int(t.y))
 					n.doing = "felling a tree for %s" % w.ref_name(c.buyer)
-					n.plan = [w.brain.go(w.brain.beside(at, n.cell())), w.brain.work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0),
+					n.plan = [w.brain.go(w.brain.beside(at, n.cell())), w.brain.work(CapabilityHook.work_time(float(GameData.b("chop_minutes")), "forestry", Skills.value(n, "woodcutting", "chop_time", 1.0), n),   # X18 HOOK: off in the game
 							"chop", {"x": t.x, "y": t.y}, "work", at)]
 					return true
 			"craft":

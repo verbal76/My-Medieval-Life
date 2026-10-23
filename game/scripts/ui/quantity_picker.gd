@@ -141,6 +141,26 @@ func cancel() -> void:
 	cancelled.emit()
 
 
+## The whole box in view once it is laid out (TRADE-AXE-01: opened from a row far down a list, the window kept its
+## scroll and the box stayed above it, out of sight), whatever the controls; focus alone scrolled only to the slider.
+func _enter_tree() -> void:
+	_show_whole.call_deferred()
+
+
+func _show_whole() -> void:
+	for i in 2:
+		if not is_inside_tree():
+			return                        # closed or rebuilt before it was laid out: nothing to show
+		await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	var p := get_parent()
+	while p != null and not p is ScrollContainer:
+		p = p.get_parent()
+	if p != null:
+		(p as ScrollContainer).ensure_control_visible(self)
+
+
 ## Put keyboard/pad focus on the slider (or Cancel when there is nothing to choose).
 func focus_default() -> void:
 	if not is_inside_tree():

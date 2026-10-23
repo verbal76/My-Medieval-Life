@@ -30,6 +30,8 @@ extends RefCounted
 ## trade it is following its equipment (Fitting.trade). Revenue, expenses (rent or licence, wages) and profit
 ## are kept for both.
 ##
+## B18-DP-01: an attendant also works the player's own workshop stations on the player's production orders (BusinessWorks).
+##
 ## Stage 4: the player may hire an attendant for a stall or shop: an adult without a trade of their own (NPCBrain plans
 ## their day through plan_attendant, so they are a real villager walking to the counter in the working day and
 ## sleeping at night). The wage is paid every morning from the till, then the purse. A premises sells
@@ -40,7 +42,8 @@ extends RefCounted
 ## sales on closing, 5% to the manor. A pitch is open from its renting until it is closed (collect() closes it and
 ## settles), and its open session's proceeds cannot be taken or spent (Q13). Shops and storefronts keep their terms.
 
-const PITCHES := [{"id": "pitch0", "x": 42, "y": 61}, {"id": "pitch1", "x": 50, "y": 61}]
+const PITCHES := [{"id": "pitch0", "x": 42, "y": 61}, {"id": "pitch1", "x": 50, "y": 61},
+	{"id": "pitch2", "x": 46, "y": 61, "service": "tailor"}, {"id": "pitch3", "x": 54, "y": 61, "service": "barber"}]   # TAILOR-18, BARBER-18: the last two are let to the village's tailor and barber, never to the player
 const AWNING := [1890, 3502]          # the merchants' stall art (ground layer "below0"), two tiles wide
 const PRICE_CAP := 4                  # a listing may be priced up to this many times the item's value
 const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: out of work, a manor hand with no job taken, a labourer
@@ -48,11 +51,15 @@ const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: 
 var w: World
 var heading := {}                     # npc id -> game hour they set out for the stall (not saved)
 var stalls: Stalls                    # market stalls: building, sessions and the 5% settlement (STALL-01..06)
+var money: BusinessMoney              # villagers' storefront tills and the owner's pay (ECON-P3)
+var works: BusinessWorks              # the attendant's production at the player's own stations (B18-DP-01)
 
 
 func _init(world: World) -> void:
 	w = world
 	stalls = Stalls.new(world, self)
+	money = BusinessMoney.new(world)
+	works = BusinessWorks.new(world, self)
 
 
 # ---------------------------------------------------------------- pitches --------------------
@@ -67,7 +74,7 @@ static func add_pitches(world: World, m: VillageMap) -> void:
 		if not world.stalls.has(id):
 			# made as a loaded one is (JSON numbers), so a save of an upgraded old save is the same as of the next load
 			world.stalls[id] = JSON.parse_string(JSON.stringify({"id": id, "x": int(p.x), "y": int(p.y), "use": [int(p.x), int(p.y) + 1],
-				"kind": "pitch", "pitch": true, "owner": World.MANOR, "tenant": ""}))
+				"kind": "pitch", "pitch": true, "owner": World.MANOR, "tenant": "", "service": str(p.get("service", ""))}))
 		if not lay.is_empty():
 			for k in 2:
 				lay.data[int(p.y) * m.w + int(p.x) + k] = AWNING[k]
@@ -307,9 +314,32 @@ func sorted_ids() -> Array:
 func free_pitch() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "":
+		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "" and str(s.get("service", "")) == "":
 			return s
 	return {}
+
+
+## TAILOR-18 / BARBER-18: the pitch kept for a service trade ("tailor", "barber"), or {}.
+static func service_pitch(w: World, job: String) -> Dictionary:
+	for id in w.stalls.keys():
+		if is_pitch(w.stalls[id]) and str(w.stalls[id].get("service", "")) == job:
+			return w.stalls[id]
+	return {}
+
+
+## Let the service pitch of `job` to `n` (rent-free like the merchants' stalls: no villager pays rent yet); it never sells
+## goods (not open). "" when done, else why not.
+static func let_service_pitch(w: World, n: NPC, job: String) -> String:
+	var s := service_pitch(w, job)
+	if s.is_empty():
+		return "no pitch"
+	var t := w.tenant_of(s)
+	if t != "" and t != World.npc_ref(n.id):
+		return "let already"
+	w.set_tenant(s, World.npc_ref(n.id))
+	s.open = false
+	n.workplace = str(s.id)
+	return ""
 
 
 static func rent_day() -> int:
@@ -318,6 +348,43 @@ static func rent_day() -> int:
 
 func use_cell(s: Dictionary) -> Vector2:
 	return Vector2(int(s.use[0]) + 0.5, int(s.use[1]) + 0.5)
+
+
+## B18-DP-01 (stalls display goods with existing item icons): the goods shown over a counter, from its REAL stock: the
+## featured item of a larger stall first, then the kinds it holds most of (ties by id), at most `slots`. A sold-out kind is
+## gone from the stock and so from the display. Looks only (StallDisplayView draws it).
+static func display_goods(s: Dictionary, slots: int) -> Array:
+	var stock: Dictionary = s.get("stock", {})
+	var ids := []
+	for id in stock:
+		if int(stock[id]) > 0:
+			ids.append(str(id))
+	ids.sort_custom(func(a, b): return int(stock[a]) > int(stock[b]) or (int(stock[a]) == int(stock[b]) and a < b))
+	var feat := str(s.get("display", ""))
+	if feat != "" and ids.has(feat):
+		ids.erase(feat)
+		ids.push_front(feat)
+	return ids.slice(0, maxi(0, slots))
+
+
+## Every counter that shows goods: [{x, y, wide (tiles), goods}] for the player's premises, the built stalls and the
+## pitches let to anyone, in a fixed order; counters with nothing in stock show nothing.
+func displays() -> Array:
+	var out := []
+	var seen := {}
+	var recs := []
+	for id in sorted_ids():
+		recs.append(w.stalls[id])
+	recs.append_array(shops())
+	for s: Dictionary in recs:
+		if seen.has(str(s.get("id", ""))) or not s.has("stock") or not s.has("x"):
+			continue
+		seen[str(s.get("id", ""))] = true
+		var wide := 1 if (is_shop(s) and not bool(s.get("front", false))) else 2
+		var goods := display_goods(s, wide * 2)
+		if not goods.is_empty():
+			out.append({"x": int(s.x), "y": int(s.y), "wide": wide, "goods": goods})
+	return out
 
 
 func stock_of(s: Dictionary) -> Dictionary:
@@ -395,7 +462,7 @@ func unlist(s: Dictionary, id: String, qty: int) -> String:
 	if qty <= 0 or qty > have:
 		return "The stall does not hold that many."
 	if not w.player.inv.can_add(id):
-		return "Your pack is full."
+		return w.player.inv.full_text(id)
 	s.stock[id] = have - qty
 	w.player.inv.add(id, qty)
 	if int(s.stock[id]) == 0:
@@ -424,6 +491,27 @@ func collect(s: Dictionary) -> int:
 	return t
 
 
+## ECON-P3: the owner's choice to move money between the purse and the till. "" when done, else why not. A market
+## stall's open session proceeds are not taken out (Q13).
+func deposit(s: Dictionary, amount: int) -> String:
+	if amount <= 0 or w.player.coins < amount:
+		return "You do not have %d coins." % amount
+	w.player.coins -= amount
+	s.till = int(s.get("till", 0)) + amount
+	w.stat("till_deposited", amount)
+	return ""
+
+
+func withdraw(s: Dictionary, amount: int) -> String:
+	var avail := stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0))
+	if amount <= 0 or avail < amount:
+		return "The till holds %d coins%s." % [avail, " you can take now" if stalls.is_market(s) else ""]
+	s.till = int(s.till) - amount
+	w.player.coins += amount
+	w.stat("till_withdrawn", amount)
+	return ""
+
+
 ## Give the pitch (or the shop's trade) back with nothing lost: the unsold goods, the back room's stock and
 ## the till return to the player; what does not fit the pack lies at the stall as loot. No refund of rent
 ## paid. A closed shop leaves its counter and shelves standing. Returns a summary line.
@@ -439,6 +527,7 @@ func close(s: Dictionary, because := "You closed your stall.") -> String:
 				back += n
 			else:
 				bag.add(id, n)
+	back += works.clear_into(s, bag)      # the workroom's materials and goods come back too (B18-DP-01)
 	var coins := collect(s)
 	var left := bag.total()
 	if left > 0:
@@ -460,6 +549,7 @@ func close(s: Dictionary, because := "You closed your stall.") -> String:
 ## Each morning: the day's rent (a shop's licence), from the purse and then the till. Unpaid, selling stops;
 ## after stall_evict_days unpaid mornings the pitch is taken back (close()). Then the attendant's wage.
 func daily() -> void:
+	money.daily()                     # the villagers' storefront tills: necessity, the owner's pay, the float (ECON-P3)
 	for s in premises():
 		if is_shop(s) and not is_mine(s):
 			w.note(close(s, "You no longer hold the shop's room."))
@@ -493,12 +583,14 @@ func _rent_due(s: Dictionary) -> void:
 		w.note("You could not pay the %s (%d coins). Sales are stopped until you do; the manor takes it back after %d days." % ["shop's licence" if is_shop(s) else "stall's rent", owed, int(GameData.b("stall_evict_days"))])
 
 
-## Make `amount` ready in the purse, from the till when the purse is short. False (and nothing moved) when
-## the two together cannot cover it. An open market session's proceeds are not drawn on (Q13: not withdrawable until
-## the session is settled).
+## Make `amount` ready in the purse for a business expense (ECON-P3: the business pays from its own till first). The
+## purse covers only what the till cannot, and only from the coins above the necessity reserve (World.spendable): a
+## failing shop does not silently eat the family's food money, the player moves money in by choice (deposit). False (and
+## nothing moved) when the two cannot cover it. An open market session's proceeds are not drawn on (Q13: not
+## withdrawable until the session is settled).
 func _charge(s: Dictionary, amount: int) -> bool:
-	var from_till := mini(maxi(0, amount - w.player.coins), stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0)))
-	if w.player.coins + from_till < amount:
+	var from_till := mini(amount, stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0)))
+	if maxi(0, amount - from_till) > w.spendable(w.player):
 		return false
 	s.till = int(s.get("till", 0)) - from_till
 	w.player.coins += from_till
@@ -619,7 +711,7 @@ func fetch(s: Dictionary, id: String, qty: int) -> String:
 	if qty <= 0 or qty > have:
 		return "The back room does not hold that many."
 	if not w.player.inv.can_add(id):
-		return "Your pack is full."
+		return w.player.inv.full_text(id)
 	w.player.inv.add(id, qty)
 	s.store[id] = have - qty
 	if int(s.store[id]) == 0:
@@ -757,8 +849,11 @@ func plan_attendant(n: NPC) -> bool:
 	for s in premises():
 		if int(s.get("attendant", -1)) != n.id:
 			continue
+		if works.plan_work(s, n):         # orders to make at the player's own stations (B18-DP-01)
+			return true
 		n.doing = "minding the player's %s" % ("shop" if is_shop(s) else "stall")
 		n.plan = [w.brain.go(counter_cell(s)), w.brain.work(60, "", {}, "idle")]
+		n.plan[1]["industry"] = "trade"      # X18-D4: hours keeping the stall open are trade experience
 		return true
 	return false
 
@@ -962,4 +1057,4 @@ func tills() -> int:
 		t += int(w.stalls[id].get("till", 0))
 	for s in shops():
 		t += int(s.get("till", 0))
-	return t
+	return t + money.front_tills() + money.counter_tills()

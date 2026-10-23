@@ -85,7 +85,17 @@ func _draw_works(cc: Vector2i) -> void:
 	cells.sort()
 	for cell: Vector2i in cells:
 		var kind := str(overworld.works[cell])
-		var file := ("steps" if kind.begins_with("steps") else kind) + ".png"
+		var low := 0
+		if kind.begins_with("steps") and kind.length() == 8:       # "steps_ns" / "steps_ew" (the old "steps" has no run)
+			# the tile's low side (its grass edge) faces the ground, not the top: steps_ns is drawn low side south, steps_ew low
+			# side east; a cell with more steps on its low side takes the "_mid" tile, whose treads run on to the next cell
+			low = _steps_low_side(cell, kind.ends_with("_ew"))
+			var ahead: Vector2i = cell + (Vector2i(low, 0) if kind.ends_with("_ew") else Vector2i(0, low))
+			if str(overworld.works.get(ahead, "")).begins_with("steps"):
+				kind += "_mid"
+		var file := kind + ".png"
+		if kind.begins_with("steps") and not ResourceLoader.exists("res://assets/terrain/" + file):
+			file = "steps.png"                  # an older way of unknown run keeps the first stand-in tile
 		if not _works_tex.has(file):
 			_works_tex[file] = load("res://assets/terrain/" + file) if ResourceLoader.exists("res://assets/terrain/" + file) else null
 		if _works_tex[file] == null:
@@ -95,7 +105,23 @@ func _draw_works(cc: Vector2i) -> void:
 		sp.centered = false
 		sp.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sp.position = Vector2(cell * MapView.T)
+		if low != 0:
+			sp.flip_v = kind.begins_with("steps_ns") and low < 0
+			sp.flip_h = kind.begins_with("steps_ew") and low < 0
 		layer.add_child(sp)
+
+
+## Which way along its run the ground lies from a steps cell: +1 (south or east) or -1 (north or west). Walk the way's cells
+## (the same run) to either end; the end that is not a mountain top is the ground.
+func _steps_low_side(cell: Vector2i, ew: bool) -> int:
+	var axis := Vector2i(1, 0) if ew else Vector2i(0, 1)
+	var ends := []
+	for sgn in [1, -1]:
+		var c: Vector2i = cell + axis * sgn
+		while overworld.works.has(c) and str(overworld.works[c]).begins_with("steps") and absi(c.x - cell.x) + absi(c.y - cell.y) < 16:
+			c += axis * sgn
+		ends.append(overworld.is_top(c))
+	return -1 if ends[0] and not ends[1] else 1   # ends[0] is the + end: a top there puts the ground at the - end
 
 
 func _layer(root: Node2D, z: int) -> TileMapLayer:
