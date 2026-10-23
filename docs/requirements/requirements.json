@@ -18421,6 +18421,43 @@
    ]
   },
   {
+   "id": "FIX-RECF1",
+   "kind": "approved",
+   "title": "Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems",
+   "description": "Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems",
+   "source": "docs/directives/2026-10-23_recf1_storage_decisions.md",
+   "owner_wording": "Correct the condition that causes villagers to reconsider an unavailable action hundreds of times without productive results. Do not simply impose an arbitrary cooldown that conceals the problem.",
+   "approval": "owner 2026-10-23",
+   "acceptance": [
+    "Root cause identified with evidence before any change",
+    "Before/after decision and action counts; work, trading and production not suppressed",
+    "Build 18 untouched; change isolated"
+   ],
+   "target_build": "19",
+   "parent": "REC-19",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_recf1_storage_decisions.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> REC-F1 worker (Sonnet subagent); branch: None -> wip/fix-recf1",
+     "why": "assigned on an isolated branch from the Expansion 19 line"
+    }
+   ],
+   "assigned_worker": "REC-F1 worker (Sonnet subagent)",
+   "branch": "wip/fix-recf1"
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",
@@ -38450,6 +38487,45 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "approval_status: PROPOSED -> OWNER APPROVED",
+     "why": "owner approved investigation and a narrow correction (FIX-RECF1)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "approval_status: OWNER APPROVED -> PROPOSED; next_action",
+     "why": "the owner's approval is carried by FIX-RECF1; the finding stays a recorded proposal"
+    }
+   ],
+   "next_action": "addressed by FIX-RECF1"
+  },
+  {
+   "id": "REC-STORE",
+   "kind": "approved",
+   "title": "Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete",
+   "description": "Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete",
+   "source": "docs/directives/2026-10-23_recf1_storage_decisions.md",
+   "owner_wording": "Do not reduce, sample, or discard the alternatives and decision factors.",
+   "approval": "owner 2026-10-23",
+   "acceptance": [
+    "Archive keeps every alternative and factor row"
+   ],
+   "target_build": "19",
+   "parent": "REC-19",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_recf1_storage_decisions.md"
     }
    ]
   },

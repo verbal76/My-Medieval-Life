@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 484 (246 of them still open) |
-| **Open entries now** (rules excluded) | | **423** |
+| Entries added since | | 486 (248 of them still open) |
+| **Open entries now** (rules excluded) | | **425** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (484)
+## Added since the baseline (486)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -205,6 +205,7 @@ None.
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 19 |
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 19 |
+| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
@@ -432,6 +433,7 @@ None.
 | REC-D3 | Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records? | decision | APPROVED | 19 |
 | REC-D4 | Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only? | decision | APPROVED | 19 |
 | REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed. | proposal | NOT STARTED / NOT TESTED / OPEN | 19 |
+| REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | decision | APPROVED | 18 |
