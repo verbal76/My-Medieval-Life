@@ -63,7 +63,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 
-## Approved, no build assigned (13)
+## Approved, no build assigned (12)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -77,7 +77,6 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | OWNER APPROVED | NOT STARTED |
 | WDR-020-C | Comply with World Design Rule 20: Autonomous Housing | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-021-C | Comply with World Design Rule 21: Household Succession and Family Care | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
-| WEATHER-01 | Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back) | approved | OWNER APPROVED | NOT STARTED |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | OWNER APPROVED | NOT STARTED |
 

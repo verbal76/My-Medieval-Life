@@ -65,6 +65,12 @@
    "implementation_authorized": false,
    "released": "",
    "authority": "OD-30 renumbered 2026-10-23: numbering only"
+  },
+  "25": {
+   "name": "Weather and Natural Disasters",
+   "implementation_authorized": false,
+   "released": "",
+   "authority": "WEATHER-01 (owner 2026-10-23): design only, no code"
   }
  },
  "requirements": [
@@ -49558,7 +49564,7 @@
    "acceptance": [
     "Expansion number, scope and authorization confirmed by the owner"
    ],
-   "target_build": "unassigned",
+   "target_build": "25",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -49572,8 +49578,19 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_dynamic_weather_idea.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: unassigned -> 25; next_action",
+     "why": "owner answered: Expansion 25, design only now, rare-but-real disasters, mixed fates for the washed away"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "next action reworded (the design document does not exist yet)"
     }
-   ]
+   ],
+   "next_action": "write the Expansion 25 design specification and audit between Build 19 tasks; no code until approved"
   },
   {
    "id": "WIKI-01",

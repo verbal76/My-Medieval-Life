@@ -164,8 +164,11 @@ class ValidationTest(unittest.TestCase):
         self.assertTrue(any(q["id"] in e and "owner's words" in e for e in _errs(new)))
         self.assertTrue(any(q["id"] in e for e in cr.compare(REGISTER, new)))
 
-    def test_x19_decay_stays_provisional(self):
-        self.assertEqual(_by(REGISTER, "X19-DECAY")["disposition"], "PROVISIONAL")
+    def test_x19_decay_approved_only_by_the_owner(self):
+        # PROVISIONAL until the owner's answer of 2026-10-23 (section A of docs/design/X19_RELEASE_DECISIONS.md)
+        d = _by(REGISTER, "X19-DECAY")
+        self.assertEqual(d["disposition"], "APPROVED")
+        self.assertTrue(any("owner_answers_x19_release_decisions" in str(h) for h in d["history"]))
         self.assertEqual(_by(REGISTER, "OD-21")["disposition"], "APPROVED")
 
     def test_memory_files_cover_work_in_development(self):
