@@ -38196,7 +38196,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -38210,10 +38210,104 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
      "why": "Phase A audit started (read-only research agent); design by the lead"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
+     "why": "Phase A audit and Phase B design written (docs/design/FLIGHT_RECORDER_DESIGN.md); Phase C owner checkpoint"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life"
+   "branch": "staging/my-medieval-life",
+   "next_action": "owner approves the design and answers REC-D1..D4; implementation waits for ID-01"
+  },
+  {
+   "id": "REC-D1",
+   "kind": "decision",
+   "title": "Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases?",
+   "description": "Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases?",
+   "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    }
+   ]
+  },
+  {
+   "id": "REC-D2",
+   "kind": "decision",
+   "title": "Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days?",
+   "description": "Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days?",
+   "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    }
+   ]
+  },
+  {
+   "id": "REC-D3",
+   "kind": "decision",
+   "title": "Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records?",
+   "description": "Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records?",
+   "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    }
+   ]
+  },
+  {
+   "id": "REC-D4",
+   "kind": "decision",
+   "title": "Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only?",
+   "description": "Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only?",
+   "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    }
+   ]
   },
   {
    "id": "RECON-01",

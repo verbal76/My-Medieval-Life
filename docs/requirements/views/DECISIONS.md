@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 44 |
+| OPEN | 48 |
 | APPROVED | 153 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -25,10 +25,14 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 
-## Build 19: NPC Judgment System: open, reopened or provisional (11)
+## Build 19: NPC Judgment System: open, reopened or provisional (15)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| REC-D1 | Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases? | OPEN | no |  | docs/directives/2026-10-23_build19_flight_recorder.md |
+| REC-D2 | Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days? | OPEN | no |  | docs/directives/2026-10-23_build19_flight_recorder.md |
+| REC-D3 | Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records? | OPEN | no |  | docs/directives/2026-10-23_build19_flight_recorder.md |
+| REC-D4 | Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only? | OPEN | no |  | docs/directives/2026-10-23_build19_flight_recorder.md |
 | X19-BOND-LIMITS | Do specific relationship or reputation effects need additional balancing limits? | OPEN | no |  | docs/directives/2026-10-23_x19_foundations_round.md |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | PROVISIONAL | no | SJD-G | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
 | X19-EVENT-Q | Expansion 19 event feeds raised four questions: (1) should a guard killing an assailant count as a killing (today it does: the game cannot tell them apart)? (2) should first acquaintance be recorded as a meeting fact? (3) should a late repayment score as a fair deal? (4) self-defence cannot yet be told from an attack: add that distinction later? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
