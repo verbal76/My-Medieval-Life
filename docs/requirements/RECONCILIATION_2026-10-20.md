@@ -289,7 +289,7 @@ None.
 | MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | APPROVED | owner decision |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
-| MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | APPROVED | 16 |
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | APPROVED | 16 |
@@ -417,7 +417,7 @@ None.
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
@@ -433,7 +433,7 @@ None.
 | SEED-04 | Households save planting material from their own harvests | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| SFX-18 | Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
+| SFX-18 | Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |

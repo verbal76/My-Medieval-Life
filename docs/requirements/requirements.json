@@ -26064,8 +26064,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -26083,10 +26083,25 @@
      "date": "2026-10-23",
      "change": "acceptance",
      "why": "owner placed the Minifantasy tracks: Fair Fight in fights, Plain Sight in the countryside (directive file)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: music worker (Sonnet subagent) -> ; branch: wip/b18-music -> ; tests: None -> audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; test_commit: None -> 7d50095; commits + 6beb4b3; commits + 7d50095; integrated_in + Build 18 wip/build18 95578d8; remaining_work",
+     "why": "audio merged into Build 18 (45e4287, 6beb4b3, 7d50095; head 95578d8): music by slot, ambience, sound effects, soft footsteps; Android Ogg, PC WAV fetched at release; all 85 suites pass"
     }
    ],
-   "assigned_worker": "music worker (Sonnet subagent)",
-   "branch": "wip/b18-music"
+   "assigned_worker": "",
+   "branch": "",
+   "tests": "audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads",
+   "test_commit": "7d50095",
+   "commits": [
+    "6beb4b3",
+    "7d50095"
+   ],
+   "integrated_in": [
+    "Build 18 wip/build18 95578d8"
+   ],
+   "remaining_work": "device check: phone audio, cross-fades, footstep loudness; Windows/Linux packages with the WAVs (memory while a WAV plays); the release workflow's fetch step on its first real run"
   },
   {
    "id": "OD-01",
@@ -38105,8 +38120,8 @@
    "target_build": "18",
    "workstream": "release gate",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -38116,7 +38131,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md; test_commit: None -> 9a86f5c; commits + 95578d8; known_defects + chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet",
+     "why": "365-day runs seeds 1-4 on 9a86f5c (run 39874405723): all reached day 365, no leak, no script error, no FATAL; read from job logs at day 365 only (artifacts blocked); the day-100 read and settlement trend not recoverable from logs (long-sims now prints them). Possible defect under root-cause check: the chapel fund holding 68-85% of all coins at day 365, treasury 0-4, 73-80% of adults without a job"
     }
+   ],
+   "tests": "run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md",
+   "test_commit": "9a86f5c",
+   "commits": [
+    "95578d8"
+   ],
+   "known_defects": [
+    "chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet"
    ]
   },
   {
@@ -38259,10 +38287,15 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> 83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records); test_commit: None -> 0e1a88b; commits + 0e1a88b; remaining_work",
      "why": "all 83 Godot suites pass on the final integration code (crafts, world and profile fixed in 0e1a88b); the 17 Build 18 suites missing from CI added to tests.yml"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: 83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records) -> 83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records); 85 suites, 0 failures on 7d50095 (run_tests 3595); test_commit: 0e1a88b -> 7d50095",
+     "why": "all 85 suites pass on 7d50095 (Build 18 with audio)"
     }
    ],
-   "tests": "83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records)",
-   "test_commit": "0e1a88b",
+   "tests": "83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records); 85 suites, 0 failures on 7d50095 (run_tests 3595)",
+   "test_commit": "7d50095",
    "commits": [
     "0e1a88b"
    ],
@@ -40290,8 +40323,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -40314,10 +40347,25 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner supplied Minifantasy Forgotten Plains SFX (footsteps, rustling, water, crickets, birds, wind, hits)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: music worker (Sonnet subagent) -> ; branch: wip/b18-music -> ; tests: None -> audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; test_commit: None -> 7d50095; commits + 6beb4b3; commits + 7d50095; integrated_in + Build 18 wip/build18 95578d8; remaining_work",
+     "why": "audio merged into Build 18 (45e4287, 6beb4b3, 7d50095; head 95578d8): music by slot, ambience, sound effects, soft footsteps; Android Ogg, PC WAV fetched at release; all 85 suites pass"
     }
    ],
-   "assigned_worker": "music worker (Sonnet subagent)",
-   "branch": "wip/b18-music"
+   "assigned_worker": "",
+   "branch": "",
+   "tests": "audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads",
+   "test_commit": "7d50095",
+   "commits": [
+    "6beb4b3",
+    "7d50095"
+   ],
+   "integrated_in": [
+    "Build 18 wip/build18 95578d8"
+   ],
+   "remaining_work": "device check: phone audio, cross-fades, footstep loudness; Windows/Linux packages with the WAVs (memory while a WAV plays); the release workflow's fetch step on its first real run"
   },
   {
    "id": "SHOP-01",

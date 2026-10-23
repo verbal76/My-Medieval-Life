@@ -9,8 +9,8 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 83 |
-| Integrated | 72 of 83 (87%) |
-| Automated tests passed | 70 of 83 (84%) |
+| Integrated | 75 of 83 (90%) |
+| Automated tests passed | 73 of 83 (88%) |
 | Integration verified | 55 of 83 (66%) |
 | Gameplay verified | 0 of 83 (0%) |
 | Owner playtested | 0 of 83 (0%) |
@@ -18,14 +18,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 81 |
 | Open owner decisions (blocking) | 6 (1) |
 
-## In development (worker assigned) (2)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
-| MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | OWNER APPROVED | IN DEVELOPMENT | music worker (Sonnet subagent) / wip/b18-music | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| SFX-18 | Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider | OWNER APPROVED | IN DEVELOPMENT | music worker (Sonnet subagent) / wip/b18-music | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
-## Integrated, awaiting gameplay or owner verification (70)
+## Integrated, awaiting gameplay or owner verification (73)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -48,6 +41,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | INTEGRATION VERIFIED | Gameplay check; keeper lessons are free and abstract (provisional); known: The player has no courier job, so cannot gain Law by carrying documents |  | verification only |
 | MAP-01 | Map shows where you are beyond the village | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | MIGRATE-18 | Migration both ways between the village and the off-map settlements for work, land, marriage or hunger | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; 30-day conservation on 1daa61f running; settlements have no housing model, so land-driven arrivals follow settlement marriages only (REG-DEMO-D1: housing as systems become available); known: In 30 days only marriage moves occurred; hunger, work and land moves are covered by tests only; A leaver's open contract is cancelled with the text 'died'; experience hours do not travel (skills do) |  | verification only |
+| MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 95578d8 | TARGETED TESTS PASSED | device check: phone audio, cross-fades, footstep loudness; Windows/Linux packages with the WAVs (memory while a WAV plays); the release workflow's fetch step on its first real run |  | verification only |
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest; the determinism gate must be re-recorded on Build 18 (REL18-DET) because clue placement changed |  | verification only |
 | PL1-10 | Player businesses, staged (1-4) | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 99dc3be | TARGETED TESTS PASSED | Build 18 (B18-DP-01): attendants operate workshop stations with real recipes, materials and wages; produced goods stocked and sold; stall goods display with item icons; leased village houses as shops; demonstrate production, payment and conservation |  | verification only |
 | PL2-008 | Expandable property | OWNER APPROVED | INTEGRATED | 4ca0063, f3eed8c | NOT TESTED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |  | verification only |
@@ -60,6 +54,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | OWNER APPROVED | INTEGRATED | staging | TARGETED TESTS PASSED | Owner review of the report (docs/investigations/2026-10-23_regional_economy.md) and decisions REG-WAGE-D1, REG-BUY-D1, REG-CIRC-D1 |  | verification only |
 | REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Per-holder need and sale-cap derivations in SettlementParty are provisional agent proposals (DESIGN.md 12a); the food-selling policy awaits REG-BUY-P1; known: Not called from the daily loop yet (RegionalMarket wiring is part of REG-BUY-01; couriers REG-COURIER-01); No settlement party hires out carts yet; treasuries and businesses cannot travel (carriage per Q18-12, approved: to be built under REG-COURIER-01) |  | verification only |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | OWNER APPROVED | INTEGRATED | b2f5c5d | INTEGRATION VERIFIED | re-run only if simulation code changes before the candidate packages |  | verification only |
+| REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | OWNER APPROVED | INTEGRATED | 95578d8 | TARGETED TESTS PASSED | known: chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet |  | verification only |
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | OWNER APPROVED | INTEGRATED | b2f5c5d, 37526cb | INTEGRATION VERIFIED | on-device import from the Android build (owner playtest) |  | verification only |
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | OWNER APPROVED | INTEGRATED | 0e1a88b | INTEGRATION VERIFIED | CI Tests run on staging after the Build 18 merge |  | verification only |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | OWNER APPROVED | INTEGRATED | 0e1a88b | INTEGRATION VERIFIED |  |  | verification only |
@@ -69,6 +64,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; owner may review the lore choices in docs/expansion18/SETTLEMENTS.md; known: Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open) |  | verification only |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned); known: No births or old-age deaths in the settlements yet; Village cannot buy food from the settlements yet; no tool-shortage productivity penalty |  | verification only |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 66a5d4c | TARGETED TESTS PASSED | Trades opening with sustained unmet demand and closing without workers, capacity following labour (existing rules); 100- and 365-day checks; multi-generation verification outstanding unless a sufficient horizon is shown (B18-DP-05); known: multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only |  | verification only |
+| SFX-18 | Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 95578d8 | TARGETED TESTS PASSED | device check: phone audio, cross-fades, footstep loudness; Windows/Linux packages with the WAVs (memory while a WAV plays); the release workflow's fetch step on its first real run |  | verification only |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | STONE-02 | Personal-use stone dressing by any villager (own house or repairs), same rules as the player | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 | STONE-03 | Materials by kind of work: major masonry reconstruction in blocks and mixed raw-stone-and-block jobs | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
@@ -100,13 +96,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 18 wip/build18 b196303 | TARGETED TESTS PASSED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11); known: covers 9 of about 46 planned runs; no capability constants adopted |  | verification only |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (7)
+## Ready to proceed now (approved, specified, nothing open blocks it) (6)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Owner-approved sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md): all implementation items closed or accepted as permanently blocked, pre-package verification done, then final candidate packages (Android, Windows, Linux) for the owner's device playtest; pass closes REL18-DEVICE, fail means fixes and corrected candidates |  | M |
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
-| REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | UNKNOWN |
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | fc25af7 | NOT TESTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | M |

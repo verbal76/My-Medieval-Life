@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `37526cb` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
+| `wip/build18` | `95578d8` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -36,15 +36,12 @@ Never reconstruct state from a conversation summary: these files are the record.
 
 Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
-| Record | Worker | Branch | Started from | Notes |
-|---|---|---|---|---|
-| MUSIC-18, SFX-18 | music worker (Sonnet subagent) | `wip/b18-music` | `wip/build18` 37526cb | the owner's three songs by time of day; Ogg on Android, WAV on PC (docs/directives/2026-10-23_game_music.md) |
+One read-only investigator: the chapel fund holding 68-85% of all coins at day 365 in the Build 18 long runs (REL18-LONGRUN known defect), with the treasury and unemployment and the firewood counter; worktree `scratchpad/rcachapel` at 9a86f5c.
 
 ### Running processes (never restart or cancel; SIM-02)
 
 | What | Where | Code | Started |
 |---|---|---|---|
-| Build 18 365-day runs, seeds 1-4, checkpoints every 10 days (REL18-LONGRUN, SET-C, WDR-004-C; day 100 read from them) | GitHub Actions long-sims run 39874405723 | `wip/build18` 9a86f5c | 2026-10-22 23:50 UTC |
 
 On their reports:
 1. Review the work.
