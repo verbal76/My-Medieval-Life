@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 481 (244 of them still open) |
-| **Open entries now** (rules excluded) | | **421** |
+| Entries added since | | 482 (245 of them still open) |
+| **Open entries now** (rules excluded) | | **422** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (481)
+## Added since the baseline (482)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -246,8 +246,9 @@ None.
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 15 |
-| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | ID-D1 | Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager? | decision | APPROVED | unassigned |
+| ID-D2 | Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not. | decision | OPEN | unassigned |
 | INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
@@ -424,7 +425,7 @@ None.
 | Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons | decision | APPROVED |  |
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) | decision | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | APPROVED | 18 |
-| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
+| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
 | REC-D1 | Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases? | decision | APPROVED | 19 |
 | REC-D2 | Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days? | decision | APPROVED | 19 |
 | REC-D3 | Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records? | decision | APPROVED | 19 |

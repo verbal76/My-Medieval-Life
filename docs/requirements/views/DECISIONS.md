@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 44 |
+| OPEN | 45 |
 | APPROVED | 157 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -88,10 +88,11 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | OPEN | no |  | docs/directives/2026-10-23_expansions_22_23_kickoff.md |
 
-## Approved, no build assigned: open, reopened or provisional (1)
+## Approved, no build assigned: open, reopened or provisional (2)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| ID-D2 | Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not. | OPEN | no |  | docs/directives/2026-10-23_identity_foundation_approval.md |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | OPEN | no |  | docs/directives/2026-10-23_decision_explainability.md |
 
 ## Waiting on an owner decision for its build: open, reopened or provisional (5)

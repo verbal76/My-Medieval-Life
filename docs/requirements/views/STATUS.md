@@ -11,8 +11,8 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Waiting on an owner decision (design) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Design work still required | 2 | 3 | 0 | 0 | 0 | 0 | 0 |
 | Design unknown | 15 | 13 | 9 | 5 | 3 | 1 | 0 |
-| Not started (incl. READY) | 2 | 10 | 8 | 2 | 2 | 0 | 0 |
-| In development (worker assigned) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Not started (incl. READY) | 2 | 9 | 8 | 2 | 2 | 0 | 0 |
+| In development (worker assigned) | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
 | Partially implemented | 1 | 4 | 0 | 0 | 0 | 0 | 0 |
 | Implemented on a task branch | 0 | 8 | 1 | 3 | 1 | 1 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -40,5 +40,5 @@ Build authority:
 - **Build 23 (Bandit Factions and Criminal Careers):** implementation authorized. owner 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): BAN-A audit and requirements reconciliation only; no criminal actions or faction behaviour
 - **Build 24 (Generational Legacy):** implementation **NOT AUTHORIZED**. OD-30 renumbered 2026-10-23: numbering only
 
-Future backlog and unassigned: 115 open records (`BACKLOG.md`). Open owner decisions: 46 (`DECISIONS.md`).
+Future backlog and unassigned: 116 open records (`BACKLOG.md`). Open owner decisions: 47 (`DECISIONS.md`).
 

@@ -18,13 +18,19 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Open (release blockers) | 22 |
 | Open owner decisions (blocking) | 11 (0) |
 
+## In development (worker assigned) (1)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | NOT TESTED | when ID-01 lands: D1 core on a recorder branch from the Expansion 19 branch with the identity foundation; smallest shared architecture; coverage reported honestly | design: UNKNOWN | UNKNOWN |
+
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -33,7 +39,6 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) / wip/expansion19-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | OWNER DECISION REQUIRED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | DVW-B1, design: UNKNOWN | L |
-| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | NOT STARTED | lead / staging/my-medieval-life | NOT TESTED | when ID-01 lands: D1 core on a recorder branch from the Expansion 19 branch with the identity foundation; smallest shared architecture; coverage reported honestly | design: UNKNOWN | UNKNOWN |
 | SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/expansion19-preparation | TARGETED TESTS PASSED |  | SJD-A | XS |
 | SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/expansion19-preparation | TARGETED TESTS PASSED |  | SJD-B | M |
 | SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/expansion19-preparation | TARGETED TESTS PASSED |  | SJD-C | M |

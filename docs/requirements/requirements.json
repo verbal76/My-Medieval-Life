@@ -22163,8 +22163,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22192,11 +22192,23 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: lead -> identity worker (Sonnet subagent); branch: staging/my-medieval-life -> wip/foundation-identity",
      "why": "assigned: identity foundation on wip/foundation-identity (from Build 18 239bdff)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined; test_commit: None -> 0f2bb92; commits + af6409f; commits + a67efd2; commits + 0f2bb92; next_action",
+     "why": "built on wip/foundation-identity (af6409f, a67efd2, 0f2bb92): never-reused counter, person register, off-map ids, migration reactivation, succession with kept heir record and ancestor snapshot, save version 20 upgrade with report and refusal path; identity_test 89 and all 87 CI suites pass; the gate differs (id shift, see ID-D2), not re-baselined"
     }
    ],
    "assigned_worker": "identity worker (Sonnet subagent)",
    "branch": "wip/foundation-identity",
-   "next_action": "owner approves the design, the foundation branch and save version 20, and answers ID-D1"
+   "next_action": "owner answers ID-D2 (id numbering and the gate re-baseline)",
+   "tests": "identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined",
+   "test_commit": "0f2bb92",
+   "commits": [
+    "af6409f",
+    "a67efd2",
+    "0f2bb92"
+   ]
   },
   {
    "id": "ID-D1",
@@ -22222,6 +22234,28 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (docs/directives/2026-10-23_identity_foundation_approval.md)"
+    }
+   ]
+  },
+  {
+   "id": "ID-D2",
+   "kind": "decision",
+   "title": "Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not.",
+   "description": "Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not.",
+   "source": "docs/directives/2026-10-23_identity_foundation_approval.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_identity_foundation_approval.md"
     }
    ]
   },
@@ -38196,7 +38230,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -38220,10 +38254,15 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner approved the design with REC-D1..D4 (docs/directives/2026-10-23_recorder_decisions.md); implementation starts when the identity foundation is ready"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: lead -> recorder worker (Sonnet subagent); branch: staging/my-medieval-life -> wip/recorder",
+     "why": "D1 core and first D2 choke points assigned on wip/recorder (from the Expansion 19 branch; the identity foundation joins later)"
     }
    ],
-   "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life",
+   "assigned_worker": "recorder worker (Sonnet subagent)",
+   "branch": "wip/recorder",
    "next_action": "when ID-01 lands: D1 core on a recorder branch from the Expansion 19 branch with the identity foundation; smallest shared architecture; coverage reported honestly"
   },
   {

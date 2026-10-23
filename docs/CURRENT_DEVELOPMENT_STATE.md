@@ -44,9 +44,9 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | E22-P1, E23-BANA | lead (done) | staging (documents) | - | audit written: docs/design/EXPANSIONS_22_23_AUDIT.md; waits on the owner's review; no implementation |
 | XAUDIT-01 | lead (done) | staging (documents) | - | report docs/design/CROSS_EXPANSION_PRESERVATION_AUDIT.md; awaits the owner's review; findings D1 (judgment save bypass) and D2 (economy save drop) are defects on the prospective branches, unfixed by instruction |
 | FIX-D1D2, FIX-D3 | repair workers (done) | `wip/expansion19-preparation` (fd99591 D1, 3ec38d2 D3), `wip/expansion20-preparation` (af62948 D2) | - | done and reported 2026-10-23; branches stay separate until the owner approves the integration plan |
-| ID-01 | identity worker (Sonnet subagent) | `wip/foundation-identity` (worktree `.claude/worktrees/foundation`) | 239bdff | approved design (docs/directives/2026-10-23_identity_foundation_approval.md): never-reused ids, person register, migration keeps the person, heir keeps own identity, save version 20 |
+| ID-01 | identity worker (done) | `wip/foundation-identity` | 0f2bb92 | built and tested (identity_test 89, all CI suites pass); gate differs by id shift, waits on ID-D2; not merged anywhere |
 | RECON-01 | reconciliation worker (done) | `wip/expansion19-preparation` 4a0459f, `wip/expansion20-preparation` 1befd0e | - | one tolerance calculation; reservations recognise contract holds; gate identical |
-| REC-19 | lead (design done) | staging (design) | - | Phase A and B in docs/design/FLIGHT_RECORDER_DESIGN.md; waits on the owner's approval and REC-D1..D4; implementation after ID-01 |
+| REC-19 | recorder worker (Sonnet subagent) | `wip/recorder` (worktree `.claude/worktrees/recorder`) | 4a0459f | D1 core and first D2 choke points (decide, act, trade, transfer, coin audit, hourly samples); off by default; identity merges in after ID-D2 |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
 Alignment report and capability matrices: `docs/design/EXPANSIONS_19_21_ALIGNMENT.md` (2026-10-23). No worker is running; every next step waits on the owner's answers.
