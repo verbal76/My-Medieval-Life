@@ -18380,8 +18380,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -18394,10 +18394,20 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> repair worker X19 (Sonnet subagent); branch: None -> wip/expansion19-preparation",
      "why": "assigned with D1"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_guard_save_test 18, relations_test 80, judgment_live_test 142, judgment_test 217, judgment_personality_test 65, judgment_bonds_test 97, migration_test 92, save_transfer_test 21, wiki_test; sim_gate identical; test_commit: None -> 3ec38d2; commits + 3ec38d2",
+     "why": "fixed (3ec38d2): Build 18 behaviour with judgment off, halve-never-waive with judgment on; judgment_guard_save_test 18, relations_test 80, wiki_test, gate identical"
     }
    ],
    "assigned_worker": "repair worker X19 (Sonnet subagent)",
-   "branch": "wip/expansion19-preparation"
+   "branch": "wip/expansion19-preparation",
+   "tests": "judgment_guard_save_test 18, relations_test 80, judgment_live_test 142, judgment_test 217, judgment_personality_test 65, judgment_bonds_test 97, migration_test 92, save_transfer_test 21, wiki_test; sim_gate identical",
+   "test_commit": "3ec38d2",
+   "commits": [
+    "3ec38d2"
+   ]
   },
   {
    "id": "FR-01",

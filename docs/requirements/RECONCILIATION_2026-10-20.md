@@ -204,7 +204,7 @@ None.
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
-| FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
+| FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 19 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
