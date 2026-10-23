@@ -8,14 +8,14 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 25 |
-| Integrated | 0 of 25 (0%) |
-| Automated tests passed | 11 of 25 (44%) |
-| Integration verified | 0 of 25 (0%) |
-| Gameplay verified | 0 of 25 (0%) |
-| Owner playtested | 0 of 25 (0%) |
-| Complete | 0 of 25 (0%) |
-| Open (release blockers) | 25 |
+| Approved requirements in scope | 26 |
+| Integrated | 0 of 26 (0%) |
+| Automated tests passed | 11 of 26 (42%) |
+| Integration verified | 0 of 26 (0%) |
+| Gameplay verified | 0 of 26 (0%) |
+| Owner playtested | 0 of 26 (0%) |
+| Complete | 0 of 26 (0%) |
+| Open (release blockers) | 26 |
 | Open owner decisions (blocking) | 14 (0) |
 
 ## In development (worker assigned) (3)
@@ -32,11 +32,12 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (22)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
+| FAM-SAC-01 | Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) / wip/expansion19-preparation, wip/expansion20-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) / wip/expansion19-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | OWNER DECISION REQUIRED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

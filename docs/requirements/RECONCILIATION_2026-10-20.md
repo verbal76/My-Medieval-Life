@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 490 (252 of them still open) |
-| **Open entries now** (rules excluded) | | **429** |
+| Entries added since | | 491 (253 of them still open) |
+| **Open entries now** (rules excluded) | | **430** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (490)
+## Added since the baseline (491)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -188,6 +188,7 @@ None.
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| FAM-SAC-01 | Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | FARM-01 | Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FARM-02 | Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FARM-03 | Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

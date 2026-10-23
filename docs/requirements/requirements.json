@@ -17140,6 +17140,36 @@
    "completion": "OPEN"
   },
   {
+   "id": "FAM-SAC-01",
+   "kind": "approved",
+   "title": "Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder",
+   "description": "Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder",
+   "source": "docs/directives/2026-10-23_family_sacrifice_responsibility.md",
+   "owner_wording": "The responsibility hierarchy is: 1. Children. 2. Spouse. 3. Parents. 4. Self.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Influences real decisions: food distribution, resources, employment, spending, caregiving, protection, danger",
+    "No separate family AI; long-term family survival weighed; personality preserved without routine self-interest overriding the hierarchy",
+    "Family-priority factors visible in the recorder"
+   ],
+   "target_build": "19",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_family_sacrifice_responsibility.md"
+    }
+   ]
+  },
+  {
    "id": "FARM-01",
    "title": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
    "kind": "approved",
