@@ -18,3 +18,15 @@ And if you're skilled at husbandry, you should have a better chance of domestica
   tame pets).
 - Odds: **"By animal (Recommended)"**: rabbits easiest, foxes more, wolves most; husbandry shortens all; a master can tame
   a rabbit on the first feeding, a wolf takes at least two.
+
+## Owner addition (same day, in the session; verbatim, spoken)
+
+If a husbandry skilled is not exist, we should be exist. You should be able to have animal pens built where you can domesticate animals take them into the pen cuz they follow you and if you're in the pen and they follow you into the pen which they should you should get a pop-up to have him stay there and then you can have him stay inside the pen like the villagers already have pens and then any offspring they have should automatically be domesticated
+
+(Facts: the husbandry skill already exists; players already fence their own pens, one kind of animal per pen.)
+
+Owner answer, what penned tamed animals are for (several chosen): **"Rabbits for meat and pelts (Recommended)"**,
+**"Wolves become guard dogs"** (pen-bred pups grow up tame and bark at bandits near home), **"Sell tame young"** (rabbits,
+fox kits, wolf pups sold to villagers who want a pet), **"Just pets"**. Agent reading of the combination (to confirm in the
+design note): foxes are kept as pets only; rabbits also for meat and pelts; wolves also as guard dogs; tame young of any of
+them can be sold.

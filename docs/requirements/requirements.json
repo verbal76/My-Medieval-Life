@@ -32806,6 +32806,11 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner answered: small add-on after Build 19, before the bigger expansions; pets follow, stay, need feeding; a tamed wolf or fox defends the player; villagers react; villagers with husbandry tame too; odds by animal (rabbit easiest, wolf hardest), husbandry shortens"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner added pens: a tamed animal follows the player into their pen and a prompt makes it stay; offspring born in the pen are tame; penned rabbits for meat and pelts, wolves as guard dogs, tame young sold to villagers, foxes as pets"
     }
    ],
    "next_action": "short design note and implementation after Build 19 ships (does not delay Build 19)"
