@@ -9,6 +9,8 @@ var failures := 0
 var checks := 0
 const BOB := 1
 const THIEF := 7
+## Recorded from the pre-move store (HEAD 3ec38d2) with the same script: tolerance of persons 1, 2, 3, 5 after each event; then [tolerance(1), threshold(1, -20000), weight_shift(3)].
+const EXPECT_TOL := "[[856,1098,876,1142],[776,1098,876,1142],[776,1058,876,1142],[776,1058,876,1142],[776,1058,796,1142],[776,1058,796,1142],[646,-12920,60]]"
 
 
 func check(cond: bool, what: String) -> void:
@@ -54,6 +56,7 @@ func holder(p: JudgmentPersonality, want := true) -> int:
 
 func _init() -> void:
 	test_shipped_inert()
+	test_tolerance_owner()
 	test_share()
 	test_evolution_inputs()
 	test_stable_and_soft_limits()
@@ -77,11 +80,12 @@ func test_shipped_inert() -> void:
 	var t0 := j.tolerance(BOB)
 	var ev := j.publish("theft", [THIEF], [BOB], [], 4)
 	j.observe_all(ev, [])
-	check(j.pers.is_empty() and not j.to_dict().has("traits"), "...nothing is recorded or saved by experiences")
+	var saved: Dictionary = j.to_dict().get("traits", {})
+	check(j.pers.drift.is_empty() and j.pers.anger.is_empty() and j.pers.wisdom.is_empty() and j.pers.record.is_empty() and saved.get("log", []).is_empty() and saved.get("tol", []).size() == 1, "...no experience is recorded; only the SJD-Q13 tolerance shift is held and saved (traits.tol)")
 	check(j.tolerance(BOB) == t0 - 40 and j.personality_growth(BOB) == 0, "...tolerance moves only by the existing life shift; growth is 0")
 	check(j.pers.mistake(BOB, "market", 3000, 5) == 0 and j.pers.practical_wisdom(BOB, "market") == 0, "...a costly mistake teaches nothing")
 	j.pers.experience(BOB, "provocation", 3000, 5)
-	check(j.pers.remind(BOB, 6) == 0 and j.pers.anger_at(BOB, 6) == 0 and j.pers.is_empty(), "...no anger, no reminder, no history")
+	check(j.pers.remind(BOB, 6) == 0 and j.pers.anger_at(BOB, 6) == 0 and j.pers.record.is_empty(), "...no anger, no reminder, no history")
 	check(before != 0 and JudgmentStore.default_cfg().traits.stubbornness_share_permille == 300, "...the approved 30% share ships")
 	var d: Dictionary = JudgmentStore.default_cfg().traits
 	var zero := true
@@ -279,7 +283,7 @@ func test_store_hook() -> void:
 	var ev := j.publish("theft", [THIEF], [BOB], [], 4)
 	j.observe_all(ev, [20])
 	check(not j.pers.drift.has(20), "a bystander's view of the theft is no experience of their own")
-	check(j.pers.tolerance_drift(BOB) == -100 and j.tolerance(BOB) == t0 - 40 - 100, "the victim's long-term drift (-100) adds to the existing life shift (-40) in tolerance()")
+	check(j.pers.tolerance_drift(BOB) == -100 and j.tolerance(BOB) == t0 - 100 and j.pers.life_tol.is_empty(), "the victim's long-term drift (-100) is the one tolerance change for the event: the plain life step (-40) does not stack on it (RECON-01)")
 	check(j.pers.anger_at(BOB, 3) == 300, "...and they are angry (%d)" % j.pers.anger_at(BOB, 3))
 	j.observe_all(ev, [BOB])
 	check(j.pers.tolerance_drift(BOB) == -100, "once per event: seeing it again changes nothing")
@@ -340,3 +344,62 @@ func test_separate_concepts() -> void:
 	for who in [THIEF, 9]:
 		check(j.net(BOB, who) == k.net(BOB, who) and j.trust_of(BOB, who) == k.trust_of(BOB, who), "personality change leaves moral judgment (NET) and trust of %d untouched" % who)
 	check(not JudgmentPersonality.TRAITS.has("resentment") and not JudgmentPersonality.TRAITS.has("trust"), "no resentment, trust, friendship or family reputation is a trait here (Worker B owns resentment and familiarity)")
+
+
+## RECON-01: the personality layer is the one owner of tolerance change. Scripted events on the shipped config (spread 300,
+## 40 a point, bound 250, personality inert); the expected values were recorded from the store as it was before the
+## move (tolerance = temperament + the store's own life shift), so they prove the move changed no number.
+func _tol_run(c: Dictionary) -> Array:
+	var j := JudgmentStore.new(c, JudgmentSocial.new(), 7)
+	var snaps := []
+	var steps := [["theft", [7], [1], []], ["assault", [7], [1], []], ["theft", [7], [2], []], ["rescue", [7], [], [3]], ["assault", [7], [3], []], ["rescue", [7], [], [1]]]
+	for s in steps:
+		j.day += 1
+		var ev := j.publish(s[0], s[1], s[2], s[3])
+		j.observe_all(ev, [5])                 # a bystander
+		j.observe_all(ev, [])
+		var row := []
+		for p in [1, 2, 3, 5]:
+			row.append(j.tolerance(p))
+		snaps.append(row)
+	for i in 30:                                  # far past the bound
+		j.day += 1
+		j.observe_all(j.publish("assault", [7], [1]), [])
+	snaps.append([j.tolerance(1), j.threshold(1, -20000), j.weight_shift(3)])
+	return snaps
+
+
+func test_tolerance_owner() -> void:
+	var c := JudgmentStore.default_cfg().duplicate(true)
+	var got := _tol_run(c)
+	print("TOLSNAP ", JSON.stringify(got))
+	var want = JSON.parse_string(EXPECT_TOL)
+	want = JSON.parse_string(JSON.stringify(want))
+	check(JSON.stringify(got) == JSON.stringify(want).replace(".0", ""), "tolerance after a scripted sequence equals the pre-move formula's recorded values")
+	# one event moves tolerance once: the layer owns it, the store keeps no copy
+	var j := JudgmentStore.new(c, JudgmentSocial.new(), 7)
+	var t0 := j.tolerance(BOB)
+	j.observe_all(j.publish("theft", [THIEF], [BOB], [], 4), [])
+	check(j.tolerance(BOB) == t0 - 40 and j.pers.life_tol.get(BOB, 0) == -40 and not j.life.has(BOB) and j.pers.tolerance_drift(BOB) == 0, "one theft moves tolerance once (-40), held by the personality layer; the store's life keeps no tolerance")
+	j.observe_all(j.publish("rescue", [THIEF], [], [BOB]), [])
+	check(j.tolerance(BOB) == t0 - 40 and int(j.life.get(BOB, 0)) > 0, "a rescue moves only the disposition weight (%d), not tolerance" % int(j.life.get(BOB, 0)))
+	# the configured experience curves drive tolerance for a provocation: the plain step no longer stacks on them
+	var ac := JudgmentStore.default_cfg().duplicate(true)
+	ac.traits = fix()
+	var a := JudgmentStore.new(ac, JudgmentSocial.new(), 7)
+	var at0 := a.tolerance(BOB)
+	a.observe_all(a.publish("theft", [THIEF], [BOB], [], 4), [])
+	check(a.pers.life_tol.is_empty() and a.tolerance(BOB) == at0 + a.pers.tolerance_drift(BOB) and a.pers.tolerance_drift(BOB) < 0, "with the personality curves driving tolerance, one event moves it once (drift %d), the Q13 step does not stack" % a.pers.tolerance_drift(BOB))
+	# old saved sections move into the new place; nothing dropped
+	var oldsec: Dictionary = JSON.parse_string(JSON.stringify(j.to_dict()))
+	oldsec.erase("traits")
+	oldsec.life = [[BOB, -40, 30], [2, -90, 0], [3, 0, 60]]          # the pre-move layout [person, tolerance, weight]
+	var o := JudgmentStore.new(c, JudgmentSocial.new(), 7)
+	var base2 := o.tolerance(2)
+	check(o.load_dict(oldsec) == "" and o.pers.life_tol.get(BOB, 0) == -40 and o.pers.life_tol.get(2, 0) == -90 and not o.pers.life_tol.has(3), "an old section's life tolerance shifts load into the personality layer")
+	check(o.tolerance(2) == base2 - 90 and int(o.life.get(BOB, 0)) == 30 and int(o.life.get(3, 0)) == 60 and not o.life.has(2), "...tolerance reads them, the weight shifts stay in life")
+	var again := JudgmentStore.new(c, JudgmentSocial.new(), 7)
+	check(again.load_dict(JSON.parse_string(JSON.stringify(o.to_dict()))) == "" and again.tolerance(2) == o.tolerance(2) and JSON.stringify(again.to_dict()) == JSON.stringify(o.to_dict()), "...and the migrated section saves and loads identically in the new layout")
+	# inert by default
+	var s := JudgmentStore.new({}, JudgmentSocial.new(), 7)
+	check(not s.pers.active and not s.pers.owns_provocation_tolerance() and s.pers.tolerance_drift(BOB) == 0, "the shipped personality rates are inert: they own and move nothing")

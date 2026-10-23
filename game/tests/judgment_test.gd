@@ -1055,7 +1055,7 @@ func test_personality() -> void:
 	var w0 := JudgmentWeighting.trait_weight(c, 7, VERBAL, "disposition", 100, jl)
 	var ev := jl.publish("theft", [THIEF], [BOB], [], 4)
 	jl.observe_all(ev, [STRANGER])
-	check(jl.tolerance(BOB) == t0 - 40 and jl.life.has(BOB) and not jl.life.has(STRANGER), "robbed Bob is 40 permille less tolerant; a bystander is unmoved")
+	check(jl.tolerance(BOB) == t0 - 40 and jl.pers.life_tol.has(BOB) and not jl.pers.life_tol.has(STRANGER), "robbed Bob is 40 permille less tolerant; a bystander is unmoved")
 	jl.observe_all(ev, [BOB])
 	check(jl.tolerance(BOB) == t0 - 40, "...once per event: seeing it again changes nothing")
 	var hv := jl.publish("rescue", [THIEF], [], [VERBAL])
@@ -1064,7 +1064,7 @@ func test_personality() -> void:
 	for i in 20:
 		jl.observe_all(jl.publish("assault", [THIEF], [BOB]), [])
 		jl.observe_all(jl.publish("rescue", [THIEF], [], [VERBAL]), [])
-	check(int(jl.life[BOB][0]) == -250 and int(jl.life[VERBAL][1]) == 250, "shifts are bounded to +/- max_shift_permille (250)")
+	check(int(jl.pers.life_tol[BOB]) == -250 and int(jl.life[VERBAL]) == 250, "shifts are bounded to +/- max_shift_permille (250)")
 	# save and load
 	var text := JSON.stringify(jl.to_dict())
 	var jr := store(c)
@@ -1073,6 +1073,7 @@ func test_personality() -> void:
 	# old section without them
 	var old: Dictionary = JSON.parse_string(text)
 	old.erase("life")
+	old.erase("traits")                                  # the tolerance shift is saved under traits.tol since RECON-01
 	var jo := store(c)
 	check(jo.load_dict(old) == "" and jo.life.is_empty() and jo.tolerance(BOB) == t0, "a section saved before personality loads: no shifts, temperament from the seed")
 	# deterministic replay

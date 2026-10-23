@@ -143,7 +143,7 @@ var _tol_step := 0               # personality.tolerance_per_point (Q13 life eve
 var _w_step := 0                 # personality.weight_per_point
 var _shift_max := 0              # personality.max_shift_permille
 var bonds: JudgmentBonds             # X19-FOUND-BONDS/FAMREP: pair history, resentment, family reputation (judgment_bonds.gd)
-var life := {}                   # person -> [tolerance shift, disposition-weight shift] permille, from firsthand life events (saved)
+var life := {}                   # person -> disposition-weight shift permille, from firsthand life events (saved). The tolerance shift lives in pers.life_tol (RECON-01)
 var pers: JudgmentPersonality    # the personality framework (traits, wisdom, anger, history): judgment_personality.gd, config "traits"
 var _morality := 0               # interpret.morality_spread_permille (Q08)
 var _perm_refs := {}             # event id -> permanent memories of it: such facts never retire (Q11)
@@ -250,6 +250,7 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_w_step = int(pc.get("weight_per_point", 0))
 	_shift_max = maxi(0, int(pc.get("max_shift_permille", 0)))
 	pers = JudgmentPersonality.new(cfg.get("traits", {}), seed)
+	pers.configure_life(_tol_step, _shift_max)
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
 	_b_thr = int(bc.confidence_threshold)
 	bonds = JudgmentBonds.new(self, cfg.get("bonds", {}))
@@ -668,23 +669,21 @@ func tolerance(person: int) -> int:
 	var t := JudgmentMath.ONE
 	if _tol_spread > 0:
 		t += JudgmentMath.hash_ints([world_seed, person, 4099]) % (2 * _tol_spread + 1) - _tol_spread
-	if not life.is_empty() and life.has(person):
-		t += int(life[person][0])
-	if not pers.drift.is_empty():
-		t += pers.tolerance_drift(person)              # the long-term drift of the personality framework (X19-FOUND-PERS)
+	if pers.moves_tolerance():
+		t += pers.tolerance_shift(person)              # the one owner of tolerance change: SJD-Q13 life shift + long-term drift (RECON-01)
 	return t
 
 
 ## A NET threshold (negative milli-points) as `person` holds it: the configured one scaled by their tolerance.
 func threshold(person: int, base: int) -> int:
-	if _tol_spread <= 0 and life.is_empty() and pers.drift.is_empty():
+	if _tol_spread <= 0 and not pers.moves_tolerance():
 		return base
 	return JudgmentMath.scale(base, tolerance(person))
 
 
 ## The life shift on the weight of a person's disposition factor (SJD-Q13), permille; 0 when their life has not moved it.
 func weight_shift(person: int) -> int:
-	return int(life[person][1]) if life.has(person) else 0
+	return int(life.get(person, 0))
 
 
 ## A firsthand experience shapes the person (SJD-Q13, bounded): the victim of a bad deed grows less tolerant, the one
@@ -703,13 +702,12 @@ func _live(observer: int, ev: int) -> void:
 			hit = true
 	if not hit:
 		return
-	var rec: Array = life.get(observer, [0, 0])
 	if _pol[t] < 0:
-		rec[0] = JudgmentMath.clampi_(int(rec[0]) - JudgmentMath.mul_div(_sev[t], _tol_step, 1000), -_shift_max, _shift_max)
+		if pers.life_provocation(observer, _sev[t]):      # tolerance change belongs to the personality layer (RECON-01)
+			_stat("life_shifts")
 	else:
-		rec[1] = JudgmentMath.clampi_(int(rec[1]) + JudgmentMath.mul_div(_sev[t], _w_step, 1000), -_shift_max, _shift_max)
-	life[observer] = rec
-	_stat("life_shifts")
+		life[observer] = JudgmentMath.clampi_(int(life.get(observer, 0)) + JudgmentMath.mul_div(_sev[t], _w_step, 1000), -_shift_max, _shift_max)
+		_stat("life_shifts")
 
 
 ## Personality framework hook (X19-FOUND-PERS): a firsthand deed that touches `observer` as victim of a BAD one or
@@ -1644,8 +1642,8 @@ func to_dict() -> Dictionary:
 	if not life.is_empty():
 		var lf := []
 		for o in _sorted(life):
-			lf.append([int(o), int(life[o][0]), int(life[o][1])])
-		out.life = lf                            # SJD-Q13: the shifts life events have given (older sections have none)
+			lf.append([int(o), int(life[o])])
+		out.life = lf                            # SJD-Q13: the disposition-weight shifts (older sections have none; the tolerance shift is under traits.tol)
 	var pt := pers.to_dict()
 	if not pt.is_empty():
 		out.traits = pt                          # X19-FOUND-PERS: traits, wisdom, anger, history (older sections have none)
@@ -1760,9 +1758,14 @@ func load_dict(d: Dictionary) -> String:
 		if not trust.has(int(r[0])):
 			trust[int(r[0])] = {}
 		trust[int(r[0])][int(r[1])] = clampi(int(r[2]), 0, 100000)
-	for r in m.get("life", []):
-		life[int(r[0])] = [clampi(int(r[1]), -_shift_max, _shift_max), clampi(int(r[2]), -_shift_max, _shift_max)]
 	pers.load_dict(m.get("traits", {}))
+	for r in m.get("life", []):
+		if (r as Array).size() >= 3:                  # the older layout [person, tolerance, weight]: the tolerance part moves to the personality layer
+			pers.adopt_life_tolerance(int(r[0]), clampi(int(r[1]), -_shift_max, _shift_max))
+			if int(r[2]) != 0:
+				life[int(r[0])] = clampi(int(r[2]), -_shift_max, _shift_max)
+		elif int(r[1]) != 0:
+			life[int(r[0])] = clampi(int(r[1]), -_shift_max, _shift_max)
 	bonds.load_dict(m.get("bonds", {}))
 	for r in m.get("scheduled", []):
 		if _g_sched:

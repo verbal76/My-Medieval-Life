@@ -296,3 +296,7 @@ scheduled); this synthetic benchmark does not exercise the new hooks, whose cost
 
 `judgment_personality.gd` extends the temperament (traits with soft limits and recovery, practical wisdom from costly mistakes, anger with a timer, stubborn override, never-erased history, 30% stubbornness potential); `JudgmentStore.personality_growth(person)` for Worker B. Config section `traits` ships inert (owner formula pending, X19-PERS-FORMULA, X19-TRAIT-DIST); tested with fixtures in `judgment_personality_test` (65 checks) and one live-path check in `judgment_live_test`. Judgment off: `sim_gate` identical. Details, deferrals and numbers awaiting the owner: DESIGN.md section 15d.
 
+
+## RECON-01 tolerance overlap (owner approval 2026-10-23 item 3)
+
+The personality layer is now the one owner of tolerance change: the SJD-Q13 life tolerance shift moved from `JudgmentStore.life` into `JudgmentPersonality.life_tol` (same numbers and bound; saved under `traits.tol`), `life` keeps only the weight shift, `tolerance()` reads `pers.tolerance_shift`. Old `life` rows `[person, tolerance, weight]` migrate on load. When the configured curves drive tolerance for a provocation they replace, not add to, the Q13 step. Judgment stays off. Tests: `test_tolerance_owner` (equivalence to values recorded before the move, one event moves tolerance once, old-section migration, inert by default). Details: DESIGN.md 15c, 15d.

@@ -786,7 +786,8 @@ func test_personality_live() -> void:
 			var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 			check(d.judgment.has("traits"), "...and the world save carries the traits key")
 		else:
-			check(j.pers.is_empty() and not w.to_dict().judgment.has("traits"), "live, shipped config: the same theft records no personality state and saves no key")
+			var sv: Dictionary = w.to_dict().judgment.get("traits", {})
+			check(j.pers.record.is_empty() and j.pers.drift.is_empty() and j.pers.anger.is_empty() and sv.get("log", []).is_empty(), "live, shipped config: the same theft records no personality experience (only the SJD-Q13 tolerance shift, traits.tol)")
 		w.dispose()
 ## X19-FOUND-BONDS: a pair's history through Relations' own paths in a real world (the dawn cooling, shared hours, help):
 ## a friendship that cools below friendship level makes former friends, whose later gains count +10% before the caps.

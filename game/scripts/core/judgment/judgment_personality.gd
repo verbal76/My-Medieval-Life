@@ -32,7 +32,10 @@ var drift := {}                       # person -> [tolerance drift, stubbornness
 var anger := {}                       # person -> [intensity at set, set day, duration days, peak, override until day] (saved)
 var wisdom := {}                      # person -> {kind hash (0 = carried to every situation) -> permille} (saved)
 var record := {}                       # person -> PackedInt64Array of LOGW-wide rows, oldest first, never erased (saved)
+var life_tol := {}                    # person -> tolerance shift permille from firsthand bad deeds (SJD-Q13 effect, RECON-01; saved under "tol")
 
+var _q13_step := 0                    # personality.tolerance_per_point: permille of tolerance lost per point of a bad deed's severity (SJD-Q13)
+var _q13_max := 0                     # personality.max_shift_permille: the bound on that shift, both ways
 var _share := 300
 var _start := 0
 var _rate := 0
@@ -143,8 +146,16 @@ func configure(config: Dictionary) -> void:
 	active = _rate > 0 or _l_rate > 0 or _a_rate > 0
 
 
+## The SJD-Q13 life effect on tolerance (RECON-01: the personality layer is the one owner of tolerance change). `step` is
+## personality.tolerance_per_point and `max_shift` personality.max_shift_permille, the numbers the store's `life` shift used
+## before the layer took it over; the store passes them in.
+func configure_life(step: int, max_shift: int) -> void:
+	_q13_step = step
+	_q13_max = maxi(0, max_shift)
+
+
 func is_empty() -> bool:
-	return drift.is_empty() and anger.is_empty() and wisdom.is_empty() and record.is_empty()
+	return drift.is_empty() and anger.is_empty() and wisdom.is_empty() and record.is_empty() and life_tol.is_empty()
 
 
 func clear() -> void:
@@ -152,6 +163,7 @@ func clear() -> void:
 	anger.clear()
 	wisdom.clear()
 	record.clear()
+	life_tol.clear()
 
 
 # ---------------------------------------------------------------- reading ------------------------
@@ -165,9 +177,42 @@ func trait_drift(person: int, which: int) -> int:
 	return int((drift[person] as Array)[which]) if drift.has(person) else 0
 
 
-## The tolerance drift (permille) that JudgmentStore.tolerance adds to temperament and the `life` shift.
+## The long-term tolerance drift (permille) of the configured experience curves (inert until the owner's formula).
 func tolerance_drift(person: int) -> int:
 	return trait_drift(person, T_TOL)
+
+
+## The one reading of tolerance change JudgmentStore.tolerance adds to temperament: the SJD-Q13 life shift plus the drift.
+func tolerance_shift(person: int) -> int:
+	return int(life_tol.get(person, 0)) + trait_drift(person, T_TOL)
+
+
+## Whether anything has moved any person's tolerance (lets the store skip scaling when it has not).
+func moves_tolerance() -> bool:
+	return not life_tol.is_empty() or not drift.is_empty()
+
+
+## Whether the configured experience curves drive tolerance for a provocation. Then they ARE the tolerance change for
+## that event and the plain SJD-Q13 step does not also apply (one event moves tolerance once).
+func owns_provocation_tolerance() -> bool:
+	return active and _rate > 0 and int((_eff.get("provocation", {}) as Dictionary).get("tolerance", 0)) != 0
+
+
+## SJD-Q13: the victim of a bad deed of `severity` (milli-points) grows less tolerant, bounded. Returns whether this
+## effect applied (false when the configured curves own the change, or the step or bound is 0).
+func life_provocation(person: int, severity: int) -> bool:
+	if _q13_max == 0 or owns_provocation_tolerance():
+		return false
+	life_tol[person] = JudgmentMath.clampi_(int(life_tol.get(person, 0)) - JudgmentMath.mul_div(severity, _q13_step, 1000), -_q13_max, _q13_max)
+	return true
+
+
+## Loading a section saved before the layer owned this (the store's `life` rows): the tolerance part moves here, bounded
+## as before; never dropped.
+func adopt_life_tolerance(person: int, shift: int) -> void:
+	if shift == 0:
+		return
+	life_tol[person] = clampi(int(life_tol.get(person, 0)) + shift, -_q13_max, _q13_max)
 
 
 ## Stubbornness level in permille: 0 for a person without the potential; else the starting level plus drift, never
@@ -361,7 +406,13 @@ func to_dict() -> Dictionary:
 			for k in LOGW:
 				row.append(rows[i + k])
 			lg.append(row)
-	return {"v": FORMAT_V, "drift": dr, "anger": an, "wisdom": ws, "log": lg}
+	var out := {"v": FORMAT_V, "drift": dr, "anger": an, "wisdom": ws, "log": lg}
+	if not life_tol.is_empty():
+		var lt := []
+		for p in _sorted(life_tol):
+			lt.append([int(p), int(life_tol[p])])
+		out.tol = lt                              # optional key (RECON-01): the SJD-Q13 tolerance shift; older sections have none
+	return out
 
 
 ## "" when the saved key can be read (absent or empty is fine), else why not (a newer layout is kept, never dropped).
@@ -385,6 +436,8 @@ func load_dict(d: Dictionary) -> void:
 		if not wisdom.has(int(r[0])):
 			wisdom[int(r[0])] = {}
 		wisdom[int(r[0])][int(r[1])] = int(r[2])
+	for r in d.get("tol", []):
+		life_tol[int(r[0])] = clampi(int(r[1]), -_q13_max, _q13_max)
 	for r in d.get("log", []):
 		var rows: PackedInt64Array = record.get(int(r[0]), PackedInt64Array())
 		for k in LOGW:
