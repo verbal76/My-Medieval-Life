@@ -11,14 +11,20 @@ extends RefCounted
 ## Invariants:
 ##  - A reservation is a claim, never a transfer: this record NEVER moves a coin or a good and never changes who holds
 ##    what or where. consume() only marks the claim consumed; the physical transfer stays with World.trade / World.give.
-##  - reserve() refuses more than the owner actually holds (read through EconActor from the existing owners) minus what is
-##    already reserved for the same item; so two reservations can never cover the same stock, and an unknown, dead or
+##  - reserve() refuses more than the owner actually holds (read through EconActor from the existing owners) minus what open
+##    contracts hold (Contracts.held_for) and what is already reserved for the same item; so two reservations can never cover the same stock, and an unknown, dead or
 ##    ended owner holds nothing to reserve.
 ##  - Goods can still leave the owner by a live trade; unbacked() REPORTS such claims, it never repairs them.
 ##  - Deterministic: ids count up from 0, every listing and the saved array are sorted by id; no RNG, no wall clock.
 ##  - Cost: reserve/reserved/available/release/consume touch only the owner's own held reservations (an index by owner);
 ##    expire_due scans held reservations only. No population scan anywhere.
 ##  - Bounded: finished (released/expired/consumed) records beyond `keep_finished` are dropped oldest first.
+## Contract holds (RECON-01, owner approval 2026-10-23 item 4): finished goods a seller still owes on an open contract are
+## already earmarked by Contracts.held_for, the live authority (NPCBrain.reserve and Credit.available read it). This record
+## recognises them without owning them: available() = held - contract holds - own reservations, and reserve() refuses anything
+## beyond that, so the same goods cannot be both held for a contract and reserved. Nothing here changes held_for or any
+## contract. At the integration the owner approves, contract holds are re-expressed as reservations with purpose
+## "contract:<id>" and held_for reads from them (one mechanism), with a test that contract behaviour is unchanged.
 ## Consumers when the owner approves integration: the scattered forms in LE00_BUILD18_REFRESH s.3 (first
 ## contracts::held_for and accepted-order inputs), via EconomyFoundation.
 ## Saved as the optional World key "economy" only when the feature is on and this record is non-empty.
@@ -78,11 +84,20 @@ func reserved(owner: String, item: String) -> int:
 	return n
 
 
-## What the owner holds of `item` less what is reserved (never negative). 0 for an unknown or dead owner.
+## Units of `item` the owner still owes on open contracts (Contracts.held_for, the authority; 0 for coins, whose set-aside
+## is escrow moved out of the purse, not an earmark).
+func contract_held(owner: String, item: String) -> int:
+	if item == COINS or actors.w.contracts == null:
+		return 0
+	return actors.w.contracts.held_for_ref(owner, item)
+
+
+## What the owner holds of `item` less what open contracts hold and what is reserved (never negative). 0 for an unknown or
+## dead owner.
 func available(owner: String, item: String) -> int:
 	if not actors.alive(owner):
 		return 0
-	return maxi(0, actors.holding(owner, item) - reserved(owner, item))
+	return maxi(0, actors.holding(owner, item) - contract_held(owner, item) - reserved(owner, item))
 
 
 func release(id: int) -> bool:
@@ -119,8 +134,9 @@ func held_of(owner: String) -> Array:
 	return out
 
 
-## Held claims the owner no longer backs, sorted by (owner, item): [{owner, item, reserved, held, short, alive}]. A report only;
-## nothing is released, shrunk or moved.
+## Held claims the owner no longer backs, sorted by (owner, item): [{owner, item, reserved, contract_held, held, short, alive}].
+## Contract holds count against the stock first, so a reservation is unbacked when reserved + contract holds exceed what is
+## held; `short` is the part of the reservation that lacks backing. A report only; nothing is released, shrunk or moved.
 func unbacked() -> Array:
 	var out := []
 	var owners: Array = _by_owner.keys()
@@ -134,8 +150,9 @@ func unbacked() -> Array:
 		for it in names:
 			var res := reserved(o, it)
 			var have := actors.holding(o, it) if actors.alive(o) else 0
-			if res > have:
-				out.append({"owner": o, "item": it, "reserved": res, "held": have, "short": res - have, "alive": actors.alive(o)})
+			var owed := contract_held(o, it) if actors.alive(o) else 0
+			if res + owed > have:
+				out.append({"owner": o, "item": it, "reserved": res, "contract_held": owed, "held": have, "short": mini(res, res + owed - have), "alive": actors.alive(o)})
 	return out
 
 

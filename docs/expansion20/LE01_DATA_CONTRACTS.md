@@ -33,11 +33,23 @@ open, so no `business:` ref exists. Consumers: reservations, events, later diagn
 `{id, owner, item (id or "coins"), qty, purpose, made_day, made_minute, expiry (day, -1 never), state: held|released|expired|consumed}`.
 - A claim, never a transfer: reserve, release, expire and consume move no coin or good; the transfer stays with
   `World.trade` / `World.give`. `consume` only marks the claim.
-- `reserve` refuses: qty <= 0, unknown or not-alive owner, an expiry already past, and more than held minus already reserved.
-- `unbacked()` reports held claims an owner no longer covers (goods left by a live trade); it never repairs.
+- `reserve` refuses: qty <= 0, unknown or not-alive owner, an expiry already past, and more than held minus contract holds minus already reserved.
+- **Contract holds (RECON-01, owner approval 2026-10-23 item 4).** `Contracts.held_for` (finished goods a seller still owes on open
+  contracts; read by `NPCBrain.reserve` and `Credit.available`) is the live authority and stays so while the economy is off.
+  `available(owner, item)` = held - `contract_held(owner, item)` (= `Contracts.held_for_ref`, the ref form `held_for` now
+  delegates to; coins are never reduced, their contract set-aside is escrow) - own reservations, so the same goods cannot be both
+  held for a contract and reserved; `reserve` refuses beyond it. A fulfilled or ended contract shrinks its hold and availability
+  returns. Planned at integration (owner approval needed): contract holds re-expressed as reservations with purpose
+  `contract:<id>` and `held_for` reading from them, one mechanism, with a test that contract behaviour is unchanged. Other live
+  goods earmarks (all derived policy or flags, none a record; untouched, not read here): `NPCBrain.reserve` pen-feed share,
+  `NPCBrain.keeps` (trade tools/forging for manor orders), `PlayerState.stolen_count` (stolen goods not for sale), the
+  construction seller hold-back (`construction.gd`), `ManorWork.consign` (a physical move into a lot, not an earmark). Coin
+  escrow (contracts, quests, manor work, couriers) stays out of scope.
+- `unbacked()` reports held claims an owner no longer covers (goods left by a live trade, or promised on a contract after being
+  reserved: reserved + contract holds above the stock; fields `reserved, contract_held, held, short, alive`); it never repairs.
 - Deterministic: ids count up, listings and the saved array sorted by id. Cost per operation is the owner's own held
   reservations (an index by owner); `expire_due` scans held reservations only; no population scan.
-- Future consumers (not wired): `contracts::held_for`, accepted-order inputs, then the other scattered forms of LE00 s.3.
+- Future consumers (not wired): accepted-order inputs, then the other scattered forms of LE00 s.3.
 
 ## Economic event record: `econ_events.gd` (`EconEvents`)
 

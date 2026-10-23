@@ -32,6 +32,7 @@ func _init() -> void:
 	test_consume_moves_nothing()
 	test_impossible()
 	test_unbacked()
+	test_contract_holds()
 	test_determinism()
 	test_events()
 	test_save()
@@ -55,6 +56,12 @@ func snap(w: World) -> Array:
 
 func test_disabled() -> void:
 	var w := new_world(false)
+	var sl: NPC = adults(w)[0]
+	var bu: NPC = adults(w)[1]
+	var cc: Dictionary = open_contract(w, sl, bu, "wheat", 3)
+	check(w.economy == null and w.contracts.held_for(sl, "wheat") == 3 and w.contracts.held_for_ref(World.npc_ref(sl.id), "wheat") == 3 and w.brain.reserve(sl, "wheat") >= 3, "economy off: contract holds are read exactly as before (held_for, NPCBrain.reserve)")
+	w.contracts.cancel(cc, cc.buyer)
+	check(w.contracts.held_for(sl, "wheat") == 0, "economy off: an ended contract holds nothing")
 	check(w.economy == null, "disabled: World builds no economy foundation")
 	check(not w.to_dict().has("economy"), "disabled: to_dict has no economy key")
 	var d := w.to_dict()
@@ -189,6 +196,59 @@ func test_unbacked() -> void:
 	check(r.reserved(ref, "wheat") == n, "report only: the claim is not changed")
 	a.alive = false
 	check(r.unbacked()[0].alive == false and r.unbacked()[0].held == 0, "dead owner's claims reported unbacked")
+
+
+## RECON-01 (owner approval 2026-10-23 item 4): reservations recognise the live contract holds (Contracts.held_for), so the
+## same goods are never both held for a contract and reserved; nothing about contracts changes.
+func open_contract(w: World, seller: NPC, buyer: NPC, item: String, qty: int) -> Dictionary:
+	buyer.coins = 500
+	var c: Dictionary = w.contracts._new_record(World.npc_ref(buyer.id), World.npc_ref(seller.id), item, qty, 2, 5, [])
+	var ok: bool = w.contracts._open(c)
+	assert(ok)
+	return c
+
+
+func test_contract_holds() -> void:
+	var w := new_world()
+	var a: NPC = adults(w)[0]
+	var b: NPC = adults(w)[1]
+	a.inv.add("wheat", 6)
+	var base := a.inv.count("wheat")
+	var ref := World.npc_ref(a.id)
+	var r := w.economy.reservations
+	check(r.available(ref, "wheat") == base and r.contract_held(ref, "wheat") == 0, "no contract: availability is the whole holding")
+	var c: Dictionary = open_contract(w, a, b, "wheat", 4)
+	var s0 := snap(w)
+	check(w.contracts.held_for(a, "wheat") == 4 and r.contract_held(ref, "wheat") == 4, "the contract holds 4 (Contracts.held_for stays the authority)")
+	check(r.available(ref, "wheat") == base - 4, "a contract hold reduces available (%d of %d)" % [r.available(ref, "wheat"), base])
+	check(not r.reserve(ref, "wheat", base - 3, "x").ok and r.is_empty(), "reserving goods a contract holds is refused, leaving no record")
+	check(r.reserve(ref, "wheat", base - 4, "free").ok and r.available(ref, "wheat") == 0, "exactly the unheld rest can be reserved")
+	check(not r.reserve(ref, "wheat", 1, "again").ok, "the same goods cannot be both held and reserved")
+	check(snap(w) == s0, "conservation unchanged by reserving beside a hold (coins and goods)")
+	check(w.brain.reserve(a, "wheat") >= 4 and w.contracts.held_for(a, "wheat") == 4, "the live earmark readers still see the hold")
+	check(r.unbacked().is_empty(), "hold plus reservation within the stock: nothing unbacked")
+	var other: NPC = adults(w)[2]
+	check(r.available(World.npc_ref(other.id), "wheat") == other.inv.count("wheat"), "another owner is not reduced by the hold")
+	check(r.available(ref, "coins") == a.coins, "coins are not goods: contract set-asides (escrow) do not reduce coin availability")
+	# a hold fulfilled or ended releases availability
+	r.release(r.held_of(ref)[0].id)
+	check(r.available(ref, "wheat") == base - 4, "release returns the reserved part")
+	check(w.contracts.cancel(c, c.buyer) == "" and r.contract_held(ref, "wheat") == 0 and r.available(ref, "wheat") == base, "an ended contract releases its hold (available %d)" % r.available(ref, "wheat"))
+	var c2: Dictionary = open_contract(w, a, b, "wheat", 3)
+	var got: int = w.contracts.deliver(c2, 2)
+	check(r.contract_held(ref, "wheat") == w.contracts.left(c2) and r.available(ref, "wheat") == a.inv.count("wheat") - w.contracts.left(c2), "a delivery shrinks the hold with the goods (delivered %d, %d still held)" % [got, w.contracts.left(c2)])
+	# unbacked counts the hold first
+	var d: NPC = adults(w)[3]
+	d.inv.add("iron_ore", 5)
+	var dref := World.npc_ref(d.id)
+	var n := d.inv.count("iron_ore")
+	r.reserve(dref, "iron_ore", n, "order")
+	var c3: Dictionary = open_contract(w, a, d, "iron_ore", 2)           # d is the BUYER here: no hold on d
+	check(r.contract_held(dref, "iron_ore") == 0 and r.unbacked().is_empty(), "a buyer's contract holds no goods of theirs")
+	var c4: Dictionary = open_contract(w, d, b, "iron_ore", 2)           # d the seller of goods it has fully reserved earlier: the contract does not shrink the claim
+	var u := r.unbacked()
+	check(u.size() == 1 and u[0].owner == dref and u[0].contract_held == 2 and u[0].short == 2, "a seller who reserved everything then promised 2 on a contract: unbacked reports the 2 short")
+	check(r.reserved(dref, "iron_ore") == n, "report only: the claim is not changed")
 
 
 func run_ops(w: World) -> String:
