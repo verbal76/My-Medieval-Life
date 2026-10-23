@@ -55,12 +55,12 @@ DESIGN = ["SPECIFIED", "PARTIAL", "OWNER DECISION REQUIRED", "DESIGN WORK REQUIR
 EFFORT = ["XS", "S", "M", "L", "XL", "UNKNOWN"]
 VERIFIED_LEVEL = {v: i for i, v in enumerate(VERIFICATION[:5])}
 ## Where an entry belongs. "20+" is the unassigned future backlog (owner, ROAD-01: Build 20 or later).
-TARGETS = ["15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "20+", "unassigned", "multiplayer", "owner decision", "owner action"]
+TARGETS = ["15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "20+", "unassigned", "multiplayer", "owner decision", "owner action"]
 TARGET_NAMES = {"15": "Build 15: simulation stabilization", "16": "Build 16: long-term equilibrium and validation",
                 "17": "Build 17: Mining & Industrial Development", "18": "Build 18: combined release (tracks A, B, C)",
                 "19": "Build 19: NPC Judgment System", "20": "Build 20: Living Economy",
                 "21": "Build 21: Village Politics", "22": "Build 22: Settlement Advancement Phase 2",
-                "23": "Build 23: Bandit Factions and Criminal Careers", "24": "Build 24: Generational Legacy", "25": "Build 25: Wild World (weather, disasters, monsters, pets, bounties)", "20+": "Future backlog (Build 20 or later, not assigned)",
+                "23": "Build 23: Bandit Factions and Criminal Careers", "24": "Build 24: Generational Legacy", "25": "Build 25: Weather, Seasons and Disasters", "26": "Build 26: Creatures and Heroes", "20+": "Future backlog (Build 20 or later, not assigned)",
                 "unassigned": "Approved, no build assigned", "multiplayer": "Multiplayer track (isolated branch)",
                 "owner decision": "Waiting on an owner decision for its build", "owner action": "Owner or external action (not development work)"}
 ## Build authorization and status; changed only with the owner's word (a history line in the build's anchor entry).
@@ -82,8 +82,10 @@ BUILDS_DEFAULT = {
            "authority": "OD-30 (renumbered 2026-10-23): numbering only"},
     "24": {"name": "Generational Legacy", "implementation_authorized": False, "released": "",
            "authority": "OD-30 (renumbered 2026-10-23): numbering only"},
-    "25": {"name": "Wild World: weather, disasters, monsters, pets and bounties", "implementation_authorized": False,
-           "released": "", "authority": "WEATHER-01, MON-01, PET-01 (owner 2026-10-23): design only, no code"},
+    "25": {"name": "Weather, Seasons and Disasters", "implementation_authorized": False, "released": "",
+           "authority": "WEATHER-01 (owner 2026-10-23): design only, no code"},
+    "26": {"name": "Creatures and Heroes", "implementation_authorized": False, "released": "",
+           "authority": "PET-01, MON-01 (owner 2026-10-23): design only, no code"},
 }
 ID_RE = re.compile(r"^[A-Z][A-Z0-9]*(-[A-Z0-9.]+)+$")
 DOC_RE = re.compile(r"\b((?:docs|tools|game|tests)/[\w./-]+\.(?:md|json|py|gd|cfg|pdf|txt))")
@@ -379,7 +381,7 @@ def memory_errors(d):
         for m in sorted(set(LINK_RE.findall(f.read_text()))):
             path = m.rstrip("/.,;:)")
             generated = {str(reconciliation_path(bp).relative_to(REPO)) for bp in BASELINES} | {"docs/requirements/views"} | {
-                "docs/requirements/views/%s.md" % n for n in ("STATUS", "DECISIONS", "BACKLOG", "QUEUES", "BUILD_18", "BUILD_19", "BUILD_20", "BUILD_21", "BUILD_22", "BUILD_23", "BUILD_24", "BUILD_25")}
+                "docs/requirements/views/%s.md" % n for n in ("STATUS", "DECISIONS", "BACKLOG", "QUEUES", "BUILD_18", "BUILD_19", "BUILD_20", "BUILD_21", "BUILD_22", "BUILD_23", "BUILD_24", "BUILD_25", "BUILD_26")}
             if not (REPO / path).exists() and not list(REPO.glob(path)) and path not in generated:
                 errors.append("%s names %s, which does not exist" % (f.relative_to(REPO), path))
     if STATE.exists():

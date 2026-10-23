@@ -95,6 +95,10 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    builds) on one Build 19 integration branch; (d) targeted integration tests, conservation, combined first-divergence check
    on both seeds and ONE proposed baseline; (e) present Build 19 for release authorization (never publish automatically).
    The mayoral term (four game years) is settled and not reopened.
+9. **Expansions 25 and 26 (owner 2026-10-23, design only, no code):** packets
+   `docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md` (WEATHER-01) and `docs/design/EXPANSION26_CREATURES_AND_HEROES.md`
+   (PET-01, MON-01, B14-09, FR-01); split per `docs/directives/2026-10-23_split_expansions_25_26.md`; open questions in each
+   packet's section 6 / 5. They never delay Build 19.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner

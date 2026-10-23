@@ -67,10 +67,16 @@
    "authority": "OD-30 renumbered 2026-10-23: numbering only"
   },
   "25": {
-   "name": "Wild World: weather, disasters, monsters, pets and bounties",
+   "name": "Weather, Seasons and Disasters",
    "implementation_authorized": false,
    "released": "",
-   "authority": "WEATHER-01, MON-01, PET-01 (owner 2026-10-23): design only, no code"
+   "authority": "WEATHER-01 (owner 2026-10-23): design only, no code"
+  },
+  "26": {
+   "name": "Creatures and Heroes",
+   "implementation_authorized": false,
+   "released": "",
+   "authority": "PET-01, MON-01 (owner 2026-10-23): design only, no code"
   }
  },
  "requirements": [
@@ -2589,7 +2595,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "built with MON-01 when the owner places it",
+   "next_action": "owner reviews docs/design/EXPANSION26_CREATURES_AND_HEROES.md; no code before approval",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -2619,10 +2625,15 @@
      "date": "2026-10-23",
      "change": "target_build: 20+ -> 25",
      "why": "owner 2026-10-23: monsters, pets and bounties merge with weather into Expansion 25, Wild World (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 25 -> 26; next_action",
+     "why": "owner asked to split Wild World into packets from 25 (docs/directives/2026-10-23_split_expansions_25_26.md); moved to Expansion 26, Creatures and Heroes"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "25",
+   "target_build": "26",
    "roadmap_gate": "",
    "roadmap_reason": "bandit factions, skeletons, castles, dungeons: combat content outside the five builds",
    "integrated_in": [],
@@ -18593,7 +18604,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "built with MON-01 when the owner places it",
+   "next_action": "owner reviews docs/design/EXPANSION26_CREATURES_AND_HEROES.md; no code before approval",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -18628,10 +18639,15 @@
      "date": "2026-10-23",
      "change": "target_build: 20+ -> 25",
      "why": "owner 2026-10-23: monsters, pets and bounties merge with weather into Expansion 25, Wild World (docs/directives/2026-10-23_monsters_bounties_companions_idea.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 25 -> 26; next_action",
+     "why": "owner asked to split Wild World into packets from 25 (docs/directives/2026-10-23_split_expansions_25_26.md); moved to Expansion 26, Creatures and Heroes"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "25",
+   "target_build": "26",
    "roadmap_gate": "owner assets",
    "roadmap_reason": "enemies and sound need asset uploads from the owner",
    "integrated_in": [],
@@ -26739,7 +26755,7 @@
    "acceptance": [
     "Build placement and design questions answered by the owner"
    ],
-   "target_build": "25",
+   "target_build": "26",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -26763,9 +26779,14 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner answered bosses (crab, Buwaya, minotaur, yeti, necromancer, dragons), defence (guards then volunteers), rewards (bounty coin, hero prestige, monster goods market, villager hunters)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 25 -> 26; next_action",
+     "why": "owner asked to split Wild World into packets from 25 (docs/directives/2026-10-23_split_expansions_25_26.md); moved to Expansion 26, Creatures and Heroes"
     }
    ],
-   "next_action": "add to the Expansion 25 Wild World design; no code before approval"
+   "next_action": "owner reviews docs/design/EXPANSION26_CREATURES_AND_HEROES.md; no code before approval"
   },
   {
    "id": "MP-01",
@@ -32862,7 +32883,7 @@
    "acceptance": [
     "Build placement and open questions answered by the owner"
    ],
-   "target_build": "25",
+   "target_build": "26",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -32906,9 +32927,14 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "moved from a small add-on after Build 19 into Expansion 25 by the owner's choice"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 25 -> 26; next_action",
+     "why": "owner asked to split Wild World into packets from 25 (docs/directives/2026-10-23_split_expansions_25_26.md); moved to Expansion 26, Creatures and Heroes"
     }
    ],
-   "next_action": "part of the Expansion 25 Wild World design; no code before approval"
+   "next_action": "owner reviews docs/design/EXPANSION26_CREATURES_AND_HEROES.md; no code before approval"
   },
   {
    "id": "PICK-01",
@@ -49773,9 +49799,14 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner confirmed rains spring/autumn, snow winter; seasonal visuals added to the design"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "split: Expansion 25 is Weather, Seasons and Disasters (docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md)"
     }
    ],
-   "next_action": "owner: E25-OD-03, 06, 07 and approval of the design; no code before approval"
+   "next_action": "owner reviews docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md and answers E25-OD-03, 06-09; no code before approval"
   },
   {
    "id": "WIKI-01",
