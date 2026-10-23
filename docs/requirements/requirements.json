@@ -38215,11 +38215,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
      "why": "Phase A audit and Phase B design written (docs/design/FLIGHT_RECORDER_DESIGN.md); Phase C owner checkpoint"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner approved the design with REC-D1..D4 (docs/directives/2026-10-23_recorder_decisions.md); implementation starts when the identity foundation is ready"
     }
    ],
    "assigned_worker": "lead",
    "branch": "staging/my-medieval-life",
-   "next_action": "owner approves the design and answers REC-D1..D4; implementation waits for ID-01"
+   "next_action": "when ID-01 lands: D1 core on a recorder branch from the Expansion 19 branch with the identity foundation; smallest shared architecture; coverage reported honestly"
   },
   {
    "id": "REC-D1",
@@ -38228,8 +38233,8 @@
    "description": "Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases?",
    "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Development and private owner playtest builds only, disabled by default; no active recording in public releases at this stage",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -38240,6 +38245,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-23_recorder_decisions.md)"
     }
    ]
   },
@@ -38250,8 +38260,8 @@
    "description": "Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days?",
    "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "At the storage limit stop recording, keep every existing record and mark the session incomplete; never delete or overwrite evidence",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -38262,6 +38272,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-23_recorder_decisions.md)"
     }
    ]
   },
@@ -38272,8 +38287,8 @@
    "description": "Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records?",
    "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Record every meaningful executed interaction, decision, outcome and state change regardless of the player; hourly snapshots for continuous conditions (hunger, movement, work progress); no per-frame or per-step records; snapshots never substitute for interaction records",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -38284,6 +38299,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-23_recorder_decisions.md)"
     }
    ]
   },
@@ -38294,8 +38314,8 @@
    "description": "Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only?",
    "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Balance auditing plus instrumentation of the existing central transaction paths; do not rewrite the ~150 coin sites in Build 19; flag unattributed changes and document coverage gaps; centralize later only on evidence",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -38306,6 +38326,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-23_recorder_decisions.md)"
     }
    ]
   },

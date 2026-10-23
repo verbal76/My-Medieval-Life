@@ -843,10 +843,10 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons |  | APPROVED |  |
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) |  | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | 18 | APPROVED |  |
-| REC-D1 | Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases? | 19 | OPEN |  |
-| REC-D2 | Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days? | 19 | OPEN |  |
-| REC-D3 | Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records? | 19 | OPEN |  |
-| REC-D4 | Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only? | 19 | OPEN |  |
+| REC-D1 | Flight recorder: available in playtest and development builds only (Settings, Diagnostics), off by default, never in public releases? | 19 | APPROVED |  |
+| REC-D2 | Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days? | 19 | APPROVED |  |
+| REC-D3 | Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records? | 19 | APPROVED |  |
+| REC-D4 | Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only? | 19 | APPROVED |  |
 | REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | 18 | APPROVED |  |
 | REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | 20+ | DEFERRED |  |
 | REG-DEMO-D1 | Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome? | 18 | APPROVED |  |
