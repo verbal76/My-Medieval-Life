@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 496 (245 of them still open) |
-| **Open entries now** (rules excluded) | | **422** |
+| Entries added since | | 497 (246 of them still open) |
+| **Open entries now** (rules excluded) | | **423** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (496)
+## Added since the baseline (497)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -124,6 +124,7 @@ None.
 | B18-DP-15 | WDR-002-C: give the sage a trade that depends on it (recommended: guards keep healing goods bought from the sage), or record the sage as a deliberate exception? | decision | APPROVED | 18 |
 | B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | decision | APPROVED | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
+| B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | APPROVED | owner decision |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

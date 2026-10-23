@@ -8,14 +8,14 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 27 |
-| Integrated | 1 of 27 (4%) |
-| Automated tests passed | 13 of 27 (48%) |
-| Integration verified | 0 of 27 (0%) |
-| Gameplay verified | 0 of 27 (0%) |
-| Owner playtested | 0 of 27 (0%) |
-| Complete | 0 of 27 (0%) |
-| Open (release blockers) | 27 |
+| Approved requirements in scope | 28 |
+| Integrated | 1 of 28 (4%) |
+| Automated tests passed | 13 of 28 (46%) |
+| Integration verified | 0 of 28 (0%) |
+| Gameplay verified | 0 of 28 (0%) |
+| Owner playtested | 0 of 28 (0%) |
+| Complete | 0 of 28 (0%) |
+| Open (release blockers) | 28 |
 | Open owner decisions (blocking) | 3 (0) |
 
 ## In development (worker assigned) (3)
@@ -38,10 +38,11 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (22)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (23)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
 | FAM-SAC-01 | Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder | OWNER APPROVED | PARTIALLY IMPLEMENTED | family worker (Sonnet subagent) / wip/expansion19-preparation | TARGETED TESTS PASSED | X19 completion worker adds the danger behaviour, then Build 19 integration | design: UNKNOWN | UNKNOWN |
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) / wip/expansion19-preparation, wip/expansion20-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |

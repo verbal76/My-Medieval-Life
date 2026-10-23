@@ -4798,6 +4798,34 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "B19-EMERGE",
+   "kind": "approved",
+   "title": "Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences",
+   "description": "Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences",
+   "source": "docs/directives/2026-10-23_build19_owner_advisement_emergence.md",
+   "owner_wording": "Before correcting unexpected behavior, distinguish: Emergent behavior ... Preserve it. Actual defect ... Correct it. Design question ... Present the evidence for owner review rather than silently rebalancing it.",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Build 19 verification report classifies every significant change as emergent, defect or design question with recorder evidence"
+   ],
+   "target_build": "19",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_owner_advisement_emergence.md"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -52389,6 +52417,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 completion worker (subagent); branch: None -> wip/expansion19-preparation",
      "why": "X19 completion worker started on wip/expansion19-preparation (fff48a4)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner advisement 2026-10-23 (B19-EMERGE): integration is routine work; changed outcomes are expected; classify, do not rebalance; keep current resources"
     }
    ],
    "next_action": "after FAM-SAC-01 lands: set the approved numbers, enable all layers, self-defence, lies and family stories live; integrate with identity, REC-F1/SIM-F9, recorder; gate; present Build 19",
