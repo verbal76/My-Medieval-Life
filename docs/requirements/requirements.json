@@ -26057,7 +26057,7 @@
    "owner_wording": "We need to add them in as game music and we will need a volume slider in settings for music and sfx I will add those too",
    "approval": "owner, 2026-10-23",
    "acceptance": [
-    "the three songs play by time of day (title and morning: Sunrise over the Village; day: Prosperous Village; evening, night and caves: Misted Ancient), fading between them; Android ships Ogg Vorbis, Windows and Linux the original WAVs, each from the owner's releases with recorded checksums; the Music slider controls the music and the Sound effects slider the SFX bus; credited as made with Suno; wiki and settings text updated"
+    "the three songs play by time of day in the village (title and morning: Sunrise over the Village; day: Prosperous Village; evening, night and underground: Misted Ancient); Fair Fight (Leohpaz) while the player is in a fight and Plain Sight in the countryside, fight first; fades between them; Android ships Ogg, Windows and Linux lossless WAV; the Music slider controls the music; credited (Suno; Leohpaz); wiki and settings text updated"
    ],
    "target_build": "18",
    "parent": null,
@@ -26078,6 +26078,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> music worker (Sonnet subagent); branch: None -> wip/b18-music; acceptance",
      "why": "owner answered the clarifying questions (docs/directives/2026-10-23_game_music.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance",
+     "why": "owner placed the Minifantasy tracks: Fair Fight in fights, Plain Sight in the countryside (directive file)"
     }
    ],
    "assigned_worker": "music worker (Sonnet subagent)",
@@ -40304,6 +40309,11 @@
      "date": "2026-10-23",
      "change": "acceptance",
      "why": "owner supplied the 48 sound effects (cozy-rpg-sfx.zip); the worker wires those matching existing game events"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner supplied Minifantasy Forgotten Plains SFX (footsteps, rustling, water, crickets, birds, wind, hits)"
     }
    ],
    "assigned_worker": "music worker (Sonnet subagent)",

@@ -33,3 +33,13 @@ and Linux ship the original WAVs, as planned; Android carries Ogg.
 The owner then sent the full set (2026-10-23, "This is supposed to be the three files"): `cozy-rpg-sfx-ambience-1.zip`,
 `cozy-rpg-sfx-ambience-2.zip` (as before) and `cozy-rpg-sfx.zip` (48 sound effects: combat, magic, items, world,
 jingles; sha256 8a17adcd…), all kept in `private-assets/`.
+
+## Minifantasy: Forgotten Plains (2026-10-23)
+
+The owner published a release "Minifantasy" with Leohpaz's `Minifantasy_Forgotten_Plains_SFX.zip` (37 sound effects;
+sha256 d94e9fd5…) and `Minifantasy_ForgottenPlains_Music.zip` ("Plain Sight (Regular)", "Fair Fight (Battle)"; sha256
+50a47734…), downloaded unchanged into `private-assets/`. Licensing.txt: use in personal or commercial projects; the pack
+itself may not be sold or distributed; credits appreciated.
+
+Owner's answer on the two tracks (verbatim choice): **"Fight music + countryside"**: Fair Fight while the player is in a
+fight, Plain Sight in the countryside beyond the village; the three songs keep the village by time of day.
