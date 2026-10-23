@@ -38,7 +38,9 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c2ece16 | Build 18 merged (c2ece16); X19-Q-TIMING done (3f89816); rule answers done (2456294: SJD-Q05, Q09, X19-ASSAULT; Q12, HARMED, CRT12 already matched; Q04 partial). Done on the branch: X19-GUARD (949b5b9), X19-REGARD (46b46e5), SJD-Q03 and Q13 (ca2e9ba). Event feeds (e8d4122) and decision hooks (577821d) done. Paused on the owner's number answers: calibration runs before them would be redone (MSW-01) |
+| X19-FOUND-PERS | X19 Worker A personality (Sonnet subagent) | `wip/x19-personality` (worktree `.claude/worktrees/x19-personality`) | 577821d | directive 2026-10-23 sections 2-3: personality framework extending the temperament; formulas shipped inert (X19-PERS-FORMULA) |
+| X19-FOUND-BONDS, X19-FOUND-FAMREP | X19 Worker B bonds (Sonnet subagent) | `wip/x19-bonds` (worktree `.claude/worktrees/x19-bonds`) | 577821d | sections 4-5: relationship history, resentment, familiarity +10%, family reputation +5% (12% combined); spillover reach and transmission inert (X19-SPILL-REACH, X19-REP-TRANSMIT) |
+| X19-FOUND, PROS-19 | lead | `wip/expansion19-preparation` | 577821d | merges A and B, then gate, perf and the completion report (directive section 8) |
 
 Expansions 20 and 21: implementation not authorized (register `builds` map: OD-30, OD-LE-01); no worker.
 Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).
@@ -68,7 +70,9 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    239bdff): three packages downloaded back, checksums match, audio per platform checked, Linux binary launched.
 5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
    report was given in the session.
-6. Expansions directive (2026-10-23): Build 18 merged into `wip/expansion19-preparation` (c2ece16, reviewed); the worker is on
+6. X19 foundations round (owner, docs/directives/2026-10-23_x19_foundations_round.md): Workers A and B in flight; on their
+   reports merge both into `wip/expansion19-preparation`, run the gate, perf and memory, report per section 8.
+7. Expansions directive (2026-10-23): Build 18 merged into `wip/expansion19-preparation` (c2ece16, reviewed); the worker is on
    nothing more until the owner answers the numbers (then 365-day calibration off vs on). Done: hooks (577821d), event feeds (e8d4122), X19-Q-TIMING (3f89816), the rule answers (2456294), X19-GUARD (949b5b9),
    X19-REGARD (46b46e5), SJD-Q03/Q13 (ca2e9ba). Open number questions for the owner: X19-GOSSIP-FLOOR, X19-RUNNERUP,
    X19-TRUST-RATES, X19-PERSONALITY, X19-EVENT-Q; X19-DECAY awaits the calendar explanation (given 2026-10-23 in the session).

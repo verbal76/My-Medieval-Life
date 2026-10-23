@@ -49966,7 +49966,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -49975,8 +49975,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (merges Workers A and B); branch: None -> wip/expansion19-preparation",
+     "why": "split into two parallel workers"
     }
-   ]
+   ],
+   "assigned_worker": "lead (merges Workers A and B)",
+   "branch": "wip/expansion19-preparation"
   },
   {
    "id": "X19-FOUND-BONDS",
@@ -49995,7 +50002,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -50004,8 +50011,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 Worker B bonds (Sonnet subagent); branch: None -> wip/x19-bonds",
+     "why": "assigned"
     }
-   ]
+   ],
+   "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
+   "branch": "wip/x19-bonds"
   },
   {
    "id": "X19-FOUND-FAMREP",
@@ -50024,7 +50038,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -50033,8 +50047,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 Worker B bonds (Sonnet subagent); branch: None -> wip/x19-bonds",
+     "why": "assigned"
     }
-   ]
+   ],
+   "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
+   "branch": "wip/x19-bonds"
   },
   {
    "id": "X19-FOUND-PERS",
@@ -50054,7 +50075,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -50063,8 +50084,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 Worker A personality (Sonnet subagent); branch: None -> wip/x19-personality",
+     "why": "assigned"
     }
-   ]
+   ],
+   "assigned_worker": "X19 Worker A personality (Sonnet subagent)",
+   "branch": "wip/x19-personality"
   },
   {
    "id": "X19-GOSSIP-FLOOR",
