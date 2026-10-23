@@ -40,8 +40,7 @@ One read-only investigator: the chapel fund holding 68-85% of all coins at day 3
 
 ### Running processes (never restart or cancel; SIM-02)
 
-| What | Where | Code | Started |
-|---|---|---|---|
+None (the 365-day runs, run 39874405723, finished 02:04 UTC).
 
 On their reports:
 1. Review the work.
