@@ -1753,6 +1753,13 @@ func _loot_to_recover(n: NPC) -> Dictionary:
 
 
 func _bandit(n: NPC, h: float) -> void:
+	# SIM-F4 (owner 2026-10-24, "heal at camp"): a badly hurt bandit rests at the camp as a hurt villager rests at home
+	# (below rest.seek_below of their health, for rest.day_minutes, restored by World.rest_recover, PAR-03)
+	if n.hp < n.max_hp * float(GameData.b("rest").seek_below):
+		var mins := float(GameData.b("rest").day_minutes)
+		n.doing = "resting at the camp"
+		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(mins, "rest_end", {"min": mins, "morning": false}, "sleep")]
+		return
 	var night := h >= 21.0 or h < 4.5
 	if night:
 		var prey = _prey_for(n)
@@ -1766,12 +1773,11 @@ func _bandit(n: NPC, h: float) -> void:
 	n.plan = [go(wander_cell(w.bandit_camp, 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
 
 
-## OD-16 (a), EQ-20 (owner 2026-10-20: "bandits spend their hoards at the market"): by day a bandit holding
-## `bandit_spend_min` coins slips into the market and buys up to `bandit_spend_units` of food from a seller no
-## guard stands near (within 10 tiles), so stolen coins return to the village's traders.
+## OD-16 (a), EQ-20 (owner 2026-10-20: "bandits spend their hoards at the market"): by day a bandit who can afford one
+## item of food slips into the market and buys up to `bandit_spend_units` of it from a seller no guard stands near
+## (within 10 tiles), so stolen coins return to the village's traders. SIM-F4 (owner 2026-10-24): however hurt, and from
+## the first item's price, not a 15-coin hoard (a hurt band with coins starved before).
 func _bandit_market(n: NPC) -> bool:
-	if n.coins < int(GameData.b("bandit_spend_min")) or n.hp < n.max_hp * 0.6:
-		return false
 	for v: NPC in w.npcs:
 		if not v.alive or v.role == "bandit" or not (buy_role(v) == "merchant_food" or v.job == "cook") or w.asleep(v):
 			continue

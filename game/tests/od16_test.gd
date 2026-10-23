@@ -141,6 +141,26 @@ func test_bandit_spends_at_the_market() -> void:
 	check(w.brain.act(bandit, "buy_from", step.args), "and buys %s" % step.args.item)
 	check(seller.coins > c0 and bandit.coins < 60, "the coins reach the seller (%d to %d)" % [c0, seller.coins])
 	check(w.total_coins() == total0, "coins only moved")
+	# SIM-F4 (owner 2026-10-24): a hurt bandit who can afford one item of food buys it; one who cannot does not go
+	bandit.plan.clear()
+	bandit.hp = bandit.max_hp * 0.2
+	var cheapest := 1000000
+	for o: NPC in w.npcs:
+		if o.alive and o.role != "bandit" and (w.brain.buy_role(o) == "merchant_food" or o.job == "cook"):
+			for f in NPCBrain.FOOD:
+				if o.inv.has(f):
+					cheapest = mini(cheapest, w.sell_price(o, f))
+	check(cheapest < 1000000, "food is on sale")
+	bandit.coins = cheapest
+	check(w.brain._bandit_market(bandit), "a badly hurt bandit with the price of one item of food still goes to market")
+	bandit.plan.clear()
+	bandit.coins = maxi(0, cheapest - 1)
+	check(not w.brain._bandit_market(bandit), "a bandit who cannot afford any food does not")
+	# and a badly hurt bandit rests at the camp until healed, as a villager rests at home (PAR-03)
+	bandit.plan.clear()
+	w.brain._bandit(bandit, 12.0)
+	check(bandit.doing == "resting at the camp" and str(bandit.plan[-1].get("act", "")) == "rest_end", "a badly hurt bandit lies up at the camp")
+	check(w.rest_recover(bandit, float(GameData.b("rest").day_minutes), false) and bandit.hp == bandit.hp_cap(), "and the rest restores their health")
 
 
 ## EQ-20: coins left lying for loot_recover_hours near a guard on duty are brought to the treasury.
