@@ -38500,11 +38500,16 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "run 1 analysed (10 days, seed 1): eight findings with evidence in docs/design/SIM_FINDINGS.md; three need the owner (SIM-F2..F4)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner bounded the workstream (docs/directives/2026-10-23_bounded_parallel_simulation.md): fixed commits, set durations and stop conditions, unattended runs, one analysis per run, no campaigns without approval"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/recorder (read-only runs)",
-   "next_action": "30 days on seeds 1 and 2 after FIX-RECF1 and recorder D3 land"
+   "next_action": "run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap"
   },
   {
    "id": "REC-F1",

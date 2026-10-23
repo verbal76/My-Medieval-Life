@@ -24,5 +24,9 @@ Archive: 1.45 M rows, 10.5 MB compressed. Totals: 51,149 decisions, 11,339 plan 
 true/false); deaths and their causes; births; job changes; the treasury and taxes; crimes; guard fights; relationships. These are
 in the recorder worker's D3 task now.
 
-**Next run** (after FIX-RECF1 and the recorder's D3 land): 30 days on seeds 1 and 2 with death causes and failure reasons recorded,
-to check F1 is gone, settle F4 and F5, and look for longer-term trends (stock build-up, prices, households running out of money).
+**Run plan under the owner's bounded rule** (`docs/directives/2026-10-23_bounded_parallel_simulation.md`): each run names its commit,
+duration and stop conditions in advance, runs unattended as a background process (no agent supervises it), is analysed once, and is
+not extended unless a finding needs more coverage; new campaigns need the owner.
+
+**Run 2 (planned, not started):** commit = the `wip/recorder` head after FIX-RECF1 and D3 are merged there (named when started);
+30 game days, seeds 1 and 2, recording on; stop at day 30, at a FATAL conservation line, or at the storage cap. Purpose: with death causes and failure reasons recorded: to check F1 is gone, settle F4 and F5, and look for longer-term trends (stock build-up, prices, households running out of money).
