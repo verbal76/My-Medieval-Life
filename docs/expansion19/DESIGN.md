@@ -5,7 +5,7 @@ PROS-01, PROS-19) on `wip/expansion19-preparation`, branched from staging `b7216
 records). Nothing here is integrated gameplay, and nothing is merged or released. **The owner answered SJD-Q01, Q02,
 Q06, Q07, Q08, Q10, Q11 and Q14 on 2026-10-21** (`docs/directives/2026-10-21_expansion19_sjd_final_decisions.md`,
 on staging): their rules are in section 5 and implemented in round 4. Q03, Q04, Q05, Q09, Q12 and Q13 stay
-provisional, and X19-Q-TIMING stays pending with "spread" as the default. Where code needs a number the owner did not
+provisional. **X19-Q-TIMING was answered 2026-10-23** (gossip spreads organically by contact and closeness): `gossip.timing` is now "scheduled" with closeness weighting (A19-12, section 15a). Where code needs a number the owner did not
 set, it is a parameter in `game/data/judgment.json` with a proposed value (section 5a). Source: the Judgment and Decision Engine master spec
 (`docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf`, "spec s.N"), gates SJD-C and SJD-D,
 and the question analysis `origin/wip/roadmap-docs:docs/roadmap/19_SJD_RECONCILIATION.md`.
@@ -95,8 +95,8 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 - **A19-9** (round 3) Word of mouth is queued and told a few meetings a tick, and reads tell first the meetings they
   depend on (`_flush_for`). It is proven result-neutral against telling at once. Settings `gossip.pump_per_tick` (8) and
   `gossip.timing` ("hour"). The `_dry` shortcut cache is never saved and is capped at 20,000 pairs.
-- **A19-10** (round 3, an option, not chosen) `gossip.timing` "scheduled" tells each meeting at its own minute. It gives
-  smaller frames but different results, so it is left for the lead or the owner to choose.
+- **A19-10** (round 3 option, **chosen 2026-10-23**, owner answer X19-Q-TIMING) `gossip.timing` "scheduled" tells each
+  meeting at its own minute. It gives smaller frames and different results from "hour", which stays as the reference mode.
 - **A19-11** (round 4) A belief is replaced only by a strictly more confident telling (Q06 updates). Together with the
   per-event knowers this bounds processing without a hop limit (Q07). The round-3 "nothing new to tell" cache was
   removed because trust can change.
@@ -132,7 +132,7 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 | SJD-Q09 best or near-best | `decision.selection`, `margin` | argmax |
 | SJD-Q12 what is scored | catalog, `min_value` | the spec's seed severities; min_value 0 |
 | SJD-Q13 weights | `decision.profiles`, `trait_spread_permille` | data profiles; no run-time learning |
-| X19-Q-TIMING | `gossip.timing` | "hour" (spread); "scheduled" not enabled |
+| X19-Q-TIMING | `gossip.timing`, `gossip.closeness_floor_permille` | answered 2026-10-23: "scheduled" with closeness weighting (floor 500 is an agent-proposed number) |
 
 ### 5a. Reconciliation of every judgment.json setting and code path with the decisions
 
@@ -154,7 +154,8 @@ system to call the shared interface).
 | `gossip.max_hops`, `gossip.min_confidence` (removed) | Q07 | code | no hop limit, no floor |
 | `gossip.per_meeting`, `daily_budget` | Q07 | config | kept as exchange limits |
 | `gossip.share_net_at`, `misattribute_permille` | Q07 | config | proposals (0: no distortion) |
-| `gossip.pump_per_tick`, `timing` | X19-Q-TIMING | config | "hour" |
+| `gossip.pump_per_tick` (hour mode only), `timing` | X19-Q-TIMING | config | "scheduled" |
+| `gossip.closeness_floor_permille` | X19-Q-TIMING (closeness) | config, agent-proposed, awaiting review | 500 |
 | `memory.effective_fade_permille` (removed) -> `decay.ordinary_permille_per_day` | Q02 | code + config | 3 proposed, unapproved |
 | `memory.permanent_severity`, `permanent_personal_severity` | Q11 | code + config | 3000; 2000 proposed |
 | `memory.capacity`, `salience_fade_permille`, `forget_below`, `horizon_days` | Q11 | config | ordinary memory only |
@@ -285,14 +286,14 @@ of the hour's meetings in a well-connected crowd. The largest flush measured was
 is what keeps the result identical, so it cannot be split up. Per day, gossip costs about the same as before (42 ms
 spread, 46 ms told at once at 500 people live).
 
-**The scheduled option** (`gossip.timing` "scheduled", off). Each meeting is told at its own minute of the hour (a seeded
+**The scheduled model** (`gossip.timing` "scheduled", the live setting since 2026-10-23; section 15a). Each meeting is told at its own minute of the hour (a seeded
 hash of the pair and the hour), and nothing has to be told early, so a frame holds only that minute's meetings.
 - **Frames:** smallest of the three, 0.62 / 1.25 ms at 500 people live (about 2.5 / 5 ms on the phone).
 - **Results:** it changes when word passes within an hour, so they differ from rounds 1 and 2 (for example, 3,073
   memories instead of 3,102 at 500 people live).
 - **Save:** meetings still to come are saved (`"scheduled"` in the section).
 - **Tests:** it is deterministic and tested (`test_scheduled_gossip`).
-- **Decision:** whether to use it is a design decision, so the default stays "hour".
+- **Decision:** the owner chose it (X19-Q-TIMING, 2026-10-23).
 
 **The live village with the queue on** (`economy_sim`, 10 days, seed 1, run one after the other):
 
@@ -590,8 +591,8 @@ determinism. Nothing else was merged in.
 
 ### What remains
 
-- The worst single frame is bounded by a necessary dependency flush. Only a different timing of when word passes (the
-  scheduled option, owner decision X19-Q-TIMING, still pending and not enabled) bounds it further.
+- Under the reference "hour" mode the worst single frame is bounded by a necessary dependency flush. The chosen
+  "scheduled" model (X19-Q-TIMING, answered 2026-10-23) bounds it further.
   - With the scheduled option: 8 to 12 ms worst, and 11 and 28 tellings a frame, against 107 and 188.
 - At stress, writes (observations) still force full flushes, since a write must see every earlier meeting.
 - Stress memory is 17.4 MB, above the 16 MB proposed budget, as it already was. Section 15 brings it to 13.5 MB.
@@ -599,7 +600,7 @@ determinism. Nothing else was merged in.
 ## 15. Investigation round: timing, the worst frame, memory (owner-directed, 2026-10-22, on `05adc9d`)
 
 There were three questions:
-1. The X19-Q-TIMING proposal. It is written in `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md` and not implemented;
+1. The X19-Q-TIMING proposal. It is written in `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md` (decided and implemented 2026-10-23, section 15a);
    "hour" stays the default.
 2. Can the worst frame fall without changing when anyone learns anything?
 3. Where does the heavy-rate memory go?
@@ -700,3 +701,36 @@ structure in turn and records what that gives back.
 **The 16 MB target.** It is an agent proposal for 500 people at the heavy rate, which is about 80 times the events of
 the live village. Both rates are now within it (13.5 and 3.6 MB). A budget at the live rate (say 8 MB at 500 people)
 would track what the game actually produces. Phone memory is in gigabytes, so frame time remains the binding cost.
+
+
+## 15a. X19-Q-TIMING decided and implemented (2026-10-23)
+
+Owner answer, verbatim: "They should spread organically by contact and closeness like a real rumor or gossip would"
+(`docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md`). The lead's reading (recorded 2026-10-23):
+each passing of gossip happens at the meeting itself, weighted by how close the two people are.
+
+- **A19-12 Timing.** `gossip.timing` is "scheduled" (the round-3 prototype, finished, not a parallel model): each meeting is
+  told at its own seeded minute of the hour it was shared, with no catch-up flush. "hour" is kept as a reference mode
+  (the identity tests prove the queue and dependency flush equal telling at once; `judgment_perf` compares against it);
+  nothing in the live game uses it. The hour-queue code was not removed because those tests and measurements need it.
+- **A19-13 Closeness.** Before this change closeness already weighted how far a story is *believed* (credibility, from the
+  existing relationship number, Q06) but not *whether* it passed: every meeting passed up to `per_meeting` stories.
+  Now each story a teller could pass passes with a chance from `gossip.closeness_floor_permille` (500, an AGENT-PROPOSED
+  number awaiting owner review; strangers, regard 0) rising linearly to certain at regard 100 (the existing Relations
+  regard through `JudgmentSocial.regard`). The roll is a seeded hash of the world seed, event, teller, listener, the
+  meeting's minute and the day: deterministic, no global random. A story withheld does not use the meeting's or the
+  teller's daily limits and may pass in a later meeting (another minute, another roll). 1000 turns it off. SJD-Q07
+  (meetings only, no hop limit, no confidence floor) is unchanged.
+- **A19-14 Pending meetings and saves.** Meetings whose minute has not come are saved (`"scheduled"`: minute, a, b) and
+  restored; a row is removed before it is told, so none is told twice. Closed gap: a scheduled save loaded while
+  the setting is "hour" now moves its pending meetings into the hour queue in minute order (before, they would have
+  waited forever). `begin_day` also tells any scheduled meeting older than the day (a long time skip), so a meeting never
+  spends the next day's tellings. Section format and `SAVE_VERSION` unchanged.
+- **Tests.** `judgment_test`: `test_scheduled_gossip`, `test_closeness_gossip`, `test_scheduled_save_migration` (180 checks).
+- **Measured** (`judgment_perf`, 500 people, 40 days, worst single frame; this machine; phone figure = 4x):
+  | rate | before, "hour" (c2ece16) | after, "scheduled" | tellings in the worst tick before / after |
+  |---|---|---|---|
+  | live | 11.7 ms (about 47 ms on the phone) | 7.4 ms (about 30 ms) | 107 / 11 |
+  | heavy (stress) | 27.0 ms (about 108 ms) | 15.6 ms (about 62 ms) | 188 / 28 |
+  Frames are noisy (one outlier can set the worst); the telling counts per tick are exact. The earlier 76 to 105 ms
+  phone figure was the heavy "hour" worst. The closeness weighting itself costs one hash per story.

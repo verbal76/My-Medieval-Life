@@ -1,9 +1,14 @@
-# X19-Q-TIMING: when word of mouth is told (proposal, not implemented)
+# X19-Q-TIMING: when word of mouth is told (DECIDED and IMPLEMENTED 2026-10-23)
 
-Owner decision X19-Q-TIMING is **pending**. This paper describes the options so the owner can decide. Nothing here is
-switched on:
-- `gossip.timing` stays `"hour"`: the "spread" queue, with results identical to telling every meeting at once.
-- `"scheduled"` exists only as the round-3 prototype, off by default.
+**Decided and implemented, 2026-10-23.** The owner answered: "They should spread organically by contact and closeness like
+a real rumor or gossip would." Variant B ("scheduled") is now `gossip.timing` in `game/data/judgment.json`, with the
+closeness weighting and the save-migration fix described in DESIGN.md section 15a. "Hour" remains only as a reference mode
+for tests and measurements; "ordered" (C) was not built. The paper below is kept as the record of the options as they stood
+on 2026-10-22; where it says "pending" or "default", read the above. Judgment itself stays `enabled: false` in the live game.
+
+Original introduction (2026-10-22):
+- `gossip.timing` was `"hour"`: the "spread" queue, with results identical to telling every meeting at once.
+- `"scheduled"` existed only as the round-3 prototype, off by default.
 
 Written 2026-10-22 on `wip/expansion19-preparation`. The measurements come from `judgment_perf` (500 people, 40 days).
 The live-village facts come from `economy_sim --judgment` (30 days, seed 1).
@@ -130,7 +135,7 @@ villagers' crimes (DESIGN.md section 7).
 - **Saves.** Under "scheduled", meetings whose minute has not come are saved (`"scheduled"`: minute, a, b) and restored
   on load. Under "hour", the queue is told before saving, so nothing is pending. The section format and `SAVE_VERSION`
   do not change: the key is optional.
-- **Migration risk, to fix before any switch.** A save made under "scheduled" and loaded under "hour" puts its pending
+- **Migration risk (fixed 2026-10-23: `load_dict` queues them in minute order under "hour").** A save made under "scheduled" and loaded under "hour" puts its pending
   meetings back in the scheduled table. "Hour" never tells that table, so those meetings would wait forever, carried
   from save to save. If the setting can ever change on an existing world, loading must move them into the hour queue in
   minute order. The other direction is safe, since an "hour" save has nothing pending.

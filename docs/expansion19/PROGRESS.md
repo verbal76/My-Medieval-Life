@@ -4,7 +4,15 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-22 (the investigation round on `05adc9d`: timing proposal, worst frame, memory).
+Updated 2026-10-23 (X19-Q-TIMING implemented; SYNC-18 baseline). Earlier: 2026-10-22 (the investigation round on `05adc9d`: timing proposal, worst frame, memory).
+
+**SYNC-18 baseline (2026-10-23):** Build 18 (`wip/build18` at `239bdff`) is merged into this branch at `c2ece16`. The
+determinism gate (`tools/sim_gate.py`, seeds 1 and 2, days 10 and 30) is identical to the baseline both at `c2ece16` and
+after the X19-Q-TIMING change (judgment is off, so nothing moves).
+
+**X19-Q-TIMING (owner answer 2026-10-23) implemented:** `gossip.timing` "scheduled", closeness-weighted passing
+(`gossip.closeness_floor_permille` 500, agent-proposed, needs owner review), pending meetings survive save/load (also across a
+timing change). Details, tests and measurements: DESIGN.md section 15a.
 
 ## Branch and latest pushed commit
 
@@ -48,7 +56,7 @@ Details are in DESIGN.md section 15 and `docs/expansion19/GOSSIP_TIMING_PROPOSAL
 - in the 30-day village on seed 1, the same world fingerprint `1c755f53d12c72bd470b7913fb5e52a6`, the same judgment
   state hash 1780545997, and no leaks.
 
-- **X19-Q-TIMING:** written up, not implemented, and still pending. The paper covers the scheduled option in detail and
+- **X19-Q-TIMING:** (2026-10-22) written up; **answered and implemented 2026-10-23, see above and DESIGN.md section 15a.** The paper covers the scheduled option in detail and
   a third variant ("ordered": today's order of tellings, paced through the hour). The recommendation is to keep "hour"
   until Gate E, and to prefer "ordered" if a bounded frame is wanted then.
   - **Measured:** of 40,000 trade choices, none chose differently under "scheduled". The dispositions they read
@@ -214,8 +222,8 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 
 - **Answered 2026-10-21:** Q01, Q02, Q06, Q07, Q08, Q10, Q11, Q14 (see above).
 - **Still provisional:** Q03, Q04, Q05, Q09, Q12, Q13.
-- **Pending:** X19-Q-TIMING, with "spread" (gossip.timing "hour") as the default; "scheduled" is not enabled. The
-  proposal and its variants are in `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`.
+- **Answered 2026-10-23:** X19-Q-TIMING (spread by contact and closeness): "scheduled" timing with closeness weighting is
+  implemented; the floor 500 is an agent-proposed number for owner review. Options record: `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`.
 - **Needed from the owner before live integration (Gate E):**
   - the Q02 decay rate;
   - the four conflicts in DESIGN.md section 10 (instant harm spread, CRT-12 thresholds, CRT-06 friendly guard, and
