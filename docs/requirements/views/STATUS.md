@@ -17,7 +17,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Implemented on a task branch | 0 | 8 | 1 | 3 | 1 | 1 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Integrated | 80 of 83 (96%) | 0 of 22 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
-| Automated tests passed (targeted or better) | 78 of 83 (94%) | 10 of 22 (45%) | 1 of 9 (11%) | 1 of 5 (20%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
+| Automated tests passed (targeted or better) | 78 of 83 (94%) | 11 of 22 (50%) | 1 of 9 (11%) | 1 of 5 (20%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Integration verified (suite on the integrated build) | 58 of 83 (70%) | 0 of 22 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Gameplay verified | 0 of 83 (0%) | 0 of 22 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Owner playtested | 0 of 83 (0%) | 0 of 22 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
@@ -25,7 +25,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Release blockers (open in-scope requirements) | 81 | 22 | 9 | 5 | 3 | 1 | 0 |
 | Open owner decisions (of which blocking) | 1 (0) | 11 (0) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) |
 | Deferred with approval | 2 | 1 | 0 | 0 | 0 | 0 | 0 |
-| Proposals and ideas (not counted) | 3 | 2 | 2 | 5 | 0 | 0 | 0 |
+| Proposals and ideas (not counted) | 3 | 3 | 2 | 5 | 0 | 0 | 0 |
 | Integrated, awaiting gameplay or owner verification | 78 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | XS 2, M 3, L 5, XL 1, UNKNOWN 11 | UNKNOWN 9 | UNKNOWN 5 | UNKNOWN 3 | UNKNOWN 1 | none |
 | Readiness | RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23)) | PROTOTYPE ONLY (isolated branch; not integrated) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | NOT AUTHORIZED for implementation |

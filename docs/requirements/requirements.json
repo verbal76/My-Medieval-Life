@@ -38241,7 +38241,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -38269,11 +38269,21 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: lead -> recorder worker (Sonnet subagent); branch: staging/my-medieval-life -> wip/recorder",
      "why": "D1 core and first D2 choke points assigned on wip/recorder (from the Expansion 19 branch; the identity foundation joins later)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; test_commit: None -> 94b1304; commits + 94b1304; next_action",
+     "why": "D1 core and first D2 points built on wip/recorder (head 94b1304): recorder off by default; recorder_test 62; world 339, start 506 steps, conservation 8, judgment_live 142; 10-day seed-1 fingerprint identical recorded vs not; gate identical; measured +27% headless time, 1.45M rows, 10.5 MB compressed over 10 days (0.5 to 1.6 MB a day), peak buffer 30,447 rows"
     }
    ],
    "assigned_worker": "recorder worker (Sonnet subagent)",
    "branch": "wip/recorder",
-   "next_action": "when ID-01 lands: D1 core on a recorder branch from the Expansion 19 branch with the identity foundation; smallest shared architecture; coverage reported honestly"
+   "next_action": "merge the verified identity foundation; then D3 systems (life, employment, government, crime, player, save) and D4 records",
+   "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical",
+   "test_commit": "94b1304",
+   "commits": [
+    "94b1304"
+   ]
   },
   {
    "id": "REC-D1",
@@ -38380,6 +38390,32 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (docs/directives/2026-10-23_recorder_decisions.md)"
+    }
+   ]
+  },
+  {
+   "id": "REC-F1",
+   "kind": "proposal",
+   "title": "Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed.",
+   "description": "Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed.",
+   "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
+   "owner_wording": null,
+   "approval": "",
+   "acceptance": [],
+   "target_build": "19",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "PROPOSED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
     }
    ]
   },

@@ -10,7 +10,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|
 | Approved requirements in scope | 22 |
 | Integrated | 0 of 22 (0%) |
-| Automated tests passed | 10 of 22 (45%) |
+| Automated tests passed | 11 of 22 (50%) |
 | Integration verified | 0 of 22 (0%) |
 | Gameplay verified | 0 of 22 (0%) |
 | Owner playtested | 0 of 22 (0%) |
@@ -22,7 +22,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | NOT TESTED | when ID-01 lands: D1 core on a recorder branch from the Expansion 19 branch with the identity foundation; smallest shared architecture; coverage reported honestly | design: UNKNOWN | UNKNOWN |
+| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | merge the verified identity foundation; then D3 systems (life, employment, government, crime, player, save) and D4 records | design: UNKNOWN | UNKNOWN |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
@@ -71,7 +71,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | OPEN | no |  |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | OPEN | no |  |
 
-## Not counted: umbrellas, proposals, ideas, deferred (5)
+## Not counted: umbrellas, proposals, ideas, deferred (6)
 
 | ID | Item | Kind | Approval |
 |---|---|---|---|
@@ -80,4 +80,5 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | umbrella | OWNER APPROVED |
 | FR-09 | Crime from desperation | approved | DEFERRED |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | umbrella | OWNER APPROVED |
+| REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed. | proposal | PROPOSED |
 
