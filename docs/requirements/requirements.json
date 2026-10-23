@@ -38194,8 +38194,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -38218,11 +38218,22 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> reconciliation worker (Sonnet subagent); branch: None -> wip/expansion19-preparation, wip/expansion20-preparation",
      "why": "assigned: tolerance on wip/expansion19-preparation, reservations on wip/expansion20-preparation (the code to reconcile lives only there)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_test 217, judgment_personality_test 73, judgment_bonds_test 97, judgment_live_test 142, judgment_guard_save_test 18, relations_test 80 (4a0459f); economy_foundation_test 89, contracts_test 154, credit_test 98, conservation_test 8, world_test 339 (1befd0e); sim_gate identical on both; test_commit: None -> 1befd0e; commits + 4a0459f; commits + 1befd0e; next_action",
+     "why": "done: tolerance has one owner (4a0459f, Expansion 19: personality layer, same numbers, old sections migrated, equivalence proven); reservations recognise contract holds (1befd0e, Expansion 20: available = held - holds - reservations); gate identical on both"
     }
    ],
-   "next_action": "owner approves the two reconciliations",
+   "next_action": "owner confirms: when the personality formula later drives tolerance for a provocation, it replaces the Q13 step rather than adding to it",
    "assigned_worker": "reconciliation worker (Sonnet subagent)",
-   "branch": "wip/expansion19-preparation, wip/expansion20-preparation"
+   "branch": "wip/expansion19-preparation, wip/expansion20-preparation",
+   "tests": "judgment_test 217, judgment_personality_test 73, judgment_bonds_test 97, judgment_live_test 142, judgment_guard_save_test 18, relations_test 80 (4a0459f); economy_foundation_test 89, contracts_test 154, credit_test 98, conservation_test 8, world_test 339 (1befd0e); sim_gate identical on both",
+   "test_commit": "1befd0e",
+   "commits": [
+    "4a0459f",
+    "1befd0e"
+   ]
   },
   {
    "id": "REG-BUY-01",

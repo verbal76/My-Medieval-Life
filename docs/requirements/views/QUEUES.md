@@ -17,7 +17,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| RECON-01 | unassigned | IN DEVELOPMENT | reconciliation worker (Sonnet subagent) | wip/expansion19-preparation, wip/expansion20-preparation |
+| RECON-01 | unassigned | IMPLEMENTED ON TASK BRANCH | reconciliation worker (Sonnet subagent) | wip/expansion19-preparation, wip/expansion20-preparation |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
