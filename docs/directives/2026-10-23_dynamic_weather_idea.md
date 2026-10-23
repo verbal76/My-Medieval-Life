@@ -20,3 +20,25 @@ I was thinking about what else would actually help here. I think we need some dy
 
 Well hit me with the questions there boss
 Fires should be able to spread through towns if they come from a forest fire. That's too close campfires have the chance of starting fires if it's in a drought. When there's heavy rains, they can create a flash flood on their own. If there's already a crick or a river running through an area the banks will swell to. Maybe you know a half or twice their size and cause flooding along the banks. Animals will migrate away from fires and floods and stampede in different areas. Droughts cause obviously less production of grown goods possibly failed crops. It will also cause illness in the elderly
+
+## Owner answers, second round (same day, in the session)
+
+- Firefighting: **"Bucket lines (Recommended)"**: villagers and the player carry water from wells and the river to slow
+  or put out a fire and can clear a firebreak; rain puts fires out; fighting fire is dangerous (smoke and burns can
+  injure or kill).
+- Warning: **"Signs in the sky (Recommended)"**: a few game hours of readable warning (darkening clouds, rising water,
+  fleeing animals); experienced villagers act on the signs; no numeric forecast.
+- Illness: **"Weather illnesses (Recommended)"**: a small illness system tied to weather only (drought fever, elderly and
+  children most at risk; chills from cold, wet and snow; foul water after floods), treated with rest, shelter, food and
+  the existing medicines; it can kill the weak.
+- Rebuilding: **"Owner, with village aid (Recommended)"**: the owner rebuilds through the existing construction system;
+  the treasury repairs public buildings and may grant relief; chapel alms and neighbours' help (Expansion 19) cover the
+  poor; the homeless shelter where they can.
+- Seasons: **"Seasonal, varied years (Recommended)"**: per-season odds (snow only in winter, drought mostly in summer,
+  storms in spring and autumn); wetter and drier years, so droughts can last a season or more.
+- Snow: **"Hardship (Recommended)"**: slower walking, no crop growth, animals need shelter and feed, homes need firewood,
+  chills for the cold and wet, heavy snow can collapse a weak roof.
+- Stampedes: **"Trample and scatter (Recommended)"**: fleeing herds trample crops and fences and can injure people;
+  wild animals move to new grounds for a while; farm animals may break out of pens.
+- Player: **"Same as everyone (Recommended)"**: the player can be burned, injured, chilled or swept away (washing up
+  downstream and walking back) and can die; the heir continues.
