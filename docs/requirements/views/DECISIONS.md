@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 39 |
+| OPEN | 40 |
 | APPROVED | 152 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -73,6 +73,12 @@ The decision register is the `decision` records of the register. A recommendatio
 | Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
+
+## Approved, no build assigned: open, reopened or provisional (1)
+
+| ID | Question | Disposition | Blocks implementation | Affects | Source |
+|---|---|---|---|---|---|
+| XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | OPEN | no |  | docs/directives/2026-10-23_decision_explainability.md |
 
 ## Waiting on an owner decision for its build: open, reopened or provisional (5)
 

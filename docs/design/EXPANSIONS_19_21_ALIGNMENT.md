@@ -46,6 +46,7 @@ Gate identical with the judgment off at every step.
 | Forgiveness, reconciliation | Existing (prospective) | resentment softening by growth, trust recovery by reliability | formulas | 19 | personality | dawn, holders only | X19-PERS-FORMULA, X19-DECAY | X19 |
 | Personality differences, learning, emotion | Existing (prospective, inert) | traits, wisdom, anger, override; 30% stubbornness | live feeds of mistakes and reminders; decision effect of stubbornness | 19 | | per event | X19-PERS-FORMULA, X19-TRAIT-DIST | X19 |
 | Decisions influenced, not dictated | Existing (prospective) | margin selection, live order preserved | more decision points | 19 via shared hooks | 20, 21 decision points | per decision | X19-RUNNERUP | X19 / LE-02 |
+| Decision explainability (XEXPL-01) | Approved, partly Existing | `JudgmentWeighting.explain` and the `trace` rows (feasible options, per-factor contributions, chosen, policy); beliefs carry source and confidence | a compact stored record; player filtering | shared (section 7) | 20 event record | traces only for consequential decisions | none | design now, build when authorized |
 | Integration breadth (trade, work, credit, family, crime, politics, business, bandits, assistance, migration, settlements, history) | Approved | trade, credit, contracts, family help, food seller wired | employment, crime, elections, bandits, migration, settlements, history | 19 via hooks | 20 offers, 21 elections | | none blocking | after Gate E, per system |
 
 **Major missing:** live activation (Gate E: owner numbers, decay rate, calibration runs); fabrication and investigation; generational
@@ -78,6 +79,7 @@ record, economic event record, actor resolver (66 checks, gate identical). Prici
 | Government purchasing | Approved (directive s.5) | manor orders, granary buying | 21 initiating through 20 transactions | 20 executes | 21 | | OD-LE-06 | LE-04 with P21 |
 | Bandits and stolen goods | Existing in part | bandit market, loot recovery | hoarding, fencing, custody vs ownership | 20 | | | OD-LE-09 | LE-05 |
 | Speculation, manipulation | Blocked | none | | 20 | | | OD-LE-11 | LE-02+ |
+| Decision explainability (XEXPL-01) | Approved, partly Existing | economic event record (built, off); refusal reasons (`why_not`, `credit` quotes, housing goal `why`); `miss_log` (diagnostics only, `track_misses`) | reason codes on offers, refusals and failures; links from a decision to its events | shared (section 7) | 19 trace format | bounded ring | none | LE-01/02 |
 | Performance budgets | Blocked | profiler, gate | budgets | all | | O(n^2) dawn food search, unpruned logs (E20-RISK-QUEUES) | OD-LE-15 | LE-01/06 |
 
 **Major missing:** Need, Offer and Knowledge records; negotiation in ordinary trade; business identity; installments and collateral.
@@ -104,6 +106,7 @@ off (`civic.json enabled: false`). Mayoral structure approved today.
 | Corruption and abuse | Proposed | none | | 21 | 20 ledger | | whether wanted | Deferred |
 | Noble or manor authority vs local government | Blocked | a manor with no lord | | 21 | | | P21-STRUCTURE | P21-03 |
 | Political history and careers | Existing in part (in progress) | legacy record (in progress) | accomplishments, generational careers | 21 | civic records, graves (WDR-014-C) | event-driven | none | P21-01 |
+| Decision explainability (XEXPL-01) | Approved | succession `why` in `_install`/`_change_job`, tax band reasons (`TaxPolicy._why`), tenure `how` and legacy cause (in progress) | why a voter chose, why an official spent | shared (section 7) | 19 voter traces, 20 events | one trace per ballot is too many: keep tallies and a sample | none | P21-03 |
 | Player participation | Approved in principle (Rule 015) | none | | 21 | | | what the player may hold | P21-03 |
 
 **Essential to the approved mayoral system:** an office record and tenure (in progress), an election calendar on the 8-day year
@@ -131,3 +134,47 @@ needs Expansion 19's Gate E.
 - **20:** with the owner's approval of the architecture: the LE-01 Need record and the Offer and transaction records shaped by the
   approved combined pricing and negotiation (visibility pending OD-LE-02B).
 - **21:** finish P21-01; then design (not build) the election record and calendar against P21-MAYOR, ready for the owner's structure answer.
+
+## 7. Decision explainability (XEXPL-01, owner 2026-10-23)
+
+`docs/directives/2026-10-23_decision_explainability.md`. Design only in this phase; nothing built or activated.
+
+### 7.1 What exists today (audit)
+
+| Kind | Where | Layer it serves today |
+|---|---|---|
+| Weighted-decision trace: every feasible option, per-factor contributions, the chosen one, the policy | `JudgmentWeighting` result `trace` and `explain()` (Expansion 19, off) | developer |
+| Refusal and failure reasons as text | `why_not` (counters, fitting, business works), credit and barter quotes (`q.why`), contracts `_end(why)`, couriers `interrupt(why)`, construction `end_contract(reason)` | player (messages, windows) |
+| Goal with its waiting reason | housing goals `{plan, cost, short, why}` (`Construction._goal`) | developer, partly player |
+| What a villager is doing | `NPC.doing` (shown to the player) | player |
+| What a villager remembers | `NPC.memory` (8 lines), read by `ui/dialogue.gd` for lines about the player | in-world |
+| Beliefs with source, confidence, teller | `JudgmentStore` memories and beliefs (Expansion 19, off) | developer; source for in-world |
+| Village record | `World.note`/`log_lines` (300) | player (log), developer |
+| Running counters | `World.stats` (not saved), store `_stat` counters, `missed_meal_*` | developer |
+| Missed-meal log | `NPCBrain.miss_log`, only with `track_misses` (set by `economy_sim.gd`, off in play) | developer |
+| Economic events | `EconEvents` ring (Expansion 20, off) | developer |
+| Office history | tenure `how` and legacy cause (Expansion 21, in progress, off) | developer; source for in-world and graves |
+
+Correction to E20-RISK-QUEUES: `miss_log` grows only when `track_misses` is on (diagnostic runs), not in play.
+
+### 7.2 Gaps
+
+- No common record: each system explains in its own text, mostly as free strings written at the refusal site.
+- Most decisions in `NPCBrain` (what to work at, what to buy, where to go) leave no reason beyond `doing`.
+- Nothing separates world truth from what the NPC believed when it decided; nothing filters by what the player's character knows.
+- No link from a decision to the events it rested on.
+
+### 7.3 Recommended shared architecture (PROPOSAL)
+
+One record, one ring, three readers; no explanation engine per expansion.
+
+1. **Decision record** `{seq, day, minute, actor ref, decision code, chosen, alternatives (top 2-3 by score, with codes), factors [[code, value]] (top few), needs and obligations as refs, info refs (belief or event ids the actor held), outcome}`. Codes are short strings from one table (`decision_codes.json`), not sentences. It is produced **at the decision point from the inputs actually used** (the `JudgmentWeighting` trace already has this shape; Expansion 20's offers and refusals and Expansion 21's ballots fill the same fields), never reconstructed afterwards.
+2. **One bounded store** shared with Expansion 20's event ring (the same class, a separate category with its own cap): consequential decisions only (job change, contract accepted or refused, loan, default, vote, appointment, spending choice, migration, crime report); trivial ones (each step, each meal) keep a counter, not a record. Developer mode can raise the caps or keep everything for a test run.
+3. **Truth and belief kept apart**: the record holds references to what the actor believed (belief ids with source and confidence), and events hold what happened. A statement an NPC makes is a third thing: dialogue renders from the actor's belief refs, so a mistaken or lying NPC says what it believes or chooses to say, never the world truth.
+4. **Three readers**:
+   - *In-world*: dialogue lines, rumours, notices and behaviour rendered from codes, limited to what the speaker believes and is willing to share (Expansion 19 decides willingness).
+   - *Player inspection*: an optional panel showing only records whose facts the player's character witnessed or was told (the player's own beliefs in the store, the village record, public notices); private motives, undiscovered crimes and others' secrets are filtered out by that rule, not by hand.
+   - *Developer*: the full record and the `explain()` text, in `economy_sim` and test output, and for replay comparisons (deterministic, so two runs give the same records).
+5. **Cost**: written only at consequential decision points (event-driven), a few integers per record, bounded rings; no per-frame work.
+
+**Owner decision (one, architectural):** whether the player-inspection layer is wanted as a panel in this generation of builds, or only the in-world layer (dialogue, rumours, notices) until later. It decides whether the player's own knowledge must be tracked as beliefs (Expansion 19 already can) and adds UI work.

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 460 (228 of them still open) |
-| **Open entries now** (rules excluded) | | **405** |
+| Entries added since | | 462 (230 of them still open) |
+| **Open entries now** (rules excluded) | | **407** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (460)
+## Added since the baseline (462)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -551,5 +551,7 @@ None.
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | OPEN | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | OPEN | 19 |
+| XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | decision | OPEN | unassigned |
 
 The current state by build is in `docs/requirements/views/`.

@@ -51030,6 +51030,72 @@
      "why": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md"
     }
    ]
+  },
+  {
+   "id": "XEXPL-01",
+   "kind": "approved",
+   "title": "Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion",
+   "description": "Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion",
+   "source": "docs/directives/2026-10-23_decision_explainability.md",
+   "owner_wording": "Every significant NPC decision should be capable of producing a lightweight, deterministic explanation record ... Do not build a separate explanation engine for each expansion.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Explanations come from the actual decision inputs and outcome, never written afterwards",
+    "World truth, NPC beliefs, NPC statements and player knowledge stay distinct; no secrets, private relationships, undiscovered crimes or hidden information in player-facing views",
+    "Compact reason codes and references; verbose traces only for consequential decisions; no unbounded storage",
+    "Current phase: audit, reusable interfaces, explainability rows in the Expansion 19-21 matrices, gaps and a shared architecture recommendation; no implementation without authorization"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_decision_explainability.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
+     "why": "lead audits (current phase is design only)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
+     "why": "audit, matrix rows and shared-architecture proposal written (docs/design/EXPANSIONS_19_21_ALIGNMENT.md section 7); implementation awaits the owner's authorization"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "staging/my-medieval-life",
+   "next_action": "owner: whether a player-inspection panel is wanted in this generation; then authorize the shared decision record"
+  },
+  {
+   "id": "XEXPL-D1",
+   "kind": "decision",
+   "title": "Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now?",
+   "description": "Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now?",
+   "source": "docs/directives/2026-10-23_decision_explainability.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_decision_explainability.md"
+    }
+   ]
   }
  ]
 }

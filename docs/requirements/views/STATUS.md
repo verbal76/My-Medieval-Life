@@ -37,5 +37,5 @@ Build authority:
 - **Build 20 (Living Economy):** implementation authorized. owner directive 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md): phase 1 only: LE-00 audit, registration, data contracts and isolated foundation components behind disabled hooks on wip/expansion20-preparation; no live economy, no merge to staging or main, no policy for open OD-LE decisions
 - **Build 21 (Village Politics):** implementation authorized. owner directive 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md): phase 1 only: P21-00 audit, P21-01 isolated civic foundations (records only, all political behaviour disabled), P21-02 decision mapping on wip/expansion21-preparation; no politics active, no merge to staging or main, no builds
 
-Future backlog and unassigned: 110 open records (`BACKLOG.md`). Open owner decisions: 41 (`DECISIONS.md`).
+Future backlog and unassigned: 112 open records (`BACKLOG.md`). Open owner decisions: 42 (`DECISIONS.md`).
 

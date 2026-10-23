@@ -63,7 +63,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 
-## Approved, no build assigned (8)
+## Approved, no build assigned (9)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -75,6 +75,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | OWNER APPROVED | NOT STARTED |
 | WDR-020-C | Comply with World Design Rule 20: Autonomous Housing | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-021-C | Comply with World Design Rule 21: Household Succession and Family Care | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
+| XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | OWNER APPROVED | NOT STARTED |
 
 ## Waiting on an owner decision for its build (43)
 

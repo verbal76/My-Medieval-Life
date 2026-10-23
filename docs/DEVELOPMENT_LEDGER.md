@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (580)
+## Approved requirement (581)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -588,6 +588,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | 19 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 
 ## Proposal awaiting an owner decision (not approved) (37)
 
@@ -681,7 +682,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (196)
+## Owner decisions (197)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -881,4 +882,5 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-SPILL-REACH | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)? | 19 | OPEN |  |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | 19 | OPEN |  |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | 19 | OPEN |  |
+| XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | unassigned | OPEN |  |
 
