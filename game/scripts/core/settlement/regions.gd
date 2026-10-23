@@ -42,7 +42,7 @@ func _add(s: OffMapSettlement) -> void:
 
 
 # ------------------------------------------------------------------ people's identities (ID-01) ----------------
-## The settlements now live in world `w`: a birth takes its id from the world's one counter and enters the register, a death marks it.
+## The settlements now live in world `w`: a birth takes its id from the world's settlement band and enters the register, a death marks it.
 func bind_world(w: World) -> void:
 	var hook := Callable(w, "offmap_person")
 	for s: OffMapSettlement in list:

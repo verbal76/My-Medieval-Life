@@ -199,7 +199,7 @@ static func _names(ms: Array) -> String:
 ## The villager a traveller's record is. ID-01: the same person, never a replacement: a traveller who left the village (their record
 ## names an NPC kept with alive false and `away` set) is reactivated, with the age, skills and purse they come back with; their old
 ## ties, memories, family links and civic history, all keyed by that id, are simply there again. A person born in a settlement (an id
-## from the world's counter, no record yet) gets their first villager record under that id. The name, age, sex and skills are what
+## from the settlement band, no record yet) gets their first villager record under that id. The name, age, sex and skills are what
 ## they carried (a settlement-born member's skills come from the village's own starting rule for their trade, `_who`), with a full
 ## stomach and the purse they brought. Until `_settled` they are not in a household; `_undo_villager` takes them back.
 static func _villager(w: World, p: Dictionary, coins: int) -> NPC:

@@ -3,7 +3,8 @@ extends RefCounted
 ## ID-01 (owner, 2026-10-23, docs/directives/2026-10-23_identity_foundation_approval.md; design docs/design/IDENTITY.md):
 ## one permanent identity for every person, never reused.
 ##
-## World.next_person_id is the one counter; a person's id is the NPC id for a villager, the member's sixth entry for a person in a
+## Two counters (ID-D2 option B): World.next_person_id (village-born people and newcomers, below 1,000,000, as in Build 18) and
+## World.next_band_id (settlement members and player characters, from 1,000,000); a person's id is the NPC id for a villager, the member's sixth entry for a person in a
 ## settlement (OffMapSettlement.M_ID) and PlayerState.pid for a player character. World.people is the register: id -> {name, family,
 ## sex, born, mother, father, where, since}, identity and whereabouts only (never pruned). Detailed state stays in exactly one place
 ## at a time: the NPC record when in the village (or kept, alive false, while away or dead), the settlement member when abstract.
