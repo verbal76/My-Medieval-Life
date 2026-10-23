@@ -8,15 +8,21 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 21 |
-| Integrated | 0 of 21 (0%) |
-| Automated tests passed | 10 of 21 (48%) |
-| Integration verified | 0 of 21 (0%) |
-| Gameplay verified | 0 of 21 (0%) |
-| Owner playtested | 0 of 21 (0%) |
-| Complete | 0 of 21 (0%) |
-| Open (release blockers) | 21 |
+| Approved requirements in scope | 22 |
+| Integrated | 0 of 22 (0%) |
+| Automated tests passed | 10 of 22 (45%) |
+| Integration verified | 0 of 22 (0%) |
+| Gameplay verified | 0 of 22 (0%) |
+| Owner playtested | 0 of 22 (0%) |
+| Complete | 0 of 22 (0%) |
+| Open (release blockers) | 22 |
 | Open owner decisions (blocking) | 11 (0) |
+
+## In development (worker assigned) (1)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | lead / staging/my-medieval-life | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 

@@ -38179,6 +38179,43 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "REC-19",
+   "kind": "approved",
+   "title": "Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01",
+   "description": "Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01",
+   "source": "docs/directives/2026-10-23_build19_flight_recorder.md",
+   "owner_wording": "Include this recorder in the Build 19 development scope. ... Begin with the repository audit and technical design. Present findings and the implementation plan for approval before making major changes.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Phase A audit and Phase B design (ten deliverables) presented for owner approval before implementation",
+    "The fifteen acceptance criteria of section 11",
+    "No change to gameplay, RNG, determinism, identities or authoritative state; no duplicate ledger; no silent sampling or dropped records"
+   ],
+   "target_build": "19",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_build19_flight_recorder.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
+     "why": "Phase A audit started (read-only research agent); design by the lead"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "staging/my-medieval-life"
+  },
+  {
    "id": "RECON-01",
    "kind": "approved",
    "title": "Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off",
