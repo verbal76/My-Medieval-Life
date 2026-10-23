@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 431 (208 of them still open) |
-| **Open entries now** (rules excluded) | | **385** |
+| Entries added since | | 432 (209 of them still open) |
+| **Open entries now** (rules excluded) | | **386** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (431)
+## Added since the baseline (432)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -433,6 +433,7 @@ None.
 | SEED-04 | Households save planting material from their own harvests | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| SFX-18 | Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
 | SHOP-01 | Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |

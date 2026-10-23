@@ -2,12 +2,13 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (5)
+## Workers and task branches (6)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | MUSIC-18 | 18 | IN DEVELOPMENT | music worker (Sonnet subagent) | wip/b18-music |
+| SFX-18 | 18 | IN DEVELOPMENT | music worker (Sonnet subagent) | wip/b18-music |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |

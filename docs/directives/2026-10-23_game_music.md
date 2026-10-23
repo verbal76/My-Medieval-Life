@@ -18,3 +18,11 @@ The three releases on the repository (tags `Songsmall`, `Songmed`, `Songbig`, pu
 - Credits: **"They were made in suno"**.
 - Format: **"Ogg for Android only"** (clarified from "Off for Android only"): Android carries compressed Ogg Vorbis;
   Windows and Linux ship the original WAVs.
+
+## Sound effects (2026-10-23)
+
+The owner supplied Cozy RPG SFX ambience loops (itch.io, aquumgifts.itch.io; author Spaceyyy; the pack's LICENSE.txt says
+"Cozy RPG SFX by Bramble & Byte"): `cozy-rpg-sfx-ambience-1.zip` (dungeon drips, campfire) and
+`cozy-rpg-sfx-ambience-2.zip` (cave wind, forest birds; sent twice, byte-identical). Terms: use in games allowed, no
+royalties; the sounds themselves may not be redistributed as assets; credit appreciated ("Cozy RPG SFX by Spaceyyy").
+Kept in `private-assets/` (git-ignored); only the imported game files are committed (CLAUDE.md section 3).

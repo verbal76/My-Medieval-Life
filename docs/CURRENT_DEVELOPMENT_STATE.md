@@ -38,7 +38,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| MUSIC-18 | music worker (Sonnet subagent) | `wip/b18-music` | `wip/build18` 37526cb | the owner's three songs by time of day; Ogg on Android, WAV on PC (docs/directives/2026-10-23_game_music.md) |
+| MUSIC-18, SFX-18 | music worker (Sonnet subagent) | `wip/b18-music` | `wip/build18` 37526cb | the owner's three songs by time of day; Ogg on Android, WAV on PC (docs/directives/2026-10-23_game_music.md) |
 
 ### Running processes (never restart or cancel; SIM-02)
 

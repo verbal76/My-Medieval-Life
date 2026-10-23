@@ -8,21 +8,22 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 82 |
-| Integrated | 72 of 82 (88%) |
-| Automated tests passed | 70 of 82 (85%) |
-| Integration verified | 55 of 82 (67%) |
-| Gameplay verified | 0 of 82 (0%) |
-| Owner playtested | 0 of 82 (0%) |
-| Complete | 2 of 82 (2%) |
-| Open (release blockers) | 80 |
+| Approved requirements in scope | 83 |
+| Integrated | 72 of 83 (87%) |
+| Automated tests passed | 70 of 83 (84%) |
+| Integration verified | 55 of 83 (66%) |
+| Gameplay verified | 0 of 83 (0%) |
+| Owner playtested | 0 of 83 (0%) |
+| Complete | 2 of 83 (2%) |
+| Open (release blockers) | 81 |
 | Open owner decisions (blocking) | 6 (1) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | OWNER APPROVED | IN DEVELOPMENT | music worker (Sonnet subagent) / wip/b18-music | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| SFX-18 | Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider | OWNER APPROVED | IN DEVELOPMENT | music worker (Sonnet subagent) / wip/b18-music | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (70)
 

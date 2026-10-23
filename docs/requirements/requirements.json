@@ -40270,6 +40270,43 @@
    "completion": "OPEN"
   },
   {
+   "id": "SFX-18",
+   "kind": "approved",
+   "title": "Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider",
+   "description": "Sound effects and ambience from the owner's Cozy RPG SFX pack (ambience loops supplied: forest birds, cave wind, dungeon drips, campfire), on the SFX bus under the Sound effects slider",
+   "source": "docs/directives/2026-10-23_game_music.md",
+   "owner_wording": "we will need a volume slider in settings for music and sfx I will add those too",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "the supplied ambience loops play where they fit (outdoors by day, caves and the mine, beside a fire), seamlessly looped, on the SFX bus",
+    "imported from private-assets/ with provenance; the source packs never committed; credited on the credits page",
+    "further sounds the owner supplies enter the same pipeline"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_game_music.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> music worker (Sonnet subagent); branch: None -> wip/b18-music",
+     "why": "assigned with MUSIC-18 (one audio player)"
+    }
+   ],
+   "assigned_worker": "music worker (Sonnet subagent)",
+   "branch": "wip/b18-music"
+  },
+  {
    "id": "SHOP-01",
    "title": "Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers",
    "kind": "approved",
