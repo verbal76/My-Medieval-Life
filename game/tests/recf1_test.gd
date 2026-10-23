@@ -64,6 +64,7 @@ func _init() -> void:
 		b._plan_sell(seller, "feather")
 		check(seller.plan.size() == 2 and seller.plan[0].k == "go" and seller.plan[1].act == "sell_to", "with a buyer, the goods are taken to them at once")
 	_test_simf9(w, b)
+	_test_blocked_chase(w, b)
 	print("%d checks, %d failures" % [checks, failures])
 	w.dispose()
 	quit(1 if failures > 0 else 0)
@@ -112,3 +113,39 @@ func _test_simf9(w: World, b: NPCBrain) -> void:
 	_lone_lasts(w, n, 120.0, "a homeless villager's rest")
 	n.home = home
 
+
+
+## SIM-F4 (recorder run 2): a chase walks straight at its target; a wall between them held the chaser on the spot for good
+## (no plan, no new decision, so a bandit stalking starved). A blocked chase is now given up and the bandit goes to camp.
+func _test_blocked_chase(w: World, b: NPCBrain) -> void:
+	var bandit: NPC = null
+	var prey: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "bandit" and bandit == null:
+			bandit = o
+		elif o.alive and o.role == "adult" and o.job != "guard" and prey == null:
+			prey = o
+	check(bandit != null and prey != null, "a bandit and a villager to chase")
+	var found := Vector2i(-1, -1)
+	for y in range(2, w.map.h - 2):
+		for x in range(4, w.map.w - 6):
+			var c := Vector2i(x, y)
+			if w.map.is_solid(c) and w.map.is_solid(c + Vector2i(1, 0)) and w.map.is_solid(c + Vector2i(2, 0)) \
+					and not w.map.is_solid(c + Vector2i.LEFT) and not w.map.is_solid(c + Vector2i(4, 0)) \
+					and w.place_of(Vector2(x - 0.5, y + 0.5)) == "" and w.place_of(Vector2(x + 4.5, y + 0.5)) == "":
+				found = c
+				break
+		if found.x >= 0:
+			break
+	check(found.x >= 0, "a wall three tiles thick with open ground on both sides")
+	bandit.pos = Vector2(found.x - 0.02, found.y + 0.5)      # just short of the wall, the prey beyond it
+	prey.pos = Vector2(found.x + 4.5, found.y + 0.5)
+	bandit.depth = 0
+	prey.depth = 0
+	bandit.hp = bandit.max_hp
+	bandit.target = prey.id
+	bandit.plan.clear()
+	b.fight(bandit, 0.5)
+	check(bandit.target == -1, "a chase blocked by a wall is given up (the chaser is free to decide again)")
+	check(not bandit.plan.is_empty() and str(bandit.plan[0].k) == "go", "the bandit heads back to the camp")
+	check(w.map.is_solid(bandit.cell()) == false, "the chaser is not left inside the wall")

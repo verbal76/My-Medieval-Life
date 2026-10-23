@@ -2774,6 +2774,13 @@ func fight(n: NPC, dt: float) -> void:
 		n.pos += d.normalized() * minf(d.length() - 0.9, float(GameData.b("walk_tiles_per_second")) * 1.3 * dt)
 		if w.map.is_solid(n.cell()):
 			n.pos -= d.normalized() * float(GameData.b("walk_tiles_per_second")) * 1.3 * dt
+			# SIM-F4 (recorder run 2): the chase walks straight at the target, so a wall or fence between them held the
+			# chaser on the spot for good, never deciding again (bandits starved stalking). A blocked chase is given up as
+			# one whose target is gone.
+			n.target = -1
+			n.plan.clear()
+			if n.role == "bandit":
+				n.plan = [go(w.bandit_camp, 1.2)]
 		return
 	if n.attack_cd > 0.0:
 		return
