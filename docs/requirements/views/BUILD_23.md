@@ -16,11 +16,17 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 1 (0%) |
 | Complete | 0 of 1 (0%) |
 | Open (release blockers) | 1 |
-| Open owner decisions (blocking) | 0 (0) |
+| Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (1)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| E23-BANA | Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour | OWNER APPROVED | IN DEVELOPMENT | lead / staging/my-medieval-life | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| E23-BANA | Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / staging/my-medieval-life | NOT TESTED | owner reviews the audit and approves the architecture | design: UNKNOWN | UNKNOWN |
+
+## Open owner decisions (1)
+
+| ID | Question | Disposition | Blocks | Affects |
+|---|---|---|---|---|
+| E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | OPEN | no |  |
 

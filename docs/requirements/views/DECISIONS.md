@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 40 |
+| OPEN | 44 |
 | APPROVED | 152 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -73,6 +73,20 @@ The decision register is the `decision` records of the register. A recommendatio
 | Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | OPEN | yes |  | docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2) |
+
+## Build 22: Settlement Advancement Phase 2: open, reopened or provisional (3)
+
+| ID | Question | Disposition | Blocks implementation | Affects | Source |
+|---|---|---|---|---|---|
+| E22-OD-03 | Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people | OPEN | no |  | docs/directives/2026-10-23_expansions_22_23_kickoff.md |
+| E22-OD-04 | Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village | OPEN | no |  | docs/directives/2026-10-23_expansions_22_23_kickoff.md |
+| E22-OD-05 | Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned | OPEN | no |  | docs/directives/2026-10-23_expansions_22_23_kickoff.md |
+
+## Build 23: Bandit Factions and Criminal Careers: open, reopened or provisional (1)
+
+| ID | Question | Disposition | Blocks implementation | Affects | Source |
+|---|---|---|---|---|---|
+| E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | OPEN | no |  | docs/directives/2026-10-23_expansions_22_23_kickoff.md |
 
 ## Approved, no build assigned: open, reopened or provisional (1)
 

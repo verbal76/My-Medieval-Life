@@ -41,7 +41,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | PROS-19, X19-FOUND | none (round complete) | `wip/expansion19-preparation` | c756211 | foundations round merged and verified (ten suites, gate identical, perf); waits on the owner's numbers and formulas |
 | E20-P1 | X20 foundation worker (done) | `wip/expansion20-preparation` | 4d9bc05 | reservation record, event record, actor resolver built, off, tested, gate identical; waits on the owner's architecture review and OD-LE answers |
 | P21-01 | X21 foundation worker (done) | `wip/expansion21-preparation` | 8ac88f5 | civic records built, off, tested, gate identical; P21-00 and P21-02 done (64317eb) |
-| E22-P1, E23-BANA | lead | staging (documents) | - | read-only audit of the Settlement Advancement specification against Build 18 and the bandit BAN-A audit; no implementation until the owner approves the architecture (docs/directives/2026-10-23_expansions_22_23_kickoff.md) |
+| E22-P1, E23-BANA | lead (done) | staging (documents) | - | audit written: docs/design/EXPANSIONS_22_23_AUDIT.md; waits on the owner's review; no implementation |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
 Alignment report and capability matrices: `docs/design/EXPANSIONS_19_21_ALIGNMENT.md` (2026-10-23). No worker is running; every next step waits on the owner's answers.

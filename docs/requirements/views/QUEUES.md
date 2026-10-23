@@ -7,8 +7,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
-| E22-P1 | 22 | IN DEVELOPMENT | lead | staging/my-medieval-life |
-| E23-BANA | 23 | IN DEVELOPMENT | lead | staging/my-medieval-life |
+| E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
+| E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -21,7 +21,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X19-FOUND-FAMREP | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
 | X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/expansion19-preparation |
 
-## Implemented but not tested (43)
+## Implemented but not tested (45)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -36,6 +36,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DVW-A14 | 15 | INTEGRATED |  |
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | DVW-B1 | 19 | PARTIALLY IMPLEMENTED |  |
+| E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH |  |
+| E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH |  |
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |

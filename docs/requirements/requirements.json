@@ -13839,6 +13839,72 @@
    ]
   },
   {
+   "id": "E22-OD-03",
+   "kind": "decision",
+   "title": "Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people",
+   "description": "Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "22",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
+  },
+  {
+   "id": "E22-OD-04",
+   "kind": "decision",
+   "title": "Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village",
+   "description": "Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "22",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
+  },
+  {
+   "id": "E22-OD-05",
+   "kind": "decision",
+   "title": "Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned",
+   "description": "Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "22",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
+  },
+  {
    "id": "E22-P1",
    "kind": "approved",
    "title": "Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation",
@@ -13856,7 +13922,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -13870,10 +13936,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
      "why": "lead audits (read-only research agent)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; next_action",
+     "why": "audit written (docs/design/EXPANSIONS_22_23_AUDIT.md); awaiting the owner's review"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life"
+   "branch": "staging/my-medieval-life",
+   "next_action": "owner reviews the audit and approves the architecture"
   },
   {
    "id": "E23-BANA",
@@ -13891,7 +13963,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -13905,10 +13977,38 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
      "why": "lead audits (read-only research agent)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; next_action",
+     "why": "audit written (docs/design/EXPANSIONS_22_23_AUDIT.md); awaiting the owner's review"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life"
+   "branch": "staging/my-medieval-life",
+   "next_action": "owner reviews the audit and approves the architecture"
+  },
+  {
+   "id": "E23-OD-01",
+   "kind": "decision",
+   "title": "Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel",
+   "description": "Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "23",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
   },
   {
    "id": "EARTH-01",
