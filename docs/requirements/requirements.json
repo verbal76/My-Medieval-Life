@@ -18502,7 +18502,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -18536,6 +18536,11 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "wording corrected per owner 2026-10-23: the bandit starvation differences between base and SIM-F9 runs are unattributed until the recorder's death causes establish them; no villager starved in the four runs"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; integrated_in + wip/recorder 2d5d49c",
+     "why": "merged into wip/recorder at 2d5d49c with the identity foundation; tests pass"
     }
    ],
    "assigned_worker": "lead",
@@ -18546,7 +18551,10 @@
     "c27aaa2",
     "b113f73"
    ],
-   "next_action": "merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline"
+   "next_action": "merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline",
+   "integrated_in": [
+    "wip/recorder 2d5d49c"
+   ]
   },
   {
    "id": "FR-01",
@@ -32811,6 +32819,11 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner added pens: a tamed animal follows the player into their pen and a prompt makes it stay; offspring born in the pen are tame; penned rabbits for meat and pelts, wolves as guard dogs, tame young sold to villagers, foxes as pets"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "agent reading recorded: foxes pets only; to confirm in the design note"
     }
    ],
    "next_action": "short design note and implementation after Build 19 ships (does not delay Build 19)"
@@ -38475,15 +38488,21 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "identity foundation merge and D3 assigned to the recorder worker on wip/recorder"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical -> recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0; test_commit: 94b1304 -> 2d5d49c; commits + 2d5d49c; next_action",
+     "why": "recorder worker: identity foundation merged (801d24b), refs on permanent ids, D3 instrumentation (life, employment, government, crime, player verbs, save/load) at 824e32c; recorder_test 160, identity 98, migration 93, aging 136, family 51, world 339, conservation 8, save_transfer 21, all 0 failures; recorded vs unrecorded identical fingerprints; gate equals the identity candidate; overhead +28%. Lead merged FIX-RECF1/SIM-F9 at 2d5d49c (recf1_test 23, recorder_test 160, world_test 339, 0 failures)"
     }
    ],
    "assigned_worker": "recorder worker (Sonnet subagent)",
    "branch": "wip/recorder",
-   "next_action": "merge the verified identity foundation; then D3 systems (life, employment, government, crime, player, save) and D4 records",
-   "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical",
-   "test_commit": "94b1304",
+   "next_action": "combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19",
+   "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0",
+   "test_commit": "2d5d49c",
    "commits": [
-    "94b1304"
+    "94b1304",
+    "2d5d49c"
    ]
   },
   {

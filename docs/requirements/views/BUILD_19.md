@@ -9,7 +9,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 27 |
-| Integrated | 0 of 27 (0%) |
+| Integrated | 1 of 27 (4%) |
 | Automated tests passed | 13 of 27 (48%) |
 | Integration verified | 0 of 27 (0%) |
 | Gameplay verified | 0 of 27 (0%) |
@@ -18,14 +18,19 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Open (release blockers) | 27 |
 | Open owner decisions (blocking) | 3 (0) |
 
-## In development (worker assigned) (4)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | OWNER APPROVED | IN DEVELOPMENT | lead / wip/fix-recf1 | TARGETED TESTS PASSED | merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline | design: UNKNOWN | UNKNOWN |
-| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | merge the verified identity foundation; then D3 systems (life, employment, government, crime, player, save) and D4 records | design: UNKNOWN | UNKNOWN |
+| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19 | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
 | X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | OWNER APPROVED | IN DEVELOPMENT | X19 completion worker (subagent) / wip/expansion19-preparation | NOT TESTED | after FAM-SAC-01 lands: set the approved numbers, enable all layers, self-defence, lies and family stories live; integrate with identity, REC-F1/SIM-F9, recorder; gate; present Build 19 | design: UNKNOWN | UNKNOWN |
+
+## Integrated, awaiting gameplay or owner verification (1)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | OWNER APPROVED | INTEGRATED | wip/recorder 2d5d49c | TARGETED TESTS PASSED | merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline |  | verification only |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 

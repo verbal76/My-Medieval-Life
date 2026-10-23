@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (23)
+## Workers and task branches (22)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,7 +11,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
-| FIX-RECF1 | 19 | IN DEVELOPMENT | lead | wip/fix-recf1 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
