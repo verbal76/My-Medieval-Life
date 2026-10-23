@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 83 (0%) |
 | Complete | 2 of 83 (2%) |
 | Open (release blockers) | 81 |
-| Open owner decisions (blocking) | 5 (0) |
+| Open owner decisions (blocking) | 1 (0) |
 
 ## Integrated, awaiting gameplay or owner verification (76)
 
@@ -121,14 +121,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 | VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (5)
+## Open owner decisions (1)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | OPEN | no |  |
-| CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | OPEN | no |  |
-| CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  |
-| COMP-R1 | Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review | OPEN | no |  |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (9)

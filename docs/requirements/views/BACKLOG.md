@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (52)
+## Build 20 or later (backlog) (53)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -56,6 +56,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | approved | OWNER DECISION REQUIRED | NOT STARTED |
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | approved | DEFERRED | NOT STARTED |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | approved | DEFERRED | NOT STARTED |
+| SET-D-MULTIGEN | Multigenerational verification of settlement development (SET-D) over a horizon long enough to show several generations | approved | OWNER APPROVED | NOT STARTED |
 | SET-E | Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI | approved | OWNER APPROVED | NOT STARTED |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | approved | OWNER APPROVED | NOT STARTED |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |

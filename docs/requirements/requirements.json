@@ -8573,8 +8573,8 @@
    "description": "Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides.",
    "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "APPROVE OPTION A: implement the missing alms distribution (offerings support the clergy; remaining available funds go to the poorest eligible households), as completion of the approved design; eight requirements; reserve or distribution rules the design does not specify come to the owner first (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -8597,6 +8597,11 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "audit done (docs/build18/CHAPEL_AUDIT.md on wip/build18 cb5eb9b): wages and relief work as designed, no defect; offerings ~290-410 coins per 10 days against 50 of wages, relief never needs to buy (the church store covers it), so the fund only grows (5,099-7,466 at day 365); offerings taken at 16:00 shrink the 17:00 tax, emptying the treasury (seed 1 day 150: 115 vs 1,741 without offerings; manor hands 0 vs 23). The owner's 'what is left goes as alms to the poorest households' has no coin path in the code. Owner decision needed; no value changed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved option A: implement the missing alms leg of Priest + alms (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ]
   },
@@ -8607,8 +8612,8 @@
    "description": "Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)?",
    "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Accepted, subject to existing compatibility checks",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -8631,6 +8636,11 @@
      "date": "2026-10-23",
      "change": "commits + 37526cb",
      "why": "engineering fix done (37526cb): nothing an old save held is dropped silently; new worlds unchanged (gate PASS). Left OPEN only for the owner's review, as the directive asked"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner accepted the old-save corrections subject to the existing compatibility checks (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ],
    "commits": [
@@ -8644,8 +8654,8 @@
    "description": "Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements?",
    "source": "docs/directives/2026-10-23_staging_ff_chapel_review.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Accepted, subject to existing compatibility checks",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -8668,6 +8678,11 @@
      "date": "2026-10-23",
      "change": "commits + 37526cb",
      "why": "engineering fix done (37526cb): nothing an old save held is dropped silently; new worlds unchanged (gate PASS). Left OPEN only for the owner's review, as the directive asked"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner accepted the old-save corrections subject to the existing compatibility checks (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ],
    "commits": [
@@ -8710,8 +8725,8 @@
    "description": "Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review",
    "source": "wip/build18 692eecc; docs/DECISIONS.md (WDR-012-C row)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "DP-18: retain the provisional +3 wage ceiling",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "18",
    "related": [
@@ -8725,6 +8740,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "wip/build18 692eecc; docs/DECISIONS.md (WDR-012-C row)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner: retain the provisional +3 wage ceiling (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ]
   },
@@ -35473,10 +35493,15 @@
      "date": "2026-10-23",
      "change": "reconciliation: disposition=PROVISIONAL; related=…",
      "why": "scale and model approved (Q18-11A, Q18-11B); final percentages wait for X18-SIM evidence"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "owner_answer",
+     "why": "owner: retain neutral 1.0 capability factors for Build 18 (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ],
    "target_build": "18",
-   "owner_answer": "Levels 0-10 for all productive industries; AdjustedPay = BasePay x PayMultiplier(industry, level); AdjustedOutput = BaseOutput x OutputMultiplier(industry, level); diminishing returns; industry-specific; numbers and composition not yet approved.",
+   "owner_answer": "DP-19: retain neutral 1.0 capability factors",
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "disposition": "PROVISIONAL",
@@ -37444,7 +37469,7 @@
    "owner_answer": "DEFERRED. Do not artificially introduce finished goods or additional money circulation merely to prevent settlement decline. First complete the approved shared trading interface, reciprocal purchasing, couriers, and settlement demographics. Then evaluate whether the regional economy has genuine circulation failures.",
    "disposition": "DEFERRED",
    "blocks_implementation": false,
-   "target_build": "18",
+   "target_build": "20+",
    "related": [
     "SET-C-SIM",
     "ECON-P1.3"
@@ -37461,6 +37486,11 @@
      "date": "2026-10-22",
      "change": "disposition: OPEN -> DEFERRED; owner_answer",
      "why": "Owner deferred 2026-10-23 (docs/directives/2026-10-23_regional_economy_decisions.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "target_build: 18 -> 20+",
+     "why": "owner deferred: document the concern (Netherton, household cash decline); no settlement redesign in Build 18 (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ]
   },
@@ -40250,6 +40280,11 @@
      "date": "2026-10-22",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on 66a5d4c: settlement_development_test 32, regions 118, settlement_life 54, migration 92, tax 34, party 102, save_transfer 21, conservation 8, run_tests 3591, wiki_test passed, Python OK; test_commit: None -> 66a5d4c; commits + 089cd5c; commits + 66a5d4c; integrated_in + Build 18 wip/build18 66a5d4c; known_defects + multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only",
      "why": "SET-D worker finished (089cd5c), merged into Build 18 as 66a5d4c; targeted suites passed on the merge. Multi-generation verification stays outstanding (B18-DP-05): a 365-day run is not multi-generation verification"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner deferred the multigenerational settlement verification to a later build; no extended campaign now (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
     }
    ],
    "target_build": "18",
@@ -40271,6 +40306,34 @@
    "test_commit": "66a5d4c",
    "known_defects": [
     "multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only"
+   ]
+  },
+  {
+   "id": "SET-D-MULTIGEN",
+   "kind": "approved",
+   "title": "Multigenerational verification of settlement development (SET-D) over a horizon long enough to show several generations",
+   "description": "Multigenerational verification of settlement development (SET-D) over a horizon long enough to show several generations",
+   "source": "docs/directives/2026-10-23_chapel_alms_build18_decisions.md; B18-DP-05",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-23: SET-D multigenerational verification deferred to a later build",
+   "acceptance": [
+    "settlement growth, decline and trade turnover verified across several generations by a sufficient simulation horizon (B18-DP-05)"
+   ],
+   "target_build": "20+",
+   "parent": "SET-D",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_chapel_alms_build18_decisions.md; B18-DP-05"
+    }
    ]
   },
   {
