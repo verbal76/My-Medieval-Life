@@ -38,14 +38,12 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| X19-FOUND-PERS | X19 Worker A personality (done) | `wip/x19-personality` | a3aa237 | done, tested, gate identical; waits for the lead's merge with Worker B |
-| X19-FOUND-BONDS, X19-FOUND-FAMREP | X19 Worker B bonds (Sonnet subagent) | `wip/x19-bonds` (worktree `.claude/worktrees/x19-bonds`) | 577821d | sections 4-5: relationship history, resentment, familiarity +10%, family reputation +5% (12% combined); spillover reach and transmission inert (X19-SPILL-REACH, X19-REP-TRANSMIT) |
-| X19-FOUND, PROS-19 | lead | `wip/expansion19-preparation` | 577821d | merges A and B, then gate, perf and the completion report (directive section 8) |
+| PROS-19, X19-FOUND | none (round complete) | `wip/expansion19-preparation` | c756211 | foundations round merged and verified (ten suites, gate identical, perf); waits on the owner's numbers and formulas |
 | E20-P1 | X20 foundation worker (done) | `wip/expansion20-preparation` | 4d9bc05 | reservation record, event record, actor resolver built, off, tested, gate identical; waits on the owner's architecture review and OD-LE answers |
 | P21-01 | X21 foundation worker (done) | `wip/expansion21-preparation` | 8ac88f5 | civic records built, off, tested, gate identical; P21-00 and P21-02 done (64317eb) |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
-Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).
+Alignment report and capability matrices: `docs/design/EXPANSIONS_19_21_ALIGNMENT.md` (2026-10-23). No worker is running; every next step waits on the owner's answers.
 
 ### Running processes (never restart or cancel; SIM-02)
 
@@ -72,8 +70,7 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    239bdff): three packages downloaded back, checksums match, audio per platform checked, Linux binary launched.
 5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
    report was given in the session.
-6. X19 foundations round (owner, docs/directives/2026-10-23_x19_foundations_round.md): Workers A and B in flight; on their
-   reports merge both into `wip/expansion19-preparation`, run the gate, perf and memory, report per section 8.
+6. X19 foundations round: DONE (c756211; report given 2026-10-23).
 7. Expansions directive (2026-10-23): Build 18 merged into `wip/expansion19-preparation` (c2ece16, reviewed); the worker is on
    nothing more until the owner answers the numbers (then 365-day calibration off vs on). Done: hooks (577821d), event feeds (e8d4122), X19-Q-TIMING (3f89816), the rule answers (2456294), X19-GUARD (949b5b9),
    X19-REGARD (46b46e5), SJD-Q03/Q13 (ca2e9ba). Open number questions for the owner: X19-GOSSIP-FLOOR, X19-RUNNERUP,
