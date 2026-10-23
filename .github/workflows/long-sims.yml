@@ -31,6 +31,10 @@ on:
         description: "Comparison variants: several 'set' strings separated by '|' (e.g. 'shared_wheat_yield=1|shared_wheat_yield=2'); each runs on every seed; empty: the one 'set'"
         default: ""
         required: false
+      recover_run:
+        description: "Instead of simulating: an earlier run's id whose artifacts are read back and their checkpoints printed in this log (where artifact downloads are blocked); empty to simulate"
+        default: ""
+        required: false
 
 permissions:
   contents: read
@@ -43,7 +47,29 @@ env:
   GODOT_VERSION: "4.7.2"
 
 jobs:
+  recover:
+    if: inputs.recover_run != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.recover_run }}
+          github-token: ${{ github.token }}
+          path: recovered
+      - name: Print each run's checkpoints and totals
+        run: |
+          for d in recovered/*/; do
+            echo "=== $d"
+            cat "$d/summary.json" 2>/dev/null || true
+            grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|=== seed|people:|food:|money:|trade:|currency:|ledger flows:)' "$d/sim.log" || true
+          done
+
   plan:
+    if: inputs.recover_run == ''
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
