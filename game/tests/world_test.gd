@@ -857,9 +857,12 @@ func _ctr04_counter_terms(s: NPC) -> void:
 	p.coins += bill
 	var p1 := p.coins
 	var s1 := s.coins
+	var armoury: Dictionary = w.business.money.counter_building(s)     # ECON-P3: a trade counter's takings go to its till
+	var till1 := BusinessMoney.counter_till_of(armoury) if not armoury.is_empty() else 0
 	r = w.player_buy_many(s, "pickaxe", 1)
-	check(r.result == "bought" and int(r.paid) == bill and p.coins == p1 - bill and s.coins == s1 + bill,
-			"CTR-04: and buys a pickaxe there: the smith gets the whole %d coins, no commission (%s)" % [bill, str(r)])
+	var till_in := (BusinessMoney.counter_till_of(armoury) - till1) if not armoury.is_empty() else 0
+	check(r.result == "bought" and int(r.paid) == bill and p.coins == p1 - bill and (s.coins - s1) + till_in == bill,
+			"CTR-04: and buys a pickaxe there: the whole %d coins go to the smith's counter (till %d, purse %d), no commission (%s)" % [bill, till_in, s.coins - s1, str(r)])
 	check(w.total_coins() == total0 + bill and w.treasury == treasury0, "CTR-04: no coin goes to the realm or anywhere else at a counter")
 	s.inv.remove("pickaxe", s.inv.count("pickaxe"))
 	s.inv.add("pickaxe", keep[4])

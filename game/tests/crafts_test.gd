@@ -77,6 +77,7 @@ func test_smith_nails() -> void:
 	w.brain._smith(s)
 	check(not _plans(s, "forge_nails"), "with every goods merchant stocked, the smith forges no nails (made for a buyer only)")
 	stock(w, "nails", false)
+	stock(w, "chisel", true)                       # the merchants' chisels stocked (STONE-06), so nails are the want
 	s.plan.clear()
 	w.brain._smith(s)
 	check(_plans(s, "forge_nails"), "with the merchant short of nails, the smith forges them")

@@ -4385,7 +4385,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
-	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: an old save derives its profile here; a saved history carries on
+	# SET-B: an old save (no history) derives its profile and starts its history here. A saved history is carried on as it
+	# was until the next dawn: today's report is taken from a copy, so saving and loading never records a change that the
+	# uninterrupted game would not (the facts can move during the day, e.g. a stonecutter buying a chisel)
+	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
+	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	_unstick()
 
 

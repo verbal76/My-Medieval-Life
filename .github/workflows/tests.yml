@@ -88,6 +88,24 @@ jobs:
           $godot --headless --path game --script res://tests/business_test.gd
           $godot --headless --path game --script res://tests/business_money_test.gd
           $godot --headless --path game --script res://tests/business_works_test.gd
+          # Build 18 suites (REL18-SUITES: every suite runs in CI)
+          $godot --headless --path game --script res://tests/chapel_test.gd
+          $godot --headless --path game --script res://tests/competition_test.gd
+          $godot --headless --path game --script res://tests/countryside_test.gd
+          $godot --headless --path game --script res://tests/courier_live_test.gd
+          $godot --headless --path game --script res://tests/credit_test.gd
+          $godot --headless --path game --script res://tests/feast_test.gd
+          $godot --headless --path game --script res://tests/horse_test.gd
+          $godot --headless --path game --script res://tests/luxury_test.gd
+          $godot --headless --path game --script res://tests/migration_test.gd
+          $godot --headless --path game --script res://tests/outlaw_return_test.gd
+          $godot --headless --path game --script res://tests/party_test.gd
+          $godot --headless --path game --script res://tests/regional_food_test.gd
+          $godot --headless --path game --script res://tests/regions_test.gd
+          $godot --headless --path game --script res://tests/settlement_development_test.gd
+          $godot --headless --path game --script res://tests/tailor_barber_test.gd
+          $godot --headless --path game --script res://tests/tax_test.gd
+          $godot --headless --path game --script res://tests/trade_skills_test.gd
           $godot --headless --path game --script res://tests/farming_test.gd
           $godot --headless --path game --script res://tests/health_jobs_test.gd
           $godot --headless --path game --script res://tests/home_test.gd
