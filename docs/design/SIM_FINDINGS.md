@@ -30,3 +30,25 @@ not extended unless a finding needs more coverage; new campaigns need the owner.
 
 **Run 2 (planned, not started):** commit = the `wip/recorder` head after FIX-RECF1 and D3 are merged there (named when started);
 30 game days, seeds 1 and 2, recording on; stop at day 30, at a FATAL conservation line, or at the storage cap. Purpose: with death causes and failure reasons recorded: to check F1 is gone, settle F4 and F5, and look for longer-term trends (stock build-up, prices, households running out of money).
+
+## Run 2: 30 days, seeds 1 and 2, recording on (`wip/build19` b2f7dc2: Expansion 19 complete and on, identity, REC-F1/SIM-F9, recorder)
+
+Run once per seed as planned (bounded rule); reached day 30 on both, no FATAL line, no currency or item leak at days 10 and
+30. The recorded runs' fingerprints at days 10 and 30 equal the determinism gate's on the same commit (seed 1 `8c45efbe`,
+`f79a7c5d`; seed 2 `45b9ece1`, `f8ea2452`): same seed, same result, recorder on or off. Archives 29 MB a seed.
+
+| Deaths | Seed 1 | Seed 2 |
+|---|---|---|
+| villagers | 5, all elders, old age | 5, all elders, old age |
+| bandits | 11, all starvation (the band of six by day 9, then every newcomer within 2-6 days) | 13, all starvation (same pattern) |
+
+Classification (owner advisement B19-EMERGE):
+
+| # | Finding | Evidence | Class | Action |
+|---|---|---|---|---|
+| F9a | A chase blocked by a wall never ends: the chaser stands on the spot with a target and no plan, never decides again, never eats | p:123 (seed 1) "stalking" on tile (106, 24) for about 30 game hours, hunger 52 to 0, health falling, until death; `NPCBrain.fight` steps straight at the target and steps back off a solid tile with no other exit | **defect** (a stuck state, invalid decision) | fixed on `wip/build19` a7c84e9: a blocked chase is given up like one whose target is gone; regression test in `recf1_test` (fails before, passes after) |
+| F4 | A hurt bandit with coins never buys food | p:117 arrived at 5.8 of 30 health and 14 coins; ate a few times from the band's stores, never went to market (`_bandit_market` needs health at least 60%), never healed, starved on day 17 | **design question** (the rule works as written; the owner's packet recommended letting health stop blocking a hungry bandit's food purchase, conditional on this run) | to the owner with this evidence |
+| F4b | Bandits do not heal | p:117's health stays 5.8 for six days | **design question** (bandits have no rest; whether they should is a rule choice) | to the owner |
+| — | Villagers: no starvation, all deaths old age | both seeds | emergent / expected | none |
+
+Re-measured after the fix on a7c84e9 (same run, once per seed, for the baseline proposal): see run 3 below.

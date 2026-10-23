@@ -42438,9 +42438,19 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner 2026-10-23: stays open for targeted correction once the recorder confirms the cause; the starvation differences in the SIM-F9 comparison are not attributed to SIM-F9 (or cleared of it) without evidence"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> PARTIALLY IMPLEMENTED; branch: None -> wip/build19; commits + a7c84e9; next_action",
+     "why": "recorder run 2 (wip/build19 b2f7dc2, 30 days, seeds 1-2): every bandit starved (11 and 13), no villager did. Cause 1 (defect): a chase blocked by a wall never ended, the chaser stood with a target and no plan and never decided again; fixed a7c84e9 with a regression test. Cause 2 (design question): the market's 60% health condition kept a hurt bandit with coins from buying food; bandits do not heal. Evidence in docs/design/SIM_FINDINGS.md run 2"
     }
    ],
-   "next_action": "recorder run 2 (already planned, bounded) records death causes; then a targeted correction proposal"
+   "next_action": "owner decides the health condition on the bandits' food purchase and whether bandits heal; run 3 on a7c84e9 measures the effect of the chase fix",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "branch": "wip/build19",
+   "commits": [
+    "a7c84e9"
+   ]
   },
   {
    "id": "SIM-F9",
