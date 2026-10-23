@@ -41,9 +41,10 @@
   },
   "21": {
    "name": "Village Politics",
-   "implementation_authorized": false,
+   "implementation_authorized": true,
+   "integration_branch": "",
    "released": "",
-   "authority": "OD-30: numbering only; implementation not authorized"
+   "authority": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md): phase 1 only: P21-00 audit, P21-01 isolated civic foundations (records only, all political behaviour disabled), P21-02 decision mapping on wip/expansion21-preparation; no politics active, no merge to staging or main, no builds"
   }
  },
  "requirements": [
@@ -27943,6 +27944,11 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner authorized Expansion 20 phase 1 (builds map: implementation_authorized, phase-1 limits); docs/directives/2026-10-23_expansion20_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner authorized Expansion 21 phase 1 (builds map); docs/directives/2026-10-23_expansion21_phase1_authorization.md"
     }
    ],
    "owner_answer": "Approved as the official long-term planning sequence (organization and sequencing only; unresolved design decisions, implementation and release dates not approved)",
@@ -30684,6 +30690,108 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT APPLICABLE",
    "completion": "OPEN"
+  },
+  {
+   "id": "P21-00",
+   "kind": "approved",
+   "title": "Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system)",
+   "description": "Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system)",
+   "source": "docs/directives/2026-10-23_expansion21_phase1_authorization.md",
+   "owner_wording": "Identify the current implementation and ownership of ... For each system, identify what exists, what is functional, what is incomplete, and what is absent.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Every listed system covered with its data owner; no duplicate government or treasury"
+   ],
+   "target_build": "21",
+   "parent": "VP-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansion21_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion21-preparation",
+     "why": "lead starts it"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion21-preparation"
+  },
+  {
+   "id": "P21-01",
+   "kind": "approved",
+   "title": "Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled",
+   "description": "Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled",
+   "source": "docs/directives/2026-10-23_expansion21_phase1_authorization.md",
+   "owner_wording": "Where requirements are settled and existing architecture permits, prepare backward-compatible foundations ... Keep all new political behavior disabled.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Unchanged gameplay with systems disabled (gate identical)",
+    "Stable ids; no duplicate holder or tenure records; references survive a holder's death",
+    "Save/load preserves the records; money and goods conserved; determinism intact; performance fine for larger settlements",
+    "No election formulas, voting eligibility, tax rates, punishments or office powers"
+   ],
+   "target_build": "21",
+   "parent": "VP-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansion21_phase1_authorization.md"
+    }
+   ]
+  },
+  {
+   "id": "P21-02",
+   "kind": "approved",
+   "title": "Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet",
+   "description": "Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet",
+   "source": "docs/directives/2026-10-23_expansion21_phase1_authorization.md",
+   "owner_wording": "Map the decisions required for ... Produce a grouped decision packet covering ...",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Twelve decisions mapped; practical interest kept apart from personal liking; moral judgment, legal guilt and eligibility separate",
+    "Decision packet with what is approved, what exists and what needs the owner, without deciding"
+   ],
+   "target_build": "21",
+   "parent": "VP-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansion21_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion21-preparation",
+     "why": "lead starts it"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion21-preparation"
   },
   {
    "id": "PACK-Q",

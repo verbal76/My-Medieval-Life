@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 448 (221 of them still open) |
-| **Open entries now** (rules excluded) | | **398** |
+| Entries added since | | 451 (224 of them still open) |
+| **Open entries now** (rules excluded) | | **401** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (448)
+## Added since the baseline (451)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -331,6 +331,9 @@ None.
 | ORE-PLACE-01 | Natural ore evidence and finds kept out of the developed village footprint | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
+| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 21 |
+| P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | approved | NOT STARTED / NOT TESTED / OPEN | 21 |
+| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 21 |
 | PACK-Q | Pack capacity: how many kinds the player can carry | decision | APPROVED | owner decision |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
