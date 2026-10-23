@@ -126,7 +126,7 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 
 | Question | Owner's answer | State in the prototype |
 |---|---|---|
-| SJD-Q03 thresholds | Own tolerance each: personality-based, seeded at birth | not yet wired: `decision.trait_spread_permille` is 0 (one scale); next task, no number chosen |
+| SJD-Q03 thresholds | Own tolerance each: personality-based, seeded at birth | **wired (round 7)**: each person has a tolerance (1000 +/- 300 permille, a hash of world seed and id) that scales the two NET thresholds (`interpret.rival_net_at`, `gossip.share_net_at`); see section 15c. Numbers are agent proposals |
 | SJD-Q04 mixed feelings | Yes: wary but willing; payment up front, gossip, can swing either way | partly matches: large GOOD and BAD give `ambivalence` (stored, weight 0); net near zero reads as disposition 50, so the person is willing and still gossips (share_net_at is a NET test); "payment up front" is a live trade-terms change, not made (needs a gameplay choice, reported) |
 | SJD-Q05 prior opinion | "Not at all": every event judged on its own | **changed**: prior bias and the `ambiguous` flag removed from code and config (`test_prior_bias`) |
 | SJD-Q09 best or near-best | Usually the best, occasionally a close second, seeded and repeatable | **changed**: `selection` "margin" with `runner_up_permille` 150 (AGENT-PROPOSED): the best, except that seeded 15% of the time one of the others within `margin` (2 points) (`test_selection_policies`) |
@@ -156,6 +156,7 @@ system to call the shared interface).
 | `interpret.affected/kin/friend/bystander/rival/accomplice`, `kin_of_actor`, `friend_of_actor` | Q08 | config | proposals implementing the owner's rule |
 | `interpret.morality_spread_permille` | Q08 | code + config | new; 150 proposed |
 | `interpret.prior_bias_*`, `events.*.ambiguous` (removed) | Q05 | code + config | none: every event judged on its own |
+| `personality.*`, `decision.trait_spread_permille` | Q03, Q13 | code + config | spread 300 each, steps 40 and 30 per point, bound 250: all proposed (section 15c) |
 | `decision.selection`, `margin`, `runner_up_permille` | Q09 | code + config | margin; 150 agent-proposed |
 | `belief.credibility_stranger`, `credibility_permille_per_point`, `credibility_min` (replacing `credibility_base`) | Q06 | code + config | credibility from Relations regard |
 | `belief.hop_factor` | Q06 | config | 900 proposed (loss per retelling) |
@@ -771,3 +772,17 @@ value. Nothing in Relations or the live game changes: judgment is off live, so t
   trader gains trust; cheats lower it, clamped at 0; a story borne out raises the teller; closeness still follows liking; save and
   load; an older section; determinism). `test_q06_trust` and `test_q06_live_trust` updated to the first-impression values (0.612, 0.6).
 - **Open for the owner.** Whether liking should seed trust at all (and how much); the rates; whether trust should fade.
+
+
+## 15c. Own tolerance and shaped weights (SJD-Q03, SJD-Q13; round 7)
+
+Owner answers 2026-10-23: Q03 "Own tolerance each: personality-based thresholds seeded at birth; some forgive quickly, some hold grudges"; Q13 "Weights seeded from personality at birth, then shaped by life events; deterministic".
+
+**There is no personality system in the game** (`npc.gd` has no traits), so a person's temperament is a hash of the world seed and their id: nothing stored for it, identical after save and load, no global random. If the owner later adds a real personality, `JudgmentStore.tolerance` and `JudgmentWeighting.trait_weight` are the two places to feed it.
+
+- **Tolerance (Q03).** `tolerance(person)` = 1000 +/- `personality.tolerance_spread_permille` (300) plus the life shift. It scales the two NET thresholds a person applies, through `threshold(person, base)`: `interpret.rival_net_at` (when a bystander turns a person's rival) and `gossip.share_net_at` (whom a teller will still tell). Above 1000 a person puts up with more before souring; below, holds a grudge sooner. The existing per-family `morality_spread_permille` (Q08, how strongly a deed registers) is a separate dial and stays.
+- **Weights (Q13).** `decision.trait_spread_permille` (300) moves each person's weight of each factor by up to that much either way (was 0). The `_first_stands` shortcut in `judgment_live.gd` no longer switches off for a non-zero spread: it uses the seller's own weights.
+- **Life events.** Smallest rule fitting the catalog: only firsthand experience (src participant or witnessed) as the victim of a BAD deed or the beneficiary of a GOOD one, once per event per person. A victim's tolerance falls by `tolerance_per_point` (40) x severity points (theft 40, assault 80, killing's victims are dead); a beneficiary's weight on the disposition factor (what they think of others, hence trust in a helper) rises by `weight_per_point` (30) x severity points (rescue 60). Each shift is clamped to +/- `max_shift_permille` (250). Shifts are person-wide, not per family of deed ("less tolerant of theft" generalises to all dealings): the owner's words do not say which, and per-family would need a family key on the thresholds. They do not decay (X19-DECAY is untouched).
+- **Saved** as an optional `life` list `[person, tolerance shift, weight shift]` in the judgment section; sections without it load (no shifts); `VERSION` stays 1. Recomputable part (temperament) is never saved.
+- **Live game unchanged**: `enabled` stays false; the store is not attached, so none of this runs. Tests in `judgment_test.gd` `test_personality`; the baseline `cfg()` there sets the spreads and steps to 0 so the exact fixtures of earlier checks keep their meaning (they assumed one scale).
+- All spreads, steps and the bound are AGENT PROPOSALS (judgment.json `personality`, `_status`).

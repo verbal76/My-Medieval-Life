@@ -34,6 +34,8 @@ func cfg() -> Dictionary:
 	c.decay.ordinary_permille_per_day = 0
 	c.gossip.timing = "hour"                 # the reference mode: the identity tests below compare queued with immediate telling
 	c.gossip.closeness_floor_permille = 1000 # closeness weighting off here; test_closeness_gossip turns it on
+	c.decision.trait_spread_permille = 0     # SJD-Q03/Q13 personality (shipped proposal: spread 300, life steps) is off for the
+	c.personality = {"tolerance_spread_permille": 0, "tolerance_per_point": 0, "weight_per_point": 0, "max_shift_permille": 250}   # fixtures; test_personality turns it on
 	return c
 
 
@@ -73,6 +75,7 @@ func _init() -> void:
 	test_x19_regard()
 	test_q07_no_hop_limit()
 	test_q08_morality()
+	test_personality()
 	test_q11_permanent_memories()
 	test_x19_assault_permanent()
 	print("%d checks, %d failures" % [checks, failures])
@@ -999,3 +1002,87 @@ func test_x19_assault_permanent() -> void:
 	check(j.ledger(BOB, THIEF) == before and int(before[6]) > 0 and int(before[4]) == 0, "the judgment of an assailant is in the permanent part and does not decay in 400 days")
 	check(t_before > 0 and int(j.ledger(BOB, JOHN)[4]) < t_before, "...while an ordinary theft's judgment does")
 	check(not j.belief(BOB, a).is_empty() and not j.belief(STRANGER, a).is_empty() and bool(j.belief(STRANGER, a).permanent), "the memory of it stays with the victim and with a bystander")
+
+
+## SJD-Q03 (own tolerance) and SJD-Q13 (weights born with, shaped by life): people differ, the seed fixes it, a life event
+## moves the weight or tolerance within bounds, the section saves and loads, an older section without them loads.
+func test_personality() -> void:
+	var c := cfg()
+	c.decision.trait_spread_permille = 300
+	c.personality.tolerance_spread_permille = 300
+	c.personality.tolerance_per_point = 40
+	c.personality.weight_per_point = 30
+	var j := store(c)
+	var tols := {}
+	var lo := -1
+	var hi := -1
+	for p in range(10, 50):
+		var t: int = j.tolerance(p)
+		tols[t] = true
+		if p < 12:
+			check(t >= 700 and t <= 1300, "person %d's tolerance %d is within the spread" % [p, t])
+		if lo < 0 or t < j.tolerance(lo):
+			lo = p
+		if hi < 0 or t > j.tolerance(hi):
+			hi = p
+	check(tols.size() > 10 and j.tolerance(lo) < 1000 and j.tolerance(hi) > 1000, "people differ in tolerance: %d values among 40, from %d to %d (Q03)" % [tols.size(), j.tolerance(lo), j.tolerance(hi)])
+	var j2 := store(c)
+	check(j.tolerance(17) == j2.tolerance(17) and JudgmentWeighting.trait_weight(c, 7, 17, "disposition", 100, j) == JudgmentWeighting.trait_weight(c, 7, 17, "disposition", 100, j2), "same seed, same temperament")
+	var other := JudgmentStore.new(c, JudgmentSocial.new(), 8)
+	var diff := 0
+	for p in range(10, 50):
+		diff += 1 if other.tolerance(p) != j.tolerance(p) else 0
+	check(diff > 30, "a different world seed gives different temperaments (%d of 40)" % diff)
+	var wa := JudgmentWeighting.trait_weight(c, 7, lo, "disposition", 100, j)
+	var wb := JudgmentWeighting.trait_weight(c, 7, hi, "disposition", 100, j)
+	var wc := JudgmentWeighting.trait_weight(c, 7, lo, "necessity", 100, j)
+	check(wa != wb or wa != wc, "two villagers weigh the same factor differently, and one villager different factors (Q13)")
+	# tolerance moves a NET threshold: the one who holds grudges stops talking to a person the tolerant one still tells
+	var tl_bad := j.threshold(lo, c.gossip.share_net_at)
+	var th_bad := j.threshold(hi, c.gossip.share_net_at)
+	check(tl_bad > th_bad, "the grudge-holder's share threshold (%d) is stricter than the tolerant one's (%d)" % [tl_bad, th_bad])
+	var told := []
+	for who in [lo, hi]:
+		var jj := store(c)
+		var ev := jj.publish("theft", [THIEF], [BOB], [], 4)
+		jj.observe_all(ev, [who])
+		jj.set_ledger(who, 90, 0, -int(round((tl_bad + th_bad) / 2.0)))     # their judgment of the listener sits between the two thresholds
+		told.append(jj.tell(who, 90))
+	check(told[0] == 0 and told[1] > 0, "...so the same low opinion silences one and not the other (told %s)" % str(told))
+	# life: a person robbed becomes less tolerant, one helped weighs opinion more; bounded; a third party is unmoved
+	var jl := store(c)
+	var t0 := jl.tolerance(BOB)
+	var w0 := JudgmentWeighting.trait_weight(c, 7, VERBAL, "disposition", 100, jl)
+	var ev := jl.publish("theft", [THIEF], [BOB], [], 4)
+	jl.observe_all(ev, [STRANGER])
+	check(jl.tolerance(BOB) == t0 - 40 and jl.life.has(BOB) and not jl.life.has(STRANGER), "robbed Bob is 40 permille less tolerant; a bystander is unmoved")
+	jl.observe_all(ev, [BOB])
+	check(jl.tolerance(BOB) == t0 - 40, "...once per event: seeing it again changes nothing")
+	var hv := jl.publish("rescue", [THIEF], [], [VERBAL])
+	jl.observe_all(hv, [])
+	check(JudgmentWeighting.trait_weight(c, 7, VERBAL, "disposition", 100, jl) > w0, "the one rescued weighs others' opinion more (%d to %d)" % [w0, JudgmentWeighting.trait_weight(c, 7, VERBAL, "disposition", 100, jl)])
+	for i in 20:
+		jl.observe_all(jl.publish("assault", [THIEF], [BOB]), [])
+		jl.observe_all(jl.publish("rescue", [THIEF], [], [VERBAL]), [])
+	check(int(jl.life[BOB][0]) == -250 and int(jl.life[VERBAL][1]) == 250, "shifts are bounded to +/- max_shift_permille (250)")
+	# save and load
+	var text := JSON.stringify(jl.to_dict())
+	var jr := store(c)
+	check(jr.load_dict(JSON.parse_string(text)) == "" and JSON.stringify(jr.to_dict()) == text and jr.tolerance(BOB) == jl.tolerance(BOB), "the life shifts save and load (round trip identical)")
+	check(jr.weight_shift(VERBAL) == jl.weight_shift(VERBAL), "...the weight shift survives too")
+	# old section without them
+	var old: Dictionary = JSON.parse_string(text)
+	old.erase("life")
+	var jo := store(c)
+	check(jo.load_dict(old) == "" and jo.life.is_empty() and jo.tolerance(BOB) == t0, "a section saved before personality loads: no shifts, temperament from the seed")
+	# deterministic replay
+	var h1 := store(c)
+	var h2 := store(c)
+	for h in [h1, h2]:
+		h.observe_all(h.publish("theft", [THIEF], [BOB], [], 4), [JOHN])
+		h.observe_all(h.publish("gift", [JOHN], [], [VERBAL]), [])
+	check(h1.state_hash() == h2.state_hash(), "same seed and events: same state with life shifts")
+	# spread 0: everyone alike, nothing moves
+	var z := store(cfg())
+	z.observe_all(z.publish("theft", [THIEF], [BOB], [], 4), [JOHN])
+	check(z.tolerance(BOB) == 1000 and z.life.is_empty() and z.threshold(BOB, -20000) == -20000, "personality off: one scale, no shifts")

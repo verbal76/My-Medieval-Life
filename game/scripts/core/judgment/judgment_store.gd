@@ -138,6 +138,11 @@ var _famh := PackedInt64Array()  # the type's family, hashed (Q08 personal moral
 var _personal := []              # per type: the NEUTRAL "personal" rule (Q01) or {}
 var _perm_personal := 3000       # memory.permanent_personal_severity: permanent for the one affected (Q11)
 var _decay := 0                  # decay.ordinary_permille_per_day (Q02)
+var _tol_spread := 0             # personality.tolerance_spread_permille (Q03)
+var _tol_step := 0               # personality.tolerance_per_point (Q13 life events)
+var _w_step := 0                 # personality.weight_per_point
+var _shift_max := 0              # personality.max_shift_permille
+var life := {}                   # person -> [tolerance shift, disposition-weight shift] permille, from firsthand life events (saved)
 var _morality := 0               # interpret.morality_spread_permille (Q08)
 var _perm_refs := {}             # event id -> permanent memories of it: such facts never retire (Q11)
 var _cap := 24
@@ -237,6 +242,11 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	for k in ["affected", "accomplice", "kin", "friend", "bystander", "rival", "rival_net_at", "kin_of_actor", "friend_of_actor"]:
 		_i.append(int(ic[k]))
 	_morality = int(ic.get("morality_spread_permille", 0))
+	var pc: Dictionary = cfg.get("personality", {})
+	_tol_spread = maxi(0, int(pc.get("tolerance_spread_permille", 0)))
+	_tol_step = int(pc.get("tolerance_per_point", 0))
+	_w_step = int(pc.get("weight_per_point", 0))
+	_shift_max = maxi(0, int(pc.get("max_shift_permille", 0)))
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
 	_b_thr = int(bc.confidence_threshold)
 
@@ -480,6 +490,8 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		_perm_refs[ev] = int(_perm_refs.get(ev, 0)) + 1
 	_stat("beliefs")
 	_judge(observer, ev)
+	if fresh and SOURCES.find(src) < TOLD:
+		_live(observer, ev)
 	if fresh and _t_ev[t] != 0:
 		for a in actors:                            # reliability shown by the deed itself: a fair deal, a cheat, a false charge
 			if int(a[0]) != observer:
@@ -604,7 +616,7 @@ func _interpret_p(observer: int, ev: int, actor: int, believed: Array, parts = n
 			elif social.friends(observer, v):
 				pv = _i[3]
 				why = 2
-			elif net(observer, v) <= _i[6]:
+			elif net(observer, v) <= threshold(observer, _i[6]):
 				pv = _i[5]
 				why = 3
 			if best < 0 or absi(pv) > absi(p) or (absi(pv) == absi(p) and pv > p):
@@ -639,6 +651,55 @@ func morality(observer: int, type: int) -> int:
 		return JudgmentMath.ONE
 	var r := JudgmentMath.hash_ints([world_seed, observer, _famh[type]]) % (2 * _morality + 1) - _morality
 	return JudgmentMath.ONE + r
+
+
+## Personal tolerance (SJD-Q03), permille: 1000 +/- personality.tolerance_spread_permille, fixed by the world seed and the
+## person's id (their temperament at birth; nothing is stored for it), plus the shift their own life has given them.
+## Above 1000 they put up with more before souring on someone; below, they hold a grudge sooner.
+func tolerance(person: int) -> int:
+	var t := JudgmentMath.ONE
+	if _tol_spread > 0:
+		t += JudgmentMath.hash_ints([world_seed, person, 4099]) % (2 * _tol_spread + 1) - _tol_spread
+	if not life.is_empty() and life.has(person):
+		t += int(life[person][0])
+	return t
+
+
+## A NET threshold (negative milli-points) as `person` holds it: the configured one scaled by their tolerance.
+func threshold(person: int, base: int) -> int:
+	if _tol_spread <= 0 and life.is_empty():
+		return base
+	return JudgmentMath.scale(base, tolerance(person))
+
+
+## The life shift on the weight of a person's disposition factor (SJD-Q13), permille; 0 when their life has not moved it.
+func weight_shift(person: int) -> int:
+	return int(life[person][1]) if life.has(person) else 0
+
+
+## A firsthand experience shapes the person (SJD-Q13, bounded): the victim of a bad deed grows less tolerant, the one
+## helped weighs others' opinions (trust in a helper) more. Once per event per person (called when the belief is new).
+func _live(observer: int, ev: int) -> void:
+	var f: PackedInt64Array = facts[ev]
+	var t := f[F_TYPE]
+	if _pol[t] == 0 or (_tol_step == 0 and _w_step == 0) or _shift_max == 0:
+		return
+	var at := F_NA + 1 + 2 * f[F_NA]
+	if _pol[t] == 1:
+		at += 1 + f[at]
+	var hit := false
+	for i in f[at]:
+		if f[at + 1 + i] == observer:
+			hit = true
+	if not hit:
+		return
+	var rec: Array = life.get(observer, [0, 0])
+	if _pol[t] < 0:
+		rec[0] = JudgmentMath.clampi_(int(rec[0]) - JudgmentMath.mul_div(_sev[t], _tol_step, 1000), -_shift_max, _shift_max)
+	else:
+		rec[1] = JudgmentMath.clampi_(int(rec[1]) + JudgmentMath.mul_div(_sev[t], _w_step, 1000), -_shift_max, _shift_max)
+	life[observer] = rec
+	_stat("life_shifts")
 
 
 ## Whether an actor list ([[id, share], ...]) names `who`.
@@ -1149,7 +1210,7 @@ func tell(teller: int, listener: int) -> int:
 	var mem: Dictionary = memories[teller]
 	if mem.is_empty():
 		return 0
-	if int(told_today.get(teller, 0)) >= _g_budget or net(teller, listener) <= _g_share_at:
+	if int(told_today.get(teller, 0)) >= _g_budget or net(teller, listener) <= threshold(teller, _g_share_at):
 		return 0
 	var cred := -1                                 # the listener's trust in the teller, found when first needed
 	var heard: Dictionary = memories.get(listener, {})
@@ -1547,6 +1608,11 @@ func to_dict() -> Dictionary:
 			for sub_ in _sorted(trust[o]):
 				tr.append([int(o), int(sub_), int(trust[o][sub_])])
 		out.trust = tr                           # X19-REGARD: only pairs with a record (older sections have none)
+	if not life.is_empty():
+		var lf := []
+		for o in _sorted(life):
+			lf.append([int(o), int(life[o][0]), int(life[o][1])])
+		out.life = lf                            # SJD-Q13: the shifts life events have given (older sections have none)
 	if not _sched.is_empty():
 		var sc := []
 		for mm in _sorted(_sched):
@@ -1567,7 +1633,7 @@ static func _sorted(d: Dictionary) -> Array:
 ## unknown format, a newer version, or naming an event type this catalog lacks is refused with a message and kept
 ## unread, written back unchanged, never dropped (CLAUDE.md section 7). Returns "" or the reason it was not read.
 func load_dict(d: Dictionary) -> String:
-	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, _early, _retiring]:
+	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, life, _early, _retiring]:
 		(x as Dictionary).clear()
 	_people = PackedInt64Array()
 	_queue = PackedInt64Array()
@@ -1650,6 +1716,8 @@ func load_dict(d: Dictionary) -> String:
 		if not trust.has(int(r[0])):
 			trust[int(r[0])] = {}
 		trust[int(r[0])][int(r[1])] = clampi(int(r[2]), 0, 100000)
+	for r in m.get("life", []):
+		life[int(r[0])] = [clampi(int(r[1]), -_shift_max, _shift_max), clampi(int(r[2]), -_shift_max, _shift_max)]
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))

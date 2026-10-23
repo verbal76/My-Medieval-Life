@@ -222,7 +222,7 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 ## Outstanding owner decisions
 
 - **Answered 2026-10-21:** Q01, Q02, Q06, Q07, Q08, Q10, Q11, Q14 (see above).
-- **Answered 2026-10-23 and applied (round 5):** Q05 (prior bias removed), Q09 (near-best, runner_up 150 proposed), X19-ASSAULT (assault permanent); Q04, Q12, X19-HARMED, X19-CRT12 already matched; X19-GUARD applied in `World.guard_confront` (friend guard halves the fine, never waives; round 6). Q03 and Q13 (own tolerance, shaped weights) not yet wired; X19-DECAY is the lead's next task; X19-REGARD done in round 6 (separate trust value in the store, DESIGN section 15b).
+- **Answered 2026-10-23 and applied (round 5):** Q05 (prior bias removed), Q09 (near-best, runner_up 150 proposed), X19-ASSAULT (assault permanent); Q04, Q12, X19-HARMED, X19-CRT12 already matched; X19-GUARD applied in `World.guard_confront` (friend guard halves the fine, never waives; round 6). Q03 and Q13 (own tolerance, shaped weights) wired in round 7 (DESIGN section 15c; numbers agent-proposed); X19-DECAY is the lead's next task; X19-REGARD done in round 6 (separate trust value in the store, DESIGN section 15b).
 - **Answered 2026-10-23:** X19-Q-TIMING (spread by contact and closeness): "scheduled" timing with closeness weighting is
   implemented; the floor 500 is an agent-proposed number for owner review. Options record: `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`.
 - **Needed from the owner before live integration (Gate E):**
@@ -239,3 +239,10 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
   ready to enable: it needs the owner's answers above, the Build 18 reconciliation, calibration runs (100- and 365-day
   matched seeds, judgment off vs on), device performance checks, and INT entries.
 - Gates F to H: not started.
+
+## Round 7: SJD-Q03 and SJD-Q13 (personality)
+
+Tolerance per person scales the rival and share NET thresholds; decision weights vary per person (trait spread 300);
+firsthand life events shift tolerance (victims) and the disposition weight (the helped), bounded and saved in the
+judgment section as `life`. Design and numbers: DESIGN.md section 15c. No personality system exists in the game, so
+temperament is a seed-and-id hash. Everything stays behind `enabled: false`.

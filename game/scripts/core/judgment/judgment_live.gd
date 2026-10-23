@@ -116,13 +116,13 @@ static func on_killing(w, n: NPC, killer: int) -> void:
 static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := "trade_sell") -> bool:
 	var dc: Dictionary = j.cfg.decision
 	var wt: Dictionary = dc.profiles[profile].weights
-	if str(dc.selection) != "argmax" or int(dc.get("trait_spread_permille", 0)) > 0:
+	if str(dc.selection) != "argmax":
 		return false
 	for k in wt:
 		if not (str(k) in ["live_order", "necessity", "disposition"]) and int(wt[k]) != 0:
 			return false
-	var wd := int(wt.get("disposition", 0))
-	var wo := int(wt.get("live_order", 0))
+	var wd := JudgmentWeighting.trait_weight(j.cfg, j.world_seed, seller, "disposition", int(wt.get("disposition", 0)), j)   # this seller's own weights (Q03/Q13)
+	var wo := JudgmentWeighting.trait_weight(j.cfg, j.world_seed, seller, "live_order", int(wt.get("live_order", 0)), j)
 	j._cu_read(seller)                          # the whole ledger is read below
 	var d0 := j.disposition(seller, first)
 	var best := int(dc.disposition_mid)

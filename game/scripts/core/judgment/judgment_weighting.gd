@@ -52,7 +52,7 @@ static func choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile:
 		var names := weights.keys()
 		names.sort()
 		for name in names:
-			var wgt := trait_weight(cfg, store.world_seed if store != null else 0, chooser, str(name), int(weights[name]))
+			var wgt := trait_weight(cfg, store.world_seed if store != null else 0, chooser, str(name), int(weights[name]), store)
 			var part := JudgmentMath.mul_div(wgt, JudgmentMath.clampi_(int(f.get(name, 0)), 0, 100000), 1000)
 			parts[name] = part
 			u += part
@@ -96,11 +96,16 @@ static func choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile:
 
 ## A factor's weight for this person (SJD-Q03, Q13): the profile's, moved by up to trait_spread_permille either way by a
 ## seeded hash of the person and the factor (0: everyone weighs alike).
-static func trait_weight(cfg: Dictionary, seed: int, person: int, factor: String, w: int) -> int:
+## Then, for the disposition factor, moved by what life has done to them (store.weight_shift: SJD-Q13, bounded).
+static func trait_weight(cfg: Dictionary, seed: int, person: int, factor: String, w: int, store: JudgmentStore = null) -> int:
 	var spread := int(cfg.decision.get("trait_spread_permille", 0))
-	if spread <= 0:
+	var r := 0
+	if spread > 0:
+		r = JudgmentMath.hash_ints([seed, person, factor.hash()]) % (2 * spread + 1) - spread
+	if store != null and factor == "disposition":
+		r += store.weight_shift(person)
+	if r == 0:
 		return w
-	var r := JudgmentMath.hash_ints([seed, person, factor.hash()]) % (2 * spread + 1) - spread
 	return JudgmentMath.scale(w, JudgmentMath.ONE + r)
 
 
