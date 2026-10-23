@@ -731,28 +731,33 @@ func traded_with(a: int, b: int) -> bool:
 	return trades.has(key(a, b))
 
 
+## A tie as saved, with every field its own type (also used for the read-only history of a former player's ties, ID-01).
+static func tie_from(src: Dictionary) -> Dictionary:
+	var t := _blank()
+	for f in src:
+		t[f] = src[f]
+	t.regard = float(t.regard)
+	t.attraction = float(t.attraction)
+	t.since = int(t.since)
+	t.gift_day = int(t.gift_day)
+	t.last = int(t.last)
+	t.friends = bool(t.friends)
+	t.refused = bool(t.refused)
+	t.shared_day = int(t.shared_day)
+	t.shared_today = float(t.shared_today)
+	for f in ["talks_today", "hour_key", "days_known", "contact_day", "att_day", "near_day", "defend_day"]:
+		t[f] = int(t[f])
+	for f in ["att_today", "reg_today", "near_min", "near_reg"]:
+		t[f] = float(t[f])
+	return t
+
+
 func load_dict(d: Dictionary) -> void:
 	ties.clear()
 	interests.clear()
 	var ts: Dictionary = d.get("ties", {})
 	for k in ts:
-		var t := _blank()
-		for f in ts[k]:
-			t[f] = ts[k][f]
-		t.regard = float(t.regard)
-		t.attraction = float(t.attraction)
-		t.since = int(t.since)
-		t.gift_day = int(t.gift_day)
-		t.last = int(t.last)
-		t.friends = bool(t.friends)
-		t.refused = bool(t.refused)
-		t.shared_day = int(t.shared_day)
-		t.shared_today = float(t.shared_today)
-		for f in ["talks_today", "hour_key", "days_known", "contact_day", "att_day", "near_day", "defend_day"]:
-			t[f] = int(t[f])
-		for f in ["att_today", "reg_today", "near_min", "near_reg"]:
-			t[f] = float(t[f])
-		ties[str(k)] = t
+		ties[str(k)] = tie_from(ts[k])
 	killings = int(d.get("killings", 0))
 	trades.clear()
 	var trd: Dictionary = d.get("trades", {})             # X18-Q12-POST; saves before it have none

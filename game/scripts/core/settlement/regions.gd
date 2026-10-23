@@ -41,6 +41,32 @@ func _add(s: OffMapSettlement) -> void:
 	by_id[s.id] = s
 
 
+# ------------------------------------------------------------------ people's identities (ID-01) ----------------
+## The settlements now live in world `w`: a birth takes its id from the world's settlement band and enters the register, a death marks it.
+func bind_world(w: World) -> void:
+	var hook := Callable(w, "offmap_person")
+	for s: OffMapSettlement in list:
+		s.person_hook = hook
+
+
+## Give every member that has no id one, in settlement, household and member order (so two worlds from the same data agree), and
+## enter them in the register. Returns how many were given. Members that have an id are not touched.
+func assign_member_ids(w: World) -> int:
+	var n := 0
+	for s: OffMapSettlement in list:
+		for h in s.hh:
+			if not h.has("mem"):
+				continue
+			for m in h.mem:
+				if OffMapSettlement.member_id(m) > 0:
+					continue
+				var id := w.new_offmap_person_id()
+				OffMapSettlement.set_member_id(m, id)
+				Identity.register_member(w, id, s.id, int(m[OffMapSettlement.M_SEX]), int(m[OffMapSettlement.M_BORN]), OffMapSettlement.who_of(m))
+				n += 1
+	return n
+
+
 ## Step every settlement through day `d` (one step a day, in order), then the traders' wholesale round on its day.
 func step_day(d: int) -> void:
 	if d <= day:

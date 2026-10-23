@@ -59,7 +59,14 @@ const M_UNWILLING := 3
 ## A member who came from, or went to, the village (MIGRATE-18) carries a fifth entry, [4]: {n: name, f: family, sk: {skill: xp}}, so
 ## the person keeps their name and what they learned across the move. A member born here has only the four entries.
 const M_WHO := 4
+## ID-01: every member has a person id, the sixth entry [5] (World.people; never reused; a member with no carried name has {} at [4]).
+## An older save has none (0): Identity.upgrade gives them, in settlement, household and member order.
+const M_ID := 5
 const JOURNAL_MAX := 100             # lines of the settlement's own journal kept (the village's log keeps 300)
+
+## ID-01: the world's register of people, when this settlement lives in one (Regions.bind_world); not saved. Called as
+## hook.call(event, info) with "birth" {sex, born, mother, father} (returns the new person's id) or "death" {id}.
+var person_hook := Callable()
 
 static var _data := {}
 static var _rules := {}               # _data.rules and _data.business_types, once loaded (the step reads them thousands of times)
@@ -281,6 +288,47 @@ static func _roll(a: int, b: int, c: int) -> float:
 	return float((x >> 20) & 0xFFFFFF) / 16777216.0
 
 
+## The id of a member (0: none yet).
+static func member_id(m: Array) -> int:
+	return int(m[M_ID]) if m.size() > M_ID else 0
+
+
+static func set_member_id(m: Array, id: int) -> void:
+	while m.size() < M_WHO:
+		m.append(0)
+	if m.size() == M_WHO:
+		m.append({})
+	while m.size() < M_ID:
+		m.append({})
+	if m.size() == M_ID:
+		m.append(id)
+	else:
+		m[M_ID] = id
+
+
+## Whether the member carries a name (they came from the village).
+static func has_who(m: Array) -> bool:
+	return m.size() > M_WHO and m[M_WHO] is Dictionary and not (m[M_WHO] as Dictionary).is_empty()
+
+
+static func who_of(m: Array) -> Dictionary:
+	return m[M_WHO] if has_who(m) else {}
+
+
+## A person is born here: the world gives them their id (0 in a settlement that lives outside a world).
+func _new_person(sex: int, mother: Array, father: Array) -> int:
+	if not person_hook.is_valid():
+		return 0
+	return int(person_hook.call("birth", {"sex": sex, "born": day, "settlement": id, "mother": member_id(mother) if not mother.is_empty() else -1,
+		"father": member_id(father) if not father.is_empty() else -1}))
+
+
+## A member dies: the register learns it. Nothing else changes.
+func _died(m: Array) -> void:
+	if person_hook.is_valid() and member_id(m) > 0:
+		person_hook.call("death", {"id": member_id(m), "settlement": id})
+
+
 func _age(m: Array) -> float:
 	return float(day - int(m[M_BORN])) / float(_yd)
 
@@ -349,6 +397,7 @@ func _old_age(salt: int) -> void:
 			var ag := _age(m)
 			var p := Life.death_chance(ag) if ag >= _mort_from else 0.0
 			if p > 0.0 and (p >= 1.0 or _roll(salt, day * 7 + 1, int(m[M_BORN]) * 64 + i) < p):
+				_died(m)
 				_remove_member(h, j)
 				flows.age_deaths += 1
 				dead = true
@@ -378,7 +427,11 @@ func _try_birth(h: Dictionary, chance: float, salt: int) -> void:
 		return
 	var sex := 1 if _roll(salt, day * 7 + 3, int(h.id)) < 0.5 else 0
 	var unw := 1 if _roll(salt, day * 7 + 4, int(h.id)) * 100.0 < float(GameData.b("relations").unwilling_percent) else 0
-	h.mem.append([day, sex, 0, unw])
+	var father: Array = []
+	for m in h.mem:
+		if int(m[M_PAIR]) == 1 and int(m[M_SEX]) == 0:
+			father = m
+	h.mem.append([day, sex, 0, unw, {}, _new_person(sex, mother, father)])
 	flows.births += 1
 	_recount(h)
 
@@ -407,6 +460,8 @@ func _after_loss(h: Dictionary) -> void:
 	h.alive = false
 	if heir < 0:
 		flows.deaths += h.mem.size()                         # no household anywhere to take the children in
+		for m in h.mem:
+			_died(m)
 		h.mem = []
 		gov.coins += int(h.coins)
 		h.coins = 0
@@ -1436,6 +1491,7 @@ func _lose_member(h: Dictionary) -> void:
 		elif not _is_adult(m):
 			pick = j
 	if pick >= 0:
+		_died(h.mem[pick])
 		_remove_member(h, pick)
 	flows.deaths += 1
 	_after_loss(h)
@@ -1765,8 +1821,8 @@ func summary() -> Dictionary:
 ## What Migration (migration.gd) asks of a settlement. A traveller's record is {age (years), sex, unw, pair, born (the settlement day,
 ## for a member born here), n, f, sk (name, family, skills: only for a person who came from the village)}.
 func _pack_of(m: Array, pair: int) -> Dictionary:
-	var out := {"age": _age(m), "sex": int(m[M_SEX]), "unw": int(m[M_UNWILLING]), "pair": pair, "born": int(m[M_BORN])}
-	if m.size() > M_WHO:
+	var out := {"age": _age(m), "sex": int(m[M_SEX]), "unw": int(m[M_UNWILLING]), "pair": pair, "born": int(m[M_BORN]), "id": member_id(m)}
+	if has_who(m):
 		out.n = str(m[M_WHO].n)
 		out.f = str(m[M_WHO].f)
 		out.sk = (m[M_WHO].sk as Dictionary).duplicate()
@@ -1775,7 +1831,7 @@ func _pack_of(m: Array, pair: int) -> Dictionary:
 
 ## The member a traveller becomes here (always with the fifth entry: they keep their name and skills for good).
 func _member_of(p: Dictionary) -> Array:
-	return [day - roundi(float(p.age) * _yd), int(p.sex), int(p.get("pair", 0)), int(p.unw), {"n": str(p.n), "f": str(p.f), "sk": (p.sk as Dictionary).duplicate()}]
+	return [day - roundi(float(p.age) * _yd), int(p.sex), int(p.get("pair", 0)), int(p.unw), {"n": str(p.n), "f": str(p.f), "sk": (p.sk as Dictionary).duplicate()}, int(p.get("id", 0))]
 
 
 func _cross_in(coins: int, goods: Dictionary, people: int) -> void:
@@ -2064,10 +2120,15 @@ static func _member_from(m: Array) -> Array:
 	var out := [int(m[0]), int(m[1]), int(m[2]), int(m[3])]
 	if m.size() > M_WHO and m[M_WHO] is Dictionary:
 		var w: Dictionary = m[M_WHO]
-		var sk := {}
-		for k in w.get("sk", {}):
-			sk[str(k)] = int(w.sk[k])
-		out.append({"n": str(w.get("n", "")), "f": str(w.get("f", "")), "sk": sk})
+		if w.is_empty():
+			out.append({})                                  # ID-01: a member born here has no carried name
+		else:
+			var sk := {}
+			for k in w.get("sk", {}):
+				sk[str(k)] = int(w.sk[k])
+			out.append({"n": str(w.get("n", "")), "f": str(w.get("f", "")), "sk": sk})
+	if m.size() > M_ID:
+		out.append(int(m[M_ID]))                            # ID-01 (save 20; absent in an older save)
 	return out
 
 

@@ -612,7 +612,8 @@ func test_player() -> void:
 	var heir := w.player
 	check(heir.alive and heir.name == kid2_name and heir.sprite == kid2_sprite and heir.generation == 2, "the eldest child of 16+ becomes the player (%s)" % heir.name)
 	check(absf(Life.age_years(heir.born, w.minutes) - 19.0) < 0.2, "and keeps their age")
-	check(w.npcs.all(func(n: NPC) -> bool: return n.id != k2.id) and not w.by_id.has(k2.id) and not (w.households[h].members as Array).has(k2.id) and (w.households[h].members as Array).size() <= members_before + 2, "the child leaves the villagers")
+	check(w.npcs.all(func(n: NPC) -> bool: return n.id != k2.id or (not n.alive and n.became_player)) and w.alive_count() > 0 and not (w.households[h].members as Array).has(k2.id) and (w.households[h].members as Array).size() <= members_before + 2, "the child leaves the villagers (ID-01: the record is kept, not alive, as the person who became the player)")
+	check(w.npc(k2.id) != null and w.npc(k2.id).became_player and heir.pid == k2.id and str(w.people[k2.id].where) == "player", "ID-01: the heir keeps their own id and record")
 	check(w.npc(k1.id) != null and w.npc(k1.id).father == Life.FORMER_PLAYER, "the other child stays a villager, its father now the former player")
 	check(heir.partner == -1 and heir.children.is_empty() and heir.father == Life.FORMER_PLAYER, "the heir starts with no partner or children of their own")
 	check(old_name != "" and w.alive_count() > 0, "the world goes on")

@@ -111,6 +111,10 @@ static func migrate(src: Dictionary, map: VillageMap) -> Dictionary:
 		return {"ok": false, "reason": "test"}
 	var w := World.new()
 	w.load_dict(map, d)
+	if w.load_error != "":
+		var why: String = w.load_error
+		w.dispose()
+		return {"ok": false, "reason": why}
 	var out := w.to_dict()
 	w.dispose()
 	out["meta"] = (src.get("meta", {}) as Dictionary).duplicate(true)
@@ -143,6 +147,8 @@ static func validate(src: Dictionary, out: Dictionary, map: VillageMap) -> Strin
 		return "the character changed"
 	var w := World.new()
 	w.load_dict(map, JSON.parse_string(JSON.stringify(out, "", true, true)))
+	if w.load_error != "":
+		return "the result does not reload (%s)" % w.load_error
 	var again := w.to_dict()
 	w.dispose()
 	for k in again:

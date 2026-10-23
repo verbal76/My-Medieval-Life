@@ -35,6 +35,21 @@ var seed := 1
 var minutes := 7.0 * 60.0          # game time since the start (day 0, 07:00)
 var npcs: Array = []               # NPC
 var by_id := {}
+## ID-01 (save 20): one id space for every person, never reused. `next_person_id` is the counter only ever raised (new_person_id);
+## `people` is the register of identity and whereabouts, id -> {name, family, sex, born, mother, father, where, since}, never pruned
+## (Identity); `identity_report` is what the upgrade of an older save found (kept so it can be read later); `tie_history` holds, for
+## each former player character (by person id), a read-only snapshot of the village's ties with them when they died.
+var next_person_id := 1
+## ID-D2 option B (owner, 2026-10-23): settlement residents (off-map members, including those born there) and player characters take their
+## ids from a separate band that starts at BAND_START, with its own counter (only raised). The village's own sequence (village-born
+## people, newcomers) stays below it, as in Build 18, so the id-seeded village rules do not move. An id keeps its value wherever its
+## person goes. See docs/design/IDENTITY.md for the headroom.
+const BAND_START := 1000000
+var next_band_id := BAND_START
+var people := {}
+var identity_report := {}
+var tie_history := {}
+var load_error := ""                # set by load_dict when the save cannot be brought up to date (the caller refuses it and leaves the file)
 var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
 var stations := {}                 # id -> dict
@@ -192,7 +207,15 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	_guard_posts()
 	Population.populate(self)
 	_open_treasury()
+	for n: NPC in npcs:
+		Identity.register_npc(self, n)           # ID-01: the register learns the settlers
+	next_person_id = 1
+	for n: NPC in npcs:
+		next_person_id = maxi(next_person_id, n.id + 1)       # the village's sequence goes on above the settlers (as Build 18's highest-plus-one did)
+	next_band_id = BAND_START
 	regions = Regions.create(world_seed)
+	regions.assign_member_ids(self)              # ID-01: every settlement member has an id from the band (after the settlers' own)
+	regions.bind_world(self)
 	# the settlers' grain store: a finite stock of last year's harvest, 7 days of the village's food
 	# (its need weighted by age: children eat less)
 	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
@@ -209,6 +232,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	give_start_kit(player)
 	Life.init_player(self)             # B8-029
+	Identity.register_player(self, player)       # ID-01: the founder's person id
 	Skills.seed_villagers(self)        # PAR-01A: the settlers' history at their trades (only here and in an old save's migration)
 	Skills.seed_trades(self)           # SKILL-TRADES-18: Carpentry, Masonry and Tanning start from each person's Crafting
 	experience.seed_once(self)              # X18 HOOK (owner D1): the settlers' starting industry experience, once, from their recorded skills
@@ -728,6 +752,7 @@ func continue_as_heir() -> void:
 	heir.chest = p.chest
 	heir.chest_stolen = p.chest_stolen
 	heir.deaths = p.deaths
+	Identity.succeed(self, p, heir, kid)       # ID-01: the predecessor is an ancestor under their own id; the heir keeps their own
 	give_start_kit(heir)
 	coin_sources += heir.coins
 	heir.spells = {}
@@ -2220,6 +2245,58 @@ func npc(id: int) -> NPC:
 	return by_id.get(id)
 
 
+## ID-01: a new person id, never one that has been used. The counter is only raised; a villager record or player made without it
+## (a test, a hand-built record) lifts it above their id first, so it can never hand out an id that is in use.
+func new_person_id() -> int:
+	var top := next_person_id
+	for o: NPC in npcs:
+		if o.id < BAND_START:
+			top = maxi(top, o.id + 1)
+	if player.pid < BAND_START:
+		top = maxi(top, player.pid + 1)
+	if top >= BAND_START:       # (returns -1, nothing issued) unreachable in play (docs/design/IDENTITY.md, headroom): refuse loudly rather than collide with the band
+		push_error("village person ids are exhausted (%d): refusing to issue one that would collide with the settlement band" % top)
+		return -1
+	next_person_id = top + 1
+	return top
+
+
+## ID-D2: a new id from the settlement band (a person born or founded in a settlement, a player character). Never lowered, never
+## reused; a record or player already holding a band id lifts the counter above it first. The band has no upper collision: nothing else
+## issues ids at or above BAND_START.
+func new_band_id() -> int:
+	var top := next_band_id
+	for o: NPC in npcs:
+		if o.id >= BAND_START:
+			top = maxi(top, o.id + 1)
+	if player.pid >= BAND_START:
+		top = maxi(top, player.pid + 1)
+	next_band_id = top + 1
+	return top
+
+
+## The id of a person born or founded in a settlement (the band).
+func new_offmap_person_id() -> int:
+	return new_band_id()
+
+
+## The id taken a moment ago went to nobody (a move that was not made): it is given back, but only if nothing has been issued since.
+func release_person_id(id: int) -> void:
+	if id < BAND_START and id == next_person_id - 1 and not by_id.has(id):
+		next_person_id = id
+		people.erase(id)
+
+
+## What a settlement tells the register (OffMapSettlement.person_hook).
+func offmap_person(event: String, info: Dictionary) -> int:
+	if event == "death":
+		Identity.move(self, int(info.id), Identity.DEAD)
+		return int(info.id)
+	var id := new_offmap_person_id()
+	Identity.register_member(self, id, str(info.settlement), int(info.sex), int(info.born), {}, int(info.mother), int(info.father))
+	return id
+
+
 func kill(n: NPC, cause: String) -> void:
 	if not n.alive:
 		return
@@ -2235,6 +2312,7 @@ func kill(n: NPC, cause: String) -> void:
 			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
+	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)
 	credit.on_death(n, heir if not cause.begins_with("slain") else null)     # TRADE-CREDIT: its debts pass to the heir, else are written off
 	if heir != null and not cause.begins_with("slain"):
@@ -3837,7 +3915,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 19          # Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 20          # 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -4203,12 +4281,76 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
+		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
 		out.judgment = judgment_foreign.duplicate(true)            # off: a saved section is carried unchanged
+	return out
+
+
+## ID-01: the register of a version 20 save, or (a save from before it) the one-time upgrade, deterministic and reported. False when the
+## save cannot be upgraded: `load_error` then says why, and the caller refuses the save and leaves the file as it is.
+func _load_identity(d: Dictionary) -> bool:
+	if d.has("people"):
+		next_person_id = int(d.get("next_person_id", 1))
+		next_band_id = int(d.get("next_band_id", BAND_START))
+		for k in d.people:
+			var e: Dictionary = d.people[k]
+			people[int(k)] = {"name": str(e.get("name", "")), "family": str(e.get("family", "")), "sex": str(e.get("sex", "male")), "born": float(e.get("born", 0.0)),
+				"mother": int(e.get("mother", -1)), "father": int(e.get("father", -1)), "where": str(e.get("where", Identity.VILLAGE)), "since": int(e.get("since", 0))}
+		identity_report = _whole_numbers(d.get("identity_report", {})) as Dictionary
+		for pid in d.get("tie_history", {}):
+			var th: Dictionary = d.tie_history[pid]
+			var ts := {}
+			for other in th.get("ties", {}):
+				ts[str(other)] = Relations.tie_from(th.ties[other])
+			tie_history[str(pid)] = {"day": int(th.get("day", 0)), "ties": ts}
+		regions.assign_member_ids(self)                 # (none lack one in a version 20 save)
+		regions.bind_world(self)
+		var bad := Identity.verify(self)
+		if bad != "":
+			load_error = "the save's register of people is inconsistent (%s)" % bad
+			return false
+		return true
+	var from := int(d.get("save_version", 0))
+	var why := Identity.upgrade(self, from if from < SAVE_VERSION else SAVE_VERSION - 1)
+	if why != "":
+		load_error = "this older save could not be given its people's identities (%s)" % why
+		return false
+	regions.bind_world(self)
+	note("Identity upgrade: %d villagers and %d people of the settlements now have permanent ids (%d cases reported)." % [npcs.size(), int(identity_report.counts.members), (identity_report.notes as Array).size()])
+	return true
+
+
+## A value read from JSON with its whole numbers as integers again (JSON gives every number as a float).
+static func _whole_numbers(v):
+	if v is Dictionary:
+		var o := {}
+		for k in v:
+			o[k] = _whole_numbers(v[k])
+		return o
+	if v is Array:
+		return (v as Array).map(func(x): return _whole_numbers(x))
+	if v is float and v == floorf(v) and absf(v) < 1.0e15:
+		return int(v)
+	return v
+
+
+func _people_to_dict() -> Dictionary:
+	if player.pid > 0 and people.has(player.pid) and str(people[player.pid].where) == Identity.PLAYER:
+		var e: Dictionary = people[player.pid]                 # the current player's own entry follows their name, looks and age (set after the world began)
+		e.name = player.name
+		e.family = player.family
+		e.sex = player.sex
+		e.born = player.born
+	var out := {}
+	var ids: Array = people.keys()
+	ids.sort()
+	for id in ids:
+		out[str(id)] = (people[id] as Dictionary).duplicate()
 	return out
 
 
@@ -4378,6 +4520,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	if not _load_identity(d):
+		return
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
 	if int(d.get("save_version", 0)) < 15:
 		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills
