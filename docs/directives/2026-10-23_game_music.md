@@ -26,3 +26,6 @@ The owner supplied Cozy RPG SFX ambience loops (itch.io, aquumgifts.itch.io; aut
 `cozy-rpg-sfx-ambience-2.zip` (cave wind, forest birds; sent twice, byte-identical). Terms: use in games allowed, no
 royalties; the sounds themselves may not be redistributed as assets; credit appreciated ("Cozy RPG SFX by Spaceyyy").
 Kept in `private-assets/` (git-ignored); only the imported game files are committed (CLAUDE.md section 3).
+
+Owner, 2026-10-23 (verbatim): "Wav for Linux and exe unless ogg has no quality loss". Ogg Vorbis is lossy, so Windows
+and Linux ship the original WAVs, as planned; Android carries Ogg.
