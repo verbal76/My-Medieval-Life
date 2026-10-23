@@ -41490,10 +41490,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 217, judgment_live_test 53, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; perf unchanged; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "ca2e9ba"
+   ],
    "parent": "EXP-C",
    "depends_on": [],
    "blockers": [],
@@ -41530,6 +41532,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 217, judgment_live_test 53, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; perf unchanged; sim_gate identical; test_commit: None -> ca2e9ba; commits + ca2e9ba",
+     "why": "implemented on the prospective branch: per-person temperament from a seeded hash (no personality system exists), shaped by firsthand life events, saved"
     }
    ],
    "target_build": "19",
@@ -41539,7 +41546,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "ca2e9ba"
   },
   {
    "id": "SJD-Q04",
@@ -42156,10 +42166,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 217, judgment_live_test 53, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; perf unchanged; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "ca2e9ba"
+   ],
    "parent": "EXP-C",
    "depends_on": [],
    "blockers": [],
@@ -42196,6 +42208,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 217, judgment_live_test 53, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; perf unchanged; sim_gate identical; test_commit: None -> ca2e9ba; commits + ca2e9ba",
+     "why": "implemented on the prospective branch: per-person temperament from a seeded hash (no personality system exists), shaped by firsthand life events, saved"
     }
    ],
    "target_build": "19",
@@ -42205,7 +42222,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "ca2e9ba"
   },
   {
    "id": "SJD-Q14",
@@ -50033,6 +50053,28 @@
    "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "test_commit": "2456294"
+  },
+  {
+   "id": "X19-PERSONALITY",
+   "kind": "decision",
+   "title": "Agent-proposed numbers for per-person temperament (SJD-Q03, Q13): tolerance and weights vary by up to 30% between people; being wronged lowers tolerance 4% per severity point, being helped raises regard for opinion 3% per point, at most 25% either way; a shift applies to all dealings, not only the kind of deed. Keep, or change?",
+   "description": "Agent-proposed numbers for per-person temperament (SJD-Q03, Q13): tolerance and weights vary by up to 30% between people; being wronged lowers tolerance 4% per severity point, being helped raises regard for opinion 3% per point, at most 25% either way; a shift applies to all dealings, not only the kind of deed. Keep, or change?",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
+    }
+   ]
   },
   {
    "id": "X19-Q-TIMING",
