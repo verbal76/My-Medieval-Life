@@ -49613,9 +49613,14 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner answered eight design questions (firefighting, warning, illness, rebuilding, seasons, snow, stampedes, player)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "design specification and audit drafted (docs/design/EXPANSION25_WEATHER_DESIGN.md); seven questions for the owner (E25-OD-01..07)"
     }
    ],
-   "next_action": "write the Expansion 25 design specification and audit between Build 19 tasks; no code until approved"
+   "next_action": "owner reviews the design and answers E25-OD-01..07; no code before approval"
   },
   {
    "id": "WIKI-01",

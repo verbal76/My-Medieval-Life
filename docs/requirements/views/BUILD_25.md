@@ -22,5 +22,5 @@ Readiness: **NOT AUTHORIZED for implementation**
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| WEATHER-01 | Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | write the Expansion 25 design specification and audit between Build 19 tasks; no code until approved | design: UNKNOWN | UNKNOWN |
+| WEATHER-01 | Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | owner reviews the design and answers E25-OD-01..07; no code before approval | design: UNKNOWN | UNKNOWN |
 
