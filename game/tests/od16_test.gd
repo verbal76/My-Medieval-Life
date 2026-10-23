@@ -168,7 +168,7 @@ func test_caravan_buys_producers_surplus() -> void:
 	var hunter: NPC = w.brain._first_with_job("hunter")
 	hunter.inv.add("meat", 30)
 	hunter.inv.add("hide", 10)
-	w.caravan_purse = 500
+	w.regions.fund_only("wulstead", 500)         # a settlement that uses meat and hides has the coins
 	var c0 := hunter.coins
 	w.brain.caravan()
 	check(int(w.stats.get("exported_meat", 0)) > 0 or int(w.stats.get("exported_hide", 0)) > 0, "the caravan buys the hunter's surplus meat or hides")
@@ -179,7 +179,7 @@ func test_caravan_buys_producers_surplus() -> void:
 
 ## EQ-22 (owner 2026-10-21): the caravan buys by need, not the smiths first. A smith well stocked with its inputs and
 ## coins and a tanner with no hides and no coins both have surplus; the tanner is served first, and the caravan never
-## spends more than its purse.
+## spends more than its trader's till.
 func test_caravan_buys_by_need() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
@@ -189,6 +189,10 @@ func test_caravan_buys_by_need() -> void:
 				o.inv.remove(id, o.inv.count(id))
 		if o.alive and (o.job == "merchant" or o.id == w.sage_id):
 			o.coins = 0                              # and nobody buys seed or medicine from it, so its purse is what we set
+	for s: OffMapSettlement in w.regions.list:   # DVW-B3-LUX: and no luxuries on the carts, so no purse here is spent on one (luxury_test covers them)
+		for id: String in Luxury.items():
+			s.trader().stock.erase(id)
+		s.reopen_books()
 	var smith: NPC = b._first_with_job("smith")
 	var tanner: NPC = b._first_with_job("tanner")
 	for id in NPCBrain.BUYS.smith:
@@ -199,22 +203,24 @@ func test_caravan_buys_by_need() -> void:
 	tanner.inv.add("leather", 12)                # 6 over its keep of 6
 	check(b.restock_cost(smith) == 0 and b.restock_cost(tanner) > 0, "the smith lacks none of its inputs; the tanner lacks its hides (restock %d)" % b.restock_cost(tanner))
 	check(b.caravan_line_need(tanner, "leather", 6, b.restock_cost(tanner)) > b.caravan_line_need(smith, "iron_bar", 8, 0), "the tanner needs the sale more than the smith")
-	w.treasury += int(GameData.b("caravan_ceiling_per_head")) * 100     # the region adds nothing: the purse is what we set
 	var leather := maxi(1, roundi(GameData.value("leather") * 0.8))
 	var bar := maxi(1, roundi(GameData.value("iron_bar") * 0.8))
 	var total0 := w.total_coins() - w.coin_sources
 	# a purse that would pay for one bar: it goes to the tanner's leather (as many pieces as it covers), not the bar
-	w.caravan_purse = maxi(leather, bar)
-	var purse0 := w.caravan_purse
+	var buyer: OffMapSettlement = w.regions.by_id["garton"]            # wants leather (no tannery) and iron bars
+	w.regions.fund_only("garton", maxi(leather, bar))
+	var purse0 := buyer.trader_cash()
+	total0 = w.total_coins() - w.coin_sources
 	b.caravan()
 	var pieces := 12 - tanner.inv.count("leather")
 	check(pieces == purse0 / leather and smith.inv.count("iron_bar") == 12, "a purse of %d buys %d of the tanner's leather and none of the smith's bars (bars %d)" % [purse0, pieces, smith.inv.count("iron_bar")])
-	check(w.caravan_purse >= 0 and purse0 - w.caravan_purse == tanner.coins and tanner.coins == pieces * leather, "paid %d from its purse of %d, no more" % [tanner.coins, purse0])
-	# a larger purse still never pays out more than it holds or caravan_coins a visit
-	w.caravan_purse = 3 * leather + bar
-	purse0 = w.caravan_purse
+	check(buyer.trader_cash() >= 0 and purse0 - buyer.trader_cash() == tanner.coins and tanner.coins == pieces * leather, "paid %d from its purse of %d, no more" % [tanner.coins, purse0])
+	# a larger purse still never pays out more than the trader holds
+	w.regions.fund_only("garton", 3 * leather + bar)
+	purse0 = buyer.trader_cash()
+	total0 = w.total_coins() - w.coin_sources
 	var paid0 := tanner.coins + smith.coins
 	b.caravan()
 	var paid := tanner.coins + smith.coins - paid0
-	check(paid > 0 and paid <= purse0 and paid <= int(GameData.b("caravan_coins")) and w.caravan_purse == purse0 - paid, "it spends %d of a purse of %d, never more" % [paid, purse0])
+	check(paid > 0 and paid <= purse0 and buyer.trader_cash() == purse0 - paid, "it spends %d of a purse of %d, never more" % [paid, purse0])
 	check(w.total_coins() - w.coin_sources == total0, "coins only moved: the village's coins less coin_sources are unchanged")

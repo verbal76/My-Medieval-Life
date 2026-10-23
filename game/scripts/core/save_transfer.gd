@@ -117,7 +117,7 @@ static func migrate(src: Dictionary, map: VillageMap) -> Dictionary:
 	for k in src:
 		if not out.has(k):
 			out[k] = src[k]                     # a section this build does not know: kept unchanged
-	var why := validate(src, out, map)
+	var why := validate(src, out, VillageMap.load_default())   # loading a world opens cells in its map (pits, quarried rock), so the check reloads on a fresh one, as the game does at start
 	if why != "":
 		return {"ok": false, "reason": why}
 	return {"ok": true, "data": out}

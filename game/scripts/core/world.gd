@@ -44,11 +44,13 @@ var trees: Array = []              # the village's trees (Trees: the one tree mo
                                    # drawn by TreeView and the characters walk behind its canopy. Trees the player planted
                                    # have planted: true. trunk/top/bottom are the old tile ids (map data), kept for the tests
 var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
+var wage_offers := {}              # WDR-012-C: the manor's raise on its hands' wage to fill its places {job: {raise, short, met}}. Saved (older saves have none)
 var manor_orders: Array = []       # tools the manor paid a smith for in advance (EQ-19, OD-16 b): {smith, tool, for, paid, day}. Saved (older saves have none)
 var vacancies: Array = []          # essential posts open after a death (B8-016, NPCBrain succession): {job, workplace, home, household, day, who}. Saved (older saves have none)
 var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
 var boulders: Array = []           # the village's small grey boulders (B8-026): {x, y, ore: "stone", amount, boulder: true}, a few
                                    # pickaxe uses each, then gone (solid cleared). Found by deposit_at like a seam; the overworld's are Overworld.boulder_at
+var _kept_plants: Array = []       # load only: saved wild plants the map no longer holds, put back once the chapel is placed
 var plants: Array = []             # wild flowers and berry bushes (village generator v5): {id, x, y, kind, tile, state, regrow}.
                                    # state: ripe | picked (bare, ripe again on day `regrow`) | cleared (grubbed up for building).
                                    # The cell stays walkable; the tile is the plant's own, in layer below1.
@@ -64,14 +66,18 @@ var construction: Construction     # building kinds, placement, hired helpers, h
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
+var feast: Feast                  # DVW-B3-FEAST: wedding and seasonal feasts at the tavern (scripts/core/feast.gd; saved in "feast")
+var chapel: Chapel                # DVW-B3-CHAPEL: the village chapel, its clergy's fund, store and farm plot (scripts/core/chapel.gd; saved in "chapel")
 var farm_plots: FarmPlots          # family farmland of any size, leased or bought, for every household (FARM-01..05, scripts/core/farm_plots.gd)
+var tax_state := {}                # DVW-B5: the tax band and any announced change (TaxPolicy); empty until the first reeve evening
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
 var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
 var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
 var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
-var caravan_purse := 0             # coins the caravan holds to spend on the village's goods (B7-014; starts at caravan_float); saved from version 9
+var couriers: CourierService         # REG-COURIER-01 (Expansion 18): the five settlements' booths and the village's, regular routes and special deliveries; saved under "couriers" (optional key; absent: no deliveries on the road)
+var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-map settlements and their traders, who are the caravan (ECON-P1.3); saved under "regions" (optional key)
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
 var log_lines: Array = []
@@ -81,6 +87,8 @@ var stats := {}                    # running ledger (food made, eaten, exported,
 var last_hour := -1
 var guard_posts: Array = []        # patrol points
 var bandit_camp := Vector2i.ZERO
+var law_lessons := {}              # LAW-SKILL: pupil ref -> [day, lessons that day] (Law.teach); saved only when set
+var outlaw_gone_day := -1            # BANDIT-RETURN: the day the last bandit died (-1 while one lives); saved only when set (Outlaws)
 var sage_id := -1
 var reeve_id := -1
 var detail_radius := 34.0          # tiles: NPCs nearer the player get every-frame updates
@@ -88,6 +96,11 @@ var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
+var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP part 1): hours worked by industry, a record only; optional save key
+var settlement_caps := {}     # SET-A/B: the village's maintained capability history (SettlementProfile; saved under SettlementSave.KEY, optional)
+var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
+var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
+var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
 var prospecting: Prospecting  # MIN-C: clues, samples and assays (scripts/core/prospecting.gd); clues generated from the seed, the rest saved in "prospecting"
@@ -112,7 +125,10 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	relations = Relations.new(self)
+	experience = WorkExperience.new()            # X18-CAPCOMP: seeded once below (owner D1), after PAR-01A
+	CapabilityHook.bind(experience)              # X18 HOOK ON (owner D1-D9, 2026-10-23): each worker's own level reads this record
 	contracts = Contracts.new(self)
+	credit = Credit.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -169,13 +185,16 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	_guard_posts()
 	Population.populate(self)
 	_open_treasury()
-	caravan_purse = int(GameData.b("caravan_float"))
+	regions = Regions.create(world_seed)
 	# the settlers' grain store: a finite stock of last year's harvest, 7 days of the village's food
 	# (its need weighted by age: children eat less)
 	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
 	fauna = Fauna.new(self)
 	farm = Farming.new(self)
 	farm_plots = FarmPlots.new(self)
+	feast = Feast.new(self)
+	chapel = Chapel.new(self)
+	chapel.found(true)                 # DVW-B3-CHAPEL: the chapel and its plot stand from the first day, the clergy placed by Population
 	fauna.populate()
 	_assign_keepers()
 	_init_ownership()
@@ -184,6 +203,9 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	give_start_kit(player)
 	Life.init_player(self)             # B8-029
 	Skills.seed_villagers(self)        # PAR-01A: the settlers' history at their trades (only here and in an old save's migration)
+	Skills.seed_trades(self)           # SKILL-TRADES-18: Carpentry, Masonry and Tanning start from each person's Crafting
+	experience.seed_once(self)              # X18 HOOK (owner D1): the settlers' starting industry experience, once, from their recorded skills
+	Skills.seed_farming(self)               # DVW-B8: Farming starts from the recorded farming experience
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	index_interiors()
@@ -195,6 +217,9 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	quests.start_story()
 	manor_work = ManorWork.new(self)
 	discovery = Discovery.create(self)  # MIN-D: the mining capability the settlers start with (derived, no rng draw)
+	couriers = CourierService.create_live(self)     # REG-COURIER-01: a booth for each of the five settlements; the village's opens at the first dawn
+	couriers.daily()
+	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
 	note("Day 1 begins in the village.")
 
 
@@ -266,6 +291,7 @@ func is_night() -> bool:
 # ---------------------------------------------------------------- update ---------------------
 ## Advance the world by `real_dt` seconds of play.
 func update(real_dt: float) -> void:
+	CapabilityHook.bind(experience)          # X18: the hook reads THIS world's record (several worlds may exist in one process)
 	var gm: float = real_dt * float(GameData.b("game_minutes_per_second"))
 	minutes += gm
 	if map.overworld != null:
@@ -340,9 +366,22 @@ func famine() -> bool:
 
 
 func _on_hour(h: int) -> void:
+	if regions != null:
+		var tr := Time.get_ticks_usec() if profiling else 0
+		regions.step_hour(day(), h)   # SET-C-SIM: the settlements take their day's step one after another through the morning
+		if profiling:
+			_prof("neighbouring settlements (a step an hour, mornings)", tr)
+	if couriers != null:
+		couriers.step()               # REG-COURIER-01: couriers leave on their routes, arrive, hand over and come home
 	_grow_trees()
 	farm.hour()                        # the player's crops (PL2-015)
 	farm_plots.hour()                  # the households' farmland crops (FARM-03)
+	if h == 17:
+		feast.plan_day()               # DVW-B3-FEAST: today's wedding and seasonal feasts are chosen, the guests asked
+	elif h == 20:
+		feast.resolve()                # DVW-B3-FEAST: at the tavern the host pays the keeper and those who came eat and drink
+	if h == 16:
+		chapel.evening()               # DVW-B3-CHAPEL: the weekly offerings and the clergy's wages, before the manor's evening business
 	_update_food_days()
 	serve_tables()
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
@@ -363,6 +402,12 @@ func _on_hour(h: int) -> void:
 
 
 func _new_day() -> void:
+	# X18 HOOK (X18-CAPCOMP part 1): experience leaves with the person: whoever is no longer a living villager is forgotten
+	for k in experience.minutes.keys():
+		if str(k).begins_with("npc:"):
+			var gone: NPC = npc(int(str(k).get_slice(":", 1)))
+			if gone == null or not gone.alive:
+				experience.forget(str(k))
 	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004); what spoils is counted
 	# (spoiled_<item>), so the goods ledger accounts for it
 	var kept := []
@@ -393,6 +438,7 @@ func _new_day() -> void:
 		t = _prof("daily: life (ages, deaths, partners, births)", t)
 	mine_works.dawn()                  # MIN-F2: supports and ladders wear; excavations too weakly held may cave in
 	discovery.dawn()                   # MIN-D: the settlement's mining capability, from what the village has this morning
+	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the capability profile, maintained daily
 	brain.dawn()
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
@@ -401,12 +447,17 @@ func _new_day() -> void:
 	property.relet_stalls()
 	brain.relet_pens()
 	business.daily()                   # the stall's rent (PL1-10)
+	if couriers != null:
+		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
+	chapel.dawn()                      # DVW-B3-CHAPEL: this morning's volunteers for the church plot, and its seed
 	if profiling:
 		_prof("daily: manor, rents, business, construction", t)
 	var cold := 0
 	for hh in households:
+		if hh.get("ended", false):
+			continue                   # its stores went to the granary (Property.household_ended): nobody there to be cold
 		if not hh.pantry.remove("log"):
 			cold += 1
 		else:
@@ -471,6 +522,7 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 				n.anim = s.get("anim", "work")
 				if s.has("face"):
 					n.facing = (Vector2(s.face) + Vector2(0.5, 0.5) - n.pos)
+				_note_work(n, s, minf(gm, maxf(n.work_left, 0.0)))   # X18 HOOK (X18-CAPCOMP): a record of hours worked, read by nothing
 				n.work_left -= gm
 				if n.work_left <= 0.0:
 					n.plan.pop_front()
@@ -544,6 +596,28 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	return false
 
 
+## X18 HOOK (Expansion 18, X18-CAPCOMP, owner D4): credit `mins` of a villager's work step to its industry
+## (WorkExperience.industry_of_step, the capability hook's mapping, or the step's own `industry` for hours at a stall).
+func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
+	var act := str(s.get("act", ""))
+	var ind := str(s.get("industry", ""))
+	if act == "" and ind == "":
+		return
+	if ind == "":
+		var args: Dictionary = s.get("args", {})
+		var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
+		ind = WorkExperience.industry_of_step(act, args, kind)
+	experience.credit(World.npc_ref(n.id), ind, mins, minutes)
+	var sx := Skills.step_xp(act)         # DVW-B8: Farming and Husbandry are trained by the work, the villager's as the player's
+	if not sx.is_empty() and n.role in ["adult", "elder"]:
+		Skills.gain(n, str(sx.skill), int(sx.xp))
+
+
+## X18 HOOK (X18-CAPCOMP part 1): credit the player's finished work (`secs` real seconds of an action in `industry`).
+func note_player_work(industry: String, secs: float) -> void:
+	experience.credit(WorkExperience.PLAYER, industry, secs * float(GameData.b("game_minutes_per_second")), minutes)
+
+
 # ---------------------------------------------------------------- player ---------------------
 func _update_player(real_dt: float, gm: float) -> void:
 	var p := player
@@ -594,6 +668,7 @@ func give_start_kit(p: PlayerState) -> void:
 ## starting kit (owner rule); its coins are new to the village, counted in coin_sources.
 func continue_as_heir() -> void:
 	var p := player
+	credit.on_player_died(Credit.slain_cause(p.death_cause), Life.player_heir_child(self))     # TRADE-CREDIT: debts and claims pass to the heir (written off where a villager's would be)
 	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
 	var bag := Inventory.new()
 	for id in p.inv.items:
@@ -609,6 +684,8 @@ func continue_as_heir() -> void:
 	heir.name = ["Alys", "Hob", "Maud", "Piers", "Emma", "Jack", "Agnes", "Will"][(p.generation) % 8]
 	heir.sprite = p.heir_sprite
 	heir.heir_sprite = p.sprite
+	heir.appearance = p.heir_appearance.duplicate(true)      # CC-01: the looks are recipes now
+	heir.heir_appearance = p.appearance.duplicate(true)
 	var kid := Life.player_heir_child(self)        # B8-029: the player's own eldest child of 16+, if there is one
 	Life.retire_player_id(self)
 	if kid != null:
@@ -663,9 +740,19 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		seller.earned += total
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
+	if relations:                      # X18 HOOK (X18-Q12-POST): the pair become commercial contacts (a record only)
+		relations.note_trade(buyer.id if buyer is NPC else Life.PLAYER_ID, seller.id if seller is NPC else Life.PLAYER_ID, day())
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
+		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
 	return true
+
+
+## REG-COURIER-01 HOOK (a record only): `actor` (an NPC or the player) really dealt with the trader of `settlement` on a caravan
+## day, so a courier may address that trader afterwards (X18-Q12-POST). Nothing moves and no rule changes.
+func note_settlement_trade(actor: Object, settlement: Object) -> void:
+	if couriers != null and settlement != null:
+		couriers.note_settlement_trade(PLAYER if actor == player else "npc:%d" % (actor as NPC).id, str(settlement.id))
 
 
 ## Move items between two inventories without money (gifts, deposits, pantry).
@@ -771,6 +858,12 @@ func reserve_of(who) -> int:
 			_reserve_cache.clear()
 		_reserve_cache[key] = int(necessity(who).reserve)
 	return int(_reserve_cache[key])
+
+
+## ECON-P3 (P3.5, one code path): the coins `who` may spend or lend freely, their purse above the necessity reserve.
+## Business money is not here: a till is the business's, and moves to a purse only by the owner's rule or choice.
+func spendable(who) -> int:
+	return maxi(0, int(who.coins) - reserve_of(who))
 
 
 var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)
@@ -938,8 +1031,10 @@ func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	var bill := 0
 	for c in prices:
 		bill += int(c)
-	if qty < 1 or not vendor.inv.has(id, qty) or not player.inv.can_add(id):
-		return {"result": "failed", "text": "They do not have that many, or your pack is full.", "bought": 0, "paid": 0}
+	if qty < 1 or not vendor.inv.has(id, qty):
+		return {"result": "failed", "text": "They do not have that many.", "bought": 0, "paid": 0}
+	if not player.inv.can_add(id):
+		return {"result": "failed", "text": player.inv.full_text(id), "bought": 0, "paid": 0}
 	if player.coins < bill:
 		return {"result": "failed", "text": "You cannot afford that (%d coins)." % bill, "bought": 0, "paid": 0}
 	if not trade(player, vendor, id, qty, 0, bill):
@@ -990,6 +1085,10 @@ func total_coins() -> int:
 		n += int(l.coins)
 	if business:
 		n += business.tills()
+	if chapel != null:
+		n += chapel.coins                         # DVW-B3-CHAPEL: the offerings fund
+	if couriers != null:
+		n += couriers.held_coins()                # REG-COURIER-01: fees held at the booths until the work is done, and proceeds deposited
 	return n
 
 
@@ -1267,41 +1366,104 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	var r: Dictionary = GameData.recipes[recipe]
 	if Skills.level(who, str(r.skill)) < int(r.level):
 		return {"result": "level"}
-	var tool := craft_tool(who, recipe)
-	if tool == "-":
+	if craft_tool(who, recipe) == "-":
 		return {"result": "tool"}
 	if not inv.remove_all(r["in"]):
 		return {"result": "materials"}
 	var exact := bool(r.get("exact", false))
-	if not exact and rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
+	var conserve: Dictionary = r.get("conserve", {})
+	var out: Dictionary = (r.out as Dictionary).duplicate()
+	if not conserve.is_empty():
+		# STONE-04 (B18-DP-09: the Masonry tiers inside conservation): a practised hand's saving or extra unit turns this
+		# batch's by-product into more of the main product (dressing: the rubble into a third block), so a batch never
+		# yields more blocks than the stone used; the inputs are always used up
+		var saved := rng.randf() < Skills.value(who, str(r.skill), "save_chance")
+		var extra := rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+		for id in r["in"]:
+			stat("used_" + id, float(r["in"][id]))
+		if saved or extra:
+			out[str(conserve.to)] = int(out.get(str(conserve.to), 0)) + int(out.get(str(conserve["from"]), 0))
+			out.erase(str(conserve["from"]))
+	elif not exact and rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
 		for id in r["in"]:
 			inv.add(id, int(r["in"][id]))                  # a practised hand wastes nothing
 	else:
 		for id in r["in"]:
 			stat("used_" + id, float(r["in"][id]))
-	var bonus := not exact and rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
-	for id in r.out:
-		_work_goods(who, inv, id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0), "made_")
+	var bonus := conserve.is_empty() and not exact and rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+	for id in out:
+		_work_goods(who, inv, id, int(out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0), "made_")
 	if str(r.station) == "anvil":
 		_work_wear(who, "hammer", 2, str(r.skill), "")
-	if tool != "" and _work_wear(who, tool, 1, str(r.skill), "") and who is PlayerState and player.tool == tool and not player.inv.has(tool):
-		player.tool = ""                                   # (the player's last one broke)
+	for t in craft_tool_items(who, recipe):                # STONE-06: every tool the recipe names wears a use a batch
+		if _work_wear(who, t, 1, str(r.skill), "") and who is PlayerState and player.tool == t and not player.inv.has(t):
+			player.tool = ""                               # (the player's last one broke)
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
+
+
+## STONE-04 (owner coordinator ruling, B18-DP-09): rubble, the by-product of dressing, is usable as raw stone for raw-stone
+## work (fittings, the farmland gate, the manor's mending, older building sites) but is never an input to dressing. At the
+## moment such work uses stone, up to `qty` of the stone `inv` lacks is made from its rubble, one for one, counted in the
+## ledger (used_rubble, made_stone); the stone is used at once by the caller, so no rubble ever becomes stone to dress.
+## Returns the stone `inv` then holds beyond what it had.
+func rubble_cover(inv: Inventory, qty: int) -> int:
+	var k := mini(qty, inv.count("rubble"))
+	if k <= 0:
+		return 0
+	inv.remove("rubble", k)
+	inv.add("stone", k)
+	stat("used_rubble", float(k))
+	stat("made_stone", float(k))
+	return k
 
 
 ## STONE-01: the item `who` works `recipe` with when the recipe names a tool kind ("" when it needs none, "-" when they
 ## hold none of that kind): the player's tool in hand or best of that kind, a villager's first in their pack.
 func craft_tool(who, recipe: String) -> String:
-	var kind := str(GameData.recipes[recipe].get("tool", ""))
-	if kind == "":
+	var kinds := craft_tool_kinds(recipe)
+	if kinds.is_empty():
 		return ""
+	var items := craft_tool_items(who, recipe)
+	return "-" if items.size() < kinds.size() else str(items[0])
+
+
+## STONE-06: the tool kinds a recipe needs: its `tool` as one kind (a string) or several (a list: dressing stone takes a
+## mallet and an iron chisel); empty when it needs none.
+func craft_tool_kinds(recipe: String) -> Array:
+	var t = GameData.recipes[recipe].get("tool", "")
+	if t is Array:
+		return t
+	return [] if str(t) == "" else [str(t)]
+
+
+## STONE-06: the item `who` holds of tool kind `kind` ("" if none): the player's tool in hand or best of the kind, a
+## villager's first in their pack.
+func tool_of_kind(who, kind: String) -> String:
 	if who is PlayerState:
-		var t: String = who.tool_of(kind)
-		return t if t != "" else "-"
+		return who.tool_of(kind)
 	for id in who.inv.ids():
 		if str(GameData.item(id).get("tool", "")) == kind:
 			return id
-	return "-"
+	return ""
+
+
+## STONE-06: the items `who` works `recipe` with, one for each kind it needs, in the recipe's order; fewer than the
+## kinds when they lack one.
+func craft_tool_items(who, recipe: String) -> Array:
+	var out := []
+	for kind in craft_tool_kinds(recipe):
+		var found := tool_of_kind(who, str(kind))
+		if found != "":
+			out.append(found)
+	return out
+
+
+## STONE-06: the first tool kind of `recipe` that `who` lacks, "" if they hold them all.
+func craft_tool_missing(who, recipe: String) -> String:
+	for kind in craft_tool_kinds(recipe):
+		if tool_of_kind(who, str(kind)) == "":
+			return str(kind)
+	return ""
 
 
 ## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
@@ -1438,7 +1600,8 @@ func player_craft_refusal(recipe: String) -> String:
 	if player.level(r.skill) < int(r.level):
 		return "Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)]
 	if craft_tool(player, recipe) == "-":
-		return "You need a %s." % str(r.tool)          # STONE-01: the recipe's tool (the mallet to dress stone)
+		var kind := craft_tool_missing(player, recipe)     # STONE-01, STONE-06: the recipe's tool (the mallet and the iron chisel to dress stone)
+		return "You need %s." % ("an iron chisel" if kind == "chisel" else "a " + kind)
 	if not player.inv.has_all(r.in):
 		return "You do not have the materials."
 	return ""
@@ -1577,6 +1740,7 @@ func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
 		fauna.provoke(a, "player")
 		return {"killed": false, "guard": ""}
 	player_xp("combat", Skills.kill_xp(a.species, player.damage()))
+	player_xp("hunting" if a.wild() else "husbandry", Skills.action_xp("hunt" if a.wild() else "slaughter"))    # DVW-B8
 	var keeper: NPC = null
 	if not a.wild():
 		keeper = pen_keeper(fauna.pens[a.area])
@@ -1909,9 +2073,10 @@ func player_loot(i: int) -> Dictionary:
 	player.coins += coins
 	l.coins = 0
 	var left: int = l.inv.total()
+	var why := pack_full_text(l.inv.ids()) if left > 0 else ""     # INV-18: the category with no place, named
 	if left == 0:
 		loot.remove_at(i)
-	return {"items": items, "coins": coins, "left": left, "far": ""}
+	return {"items": items, "coins": coins, "left": left, "far": "", "why": why}
 
 
 ## DVW-A12 R4: the player plants the sapling `item` from the pack at `cell`: refused ({}) without one in the pack or
@@ -1954,8 +2119,10 @@ func nearest_deposit(from: Vector2i, ores: Array, level := 0) -> Dictionary:
 	return best
 
 
+## A field's ground: the tilled-soil edge set whatever its state; its plants are drawn over it by CropView
+## (VIS-CROP-01), so every field reads the same way and only the crop on it shows how far it has grown.
 func _field_tiles(f: Dictionary) -> void:
-	var base: int = map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[f.state]]
+	var base: int = map.data.tiles.field.tilled
 	var cols := int(map.data.atlases[0].columns)
 	for j in int(f.h):
 		for i in int(f.w):
@@ -2028,6 +2195,7 @@ func kill(n: NPC, cause: String) -> void:
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
 	var heir := _heir(n)
+	credit.on_death(n, heir if not cause.begins_with("slain") else null)     # TRADE-CREDIT: its debts pass to the heir, else are written off
 	if heir != null and not cause.begins_with("slain"):
 		_inherit(n, heir)
 	elif n.inv.total() > 0 or n.coins > 0:
@@ -2041,6 +2209,7 @@ func kill(n: NPC, cause: String) -> void:
 	var who := "%s %s" % [n.name, n.family] if n.family != "" else n.name
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
+	Outlaws.on_death(self, n)              # BANDIT-RETURN: the last bandit's death starts the wait for newcomers
 	if n.household >= 0:
 		var hh: Dictionary = households[n.household]
 		for m in hh.members:
@@ -2188,6 +2357,7 @@ var interiors := {}                # building id -> interior
 var place_ids: Array = []          # building ids, indexed by place_idx / roof_idx
 var place_idx := PackedInt32Array()  # cell -> index of the building whose area holds it, -1 outdoors
 var roof_idx := PackedInt32Array()   # cell -> index of the building whose roof covers it, -1 none
+var doorways: Array = []           # ROOMS-18: the inner doorways between rooms of one property (Doorways.find), derived, never saved
 
 
 ## The interior a building has: its own from the map, or a built building's from its stamp (a
@@ -2271,8 +2441,12 @@ func index_interiors() -> void:
 	roof_idx.fill(-1)
 	var ids := buildings.keys()
 	ids.sort()
+	doorways = Doorways.find(self)
+	for dw: Dictionary in doorways:
+		for c: Vector2i in dw.cells:
+			map.set_solid(c, false)            # the gap in the shared wall is open ground (the wall's collision came with each room's stamp)
 	for id in ids:
-		var it := _with_loft(buildings[id], _with_chairs(buildings[id], interior_for(buildings[id])))
+		var it := Doorways.add_to(_with_loft(buildings[id], _with_chairs(buildings[id], interior_for(buildings[id]))), str(id), doorways)
 		if it.is_empty() or it.area.is_empty():
 			continue
 		interiors[id] = it
@@ -2308,6 +2482,11 @@ func reaches(from: Vector2, to: Vector2) -> bool:
 	var b := place_of(to)
 	if a != b:
 		var door_ok := false
+		for dw: Dictionary in doorways:      # an inner doorway joins two rooms: from its gap, or beside it, the other room is in reach
+			if [a, b].has(str(dw.a)) and [a, b].has(str(dw.b)):
+				for c: Vector2i in dw.cells:
+					if Vector2(c).distance_to(from) <= 1.8 or Vector2(c).distance_to(to) <= 1.8:
+						door_ok = true
 		for id in [a, b]:
 			if id != "" and buildings.has(id):
 				var dc := Vector2(building_door(id)) + Vector2(0.5, 0.5)
@@ -2432,6 +2611,8 @@ func stations_of(kind: String) -> Array:
 
 
 # ---------------------------------------------------------------- building -------------------
+## ROOMS-18 (village generator v8): a world made with the plots where v7 and older put them
+## (`legacy_plots`) keeps them there, owner, site, house and all; the new map's plots are for new worlds.
 ## Saves made before the village generator moved the building plots (they lay over houses b20-b22)
 ## keep the plots where they were. Move each plot to its place on the map, with its owner, its
 ## building site and the house built on it, and the player with them if they stood on it; the trees
@@ -2440,9 +2621,16 @@ func _move_plots_to_map(m: VillageMap) -> void:
 	var placed := {}
 	for mp in m.data.plots:
 		placed[mp.id] = mp
+	var legacy := {}                   # ROOMS-18 (generator v8): the plots v7 and older worlds were made with stay put
+	for lp in m.data.get("legacy_plots", []):
+		legacy[str(lp.id)] = lp
+	var moved := false
 	for p in plots:
 		var mp: Dictionary = placed.get(p.id, {})
 		if mp.is_empty() or (int(p.x) == int(mp.x) and int(p.y) == int(mp.y)):
+			continue
+		var lp: Dictionary = legacy.get(str(p.id), {})
+		if not lp.is_empty() and int(p.x) == int(lp.x) and int(p.y) == int(lp.y):
 			continue
 		var old := Rect2(float(p.x), float(p.y), float(p.w), float(p.h))
 		var shift := Vector2(int(mp.x) - int(p.x), int(mp.y) - int(p.y))
@@ -2457,6 +2645,9 @@ func _move_plots_to_map(m: VillageMap) -> void:
 		if old.has_point(player.pos):
 			player.pos += shift
 		note("The manor's surveyor marked %s out anew, at the forest edge north of the east houses." % p.id)
+		moved = true
+	if not moved:
+		return                         # nothing moved: every tree of the save stays (ROOMS-18: v7 worlds keep their plots and their woods)
 	var on_map := {}
 	for t in m.data.trees:
 		on_map[Vector2i(int(t.x), int(t.y))] = true
@@ -2499,6 +2690,8 @@ func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 		return false
 	var need: Dictionary = p.site.need
 	var given := 0
+	if need.has("stone"):
+		rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
 	for id in need.keys():
 		var n := mini(int(need[id]), inv.count(id))
 		if n > 0:
@@ -2681,6 +2874,7 @@ func player_harvest(f: Dictionary) -> int:
 	if n <= 0:
 		return 0
 	player.inv.add("wheat", n)
+	player_xp("farming", Skills.action_xp("harvest"))        # DVW-B8
 	var taken := n - quests.hired_harvest(f, n)
 	var victim := field_owner(f)
 	if victim != null and taken > 0:
@@ -3345,25 +3539,55 @@ func player_use_medicine(id: String) -> bool:
 	if not player.inv.remove(id):
 		return false
 	player.hp = minf(player.hp_cap(), player.hp + float(it.heal))
+	player_xp("healing", Skills.action_xp("treat"))          # DVW-B8: dressing a wound trains Healing
 	stat("used_medicine")
 	stat("used_" + id)
 	return true
 
 
+## INV-18: why the player's pack takes none of `ids`: the first one without a place, naming its category ("Raw
+## materials inventory full: 18 of 18 slots."); "Your pack is full." when every one fits (or `ids` is empty).
+func pack_full_text(ids: Array) -> String:
+	for id in ids:
+		if not player.inv.can_add(str(id)):
+			return player.inv.full_text(str(id))
+	return "Your pack is full."
+
+
 ## Hold a weapon, wear armour, a cap or helmet, an amulet or a ring, or take a tool in hand: the
-## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there.
+## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there. INV-18: the worn
+## unit leaves its backpack position; what it replaces goes back to its category, and the swap is refused,
+## nothing moved, when that category is full (equip_refusal says why). The one store never gains or loses a unit.
 func player_equip(id: String) -> bool:
+	return equip_refusal(id) == ""
+
+
+## "" when equipping `id` worked (it is then worn); otherwise why not.
+func equip_refusal(id: String) -> String:
 	var slot: String = GameData.item(id).get("type", "")
 	if not player.inv.has(id) or not slot in PlayerState.GEAR:
-		return false
+		return "You cannot wear or hold that."
+	var why := player.gear_refusal(slot, id)
+	if why != "":
+		return why
 	player.set(slot, id)
 	player.fit_caps()
-	return true
+	return ""
 
 
-func player_unequip(slot: String) -> void:
+## Take off what `slot` holds: it goes back to its category, or stays worn when that category is full
+## (unequip_refusal says so). True when the slot is empty after.
+func player_unequip(slot: String) -> bool:
+	return unequip_refusal(slot) == ""
+
+
+func unequip_refusal(slot: String) -> String:
+	var why := player.gear_refusal(slot, "")
+	if why != "":
+		return why
 	player.set(slot, "")
 	player.fit_caps()
+	return ""
 
 
 ## Drop items on the ground where the player stands: they can be picked up again by anyone looking.
@@ -3417,6 +3641,123 @@ func player_learn_fireball(teacher: NPC) -> Dictionary:
 	return {"ok": true, "why": "", "thanks": thanks}
 
 
+## TAILOR-18: whether `n` is a tailor (balance.json tailor.job), who sells the pack's upgrades.
+func is_tailor(n: NPC) -> bool:
+	return n != null and n.alive and n.role == "adult" and n.job == str(GameData.b("tailor").job)
+
+
+## TAILOR-18: the price of the player's next pack row (the second, then the third), -1 when every row is open.
+func pack_row_price() -> int:
+	var rows: Array = GameData.b("tailor").pack_rows
+	return int(rows[player.pack_level]) if player.pack_level < rows.size() and player.pack_level < PlayerState.PACK_CAPS.size() - 1 else -1
+
+
+## The service rule shared by the tailor and the barber: "" when `t` is awake and at their post (or has none), else why not.
+func service_absence(t: NPC) -> String:
+	if asleep(t):
+		return "%s is asleep." % t.name
+	if t.workplace != "" and t.pos.distance_to(Vector2(brain._workplace_cell(t)) + Vector2(0.5, 0.5)) > 3.0:
+		return "%s is not at work." % t.name
+	return ""
+
+
+## TAILOR-18: why tailor `t` cannot open the player's next pack row now ("" if they can): a tailor, awake, at work
+## when they have a workplace, the rows bought in order and never twice, the price in the player's own purse.
+func pack_row_refusal(t: NPC) -> String:
+	if not is_tailor(t):
+		return "Only a tailor can open more of your pack."
+	var away := service_absence(t)
+	if away != "":
+		return away
+	var price := pack_row_price()
+	if price < 0:
+		return "Every row of your pack is open already."
+	if player.coins < price:
+		return "The %s row costs %d coins; you have %d." % ["second" if player.pack_level == 0 else "third", price, player.coins]
+	return ""
+
+
+## TAILOR-18: the player pays tailor `t` for the next pack row, all or nothing: the price goes from the player's purse to
+## the tailor's own (theirs to spend by their usual rules; no coin made or lost) and pack_level rises by one, opening
+## that row in all eight categories. Returns {ok, why, level, paid}.
+func player_buy_pack_row(t: NPC) -> Dictionary:
+	var why := pack_row_refusal(t)
+	if why != "":
+		return {"ok": false, "why": why, "level": player.pack_level, "paid": 0}
+	var price := pack_row_price()
+	player.coins -= price
+	t.coins += price
+	t.earned += price
+	player.pack_level += 1
+	stat("tailor_pack_rows")
+	stat("tailor_fees", float(price))
+	return {"ok": true, "why": "", "level": player.pack_level, "paid": price}
+
+
+## BARBER-18: whether `n` is a barber (balance.json barber.job), who changes the player's hair, beard and hair colour.
+func is_barber(n: NPC) -> bool:
+	return n != null and n.alive and n.role == "adult" and n.job == str(GameData.b("barber").job)
+
+
+## BARBER-18: the features a barber changes, as the creator's own pickers have them: [label, kind, key].
+const BARBER_FEATURES := [["Hair", "pick", "hair"], ["Beard", "pick", "facial-hair"], ["Hair colour", "swatch", "hair"]]
+
+
+## BARBER-18: the player's recipe with only the barber's features taken from `want` (a recipe), each checked against the
+## creator's options; {} when `want` offers something the creator does not.
+func barber_recipe(want: Dictionary) -> Dictionary:
+	var now: Dictionary = CharacterLook.normalize(player.appearance)
+	var out: Dictionary = now.duplicate(true)
+	var w2: Dictionary = CharacterLook.normalize(want)
+	if now.is_empty() or w2.is_empty():
+		return {}
+	for key in ["hair", "facial-hair"]:
+		if not CharacterLook.options(key).has(str(w2.picks.get(key, ""))):
+			return {}
+		out.picks[key] = str(w2.picks[key])
+	var row := int(w2.swatches.get("hair", -1))
+	if not CharacterLook.rows("hair").has(row):
+		return {}
+	CharacterLook.set_swatch(out, "hair", row)          # the beard takes the hair's colour, as in the creator
+	return out
+
+
+## BARBER-18: why barber `b` cannot change the player's looks to `want` now ("" if they can): a barber, awake, at the
+## pitch, a change worth paying for, and the price in the player's purse.
+func barber_refusal(b: NPC, want: Dictionary) -> String:
+	if not is_barber(b):
+		return "Only a barber can change your hair."
+	var away := service_absence(b)
+	if away != "":
+		return away
+	var recipe := barber_recipe(want)
+	if recipe.is_empty():
+		return "The barber cannot do that."
+	if recipe == CharacterLook.normalize(player.appearance):
+		return "Nothing would change."
+	var price := int(GameData.b("barber").price)
+	if player.coins < price:
+		return "A visit costs %d coins; you have %d." % [price, player.coins]
+	return ""
+
+
+## BARBER-18: the player pays barber `b` the visit and takes the new hair, beard and hair colour, all or nothing: the
+## price goes from the player's purse to the barber's own (no coin made or lost), only those features of the saved
+## recipe change (gear drawn over it is untouched). Returns {ok, why, paid}.
+func player_barber_visit(b: NPC, want: Dictionary) -> Dictionary:
+	var why := barber_refusal(b, want)
+	if why != "":
+		return {"ok": false, "why": why, "paid": 0}
+	var price := int(GameData.b("barber").price)
+	player.coins -= price
+	b.coins += price
+	b.earned += price
+	player.appearance = barber_recipe(want)
+	stat("barber_visits")
+	stat("barber_fees", float(price))
+	return {"ok": true, "why": "", "paid": price}
+
+
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
 func buy_plot(p: Dictionary) -> bool:
 	return property.buy(p, PLAYER) == ""
@@ -3439,7 +3780,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 17          # 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 19          # Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -3788,12 +4129,13 @@ func to_dict() -> Dictionary:
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
 		"manor_work": manor_work.to_dict(),
-		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
+		"tax": tax_state.duplicate(true), "treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
-		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
+		"vacancies": vacancies, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
+		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
+		"player": player.to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": player_level},
@@ -3801,7 +4143,17 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
-	}
+		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+
+
+func _settlement_section() -> Dictionary:
+	var out := {}
+	if settlement_foreign != null:
+		out[SettlementSave.KEY] = settlement_foreign
+	else:
+		SettlementProfile.attach(out, settlement_caps, day())
+	return out
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -3817,6 +4169,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
+	experience = WorkExperience.new()
+	CapabilityHook.bind(experience)
+	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it is seeded once below (D1)
+	credit = Credit.new(self)
+	credit.load_dict(d.get("credit", {}))         # TRADE-CREDIT: saves before it have no debts
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	property = Property.new(self)
@@ -3863,20 +4220,30 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			t.born = -1.0e7 if t.state == "grown" else Trees.born_of(t)
 	# a plant's place and tile are map data; its state is the save's (older saves: every plant ripe)
 	_make_plants(m)
-	var saved_plants := {}
-	for pl in d.get("plants", []):
-		saved_plants[str(pl.id)] = pl
+	# saved states go to the plant on the same cell and kind, not the same id: a relaid map (ROOMS-18, the chapel) renumbers ids
+	var by_cell := {}
 	for pl in plants:
-		var sp: Dictionary = saved_plants.get(str(pl.id), {})
-		if not sp.is_empty():
+		by_cell[Vector2i(int(pl.x), int(pl.y))] = pl
+	var orphans := []                  # saved wild plants whose cell the map no longer has one on
+	for sp in d.get("plants", []):
+		if sp.get("planted", false):
+			continue
+		var pl: Dictionary = by_cell.get(Vector2i(int(sp.x), int(sp.y)), {})
+		if pl.is_empty():
+			orphans.append(sp)
+		elif str(pl.kind) == str(sp.kind):
 			pl.state = str(sp.state)
 			pl.regrow = float(sp.regrow)
+		else:
+			stat("plants_lost_on_load")        # a different plant now stands on that cell: counted, not silent
+	_kept_plants = orphans
 	for sp in d.get("plants", []):     # SEED-02: plants grown from cuttings and seed are not map data: the save holds them
 		if sp.get("planted", false):
 			plants.append({"id": str(sp.id), "x": int(sp.x), "y": int(sp.y), "kind": str(sp.kind), "tile": int(sp.tile),
 					"state": str(sp.state), "regrow": float(sp.regrow), "planted": true})
 	vacancies = d.get("vacancies", [])
 	manor_orders = d.get("manor_orders", [])
+	wage_offers = (d.get("wage_offers", {}) as Dictionary).duplicate(true)
 	deposits = d.deposits
 	# a seam the map gained after the save was made (the gold seam, Build 13; the gallery's seams, Build 17) starts
 	# full; seams are matched by (level, x, y) (MIN-A: a level seam may share (x, y) with one above it)
@@ -3905,12 +4272,25 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		for b in boulders:
 			if b.x == int(sb[0]) and b.y == int(sb[1]):
 				b.amount = int(sb[2])
+	for b in boulders:                 # a boulder quarried away leaves its cell open: before the load unsticks anyone standing there
+		if int(b.amount) <= 0 and not b.get("ow", false):
+			map.set_solid(Vector2i(int(b.x), int(b.y)), false)
 	fields = d.fields
 	plots = d.plots
 	coin_sources = int(d.coin_sources)
-	# save_version 1-8 kept no caravan purse: an older world's caravan arrives with its float, as a new
-	# one does (it is the caravan's own, not the village's: no village coin changes hands)
-	caravan_purse = int(d.caravan_purse) if d.has("caravan_purse") else int(GameData.b("caravan_float"))
+	# SET-C-FIVE: a save from before the five settlements has none: they are founded from the world's seed and stepped
+	# to the saved day, and the coins an older save's caravan purse held (it had one from save version 9; before that its
+	# float) are the traders' own from then on. No village coin changes hands.
+	regions = Regions.from_dict(d.regions, seed) if d.get("regions") is Dictionary else null
+	if regions == null:
+		regions = Regions.create(seed)
+		regions.catch_up(int(minutes / DAY) - 1)
+		var purse := int(d.caravan_purse) if d.has("caravan_purse") else 0
+		if purse > 0:
+			regions.add_migrated(purse)
+	# REG-COURIER-01: the couriers' booths, routes and deliveries on the road; a save from before them has none in flight (the
+	# settlements' booths stand, the village's opens at the next dawn)
+	couriers = CourierService.from_dict(self, d.couriers) if d.get("couriers") is Dictionary else CourierService.create_live(self)
 	log_lines = d.log
 	sage_id = int(d.sage_id)
 	reeve_id = int(d.reeve_id)
@@ -3930,7 +4310,17 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
 	if int(d.get("save_version", 0)) < 15:
 		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills
+	var trades_new := not d.has("trade_skills")
+	if trades_new:
+		Skills.seed_trades(self)       # SKILL-TRADES-18: a save from before the trade skills: each starts from the person's Crafting, once
+	if not d.has(WorkExperience.KEY):
+		experience.seed_once(self)          # X18 HOOK (owner D1): a save with no experience section is given its starting experience once
+	if trades_new:
+		Skills.seed_farming(self)       # DVW-B8: Farming starts from the recorded (or just seeded) farming experience, once
 	_migrate_property(d)
+	tax_state = {}
+	if d.has("tax") and d.tax is Dictionary:
+		tax_state = d.tax.duplicate(true)   # DVW-B5 (optional key; absent: the band is read from the treasury at the next reeve evening)
 	if d.has("treasury"):
 		treasury = int(d.treasury)
 		granary = Inventory.from_dict(d.granary)
@@ -3956,8 +4346,23 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	farm.load_dict(d.get("farm", {}))          # PL2-015: older saves have no field and no pens of the player's
 	farm_plots = FarmPlots.new(self)
 	farm_plots.load_dict(d.get("farm_plots", {}))   # FARM-01..05: older saves have no farmland
+	feast = Feast.new(self)
+	feast.load_dict(d.get("feast", {}))          # DVW-B3-FEAST: a save from before feasts has none planned and no weddings owed
+	chapel = Chapel.new(self)
+	chapel.load_dict(d.get("chapel", {}))        # DVW-B3-CHAPEL: a save from before the chapel has it founded now, on free ground (after the farmland, which it must not cover)
+	for sp in _kept_plants:                      # wild plants the map no longer holds stay, unless the chapel now stands on them
+		var sc := Vector2i(int(sp.x), int(sp.y))
+		if chapel.footprint_has(sc):
+			stat("plants_lost_on_load")
+		else:
+			plants.append({"id": "kept_" + str(sp.id).trim_prefix("kept_"), "x": sc.x, "y": sc.y, "kind": str(sp.kind), "tile": int(sp.tile),
+					"state": str(sp.state), "regrow": float(sp.regrow)})
+	_kept_plants = []
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
+	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
+	outlaw_gone_day = int(d.get("outlaw_gone_day", -1))     # BANDIT-RETURN: absent in an older save
+	Outlaws.after_load(self)
 	_guard_posts()
 	# the tables' dishes are saved; a save from before containers gets its tables set from the
 	# keepers' stock (the crates, barrels and stalls are their owners' stock, so they need nothing)
@@ -3977,6 +4382,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	pits.load_dict(d.get("pits", {}))                # MIN-E: saves before it have no pits
 	discovery = Discovery.create(self)
 	discovery.load_dict(d.get("discovery", {}))      # MIN-D: saves before it have nothing dug; levels from the world
+	var sp := SettlementProfile.extract(d)           # SET-A: optional section; absent, the history starts at the first dawn
+	settlement_caps = sp.state
+	settlement_foreign = sp.foreign
 	if int(d.get("save_version", 1)) == 7:
 		quests.drop_manor_quarry()                   # version 7's single manor job gives way to the job board
 	_move_plots_to_map(m)
@@ -3997,6 +4405,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
+	# SET-B: an old save (no history) derives its profile and starts its history here. A saved history is carried on as it
+	# was until the next dawn: today's report is taken from a copy, so saving and loading never records a change that the
+	# uninterrupted game would not (the facts can move during the day, e.g. a stonecutter buying a chisel)
+	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
+	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	_unstick()
 
 
@@ -4064,7 +4477,7 @@ func _migrate_property(d: Dictionary) -> void:
 		if not s.has("tenant"):
 			var o := npc(int(s.get("owner", -1)))
 			s.owner = MANOR
-			s.tenant = npc_ref(o.id) if o and o.alive and o.job == "merchant" and o.workplace == id else ""
+			s.tenant = npc_ref(o.id) if o and o.alive and o.job in ["merchant", "tailor", "barber"] and o.workplace == id else ""
 	for id in buildings:
 		var b: Dictionary = buildings[id]
 		if b.type == "player_house" and not b.has("owner"):

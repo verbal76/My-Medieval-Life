@@ -43,6 +43,7 @@ var dug := {}               # clue id -> [[x, y, who, day], ...]: trial pits dug
 var levels := {}            # industry -> the level last computed (saved, for history; the truth is evaluate())
 var history: Array = []     # {day, industry, from, to, why}: capability changes (saved)
 var _open := PackedByteArray()   # the static layout's open ground (Prospecting._open_cells)
+var _wild := PackedByteArray()   # that ground less the settlement's footprint (Prospecting.wild_cells, ORE-PLACE-01)
 
 
 static func cfg() -> Dictionary:
@@ -61,6 +62,7 @@ static func create(world: World) -> Discovery:
 	var d := Discovery.new()
 	d.w = world
 	d._open = Prospecting._open_cells(world.map)
+	d._wild = Prospecting.wild_cells(world.map)
 	d.levels[INDUSTRY] = int(d.evaluate(INDUSTRY).level)
 	return d
 
@@ -112,7 +114,7 @@ func _static_open(c: Vector2i) -> bool:
 
 
 ## Why a trial pit cannot be dug on `cell` of clue `c` whoever digs ("" if it can): inside the area, on ground that
-## was open in the village's layout with open ground on its four sides (so a seam opened there blocks no road, door
+## was open in the village's layout and outside the settlement's footprint (ORE-PLACE-01) with open ground on its four sides (so a seam opened there blocks no road, door
 ## or yard), clear now (nothing planted, built, farmed or standing there), not dug before, the clue not yet opened and
 ## with pits left.
 func ground_refusal(c: Dictionary, cell: Vector2i) -> String:
@@ -127,6 +129,8 @@ func ground_refusal(c: Dictionary, cell: Vector2i) -> String:
 		return "A trial pit has been dug here already."
 	if not _static_open(cell):
 		return "The ground here is not clear enough to dig."
+	if _wild[cell.y * w.map.w + cell.x] == 0:     # ORE-PLACE-01: no trial pit inside the settlement's footprint
+		return "That ground belongs to the village: no ore is sought there."
 	for dv in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 		if not _static_open(cell + dv) or w.map.is_solid(cell + dv):
 			return "The ground here is not clear enough to dig."
@@ -553,12 +557,10 @@ func to_dict() -> Dictionary:
 
 ## A save without discovery (Build 16, or Build 17 before MIN-D) loads with nothing dug and the levels computed from
 ## the world as it stands, with no history. Seams opened are in the save's deposits (with `found`): their cells are
-## solid again unless quarried away. Pits round a clue the generator no longer makes are dropped with it.
+## solid again unless quarried away. Pits round a clue the generator no longer makes are kept by its id, inert (never silently dropped).
 func load_dict(d: Dictionary) -> void:
 	dug = {}
 	for id in d.get("dug", {}):
-		if w.prospecting.clue(str(id)).is_empty():
-			continue
 		dug[str(id)] = (d.dug[id] as Array).map(func(t): return [int(t[0]), int(t[1]), str(t[2]), int(t[3])])
 	history = []
 	for h in d.get("history", []):

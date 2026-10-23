@@ -928,13 +928,13 @@ func test_caravan_keeps_needed_tools() -> void:
 			cutters[i].inv.add("axe")
 	check(int(b.local_tool_need().axe) >= 3, "three woodcutters need an axe (%d)" % int(b.local_tool_need().axe))
 	var exported := int(w.stats.get("exported_axe", 0))
-	w.caravan_purse = 1000
+	w.regions.fund_traders(1000)
 	b.caravan()
 	check(merchant.inv.count("axe") >= 3, "the caravan leaves an axe for each of them (%d kept, %d exported)" % [merchant.inv.count("axe"), int(w.stats.get("exported_axe", 0)) - exported])
 	for i in 3:
 		cutters[i].inv.add("axe")
 	var need_now := int(b.local_tool_need().axe)
 	merchant.inv.add("axe", 2)                  # six: two above what the merchant keeps in stock
-	w.caravan_purse = 1000
+	w.regions.fund_traders(1000)
 	b.caravan()
 	check(need_now > 0 or int(w.stats.get("exported_axe", 0)) > exported, "with nobody short of one, the surplus goes to the caravan as before (%d exported)" % (int(w.stats.get("exported_axe", 0)) - exported))

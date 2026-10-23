@@ -31,7 +31,10 @@ What is counted, and why (the same text heads the generated document):
   end good: food (food > 0), medicine (heal > 0), equipment (EQUIP types), a cart (cart: true), a
   plant, or an item with a code-defined use in resources.json "materials".
 - Exceptions are recorded in docs/systems/material_exceptions.json (mml-material-exceptions/1); each
-  names one material, profession or recipe, the finding it excuses, the reason and the rule.
+  names one material, profession or recipe, the finding it excuses, the reason and the rule. A supplies_nobody
+  exception must also carry `evidence` {code, goods, test} of the cross-profession relationship it stands for: the
+  cited code must exist and name the profession, the goods must be the profession's own, and the test must exist;
+  otherwise it is an unsupported exception and fails the check (owner B18-DP-15).
 
 Hard errors (exit 1): broken references (unknown item, station, recipe, job or cited function) and
 stale or invalid exceptions. Threshold violations without an exception are listed and counted; with
@@ -65,11 +68,14 @@ JOB_WORK = {
     "carpenter": [BRAIN + "::_plan_job@carpenter", BRAIN + "::_carpenter_carts", BRAIN + "::_carpenter_goods", BRAIN + "::_carpenter_mallet"],
     "sage": [BRAIN + "::_plan_job@sage"],
     "laborer": [BRAIN + "::_mason"],          # STONE-01: the labourers dress stone into building blocks
+    "stonecutter": [BRAIN + "::_stonecutter", BRAIN + "::_mason"],   # X18-STONECUT: the independent trade of dressing and selling blocks
 }
+# trades nobody starts in, taken up through the job market (Population.JOBS does not list them)
+ADOPTED = {"stonecutter"}     # X18-STONECUT
 # households' own recipes (not a profession): home brewing, cooking at the hearth, a storefront's cart,
 # sawing planks for their own house
 HOUSEHOLD_WORK = [BRAIN + "::_plan_home_work", BRAIN + "::_cook_at_home", BRAIN + "::_plan_cart",
-                  "game/scripts/core/construction.gd::_make_timber"]
+                  "game/scripts/core/construction.gd::_make_timber", "game/scripts/core/construction.gd::_dress_own"]   # STONE-02: dressing for their own house
 # the node categories (resources.json) each gathering job harvests, and the function that does it
 GATHERING = {
     "miner": (["mineral"], BRAIN + "::_miner"),
@@ -122,7 +128,7 @@ def load(root=ROOT):
     ctx = cr.load(root)
     items, recipes, bal = ctx["items"], ctx["recipes"], ctx["balance"]
     brain = (root / BRAIN).read_text(encoding="utf-8")
-    jobs = sorted(cr.gd_const((root / "game/scripts/core/population.gd").read_text(encoding="utf-8"), "JOBS"))
+    jobs = sorted(set(cr.gd_const((root / "game/scripts/core/population.gd").read_text(encoding="utf-8"), "JOBS")) | ADOPTED)
     refs, crafters = [], {}
     for job, cited in sorted(JOB_WORK.items()):
         for ref in cited:
@@ -181,6 +187,13 @@ def load(root=ROOT):
             end_uses[i] = sorted(kinds)
     path = root / EXCEPTIONS.relative_to(ROOT)
     exc = json.loads(path.read_text()) if path.is_file() else {"format": EXC_FORMAT, "exceptions": []}
+    for e in exc.get("exceptions", []):              # B18-DP-15: an exception's evidence is read from the code, not trusted
+        ev = e.get("evidence")
+        if isinstance(ev, dict):
+            body = code_body(root, str(ev.get("code", ""))) if ev.get("code") else None
+            subject = str(e.get("profession") or e.get("material") or e.get("recipe") or "")
+            e["_checked"] = {"code": body is not None, "mentions": body is not None and subject != "" and subject in body,
+                             "test": bool(ev.get("test")) and code_body(root, str(ev["test"])) is not None}
     return {
         "items": items, "recipes": recipes, "stations": sorted(cr.station_types(ctx)), "jobs": jobs,
         "crafters": {r: sorted(j) for r, j in sorted(crafters.items())}, "household": sorted(household),
@@ -355,6 +368,11 @@ def build_report(data):
         if key not in found:
             stale.append("stale exception: %s %s %s no longer occurs (remove it)" % (kind, subject, f))
             continue
+        if f == "supplies_nobody" and not _evidenced(e, professions.get(subject, {}).get("makes", [])):
+            stale.append("%s (%s %s): unsupported: a supplies_nobody exception needs evidence of the cross-profession "
+                         "relationship it stands for (B18-DP-15): the code that serves other professions (naming %s), "
+                         "goods that %s really makes, and a test that exists" % (where, subject, f, subject, subject))
+            continue
         excepted[key] = e
     violations = [{"kind": k, "subject": s, "finding": f, "detail": d, "exception": excepted.get((k, s, f))}
                   for k, s, f, d in sorted(findings)]
@@ -363,6 +381,17 @@ def build_report(data):
         "recipes": recipes, "runs_by": runs_by, "household": sorted(household), "violations": violations,
         "open": [v for v in violations if not v["exception"]], "broken": sorted(set(broken)), "stale": stale,
     }
+
+
+def _evidenced(e, makes):
+    """B18-DP-15 (owner): an exception to "supplies nobody" stands only on a functioning relationship shown in the game:
+    `evidence` names the code that serves people of other professions (it must exist and name the profession), the
+    goods involved (all made by the profession) and a test that exercises it (it must exist). Missing demand never
+    passes by being written down."""
+    ev, c = e.get("evidence"), e.get("_checked", {})
+    goods = ev.get("goods", []) if isinstance(ev, dict) else []
+    return bool(isinstance(ev, dict) and c.get("code") and c.get("mentions") and c.get("test") and goods
+                and all(g in makes for g in goods))
 
 
 def errors(report, strict=False):

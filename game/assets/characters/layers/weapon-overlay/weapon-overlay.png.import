@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4veys6vxkkjx"
-path="res://.godot/imported/apple_orchard_stump.png-8c2ffa3e6065cac83a5cdf9c6a353316.ctex"
+uid="uid://b3ped782v6i75"
+path="res://.godot/imported/weapon-overlay.png-9f88c95b69f98a5f03b4381aca81d34a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/trees/apple_orchard_stump.png"
-dest_files=["res://.godot/imported/apple_orchard_stump.png-8c2ffa3e6065cac83a5cdf9c6a353316.ctex"]
+source_file="res://assets/characters/layers/weapon-overlay/weapon-overlay.png"
+dest_files=["res://.godot/imported/weapon-overlay.png-9f88c95b69f98a5f03b4381aca81d34a.ctex"]
 
 [params]
 

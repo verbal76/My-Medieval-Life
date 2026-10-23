@@ -10,6 +10,8 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
+##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
+##       analysis only: tests/capability_metrics.gd)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
 ## Exit code 1 if the currency or any item does not balance. SIM-01 (owner, 2026-10-21): run the longest duration once and
@@ -19,6 +21,7 @@ const STEP := 0.5
 const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block", "log", "plank", "iron_bar", "copper_bar",
 	"wheat", "meat", "hide", "leather", "pottage", "roast_meat", "ale", "pickaxe", "axe", "hammer"]
 const Census := preload("res://tests/census.gd")
+const CapMetrics := preload("res://tests/capability_metrics.gd")     # X18-SIM (Expansion 18): analysis switch, off unless asked
 const MARKET_ROLES := Census.MARKET_ROLES
 
 var w: World
@@ -64,6 +67,8 @@ func _init() -> void:
 			var kv: PackedStringArray = args[i + 1].split("=", true, 1)
 			GameData.balance[kv[0]] = float(kv[1])
 			print("balance override: %s = %s" % [kv[0], kv[1]])
+	var cap_on := CapMetrics.wanted(args)          # X18-SIM: --capability L --cap-profile P --cap-scenario S (analysis only)
+	var cap_info := CapMetrics.pre_setup(args) if cap_on else {}
 	var t0 := Time.get_ticks_msec()
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
@@ -77,7 +82,11 @@ func _init() -> void:
 	w.trade_hook = _on_trade
 	w.npc_died.connect(_on_died)
 	player_min_hp = w.player.hp
-	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
+	if cap_on:
+		CapMetrics.post_setup(cap_info, w)
+	var cap0 := CapMetrics.snapshot(w) if cap_on else {}
+	var cap_at: PackedStringArray = str(arg.call("--cap-at", "")).split(",")
+	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources, "regions_coins": w.regions.coins(), "regions_goods": w.regions.goods(),
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "fill_out": w.mine_works.fill_out, "fill_in": w.mine_works.fill_in(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
 	var samples: Array = [_sample(start)]
@@ -116,9 +125,16 @@ func _init() -> void:
 			_print_sample(samples[-1])
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
+			if cap_on and str(d + 1) in cap_at:      # X18-SIM: a milestone read from this one run (SIM-01), read only
+				print("CAPABILITY@%d %s" % [d + 1, JSON.stringify(CapMetrics.report(cap_info, w, cap0, d + 1))])
 			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
 			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
 			var bad: Dictionary = samples[-1]
+			if str(bad.regions.audit) != "" or int(bad.regions.coins_mismatch) != 0 or int(bad.regions.goods_mismatch) != 0 or int(bad.regions.people_mismatch) != 0:
+				reached = d + 1
+				print("FATAL day %d seed %d: the neighbouring settlements' books: %s (coins mismatch %d, goods mismatch %d, people mismatch %d)" % [reached, seed,
+					str(bad.regions.audit), int(bad.regions.coins_mismatch), int(bad.regions.goods_mismatch), int(bad.regions.people_mismatch)])
+				break
 			if int(bad.currency.leak) != 0 or not (bad.ledger.items as Dictionary).is_empty():
 				reached = d + 1
 				print("FATAL day %d seed %d: currency leak %d; items %s; deposits %s; animals %s" % [reached, seed, int(bad.currency.leak),
@@ -133,6 +149,8 @@ func _init() -> void:
 				print("WATCH MISS ", str(e))
 	var final: Dictionary = samples[-1]
 	_print_final(final, start, seed, reached, secs)
+	if cap_on:
+		print("CAPABILITY " + JSON.stringify(CapMetrics.report(cap_info, w, cap0, reached)))
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
@@ -177,7 +195,7 @@ func _on_event(t: String) -> void:
 		events.seams_worked_out += 1
 	elif "had no firewood last night" in t:
 		events.no_firewood_nights += int(t.substr(t.find("] ") + 2).split(" ")[0])
-	elif "merchant caravan passes through" in t:
+	elif "merchant caravan passes through" in t or ("Traders from" in t and "pass through" in t):
 		events.caravans += 1
 	elif t.ends_with(" broke."):
 		events.tools_broke += 1
@@ -454,6 +472,28 @@ func _st(k: String) -> float:
 
 
 ## CON-01: contracts over the run (counters from World.stats) and those on record now, by item and by who to whom.
+## Expansion 18 couriers (X18-Q12, X18-Q13): booths, deliveries by who booked them and how they ended, the villagers' own postings,
+## the notarised documents and the Law the keepers reached.
+func _couriers_summary() -> Dictionary:
+	var cs := w.couriers
+	var by_state := {}
+	var by_villager := 0
+	for j in cs.jobs:
+		by_state[str(j.state)] = int(by_state.get(str(j.state), 0)) + 1
+		if str(j.sender).begins_with("npc:"):
+			by_villager += 1
+	var docs := {}
+	for a in cs.agreements:
+		docs[str(a.state)] = int(docs.get(str(a.state), 0)) + 1
+	var law := []
+	for b in cs.booths:
+		if str(b.keeper).begins_with("npc:") and not bool(b.get("shop", false)):
+			law.append(Skills.level(w.npc(int(str(b.keeper).trim_prefix("npc:"))), "law"))
+	return {"booths": cs.booths.size(), "shop_booths": cs.booths.filter(func(b): return bool(b.get("shop", false))).size(), "routes": cs.routes.size(),
+		"deliveries": cs.jobs.size(), "by_state": by_state, "booked_by_villagers": by_villager, "villager_posts_stat": int(w.stats.get("courier_posts_villager", 0)),
+		"documents": docs, "keeper_law": law}
+
+
 func _contracts_summary() -> Dictionary:
 	var items := {}
 	var pairs := {}
@@ -521,7 +561,8 @@ func _sample(start: Dictionary) -> Dictionary:
 			if n.doing == "lost":
 				lost += 1
 	s.work = {"adults": adults, "with_job": with_job, "with_workplace": with_place, "unemployed": adults - with_job,
-		"lost": lost, "job_changes": int(_st("job_changes"))}
+		"lost": lost, "job_changes": int(_st("job_changes")),
+		"spec_switches": int(_st("spec_switches")), "wage_offers_raised": int(_st("wage_offers_raised")), "wage_offers_eased": int(_st("wage_offers_eased")), "stall_relocations": int(_st("stall_relocations"))}
 	# money
 	var cash := []
 	for h in w.households.size():
@@ -651,7 +692,8 @@ func _sample(start: Dictionary) -> Dictionary:
 	# coins from outside: the caravan's purchases, newcomers' purses (they come in from outside), and a scenario's grant (EQ-06)
 	var c_in := int(_st("caravan_coins_in")) - int(start.stats.get("caravan_coins_in", 0)) \
 			+ int(_st("newcomer_coins_in")) - int(start.stats.get("newcomer_coins_in", 0)) \
-			+ int(_st("scenario_coins_in")) - int(start.stats.get("scenario_coins_in", 0))
+			+ int(_st("scenario_coins_in")) - int(start.stats.get("scenario_coins_in", 0)) \
+			+ int(_st("outlaw_coins_in")) - int(start.stats.get("outlaw_coins_in", 0))        # BANDIT-RETURN: the outlaws' purses come in from outside
 	var c_out := int(_st("caravan_coins_out")) - int(start.stats.get("caravan_coins_out", 0))
 	var src_delta := w.coin_sources - int(start.coin_sources)
 	s.currency = {"holders": c, "total": c.total, "world_total_coins": w.total_coins(), "start_total": start.coins.total,
@@ -659,10 +701,56 @@ func _sample(start: Dictionary) -> Dictionary:
 		"coin_sources_delta": src_delta, "coin_sources_mismatch": src_delta - (c_in - c_out),
 		"holders_mismatch": int(c.total) - w.total_coins()}
 	s.ledger = _ledger(start)
+	s.regions = _regions(start)
 	s.player = {"alive": w.player.alive, "hp": snappedf(w.player.hp, 0.1), "min_hp": snappedf(player_min_hp, 0.1), "hours_hurt": player_attacked}
 	s.events = events.duplicate()
 	s.farm = _farm()
 	return s
+
+
+## SET-C-SIM: the five neighbouring settlements. Their coins changed by exactly what the village paid them less what they
+## paid it (the village's coin_sources moved the other way), and their goods by what crossed the boundary, their own
+## production and their own use; each settlement's books balance (OffMapSettlement.audit). Mismatches are printed, never hidden.
+func _regions(start: Dictionary) -> Dictionary:
+	var r: Regions = w.regions
+	var coins_now := r.coins()
+	var net := r.net_paid_by_village()
+	var made := {}
+	var used := {}
+	var in_v := {}
+	var out_v := {}
+	for st in r.list:
+		for k in st.flows.produced:
+			made[k] = int(made.get(k, 0)) + int(st.flows.produced[k])
+		for k in st.flows.used:
+			used[k] = int(used.get(k, 0)) + int(st.flows.used[k])
+		for k in st.flows.from_village:
+			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.from_village[k])
+		for k in st.flows.to_village:
+			out_v[k] = int(out_v.get(k, 0)) + int(st.flows.to_village[k])
+		for k in st.flows.outside_in:           # REG-COURIER-01: goods the couriers handed to a settlement's party, and took from it
+			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.outside_in[k])
+		for k in st.flows.outside_out:
+			out_v[k] = int(out_v.get(k, 0)) + int(st.flows.outside_out[k])
+	var now_goods := r.goods()
+	var bad_goods := {}
+	var ids := {}
+	for k in start.regions_goods:
+		ids[k] = true
+	for k in now_goods:
+		ids[k] = true
+	for k in ids:
+		# the settlements' goods now = at the start + made - used + bought from the village - sold to it (the run starts at day 0)
+		var d := int(now_goods.get(k, 0)) - int(start.regions_goods.get(k, 0))
+		var f := int(made.get(k, 0)) - int(used.get(k, 0)) + int(in_v.get(k, 0)) - int(out_v.get(k, 0))
+		if d != f:
+			bad_goods[k] = d - f
+	# MIGRATE-18: people crossing the boundary: the village's count out less in is what the settlements took in less sent
+	return {"people_mismatch": r.net_migrants_counted() - r.net_migrants_from_village(), "migrants_in": int(_st("migrants_in")), "migrants_out": int(_st("migrants_out")),
+		"moves": r.move_counts.duplicate(), "audit": r.audit(), "coins": coins_now, "coins_start": int(start.regions_coins), "coins_delta": coins_now - int(start.regions_coins),
+		"village_paid_net": net, "coins_mismatch": (coins_now - int(start.regions_coins)) - net,
+		"goods_mismatch": bad_goods.size(), "goods_mismatch_items": bad_goods, "population": r.population(),
+		"settlements": r.summary(), "made": made, "used": used, "bought_from_village": in_v, "sold_to_village": out_v}
 
 
 ## FARM-08 (owner, 2026-10-21): the farming economy for the shared-yield comparison: the fields, the pens and their
@@ -724,7 +812,9 @@ func _coins() -> Dictionary:
 	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0,
 		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total(),
 		"contract_reserves": w.contracts.reserved_total(),   # CON-01: buyers' coins set aside for contracts
-		"stall_tills": w.business.tills()}         # takings held in stall tills until settled (STALL-05)
+		"stall_tills": w.business.tills(),
+		"chapel": w.chapel.coins,
+		"courier_booths": w.couriers.held_coins() if w.couriers != null else 0}                  # DVW-B3-CHAPEL: the offerings fund; takings held in stall tills until settled (STALL-05)
 	for n: NPC in w.npcs:
 		out["dead" if not n.alive else ("bandits" if n.role == "bandit" else "villagers")] += n.coins
 	for l in w.loot:
@@ -928,6 +1018,13 @@ func _print_sample(s: Dictionary) -> void:
 		s.materials.deposit_left, sum.call("log"), sum.call("plank"), int(s.materials.trees.get("grown", 0)), wild, penned,
 		s.building.sites_finished, s.building.sites_started, s.building.houses_built, s.building.households, s.currency.total, s.currency.leak, (s.ledger.items as Dictionary).size()])
 	print("  growth: %s" % JSON.stringify(s.growth))
+	var rg: Dictionary = s.regions
+	var per := []
+	for st in rg.settlements:
+		per.append("%s %d people %dc (treasury %d, trader %d, %d hungry, %d died)" % [st.id, st.population, st.coins, st.treasury, st.trader, st.hungry, st.deaths])
+	print("  neighbours: %d people, %d coins (village paid net %d); %s%s" % [rg.population, rg.coins, rg.village_paid_net, "; ".join(per),
+		("  AUDIT " + str(rg.audit)) if str(rg.audit) != "" else ""])
+	print("  migration (MIGRATE-18): %d to the settlements, %d to the village; by reason %s" % [rg.migrants_out, rg.migrants_in, JSON.stringify(rg.moves)])
 
 
 ## What holds back births, partnering and new households (EQ-07; read only): beds against people, couples
@@ -1022,6 +1119,16 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("trade: %s" % JSON.stringify(s.trade))
 	print("manor work: %s" % JSON.stringify(s.manor_work))
 	print("contracts: %s" % JSON.stringify(_contracts_summary()))
+	print("couriers: %s" % JSON.stringify(_couriers_summary()))
+	var cr := {}                       # TRADE-CREDIT: barter and credit over the run, and the debts on record
+	for k in w.stats:
+		if str(k).begins_with("credit_") or str(k).begins_with("barter_"):
+			cr[str(k)] = int(w.stats[k])
+	var open_debts := 0
+	for d in w.credit.debts:
+		open_debts += 1 if Credit.standing(d) else 0
+	cr["standing_debts_now"] = open_debts
+	print("credit: %s" % JSON.stringify(cr))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
 	print("events: %s" % JSON.stringify(s.events))

@@ -49,7 +49,7 @@ func _st(w: World, k: String) -> int:
 
 
 func _coins(w: World) -> int:
-	return w.total_coins() - w.coin_sources + w.caravan_purse
+	return w.total_coins() - w.coin_sources + w.regions.coins()
 
 
 func _cheb(a: Vector2i, b: Vector2i) -> int:
@@ -288,8 +288,8 @@ func _test_shovel() -> void:
 	var ra: Dictionary = GameData.recipes["assemble_shovel"]
 	check(str(rb.station) == "anvil" and str(rb.skill) == "smithing" and (rb["in"] as Dictionary).has("iron_bar") and int(rb.minutes) > 0,
 			"the blade is the smith's: iron at the anvil, Smithing, time")
-	check(str(rh.station) == "workbench" and str(rh.skill) == "crafting" and (rh["in"] as Dictionary).has("plank") and int(rh.minutes) > 0,
-			"the haft is the carpenter's: a plank at the workbench, Crafting, time")
+	check(str(rh.station) == "workbench" and str(rh.skill) == "carpentry" and (rh["in"] as Dictionary).has("plank") and int(rh.minutes) > 0,
+			"the haft is the carpenter's: a plank at the workbench, Carpentry, time")
 	check(str(ra.station) == "workbench" and (ra["in"] as Dictionary).size() == 2 and int(ra["in"].shovel_haft) == 1 and int(ra["in"].shovel_blade) == 1 and int(ra.out.shovel) == 1,
 			"a shovel is assembled from one haft and one blade at the workbench")
 	# the player and a villager by one rule (work_craft)
@@ -300,7 +300,7 @@ func _test_shovel() -> void:
 		o.inv.add("iron_bar", 1)
 		o.inv.add("plank", 1)
 		o.skills["smithing"] = 0
-		o.skills["crafting"] = 0
+		o.skills["carpentry"] = 0
 	var ok := true
 	for o in [p, v]:
 		for r in ["forge_shovel_blade", "make_shovel_haft", "assemble_shovel"]:
@@ -488,7 +488,7 @@ func _test_saves() -> void:
 	var t := _trial_spot(w)
 	w.discovery.trial_dig(p, t.clue, t.cell, "shovel")
 	var sd := w.to_dict()
-	check(int(sd.save_version) == 17, "no new save version (17)")
+	check(int(sd.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(sd)))
 	check(w2.player.inv.count("shovel") == p.inv.count("shovel") and int(w2.player.inv.durability.get("shovel", 0)) == int(p.inv.durability.get("shovel", 0)),

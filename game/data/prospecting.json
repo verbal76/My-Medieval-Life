@@ -1,7 +1,8 @@
 {
   "format": "mml-prospecting/1",
   "note": "MIN-C prospecting (Mining spec stage 2 and section 4; docs/build17/MIN_C_PROSPECTING.md), read by Prospecting (game/scripts/core/prospecting.gd). Clues are stains on the ground, placed from the world seed by integer hashing over blocks of the village (never world.rng, never the overworld's chunks): a clue marks a search area of `radius` cells round its stain, not a deposit. Some clues lie over a mineral body (`true_percent`), the rest mislead. A body is geology only (ore and grade, and the cell it lies under): it is never a deposit record; opening it is MIN-D's. Samples are rock chips taken with a prospector's kit inside a clue's area, a finite number per clue (`samples_per_clue`), one per cell; an assay (a smith at a forge, with fuel) reads one sample with uncertainty and never with certainty. Every number here is an agent decision (minor detail under the standing release directive), not owner-approved balance.",
-  "gen_version": 1,
+  "gen_version": 2,
+  "settlement": {"_note": "ORE-PLACE-01 (owner 2026-10-22, docs/directives/2026-10-22_build18_ore_deposit_placement.md): no stain, sample spot, mineral body or trial pit lies in the settlement footprint: cells within `structures` of a building, plot, field or pen, `roads` of a road, `market` of a market stall. Agent decision: the smallest margins that cover the whole developed village of the current map (houses' yards, the lanes, the market common) and leave the wild ground: the northern woods band, the mine hill and the east and west edges.", "structures": 4, "roads": 3, "market": 9},
   "block": 15,
   "clue_percent": 35,
   "true_percent": 55,

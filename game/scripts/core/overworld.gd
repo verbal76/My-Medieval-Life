@@ -83,6 +83,7 @@ var _segments := {}                      # segment key -> PackedInt32Array of x,
 var _links: Array = []                   # the gates' road polylines: {a, b, key}
 var _gate_inner := {}                    # village cells a gate road joins (they count as road for the tile drawn)
 var _wob := {}                           # axis noise cache
+var _trails: Array = []                  # gate_trails() cache (not saved: a function of the seed)
 
 
 static func create(world_seed: int, m: VillageMap) -> Overworld:
@@ -273,6 +274,30 @@ func _setup_gates() -> void:
 		for k in mini(3, near.size()):
 			_links.append({"a": far, "b": near[k][3], "key": 1000 + g * 8 + 1 + k})
 		g += 1
+
+
+## WORLD-LIFE-01: the trails that lead to the village, each a list of road cells from a road node out in the country to the
+## gate's outside cell (the village edge): {gate, cells: Array[Vector2i]}. Ordered by gate, then nearest node; a pure function
+## of the seed. Ambient walkers (Countryside) follow them; nothing here changes the roads or the chunks.
+func gate_trails() -> Array:
+	if not _trails.is_empty():
+		return _trails
+	var base := -1
+	for li in _links.size():
+		var l: Dictionary = _links[li]
+		var j := (int(l.key) - 1000) % 8
+		if j == 0:
+			base = li
+			continue
+		var far_node := _segment(Vector3i(-1, li, 0), l.a, l.b, int(l.key))
+		var out_far: PackedInt32Array = _segment(Vector3i(-1, base, 0), _links[base].a, _links[base].b, int(_links[base].key))
+		var cells: Array[Vector2i] = []
+		for q in range(far_node.size() - 2, -1, -2):
+			cells.append(Vector2i(far_node[q], far_node[q + 1]))
+		for q in range(out_far.size() - 4, -1, -2):          # from the cell before `far` (it is the last of far_node) down to the gate
+			cells.append(Vector2i(out_far[q], out_far[q + 1]))
+		_trails.append({"gate": (int(l.key) - 1000) / 8, "cells": cells})
+	return _trails
 
 
 func _segment(key: Vector3i, a: Vector2i, b: Vector2i, hkey: int) -> PackedInt32Array:

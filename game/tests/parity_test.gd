@@ -259,7 +259,8 @@ func test_eleven_recipes() -> void:
 	smith.plan.clear()
 	smith.skills = {"smithing": Skills.xp_for_level(3)}
 	check(w.brain._smith(smith) and str(smith.plan[-1].get("args", {}).get("recipe", "")) == "smelt_gold", "at Smithing 3, with a buyer for the bar, the smith smelts gold")
-	# the smith: a copper ring only while someone wants one
+	# the smith: a copper ring only while someone wants one (the merchants' chisels stocked, so the forge's iron is not turned to one: STONE-06)
+	stock_all.call("chisel", true)
 	for rid in [["forge_copper_ring", {"copper_bar": 1}, "copper_ring"], ["forge_iron_helmet", {"iron_bar": 2, "leather": 1}, "iron_helmet"], ["forge_amulet", {"copper_bar": 1, "leather": 1}, "amulet"], ["forge_gold_ring", {"gold_bar": 1}, "gold_ring"]]:
 		smith.inv.items.clear()
 		smith.plan.clear()
@@ -303,16 +304,16 @@ func test_eleven_recipes() -> void:
 			o.inv.items.erase("bread")
 	free_stations.call()
 	check(w.brain._cook(cook) and str(cook.plan[-1].get("args", {}).get("recipe", "")) == "knead_flatbread", "with no egg, the cook kneads flatbread for the tavern")
-	# the sage: the herbal tonic, and the strong tonic at Cooking 3
+	# the sage: the herbal tonic, and the strong tonic at Healing 3
 	var sage := w.npc(w.sage_id)
 	sage.inv.items.clear()
 	sage.plan.clear()
 	sage.inv.add("herbal_poultice", 8)
 	sage.inv.add("healing_tonic", 6)
 	sage.inv.add("ale", 1)
-	sage.skills = {"cooking": Skills.xp_for_level(3)}
+	sage.skills = {"cooking": Skills.xp_for_level(3), "healing": Skills.xp_for_level(3)}
 	free_stations.call()
-	check(w.brain._plan_job(sage) and str(sage.plan[-1].get("args", {}).get("recipe", "")) == "brew_strong_tonic", "at Cooking 3 the sage brews the strong tonic")
+	check(w.brain._plan_job(sage) and str(sage.plan[-1].get("args", {}).get("recipe", "")) == "brew_strong_tonic", "at Healing 3 the sage brews the strong tonic")
 	sage.plan.clear()
 	sage.inv.items.erase("ale")
 	sage.inv.add("flower", 3)

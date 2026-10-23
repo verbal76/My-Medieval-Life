@@ -138,7 +138,7 @@ func test_stairs(w: World, site: Dictionary) -> void:
 	p.inv.items.erase("plank")
 	p.inv.items.erase("nails")
 	p.inv.add("mallet")
-	p.raise_to("crafting", 2)
+	p.raise_to("carpentry", 2)
 	var t := _target(w, p, rim, "stairs")
 	check(str(t.label).contains("You need %d planks" % (3 * n)), "stairs need planks: \"%s\"" % str(t.label))
 	p.inv.add("plank", 3 * n)
@@ -146,7 +146,7 @@ func test_stairs(w: World, site: Dictionary) -> void:
 	var used0 := float(w.stats.get("used_plank", 0.0))
 	t = _target(w, p, rim, "stairs")
 	var plan: Dictionary = w.farm.plan(t, p)
-	check(bool(plan.ok), "with a mallet, Crafting 2, %d planks and %d nails the stairs can be built" % [3 * n, 4 * n])
+	check(bool(plan.ok), "with a mallet, Carpentry 2, %d planks and %d nails the stairs can be built" % [3 * n, 4 * n])
 	plan.run.call()
 	check(not p.inv.has("plank") and not p.inv.has("nails") and float(w.stats.get("used_plank", 0.0)) - used0 == 3.0 * n,
 		"the planks and nails are used up and counted (used_plank, the goods ledger)")
@@ -202,7 +202,7 @@ func test_walkway() -> void:
 		# stand on the first top: it is reached first by steps cut somewhere is not needed for the rule; place the player there
 		var p := stand(w, from)
 		p.inv.add("mallet")
-		p.raise_to("crafting", 2)
+		p.raise_to("carpentry", 2)
 		var n: int = (s.span.cells as Array).size()
 		p.inv.add("plank", 2 * n)
 		p.inv.add("nails", 3 * n)
@@ -210,7 +210,7 @@ func test_walkway() -> void:
 		var t := _target(w, p, from + s.dir, "walkway")
 		check(not t.is_empty() and _target(w, p, from + s.dir, "steps").is_empty(), "between tops a walkway is offered, not steps")
 		var plan: Dictionary = w.farm.plan(t, p)
-		check(bool(plan.ok), "with a mallet, Crafting 2 and the materials it can be built")
+		check(bool(plan.ok), "with a mallet, Carpentry 2 and the materials it can be built")
 		plan.run.call()
 		check(Terrain.work_at(w, from + s.dir) == "walkway" and Terrain.reachable(w, from, 20).has(s.span.to) and Terrain.reachable(w, s.span.to, 20).has(from),
 			"the walkway joins the two tops, both ways")

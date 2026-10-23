@@ -31,12 +31,13 @@ const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench an
 	"kitchen": "a stove for cooking and brewing", "apothecary": "a stove for tonics and poultices",
 	"storage": "a room that opens the family chest from here", "quarters": "more beds for the household",
 	"room": "two beds on a small piece of ground"}
+const DOORWAY_PREFERENCE := 6   # find_module_slot: ground where a doorway can be cut (Doorways) counts this much nearer (3 rows)
 const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
-## STONE-01: building blocks from the raw-goods merchant and the labourers who dress them; raw stone stays on sale for
+## STONE-01: building blocks from the raw-goods merchant and the labourers and stonecutters who dress them; raw stone stays on sale for
 ## sites marked out before blocks (they keep the cost they were marked out with).
-const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"], "building_block": ["merchant_raw", "laborer"],
+const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"], "building_block": ["merchant_raw", "laborer", "stonecutter"],
 	"log": ["woodcutter", "merchant_raw"], "iron_bar": ["smith", "merchant_goods"]}
 
 var w: World
@@ -206,9 +207,17 @@ func find_module_slot(kind: String, anchor: Dictionary, ref: String) -> Rect2i:
 	var treed_d := 1 << 30
 	for q in w.property.estate_parcels(head):
 		var cands := []
+		var room := w.property.building_on(q)
+		var mine: Dictionary = w.map.data.stamps.get(stamp_name(kind), {})
 		for dy in range(-size.y, int(q.h) + 1, 1):
 			for dx in [-size.x, int(q.w)]:
-				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), absi(dy) * 2 + absi(dx) / 4])
+				var cost := absi(dy) * 2 + absi(dx) / 4
+				if World.is_built(room):        # ROOMS-18: ground where a doorway can be cut between the two rooms comes first
+					var y := Doorways.row_between(mine, int(q.y) + dy, w.stamp_of(room), int(room.y)) if dx < 0 \
+							else Doorways.row_between(w.stamp_of(room), int(room.y), mine, int(q.y) + dy)
+					if y >= 0:
+						cost -= DOORWAY_PREFERENCE
+				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), cost])
 		for dx in range(-size.x, int(q.w) + 1, 1):
 			for dy in [-size.y, int(q.h)]:
 				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), absi(dx) * 2 + absi(dy) / 4 + 3])
@@ -385,7 +394,7 @@ func plan_helper(n: NPC) -> bool:
 	var own := _own_builder(n, c)
 	if own:
 		for id in ids:                         # what the builder holds goes in first (HOUSE-04)
-			if n.inv.count(id) > 0:
+			if n.inv.count(id) + (n.inv.count("rubble") if id == "stone" else 0) > 0:
 				n.doing = "bringing %s for the building site" % GameData.item_name(id).to_lower()
 				n.plan = [b.doit("helper_own", {"item": id})]
 				return true
@@ -402,6 +411,8 @@ func plan_helper(n: NPC) -> bool:
 			n.plan = [b.go(b._workplace_cell(seller) if seller.job != "laborer" else seller.cell()), b.doit("helper_buy", {"item": id, "seller": seller.id})]
 			return true
 	if own and _make_timber(n, c, need):
+		return true
+	if own and _dress_own(n, c, need):
 		return true
 	b.once("helper_idle_%d_%d" % [n.id, w.day()], "%s %s can find no materials to carry to %s." % [n.name, n.family, w.property.describe(p)])
 	n.doing = "waiting for building materials"
@@ -434,13 +445,37 @@ func _make_timber(n: NPC, c: Dictionary, need: Dictionary) -> bool:
 		t.claimed = n.id
 		var at := Vector2i(t.x, t.y)
 		n.doing = "felling a tree for the building site"
-		n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0), "chop", {"x": t.x, "y": t.y}, "work", at)]
+		n.plan = [b.go(b.beside(at, n.cell())), b.work(CapabilityHook.work_time(float(GameData.b("chop_minutes")), "forestry", Skills.value(n, "woodcutting", "chop_time", 1.0), n), "chop", {"x": t.x, "y": t.y}, "work", at)]
 		return true
 	var price := b.tool_price(n, "axe")
 	if price > 0 and n.coins >= price and w.property.purse(str(c.employer)) - price >= estimate(need) / 2:
 		w.stat("builder_axes")
 		return b._get_tool(n, "axe")
 	return false
+
+
+## STONE-02 (owner: any villager may dress stone for their own house or repairs, by the player's rules; a title grants
+## no bypass): when no blocks can be bought for their own household's site, a builder who has the Masonry for it dresses
+## stone themselves, at a workbench, with the mallet and the iron chisel the player needs (dress_stone: World.work_craft),
+## the stone and the tools their own, bought with their own coins above their reserve when they have none; the blocks they
+## dress go into the site (helper_own). True when planned.
+func _dress_own(n: NPC, c: Dictionary, need: Dictionary) -> bool:
+	if int(need.get("building_block", 0)) - (c.load as Inventory).count("building_block") - n.inv.count("building_block") <= 0:
+		return false
+	var b: NPCBrain = w.brain
+	var rec: Dictionary = GameData.recipes["dress_stone"]
+	if n.level(str(rec.skill)) < int(rec.level):
+		return false
+	var miss := w.craft_tool_missing(n, "dress_stone")
+	if miss != "":
+		return b._fetch_dress_tool(n, miss)
+	if n.inv.has_all(rec["in"]):
+		if b._do_recipe(n, "dress_stone"):
+			n.doing = "dressing stone for their own building"
+			w.stat("dressed_for_own_use")
+			return true
+		return false
+	return b._fetch_dress_stone(n)
 
 
 ## The nearest villager selling a material whom the helper can pay (from the employer's purse,
@@ -518,6 +553,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return got > 0
 		"helper_own":                          # the builder's own goods go to the site (HOUSE-04)
 			var id := str(a.item)
+			if id == "stone":
+				w.rubble_cover(n.inv, int(p.site.need.get(id, 0)) - load.count(id) - n.inv.count(id))       # STONE-04: the builder's rubble, as stone
 			var k := mini(int(p.site.need.get(id, 0)) - load.count(id), n.inv.count(id))
 			if k <= 0:
 				return false
@@ -1187,6 +1224,8 @@ func _free_sums() -> PackedInt32Array:
 		mark.call(Rect2i(int(c[0]), int(c[1]), 1, 1))
 	for r in w.property.records() + w.fields + w.fauna.pens.values():
 		mark.call(Rect2i(int(r.x), int(r.y), int(r.w), int(r.h)))
+	if w.chapel != null and w.chapel.present:
+		mark.call(w.chapel.plot_rect())              # DVW-B3-CHAPEL: the church's farm plot
 	for id in w.stalls:
 		mark.call(Rect2i(int(w.stalls[id].x), int(w.stalls[id].y), 1, 1))
 		mark.call(Rect2i(int(w.stalls[id].use[0]), int(w.stalls[id].use[1]), 1, 1))

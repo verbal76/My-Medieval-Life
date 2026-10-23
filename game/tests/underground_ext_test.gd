@@ -553,7 +553,7 @@ func _test_save_load() -> void:
 	var cl := _cave(w)
 	var p := _player_below(w, -2, cl.floor_cells()[cl.floor_cells().size() / 2])
 	var d := w.to_dict()
-	check(d.has("mine_works") and int(d.save_version) == 17 and int(d.underground.player_level) == -2, "the save is still version 17, with the works and the player in the cave")
+	check(d.has("mine_works") and int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17 and int(d.underground.player_level) == -2, "the save is the current version (17 for this; 18 is CC-01), with the works and the player in the cave")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	var lm2 := _gallery(w2)

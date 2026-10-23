@@ -1,0 +1,36 @@
+# Requirements register validation (owner directive 2026-10-23, REQ-CTRL-01): structural checks only, no game suites.
+# Fails on duplicate ids, broken references, invalid statuses, unrecorded status changes or stale generated views;
+# never on legitimately unfinished work.
+name: Requirements register
+
+on:
+  push:
+    branches: [staging/my-medieval-life]
+    paths: ["docs/requirements/**", "docs/directives/**", "docs/CURRENT_DEVELOPMENT_STATE.md", "docs/PROJECT_MEMORY.md",
+            "docs/DEVELOPMENT_LEDGER.md", "tools/check_requirements.py", "tools/requirements_report.py",
+            "tools/requirements_update.py", "tests/test_requirements.py", ".github/workflows/requirements.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Fetch the integration branches named by records (paths are checked there too)
+        run: |
+          for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
+            git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
+          done
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate the register and its generated views
+        run: python3 tools/check_requirements.py --against HEAD~1
+      - name: Register tests
+        run: python3 -m unittest tests.test_requirements -v

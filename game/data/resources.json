@@ -616,6 +616,41 @@
       "status": "implemented",
       "risk": "Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md)."
     },
+    "horse_pen": {
+      "name": "Horses",
+      "category": "livestock",
+      "origin": "bred",
+      "match": {"kind": "animal", "species": "horse"},
+      "where": "The player's own horse pen (bought from the visiting caravan)",
+      "verb": "Slaughtering",
+      "action_label": "Your horse",
+      "action": "attack",
+      "tool": "",
+      "tool_required": false,
+      "tool_hint": "Only your own horse stands in a horse pen.",
+      "skill": "",
+      "level": 0,
+      "minutes": 30,
+      "time_note": "As for any pen animal: 30 game minutes.",
+      "action_cost": {"stamina": 0, "tool_wear": 0, "note": "The player feeds the horse animals.horse.feed wheat a meal at the pen's gate."},
+      "yields": {"meat": "animals.horse.meat", "hide": "animals.horse.hide"},
+      "yield_notes": "A young animal gives half the meat and no hide.",
+      "total": "One horse, bought: animals.horse.pen_cap.",
+      "depletion": "finite",
+      "regeneration": "None: a horse is bought again from the caravan; it never breeds (pen_cap 1). It dies unfed.",
+      "owner": "The player's own pen.",
+      "theft": "None: it is the player's own animal.",
+      "npc_harvest": false,
+      "npc_note": "Villagers neither keep nor slaughter it.",
+      "player_harvest": false,
+      "gather": false,
+      "range": 1.1,
+      "range_note": "As for any animal.",
+      "icon": "meat",
+      "sources": ["game/scripts/core/farming.gd::buy_horse", "game/scripts/core/fauna.gd::kill", "game/scripts/main.gd::_hit_animal"],
+      "status": "implemented",
+      "risk": "Not at risk: one animal, bought."
+    },
     "pig_pen": {
       "name": "Pigs",
       "category": "livestock",
@@ -740,7 +775,7 @@
       "action_cost": {"stamina": 0, "tool_wear": 0, "note": "Harvesting costs nothing. Tilling a cell costs farming.till stamina (the hand plough wears one a cell)."},
       "yields": {"wheat": "farming.crops.wheat.yield", "carrot": "farming.crops.carrot.yield", "potato": "farming.crops.potato.yield", "flower": "farming.crops.herb.yield",
                  "wheat_seed": "farming.crops.wheat.seeds_back", "carrot_seed": "farming.crops.carrot.seeds_back", "potato_seed": "farming.crops.potato.seeds_back", "herb_seed": "farming.crops.herb.seeds_back"},
-      "yield_notes": "Per ripe cell: its crop (the herb crop is the wild flower the sage buys) and seeds_back seed of the same crop (seed saving). Seed is also sold by the farmers and the food stall's merchant at farming.crops seed_price (a standing offer, taken from nobody's stock).",
+      "yield_notes": "Per ripe cell: its crop (the herb crop is the wild flower the sage buys) and seeds_back seed of the same crop (seed saving). Seed is also sold by the farmers and the food stall's merchant at farming.crops seed_price (taken from the seller's own stock: MERCH-01).",
       "total": "As many cells as the player clears and tills on ground they hold; each ripens again after it is sown again.",
       "depletion": "ripens",
       "regeneration": "A harvested cell is tilled soil again: sow it with a seed. Nothing grows or can be sown in winter.",
@@ -961,13 +996,16 @@
       {"use": "fuel", "text": "Villagers buy a log for the pantry in the evening from a carpenter or the raw-goods merchant.", "source": "game/scripts/core/npc_brain.gd::_plan_evening"},
       {"use": "manor_job", "text": "Bought by the manor for repairs and carried to the works yard (haul), then used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::reeve_day"}
     ],
-    "plank": [{"use": "building", "text": "B14-07: wooden stairs (3 a rim cell) and walkways (2 a rim cell) built through a mountain's cliff rim in the world outside (with nails, a mallet and Crafting 2).", "source": "game/scripts/core/terrain.gd::build"}, 
+    "plank": [{"use": "building", "text": "B14-07: wooden stairs (3 a rim cell) and walkways (2 a rim cell) built through a mountain's cliff rim in the world outside (with nails, a mallet and Carpentry 2).", "source": "game/scripts/core/terrain.gd::build"}, 
       {"use": "manor_job", "text": "Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::_public_works"},
       {"use": "building", "text": "Fence round family farmland (FARM-02, owner Q9): one plank per 3 fence cells of the plot's perimeter, the gate cell free (the player pen's rule), used up.", "source": "game/scripts/core/farm_plots.gd::build_fence"}
     ],
     "stone": [
       {"use": "manor_job", "text": "Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).", "source": "game/scripts/core/manor_work.gd::post_quarry"},
       {"use": "building", "text": "The gate of family farmland's fence (FARM-02, owner Q9): farm_plot.gate_stone stone (provisional, awaiting the owner), used up.", "source": "game/scripts/core/farm_plots.gd::build_fence"}
+    ],
+    "rubble": [
+      {"use": "manor_job", "text": "STONE-04: the rubble a dressing leaves, bought for repairs and public works like stone, carried to the works yard and used up mending; also taken as raw stone by fittings, the farmland gate and older building sites at the moment they use it (World.rubble_cover), never as an input to dressing.", "source": "game/scripts/core/npc_brain.gd::_public_works"}
     ],
     "iron_bar": [
       {"use": "manor_job", "text": "Fittings and nails: bought for repairs and public works, carried to the works yard and used up mending.", "source": "game/scripts/core/npc_brain.gd::_public_works"}
@@ -1034,9 +1072,10 @@
   "imports": [
     {"items_key": "caravan_import_stock", "text": "When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan.", "source": "game/scripts/core/npc_brain.gd::_caravan_imports"},
     {"items": ["stone"], "text": "When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants.", "source": "game/scripts/core/npc_brain.gd::_caravan_stone"},
-    {"items_key": "farming.caravan_seed_stock", "text": "Each caravan visit sells the seed sellers (the food stall) up to caravan_seed_per_visit seed, cuttings and flower seed, the scarcest first, towards this stock, from the merchant's own coins (Build 13 rule 3, MERCH-01).", "source": "game/scripts/core/npc_brain.gd::_caravan_seeds"}
+    {"items_key": "farming.caravan_seed_stock", "text": "Each caravan visit sells the seed sellers (the food stall) up to caravan_seed_per_visit seed, cuttings and flower seed, the scarcest first, towards this stock, from the merchant's own coins (Build 13 rule 3, MERCH-01).", "source": "game/scripts/core/npc_brain.gd::_caravan_seeds"},
+    {"items": ["jewellery", "fine_cloth", "spice"], "text": "DVW-B3-LUX: costly goods the traders of Wulstead and Higham-on-the-Way hold in their stock (settlements.json start; GAME EXPANSION, from beyond the map). On a visit day villagers with a taste for them and spare coin beyond their reserve buy some, and the player buys at the wagon, at value x luxury.markup, the coins going into the trader's till and leaving the village. Kept, never used up.", "source": "game/scripts/core/luxury.gd::visit"}
   ],
-  "exports": {"text": "Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf.", "smith_caps": {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}, "source": "game/scripts/core/npc_brain.gd::caravan"},
+  "exports": {"text": "Every second day (the nearer settlements' traders more often) the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. The caravan is the traders of the five neighbouring settlements: each buys only what its settlement still wants and pays only from the coins in its own trader's till, so a surplus nobody wants or can be paid for stays on the shelf.", "smith_caps": {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}, "source": "game/scripts/core/npc_brain.gd::caravan"},
   "non_harvestable": [
     {"id": "container", "kinds": ["crate", "barrel", "table"], "what": "Crates, barrels and the tavern's tables (village.json containers), and the chests inside buildings", "reason": "Their owners' stock, not a node: nothing grows or is made there. Taking from one is theft; a tavern table holds a keeper's dish while the tavern is open.", "source": "game/scripts/core/world.gd::player_take"},
     {"id": "stall", "what": "The market stalls", "reason": "A merchant's shop: goods are bought, or the stall's stock is stolen while its merchant is away.", "source": "game/scripts/core/world.gd::shop_post"},
@@ -1063,6 +1102,9 @@
     {"item": "coal", "finding": "import", "reason": "After the coal seams are worked out, the smiths' coal comes only by caravan.", "status": "implemented"},
     {"item": "gold_ore", "finding": "import", "reason": "The mine's one gold seam (8 units, Mining 3) is the only source; the caravan does not bring gold, so once the seam is worked out gold ore, gold bars and gold rings come only from what villagers already hold. Scarce by design (Build 13).", "status": "implemented"},
     {"item": "copper_ore", "finding": "import", "reason": "After the copper seams are worked out, the smiths' copper comes only by caravan.", "status": "implemented"},
-    {"item": "stone", "finding": "import", "reason": "After the stone seams are worked out, stone comes only by caravan, to the raw-goods merchants.", "status": "implemented"}
+    {"item": "stone", "finding": "import", "reason": "After the stone seams are worked out, stone comes only by caravan, to the raw-goods merchants.", "status": "implemented"},
+    {"item": "spice", "finding": "no_consumer", "reason": "DVW-B3-LUX: bought for show and kept, not eaten: no recipe takes it (a villager's food is the village's own); the traders' stock of it is finite and nothing makes more (WDR-022).", "status": "implemented"},
+    {"item": "fine_cloth", "finding": "no_consumer", "reason": "DVW-B3-LUX: a luxury bought for show and kept; nothing makes or uses it up.", "status": "implemented"},
+    {"item": "jewellery", "finding": "no_consumer", "reason": "DVW-B3-LUX: a luxury bought for show and kept; it is not worn (no slot takes it) and nothing makes or uses it up.", "status": "implemented"}
   ]
 }

@@ -11,6 +11,9 @@ var world: World
 var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
 var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
+var stall_display_view: StallDisplayView   # B18-DP-01: the goods shown on stall and shop counters
+var crop_view: CropView        # VIS-CROP-01: the plants drawn on the fields
+var door_view: DoorView        # VIS-DOOR-01: the doorways, open while someone passes
 var surface_works: WorksView   # MIN-F: track laid in the mine's yard (drawn from World.mine_works)
 var _pit_site := {}            # MIN-E: the last site looked at for staking a pit ({key, ok}: the cheap check, cached)
 var actors: Node2D
@@ -22,10 +25,15 @@ var roofs: RoofFade            # fades the roof of the building the player is in
 var blankets := {}             # bed tile -> its blanket (AtlasTexture), drawn over a sleeper
 var camera: Camera2D
 var ui: GameUI
+var courier_window: CourierWindow         # REG-COURIER-01: the open courier window, if any
 var sprites := {}              # npc id -> ActorSprite
 var animal_sprites := {}       # animal id -> AnimalSprite
+var countryside: Countryside   # WORLD-LIFE-01: ambient animals and travellers outside the village (drawn only; never saved)
+var country_sprites := {}      # "a<key>" / "t<key>" -> AnimalSprite / ActorSprite / wagon Sprite2D of the countryside
+var caravan_sprite: Sprite2D = null   # B14-11: the visiting caravan's wagon, while it is here
 var cart_sprites := {}         # cart id -> Sprite2D (B14: the mine cart stands in for the handcart)
 var player_sprite: ActorSprite
+var player_worn := ""          # ARMOR-01: the worn armour and head item the player's sheet was drawn with
 var loot_nodes: Array = []
 var projectiles: Array = []    # {node, pos, dir, left}
 var target := {}               # current interaction target
@@ -75,6 +83,7 @@ var shot_path := ""
 var shot_frames := 0
 var shot_warp := Vector2.INF
 var shot_advance := 0.0
+var shot_side := Vector2i(0, 1)        # swing panels: the side of the tree or rock the swinger stands on (--side n|s|e|w)
 var shot_zoom := 0.0
 var shot_panel := ""
 var shot_field_state := ""
@@ -93,6 +102,15 @@ var strike_pending := false    # strike the target once in reach (a tap on it, o
 var swing := Combat.new()      # the sword swing: windup, blow, recovery and one buffered press (CQ-01)
 var target_marker: Sprite2D    # the sword shown over the target
 var settings := GameSettings.new()
+var audio: GameAudio           # MUSIC-18, SFX-18: the music, the ambience and the effects (audio only reads the hour, the level and the title)
+var _fight_until := 0.0        # audio clock seconds until which the fight music holds (6 s after the last engagement)
+var _fight_scan := 0.0
+var _audio_clock := 0.0
+var _last_foot := Vector2.INF  # where the player stood last frame (footsteps are spaced by distance walked)
+var _foot_dist := 0.0
+var _road_cells := {}          # the village's road cells, once (the ground under a footstep)
+var next_sound := ""           # SFX-18: the effect for the next started work, played when its stroke lands
+var _hp_seen := -1.0           # the player's health last frame (a drop of a point or more is heard as a hurt)
 var scheme := "kbm"            # the controls in use, from the last input: touch | gamepad | kbm
 var blood_layer: Node2D        # blood where someone was slain, under the actors
 var dying := {}                # npc id -> seconds left of the death flicker
@@ -119,6 +137,8 @@ func _ready() -> void:
 	# the interface is laid out for the screen (larger on a phone) and the camera zoom makes up for it
 	settings.load_file()
 	settings.apply(get_tree())
+	audio = GameAudio.new()
+	add_child(audio)
 	view_scale = settings.layout_height() / 720.0
 	scheme = "touch" if settings.phone else "kbm"
 	ui = GameUI.new()
@@ -146,6 +166,8 @@ func _ready() -> void:
 				shot_zoom = float(args[i + 1])
 			"--panel":
 				shot_panel = args[i + 1]
+			"--side":
+				shot_side = {"n": Vector2i(0, -1), "s": Vector2i(0, 1), "e": Vector2i(1, 0), "w": Vector2i(-1, 0)}.get(args[i + 1], Vector2i(0, 1))
 			"--pick":
 				shot_pick = float(args[i + 1])          # pick every wild plant within this many tiles of the warp point (screenshots)
 			"--field-state":
@@ -190,6 +212,35 @@ func _ready() -> void:
 					world.player.pos = shot_warp
 				_sync_levels(0.0)
 				follow_at = _in_view(world.player.pos * T)
+			"steps_ns", "steps_ew", "steps_ns2", "steps_ew2":
+				# VIS-STEPS-01: steps cut through a rim, running north-south or east-west, drawn as the game draws them
+				var want := "_ns" if shot_panel.begins_with("steps_ns") else "_ew"
+				var flip := shot_panel.ends_with("2")          # the other side: a way climbed north or west (ground at the south or east end)
+				var rise := Vector2i(0, -1) if want == "_ns" else Vector2i(1, 0)       # the climb's direction in the first panels
+				var o: Overworld = world.map.overworld
+				var found := false
+				for r in range(2, 24):
+					for cy in range(-r, r + 1):
+						for cx in range(-r, r + 1):
+							if found or maxi(absi(cx), absi(cy)) != r:
+								continue
+							o.get_chunk(Vector2i(cx, cy))
+							for i in Overworld.CHUNK * Overworld.CHUNK:
+								var c := Vector2i(cx * Overworld.CHUNK + i % Overworld.CHUNK, cy * Overworld.CHUNK + i / Overworld.CHUNK)
+								if found or not o.is_rim(c):
+									continue
+								for d: Vector2i in Terrain.DIRS:
+									var sp := Terrain.span(o, c - d, d)
+									if not sp.is_empty() and str(sp.kind) == "steps" and not bool(sp.from_top) and Terrain.run_of(d) == want and d == (-rise if flip else rise) and (sp.cells as Array).size() >= 2 and _no_trees_near(o, c):
+										for rc: Vector2i in sp.cells:
+											o.note_work(rc, "steps" + want)
+											ow_view._draw_works(Overworld.chunk_of(rc))
+										world.player.pos = Vector2(c - d * 2 + (Vector2i(0, -3) if want == "_ns" and d.y > 0 else Vector2i.ZERO)) + Vector2(0.5, 0.5)
+										print("steps shot at ", c, " climbing ", d, " cells ", sp.cells)
+										follow_at = _in_view(world.player.pos * T)
+										found = true
+										break
+				print("steps shot: found=", found)
 			"mine_works", "cave":
 				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
 			"collapse", "shaft", "backfill":
@@ -203,8 +254,14 @@ func _ready() -> void:
 				# PL1-04: the sage's shop (the normal trade window)
 				var sage := world.npc(world.sage_id)
 				ui.show_trade(sage)
+			"horse", "caravan":
+				_horse_shot(shot_panel == "caravan")    # B14-11: the plough horse in its pen beside the player; the caravan's wagon at its stop
 			"farm_tilled", "farm_growing", "farm_pen":
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
+			"farm_plot_mixed":
+				_plot_shot()                            # VIS-CROP-01: a household's plot part sown, part only tilled
+			"door", "door_deep":
+				_door_shot(shot_panel == "door_deep")   # VIS-DOOR-01: a villager stepping into a house's doorway
 			"open_pit", "open_pit_dug":
 				_pit_shot(shot_panel == "open_pit_dug")  # MIN-E: an open pit part dug (or dug out), its spoil heaps, people beside it
 			"small_room", "small_room_inside":
@@ -247,7 +304,7 @@ func _ready() -> void:
 				_swing_panel(shot_panel.begins_with("mine"), int(shot_panel.right(1)))
 			"skills":
 				ui.show_skills()
-			"inventory", "inventory_pad", "inventory_tab":
+			"inventory", "inventory_pad", "inventory_tab", "inventory_raw", "inventory_over", "inventory_level1":
 				# a pack with something in most tabs, and the new gear worn
 				var kit := {"log": 6, "plank": 12, "iron_ore": 3, "coal": 4, "wheat": 9, "pottage": 2, "leather": 2,
 					"leather_cap": 1, "copper_ring": 1, "amulet": 1, "iron_bar": 2, "apple": 3}
@@ -255,25 +312,78 @@ func _ready() -> void:
 					world.player.inv.add(id, kit[id])
 				for id in ["rusty_sword", "rusty_pickaxe", "leather_cap", "copper_ring", "amulet"]:
 					world.player_equip(id)
-				if shot_panel != "inventory":
+				var raw := GameData.items.keys().filter(func(id): return GameData.category(id) == "raw")
+				raw.sort()
+				if shot_panel == "inventory_over":
+					# INV-18: an older save's pack with 12 raw materials: kept, shown over capacity
+					for id in raw.slice(0, 12):
+						world.player.inv.items[id] = world.player.inv.count(id) + 2
+				elif shot_panel == "inventory_level1":
+					world.player.pack_level = 1           # the screenshot path (in play: bought from the tailor)
+					for id in raw.slice(0, 16):
+						world.player.inv.add(id, 1)
+				if shot_panel in ["inventory_pad", "inventory_tab"]:
 					ui.set_scheme("gamepad")
-				ui.show_inventory()
+				ui.show_inventory("raw" if shot_panel in ["inventory_raw", "inventory_over", "inventory_level1"] else "general")
+				if shot_panel == "inventory":
+					ui.inventory_window().choose_tab("armour")
 				ui.inventory_window().choose("copper_ring")
 				if shot_panel == "inventory_pad":
 					ui.inventory_window().gear_buttons["weapon"].grab_focus()
 				elif shot_panel == "inventory_tab":
 					ui.inventory_window().tab_buttons[2].grab_focus()
+			"worn_none", "worn_iron_armor", "worn_iron_helmet", "worn_iron_both", "worn_leather":
+				# ARMOR-01: the player (made at the creator's defaults) wearing nothing, iron armour, an iron helmet, both,
+				# or leather armour and a cap (no art: unchanged); the other worn panels show the same character
+				var gear := {"worn_iron_armor": ["iron_armor"], "worn_iron_helmet": ["iron_helmet"],
+						"worn_iron_both": ["iron_armor", "iron_helmet"], "worn_leather": ["leather_armor", "leather_cap"]}
+				for id in gear.get(shot_panel, []):
+					world.player.inv.add(id, 1)
+					world.player_equip(id)
+				if world.player.appearance.is_empty():
+					world.player.appearance = CharacterLook.normalize(CharacterLook.random_recipe(_shot_rng(), "male"))
+					world.player.sprite = ""
+					player_worn = "reset"
+				camera.zoom = Vector2(12, 12) * view_scale
+				follow_at = _in_view(world.player.pos * T)
+			"tailor_pitch", "barber_pitch", "barber", "barber_result":
+				# TAILOR-18 / BARBER-18: the tailor or barber at the manor's pitch; the barber's chair, before and after a visit
+				var job := "tailor" if shot_panel == "tailor_pitch" else "barber"
+				var svc: NPC = world.npcs.filter(func(o): return o.alive and o.job == job)[0]
+				svc.pos = Vector2(brain_cell(svc)) + Vector2(0.5, 0.5)
+				world.player.pos = svc.pos + Vector2(0, 1.6)
+				svc.anim = "idle"
+				if shot_panel in ["barber", "barber_result"]:
+					world.player.appearance = CharacterLook.normalize(CharacterLook.random_recipe(_shot_rng(), "male"))
+					world.player.appearance.picks["facial-hair"] = ""
+					world.player.sprite = ""
+					player_worn = "reset"
+					world.player.coins = 12
+					var want: Dictionary = world.player.appearance.duplicate(true)
+					want.picks.hair = "f3"
+					want.picks["facial-hair"] = "beard2"
+					CharacterLook.set_swatch(want, "hair", 3)
+					if shot_panel == "barber_result":
+						world.player_barber_visit(svc, want)
+						camera.zoom = Vector2(12, 12) * view_scale
+					else:
+						ui.show_barber(svc, want)
+				else:
+					camera.zoom = Vector2(6, 6) * view_scale
+				follow_at = _in_view(world.player.pos * T)
 			"title":
 				ui.show_title(false)
 			"creation":
 				ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female"})
 			"origin":
 				ui.show_origin()
-			"settings", "settings_display", "settings_interface", "settings_controls", "settings_wiki":
+			"settings", "settings_display", "settings_interface", "settings_controls":
 				ui.show_settings(ui.hide_all, shot_panel.trim_prefix("settings_") if shot_panel.begins_with("settings_") else "audio")
-			"wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
-				ui.show_settings(ui.hide_all, "wiki")
+			"settings_wiki", "wiki", "wiki_category", "wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
+				ui.show_wiki(ui.hide_all)        # the Village Encyclopedia (UI-WIKI-01); add --phone for a phone's layout
 				match shot_panel:
+					"wiki_category":
+						ui.wiki_win.show_category("items_tools")
 					"wiki_search":
 						ui.wiki_win.search_for("plank")
 					"wiki_item":
@@ -445,6 +555,38 @@ func _ready() -> void:
 					if n.job == "smith":
 						ui.show_trade(n)
 						break
+			"contract_reply":
+				# TRADE-UI-02: a proposal made from a contract window scrolled down to Propose; the answer must be in view
+				for n: NPC in world.npcs:
+					if n.job == "farmer" and n.alive:
+						world.player.coins = 85
+						var t := {"item": "axe", "all": true, "qty": 1, "price": 45, "days": 1}
+						ui.show_contract(n, t)
+						await get_tree().process_frame
+						ui.body_scroll.scroll_vertical = 100000
+						await get_tree().process_frame
+						ui.show_contract(n, t, world.contracts.propose(World.PLAYER, n, "axe", 1, 45, 1))
+						break
+			"contract_item", "contract_qty", "contract_price", "contract_days", "contract_sum":
+				# CON-UX-01: each step of the contract form (the farmer; 10 axes)
+				for n: NPC in world.npcs:
+					if n.job == "farmer" and n.alive:
+						world.player.coins = 400
+						var st: String = shot_panel.trim_prefix("contract_")
+						if st == "item":
+							ui.show_contract(n, {})
+						else:
+							ui.show_contract(n, {"item": "axe", "all": true, "qty": 3, "price": 45, "days": 4, "step": st})
+						break
+			"contract_grids", "contract_work":
+				# the contract window's goods grid (top) and work grid (scrolled down) at the window width
+				for n: NPC in world.npcs:
+					if n.job == "farmer" and n.alive:
+						ui.show_contract(n, {"all": true})
+						await get_tree().process_frame
+						if shot_panel == "contract_work":
+							ui.body_scroll.scroll_vertical = 100000
+						break
 			"trade_qty":
 				# PL1-03: the quantity control, buying 3 of 8 affordable
 				var tk := world.tavern_keeper()
@@ -564,7 +706,7 @@ func _ready() -> void:
 				for id in GameData.b("house_cost"):
 					world.player.inv.add(id, int(GameData.b("house_cost")[id]))
 				world.deliver(house, world.player.inv)
-				var spot := Rect2i(Vector2i(72, 15), c.footprint("smithy"))
+				var spot := c.find_ground("smithy", Vector2i(72, 15), World.PLAYER)      # open ground near the north-east wood (the plots lie there too)
 				for t in world.trees:
 					if t.state == "grown" and (spot.grow(1).has_point(Vector2i(int(t.x), int(t.y))) or Vector2i(int(t.x), int(t.y)) == c.door_step("smithy", spot)):
 						world.fell(t, 0)
@@ -602,7 +744,7 @@ func _ready() -> void:
 					follow_at = _in_view((Vector2(spot.position) + Vector2(spot.size) / 2.0) * T)
 					ui.toast_t = 0.01
 				shot_frames = -40                  # the roof needs a moment to fade
-			"property", "property_after", "property_in", "property_menu", "property_place":
+			"property", "property_after", "property_in", "property_menu", "property_place", "rooms", "rooms_in", "rooms_west":
 				# PL2-008/014: a leased plot with a house, then a carpenter's shop added beside it
 				var pc: Construction = world.construction
 				var pl: Dictionary = world.plots[0]
@@ -627,6 +769,12 @@ func _ready() -> void:
 				if shot_panel == "property_in":
 					world.player.pos = Vector2(world.station_use("ws_workshop_%s_workbench" % pl.id.replace("plot0", "parcel0"))) + Vector2(0.5, 0.5)
 				follow_at = _in_view(Vector2(int(pl.x) - 4, int(pl.y) + 5) * T)
+				if shot_panel in ["rooms", "rooms_in", "rooms_west"] and not world.doorways.is_empty():
+					# ROOMS-18: the doorway between the house and the room beside it, seen from outside the wall or from inside
+					var dw: Dictionary = world.doorways[0]
+					var at: Vector2i = dw.inside[1] if shot_panel == "rooms_in" else (dw.inside[0] if shot_panel == "rooms_west" else Vector2i(dw.cells[0].x, int(pl.y) + 12))
+					world.player.pos = Vector2(at) + Vector2(0.5, 0.5)
+					follow_at = _in_view(Vector2(dw.cells[0]) * T + Vector2(8, 24))
 				if shot_panel == "property_menu":
 					ui.show_build(pl)
 				else:
@@ -754,11 +902,15 @@ func new_game(spec := {}) -> void:
 		p.name = spec.name
 		p.family = spec.family
 		p.sex = spec.sex
-		p.look = spec.look
-		p.sprite = spec.sprite
-		p.heir_sprite = spec.sprite
+		# CC-01: the look is a recipe (CharacterLook); the heir who is not the player's child keeps it too
+		p.appearance = CharacterLook.normalize(spec.appearance)
+		p.heir_appearance = p.appearance.duplicate(true)
+		p.look = ""
+		p.sprite = ""
+		p.heir_sprite = ""
 	_build_scene()
 	_show_plants()                            # SEED-03: berry bushes out of season are bare from the start
+	world.farm_plots.show_all()               # DVW-B3-CHAPEL: the church plot's fence stands from the first day
 	if spec.is_empty():
 		_start(true)
 	else:
@@ -870,10 +1022,11 @@ func _clear_world() -> void:
 		attack_mode = false
 		ui.set_attack_mode(false)
 	for c in get_children():
-		if c != ui:
+		if c != ui and c != audio:        # the audio node outlives the worlds (a new game keeps the music)
 			c.queue_free()
 	sprites.clear()
 	animal_sprites.clear()
+	country_sprites.clear()
 	bubbles.clear()
 	loot_nodes.clear()
 	projectiles.clear()
@@ -951,11 +1104,21 @@ func _build_scene() -> void:
 	view.add_child(pit_view)
 	view.move_child(pit_view, view.layer("below0").get_index())
 	pit_view.setup(view, world.pits)
+	crop_view = CropView.new()                   # VIS-CROP-01: the plants on the fields, over their ground, under the characters
+	view.add_child(crop_view)
+	view.move_child(crop_view, view.layer("path1").get_index() + 1)
+	crop_view.setup(world)
+	stall_display_view = StallDisplayView.new()  # B18-DP-01: goods on the counters, over the awning and counters, under the characters
+	view.add_child(stall_display_view)
+	view.move_child(stall_display_view, view.layer("below1").get_index() + 1)
+	stall_display_view.setup(world)
 	_draw_village_exits()
+	_clear_legacy_lanes()
 	tree_view.setup(world)
 	_replace_tree_tiles()
 	ow_view.setup(view, map.overworld, int(GameData.b("overworld_chunk_radius")))
 	ow_view.tree_sink = tree_view
+	countryside = Countryside.new(map.overworld)
 	bubble_layer = CanvasLayer.new()
 	bubble_layer.layer = 5               # over the map, under the interface (layer 20)
 	add_child(bubble_layer)
@@ -965,13 +1128,18 @@ func _build_scene() -> void:
 	roofs = RoofFade.new()
 	above.add_child(roofs)
 	roofs.setup(view, map.data.get("roof_layers", []))
+	door_view = DoorView.new()                   # VIS-DOOR-01: doorways open dark while someone goes through
+	view.add_child(door_view)                    # the MapView's last child: over its ground layers, under the characters
+	door_view.setup(world, view, roofs)
+	door_view.player_through.connect(func(): audio.play_sfx("door_wood"))
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
 		s.setup(n.sprite)
 		actors.add_child(s)
 		sprites[n.id] = s
 	player_sprite = ActorSprite.new()
-	player_sprite.setup(world.player.sprite)
+	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
+	player_worn = _worn_key()
 	actors.add_child(player_sprite)
 	camera = Camera2D.new()
 	camera.zoom = Vector2(3, 3) * view_scale
@@ -984,6 +1152,9 @@ func _build_scene() -> void:
 	ow_view.follow(world.player.pos, world.player.pos, 0.0, 6)      # the nearest chunks at once, the rest over the next frames
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
+	world.tree_felled.connect(func(t: Dictionary, _side: int):          # SFX-18: a tree coming down near the player rustles
+		if Vector2(float(t.x), float(t.y)).distance_to(world.player.pos) < 12.0:
+			audio.play_variant("tree_rustling"))
 	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
 	dying.clear()
 	fading.clear()
@@ -1130,6 +1301,26 @@ func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 		view.set_tile(layer, cell, value)
 
 
+## ROOMS-18: a world made with the plots at their old sites (village generator v7) has a new plot's lane running
+## across one of them. Nothing is built there for the lane (it is only drawn): the dirt path tiles on the cells of
+## the old plot are taken out of the view, so the old plot and its house look as they always did.
+func _clear_legacy_lanes() -> void:
+	var road := {}
+	for c in map.data.road:
+		road[Vector2i(int(c[0]), int(c[1]))] = true
+	for p in world.plots:
+		for lp in map.data.get("legacy_plots", []):
+			if str(lp.id) != str(p.id) or int(lp.x) != int(p.x) or int(lp.y) != int(p.y):
+				continue
+			for y in range(int(p.y), int(p.y) + int(p.h)):
+				for x in range(int(p.x), int(p.x) + int(p.w)):
+					if road.has(Vector2i(x, y)):
+						for lname in ["path0", "path1"]:
+							var lay := view.layer(lname)
+							if lay != null:
+								view.set_tile(lay, Vector2i(x, y), -1)
+
+
 ## Where the village's roads leave it, the dirt path continues over the grass to the map edge, where
 ## the overworld's road takes it up (VillageMap.exits). Only drawn: the grass is walkable already.
 ## The road cell's own tile is chosen again with the trail as a neighbour, so the two join.
@@ -1179,12 +1370,62 @@ func _on_building_added(b: Dictionary) -> void:
 	if fit_layer != null:
 		for e in world.fitting.list(b):
 			view.set_tile(fit_layer, world.fitting.cell_of(e), int(Fitting.ART[str(e.kind)]))
+	_draw_doorways()                                 # the gaps cut through the shared walls of joined rooms (ROOMS-18)
+	door_view.rescan()                               # its door: the copy over the doorway out, the doorway known
+
+
+## ROOMS-18: an inner doorway is the gap where the two rooms' side walls were: the wall tile of each side goes and
+## the room's own floor tile (the one just inside) shows in its place, so nothing is drawn that was not drawn before.
+func _draw_doorways() -> void:
+	var floors := view.layer("ground1")
+	for dw: Dictionary in world.doorways:
+		for k in 2:
+			var c: Vector2i = dw.cells[k]
+			for lname in view.layers:
+				if str(lname).begins_with("below"):
+					var lay: TileMapLayer = view.layers[lname]
+					if view.tile_value(lay, c) == Doorways.WALL:
+						view.set_tile(lay, c, -1)
+			if floors != null:
+				var v := view.tile_value(floors, dw.inside[k])
+				if v >= 0:
+					view.set_tile(floors, c, v)
 
 
 # ---------------------------------------------------------------- frame ----------------------
+func _shot_rng() -> RandomNumberGenerator:
+	var r := RandomNumberGenerator.new()
+	r.seed = 7
+	return r
+
+
+func brain_cell(n: NPC) -> Vector2i:
+	return world.brain._workplace_cell(n)
+
+
+func _worn_key() -> String:
+	return "%s|%s" % [world.player.armor, world.player.head]
+
+
+## ARMOR-01 (view only): redraw the player's sheet when the worn armour or helmet changes (put on, taken off, a
+## load or an heir sets them); the recipe, the saved state and the animation frame are untouched.
+func _refresh_player_worn() -> void:
+	if player_sprite == null:
+		return
+	var key := _worn_key()
+	if key == player_worn:
+		return
+	player_worn = key
+	var sheet := CharacterLook.player_sheet(world.player)
+	if sheet != null:
+		player_sprite.texture = sheet
+
+
 func _process(delta: float) -> void:
 	if world == null:
 		return
+	_refresh_player_worn()
+	_audio_step(delta)
 	if shot_path != "":
 		_screenshot_step(delta)
 	if not placing.is_empty():
@@ -1270,6 +1511,9 @@ func _sync_sprites() -> void:
 			actors.add_child(s)
 			sprites[n.id] = s
 		var near := n.pos.distance_to(cam) < 30.0
+		if not n.alive and n.away != "":
+			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls
+			continue
 		if not n.alive:
 			# the body falls, flickers and is gone
 			var left: float = dying.get(n.id, FLICKER) - get_process_delta_time()
@@ -1298,6 +1542,14 @@ func _sync_sprites() -> void:
 		s.play(look[0] if look[0] != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
+	# who could be in a doorway, with their sprite when drawn (VIS-DOOR-01); the player opens doors but never fades:
+	# the roof lifts as they step in, so their way in stays in view
+	var people := [[p.pos, null]]
+	for n: NPC in world.npcs:
+		if n.alive and n.pos.distance_to(cam) < 30.0:
+			var ns: ActorSprite = sprites.get(n.id)
+			people.append([n.pos, ns if ns != null and ns.visible else null])
+	door_view.update(people, get_process_delta_time())
 	_sync_player_pose()
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
@@ -1315,7 +1567,9 @@ func _sync_sprites() -> void:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
+	_sync_countryside()
 	_sync_carts()
+	_sync_caravan()
 	_sync_loot()
 	_sync_bubbles()
 	_sync_diamonds()
@@ -1410,12 +1664,7 @@ func _sync_sites() -> void:
 			bar.show_percentage = false
 			bar.size = Vector2(28, 5)
 			bar.z_index = MARKER_Z
-			var back := StyleBoxFlat.new()
-			back.bg_color = Color(0.17, 0.11, 0.07, 0.9)
-			var fill := StyleBoxFlat.new()
-			fill.bg_color = Color(0.47, 0.72, 0.29)
-			bar.add_theme_stylebox_override("background", back)
-			bar.add_theme_stylebox_override("fill", fill)
+			GameUI.style_progress(bar, GameUI.PROGRESS_FILL)     # the same look as the player's action bar
 			above.add_child(bar)
 			site_bars[pl.id] = bar
 		if bar:
@@ -1495,6 +1744,21 @@ func _sync_carts() -> void:
 			cart_sprites.erase(id)
 
 
+## B14-11: the caravan's wagon stands at its stop while it is in the village (the paid atlas's mine cart, a stand-in like the
+## handcart's, until the owner's own art).
+func _sync_caravan() -> void:
+	var here: bool = world.farm.caravan_here()
+	if here and caravan_sprite == null:
+		caravan_sprite = Sprite2D.new()
+		caravan_sprite.offset = Vector2(0, -T / 2.0 + 2.0)
+		caravan_sprite.texture = _tile_texture(MINECART_TILE)
+		caravan_sprite.position = (world.farm.caravan_stop() + Vector2(0.0, 0.5)) * T
+		actors.add_child(caravan_sprite)
+	elif not here and caravan_sprite != null:
+		caravan_sprite.queue_free()
+		caravan_sprite = null
+
+
 const CART_TILE := 3009          # the mine cart on its rail (tools/build_village.py MINE_CART, atlas 0)
 const MINECART_TILE := 3229      # MIN-F: the paid atlas's empty mine cart (the column of carts beside CART_TILE)
 const MINECART_FULL_TILE := 3449  # MIN-F: the same cart heaped with grey rock
@@ -1536,6 +1800,52 @@ func _sync_animals() -> void:
 			fading.erase(f)
 		else:
 			f[0].visible = int(f[1] * 12.0) % 2 == 0
+
+
+## WORLD-LIFE-01: the countryside's ambient animals and travellers within view of the camera, from Countryside (a function of
+## the seed and the clock). Sprites exist only while their subject is in view and are freed when it leaves (a few at a time).
+func _sync_countryside() -> void:
+	if countryside == null:
+		return
+	var cam := camera.get_screen_center_position() / T
+	var radius := float(Countryside.cfg().cull_radius)
+	var dt := get_process_delta_time()
+	var seen := {}
+	for a: Animal in countryside.animals_near(cam, radius, world.minutes):
+		var id := "a%d" % a.id
+		seen[id] = true
+		var s: AnimalSprite = country_sprites.get(id)
+		if s == null:
+			s = AnimalSprite.new()
+			s.setup(a, world.minutes)
+			actors.add_child(s)
+			country_sprites[id] = s
+		s.position = a.pos * T
+		s.show_state(a, world.minutes, dt)
+	for e: Dictionary in countryside.travellers_near(cam, radius, world.minutes):
+		var id := "t%d" % int(e.key)
+		seen[id] = true
+		var node: Node = country_sprites.get(id)
+		if node == null:
+			if str(e.kind) == "wagon":
+				var w := Sprite2D.new()
+				w.offset = Vector2(0, -T / 2.0 + 2.0)
+				w.texture = _tile_texture(MINECART_TILE)
+				node = w
+			else:
+				var s := ActorSprite.new()
+				s.setup("res://assets/characters/villager_%02d.png" % int(e.sheet))
+				node = s
+			actors.add_child(node)
+			country_sprites[id] = node
+		(node as Node2D).position = (e.pos as Vector2) * T
+		if node is ActorSprite:
+			(node as ActorSprite).face(e.facing)
+			(node as ActorSprite).play(("carry" if str(e.kind) == "pedlar" else "walk") if e.moving else "idle")
+	for id in country_sprites.keys():
+		if not seen.has(id):
+			country_sprites[id].queue_free()
+			country_sprites.erase(id)
 
 
 ## A pool of blood where someone or something was slain; it fades away over BLOOD_FADE seconds.
@@ -1602,7 +1912,11 @@ func _player_step(delta: float) -> void:
 		action.left -= delta
 		if action.left <= 0.0:
 			var done: Callable = action.done
+			if action.has("industry"):          # X18 HOOK (X18-CAPCOMP part 1): a record of the player's finished work, read by nothing
+				world.note_player_work(str(action.industry), float(action.total))
 			world.release_player_station(str(action.get("station", "")))
+			if action.has("sound"):
+				audio.play_variant(str(action.sound))          # SFX-18: the stroke lands
 			action = {}
 			done.call()                  # may begin the next blow of a felling
 			if action.is_empty():
@@ -1693,6 +2007,8 @@ func cancel_action(why := "") -> void:
 	if furn.get("kind", "") == "lie":
 		stand_up()                         # woken: up beside the bed, the rest cut short
 	if not action.is_empty():
+		if action.has("industry"):             # X18-D4: a cancelled action credits the seconds actually worked
+			world.note_player_work(str(action.industry), maxf(0.0, float(action.total) - float(action.left)))
 		world.release_player_station(str(action.get("station", "")))
 	action = {}
 	stop_gather("")
@@ -2018,6 +2334,26 @@ func _find_target() -> void:
 					if spare != null:
 						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
 					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
+	if world.couriers != null:                                # REG-COURIER-01: the village's courier booth (a stall kept by a villager)
+		var cb: Dictionary = world.couriers.booth_near(p.pos, 1.8)
+		if not cb.is_empty():
+			here.append({"kind": "courier_booth", "booth": str(cb.id), "label": "Courier booth: send goods by the regular route or a special delivery"})
+		elif world.couriers.booth_of_keeper(World.PLAYER).is_empty():                  # Q18-15: a business with a shop may open its own booth
+			for sst in world.business.stalls.built(World.PLAYER):
+				if Vector2(float(sst.x) + 1.0, float(sst.y) + 0.5).distance_to(p.pos) < 2.5:
+					here.append({"kind": "courier_shop_booth", "label": "Open a courier booth at your stall"})
+					break
+	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # B14-11: the visiting caravan sells a plough horse
+		var no_horse := world.farm.buy_horse_refusal(p)
+		here.append({"kind": "caravan_horse", "label": ("Buy a plough horse from the caravan (%d coins)" if no_horse == "" else "The caravan's plough horse (%d coins): " + no_horse) % int(Farming.cfg().caravan_horse.price)})
+	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # DVW-B3-LUX: ... and costly goods from its traders' stock
+		for o in Luxury.offers(world):
+			var no_lux := Luxury.refusal(world, p, str(o.id))
+			here.append({"kind": "caravan_luxury", "item": str(o.id), "id": str(o.id), "label": ("Buy %s from the caravan (%d coins, %d left)" if no_lux == "" else "The caravan's %s (%d coins, %d left): " + no_lux) % [GameData.item_name(str(o.id)).to_lower(), int(o.price), int(o.left)]})
+	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # REG-BUY-01: ... and food, at the traders' prices
+		for o in CaravanFood.offers(world):
+			var no_food := CaravanFood.refusal(world, p, str(o.id))
+			here.append({"kind": "caravan_food", "item": str(o.id), "id": "food_" + str(o.id), "label": ("Buy %s from the caravan (%d coins, %d left)" if no_food == "" else "The caravan's %s (%d coins, %d left): " + no_food) % [GameData.item_name(str(o.id)).to_lower(), int(o.price), int(o.left)]})
 	# a house the family holds but does not live in, or one the manor offers: its door
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -2227,6 +2563,9 @@ func _shop_target(post: Dictionary) -> Dictionary:
 			return _built_stall_target(s)
 		if Business.is_pitch(s):
 			var mine := world.tenant_of(s) == World.PLAYER
+			if str(s.get("service", "")) != "":                  # the tailor's or the barber's pitch (never the player's to rent)
+				var pk := world.party(world.tenant_of(s))
+				return {"kind": "info", "label": "The %s's pitch" % str(s.service), "text": ("%s %s keeps this pitch: talk to them there." % [pk.name, pk.family]) if pk != null else "Nobody keeps this pitch now."}
 			if not mine and world.tenant_of(s) != "":
 				return {"kind": "info", "label": "An open market pitch", "text": "Nobody keeps this pitch."}
 			return {"kind": "stall", "id": post.id, "label": "Manage your market stall" if mine else "Rent this market pitch (%d coins a day)" % Business.rent_day()}
@@ -2447,7 +2786,7 @@ func _use() -> void:
 			if got == "far":
 				ui.message(world.player_container_reach(c))         # out of reach (DVW-A12 R15)
 			elif got == "full":
-				ui.message("Your pack is full.")
+				ui.message(world.pack_full_text([world.container_pick(c)]))
 			elif got == "":
 				ui.message("There is nothing to take.")
 			else:
@@ -2465,9 +2804,9 @@ func _use() -> void:
 			if int(got.coins) > 0:
 				_gain("+%d coins" % int(got.coins), "coins")
 			elif got.items.is_empty():
-				ui.message("Your pack is full." if int(got.left) > 0 else "There is nothing left.")
+				ui.message(str(got.why) if int(got.left) > 0 else "There is nothing left.")
 			elif int(got.left) > 0:
-				ui.message("Your pack is full: some is left behind.")
+				ui.message(str(got.why) + " Some is left behind.")
 		"sample":
 			_sample(target.clue, target.cell)
 		"assay":
@@ -2512,7 +2851,7 @@ func _use() -> void:
 			if got > 0:
 				_gain("+%d %s" % [got, GameData.item_name(str(target.item))], str(target.item))
 			else:
-				ui.message("Your pack is full.")
+				ui.message(world.pack_full_text([str(target.item)]))
 		"deposit":
 			var dep: Dictionary = target.dep
 			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
@@ -2520,6 +2859,8 @@ func _use() -> void:
 				ui.message(str(mp.why))
 				return
 			var pick: String = mp.tool
+			next_industry = "mining"
+			next_sound = "hit_on_brick"
 			start_action("Mining", float(mp.secs), func():
 				var r := world.player_mine(dep, pick)                  # the same swing as a miner's (PAR-01)
 				if r.result == "out":
@@ -2529,7 +2870,7 @@ func _use() -> void:
 					ui.message("Gold needs Mining level 3.")
 					return
 				if r.full:
-					ui.message("Your pack is full: the ore is left at your feet.")
+					ui.message(world.pack_full_text([str(dep.get("ore", "stone"))]) + " The ore is left at your feet.")
 				else:
 					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
 				if r.broke:
@@ -2546,6 +2887,7 @@ func _use() -> void:
 			ui.show_craft(target.id)
 		"field":
 			var f: Dictionary = target.field
+			next_sound = "bush_rustling"
 			start_action("Harvesting", 2.5, func():
 				var got := world.player_harvest(f)
 				if got > 0:
@@ -2556,8 +2898,9 @@ func _use() -> void:
 			var ftree: Dictionary = target.tree
 			var fitem: String = str(Trees.fruit_cfg(str(ftree.species)).item)
 			if not p.inv.can_add(fitem):
-				ui.message("Your pack is full.")
+				ui.message(p.inv.full_text(fitem))
 				return
+			next_sound = "fruit_drop"
 			start_action("Picking", 1.5, func():
 				var got := world.pick_fruit(ftree)
 				for id in got:
@@ -2568,10 +2911,10 @@ func _use() -> void:
 		"plant":
 			var pl: Dictionary = target.plant
 			var pdef := ResourceNodes.def_for("plant", str(pl.kind))
-			for id in ResourceNodes.products(pdef):
-				if not p.inv.can_add(id):
-					ui.message("Your pack is full.")
-					return
+			if not p.inv.can_add_all(ResourceNodes.products(pdef)):
+				ui.message(p.inv.full_text_all(ResourceNodes.products(pdef)))
+				return
+			next_sound = "bush_rustling"
 			start_action("Picking", 1.2, func():
 				var got := world.pick_plant(pl)
 				for id in got:
@@ -2587,6 +2930,8 @@ func _use() -> void:
 					_gain("+%d %s" % [int(got[k]), GameData.item_name(k)], k))
 		"pen":
 			var put := world.fauna.feed(target.pen, p.inv, 5)
+			if put > 0:
+				world.player_xp("husbandry", Skills.action_xp("feed_pen"))    # DVW-B8
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
 		"animal":
 			var own: bool = not target.animal.wild() and world.fauna.pens.has(target.animal.area) and world.fauna.pens[target.animal.area].get("player", false)
@@ -2597,6 +2942,7 @@ func _use() -> void:
 				ui.message(str(fp.why))
 				return
 			player_sprite.face(Vector2(target.cell) + Vector2(0.5, 0.5) - p.pos)
+			next_industry = WorkExperience.industry_of_step("fp_work", {"task": str(target.get("task", target.get("act", "")))})   # till, sow, harvest: farming (B18-DP-12: a villager's fp_work experience on the church field too)
 			start_action(str(fp.label), float(fp.secs), func():
 				var r: Dictionary = fp.run.call()
 				for id in r.items:
@@ -2606,9 +2952,33 @@ func _use() -> void:
 		"pen_collect":
 			var got: Dictionary = world.farm.collect(target.pen, p)
 			if got.is_empty():
-				ui.message("Your pack is full.")
+				ui.message(world.pack_full_text(world.farm.products_in(target.pen).keys()))
 			for id in got:
 				_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
+		"courier_booth":
+			courier_window = CourierWindow.new(ui, world.couriers)
+			courier_window.booth_id = str(target.booth)
+			courier_window.show()
+		"caravan_horse":
+			var why_not: String = world.farm.buy_horse(p)
+			ui.message(why_not if why_not != "" else "You pay the caravan and walk the horse into your pen. With it, the hand plough does a cell in %.0f second." % float(Farming.cfg().till.horse.seconds))
+		"caravan_luxury":
+			var why_lux: String = Luxury.buy(world, p, str(target.item))
+			if why_lux != "":
+				ui.message(why_lux)
+			else:
+				_gain("+1 %s" % GameData.item_name(str(target.item)), str(target.item))
+				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
+		"caravan_food":
+			var why_food: String = CaravanFood.buy(world, p, str(target.item))
+			if why_food != "":
+				ui.message(why_food)
+			else:
+				_gain("+1 %s" % GameData.item_name(str(target.item)), str(target.item))
+				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
+		"courier_shop_booth":
+			var why_booth: String = world.couriers.open_shop_booth(World.PLAYER)
+			ui.message(why_booth if why_booth != "" else "You set a courier booth at your stall: your deliveries can leave from it.")
 		"pen_buy":
 			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
 			ui.message(no if no != "" else "You buy it and walk it into your pen.")
@@ -2651,10 +3021,13 @@ func _use() -> void:
 			var step := mw.step(mj)
 			if step == "mend":
 				var secs := float(ManorWork.cfg("mend_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
+				next_industry = WorkExperience.industry_of_step("mj_step", {}, "mend")
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "sample":
+				next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "dig":
+				next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "shovel")
 			elif step == "excavate":
 				var pit := world.pits.pit(int(mj.pit))
@@ -2663,6 +3036,7 @@ func _use() -> void:
 				if pit.is_empty() or cell.x < 0 or pick == "":
 					ui.message("There is nothing in the pit you can dig now: earth needs a shovel, rock a pickaxe." if OpenPits.kinds_held(p).size() < 2 else "There is nothing in the pit that can be dug now.")
 					return
+				next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 				start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), pick), func():
 					var was: int = mj.load.total()
 					var ok := mw.do_step(mj, "player", p.inv)
@@ -2788,6 +3162,7 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), tool), func():
 		var r := world.pits.dig(p, pit, cell, p.inv, tool)
 		if r.result != "ok":
@@ -2917,6 +3292,8 @@ func _tunnel_cut(cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
+	next_sound = "hit_on_brick"
 	start_action("Cutting", world.mine_works.player_secs(cell, tool), func():
 		var r := world.mine_works.dig(p, cell, p.inv, tool)
 		if r.result != "ok":
@@ -2973,6 +3350,7 @@ func _shaft_dig(cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Digging", world.mine_works.shaft_secs(cell, tool), func():
 		var r := world.mine_works.dig_shaft(p, cell, p.inv, tool)
 		if r.result != "ok":
@@ -2991,6 +3369,7 @@ func _fill_own(cell: Vector2i) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Filling", world.mine_works.fill_secs(), func():
 		var r := world.mine_works.fill(p, cell, p.inv)
 		if r.result != "ok":
@@ -3007,6 +3386,7 @@ func _sample(c: Dictionary, cell: Vector2i) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Sampling", Prospecting.player_secs(), func():
 		var r := world.prospecting.take_sample(p, c, cell)
 		if r.result != "ok":
@@ -3026,6 +3406,7 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 	if why != "":
 		ui.message(why)
 		return
+	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
 	start_action("Digging a trial pit", Discovery.player_secs(), func():
 		var r := world.discovery.trial_dig(p, c, cell, tool)
 		if r.result != "ok":
@@ -3034,6 +3415,7 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 		if (r.found as Dictionary).is_empty():
 			ui.message("The trial pit finds no ore.")
 		else:
+			audio.play_sfx("secret_found")
 			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower())
 		ui.message("The earth you dug lies in a spoil pile beside the pit.")
 		if r.broke:
@@ -3064,6 +3446,8 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	var cell := Vector2i(int(tr.x), int(tr.y))
 	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
+	next_industry = "forestry"
+	next_sound = "hit_on_wood"
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
 		var r := world.player_chop(tr, side, axe)          # the same felling as a woodcutter's (PAR-01, DVW-A12 R2)
 		if r.result == "gone":
@@ -3072,7 +3456,7 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 			_chop(tr, axe, secs)
 			return
 		if r.full:
-			ui.message("Your pack is full: the logs are left at your feet.")
+			ui.message(world.pack_full_text(["log"]) + " The logs are left at your feet.")
 		else:
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
 		for id in r.saplings:
@@ -3147,8 +3531,17 @@ func plant_cutting(item: String) -> void:
 ## Begin a timed piece of work: `anim` is "swing" (with `tool`, the item held in the hand: the pickaxe
 ## for mining, the axe for felling) or "gather" (picking, harvesting, planting); it plays until the work ends
 ## or is cancelled (cancel_action), then the player is back to idle.
+var next_industry := ""   # X18 HOOK (X18-CAPCOMP part 1): the industry of the next started work, for the experience record
+
+
 func start_action(label: String, secs: float, done: Callable, anim := "gather", tool := "") -> void:
 	action = {"label": label, "left": secs, "total": secs, "done": done, "anim": anim, "tool": tool}
+	if next_sound != "":
+		action.sound = next_sound
+		next_sound = ""
+	if next_industry != "":
+		action.industry = next_industry   # X18-CAPCOMP: the industry of this work, set just before (record only)
+		next_industry = ""
 	move_to = Vector2.INF
 	sprinting = false
 	player_sprite.hold(tool)
@@ -3163,6 +3556,7 @@ func _xp(skill: String, n: int) -> void:
 ## The banner for a new level (`up` 0: none).
 func _level_up(skill: String, up: int) -> void:
 	if up > 0:
+		audio.play_sfx("jingle_level_up")
 		var s: Dictionary = GameData.skills[skill]
 		var unlock := Skills.tier_text(skill, up)
 		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""])
@@ -3180,12 +3574,19 @@ func craft(recipe: String, station := "") -> void:
 		return
 	station = str(cp.station)
 	ui.hide_all()
+	next_industry = CapabilityHook.recipe_industry(recipe)
 	start_action("Crafting", float(cp.secs), func():
+		var had := {}
+		for o in r.out:
+			had[o] = world.player.inv.count(o)
 		var res := world.player_craft(recipe)                   # the same as a villager's (PAR-01, PAR-04)
 		if res.result != "ok":
 			return
 		_level_up(str(r.skill), int(res.up))
-		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
+		# INV-18: what the pack had no place for is set down at the player's feet (World.player_gain), and said so
+		var left: Array = r.out.keys().filter(func(o): return world.player.inv.count(o) <= int(had[o]) and not world.player.inv.can_add(o))
+		ui.message("Made %s.%s" % [", ".join(r.out.keys().map(func(k): return GameData.item_name(k))),
+			(" " + world.pack_full_text(left) + " It is set down at your feet.") if not left.is_empty() else ""]),
 			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")
 	if station != "" and not action.is_empty():
 		action["station"] = station          # released the moment the work ends or is cut short (Build 13)
@@ -3207,12 +3608,74 @@ func attack(only: Object = null) -> String:
 	return r
 
 
+## MUSIC-18, SFX-18: the music and ambience follow the hour, the level, the title, a fight and the countryside; a drop
+## of a point of the player's health is heard as a hurt; soft footsteps follow the ground. Audio only reads the world.
+func _audio_step(delta: float) -> void:
+	var p := world.player
+	_audio_clock += delta
+	_fight_scan -= delta
+	if _fight_scan <= 0.0:
+		_fight_scan = 0.3
+		if _in_fight():
+			_fight_until = _audio_clock + float(audio.cfg.get("fight_hold_seconds", 6.0))
+	var title: bool = ui != null and ui.is_open("title")
+	audio.update(delta, {"hour": world.hour(), "level": world.player_level, "title": title,
+			"fight": _audio_clock < _fight_until and not title,
+			"countryside": not map.in_village(Vector2i(p.pos.floor())),
+			"summer": Life.season(world.minutes) == "Summer"})
+	if _hp_seen >= 0.0 and p.hp <= _hp_seen - 1.0 and p.alive:
+		audio.play_sfx("player_hurt")
+	_hp_seen = p.hp
+	_footsteps(p)
+
+
+## A fight: a bandit or anyone fighting the player within 12 cells, or a wild animal angry at the player.
+func _in_fight() -> bool:
+	var p := world.player
+	if not p.alive or world.player_level != 0:
+		return false
+	for n: NPC in world.present(p.pos, 12.0):
+		if n.alive and Combat.foe(n):
+			return true
+	for a: Animal in world.fauna.near(p.pos, 12.0):
+		if a.alive and a.anger == "player":
+			return true
+	return false
+
+
+## Soft footsteps, one every `stride_cells` walked on foot (the minimum gap in music.json drops them in a sprint).
+func _footsteps(p: PlayerState) -> void:
+	var d := p.pos.distance_to(_last_foot) if _last_foot != Vector2.INF else 0.0
+	_last_foot = p.pos
+	if d <= 0.0 or d > 1.0 or paused or not action.is_empty() or ui.modal():
+		return                                    # standing, a jump in position (a portal, a load), or not walking
+	_foot_dist += d
+	if _foot_dist >= float(audio.cfg.get("sfx", {}).get("steps", {}).get("stride_cells", 1.15)):
+		_foot_dist = 0.0
+		audio.step(_ground_under(p.pos))
+
+
+## grass | dirt | stone under a position: stone below the surface and indoors, dirt on the village's roads and the
+## countryside's, grass elsewhere.
+func _ground_under(pos: Vector2) -> String:
+	if world.player_level != 0 or world.place_of(pos) != "":
+		return "stone"
+	var c := Vector2i(pos.floor())
+	if map.in_village(c):
+		if _road_cells.is_empty():
+			for r in map.data.road:
+				_road_cells[Vector2i(int(r[0]), int(r[1]))] = true
+		return "dirt" if _road_cells.has(c) else "grass"
+	return "dirt" if map.overworld != null and map.overworld.is_road(c) else "grass"
+
+
 ## Seconds one swing takes: windup, blow and recovery (the Combat tier makes it shorter).
 func swing_time() -> float:
 	return float(Combat.cfg().swing_time) * Skills.value(world.player, "combat", "attack_time", 1.0)
 
 
 func _swing_begins() -> void:
+	audio.swing()
 	sprinting = false                  # no sprint while attacking
 	if swing.only != null and swing.only.alive:
 		player_sprite.face(swing.only.pos - world.player.pos)
@@ -3237,6 +3700,9 @@ func _blow() -> void:
 		var h := world.player_melee_npc(who)          # the strike, the harm, the crime and the xp are core's (DVW-A12 R7-R9)
 		if h.crit:
 			ui.message("A telling blow!")
+		audio.hit(bool(h.crit))
+		if not who.alive:
+			audio.play_sfx("enemy_defeat")
 		_hit_fx(sprites.get(who.id), who.max_hp, hp0 - float(h.dealt), float(h.dealt))
 		_level_up("combat", int(h.up))
 	elif who is Animal:
@@ -3245,6 +3711,9 @@ func _blow() -> void:
 		if s.crit:
 			ui.message("A telling blow!")
 		_hit_animal(who, float(s.dmg))
+		audio.play_sfx("critical_hit" if s.crit else "enemy_hit")
+		if not who.alive:
+			audio.play_sfx("enemy_defeat")
 
 
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
@@ -3408,6 +3877,7 @@ func fireball() -> void:
 		if str(cast.why) != "":
 			ui.message(str(cast.why))
 		return
+	audio.play_sfx("fireball")
 	player_sprite.play("throw", true)
 	var node := Sprite2D.new()
 	node.texture = load("res://assets/icons/fireball.png")
@@ -4181,6 +4651,7 @@ func save_game(show := true) -> bool:
 	save_failing = false
 	_update_linked_copy()
 	if show:
+		audio.play_sfx("save_crystal")
 		ui.message("Saved.")
 	return true
 
@@ -4278,7 +4749,8 @@ func _notification(what: int) -> void:
 
 func continue_as_heir() -> void:
 	world.continue_as_heir()
-	player_sprite.setup(world.player.sprite)
+	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
+	player_worn = _worn_key()
 	player_sprite.play("idle")
 	ui.hide_all()
 	save_game(false)
@@ -4379,6 +4851,7 @@ func _sync_player_pose() -> void:
 
 func _rest_now() -> void:
 	world.player_rest()                         # how long, the world going on and the recovery are core's (DVW-A12 R18)
+	audio.play_sfx("jingle_inn_rest")
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
 
@@ -4407,7 +4880,7 @@ func _swing_panel(mining: bool, frame: int) -> void:
 	var tool_id := "rusty_pickaxe" if mining else "axe"
 	p.inv.add(tool_id, 1)
 	p.tool = tool_id
-	var c: Vector2i = world.brain.beside(cell, cell + Vector2i(0, 1))
+	var c: Vector2i = world.brain.beside(cell, cell + shot_side)
 	p.pos = Vector2(c) + Vector2(0.5, 0.5)
 	follow_at = _in_view(p.pos * T)
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
@@ -4622,6 +5095,15 @@ func _struct_shot(kind: String) -> void:
 	camera.position = follow_at
 
 
+## VIS-STEPS-01 panel: no tree (or its canopy) within 4 cells of the way (more below it, where a canopy hangs over), so the steps are not hidden.
+func _no_trees_near(o: Overworld, c: Vector2i) -> bool:
+	for dy in range(-4, 9):
+		for dx in range(-5, 6):
+			if not o.tree_at(c + Vector2i(dx, dy)).is_empty():
+				return false
+	return true
+
+
 func _works_shot(cave: bool) -> void:
 	var u := world.underground
 	var pi := 1 if cave else 0
@@ -4719,6 +5201,100 @@ func _works_shot(cave: bool) -> void:
 	_sync_carts()
 	_sync_levels(0.0)
 	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
+
+
+## VIS-DOOR-01 screenshot: one villager on the step of b_v1_house's door walking in (its head and body already in
+## the doorway; `deep`: nearly through), another standing beside the step, and the player a little way off.
+func _door_shot(deep: bool) -> void:
+	var step := world.building_door("b_v1_house")
+	var adults := world.npcs.filter(func(n: NPC): return n.alive and Life.stage_of(world.age_years(n.born)) == "adult")
+	var a: NPC = adults[0]
+	var b: NPC = adults[1]
+	for n: NPC in [a, b]:
+		n.plan.clear()
+		n.path = PackedVector2Array()
+	a.pos = Vector2(step) + Vector2(0.5, 0.05 if deep else 0.45)
+	a.facing = Vector2.UP
+	a.anim = "walk"
+	b.pos = Vector2(step) + Vector2(1.6, 0.8)
+	b.anim = "idle"
+	world.player.pos = Vector2(step) + Vector2(-1.5, 2.5)
+	follow_at = _in_view(Vector2(step) * T)
+	camera.position = follow_at
+	camera.zoom = Vector2(5, 5) * view_scale
+	paused = true                                # held still for the picture
+
+
+## VIS-CROP-01 screenshot: the first household leases a 10 x 6 farm plot near its home (FarmPlots.claim, its own
+## coins) and fences it, one of the family tills it with the household's own calls and sows its left half with wheat (the leftmost
+## column shown ripe, the next part grown); the rest is left tilled, so cells of every state lie side by side.
+func _plot_shot() -> void:
+	var fp: FarmPlots = world.farm_plots
+	var hh: Dictionary = world.households[0]
+	var ref := World.hh_ref(int(hh.id))
+	var n: NPC = world.npc(int(hh.members[0]))
+	n.coins += 500
+	var r: Rect2i = fp.find_ground(Vector2i(10, 6), world.building_door(str(hh.home)), int(hh.id))
+	var p: Dictionary = fp.claim(r, ref, true)
+	if p.is_empty():
+		print("plot shot: no farm plot (%s)" % fp.why)
+		return
+	for j in r.size.y:                                 # the wild growth on it cleared first, by the family's own call
+		for i in r.size.x:
+			fp.clear(p, r.position + Vector2i(i, j), n.inv, hh.pantry)
+	var cost: Dictionary = fp.fence_cost(p)
+	for id in cost:
+		n.inv.add(str(id), int(cost[id]))
+	var no := fp.build_fence(p, ref, [n.inv])
+	if no != "":
+		print("plot shot: no fence (%s)" % no)
+	n.inv.add("wheat_seed", 200)
+	var x0 := r.end.x
+	for j in r.size.y:
+		for i in r.size.x:
+			var c := r.position + Vector2i(i, j)
+			if fp.till(p, c, n.inv, hh.pantry) != "":
+				continue                                   # the fence line
+			x0 = mini(x0, c.x)
+			if c.x < r.position.x + r.size.x / 2:
+				fp.sow(c, "wheat", [n.inv])
+	for c: Vector2i in fp.cells:
+		if fp.cells[c].state == "growing" and c.x == x0:
+			fp.cells[c].state = "ripe"
+			fp.cells[c].progress = 1.0
+		elif fp.cells[c].state == "growing" and c.x == x0 + 1:
+			fp.cells[c].progress = 0.6
+	fp.show_all()
+	world.player.pos = Vector2(r.position) + Vector2(r.size.x / 2.0, r.size.y + 1.5)
+	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
+
+
+func _horse_shot(at_caravan: bool) -> void:
+	var p := world.player
+	p.coins = 3000
+	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), World.PLAYER)
+	var pl: Dictionary = world.property.claim(rect, World.PLAYER, false)
+	if pl.is_empty():
+		print("horse shot: no ground (%s)" % world.property.why)
+		return
+	p.inv.add("plank", 60)
+	p.inv.add("plough")
+	world.minutes = (int(GameData.b("caravan_every_days")) * 3 + 1) * 1440.0 + 13.0 * 60.0       # the caravan's afternoon
+	var pr: Rect2i = world.farm.pen_rect_ahead("horse", Vector2(float(pl.x) + 4.5, float(pl.y) + 8.5), Vector2.UP)
+	var pen: Dictionary = world.farm.build_pen("horse", pr, p)
+	var why: String = world.farm.buy_horse(p)
+	if pen.is_empty() or why != "":
+		print("horse shot: %s %s" % [world.farm.pen_why, why])
+		return
+	pen.trough = 4
+	if at_caravan:
+		p.pos = world.farm.caravan_stop() + Vector2(1.5, 0.5)
+		follow_at = _in_view(world.farm.caravan_stop() * T)
+	else:
+		p.pos = Vector2(float(pen.x) + float(pen.w) / 2.0 + 0.5, float(pen.y) - 0.5)
+		follow_at = _in_view(Vector2(float(pen.x) + float(pen.w) / 2.0, float(pen.y) + float(pen.h) / 2.0) * T)
 	camera.position = follow_at
 
 
@@ -4879,10 +5455,9 @@ func _gather_step() -> void:
 			chase = ref
 		strike_pending = true          # keep striking until it falls
 		return
-	for id in ResourceNodes.products(d):
-		if not p.inv.can_add(id):
-			stop_gather("Your pack is full.")
-			return
+	if not p.inv.can_add_all(ResourceNodes.products(d)):
+		stop_gather(p.inv.full_text_all(ResourceNodes.products(d)))
+		return
 	var stand := _gather_stand(d, ref)
 	if p.pos.distance_to(stand) > 0.6:
 		if move_to == Vector2.INF:
@@ -5167,6 +5742,7 @@ func _sync_levels(delta: float) -> void:
 	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
 	fade.append_array(view.sorted_of.values())
 	fade.append_array(animal_sprites.values())
+	fade.append_array(country_sprites.values())
 	fade.append_array(house_signs.values())
 	for node in fade:
 		if is_instance_valid(node):

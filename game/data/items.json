@@ -1,133 +1,171 @@
 {
   "format": "mml-items/1",
   "note": "Values are GAME EXPANSION balance numbers, not Morris canon. value = base price in coins. type medicine = heals `heal` health when used (never above the maximum; not food, no hunger).",
+  "categories": {
+    "order": [
+      "general",
+      "food",
+      "raw",
+      "tools",
+      "weapons",
+      "armour",
+      "medicine",
+      "crafted"
+    ],
+    "rule": "INV-18 (Build 18): every item has exactly one category, the pack tab it is carried in and the capacity pool it counts against. Precedence: weapon, tool, armour and clothing (anything worn), food, medicine, whatever made them; raw = gathered, dug, cut or taken from animals before any workshop step (seeds and planting stock included); crafted = made in a workshop and none of the above (jewellery included); general = what is left, kept short.",
+    "owner": "INV-Q1 decided by the owner 2026-10-22 (docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md): rings and amulets crafted goods and valuables; wheat raw; raw meat food; seeds, saplings and cuttings raw; herbal tonic medicine; lockpicks and padlocks tools."
+  },
   "items": {
     "copper_ore": {
       "name": "Copper ore",
       "type": "resource",
-      "value": 3
+      "value": 3,
+      "category": "raw"
     },
     "iron_ore": {
       "name": "Iron ore",
       "type": "resource",
-      "value": 4
+      "value": 4,
+      "category": "raw"
     },
     "gold_ore": {
       "name": "Gold ore",
       "type": "resource",
-      "value": 20
+      "value": 20,
+      "category": "raw"
     },
     "coal": {
       "name": "Coal",
       "type": "resource",
-      "value": 3
+      "value": 3,
+      "category": "raw"
     },
     "stone": {
       "name": "Stone",
       "type": "resource",
-      "value": 1
+      "value": 1,
+      "category": "raw"
     },
     "building_block": {
       "name": "Building block",
       "type": "resource",
-      "value": 3
+      "value": 3,
+      "category": "crafted"
     },
     "log": {
       "name": "Log",
       "type": "resource",
-      "value": 2
+      "value": 2,
+      "category": "raw"
     },
     "oak_sapling": {
       "name": "Oak sapling",
       "type": "resource",
       "value": 1,
-      "plant": "oak"
+      "plant": "oak",
+      "category": "raw"
     },
     "pine_sapling": {
       "name": "Pine sapling",
       "type": "resource",
       "value": 1,
-      "plant": "pine"
+      "plant": "pine",
+      "category": "raw"
     },
     "plank": {
       "name": "Plank",
       "type": "resource",
-      "value": 2
+      "value": 2,
+      "category": "crafted"
     },
     "wheat": {
       "name": "Wheat",
       "type": "resource",
       "value": 3,
-      "food": 20
+      "food": 20,
+      "category": "raw"
     },
     "meat": {
       "name": "Raw meat",
       "type": "resource",
-      "value": 3
+      "value": 3,
+      "category": "food"
     },
     "hide": {
       "name": "Hide",
       "type": "resource",
-      "value": 3
+      "value": 3,
+      "category": "raw"
     },
     "rabbit_pelt": {
       "name": "Rabbit pelt",
       "type": "resource",
-      "value": 3
+      "value": 3,
+      "category": "raw"
     },
     "feather": {
       "name": "Feathers",
       "type": "resource",
-      "value": 1
+      "value": 1,
+      "category": "raw"
     },
     "leather": {
       "name": "Leather",
       "type": "resource",
-      "value": 6
+      "value": 6,
+      "category": "crafted"
     },
     "iron_bar": {
       "name": "Iron bar",
       "type": "resource",
-      "value": 14
+      "value": 14,
+      "category": "crafted"
     },
     "lockpick": {
       "name": "Lockpick",
       "type": "resource",
-      "value": 8
+      "value": 8,
+      "category": "tools"
     },
     "padlock": {
       "name": "Padlock",
       "type": "resource",
       "value": 24,
-      "lock_level": 2
+      "lock_level": 2,
+      "category": "tools"
     },
     "copper_bar": {
       "name": "Copper bar",
       "type": "resource",
-      "value": 10
+      "value": 10,
+      "category": "crafted"
     },
     "gold_bar": {
       "name": "Gold bar",
       "type": "resource",
-      "value": 50
+      "value": 50,
+      "category": "crafted"
     },
     "pottage": {
       "name": "Pottage",
       "type": "food",
       "value": 2,
-      "food": 40
+      "food": 40,
+      "category": "food"
     },
     "roast_meat": {
       "name": "Roast meat",
       "type": "food",
       "value": 4,
-      "food": 60
+      "food": 60,
+      "category": "food"
     },
     "ale": {
       "name": "Ale",
       "type": "food",
       "value": 2,
-      "food": 10
+      "food": 10,
+      "category": "food"
     },
     "pickaxe": {
       "name": "Pickaxe",
@@ -135,7 +173,8 @@
       "tool": "pickaxe",
       "value": 32,
       "durability": 120,
-      "speed": 1.0
+      "speed": 1.0,
+      "category": "tools"
     },
     "axe": {
       "name": "Axe",
@@ -143,49 +182,56 @@
       "tool": "axe",
       "value": 32,
       "durability": 120,
-      "speed": 1.0
+      "speed": 1.0,
+      "category": "tools"
     },
     "hammer": {
       "name": "Smith's hammer",
       "type": "tool",
       "tool": "hammer",
       "value": 20,
-      "durability": 400
+      "durability": 400,
+      "category": "tools"
     },
     "copper_sword": {
       "name": "Copper sword",
       "type": "weapon",
       "value": 30,
       "damage": 7,
-      "durability": 150
+      "durability": 150,
+      "category": "weapons"
     },
     "iron_sword": {
       "name": "Iron sword",
       "type": "weapon",
       "value": 48,
       "damage": 11,
-      "durability": 220
+      "durability": 220,
+      "category": "weapons"
     },
     "leather_armor": {
       "name": "Leather armour",
       "type": "armor",
       "value": 30,
       "armor": 3,
-      "durability": 300
+      "durability": 300,
+      "category": "armour"
     },
     "iron_armor": {
       "name": "Iron armour",
       "type": "armor",
       "value": 80,
       "armor": 6,
-      "durability": 600
+      "durability": 600,
+      "category": "armour"
     },
     "rusty_sword": {
       "name": "Rusty sword",
       "type": "weapon",
       "value": 6,
       "damage": 5,
-      "durability": 80
+      "durability": 80,
+      "category": "weapons"
     },
     "rusty_pickaxe": {
       "name": "Rusty pickaxe",
@@ -193,113 +239,137 @@
       "tool": "pickaxe",
       "value": 8,
       "durability": 60,
-      "speed": 0.7
+      "speed": 0.7,
+      "category": "tools"
     },
     "bread": {
       "name": "Loaf of bread",
       "type": "food",
       "value": 3,
-      "food": 50
+      "food": 50,
+      "category": "food"
     },
     "apple": {
       "name": "Apple",
       "type": "food",
       "value": 1,
-      "food": 15
+      "food": 15,
+      "category": "food"
     },
     "flower": {
       "name": "Wild flower",
       "type": "resource",
-      "value": 1
+      "value": 1,
+      "category": "raw"
     },
     "red_berries": {
       "name": "Red berries",
       "type": "food",
       "value": 1,
-      "food": 6
+      "food": 6,
+      "category": "food"
     },
     "blueberries": {
       "name": "Blueberries",
       "type": "food",
       "value": 1,
-      "food": 6
+      "food": 6,
+      "category": "food"
     },
     "herbal_tonic": {
       "name": "Herbal tonic",
       "type": "food",
       "value": 4,
       "food": 4,
-      "heal": 12
+      "heal": 12,
+      "category": "medicine"
     },
     "linen_bandage": {
       "name": "Linen bandage",
       "type": "medicine",
       "value": 3,
-      "heal": 15
+      "heal": 15,
+      "category": "medicine"
     },
     "herbal_poultice": {
       "name": "Herbal poultice",
       "type": "medicine",
       "value": 6,
-      "heal": 30
+      "heal": 30,
+      "category": "medicine"
     },
     "healing_tonic": {
       "name": "Healing tonic",
       "type": "medicine",
       "value": 12,
-      "heal": 50
+      "heal": 50,
+      "category": "medicine"
     },
     "strong_healing_tonic": {
       "name": "Strong healing tonic",
       "type": "medicine",
       "value": 22,
-      "heal": 80
+      "heal": 80,
+      "category": "medicine"
     },
     "rotten_apple": {
       "name": "Rotten apple",
       "type": "food",
       "value": 0,
       "food": 6,
-      "harm": 3
+      "harm": 3,
+      "category": "food"
     },
     "plain_clothes": {
       "name": "Plain clothes",
       "type": "armor",
       "value": 2,
       "armor": 0,
-      "durability": 240
+      "durability": 240,
+      "category": "armour"
     },
     "leather_cap": {
       "name": "Leather cap",
       "type": "head",
       "value": 14,
       "armor": 1,
-      "durability": 240
+      "durability": 240,
+      "category": "armour"
     },
     "iron_helmet": {
       "name": "Iron helmet",
       "type": "head",
       "value": 36,
       "armor": 2,
-      "durability": 480
+      "durability": 480,
+      "category": "armour"
     },
     "copper_ring": {
       "name": "Copper ring",
       "type": "ring",
       "value": 14,
-      "bonus": {"max_stamina": 5}
+      "bonus": {
+        "max_stamina": 5
+      },
+      "category": "crafted"
     },
     "gold_ring": {
       "name": "Gold ring",
       "type": "ring",
       "value": 60,
-      "bonus": {"max_stamina": 10}
+      "bonus": {
+        "max_stamina": 10
+      },
+      "category": "crafted"
     },
     "amulet": {
       "name": "Copper amulet",
       "type": "amulet",
       "value": 20,
-      "bonus": {"max_hp": 5}
+      "bonus": {
+        "max_hp": 5
+      },
+      "category": "crafted"
     },
     "plough": {
       "name": "Hand plough",
@@ -307,30 +377,163 @@
       "tool": "plough",
       "value": 40,
       "durability": 150,
-      "speed": 1.0
+      "speed": 1.0,
+      "category": "tools"
     },
-    "wheat_seed": {"name": "Wheat seed", "type": "resource", "value": 1},
-    "carrot_seed": {"name": "Carrot seed", "type": "resource", "value": 1},
-    "potato_seed": {"name": "Seed potato", "type": "resource", "value": 1},
-    "herb_seed": {"name": "Herb seed", "type": "resource", "value": 1},
-    "flower_seed": {"name": "Wild flower seed", "type": "resource", "value": 1, "propagates": "flower"},
-    "red_berry_cutting": {"name": "Red berry cutting", "type": "resource", "value": 1, "propagates": "redberry"},
-    "blue_berry_cutting": {"name": "Blue berry cutting", "type": "resource", "value": 1, "propagates": "blueberry"},
-    "carrot": {"name": "Carrot", "type": "food", "value": 2, "food": 12},
-    "potato": {"name": "Potato", "type": "food", "value": 2, "food": 14},
-    "egg": {"name": "Egg", "type": "food", "value": 2, "food": 10},
-    "milk": {"name": "Milk", "type": "food", "value": 3, "food": 12},
-    "cheese": {"name": "Cheese", "type": "food", "value": 8, "food": 35},
-    "wool": {"name": "Wool", "type": "resource", "value": 4},
-    "wool_cloth": {"name": "Woollen cloth", "type": "resource", "value": 9},
-    "cart_wheel": {"name": "Cart wheel", "type": "resource", "value": 9},
-    "cart_axle": {"name": "Cart axle", "type": "resource", "value": 20},
-    "cart_ironwork": {"name": "Cart ironwork", "type": "resource", "value": 19},
-    "handcart": {"name": "Handcart", "type": "resource", "value": 90, "cart": true},
+    "wheat_seed": {
+      "name": "Wheat seed",
+      "type": "resource",
+      "value": 1,
+      "category": "raw"
+    },
+    "carrot_seed": {
+      "name": "Carrot seed",
+      "type": "resource",
+      "value": 1,
+      "category": "raw"
+    },
+    "potato_seed": {
+      "name": "Seed potato",
+      "type": "resource",
+      "value": 1,
+      "category": "raw"
+    },
+    "herb_seed": {
+      "name": "Herb seed",
+      "type": "resource",
+      "value": 1,
+      "category": "raw"
+    },
+    "flower_seed": {
+      "name": "Wild flower seed",
+      "type": "resource",
+      "value": 1,
+      "propagates": "flower",
+      "category": "raw"
+    },
+    "red_berry_cutting": {
+      "name": "Red berry cutting",
+      "type": "resource",
+      "value": 1,
+      "propagates": "redberry",
+      "category": "raw"
+    },
+    "blue_berry_cutting": {
+      "name": "Blue berry cutting",
+      "type": "resource",
+      "value": 1,
+      "propagates": "blueberry",
+      "category": "raw"
+    },
+    "carrot": {
+      "name": "Carrot",
+      "type": "food",
+      "value": 2,
+      "food": 12,
+      "category": "food"
+    },
+    "potato": {
+      "name": "Potato",
+      "type": "food",
+      "value": 2,
+      "food": 14,
+      "category": "food"
+    },
+    "egg": {
+      "name": "Egg",
+      "type": "food",
+      "value": 2,
+      "food": 10,
+      "category": "food"
+    },
+    "milk": {
+      "name": "Milk",
+      "type": "food",
+      "value": 3,
+      "food": 12,
+      "category": "food"
+    },
+    "cheese": {
+      "name": "Cheese",
+      "type": "food",
+      "value": 8,
+      "food": 35,
+      "category": "food"
+    },
+    "wool": {
+      "name": "Wool",
+      "type": "resource",
+      "value": 4,
+      "category": "raw"
+    },
+    "wool_cloth": {
+      "name": "Woollen cloth",
+      "type": "resource",
+      "value": 9,
+      "category": "crafted"
+    },
+    "spice": {
+      "name": "Spices",
+      "type": "resource",
+      "value": 14,
+      "category": "raw"
+    },
+    "fine_cloth": {
+      "name": "Fine cloth",
+      "type": "resource",
+      "value": 30,
+      "category": "crafted"
+    },
+    "jewellery": {
+      "name": "Jewellery",
+      "type": "resource",
+      "value": 60,
+      "category": "crafted"
+    },
+    "cart_wheel": {
+      "name": "Cart wheel",
+      "type": "resource",
+      "value": 9,
+      "category": "crafted"
+    },
+    "cart_axle": {
+      "name": "Cart axle",
+      "type": "resource",
+      "value": 20,
+      "category": "crafted"
+    },
+    "cart_ironwork": {
+      "name": "Cart ironwork",
+      "type": "resource",
+      "value": 19,
+      "category": "crafted"
+    },
+    "handcart": {
+      "name": "Handcart",
+      "type": "resource",
+      "value": 90,
+      "cart": true,
+      "category": "crafted"
+    },
     "nails": {
       "name": "Nails",
       "type": "resource",
-      "value": 1
+      "value": 1,
+      "category": "crafted"
+    },
+    "rubble": {
+      "name": "Rubble",
+      "type": "resource",
+      "value": 1,
+      "category": "raw"
+    },
+    "chisel": {
+      "name": "Iron chisel",
+      "type": "tool",
+      "tool": "chisel",
+      "value": 18,
+      "durability": 150,
+      "category": "tools"
     },
     "mallet": {
       "name": "Mallet",
@@ -338,20 +541,94 @@
       "tool": "mallet",
       "value": 8,
       "durability": 150,
-      "speed": 1.0
+      "speed": 1.0,
+      "category": "tools"
     },
-    "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"},
-    "prospecting_kit": {"name": "Prospector's kit", "type": "tool", "tool": "prospecting_kit", "value": 34, "durability": 40, "speed": 1.0},
-    "ore_sample": {"name": "Rock sample", "type": "resource", "value": 0},
-    "topsoil": {"name": "Topsoil", "type": "resource", "value": 0},
-    "dirt": {"name": "Dirt", "type": "resource", "value": 0},
-    "spoil": {"name": "Spoil", "type": "resource", "value": 0},
-    "timber_support": {"name": "Timber support", "type": "resource", "value": 8},
-    "track_section": {"name": "Track section", "type": "resource", "value": 10},
-    "minecart": {"name": "Minecart", "type": "resource", "value": 170, "cart": true},
-    "ladder": {"name": "Ladder", "type": "resource", "value": 14},
-    "shovel": {"name": "Shovel", "type": "tool", "tool": "shovel", "value": 20, "durability": 120, "speed": 1.0},
-    "shovel_blade": {"name": "Shovel blade", "type": "resource", "value": 15},
-    "shovel_haft": {"name": "Shovel haft", "type": "resource", "value": 3}
+    "apple_sapling": {
+      "name": "Apple sapling",
+      "type": "resource",
+      "value": 3,
+      "plant": "apple",
+      "category": "raw"
+    },
+    "prospecting_kit": {
+      "name": "Prospector's kit",
+      "type": "tool",
+      "tool": "prospecting_kit",
+      "value": 34,
+      "durability": 40,
+      "speed": 1.0,
+      "category": "tools"
+    },
+    "ore_sample": {
+      "name": "Rock sample",
+      "type": "resource",
+      "value": 0,
+      "category": "general"
+    },
+    "topsoil": {
+      "name": "Topsoil",
+      "type": "resource",
+      "value": 0,
+      "category": "raw"
+    },
+    "dirt": {
+      "name": "Dirt",
+      "type": "resource",
+      "value": 0,
+      "category": "raw"
+    },
+    "spoil": {
+      "name": "Spoil",
+      "type": "resource",
+      "value": 0,
+      "category": "raw"
+    },
+    "timber_support": {
+      "name": "Timber support",
+      "type": "resource",
+      "value": 8,
+      "category": "crafted"
+    },
+    "track_section": {
+      "name": "Track section",
+      "type": "resource",
+      "value": 10,
+      "category": "crafted"
+    },
+    "minecart": {
+      "name": "Minecart",
+      "type": "resource",
+      "value": 170,
+      "cart": true,
+      "category": "crafted"
+    },
+    "ladder": {
+      "name": "Ladder",
+      "type": "resource",
+      "value": 14,
+      "category": "crafted"
+    },
+    "shovel": {
+      "name": "Shovel",
+      "type": "tool",
+      "tool": "shovel",
+      "value": 20,
+      "durability": 120,
+      "speed": 1.0,
+      "category": "tools"
+    },
+    "shovel_blade": {
+      "name": "Shovel blade",
+      "type": "resource",
+      "value": 15,
+      "category": "crafted"
+    },
+    "shovel_haft": {
+      "name": "Shovel haft",
+      "type": "resource",
+      "value": 3,
+      "category": "crafted"
+    }
   }
 }

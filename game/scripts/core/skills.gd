@@ -136,6 +136,66 @@ static func seed_villagers(w: World) -> void:
 			n.skills = start_xp(job, Life.npc_age(w, n), tenure_share(w, n))
 
 
+## SKILL-TRADES-18 (owner Q18-1, 2026-10-23): the skills that start from another's experience (skills.json `starts_from`:
+## Carpentry, Masonry and Tanning from Crafting). Gives `who` (a PlayerState or NPC) each such skill they have no record of
+## yet, with the experience of the skill it starts from, so no one loses progress. Never replaces a recorded skill; a
+## person with no experience to start from is given nothing. Returns whether anything was given.
+static func seed_trades_for(who) -> bool:
+	GameData.ensure()
+	var given := false
+	for sk in GameData.skills:
+		var from := str(GameData.skills[sk].get("starts_from", ""))
+		if from != "" and not who.skills.has(sk) and int(who.skills.get(from, 0)) > 0:
+			who.skills[sk] = int(who.skills[from])
+			given = true
+	return given
+
+
+## The one-time start of the trade skills for the player and every villager: only at World.setup (after the settlers'
+## history) and when a save without the `trade_skills` mark is loaded (World.load_dict). Deterministic.
+static func seed_trades(w: World) -> void:
+	seed_trades_for(w.player)
+	for n: NPC in w.npcs:
+		seed_trades_for(n)
+
+
+## DVW-B8 (owner, 2026-10-23: "Farming starts from the experience already recorded"): the Farming skill starts from each
+## person's recorded Expansion 18 farming experience (WorkExperience), on its own curve: the experience level (0 to 10,
+## 10 x days / cap) is the skill level, interpolated between levels, level 1 being no xp. Never replaces a recorded Farming
+## skill. Runs after the experience was seeded or loaded, with seed_trades, once.
+static func seed_farming(w: World) -> void:
+	_seed_farming_for(w.player, WorkExperience.PLAYER, w)
+	for n: NPC in w.npcs:
+		_seed_farming_for(n, World.npc_ref(n.id), w)
+
+
+static func _seed_farming_for(who, key: String, w: World) -> void:
+	if who.skills.has("farming"):
+		return
+	var lv := w.experience.level(key, "farming")
+	if lv < 1.0:
+		return
+	var base := mini(floori(lv), max_level())
+	var xp := xp_for_level(base) + (roundi((lv - float(base)) * float(step(base))) if base < max_level() else 0)
+	if xp > 0:
+		who.skills["farming"] = xp
+
+
+## DVW-B8: the experience a finished action (`key` in skills.json work_xp.xp) earns.
+static func action_xp(key: String) -> int:
+	GameData.ensure()
+	return int(((cfg().work_xp as Dictionary).xp as Dictionary).get(key, 0))
+
+
+## DVW-B8: the skill and experience a villager's work step earns, by its act: {skill, xp} or {} for none.
+static func step_xp(act: String) -> Dictionary:
+	GameData.ensure()
+	var sk := str(((cfg().work_xp as Dictionary).act_skill as Dictionary).get(act, ""))
+	if sk == "":
+		return {}
+	return {"skill": sk, "xp": action_xp(act)}
+
+
 ## The value of a tier effect for the player or a villager: the highest tier at or below their level that defines
 ## the key, else `default`.
 static func value(who, skill: String, key: String, default := 0.0) -> float:
