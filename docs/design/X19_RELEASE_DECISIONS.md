@@ -54,6 +54,13 @@ about, or hearing the story retold.
 | Transmission | The impression is the sum of the observer's own remembered judgments of those relatives (no new store); stories fade with X19-DECAY, permanent deeds stay; each personal dealing with the descendant replaces a tenth of the inherited impression |
 | Limit | An inherited impression never weighs more than a quarter of the strongest personal judgment, and spillover alone can never make someone refuse a deal or aid (it only colours) |
 
+**Owner answer and clarification (2026-10-23):** wider reach, including cousins down to second cousins, with weights
+falling by relationship distance. Provisional starting values (not owner-selected, tunable): spillover 30% for the first
+ring (parents, children, siblings, spouse), 15% for the second (grandparents, grandchildren, aunts, uncles, nieces,
+nephews, in-laws), 7.5% for first cousins, 3.75% for second cousins; a good name from ancestors and kin at the same falling
+weights. Inherited reputation stays separate from direct, relationship-weighted reactions to witnessed deeds, and can
+never cause a refusal on its own (`docs/directives/2026-10-23_owner_clarifications_famrep_simf4.md`).
+
 ## D. Lies, family stories, explainability
 
 | Id | Recommendation |
