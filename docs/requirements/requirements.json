@@ -38141,12 +38141,18 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md; test_commit: None -> 9a86f5c; commits + 95578d8; known_defects + chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet",
      "why": "365-day runs seeds 1-4 on 9a86f5c (run 39874405723): all reached day 365, no leak, no script error, no FATAL; read from job logs at day 365 only (artifacts blocked); the day-100 read and settlement trend not recoverable from logs (long-sims now prints them). Possible defect under root-cause check: the chapel fund holding 68-85% of all coins at day 365, treasury 0-4, 73-80% of adults without a job"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + ed6fd18",
+     "why": "checkpoints recovered without re-simulation: long-sims recover_run mode (ed6fd18), run 39893372350 printed run 39874405723's artifacts in its log; analysis in progress"
     }
    ],
    "tests": "run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md",
    "test_commit": "9a86f5c",
    "commits": [
-    "95578d8"
+    "95578d8",
+    "ed6fd18"
    ],
    "known_defects": [
     "chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet"
@@ -43432,7 +43438,15 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered via B18-DP-17: option A"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 3eff7da",
+     "why": "implemented (3eff7da)"
     }
+   ],
+   "commits": [
+    "3eff7da"
    ]
   },
   {
@@ -45605,11 +45619,12 @@
     "Rule 002's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Chains exist (farmer>cook, woodcutter>carpenter, miner>smith, hunter>tanner, keeper>cook); not audited per profession",
-   "tests": "interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale",
+   "tests": "interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale; check_materials: 11 professions pass or excepted, 0 stale; interdependency_test 30; test_check_materials 18 OK",
    "playtest": [],
    "branch": "",
    "commits": [
-    "fc25af7"
+    "fc25af7",
+    "3eff7da"
    ],
    "parent": null,
    "depends_on": [],
@@ -45664,23 +45679,30 @@
      "date": "2026-10-22",
      "change": "tests: interdependency_test 22 checks (Rule 002 verification scenario) on 027d742 -> interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale; test_commit: None -> b196303; commits + fc25af7",
      "why": "B18-DP-15 done: the checker requires code, test and goods evidence for a supplies-nobody exception; sage exception evidenced by test_sage_medicine (fc25af7, merged b196303)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale -> interdependency_test 22 checks (Rule 002 verification scenario) on 027d742; interdependency_test 30 (test_sage_medicine), tests/test_check_materials.py 18 OK, check_materials 0 stale; check_materials: 11 professions pass or excepted, 0 stale; interdependency_test 30; test_check_materials 18 OK; test_commit: b196303 -> 3eff7da; commits + 3eff7da; integrated_in + Build 18 wip/build18 3eff7da",
+     "why": "B18-DP-17 (option A): stonecutter documented as an evidence-checked exception (3eff7da); all 11 professions pass Rule 2 or hold an approved exception; interdependency_test is the verification scenario"
     }
    ],
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 3eff7da"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
    "assigned_worker": "",
    "remaining_work": "Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains",
-   "test_commit": "b196303"
+   "test_commit": "3eff7da"
   },
   {
    "id": "WDR-003",

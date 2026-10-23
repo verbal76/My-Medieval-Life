@@ -9,16 +9,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 83 |
-| Integrated | 75 of 83 (90%) |
-| Automated tests passed | 73 of 83 (88%) |
-| Integration verified | 55 of 83 (66%) |
+| Integrated | 76 of 83 (92%) |
+| Automated tests passed | 74 of 83 (89%) |
+| Integration verified | 56 of 83 (67%) |
 | Gameplay verified | 0 of 83 (0%) |
 | Owner playtested | 0 of 83 (0%) |
 | Complete | 2 of 83 (2%) |
 | Open (release blockers) | 81 |
 | Open owner decisions (blocking) | 5 (0) |
 
-## Integrated, awaiting gameplay or owner verification (73)
+## Integrated, awaiting gameplay or owner verification (74)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -54,7 +54,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | OWNER APPROVED | INTEGRATED | staging | TARGETED TESTS PASSED | Owner review of the report (docs/investigations/2026-10-23_regional_economy.md) and decisions REG-WAGE-D1, REG-BUY-D1, REG-CIRC-D1 |  | verification only |
 | REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Per-holder need and sale-cap derivations in SettlementParty are provisional agent proposals (DESIGN.md 12a); the food-selling policy awaits REG-BUY-P1; known: Not called from the daily loop yet (RegionalMarket wiring is part of REG-BUY-01; couriers REG-COURIER-01); No settlement party hires out carts yet; treasuries and businesses cannot travel (carriage per Q18-12, approved: to be built under REG-COURIER-01) |  | verification only |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | OWNER APPROVED | INTEGRATED | b2f5c5d | INTEGRATION VERIFIED | re-run only if simulation code changes before the candidate packages |  | verification only |
-| REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | OWNER APPROVED | INTEGRATED | 95578d8 | TARGETED TESTS PASSED | known: chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet |  | verification only |
+| REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | OWNER APPROVED | INTEGRATED | 95578d8, ed6fd18 | TARGETED TESTS PASSED | known: chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet |  | verification only |
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | OWNER APPROVED | INTEGRATED | b2f5c5d, 37526cb | INTEGRATION VERIFIED | on-device import from the Android build (owner playtest) |  | verification only |
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | OWNER APPROVED | INTEGRATED | 0e1a88b | INTEGRATION VERIFIED | CI Tests run on staging after the Build 18 merge |  | verification only |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | OWNER APPROVED | INTEGRATED | 0e1a88b | INTEGRATION VERIFIED |  |  | verification only |
@@ -85,6 +85,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | VIS-DOOR-01 | Doorway transition: characters no longer pass under a closed door | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | VIS-STEPS-01 | Steps cut through rock need real step art | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: a thin seam at one join between two step cells (north-south, ground to the north) |  | verification only |
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 3eff7da | INTEGRATION VERIFIED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | verification only |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 692eecc | TARGETED TESTS PASSED | Specialization by local returns, wage competition within the wage system, stall relocation, failure; focused tests (B18-DP-08); known: hiring competition covers manor hands only; construction helpers and business attendants have no unfilled-place signal |  | verification only |
 | WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device (performance on a phone); Build 18 release gate; known: countryside animals are ambient only: they cannot be hunted; travellers stop at the village gate |  | verification only |
 | X18-CAPCOMP | Capability composition: workforce capability from local experience, effective capability capped by operational facilities | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
@@ -96,7 +97,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 18 wip/build18 b196303 | TARGETED TESTS PASSED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11); known: covers 9 of about 46 planned runs; no capability constants adopted |  | verification only |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (6)
+## Ready to proceed now (approved, specified, nothing open blocks it) (5)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -104,7 +105,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | M |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  |  | S |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | UNKNOWN |
-| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | fc25af7 | NOT TESTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | M |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |  | M |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (2)

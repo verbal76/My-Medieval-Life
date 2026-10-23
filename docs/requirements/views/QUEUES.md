@@ -11,7 +11,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 
-## Implemented but not tested (42)
+## Implemented but not tested (41)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -46,7 +46,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
-| WDR-002-C | 18 | PARTIALLY IMPLEMENTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |
 | WDR-004-C | 18 | PARTIALLY IMPLEMENTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |
 | WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |

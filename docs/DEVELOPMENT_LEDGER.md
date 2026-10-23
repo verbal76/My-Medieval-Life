@@ -543,7 +543,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | VIS-TREE-02 | Tree fragments: no stray old tree pieces; stages and stumps draw correctly | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | 21 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | WDR-001-C | Comply with World Design Rule 1: Material Interdependency | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | 17 | OWNER DECISION REQUIRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
