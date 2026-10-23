@@ -70,6 +70,7 @@ func _init() -> void:
 	test_q01_facts_and_zero()
 	test_q02_decay_and_murder()
 	test_q06_trust()
+	test_x19_regard()
 	test_q07_no_hop_limit()
 	test_q08_morality()
 	test_q11_permanent_memories()
@@ -815,11 +816,11 @@ func test_q06_trust() -> void:
 	j.observe(ev, BOB)
 	j.observe(ev, JOHN)
 	check(int(j.belief(JOHN, ev).conf) == 1000 and str(j.belief(JOHN, ev).src) == "witnessed", "a witness is firsthand: no storyteller to weigh")
-	check(j.credibility(STRANGER, BOB) == 950 and j.credibility(COUSIN, STRANGER) == 500, "credibility from the relationship number: regard 90 -> 0.95, a stranger 0.5")
+	check(j.credibility(STRANGER, BOB) == 612 and j.credibility(COUSIN, STRANGER) == 500, "credibility with no record yet is a first impression from liking (X19-REGARD): regard 90 x 0.25 -> trust 22.5 -> 0.612, a stranger 0.5")
 	j.tell(BOB, STRANGER)
-	check(int(j.belief(STRANGER, ev).conf) == JudgmentMath.mul_div(1000 * 900, 950, 1000000), "told by a trusted friend: 0.9 x 0.95")
+	check(int(j.belief(STRANGER, ev).conf) == JudgmentMath.mul_div(1000 * 900, 612, 1000000), "told by a liked newcomer: 0.9 x 0.612")
 	j.tell(STRANGER, COUSIN)
-	var chain := JudgmentMath.mul_div(JudgmentMath.mul_div(1000 * 900, 950, 1000000) * 900, 500, 1000000)
+	var chain := JudgmentMath.mul_div(JudgmentMath.mul_div(1000 * 900, 612, 1000000) * 900, 500, 1000000)
 	check(int(j.belief(COUSIN, ev).conf) == chain, "over two links the confidence is the product along the chain (%d)" % chain)
 	var once := j.bad(COUSIN, THIEF)
 	j.tell(STRANGER, COUSIN)
@@ -835,6 +836,60 @@ func test_q06_trust() -> void:
 ## person judges it once; processing ends. A murder (never forgotten, Q11) travels the whole line; an ordinary story
 ## goes on until it is too faint to remember (salience = severity x confidence, Q11's ordinary forgetting), not to a
 ## fixed count.
+## X19-REGARD (owner 2026-10-23, "separate them"): liking (regard) and trust are different numbers. A liked liar is
+## believed less once found out; a disliked honest trader is still trusted; the split saves, loads and replays exactly.
+func test_x19_regard() -> void:
+	var liar := 21
+	var honest := 22
+	var judge := 23
+	var social := JudgmentSocial.new().set_regard(judge, liar, 90).set_regard(judge, honest, 0)
+	var j := JudgmentStore.new(cfg(), social, 7)
+	var first := j.credibility(judge, liar)
+	check(first > j.credibility(judge, honest) and j.trust_of(judge, liar) == 22500 and j.trust_of(judge, honest) == 0, "before any evidence, trust starts as a small first impression of liking (%d vs %d)" % [first, j.credibility(judge, honest)])
+	# the liar's story is shown wrong: the judge heard that the thief was someone else, then saw who did it
+	var ev := j.publish("theft", [THIEF], [BOB])
+	j.observe(ev, liar)
+	j.learn(judge, ev, "told", liar, 0, 500, [[JOHN, 1000]])
+	j.observe(ev, judge)                                  # first-hand: it was the thief, not John
+	check(j.trust_of(judge, liar) == 22500 - 15000 and j.credibility(judge, liar) < first, "a liked liar shown wrong is trusted less (%d -> %d) though liking is unchanged" % [first, j.credibility(judge, liar)])
+	check(social.regard(judge, liar) == 90, "liking itself is untouched by the lie: Relations' regard stays 90")
+	# a disliked trader who deals fairly gains trust
+	social.set_regard(judge, honest, -40)
+	for i in 6:
+		j.observe(j.publish("trade_fair", [honest], [judge]), judge)
+	var low := j.credibility(judge, liar)
+	check(j.trust_of(judge, honest) == 24000 and j.credibility(judge, honest) > low and social.regard(judge, honest) == -40, "a disliked honest trader is still trusted: 6 fair deals -> trust 24 (above the liar's), liking -40 unchanged")
+	# a cheat costs trust; trust stays within 0..100
+	j.observe(j.publish("trade_cheat", [honest], [judge]), judge)
+	check(j.trust_of(judge, honest) == 4000, "a cheat takes 20 points of trust (24 -> 4)")
+	for i in 3:
+		j.observe(j.publish("trade_cheat", [honest], [judge]), judge)
+	check(j.trust_of(judge, honest) == 0, "trust never goes below 0")
+	# a story borne out raises the teller's trust
+	var ev2 := j.publish("theft", [THIEF], [BOB])
+	j.learn(judge, ev2, "told", FRIEND, 0, 500, [[THIEF, 1000]])
+	var before := j.trust_of(judge, FRIEND)
+	j.observe(ev2, judge)
+	check(j.trust_of(judge, FRIEND) == before + 4000, "a story borne out by what the listener sees raises the teller's trust")
+	# gossip closeness still comes from liking
+	var cc := cfg()
+	cc.gossip.closeness_floor_permille = 400
+	var jc := JudgmentStore.new(cc, social, 7)
+	check(jc.close_chance(judge, liar) > jc.close_chance(judge, honest) and jc.close_chance(judge, honest) == 400, "closeness for gossip still follows liking, not trust")
+	# save, load, determinism
+	var d := j.to_dict()
+	var j2 := JudgmentStore.new(cfg(), social, 7)
+	check(j2.load_dict(JSON.parse_string(JSON.stringify(d))) == "" and j2.trust_of(judge, liar) == j.trust_of(judge, liar) and j2.trust_of(judge, honest) == 0 and j2.state_hash() == j.state_hash(), "trust saves with the section and loads back identical")
+	var j3 := JudgmentStore.new(cfg(), JudgmentSocial.new(), 7)
+	check(j3.load_dict({"format": "mml-judgment/1", "version": 1, "day": 0, "next_event": 1, "facts": [], "memories": [], "contrib": [], "ledgers": []}) == "" and j3.to_dict().get("trust", null) == null, "a section without trust loads (older saves) and writes none")
+	var a := JudgmentStore.new(cfg(), JudgmentSocial.new().set_regard(judge, liar, 90), 7)
+	var b := JudgmentStore.new(cfg(), JudgmentSocial.new().set_regard(judge, liar, 90), 7)
+	for x in [a, b]:
+		x.observe(x.publish("trade_cheat", [liar], [judge]), judge)
+		x.learn(judge, x.publish("theft", [THIEF], [BOB]), "told", liar, 0, 500, [[JOHN, 1000]])
+	check(a.state_hash() == b.state_hash(), "trust is deterministic: the same events give the same state")
+
+
 func test_q07_no_hop_limit() -> void:
 	var social := JudgmentSocial.new()
 	for i in 40:

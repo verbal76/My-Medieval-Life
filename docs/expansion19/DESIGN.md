@@ -62,8 +62,8 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
    few a tick, round 3). Each may tell the other up to `per_meeting` of their most salient memories the other does not
    hold or holds less surely, within the teller's `daily_budget`, only to someone they judge above `share_net_at`,
    never about the listener's own deed. There is **no hop limit and no confidence floor**. Confidence = the teller's x
-   `hop_factor` x credibility. Credibility is the listener's trust in the immediate teller, from the existing Relations
-   regard (`credibility_stranger` at 0, up to 1000 at 100), moved a little by their judgment of the teller. Along a
+   `hop_factor` x credibility. Credibility is the listener's trust in the immediate teller (`trust_of`, its own value since X19-REGARD, section 15b; starting
+   as a first impression of Relations regard), `credibility_stranger` at trust 0, up to 1000 at 100, moved a little by their judgment of the teller. Along a
    chain it is the product of the links. Each person judges an event once. A belief is replaced only by a strictly more
    confident telling, which updates its contribution in place. An ordinary story travels until it is too faint to
    remember (salience = severity x confidence); a murder, never forgotten, travels as far as meetings carry it (tested
@@ -134,6 +134,7 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 | SJD-Q13 weights | Born with + shaped by life | not yet wired (profiles are data, no learning) |
 | X19-ASSAULT | Permanent | **changed**: `events.assault.permanent` true: memories never fade for anyone, judgments never decay (`test_x19_assault_permanent`) |
 | X19-GUARD | Reduce, never waive | APPLIED in live code (`World.guard_confront`): a friend guard halves the fine, a friend nearby halves it again, always at least 1 coin (agent proposal for the amount, `docs/DECISIONS.md`); outside the judgment (section 10.3) |
+| X19-REGARD | Separate them: liking and trust tracked apart | **changed**: a separate trust value in the store (section 15b); regard stays liking and gossip closeness (`test_x19_regard`) |
 | X19-HARMED | Keep instant | already matches: `Relations.harmed` unchanged |
 | X19-CRT12 | Keep fixed cut-offs | already matches: `Relations.refusal` and `marry_regard` unchanged |
 | X19-DECAY | Half-life 2 game years (16 days), on each deed's ledger contribution | not touched here (decay rate stays the proposed 3 permille a day until the lead sets it) |
@@ -391,7 +392,7 @@ With judgment on for 10 village days (`economy_sim --judgment`, seed 1) there we
    - (b) the guard enforces always, and friendship shows only in words;
    - (c) friendship may reduce the fine but never waive it.
    Answered (c). Nothing in the judgment code touches it.
-4. **Regard as trust (Q06) and regard as harm.** Q06 reuses Relations regard as trust. But `harmed` also lowers regard
+4. **Regard as trust (Q06) and regard as harm. ANSWERED 2026-10-23 (X19-REGARD, "Separate them"): trust is now its own value (section 15b); a crime lowers liking, trust moves only with reliability.** Q06 reused Relations regard as trust. But `harmed` also lowers regard
    when a crime is seen, so a crime against someone lowers how far they believe the culprit's stories. That is coherent
    but couples two concepts. No action proposed; noted for calibration.
 5. **Regard decay vs Q02.** `Relations.dawn` cools ties without contact (0.5 a day), which is much faster than the
@@ -742,3 +743,31 @@ each passing of gossip happens at the meeting itself, weighted by how close the 
   | heavy (stress) | 27.0 ms (about 108 ms) | 15.6 ms (about 62 ms) | 188 / 28 |
   Frames are noisy (one outlier can set the worst); the telling counts per tick are exact. The earlier 76 to 105 ms
   phone figure was the heavy "hour" worst. The closeness weighting itself costs one hash per story.
+
+
+## 15b. X19-REGARD: liking and trust apart (2026-10-23)
+
+Owner answer: "Separate them (Recommended)": liking and trust tracked apart. The lead's reading: Relations' `regard` is
+liking and contact (it keeps setting gossip closeness, befriending, courting, prices); belief credibility takes its own
+value. Nothing in Relations or the live game changes: judgment is off live, so the gate stays identical.
+
+- **Store.** `JudgmentStore.trust[listener][subject]`, milli-points 0..100000, `trust_of(a, b)`, `trust_add`. Saved as an optional
+  `"trust"` list of [listener, subject, value] with the section (format and `VERSION` unchanged; older sections have none and load
+  fine; a store with no trust writes none).
+- **Starting value.** With no record, a first impression: regard x `trust.seed_from_regard_permille` (250, proposal) / 1000, so a
+  stranger is 0 and a well-liked newcomer a little above; the first thing that moves trust stores the value. This keeps Q06's
+  "the relationship number must influence" without letting liking alone buy belief.
+- **What raises or lowers trust (reliability, not warmth).**
+  - A deed's own `trust` in `events` (milli-points, proposals): fair deal +4000, cheat -20000, false accusation -20000, times the
+    observer's confidence and the actor's share, once, when the belief is first formed. Kept promises and contracts are the same
+    field once the game publishes them as events (none are published today; no new event invented here).
+  - A teller's account meeting what the listener learns first-hand: right (same actors) +4000 (`rumour_confirmed`); wrong (another
+    actor) -15000 (`rumour_false`), also on `correct`. Counted once per story.
+  - Liking (shared time, kindness, help, harm seen) stays in Relations regard; judgment's moral view (`net`) still nudges credibility
+    as before.
+- **No decay** of trust (proposal; trust only moves on evidence). Every number above is an AGENT PROPOSAL labelled in
+  `judgment.json` (`_trust_note`).
+- **Tests.** `judgment_test::test_x19_regard` (a liked liar is believed less once found out, liking unchanged; a disliked honest
+  trader gains trust; cheats lower it, clamped at 0; a story borne out raises the teller; closeness still follows liking; save and
+  load; an older section; determinism). `test_q06_trust` and `test_q06_live_trust` updated to the first-impression values (0.612, 0.6).
+- **Open for the owner.** Whether liking should seed trust at all (and how much); the rates; whether trust should fade.

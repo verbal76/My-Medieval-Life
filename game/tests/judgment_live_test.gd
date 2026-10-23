@@ -261,7 +261,7 @@ func test_q10_no_numbers_in_ui() -> void:
 	w.dispose()
 
 
-## Q06 in the live world: trust in a teller is the existing Relations regard, no second friendship system.
+## Q06 in the live world: liking is still the existing Relations regard (no second friendship system); trust (X19-REGARD) starts as a first impression of it.
 func test_q06_live_trust() -> void:
 	var w := new_world()
 	var j := JudgmentLive.attach(w)
@@ -271,7 +271,7 @@ func test_q06_live_trust() -> void:
 	var c: NPC = people[2]
 	w.relations.tie(a.id, b.id).regard = 80.0
 	check(j.social.regard(a.id, b.id) == 80 and j.social.regard(a.id, c.id) == 0, "the adapter reads Relations' regard (80 for a friend, 0 for a stranger)")
-	check(j.credibility(a.id, b.id) == 900 and j.credibility(a.id, c.id) == 500, "so a trusted teller is believed more (0.9) than a stranger (0.5)")
+	check(j.credibility(a.id, b.id) == 600 and j.credibility(a.id, c.id) == 500, "so a liked teller starts a little more trusted (first impression, X19-REGARD: 0.6) than a stranger (0.5)")
 	w.dispose()
 
 

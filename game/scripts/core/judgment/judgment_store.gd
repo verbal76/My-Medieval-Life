@@ -110,6 +110,7 @@ var contrib := {}        # observer -> {event id -> PackedInt64Array [actor, goo
 var ledgers := {}        # observer -> [subjects (PackedInt64Array, ascending), values (PackedInt64Array, L_W a subject: life good, life bad, n, fading good, fading bad, permanent good, permanent bad, the day decayed to)]
 const L_W := 8                   # values a ledger entry
 var _none := PackedInt64Array()  # put in a record's place while its array changes, so the change is made in place
+var trust := {}          # listener -> {subject -> trust milli-points 0..100000}: how far the listener relies on the subject (X19-REGARD)
 var told_today := {}     # teller -> tellings today (gossip.daily_budget)
 var stats := {}          # counters for diagnostics and performance reports
 var unread := {}         # a saved section this version cannot read: kept and written back unchanged (CLAUDE.md s.7)
@@ -172,6 +173,10 @@ var _reach_cache := {}                   # person -> [_gver, the actors whose en
 var _g_sched := false                    # gossip.timing "scheduled"
 var _sched := {}                         # minute -> PackedInt64Array [a, b, ...] in the order queued (scheduled timing)
 var _stamp := 0                          # the meeting being told: its minute (scheduled) or 0, a part of the closeness roll
+var _t_seed := 0                        # trust.seed_from_regard_permille: a first impression from liking (X19-REGARD)
+var _t_ev := PackedInt64Array()         # per event type: trust milli-points a firsthand or told account of it moves the actor's trust
+var _t_true := 0                        # trust.rumour_confirmed: milli-points the teller gains when what they told is borne out
+var _t_false := 0                       # trust.rumour_false: ... loses when it is shown wrong
 var _g_floor := 1000                     # gossip.closeness_floor_permille
 var _snext := -1                         # the next minute whose meetings are still to tell (-1: none queued yet)
 
@@ -201,6 +206,7 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 		_pol.append(1 if str(d.polarity) == "GOOD" else (-1 if str(d.polarity) == "BAD" else 0))
 		_perm.append(1 if bool(d.get("permanent", false)) or int(d.severity) >= int(m.permanent_severity) else 0)
 		_jperm.append(1 if bool(d.get("permanent", false)) else 0)
+		_t_ev.append(int((d.get("trust", 0))))
 		_famh.append(str(d.get("family", "")).hash())
 		_personal.append((d.get("personal", {}) as Dictionary).duplicate())
 	_cap = int(m.capacity)
@@ -219,6 +225,10 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_g_pump = maxi(1, int(g.get("pump_per_tick", 8)))
 	_g_sched = str(g.get("timing", "scheduled")) == "scheduled"
 	_g_floor = clampi(int(g.get("closeness_floor_permille", 1000)), 0, 1000)
+	var tc: Dictionary = cfg.get("trust", {})
+	_t_seed = clampi(int(tc.get("seed_from_regard_permille", 1000)), 0, 1000)
+	_t_true = int(tc.get("rumour_confirmed", 0))
+	_t_false = int(tc.get("rumour_false", 0))
 	_b_hop = int(bc.hop_factor)
 	_b_cred_stranger = int(bc.credibility_stranger)
 	_b_cred_pp = int(bc.credibility_permille_per_point)
@@ -457,6 +467,11 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		return false
 	var f: PackedInt64Array = facts[ev]
 	var t := f[F_TYPE]
+	var fresh := not had and not has_contribution(observer, ev)
+	if had and SOURCES.find(src) < TOLD:
+		var prev: PackedInt64Array = mem[ev]
+		if prev[M_SRC] >= TOLD:                     # a told account meets first-hand knowledge: the teller was right or wrong (X19-REGARD)
+			_vouch(observer, prev[M_BY], _same_actors(_mem_actors(prev), actors))
 	var sal := JudgmentMath.scale(_sev[t], conf) if _pol[t] != 0 else int(c("memory").get("neutral_salience", 500))
 	var perm := _mem_permanent(observer, f)
 	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 1 if perm else 0)
@@ -465,6 +480,10 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		_perm_refs[ev] = int(_perm_refs.get(ev, 0)) + 1
 	_stat("beliefs")
 	_judge(observer, ev)
+	if fresh and _t_ev[t] != 0:
+		for a in actors:                            # reliability shown by the deed itself: a fair deal, a cheat, a false charge
+			if int(a[0]) != observer:
+				trust_add(observer, int(a[0]), JudgmentMath.mul_div(JudgmentMath.mul_div(_t_ev[t], conf, 1000), int(a[1]), 1000))
 	_bound(observer)
 	return true
 
@@ -487,6 +506,8 @@ func correct(observer: int, ev: int, new_actors: Array = []) -> void:
 		return
 	var m: PackedInt64Array = mem[ev]
 	var acts: Array = _fact_actors(facts[ev]) if new_actors.is_empty() else _shares(new_actors)
+	if m[M_SRC] >= TOLD and m[M_CONF] < int(c("belief").witnessed):
+		_vouch(observer, m[M_BY], _same_actors(_mem_actors(m), acts))     # the story the teller gave is borne out or shown wrong
 	mem[ev] = _pack_mem(m[M_TYPE], m[M_DAY], m[M_SRC], m[M_BY], m[M_HOPS], maxi(m[M_CONF], int(c("belief").witnessed)), m[M_SAL], acts, m[M_FLAGS])
 	_gver += 1
 	_stat("corrections")
@@ -1189,13 +1210,37 @@ func close_chance(a: int, b: int) -> int:
 	return _g_floor + (JudgmentMath.ONE - _g_floor) * reg / 100
 
 
+## Trust, X19-REGARD (owner 2026-10-23, "separate them"): how far `a` relies on `b`, milli-points 0..100000, apart from
+## liking (Relations regard, which still sets gossip closeness). With no evidence yet it is a first impression: regard
+## x trust.seed_from_regard_permille; then each deed and each told account that proves right or wrong moves it.
+func trust_of(a: int, b: int) -> int:
+	var row: Dictionary = trust.get(a, {})
+	if row.has(b):
+		return int(row[b])
+	return clampi(social.regard(a, b), 0, 100) * 1000 * _t_seed / 1000
+
+
+func trust_add(a: int, b: int, d: int) -> void:
+	if a == b or d == 0:
+		return
+	var cur := trust_of(a, b)
+	if not trust.has(a):
+		trust[a] = {}
+	trust[a][b] = clampi(cur + d, 0, 100000)
+	_stat("trust_moves")
+
+
+## The teller of a story that has met the facts: right (their account matched who did it) or wrong.
+func _vouch(listener: int, teller: int, right: bool) -> void:
+	if teller >= 0:
+		trust_add(listener, teller, _t_true if right else -_t_false)
+
+
 ## How far `listener` believes what `teller` tells them, permille (Q06): credibility_stranger for someone they have no
-## tie with, rising to 1000 with the existing relationship number (JudgmentSocial.regard, 0..100: Relations regard in
-## the live game), moved by their judgment of the teller (credibility_permille_per_point a point of NET), within
+## record with, rising to 1000 with the listener's trust in the teller (trust_of: its own value, not liking), moved by their judgment of the teller (credibility_permille_per_point a point of NET), within
 ## credibility_min..1000. Witnesses never need it: firsthand beliefs take belief.witnessed.
 func credibility(listener: int, teller: int) -> int:
-	var reg := clampi(social.regard(listener, teller), 0, 100)
-	var base := _b_cred_stranger + (JudgmentMath.ONE - _b_cred_stranger) * reg / 100
+	var base := _b_cred_stranger + (JudgmentMath.ONE - _b_cred_stranger) * trust_of(listener, teller) / 100000
 	return JudgmentMath.clampi_(base + JudgmentMath.mul_div(net(listener, teller), _b_cred_pp, 1000), _b_cred_min, JudgmentMath.ONE)
 
 
@@ -1496,6 +1541,12 @@ func to_dict() -> Dictionary:
 		tt.append([int(t), int(told_today[t])])
 	var out := {"format": FORMAT, "version": VERSION, "day": day, "next_event": next_event, "facts": fs, "memories": ms,
 		"contrib": cs, "ledgers": ls, "told_today": tt}
+	if not trust.is_empty():
+		var tr := []
+		for o in _sorted(trust):
+			for sub_ in _sorted(trust[o]):
+				tr.append([int(o), int(sub_), int(trust[o][sub_])])
+		out.trust = tr                           # X19-REGARD: only pairs with a record (older sections have none)
 	if not _sched.is_empty():
 		var sc := []
 		for mm in _sorted(_sched):
@@ -1516,7 +1567,7 @@ static func _sorted(d: Dictionary) -> Array:
 ## unknown format, a newer version, or naming an event type this catalog lacks is refused with a message and kept
 ## unread, written back unchanged, never dropped (CLAUDE.md section 7). Returns "" or the reason it was not read.
 func load_dict(d: Dictionary) -> String:
-	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, told_today, _early, _retiring]:
+	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, _early, _retiring]:
 		(x as Dictionary).clear()
 	_people = PackedInt64Array()
 	_queue = PackedInt64Array()
@@ -1595,6 +1646,10 @@ func load_dict(d: Dictionary) -> String:
 		rec[1] = v
 	for r in m.told_today:
 		told_today[int(r[0])] = int(r[1])
+	for r in m.get("trust", []):
+		if not trust.has(int(r[0])):
+			trust[int(r[0])] = {}
+		trust[int(r[0])][int(r[1])] = clampi(int(r[2]), 0, 100000)
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))
