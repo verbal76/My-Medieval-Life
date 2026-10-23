@@ -49805,6 +49805,28 @@
    "blocks_implementation": false
   },
   {
+   "id": "X19-GOSSIP-FLOOR",
+   "kind": "decision",
+   "title": "Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value?",
+   "description": "Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value?",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md"
+    }
+   ]
+  },
+  {
    "id": "X19-GUARD",
    "title": "A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine?",
    "kind": "decision",
@@ -49938,10 +49960,13 @@
     "Owner chooses"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 180, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 7, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "af819a6",
+    "3f89816"
+   ],
    "parent": "PROS-19",
    "depends_on": [],
    "blockers": [],
@@ -49978,6 +50003,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=19",
      "why": "a Build 19 judgment decision (parent PROS-19); the build is established by its parent"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 180, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 7, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; test_commit: None -> 3f89816; commits + af819a6; commits + 3f89816",
+     "why": "implemented on the prospective branch: gossip told at its own minute of the meeting's hour, passing weighted by regard; judgment_test 180, relations 79, migration 92, save_transfer 21, gate identical (judgment off)"
     }
    ],
    "target_build": "19",
@@ -49985,7 +50015,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "3f89816"
   },
   {
    "id": "X19-REGARD",

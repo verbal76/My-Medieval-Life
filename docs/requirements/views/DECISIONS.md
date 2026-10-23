@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 29 |
+| OPEN | 30 |
 | APPROVED | 147 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -25,11 +25,12 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 
-## Build 19: NPC Judgment System: open, reopened or provisional (1)
+## Build 19: NPC Judgment System: open, reopened or provisional (2)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | PROVISIONAL | no | SJD-G | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
+| X19-GOSSIP-FLOOR | Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md |
 
 ## Build 20: Living Economy: open, reopened or provisional (14)
 

@@ -16,7 +16,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Owner playtested | 0 of 13 (0%) |
 | Complete | 0 of 13 (0%) |
 | Open (release blockers) | 13 |
-| Open owner decisions (blocking) | 1 (0) |
+| Open owner decisions (blocking) | 2 (0) |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
@@ -41,11 +41,12 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model | design: DESIGN WORK REQUIRED | L |
 
-## Open owner decisions (1)
+## Open owner decisions (2)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | PROVISIONAL | no | SJD-G |
+| X19-GOSSIP-FLOOR | Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value? | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (4)
 
