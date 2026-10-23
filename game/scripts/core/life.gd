@@ -195,7 +195,10 @@ static func sync_roles(w: World) -> void:
 			continue
 		var r := role_for(w, n)
 		if r != n.role:
+			var was := n.role
 			_set_role(w, n, r)
+			if w.recorder != null and n.role != was:
+				w.recorder.role_changed(n, was)      # REC-19: ageing into a role
 
 
 static func _set_role(w: World, n: NPC, r: String) -> void:
@@ -397,6 +400,8 @@ static func _player_dawn(w: World) -> void:
 		p.last_damage = "old age"
 		p.deaths += 1
 		w.note("%s %s died (old age)." % [p.name, p.family])
+		if w.recorder != null:
+			w.recorder.player_died(p, "old age")     # REC-19
 
 
 static func _living_in(w: World, h: int) -> int:
@@ -511,6 +516,8 @@ static func partner_player(w: World, n: NPC) -> String:
 	w.player.partner = n.id
 	n.partner = PLAYER_ID
 	w.stat("partnerships")
+	if w.recorder != null:
+		w.recorder.partnered(w.player, n)      # REC-19
 	w.note("%s %s and %s %s become partners." % [w.player.name, w.player.family, n.name, n.family])
 	return ""
 
@@ -581,8 +588,10 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	hh.members.append(k.id)
 	w.npcs.append(k)
 	w.by_id[k.id] = k
-	Identity.register_npc(w, k)
+	Identity.register_npc(w, k, "birth")
 	w.stat("births")
+	if w.recorder != null:
+		w.recorder.birth(k, mother, father, h)      # REC-19
 	var m_name: String = mother.name if mother != null else father.name
 	w.note("A %s, %s, is born to %s." % ["girl" if k.sex == "female" else "boy", k.name, m_name])
 	return k

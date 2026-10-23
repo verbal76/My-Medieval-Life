@@ -514,6 +514,8 @@ func propose(a: int, n: NPC) -> String:
 	var together := Life._move_in(w, o, n)
 	Life._link_partners(o, n)
 	w.stat("partnerships")
+	if w.recorder != null:
+		w.recorder.partnered(o, n)      # REC-19
 	w.feast.on_partnered(a, n.id)                    # DVW-B3-FEAST: the wedding feast is owed
 	if w.judgment != null:
 		JudgmentLive.on_marriage(w, a, n.id)                       # PROSPECTIVE (PROS-19)

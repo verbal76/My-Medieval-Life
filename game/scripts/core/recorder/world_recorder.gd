@@ -49,12 +49,27 @@ func _now() -> Array:
 	return [w.day(), fmod(w.minutes, World.DAY)]
 
 
+## A person's reference is their permanent person id (ID-01): `p:<id>`. The player character is `p:<PlayerState.pid>`, the same
+## kind of reference as anyone's and stable across succession (an heir who was the player's child keeps their own id); that the
+## person is the player at the time is a role marker (`part`: the participant role gets the suffix `:player`), never a separate
+## identity. `p:player` is only the fallback for a player without a pid (a bare test world).
 static func ref_of(o) -> String:
 	if o is NPC:
 		return "p:%d" % o.id
 	if o is PlayerState:
-		return "p:player"
+		return "p:%d" % o.pid if o.pid > 0 else "p:player"
 	return "obj:?"
+
+
+## A participant role, marked `:player` when the participant is the player character.
+static func role_of(o, role: String) -> String:
+	return role + ":player" if o is PlayerState else role
+
+
+## A participant row for a person (NPC or PlayerState); `null` is skipped.
+func part(ev: int, o, role: String) -> void:
+	if o != null:
+		participant(ev, ref_of(o), role_of(o, role))
 
 
 func _xy(o) -> Dictionary:
@@ -77,7 +92,7 @@ func inv_ref(inv: Inventory) -> String:
 		_inv_refs.clear()
 		for n: NPC in w.npcs:
 			_inv_refs[n.inv.get_instance_id()] = "p:%d" % n.id
-		_inv_refs[w.player.inv.get_instance_id()] = "p:player"
+		_inv_refs[w.player.inv.get_instance_id()] = ref_of(w.player)
 		for i in w.households.size():
 			_inv_refs[(w.households[i].pantry as Inventory).get_instance_id()] = World.hh_ref(i)
 		_inv_refs[w.granary.get_instance_id()] = "granary"
@@ -87,7 +102,7 @@ func inv_ref(inv: Inventory) -> String:
 
 
 func _note_state_change(ref: String, prop: String, delta, authority: String) -> void:
-	if authority != "audit" and prop == "coins" and typeof(delta) == TYPE_INT:
+	if authority != "audit" and authority != "summary" and prop == "coins" and typeof(delta) == TYPE_INT:
 		_coin_delta[ref] = int(_coin_delta.get(ref, 0)) + int(delta)
 		_coin_net += int(delta)
 
@@ -220,8 +235,8 @@ func trade_end(t: Array, buyer: Object, seller: Object, id: String) -> void:
 		return
 	var b := ref_of(buyer)
 	var s := ref_of(seller)
-	participant(ev, b, "buyer")
-	participant(ev, s, "seller")
+	part(ev, buyer, "buyer")
+	part(ev, seller, "seller")
 	state_change(ev, b, "coins", t[1], int(buyer.coins), "world.trade")
 	state_change(ev, s, "coins", t[2], int(seller.coins), "world.trade")
 	state_change(ev, b, "item:" + id, t[3], buyer.inv.count(id), "world.trade")
@@ -240,8 +255,8 @@ func trade_refused(buyer: Object, seller: Object, id: String, qty: int, price_ea
 		else:
 			reason = "buyer_inventory_full"
 	var ev := begin("economy", "trade", "transaction", "trade", ref_of(buyer), _xy(buyer).merged({"detail": "item=%s qty=%d total=%d" % [id, qty, total]}))
-	participant(ev, ref_of(buyer), "buyer")
-	participant(ev, ref_of(seller), "seller")
+	part(ev, buyer, "buyer")
+	part(ev, seller, "seller")
 	end(ev, "refused", reason)
 
 
@@ -282,7 +297,7 @@ func hour() -> void:
 			if n.alive:
 				var c := n.cell()
 				sample("p:%d" % n.id, snappedf(n.hunger, 0.1), snappedf(n.hp, 0.1), c.x, c.y, n.doing, n.coins)
-		sample("p:player", snappedf(w.player.hunger, 0.1), snappedf(w.player.hp, 0.1), int(w.player.pos.x), int(w.player.pos.y), "", w.player.coins)
+		sample(ref_of(w.player), snappedf(w.player.hunger, 0.1), snappedf(w.player.hp, 0.1), int(w.player.pos.x), int(w.player.pos.y), "", w.player.coins)
 
 
 ## REC-D4: balance auditing, not a rewrite of the coin sites. A holder's purse is compared with its last audited balance
@@ -294,7 +309,7 @@ func _audit_coins() -> void:
 	var holders := {}
 	for n: NPC in w.npcs:
 		holders["p:%d" % n.id] = n.coins
-	holders["p:player"] = w.player.coins
+	holders[ref_of(w.player)] = w.player.coins
 	holders["manor"] = w.treasury
 	if not _audited:
 		_audited = true
@@ -326,3 +341,398 @@ func _unattributed(ref: String, expected: int, actual: int, rule: String, severi
 	state_change(ev, ref, "coins", expected, actual, "audit")
 	alert(severity, rule, ref, "expected=%d actual=%d delta=%d" % [expected, actual, actual - expected], ev)
 	end(ev, "unattributed")
+
+
+# ================================================================ D3: identity, life, employment, government, crime, player, save and load
+## The pass events (reeve_day, pay_guards): the manor's treasury and granary at the start, so the end can write the summary rows.
+var _pass := {}
+
+
+## One complete event in a single call. parts: [[ref, role], ...]; changes: [[ref, prop, before, after, authority], ...].
+func occurrence(system: String, subsystem: String, category: String, subtype: String, actor: String, parts: Array, changes: Array,
+		outcome := "ok", reason := "", detail := "", opts := {}) -> int:
+	var ev := begin(system, subsystem, category, subtype, actor, opts)
+	for p in parts:
+		participant(ev, str(p[0]), str(p[1]))
+	for c in changes:
+		state_change(ev, str(c[0]), str(c[1]), c[2], c[3], str(c[4]))
+	end(ev, outcome, reason, detail)
+	return ev
+
+
+static func _pref(id: int) -> String:
+	if id > 0:
+		return "p:%d" % id
+	return "player_view" if id == -2 else ("none" if id == -1 else "former_player")
+
+
+func _loot_coins() -> int:
+	var n := 0
+	for l in w.loot:
+		n += int(l.coins)
+	return n
+
+
+## Live ties that name the player's view id (-2): the continuity a succession keeps (ID-D1).
+func _player_view_ties() -> int:
+	var n := 0
+	for k in w.relations.ties:
+		var parts: PackedStringArray = str(k).split(":")
+		if parts.size() == 2 and (int(parts[0]) == Life.PLAYER_ID or int(parts[1]) == Life.PLAYER_ID):
+			n += 1
+	return n
+
+
+# ---------------------------------------------------------------- identity ------------------
+## The register learns a person (Identity.register_npc / register_member / register_player). `how`: birth, newcomer, outlaw, arrival,
+## founding, member, settlement_birth, player; the event subtype is "registered_" + how.
+func identity_registered(id: int, how: String, where: String, name: String, mother: int, father: int) -> void:
+	var ref := "p:%d" % id
+	occurrence("identity", "register", "identity", "registered_" + how, ref, [[ref, "person"]], [[ref, "where", "unregistered", where, "identity"]],
+			"ok", "", "%s; mother=%s father=%s%s" % [name, _pref(mother), _pref(father), "; band id" if id >= World.BAND_START else ""])
+
+
+## The register moves a person (Identity.move): leave and return (same id), death, ancestor, player.
+func identity_move(id: int, before: String, after: String) -> void:
+	var sub := "moved"
+	if after == Identity.DEAD:
+		sub = "died"
+	elif after == Identity.ANCESTOR:
+		sub = "became_ancestor"
+	elif after == Identity.PLAYER:
+		sub = "became_player"
+	elif after == Identity.VILLAGE:
+		sub = "returned_to_village"
+	elif before == Identity.VILLAGE:
+		sub = "left_village"
+	var ref := "p:%d" % id
+	occurrence("identity", "register", "identity", sub, ref, [[ref, "person"]], [[ref, "where", before, after, "identity"]], "ok", "", "from=%s to=%s" % [before, after])
+
+
+## Before Identity.succeed: the player role changes hands. Returns the open event and what the end compares with.
+func succession_begin(parent: PlayerState) -> Array:
+	var ev := begin("identity", "succession", "identity", "succession", ref_of(parent), _xy(parent))
+	return [ev, ref_of(parent), _player_view_ties(), w.tie_history.size()]
+
+
+func succession_end(t: Array, parent: PlayerState, heir: PlayerState, kid: NPC) -> void:
+	var ev: int = t[0]
+	if ev <= 0:
+		return
+	part(ev, parent, "predecessor")
+	part(ev, heir, "heir")
+	state_change(ev, "role:player", "holder", str(t[1]), ref_of(heir), "identity")
+	var snap: int = ((w.tie_history.get(str(parent.pid), {}) as Dictionary).get("ties", {}) as Dictionary).size()
+	end(ev, "ok", "", "generation=%d; predecessor=%s heir=%s; heir_is_the_players_child=%s; live_view_ties(-2) before=%d after=%d; tie_history_for_predecessor=%d" % [
+			heir.generation, t[1], ref_of(heir), str(kid != null), int(t[2]), _player_view_ties(), snap])
+	_inv_hour = -1                                  # the heir's pack is a new inventory
+
+
+# ---------------------------------------------------------------- life ----------------------
+func birth(k: NPC, mother, father, h: int) -> void:
+	var ref := ref_of(k)
+	var ev := begin("life", "birth", "life", "birth", ref, _xy(k))
+	part(ev, k, "child")
+	part(ev, mother, "mother")
+	part(ev, father, "father")
+	state_change(ev, ref, "alive", "unborn", true, "life")
+	state_change(ev, "hh:%d" % h, "household", "members", "members+1", "life")
+	end(ev, "ok", "", "%s %s; household=%d" % [k.name, k.family, h])
+
+
+## Before World.kill mutates.
+func death_begin(n: NPC, cause: String) -> Array:
+	var ev := begin("life", "death", "life", "death", ref_of(n), _xy(n).merged({"detail": "cause=" + cause}))
+	return [ev, n.coins]
+
+
+func death_end(t: Array, n: NPC, cause: String, heir: NPC) -> void:
+	var ev: int = t[0]
+	if ev <= 0:
+		return
+	var ref := ref_of(n)
+	part(ev, n, "deceased")
+	part(ev, heir, "heir")
+	state_change(ev, ref, "alive", true, false, "life")
+	var moved: int = int(t[1]) - int(n.coins)
+	if moved != 0:
+		state_change(ev, ref, "coins", int(t[1]), int(n.coins), "life.inherit")
+		if heir != null and not cause.begins_with("slain"):
+			state_change(ev, ref_of(heir), "coins", int(heir.coins) - moved, int(heir.coins), "life.inherit")
+		else:
+			var lc := _loot_coins()
+			state_change(ev, "loot", "coins", lc - moved, lc, "life.inherit")      # what lay with the dead lies where they fell
+	end(ev, "ok", "", "cause=%s; role=%s job=%s household=%d age=%.1f" % [cause, n.role, n.job, n.household, Life.npc_age(w, n)])
+
+
+func player_died(p: PlayerState, cause: String) -> void:
+	var ref := ref_of(p)
+	occurrence("life", "death", "life", "death", ref, [[ref, role_of(p, "deceased")]], [[ref, "alive", true, false, "life"]], "ok", "",
+			"cause=%s; generation=%d; the player character died: succession follows when the heir takes over" % [cause, p.generation], _xy(p))
+
+
+## A villager's role changed with their age (Life.sync_roles): child to adult at 16, adult to elder.
+func role_changed(n: NPC, before: String) -> void:
+	var ref := ref_of(n)
+	occurrence("life", "role", "life", "role_changed", ref, [[ref, "person"]], [[ref, "role", before, n.role, "life"]], "ok", "",
+			"age=%.1f; job=%s" % [Life.npc_age(w, n), n.job], _xy(n))
+
+
+func partnered(a, b) -> void:
+	var ra := ref_of(a)
+	var rb := ref_of(b)
+	var ev := begin("life", "partner", "life", "partnership", ra, _xy(a))
+	part(ev, a, "partner")
+	part(ev, b, "partner")
+	state_change(ev, ra, "partner", "none", rb, "life")
+	state_change(ev, rb, "partner", "none", ra, "life")
+	end(ev)
+
+
+## Guardianship.move: an orphaned child taken in by a household.
+func guardianship(k: NPC, old_h: int, h: int, tier: String, host: NPC) -> void:
+	var ref := ref_of(k)
+	var ev := begin("life", "guardianship", "life", "guardianship_placement", ref, _xy(k))
+	part(ev, k, "ward")
+	part(ev, host, "host")
+	state_change(ev, ref, "household", old_h, h, "life")
+	end(ev, "ok", "", "tier=%s" % tier)
+
+
+## Guardianship.join_clan: no household took the orphan.
+func clan_joined(k: NPC, old_h: int) -> void:
+	var ref := ref_of(k)
+	occurrence("life", "guardianship", "life", "guardianship_clan", ref, [[ref, "ward"]], [[ref, "household", old_h, k.household, "life"]], "ok", "", "no household could take the child", _xy(k))
+
+
+# ---------------------------------------------------------------- employment ----------------
+func job_changed(n: NPC, old: String, job: String, why: String, place: String) -> void:
+	var ref := ref_of(n)
+	var sub := "job_lost" if job == "" else ("job_taken" if old == "" else "job_switched")
+	occurrence("employment", "job", "employment", sub, ref, [[ref, "worker"]], [[ref, "job", old, job, "employment"]], "ok", "",
+			"%s%s" % [why, "; place=" + place if place != "" else ""], _xy(n))
+
+
+func vacancy_opened(v: Dictionary, cause: String) -> void:
+	var size: int = w.vacancies.size()
+	occurrence("employment", "vacancy", "employment", "vacancy_opened", "world", [], [["world", "vacancies", size - 1, size, "employment"]], "ok", "",
+			"job=%s; workplace=%s; left by %s; %s" % [v.get("job", ""), v.get("workplace", ""), v.get("who", ""), cause])
+
+
+## After `_install`: the vacancy `v` (already removed from World.vacancies) is filled by `n`.
+func vacancy_filled(n: NPC, v: Dictionary, why: String) -> void:
+	var ref := ref_of(n)
+	var size: int = w.vacancies.size()
+	occurrence("employment", "vacancy", "employment", "vacancy_filled", ref, [[ref, "hired"]], [["world", "vacancies", size + 1, size, "employment"]], "ok", "",
+			"job=%s; %s" % [v.get("job", ""), why], _xy(n))
+
+
+## The manor's hiring competition moved its offer (raised or eased): the wage a hand is offered is the base plus `raise`.
+func wage_offer(kind: String, before: int, after: int, open_left: int, seekers: int) -> void:
+	occurrence("employment", "wage", "employment", "wage_offer_" + kind, "manor", [], [["manor", "wage_raise", before, after, "employment"]], "ok", "",
+			"manor_hand; places still open=%d, seekers who did not take them=%d" % [open_left, seekers])
+
+
+# ---------------------------------------------------------------- government ----------------
+## A daily pass of the manor (reeve_day, pay_guards): its own events (tax, wages, relief transfers, job losses) are its children;
+## the end writes the treasury and granary before and after as summary rows (not counted again by the coin audit).
+func pass_begin(subtype: String) -> int:
+	var ev := begin("government", subtype, "civic", subtype, "manor")
+	if ev > 0:
+		_pass[ev] = {"treasury": w.treasury, "granary": w.granary.items.duplicate()}
+	return ev
+
+
+func pass_end(ev: int, detail := "") -> void:
+	if ev <= 0:
+		return
+	var snap: Dictionary = _pass.get(ev, {})
+	_pass.erase(ev)
+	if not snap.is_empty():
+		state_change(ev, "manor", "coins", int(snap.treasury), int(w.treasury), "summary")
+		var ids: Array = (snap.granary as Dictionary).keys()
+		for id in w.granary.items:
+			if not ids.has(id):
+				ids.append(id)
+		ids.sort()
+		for id in ids:
+			var b: int = int((snap.granary as Dictionary).get(id, 0))
+			var a: int = w.granary.count(str(id))
+			if a != b:
+				state_change(ev, "granary", "item:" + str(id), b, a, "summary")
+	end(ev, "ok", "", detail)
+
+
+## Coins between the manor's treasury and a person, recorded right after both sides changed. kind: tax, wage, repairs, granary, tools,
+## works, relief. `to_manor`: the person paid the manor (tax); else the manor paid the person.
+func manor_flow(kind: String, o, amount: int, to_manor: bool) -> void:
+	var ref := ref_of(o)
+	var auth := "gov." + kind
+	var ev := begin("government", "manor", "civic", kind, ref if to_manor else "manor", _xy(o))
+	part(ev, o, "payer" if to_manor else "payee")
+	participant(ev, "manor", "payee" if to_manor else "payer")
+	var after: int = int(o.coins)
+	state_change(ev, ref, "coins", after + amount if to_manor else after - amount, after, auth)
+	var t: int = int(w.treasury)
+	state_change(ev, "manor", "coins", t - amount if to_manor else t + amount, t, auth)
+	end(ev)
+
+
+func layoff(n: NPC) -> void:
+	var ref := ref_of(n)
+	occurrence("government", "pay_guards", "civic", "layoff", "manor", [[ref, "laid_off"]], [], "ok", "", "the manor could not keep its hands on", _xy(n))
+
+
+func wage_unpaid(who: String) -> void:
+	occurrence("government", "pay_guards", "civic", "wage_unpaid", "manor", [], [], "failed", "treasury_short", who)
+
+
+# ---------------------------------------------------------------- crime ---------------------
+## World.witness: what the village saw the player do (the player's crime record grew by one). Stays open: a guard's confrontation is its child.
+func witness_begin(kind: String, what: String, victim: NPC, seen: Array, worth: int) -> int:
+	var p: PlayerState = w.player
+	var ev := begin("crime", "witness", "crime", kind, ref_of(p), _xy(p).merged({"detail": "%s; worth=%d; witnesses=%d" % [what, worth, seen.size()]}))
+	part(ev, p, "offender")
+	part(ev, victim, "victim")
+	for s in seen:
+		part(ev, s, "witness")
+	state_change(ev, ref_of(p), "crimes", p.crimes.size() - 1, p.crimes.size(), "life")
+	return ev
+
+
+## Before World.guard_confront mutates: the player's coins and goods and the treasury.
+func guard_begin(g: NPC) -> Array:
+	var p: PlayerState = w.player
+	var ev := begin("crime", "guard", "crime", "guard_confront", ref_of(g), _xy(g))
+	return [ev, p.coins, w.treasury, p.inv.items.duplicate()]
+
+
+func guard_end(t: Array, g: NPC, owner: NPC, fine: int, paid: int, warned: bool) -> void:
+	var ev: int = t[0]
+	if ev <= 0:
+		return
+	var p: PlayerState = w.player
+	part(ev, g, "guard")
+	part(ev, p, "offender")
+	part(ev, owner, "owner")
+	var ref := ref_of(p)
+	state_change(ev, ref, "coins", int(t[1]), int(p.coins), "gov.fine")
+	state_change(ev, "manor", "coins", int(t[2]), int(w.treasury), "gov.fine")
+	var before: Dictionary = t[3]
+	var ids: Array = before.keys()
+	for id in p.inv.items:
+		if not ids.has(id):
+			ids.append(id)
+	ids.sort()
+	for id in ids:
+		var b: int = int(before.get(id, 0))
+		var a: int = p.inv.count(str(id))
+		if a != b:
+			state_change(ev, ref, "item:" + str(id), b, a, "gov.fine")
+	end(ev, "ok", "", "fine=%d paid=%d warned=%s%s" % [fine, paid, str(warned), "; could not pay it all: the guard draws a weapon" if paid < fine else ""])
+
+
+## World.raise_alarm: who saw an attack; the guards that took it on; the reports are its children.
+func alarm_begin(attacker: int, aware: Dictionary) -> int:
+	var who := ref_of(w.player) if attacker == Life.PLAYER_ID else _pref(attacker)
+	var ev := begin("crime", "alarm", "crime", "raise_alarm", who)
+	participant(ev, who, "attacker")
+	for s in aware.get("seen", []):
+		part(ev, s, "witness")
+	part(ev, aware.get("victim", null), "victim")
+	return ev
+
+
+func alarm_end(ev: int, guards_answered: int) -> void:
+	end(ev, "ok", "", "guards_answered=%d" % guards_answered)
+
+
+## World.report_crime: `n` will carry word of an attack or a theft to a guard.
+func report(n: NPC, offender: int, how: String, crime: String) -> void:
+	var ref := ref_of(n)
+	var off := ref_of(w.player) if offender == Life.PLAYER_ID else _pref(offender)
+	occurrence("crime", "report", "crime", "report_crime", ref, [[ref, "reporter"], [off, "offender"]], [[ref, "report", "none", "%s %s" % [crime, off], "life"]], "ok", "", "how=%s" % how, _xy(n))
+
+
+## NPCBrain: a bandit robbed a villager (called right after the coins and the item moved).
+func robbery(b: NPC, victim: NPC, take: int, stolen: String) -> void:
+	var rb := ref_of(b)
+	var rv := ref_of(victim)
+	var ch := [[rb, "coins", int(b.coins) - take, int(b.coins), "crime.robbery"], [rv, "coins", int(victim.coins) + take, int(victim.coins), "crime.robbery"]]
+	if stolen != "":
+		ch.append([rb, "item:" + stolen, b.inv.count(stolen) - 1, b.inv.count(stolen), "crime.robbery"])
+		ch.append([rv, "item:" + stolen, victim.inv.count(stolen) + 1, victim.inv.count(stolen), "crime.robbery"])
+	occurrence("crime", "robbery", "crime", "robbery", rb, [[rb, "robber"], [rv, "victim"]], ch, "ok", "", "coins=%d item=%s" % [take, stolen], _xy(b))
+
+
+# ---------------------------------------------------------------- player verbs --------------
+## A verb of the player that changes the world (trade, take, strike, craft, loot). The event is the parent of what the verb
+## triggers (a trade, a witness, a death). Its state rows are a summary of the player's coins and pack (and the target's health):
+## authority "summary" repeats what a child event recorded and is not counted again; a coin change no child recorded (loot) is
+## attributed to the player's purse for the hourly audit.
+func verb_begin(kind: String, detail := "", target = null) -> Array:
+	var p: PlayerState = w.player
+	var ev := begin("player", "verb", "verb", kind, ref_of(p), _xy(p).merged({"detail": detail}))
+	part(ev, p, "actor")
+	part(ev, target, "target")
+	return [ev, p.coins, p.inv.items.duplicate(), target, float(target.hp) if target is NPC else 0.0, int(_coin_delta.get(ref_of(p), 0))]
+
+
+func verb_end(t: Array, outcome := "ok", reason := "", detail := "") -> void:
+	var ev: int = t[0]
+	if ev <= 0:
+		return
+	var p: PlayerState = w.player
+	var ref := ref_of(p)
+	if p.coins != int(t[1]):
+		state_change(ev, ref, "coins", int(t[1]), int(p.coins), "summary")
+		var rest: int = (int(p.coins) - int(t[1])) - (int(_coin_delta.get(ref, 0)) - int(t[5]))      # what no child event attributed
+		if rest != 0:
+			_coin_delta[ref] = int(_coin_delta.get(ref, 0)) + rest
+	var before: Dictionary = t[2]
+	var ids: Array = before.keys()
+	for id in p.inv.items:
+		if not ids.has(id):
+			ids.append(id)
+	ids.sort()
+	for id in ids:
+		var b: int = int(before.get(id, 0))
+		var a: int = p.inv.count(str(id))
+		if a != b:
+			state_change(ev, ref, "item:" + str(id), b, a, "summary")
+	if t[3] is NPC and float((t[3] as NPC).hp) != float(t[4]):
+		state_change(ev, ref_of(t[3]), "hp", snappedf(float(t[4]), 0.1), snappedf(float((t[3] as NPC).hp), 0.1), "summary")
+	end(ev, outcome, reason, detail)
+
+
+# ---------------------------------------------------------------- save and load -------------
+## World.load_dict finished: a session note that the world was loaded, its save version, and whether every person kept their id.
+func world_loaded(d: Dictionary) -> void:
+	meta["seed"] = int(w.seed)
+	meta["save_version"] = World.SAVE_VERSION
+	_audited = false                                # the audit takes its balances afresh from the loaded world
+	_inv_hour = -1
+	_plan_ev.clear()
+	var saved_version := int(d.get("save_version", 0))
+	var in_save: bool = d.get("people") is Dictionary
+	var same := true
+	var saved_count := 0
+	if in_save:
+		saved_count = (d.people as Dictionary).size()
+		for k in d.people:
+			same = same and w.people.has(int(k))
+		same = same and saved_count == w.people.size()
+	var upgraded := not in_save
+	var ev := begin("world", "save", "system", "world_loaded", "world", {"detail": "save_version=%d (running %d); identity=%s; ids_unchanged=%s; people=%d; next_person_id=%d next_band_id=%d; day=%d" % [
+			saved_version, World.SAVE_VERSION, "upgraded once on load (ids assigned, none reassigned)" if upgraded else "register read from the save", str(same) if in_save else "n/a (ids assigned on load)",
+			w.people.size(), w.next_person_id, w.next_band_id, w.day()]})
+	state_change(ev, "world", "people", saved_count if in_save else 0, w.people.size(), "identity")
+	if in_save and not same:
+		alert("violation", "identity.ids_changed_on_load", "world", "saved people=%d, loaded people=%d" % [saved_count, w.people.size()], ev)
+	end(ev)
+	_write_session()
+
+
+func saved(d: Dictionary) -> void:
+	occurrence("world", "save", "system", "world_saved", "world", [], [], "ok", "", "save_version=%d; people=%d; next_person_id=%d next_band_id=%d; day=%d" % [
+			int(d.get("save_version", 0)), w.people.size(), w.next_person_id, w.next_band_id, w.day()])

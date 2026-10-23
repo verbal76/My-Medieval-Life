@@ -44,8 +44,10 @@ static func entry_of(w: World, n: NPC) -> Dictionary:
 
 
 ## A villager enters the world (population, birth, newcomer, outlaw, arrival): the register learns them.
-static func register_npc(w: World, n: NPC) -> void:
+static func register_npc(w: World, n: NPC, how := "other") -> void:
 	w.people[n.id] = entry_of(w, n)
+	if w.recorder != null:
+		w.recorder.identity_registered(n.id, how, VILLAGE, "%s %s" % [n.name, n.family], link(w, n.mother), link(w, n.father))     # REC-19
 
 
 ## A villager's name or family changed (they joined a household): the register says so.
@@ -58,12 +60,16 @@ static func sync_name(w: World, n: NPC) -> void:
 ## The person is now `where` (from today).
 static func move(w: World, id: int, where: String) -> void:
 	if w.people.has(id):
+		if w.recorder != null:
+			w.recorder.identity_move(id, str(w.people[id].where), where)     # REC-19: leave, return, death, ancestor, player (same id throughout)
 		w.people[id].where = where
 		w.people[id].since = w.day()
 
 
 ## The register for a person of a settlement (a member). `who` is the member's carried identity ({n, f}), possibly empty.
-static func register_member(w: World, id: int, sid: String, sex: int, born_day: int, who: Dictionary, mother := -1, father := -1) -> void:
+static func register_member(w: World, id: int, sid: String, sex: int, born_day: int, who: Dictionary, mother := -1, father := -1, how := "member") -> void:
+	if w.recorder != null:
+		w.recorder.identity_registered(id, how, sid, "%s %s" % [str(who.get("n", "")), str(who.get("f", ""))], mother, father)     # REC-19
 	w.people[id] = {"name": str(who.get("n", "")), "family": str(who.get("f", "")), "sex": "female" if sex == 1 else "male",
 		"born": float(born_day) * World.DAY, "mother": mother, "father": father, "where": sid, "since": w.day()}
 
@@ -74,6 +80,8 @@ static func register_player(w: World, p: PlayerState, mother := -1, father := -1
 		p.pid = w.new_band_id()
 	w.people[p.pid] = {"name": p.name, "family": p.family, "sex": p.sex, "born": p.born, "mother": mother, "father": father,
 		"where": PLAYER, "since": w.day()}
+	if w.recorder != null:
+		w.recorder.identity_registered(p.pid, "player", PLAYER, "%s %s" % [p.name, p.family], mother, father)     # REC-19
 
 
 # ------------------------------------------------------------------ succession ----------------
@@ -81,6 +89,7 @@ static func register_player(w: World, p: PlayerState, mother := -1, father := -1
 ## village's ties with them at this moment is kept under that id (history only: no rule reads it; the live ties with the player id
 ## (-2) go on to the heir exactly as in Build 18, ID-D1). `kid`, when the heir is the player's own child, keeps their record and id.
 static func succeed(w: World, parent: PlayerState, heir: PlayerState, kid: NPC) -> void:
+	var rec: Array = w.recorder.succession_begin(parent) if w.recorder != null else []     # REC-19
 	if parent.pid <= 0:
 		register_player(w, parent)
 	var ties := {}
@@ -100,6 +109,8 @@ static func succeed(w: World, parent: PlayerState, heir: PlayerState, kid: NPC) 
 			w.people[kid.id].name = heir.name
 	else:
 		register_player(w, heir)
+	if w.recorder != null:
+		w.recorder.succession_end(rec, parent, heir, kid)
 
 
 # ------------------------------------------------------------------ the upgrade of a save from before version 20 ----------------

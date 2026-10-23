@@ -223,7 +223,7 @@ static func _villager(w: World, p: Dictionary, coins: int) -> NPC:
 	w.npcs.append(n)
 	w.by_id[n.id] = n
 	if not w.people.has(n.id):
-		Identity.register_npc(w, n)                     # (a person the register does not know yet: it always does after a world loads)
+		Identity.register_npc(w, n, "arrival")                     # (a person the register does not know yet: it always does after a world loads)
 	return n
 
 

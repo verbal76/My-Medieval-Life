@@ -4657,6 +4657,8 @@ func save_game(show := true) -> bool:
 		save_failing = true
 		return false
 	save_failing = false
+	if world.recorder != null:
+		world.recorder.saved(d)        # REC-19
 	_update_linked_copy()
 	if show:
 		audio.play_sfx("save_crystal")

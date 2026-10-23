@@ -2749,6 +2749,8 @@ func fight(n: NPC, dt: float) -> void:
 				stolen = id
 				break
 		tnpc.remember("robbed by %s" % n.name)
+		if w.recorder != null:
+			w.recorder.robbery(n, tnpc, take, stolen)      # REC-19
 		var aware: Dictionary = w.aware_of_attack(n.pos, tnpc)
 		if w.judgment != null:
 			JudgmentLive.on_robbery(w, n, tnpc, take + (GameData.value(stolen) if stolen != "" else 0), aware)    # PROSPECTIVE (PROS-19)
@@ -2795,6 +2797,7 @@ func fight(n: NPC, dt: float) -> void:
 ##     manor buys for it. A household under 1 day of food is helped even below the reserve, down
 ##     to one day of wages. A household that keeps needing relief is named in the log.
 func reeve_day() -> void:
+	var rec_pass: int = w.recorder.pass_begin("reeve_day") if w.recorder != null else 0      # REC-19: tax, relief, tools, works, granary are its children
 	update_market()
 	_reeve_succession()
 	_guard_posts()
@@ -2825,6 +2828,8 @@ func reeve_day() -> void:
 				taxed += take
 				t -= take
 				w.stat("gov_tax", take)
+				if w.recorder != null:
+					w.recorder.manor_flow("tax", o, take, true)      # REC-19
 	# relief first (it is bought before anything optional), then repairs and the granary
 	var relief := _relief(obligations, reserve)
 	var tools := _support_trades(obligations)        # tools for the essential trades come before optional spending (EQ-19)
@@ -2858,6 +2863,8 @@ func reeve_day() -> void:
 				budget -= price
 				bought += 1
 				w.stat("gov_repairs", price)
+				if w.recorder != null:
+					w.recorder.manor_flow("repairs", o, price, false)      # REC-19
 	var works := _public_works(obligations)
 	var grain := 0
 	var target := int(village_day_food() * float(GameData.b("granary_target_days")) / food_points("wheat"))
@@ -2876,6 +2883,8 @@ func reeve_day() -> void:
 				w.treasury -= price
 				grain += 1
 				w.stat("gov_procurement", price)
+				if w.recorder != null:
+					w.recorder.manor_flow("granary", o, price, false)      # REC-19
 				w.stat("gov_granary_in", 1)
 	if tools > 0:
 		w.note("The manor spent %d coins keeping the village's workers in tools." % tools)
@@ -2884,6 +2893,8 @@ func reeve_day() -> void:
 	if works > 0:
 		w.note("The manor bought %d loads of planks, iron and stone for its public works." % works)
 	w.manor_work.refresh()
+	if w.recorder != null:
+		w.recorder.pass_end(rec_pass, "tax=%d repairs_loads=%d granary_grain=%d households_helped=%d tools=%d works_loads=%d" % [taxed, bought, grain, relief, tools, works])      # REC-19
 
 
 ## EQ-04 (owner, 2026-10-19: "When leadership changes, government should continue"). The manor's business (tax, relief,
@@ -2909,6 +2920,8 @@ func _reeve_succession() -> void:
 	var who := "%s %s" % [rv.name, rv.family] if rv != null else "the reeve"
 	w.vacancies.append({"job": "reeve", "workplace": "manor", "home": rv.home if rv != null else "", "household": rv.household if rv != null else -1,
 			"day": w.day(), "who": who, "heir": -1})
+	if w.recorder != null:
+		w.recorder.vacancy_opened(w.vacancies[-1], "the reeve's office")      # REC-19
 	w.note("The office of reeve, left by %s, is open: someone of the village or a newcomer will take it." % who)
 
 
@@ -2933,6 +2946,8 @@ func _guard_posts() -> void:
 	w.vacancies.append({"job": "guard", "workplace": _guard_shift(null), "home": "", "household": -1, "day": w.day(),
 			"who": "a guard of the watch", "heir": -1})
 	w.stat("guard_posts_opened")
+	if w.recorder != null:
+		w.recorder.vacancy_opened(w.vacancies[-1], "the watch is %d short" % missing)      # REC-19
 	w.note("The manor opens a guard's post: the watch is %d short." % missing)
 
 
@@ -2996,6 +3011,8 @@ func _support_trades(obligations: float) -> int:
 			spent += price
 			w.stat("gov_tools", price)
 			w.stat("gov_tool_given_" + tool)
+			if w.recorder != null:
+				w.recorder.manor_flow("tools", seller, price, false)      # REC-19
 			continue
 		var smith: NPC = null
 		for v: NPC in w.npcs:
@@ -3014,6 +3031,8 @@ func _support_trades(obligations: float) -> int:
 		w.manor_orders.append({"smith": smith.id, "tool": tool, "for": o.id, "paid": advance, "day": w.day()})
 		w.stat("gov_tools", advance)
 		w.stat("gov_tool_advance_" + tool)
+		if w.recorder != null:
+			w.recorder.manor_flow("tools", smith, advance, false)      # REC-19
 	return spent
 
 
@@ -3106,6 +3125,8 @@ func _public_works(obligations: float) -> int:
 				budget -= price
 				used += 1
 				w.stat("gov_public_works", price)
+				if w.recorder != null:
+					w.recorder.manor_flow("works", o, price, false)      # REC-19
 	return used
 
 
@@ -3197,6 +3218,8 @@ func _relief(obligations: float, reserve: float) -> int:
 			if o.item == "wheat":
 				held += qty
 			w.stat("gov_relief_bought", price)
+			if w.recorder != null:
+				w.recorder.manor_flow("relief", payee, price, false)      # REC-19
 			w.stat("gov_relief_bought_" + str(o.item), qty)
 		if need < (float(GameData.b("relief_fill_days")) - days) * household_day_food(h):
 			helped += 1
@@ -3476,12 +3499,15 @@ func update_market() -> void:
 
 ## Wages from the treasury: the sage, the reeve, the guards and the manor's hands.
 func pay_guards() -> void:
+	var rec_pass: int = w.recorder.pass_begin("pay_guards") if w.recorder != null else 0      # REC-19: wages and layoffs are its children
 	var sage := w.npc(w.sage_id)
 	if sage and sage.alive and w.treasury >= 4:
 		w.treasury -= 4
 		sage.coins += 4
 		sage.earned += 4
 		w.stat("gov_wages", 4)
+		if w.recorder != null:
+			w.recorder.manor_flow("wage", sage, 4, false)      # REC-19
 	var rv := w.npc(w.reeve_id)
 	var rw := int(GameData.b("reeve_wage_per_day"))
 	if rv and rv.alive and w.treasury >= rw:
@@ -3489,6 +3515,8 @@ func pay_guards() -> void:
 		rv.coins += rw
 		rv.earned += rw
 		w.stat("gov_wages", rw)
+		if w.recorder != null:
+			w.recorder.manor_flow("wage", rv, rw, false)      # REC-19
 	var wage := int(GameData.b("guard_wage_per_day"))
 	for o: NPC in w.npcs:
 		if o.alive and o.job == "guard":
@@ -3497,7 +3525,11 @@ func pay_guards() -> void:
 				o.coins += wage
 				o.earned += wage
 				w.stat("gov_wages", wage)
+				if w.recorder != null:
+					w.recorder.manor_flow("wage", o, wage, false)      # REC-19
 			else:
+				if w.recorder != null:
+					w.recorder.wage_unpaid("guard " + str(o.id))      # REC-19
 				once("unpaid_%d" % w.day(), "The manor cannot pay the guards today.")
 	var hand_wage := manor_hand_wage()
 	if w.treasury < 2.0 * daily_obligations():
@@ -3508,6 +3540,8 @@ func pay_guards() -> void:
 				last = o
 		if last:
 			_change_job(last, "", "the manor can no longer pay its hands")
+			if w.recorder != null:
+				w.recorder.layoff(last)      # REC-19
 	for o: NPC in w.npcs:
 		# a hand hired out for the day to carry building materials was paid by the employer
 		if o.alive and o.job == "manor_hand" and w.construction.contract_of(o).is_empty():
@@ -3516,8 +3550,14 @@ func pay_guards() -> void:
 				o.coins += hand_wage
 				o.earned += hand_wage
 				w.stat("gov_wages", hand_wage)
+				if w.recorder != null:
+					w.recorder.manor_flow("wage", o, hand_wage, false)      # REC-19
 			else:
+				if w.recorder != null:
+					w.recorder.wage_unpaid("manor hand " + str(o.id))      # REC-19
 				once("unpaid_hands_%d" % w.day(), "The manor cannot pay its hands today.")
+	if w.recorder != null:
+		w.recorder.pass_end(rec_pass)      # REC-19
 
 
 # ---------------------------------------------------------------- households and work ------
@@ -3660,6 +3700,7 @@ func manor_hand_wage() -> int:
 func _hiring_competition(open_left: int, seekers: int) -> void:
 	var cfg: Dictionary = GameData.b("hiring_competition")
 	var o: Dictionary = (w.wage_offers.get("manor_hand", {"raise": 0, "short": 0, "met": 0}) as Dictionary).duplicate()
+	var raise0 := int(o.raise)
 	if open_left > 0 and seekers > 0:
 		o.short = int(o.short) + 1
 		o.met = 0
@@ -3667,6 +3708,8 @@ func _hiring_competition(open_left: int, seekers: int) -> void:
 			o.raise = int(o.raise) + int(cfg.raise_step)
 			o.short = 0
 			w.stat("wage_offers_raised")
+			if w.recorder != null:
+				w.recorder.wage_offer("raised", raise0, int(o.raise), open_left, seekers)      # REC-19
 			w.note("The manor cannot fill its places and offers its hands %d coins a day." % (int(GameData.b("manor_wage_per_day")) + int(o.raise)))
 	elif open_left <= 0 and int(o.raise) > 0:
 		o.met = int(o.met) + 1
@@ -3675,6 +3718,8 @@ func _hiring_competition(open_left: int, seekers: int) -> void:
 			o.raise = maxi(0, int(o.raise) - int(cfg.raise_step))
 			o.met = 0
 			w.stat("wage_offers_eased")
+			if w.recorder != null:
+				w.recorder.wage_offer("eased", raise0, int(o.raise), open_left, seekers)      # REC-19
 	if int(o.raise) > 0 or int(o.short) > 0 or int(o.met) > 0 or w.wage_offers.has("manor_hand"):
 		w.wage_offers["manor_hand"] = o
 
@@ -3867,6 +3912,8 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 	else:
 		w.note("%s %s leaves work as a %s to be a %s: %s." % [n.name, n.family, old.replace("_", " "), job.replace("_", " "), why])
 	w.stat("job_changes")
+	if w.recorder != null:
+		w.recorder.job_changed(n, old, job, why, place)      # REC-19
 	if n.household >= 0:
 		evaluate_household(n.household)
 
@@ -3923,6 +3970,8 @@ func _open_vacancy(n: NPC) -> void:
 	var heir := w._heir(n)                            # who inherited the master's tools (World._inherit)
 	w.vacancies.append({"job": n.job, "workplace": n.workplace, "home": n.home, "household": n.household, "day": w.day(),
 			"who": "%s %s" % [n.name, n.family], "heir": heir.id if heir != null else -1})
+	if w.recorder != null:
+		w.recorder.vacancy_opened(w.vacancies[-1], "left by death or retirement")      # REC-19
 	w.note("The post of %s, left by %s, is open: an apprentice or a newcomer will take it." % [n.job.replace("_", " "), "%s %s" % [n.name, n.family]])
 
 
@@ -3934,6 +3983,8 @@ func _post_left(n: NPC, job: String, place: String) -> void:
 	w.vacancies.append({"job": job, "workplace": place, "home": n.home, "household": n.household,
 			"day": w.day(), "who": "%s %s" % [n.name, n.family], "heir": n.id, "left_by": n.id})
 	w.stat("posts_left_" + job)
+	if w.recorder != null:
+		w.recorder.vacancy_opened(w.vacancies[-1], "left for other work")      # REC-19
 	w.note("%s %s leaves the post of %s: an apprentice or a newcomer will take it." % [n.name, n.family, job.replace("_", " ")])
 
 
@@ -4023,6 +4074,8 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 		# an apprentice with no tool to take over buys one (tool_short) or works without
 	w.stat("successions")
 	w.stat("succession_" + str(v.job))
+	if w.recorder != null:
+		w.recorder.vacancy_filled(n, v, why)      # REC-19
 
 
 ## Who holds the late master's tool and does not need it: the heir (World._inherit), else someone of
@@ -4070,7 +4123,7 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	w.stat("newcomer_coins_in", n.coins)
 	w.npcs.append(n)
 	w.by_id[n.id] = n
-	Identity.register_npc(w, n)
+	Identity.register_npc(w, n, "newcomer")
 	var h := int(v.household)
 	if h >= 0 and h < w.households.size() and not w.households[h].get("ended", false) and not _members(h).is_empty() \
 			and w.buildings.has(str(w.households[h].home)):

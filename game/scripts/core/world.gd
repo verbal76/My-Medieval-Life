@@ -208,7 +208,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	Population.populate(self)
 	_open_treasury()
 	for n: NPC in npcs:
-		Identity.register_npc(self, n)           # ID-01: the register learns the settlers
+		Identity.register_npc(self, n, "founding")           # ID-01: the register learns the settlers
 	next_person_id = 1
 	for n: NPC in npcs:
 		next_person_id = maxi(next_person_id, n.id + 1)       # the village's sequence goes on above the settlers (as Build 18's highest-plus-one did)
@@ -699,6 +699,8 @@ func damage_player(amount: float, source: String) -> void:
 		p.death_cause = source
 		p.deaths += 1
 		note("%s %s died (%s)." % [p.name, p.family, source])
+		if recorder != null:
+			recorder.player_died(p, source)     # REC-19
 
 
 ## Permanent death: the next of the family line takes over. The world is not reset.
@@ -1091,6 +1093,16 @@ func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
 ## Buy `qty` of `id` from `vendor` at player_quote prices, all or nothing: the vendor must hold them, the
 ## pack must have room and the player's own coins must cover the whole bill. Returns {result, text, bought, paid}.
 func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
+	if recorder == null:
+		return _player_buy_many(vendor, id, qty)
+	var rec: Array = recorder.verb_begin("buy", "%s x%d from %d" % [id, qty, vendor.id], vendor)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_buy_many(vendor, id, qty)
+	recorder.verb_end(rec, "ok" if r.result == "bought" else "failed", "" if r.result == "bought" else "buy_failed", str(r.text))
+	return r
+
+
+## (player_buy_many's own work; the wrapper above records it when the flight recorder is on.)
+func _player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	var prices := player_quote(vendor, id, qty, true)
 	var bill := 0
 	for c in prices:
@@ -1700,6 +1712,16 @@ func player_craft_begin(recipe: String, station := "") -> Dictionary:
 ## DVW-A12 R3: the player's work on `recipe` is done: work_craft from the pack into the pack, as a villager's (PAR-01,
 ## PAR-04). Returns work_craft's result.
 func player_craft(recipe: String) -> Dictionary:
+	if recorder == null:
+		return _player_craft(recipe)
+	var rec: Array = recorder.verb_begin("craft", recipe, null)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_craft(recipe)
+	recorder.verb_end(rec, "ok" if str(r.get("result", "")) == "ok" else "failed", "" if str(r.get("result", "")) == "ok" else "craft_refused", "result=" + str(r.get("result", "")))
+	return r
+
+
+## (player_craft's own work; the wrapper above records it when the flight recorder is on.)
+func _player_craft(recipe: String) -> Dictionary:
 	return work_craft(player, recipe, player.inv)
 
 
@@ -1736,6 +1758,16 @@ func player_melee_npc(n: NPC) -> Dictionary:
 ## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
 ## slain by the player, and a bandit put down near villagers is a defence (CRT-10). Returns {dealt, killed}.
 func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
+	if recorder == null:
+		return _player_hit_npc(n, dmg)
+	var rec: Array = recorder.verb_begin("strike", "dmg=%.1f" % dmg, n)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_hit_npc(n, dmg)
+	recorder.verb_end(rec, "ok", "", "dealt=%.1f killed=%s" % [r.dealt, str(r.killed)])
+	return r
+
+
+## (player_hit_npc's own work; the wrapper above records it when the flight recorder is on.)
+func _player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 	var dealt := harm_npc(n, dmg)
 	wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
 	if n.role != "bandit":
@@ -2123,6 +2155,16 @@ func player_home_move(id: String, from_chest: bool, qty: int) -> bool:
 ## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
 ## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
 func player_loot(i: int) -> Dictionary:
+	if recorder == null:
+		return _player_loot(i)
+	var rec: Array = recorder.verb_begin("loot", "pile %d" % i, null)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_loot(i)
+	recorder.verb_end(rec, "ok" if str(r.get("far", "")) == "" else "failed", "" if str(r.get("far", "")) == "" else "too_far", "coins=%d items=%d left=%d" % [int(r.coins), (r.items as Array).size(), int(r.left)])
+	return r
+
+
+## (player_loot's own work; the wrapper above records it when the flight recorder is on.)
+func _player_loot(i: int) -> Dictionary:
 	var l: Dictionary = loot[i]
 	var far := player_reach_point(l.pos, TARGET_PROBE + TARGET_REACH)
 	if far != "":
@@ -2293,7 +2335,7 @@ func offmap_person(event: String, info: Dictionary) -> int:
 		Identity.move(self, int(info.id), Identity.DEAD)
 		return int(info.id)
 	var id := new_offmap_person_id()
-	Identity.register_member(self, id, str(info.settlement), int(info.sex), int(info.born), {}, int(info.mother), int(info.father))
+	Identity.register_member(self, id, str(info.settlement), int(info.sex), int(info.born), {}, int(info.mother), int(info.father), "settlement_birth")
 	return id
 
 
@@ -2312,6 +2354,7 @@ func kill(n: NPC, cause: String) -> void:
 			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
+	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
 	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)
 	credit.on_death(n, heir if not cause.begins_with("slain") else null)     # TRADE-CREDIT: its debts pass to the heir, else are written off
@@ -2325,6 +2368,8 @@ func kill(n: NPC, cause: String) -> void:
 		n.inv = Inventory.new()
 		loot.append({"pos": n.pos, "inv": bag, "coins": n.coins, "from": n.name})
 		n.coins = 0
+	if recorder != null:
+		recorder.death_end(rec_death, n, cause, heir)     # REC-19
 	var who := "%s %s" % [n.name, n.family] if n.family != "" else n.name
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
@@ -3030,6 +3075,7 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 			"items": taken.duplicate(), "qty": count, "value": worth})
 	if worth > 0:
 		stat("player_stolen_value", worth)
+	var rec_ev: int = recorder.witness_begin(kind, what, victim, seen, worth) if recorder != null else 0     # REC-19: stays open over the guard's answer
 	if judgment != null:
 		JudgmentLive.on_theft(self, kind, victim, seen, worth)     # PROSPECTIVE (PROS-19)
 	if seen.size() > 0:
@@ -3038,6 +3084,8 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 	stat("player_" + kind)
 	if guard:
 		last_guard = guard_confront(guard, taken, back, victim)
+	if recorder != null:
+		recorder.end(rec_ev)
 	return seen.size()
 
 
@@ -3064,6 +3112,7 @@ static func theft_fine_for(goods: Dictionary) -> int:
 ## pays theft_fine_for(taken) (a base fine plus a share of the goods' value) to the manor's treasury. One who cannot pay it all pays what they have and the
 ## guard comes after them, as for an attack (main.gd::_crime). Coins and goods only move.
 func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> String:
+	var rec_guard: Array = recorder.guard_begin(g) if recorder != null else []     # REC-19: the fine and the goods returned, before and after
 	var returned := []
 	for id in taken:
 		var k := mini(int(taken[id]), player.inv.count(id))
@@ -3117,6 +3166,8 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 	if paid < fine:
 		g.target = -2
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
+	if recorder != null:
+		recorder.guard_end(rec_guard, g, owner, fine, paid, warned)
 	return text
 
 
@@ -3135,6 +3186,7 @@ func aware_of_attack(at: Vector2, victim: NPC) -> Dictionary:
 ## id, or -2 for the player); the victim and the others who saw it carry a report to a guard (report_crime). Returns
 ## how many guards answered at once.
 func raise_alarm(aware: Dictionary, attacker: int) -> int:
+	var rec_alarm: int = recorder.alarm_begin(attacker, aware) if recorder != null else 0     # REC-19: the reports it causes are its children
 	if judgment != null:
 		JudgmentLive.on_attack(self, attacker, aware)              # PROSPECTIVE (PROS-19)
 	var k := 0
@@ -3154,6 +3206,8 @@ func raise_alarm(aware: Dictionary, attacker: int) -> int:
 			report_crime(v, attacker, "victim")
 	if k > 0:
 		stat("guards_alarmed", k)
+	if recorder != null:
+		recorder.alarm_end(rec_alarm, k)
 	return k
 
 
@@ -3166,6 +3220,8 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack") -> void
 	if crime != "attack":
 		n.report.crime = crime
 	stat("crime_reports_made")
+	if recorder != null:
+		recorder.report(n, offender, how, crime)      # REC-19
 
 
 ## Whether the offender of a report can still be pursued: alive (the player alive, or the villager).
@@ -3358,6 +3414,16 @@ func container_pick(c: Dictionary) -> String:
 ## there was nothing, "full" if the pack has no room, or "far" if it is out of the player's reach (DVW-A12 R15:
 ## player_container_reach says why).
 func player_take(c: Dictionary) -> String:
+	if recorder == null:
+		return _player_take(c)
+	var rec: Array = recorder.verb_begin("take", "%s" % container_place(c), null)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_take(c)
+	recorder.verb_end(rec, "ok" if r != "" and r != "far" and r != "full" else "failed", "" if r != "" and r != "far" and r != "full" else ("too_far" if r == "far" else ("pack_full" if r == "full" else "nothing_to_take")), "took " + r)
+	return r
+
+
+## (player_take's own work; the wrapper above records it when the flight recorder is on.)
+func _player_take(c: Dictionary) -> String:
 	if player_container_reach(c) != "":
 		return "far"
 	var id := container_pick(c)
@@ -3585,6 +3651,16 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 ## the piece goes back to its owner and the fine is paid. Marked goods are sold first.
 ## Returns {result: sold|recognised|questioned|failed, text}.
 func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
+	if recorder == null:
+		return _player_sell(buyer, id, price)
+	var rec: Array = recorder.verb_begin("sell", "%s for %d to %d" % [id, price, buyer.id], buyer)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_sell(buyer, id, price)
+	recorder.verb_end(rec, "ok" if r.result == "sold" else "failed", "" if r.result == "sold" else (str(r.result) if r.result in ["recognised", "questioned"] else "sale_failed"), str(r.text))
+	return r
+
+
+## (player_sell's own work; the wrapper above records it when the flight recorder is on.)
+func _player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 	player.trim_stolen()
 	var marks: Dictionary = player.stolen.get(id, {})
 	var owners := marks.keys()
@@ -4626,6 +4702,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	_unstick()
+	if recorder == null and FlightRecorder.enabled():
+		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
+	if recorder != null:
+		recorder.world_loaded(d)       # REC-19: a session note: loaded, its save version, the ids unchanged
 
 
 ## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later

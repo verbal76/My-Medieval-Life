@@ -32,6 +32,16 @@ func _init() -> void:
 	test_live_world()
 	test_unattributed_coins()
 	test_interruptions()
+	test_identity_events()
+	test_succession_events()
+	test_save_load_events()
+	test_life_events()
+	test_employment_events()
+	test_government_events()
+	test_crime_events()
+	test_player_verbs()
+	test_scripted_equivalence()
+	test_person_refs()
 	test_coverage_file()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
@@ -368,6 +378,571 @@ func test_interruptions() -> void:
 	w.brain.decide(m)
 	var dec: Array = rec.buffer.decision.filter(func(r): return r[2] == "p:%d" % m.id)
 	check(dec.size() == 1, "decide records exactly one decision event for the call")
+	w.dispose()
+
+
+# ======================================================================== D3: identity, life, employment, government, crime, player, save and load
+func identity_world(seed := 1) -> World:
+	var w := new_world(seed)
+	w.regions.step_day(w.day())
+	return w
+
+
+func rows(rec: WorldRecorder, table: String) -> Array:
+	rec.flush()
+	return RecorderArchive.read_table(session_dir(rec), table)
+
+
+func evs(rec: WorldRecorder, subtype: String) -> Array:
+	return rows(rec, "event").filter(func(e): return e.subtype == subtype)
+
+
+func changes_of(rec: WorldRecorder, ev_id: int) -> Array:
+	return rows(rec, "state_change").filter(func(c): return int(c.event) == ev_id)
+
+
+func parts_of(rec: WorldRecorder, ev_id: int) -> Array:
+	return rows(rec, "participant").filter(func(c): return int(c.event) == ev_id)
+
+
+func plain_adult(w: World) -> NPC:
+	for h in range(3, w.households.size()):
+		if w.households[h].get("ended", false):
+			continue
+		var ms: Array = w.brain._members(h)
+		if ms.is_empty() or Migration._any_barred(w, ms):
+			continue
+		for o: NPC in ms:
+			if o.role == "adult" and Life._may_move(w, o):
+				return o
+	return null
+
+
+func leave_to(w: World, s: OffMapSettlement, who: NPC) -> void:
+	Migration._pre_leave(w, [who])
+	var load_ := Migration._pack(w, [who])
+	s.receive_person(load_.people[0], int(load_.coins), load_.goods, Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
+	Migration._gone(w, s, [who], load_, null, "work")
+
+
+func come_back(w: World, id: int) -> NPC:
+	var at: Array = []
+	for s: OffMapSettlement in w.regions.list:
+		for hi in s.hh.size():
+			for j in (s.hh[hi].mem as Array).size():
+				if OffMapSettlement.member_id(s.hh[hi].mem[j]) == id:
+					at = [s, hi, j]
+	var s: OffMapSettlement = at[0]
+	var load_ := s.person_load(at[1], at[2])
+	var n := Migration._villager(w, Migration._with_who(s, load_.people[0], str(s.hh[at[1]].trade)), int(load_.coins))
+	var h := Migration._house(w, [n])
+	s.release_person(at[1], at[2])
+	Migration._settled(w, s, [n], h, load_.goods, int(load_.coins), "work")
+	return n
+
+
+func test_identity_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("ident")})
+	var s: OffMapSettlement = w.regions.by_id["higham"]
+	var who := plain_adult(w)
+	var id := who.id
+	var ref := "p:%d" % id
+	leave_to(w, s, who)
+	var left := evs(rec, "left_village")
+	check(left.size() == 1 and left[0].actor == ref and left[0].category == "identity", "migration: leaving the village is an identity event on the person's permanent reference (%s)" % ref)
+	var lc := changes_of(rec, int(left[0].id))
+	check(lc.size() == 1 and lc[0].prop == "where" and lc[0].before == "village" and lc[0].after == "higham", "leave: the state change says where, village -> higham")
+	var back := come_back(w, id)
+	var ret := evs(rec, "returned_to_village")
+	check(back == who and ret.size() == 1 and ret[0].actor == ref and back.id == id, "migration: returning is an identity event on the identical reference (same NPC record, same id)")
+	var rc := changes_of(rec, int(ret[0].id))
+	check(rc.size() == 1 and rc[0].before == "higham" and rc[0].after == "village", "return: higham -> village")
+	var refs := {}
+	for e in rows(rec, "event"):
+		if e.category == "identity" and (e.actor == ref):
+			refs[e.actor] = true
+	check(refs.keys() == [ref], "a person's reference is identical before and after leave/return (only %s)" % ref)
+	# no second person was made for them: no 'arrival' registration for this id
+	check(evs(rec, "registered_arrival").filter(func(e): return e.actor == ref).is_empty(), "no new registration was made for the returning person (their register entry is the same)")
+	# the person acts again under the same reference
+	run_minutes(w, 4 * 60)
+	check(rows(rec, "event").any(func(e): return e.actor == ref and e.category in ["decision", "action"]), "after returning they decide and act under the same reference")
+	# a person born in a settlement: a band id in the register event
+	var known := {}
+	for h in s.hh:
+		for m in h.mem:
+			known[OffMapSettlement.member_id(m)] = true
+	var guard := 0
+	var born := 0
+	while born == 0 and guard < 400:
+		guard += 1
+		w.minutes += World.DAY
+		w.regions.step_day(w.day())
+		for h in s.hh:
+			for m in h.mem:
+				var mid := OffMapSettlement.member_id(m)
+				if mid > 0 and not known.has(mid):
+					born = mid
+	var births := evs(rec, "registered_settlement_birth")
+	check(born >= World.BAND_START and births.any(func(e): return e.actor == "p:%d" % born and "band id" in e.detail), "a settlement birth is a register event with its band id (p:%d)" % born)
+	var bc := changes_of(rec, int(births.filter(func(e): return e.actor == "p:%d" % born)[0].id))
+	check(bc.size() == 1 and bc[0].before == "unregistered" and bc[0].after == "higham", "and its state change says unregistered -> higham")
+	# death: the villager dies, the register moves them to dead under the same reference
+	var victim := plain_adult(w)
+	w.kill(victim, "old age")
+	var died := evs(rec, "died").filter(func(e): return e.actor == "p:%d" % victim.id)
+	check(died.size() == 1 and changes_of(rec, int(died[0].id))[0].after == "dead", "death is also a register transition on the same reference")
+	check(rec.unknown_codes.is_empty(), "identity: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
+	w.dispose()
+
+
+func player_children(w: World) -> Array:
+	var p := w.player
+	p.sex = "male"
+	var mother: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.sex == "female" and n.partner < 0 and n.household >= 3 and Life.npc_age(w, n) >= 18.0)[0]
+	var h := mother.household
+	var k1 := Life.birth(w, mother, p, h)
+	var k2 := Life.birth(w, mother, p, h)
+	var Y := Life.year_minutes()
+	k1.born = w.minutes - 17.0 * Y
+	k2.born = w.minutes - 19.0 * Y
+	p.born = w.minutes - 60.0 * Y
+	return [k1, k2]
+
+
+func test_succession_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("succ")})
+	var kids := player_children(w)
+	var k2: NPC = kids[1]
+	var villager: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.household >= 3 and n.id != k2.id and n.inv.total() > 0)[0]
+	w.relations.tie(Life.PLAYER_ID, villager.id).regard = 37.0
+	w.relations.tie(Life.PLAYER_ID, villager.id).friends = true
+	var old_pid := w.player.pid
+	var old_ref := "p:%d" % old_pid
+	check(WorldRecorder.ref_of(w.player) == old_ref and old_pid > 0, "the player is referred to by the permanent person id, not p:player (%s)" % old_ref)
+	# a trade by the player, before the succession
+	var item: String = villager.inv.ids()[0]
+	villager.inv.add(item, 3)
+	w.player.coins = 500
+	check(w.trade(w.player, villager, item, 1, 0, 3), "the predecessor buys from a villager")
+	var ties_before := rec._player_view_ties()
+	w.damage_player(1000.0, "test")
+	w.continue_as_heir()
+	var heir_ref := "p:%d" % w.player.pid
+	check(w.player.pid == k2.id and heir_ref == "p:%d" % k2.id and heir_ref != old_ref, "succession: the heir (the player's child) keeps the child's own reference %s; the predecessor %s is a different reference" % [heir_ref, old_ref])
+	var su := evs(rec, "succession")
+	check(su.size() == 1 and su[0].actor == old_ref, "one succession event, acting on the predecessor")
+	var sp := parts_of(rec, int(su[0].id))
+	check(sp.any(func(x): return x.ref == old_ref and x.role == "predecessor:player") and sp.any(func(x): return x.ref == heir_ref and x.role == "heir:player"), "its participants are two different references: the predecessor and the heir, each marked as holding the player role")
+	var sc := changes_of(rec, int(su[0].id))
+	check(sc.size() == 1 and sc[0].ref == "role:player" and sc[0].before == old_ref and sc[0].after == heir_ref, "the state change is the player role passing from the predecessor to the heir")
+	check(("live_view_ties(-2) before=%d after=%d" % [ties_before, rec._player_view_ties()]) in su[0].detail and ties_before > 0 and rec._player_view_ties() == ties_before, "the live -2 view continues unchanged for the heir (%d ties before and after)" % ties_before)
+	check("tie_history_for_predecessor=" in su[0].detail and not str(su[0].detail).ends_with("=0"), "and a snapshot of the predecessor's ties is kept under their id")
+	var moves := rows(rec, "event").filter(func(e): return int(e.parent) == int(su[0].id) and e.category == "identity")
+	check(moves.any(func(e): return e.subtype == "became_ancestor" and e.actor == old_ref) and moves.any(func(e): return e.subtype == "became_player" and e.actor == heir_ref), "the identity moves are children of the succession: predecessor -> ancestor, heir -> player")
+	# the heir acts under the new reference with the role marker; the predecessor's old events keep the old one
+	w.player.coins = 500
+	check(w.trade(w.player, villager, item, 1, 0, 3), "the heir buys from a villager")
+	var trades := evs(rec, "trade").filter(func(e): return e.outcome == "ok")
+	var tr_parts := parts_of(rec, int(trades[0].id)) + parts_of(rec, int(trades[-1].id))
+	check(trades.size() == 2 and trades[0].actor == old_ref and trades[1].actor == heir_ref, "trades: the predecessor's is on %s, the heir's on %s" % [old_ref, heir_ref])
+	check(tr_parts.any(func(x): return x.ref == old_ref and x.role == "buyer:player") and tr_parts.any(func(x): return x.ref == heir_ref and x.role == "buyer:player"), "both appear as buyer:player (the marker), under their own permanent references")
+	check(not rows(rec, "event").any(func(e): return e.actor == "p:player") and not rows(rec, "participant").any(func(x): return x.ref == "p:player"), "no event or participant uses a p:player identity")
+	var deaths := evs(rec, "death").filter(func(e): return e.actor == old_ref)
+	check(deaths.size() == 1 and "cause=test" in str(deaths[0].detail) and changes_of(rec, int(deaths[0].id))[0].after == false, "the player's own death is recorded on the predecessor's reference, with its cause")
+	# a relative heir: a new band id, still a single stable reference
+	var w2 := identity_world(2)
+	var rec2 := WorldRecorder.attach(w2, {"root": sub("succ2")})
+	var o2 := "p:%d" % w2.player.pid
+	w2.player.alive = false
+	w2.continue_as_heir()
+	var n2 := "p:%d" % w2.player.pid
+	var su2 := evs(rec2, "succession")
+	check(su2.size() == 1 and n2 != o2 and w2.player.pid >= World.BAND_START and ("heir_is_the_players_child=false" in su2[0].detail), "a relative heir: a new band-id reference (%s), a different person from %s" % [n2, o2])
+	w2.dispose()
+	check(rec.unknown_codes.is_empty() and rec2.unknown_codes.is_empty(), "succession: no code outside recorder_codes.json")
+	w.dispose()
+
+
+func test_save_load_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("saveload")})
+	var who := plain_adult(w)
+	var id := who.id
+	leave_to(w, w.regions.by_id["higham"], who)
+	run_minutes(w, 120)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
+	rec.saved(d)
+	var sv := evs(rec, "world_saved")
+	check(sv.size() == 1 and ("save_version=%d" % World.SAVE_VERSION) in sv[0].detail, "saving: a session event with the save version")
+	var people_before := w.people.keys().duplicate()
+	var w2 := World.new()
+	var rec2 := WorldRecorder.attach(w2, {"root": sub("saveload2")})
+	w2.load_dict(VillageMap.load_default(), d)
+	var lo := evs(rec2, "world_loaded")
+	check(lo.size() == 1 and ("save_version=%d" % World.SAVE_VERSION) in lo[0].detail and "ids_unchanged=true" in lo[0].detail, "loading: a session note that the world was loaded, its save version and that the ids are unchanged")
+	var lc := changes_of(rec2, int(lo[0].id))
+	check(lc.size() == 1 and lc[0].prop == "people" and lc[0].before == lc[0].after and int(lc[0].after) == people_before.size(), "the people count before and after the load is identical (%d)" % people_before.size())
+	check(rows(rec2, "alert").filter(func(a): return a.rule == "identity.ids_changed_on_load").is_empty(), "no identity alert")
+	check(w2.people.keys().size() == people_before.size() and people_before.all(func(k): return w2.people.has(k)), "every person id of the saved world is in the loaded one")
+	# a person away at save time comes back under the same reference in the loaded session
+	var back := come_back(w2, id)
+	var ret := evs(rec2, "returned_to_village")
+	check(back.id == id and ret.size() == 1 and ret[0].actor == "p:%d" % id, "mid-journey: the person comes back in the loaded session on the same reference p:%d" % id)
+	run_minutes(w2, 3 * 60)
+	check(rows(rec2, "event").any(func(e): return e.actor == "p:%d" % id and e.category in ["decision", "action"]), "and acts under it")
+	# the audit starts afresh after a load: a clean hour raises no total alert
+	check(rows(rec2, "alert").filter(func(a): return a.rule == "coin.unattributed_total").is_empty(), "the coin audit re-baselines after a load: no total alert")
+	check(rec.unknown_codes.is_empty() and rec2.unknown_codes.is_empty(), "save/load: no code outside recorder_codes.json")
+	w2.dispose()
+	w.dispose()
+
+
+func test_life_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("life")})
+	var mother: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.sex == "female" and n.partner >= 0 and n.household >= 3)[0]
+	var father: NPC = w.npc(mother.partner)
+	var k := Life.birth(w, mother, father, mother.household)
+	var b := rows(rec, "event").filter(func(e): return e.subtype == "birth" and e.category == "life")
+	check(b.size() == 1 and b[0].actor == "p:%d" % k.id, "birth: one event on the child's permanent reference")
+	var bp := parts_of(rec, int(b[0].id))
+	check(bp.any(func(x): return x.ref == "p:%d" % mother.id and x.role == "mother") and bp.any(func(x): return x.ref == "p:%d" % father.id and x.role == "father") and bp.any(func(x): return x.ref == "p:%d" % k.id and x.role == "child"), "with child, mother and father as participants")
+	check(rows(rec, "event").any(func(e): return e.subtype == "registered_birth" and e.category == "identity" and e.actor == "p:%d" % k.id), "and the register's own birth record on the same id")
+	# ageing into a role
+	k.born = w.minutes - 17.0 * Life.year_minutes()
+	Life.sync_roles(w)
+	var rc := evs(rec, "role_changed").filter(func(e): return e.actor == "p:%d" % k.id)
+	check(rc.size() == 1 and changes_of(rec, int(rc[0].id))[0].before == "child" and changes_of(rec, int(rc[0].id))[0].after == "adult", "ageing: a child becomes an adult (role state change)")
+	# death with its cause and the heir
+	var old: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.partner >= 0 and n.coins > 0 and n.household >= 3 and n.id != mother.id and n.id != father.id)[0]
+	var coins: int = old.coins
+	var heir: NPC = w._heir(old)
+	w.kill(old, "old age")
+	var dx := evs(rec, "death").filter(func(e): return e.actor == "p:%d" % old.id)
+	check(dx.size() == 1 and "cause=old age" in dx[0].detail, "death: an event with its cause")
+	var dc := changes_of(rec, int(dx[0].id))
+	check(dc.any(func(c): return c.prop == "alive" and c.before == true and c.after == false), "and the state change alive true -> false")
+	check(dc.any(func(c): return c.prop == "coins" and c.ref == "p:%d" % old.id and int(c.delta) == -coins) and (heir == null or dc.any(func(c): return c.prop == "coins" and c.ref == "p:%d" % heir.id and int(c.delta) == coins)), "the purse passes to the heir as two coin state changes of equal size (%d coins)" % coins)
+	# a slain villager's coins lie in the loot
+	var slain: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.coins > 0 and n.household >= 3)[0]
+	var sc: int = slain.coins
+	w.kill(slain, "slain by test")
+	var sx := evs(rec, "death").filter(func(e): return e.actor == "p:%d" % slain.id)
+	var scs := changes_of(rec, int(sx[0].id))
+	check(scs.any(func(c): return c.ref == "loot" and int(c.delta) == sc), "a slain villager's coins are recorded going to the loot (%d)" % sc)
+	# partners: the player and a villager
+	var cand: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and Life.partner_refusal(w, n) == "":
+			cand = n
+			break
+	if cand != null:
+		check(Life.partner_player(w, cand) == "", "the player and a villager become partners")
+		var pe := evs(rec, "partnership")
+		check(pe.size() == 1 and parts_of(rec, int(pe[0].id)).size() == 2 and changes_of(rec, int(pe[0].id)).size() == 2, "partnership: an event with both people and a partner state change each")
+	# guardianship
+	var orphan: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "child" and n.household >= 3)[0]
+	var target_h: int = (w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.household >= 3 and n.household != orphan.household)[0] as NPC).household
+	var from_h := orphan.household
+	Guardianship.move(w, orphan, target_h, "relative")
+	var ge := evs(rec, "guardianship_placement")
+	check(ge.size() == 1 and ge[0].actor == "p:%d" % orphan.id and "tier=relative" in ge[0].detail and int(changes_of(rec, int(ge[0].id))[0].before) == from_h and int(changes_of(rec, int(ge[0].id))[0].after) == target_h, "guardianship: a placement event with the household before and after")
+	check(rec.unknown_codes.is_empty(), "life: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
+	w.dispose()
+
+
+func test_employment_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("employ")})
+	var smith: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job == "smith")[0]
+	var hand: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job not in ["smith", "guard", "reeve", "sage"] and n.household >= 3)[0]
+	w.brain._change_job(hand, "", "make them free")
+	var jt0 := evs(rec, "job_taken").size()
+	w.brain._change_job(hand, "woodcutter", "test hire")
+	var jt := evs(rec, "job_taken").slice(jt0)
+	check(jt.size() == 1 and jt[0].actor == "p:%d" % hand.id and changes_of(rec, int(jt[0].id))[0].before == "" and changes_of(rec, int(jt[0].id))[0].after == "woodcutter", "job change: job_taken with the job before and after")
+	w.brain._change_job(hand, "", "test layoff")
+	check(evs(rec, "job_lost").size() == 2, "and job_lost (the free-up and this one)")
+	var n_vac := w.vacancies.size()
+	w.kill(smith, "old age")
+	var vo := evs(rec, "vacancy_opened")
+	check(vo.size() == 1 and "job=smith" in vo[0].detail and w.vacancies.size() == n_vac + 1 and int(changes_of(rec, int(vo[0].id))[0].delta) == 1, "vacancy opened by the smith's death: an event with the vacancy count +1")
+	for v in w.vacancies:
+		v.day = w.day() - 100
+	w.brain.succession_dawn()
+	var vf := evs(rec, "vacancy_filled")
+	check(vf.size() >= 1 and "job=smith" in vf[0].detail and int(changes_of(rec, int(vf[0].id))[0].delta) == -1, "and filled at the next succession: an event on the new smith with the vacancy count -1")
+	check(evs(rec, "job_taken").size() + evs(rec, "job_switched").size() >= 2, "the filling is also a job change on the same person")
+	# hiring competition: wage offers
+	var cfg: Dictionary = GameData.b("hiring_competition")
+	for i in int(cfg.unfilled_days) + 1:
+		w.brain._hiring_competition(3, 5)
+	var wo := evs(rec, "wage_offer_raised")
+	check(wo.size() >= 1 and int(changes_of(rec, int(wo[0].id))[0].after) > int(changes_of(rec, int(wo[0].id))[0].before), "hiring competition: a raised wage offer with the raise before and after")
+	for i in int(cfg.unfilled_days) * 4:
+		w.brain._hiring_competition(0, 0)
+	check(evs(rec, "wage_offer_eased").size() >= 1, "and an eased one when the places fill")
+	check(rec.unknown_codes.is_empty(), "employment: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
+	w.dispose()
+
+
+func test_government_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("gov")})
+	run_minutes(w, 60)
+	w.treasury = 0
+	for n: NPC in w.npcs:
+		if n.alive and n.household >= 0:
+			n.coins += 300
+			w.coin_sources += 300                      # (the test's own purse, counted as money from outside)
+	rec._audit_coins()
+	var total0 := w.total_coins()
+	w.brain.reeve_day()
+	var pass_ev := evs(rec, "reeve_day")
+	check(pass_ev.size() == 1 and pass_ev[0].category == "civic", "reeve_day: one pass event")
+	var pid := int(pass_ev[0].id)
+	var kids := rows(rec, "event").filter(func(e): return int(e.parent) == pid)
+	var taxes := kids.filter(func(e): return e.subtype == "tax")
+	check(taxes.size() > 0, "tax: collected per payer as children of the pass (%d payments)" % taxes.size())
+	var tax_ok := true
+	var manor_sum := 0
+	var by_ev := {}
+	for c in rows(rec, "state_change"):
+		if not by_ev.has(int(c.event)):
+			by_ev[int(c.event)] = []
+		by_ev[int(c.event)].append(c)
+	for t in taxes:
+		var cs: Array = by_ev.get(int(t.id), [])
+		tax_ok = tax_ok and cs.size() == 2 and int(cs[0].delta) < 0 and int(cs[0].delta) + int(cs[1].delta) == 0 and cs[1].ref == "manor"
+		manor_sum += int(cs[1].delta)
+	check(tax_ok, "each tax payment is two coin state changes that net to zero: the payer's purse down, the treasury up")
+	var summary: Array = by_ev.get(pid, []).filter(func(c): return c.ref == "manor" and c.prop == "coins")
+	check(summary.size() == 1 and summary[0].authority == "summary" and int(summary[0].before) == 0, "the pass writes the treasury before (0) and after as a summary row")
+	var flows := 0
+	for k in kids:
+		if k.category == "civic" and k.subsystem == "manor":
+			for c in by_ev.get(int(k.id), []):
+				if c.ref == "manor":
+					flows += int(c.delta)
+	check(flows == int(summary[0].delta), "the treasury change of the pass (%d) equals the sum of its recorded flows (%d): nothing moved unrecorded" % [int(summary[0].delta), flows])
+	check(w.total_coins() == total0, "conservation: the pass created or lost no coin")
+	var before_alerts: int = rows(rec, "alert").filter(func(a): return a.rule == "coin.unattributed_total").size()
+	rec._audit_coins()
+	check(rows(rec, "alert").filter(func(a): return a.rule == "coin.unattributed_total").size() == before_alerts, "the coin audit has no total alert for the pass")
+	# wages and layoffs
+	var guard: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.job == "guard")[0]
+	var hand: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job not in ["smith", "guard", "reeve", "sage"] and n.household >= 3)[0]
+	w.brain._change_job(hand, "manor_hand", "test")
+	w.treasury = 20
+	var gc := guard.coins
+	w.brain.pay_guards()
+	var pg := evs(rec, "pay_guards")
+	check(pg.size() == 1, "pay_guards: one pass event")
+	var wages := rows(rec, "event").filter(func(e): return e.subtype == "wage" and int(e.parent) == int(pg[0].id))
+	check(wages.size() >= 1 and wages.any(func(e): return e.actor == "manor") , "wages: paid by the manor, each a child of the pass (%d)" % wages.size())
+	check(guard.coins >= gc and by_ev.size() > 0, "a guard was paid")
+	check(evs(rec, "layoff").size() == 1 and rows(rec, "event").any(func(e): return e.subtype == "job_lost" and e.actor == "p:%d" % hand.id and int(e.parent) == int(pg[0].id)), "the manor, short of coin, let its most recent hand go: a layoff event and the job loss, children of the pass")
+	w.treasury = 0
+	w.brain.pay_guards()
+	var unpaid := evs(rec, "wage_unpaid")
+	check(unpaid.size() >= 1 and unpaid[0].outcome == "failed" and unpaid[0].reason == "treasury_short", "wages the empty treasury could not pay are failed events with the reason treasury_short (%d)" % unpaid.size())
+	check(rec.unknown_codes.is_empty(), "government: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
+	w.dispose()
+
+
+func test_crime_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("crime")})
+	w.minutes = float(World.DAY) * 2.0 + 11.0 * 60.0              # a working morning
+	var g: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.job == "guard")[0]
+	var victim: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job != "guard" and n.household >= 3)[0]
+	w.player.pos = g.pos
+	g.target = -1
+	g.doing = "idle"
+	w.player.coins = 40
+	var back := Inventory.new()
+	w.player.inv.add("bread", 1)
+	var seen := w.witness("theft", "a loaf", victim, {"bread": 1}, back)
+	var we := evs(rec, "theft")
+	check(we.size() == 1 and we[0].category == "crime" and we[0].actor == "p:%d" % w.player.pid, "witness: a theft event on the player's permanent reference (%d seen)" % seen)
+	var wc := changes_of(rec, int(we[0].id))
+	check(wc.size() == 1 and wc[0].prop == "crimes" and int(wc[0].delta) == 1, "with the player's crime count +1 as a state change")
+	var wp := parts_of(rec, int(we[0].id))
+	check(wp.any(func(x): return x.role == "offender:player") and wp.any(func(x): return x.role == "victim" and x.ref == "p:%d" % victim.id), "participants: the offender (player marker) and the victim")
+	var gc := evs(rec, "guard_confront")
+	if seen > 0 and w.last_guard != "":
+		check(gc.size() == 1 and int(gc[0].parent) == int(we[0].id), "guard_confront is a child of the witness event")
+		var cs := changes_of(rec, int(gc[0].id))
+		var pc := cs.filter(func(c): return c.prop == "coins" and c.ref == "p:%d" % w.player.pid)
+		var mc := cs.filter(func(c): return c.prop == "coins" and c.ref == "manor")
+		check(pc.size() == 1 and mc.size() == 1 and int(pc[0].delta) < 0 and int(pc[0].delta) + int(mc[0].delta) == 0, "the fine: the player's coins before/after and the treasury's, equal and opposite (%d)" % int(pc[0].delta))
+		check(cs.any(func(c): return c.prop == "item:bread" and int(c.delta) == -1), "and the stolen goods returned, as an item state change")
+	else:
+		check(false, "a guard stood beside the player and answered the theft")
+	# alarm and reports
+	var n_before := rows(rec, "event").size()
+	var aware: Dictionary = w.aware_of_attack(victim.pos, victim)
+	w.player.pos = victim.pos
+	var cast := NPC.new()
+	cast.id = -99
+	var bystander: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job != "guard" and n != victim and n.household >= 3)[0]
+	aware.seen = [bystander]
+	w.raise_alarm(aware, Life.PLAYER_ID)
+	var ae := evs(rec, "raise_alarm")
+	check(ae.size() == 1 and ae[0].actor == "p:%d" % w.player.pid, "raise_alarm: an event; the attacker is the player's permanent reference")
+	var rp := evs(rec, "report_crime")
+	check(rp.size() >= 2 and rp.all(func(e): return int(e.parent) == int(ae[0].id)), "report_crime: one event per person carrying word, children of the alarm (%d)" % rp.size())
+	check(changes_of(rec, int(rp[0].id))[0].prop == "report", "each with the report as a state change")
+	# robbery by a bandit
+	var bandit: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "bandit")[0]
+	var prey: NPC = victim
+	prey.coins = 30
+	prey.inv.add("log", 1)
+	bandit.pos = prey.pos + Vector2(0.5, 0)
+	bandit.target = prey.id
+	bandit.attack_cd = 0.0
+	var bc := bandit.coins
+	w.brain.fight(bandit, 0.1)
+	var rb := evs(rec, "robbery")
+	check(rb.size() == 1 and rb[0].actor == "p:%d" % bandit.id, "robbery: an event on the bandit's reference")
+	var rbc := changes_of(rec, int(rb[0].id))
+	var coin_rows := rbc.filter(func(c): return c.prop == "coins")
+	check(coin_rows.size() == 2 and int(coin_rows[0].delta) + int(coin_rows[1].delta) == 0 and int(coin_rows[0].delta) == bandit.coins - bc, "with coin state changes for robber and victim that net to zero (%d)" % int(coin_rows[0].delta))
+	check(rows(rec, "event").size() > n_before, "events recorded")
+	check(rec.unknown_codes.is_empty(), "crime: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
+	cast = null
+	w.dispose()
+
+
+func test_player_verbs() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("verbs")})
+	var pref := "p:%d" % w.player.pid
+	w.minutes = float(World.DAY) * 2.0 + 11.0 * 60.0
+	var vendor: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.inv.total() > 0 and n.household >= 3)[0]
+	var item: String = vendor.inv.ids()[0]
+	w.player.coins = 200
+	var r := w.player_buy_many(vendor, item, 1)
+	var buy := evs(rec, "buy")
+	check(r.result == "bought" and buy.size() == 1 and buy[0].actor == pref and buy[0].category == "verb", "trade: the player's purchase is a verb event on the player's permanent reference")
+	var kids := rows(rec, "event").filter(func(e): return int(e.parent) == int(buy[0].id) and e.subtype == "trade")
+	check(kids.size() == 1 and kids[0].outcome == "ok", "and the trade it caused is its child")
+	var bc := changes_of(rec, int(buy[0].id))
+	check(bc.any(func(c): return c.prop == "coins" and int(c.delta) < 0) and bc.any(func(c): return c.prop == "item:" + item and int(c.delta) == 1), "the verb's summary: coins down, the item up")
+	var before_total := rows(rec, "alert").filter(func(a): return a.rule == "coin.unattributed_total").size()
+	rec._audit_coins()
+	check(rows(rec, "alert").filter(func(a): return a.rule == "coin.unattributed_total").size() == before_total, "the verb's summary is not counted twice by the coin audit")
+	# sell
+	w.player.inv.add(item, 1)
+	var price: int = w.player_quote(vendor, item, 1, false)[0]
+	var rs := w.player_sell(vendor, item, price)
+	var sell := evs(rec, "sell")
+	check(sell.size() == 1 and sell[0].outcome == ("ok" if rs.result == "sold" else "failed"), "sell: a verb event with the result (%s)" % str(rs.result))
+	# take from a container
+	var took := false
+	for c in w.containers:
+		w.player.pos = Vector2(c.pos) if c.has("pos") else w.player.pos
+		var res := w.player_take(c)
+		if res != "far" and res != "" and res != "full":
+			took = true
+			break
+	var tk := evs(rec, "take")
+	check(tk.size() > 0 and (not took or tk.any(func(e): return e.outcome == "ok")), "take: a verb event for every attempt (%d); a taken item is a state change" % tk.size())
+	# strike
+	var target: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job != "guard" and n.household >= 3 and n != vendor)[0]
+	w.player.pos = target.pos
+	var hp0 := target.hp
+	var hit := w.player_hit_npc(target, 2.0)
+	var st := evs(rec, "strike")
+	check(st.size() == 1 and st[0].actor == pref, "strike: a verb event on the player's reference")
+	check(changes_of(rec, int(st[0].id)).any(func(c): return c.prop == "hp" and c.ref == "p:%d" % target.id and float(c.after) < float(c.before)) and target.hp < hp0, "the target's health before and after is a state change (%.1f -> %.1f)" % [hp0, target.hp])
+	check(rows(rec, "event").any(func(e): return e.subtype == "raise_alarm" and int(e.parent) == int(st[0].id)), "an assault raises the alarm, recorded as a child of the strike")
+	# loot
+	w.loot.append({"pos": w.player.pos, "inv": Inventory.new(), "coins": 9, "from": "test"})
+	w.loot[-1].inv.add("log", 1)
+	var pc0 := w.player.coins
+	var lr := w.player_loot(w.loot.size() - 1)
+	var lt := evs(rec, "loot")
+	check(lt.size() == 1 and w.player.coins == pc0 + 9 and changes_of(rec, int(lt[0].id)).any(func(c): return c.prop == "coins" and int(c.delta) == 9), "loot: coins and goods picked up are the verb's state changes (%s)" % str(lr.coins))
+	rec._audit_coins()
+	check(rows(rec, "alert").filter(func(a): return a.rule == "coin.unattributed_holder" and a.entities == pref).is_empty(), "and the player's purse raises no unattributed alert for them")
+	# craft
+	var crafted := false
+	for id in GameData.recipes:
+		var rcp: Dictionary = GameData.recipes[id]
+		w.player.inv = Inventory.new()
+		for k in rcp["in"]:
+			w.player.inv.add(k, int(rcp["in"][k]))
+		if w.player_craft_refusal(id) == "":
+			var res := w.player_craft(id)
+			crafted = res.result == "ok"
+			break
+	var cf := evs(rec, "craft")
+	check(crafted and cf.size() == 1 and cf[0].outcome == "ok" and changes_of(rec, int(cf[0].id)).size() > 0, "craft: a verb event with the pack's items before and after")
+	check(rec.unknown_codes.is_empty(), "player verbs: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
+	w.dispose()
+
+
+## The same scripted sequence in two worlds, with and without a recorder: the world and the random state are identical.
+func scripted(w: World) -> void:
+	var s: OffMapSettlement = w.regions.by_id["higham"]
+	var who := plain_adult(w)
+	leave_to(w, s, who)
+	run_minutes(w, 90)
+	come_back(w, who.id)
+	var mother: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.sex == "female" and n.partner >= 0 and n.household >= 3)[0]
+	Life.birth(w, mother, w.npc(mother.partner), mother.household)
+	w.kill(w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.job == "smith")[0], "old age")
+	w.treasury = 0
+	for n: NPC in w.npcs:
+		if n.alive and n.household >= 0:
+			n.coins += 100
+	w.brain.reeve_day()
+	w.brain.pay_guards()
+	w.player.coins = 100
+	var g: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.job == "guard")[0]
+	w.player.pos = g.pos
+	w.witness("theft", "a loaf", w.npcs[5], {"bread": 1}, Inventory.new())
+	w.player.alive = false
+	w.continue_as_heir()
+	run_minutes(w, 120)
+
+
+func test_scripted_equivalence() -> void:
+	var a := identity_world()
+	scripted(a)
+	var ha := world_hash(a)
+	var b := identity_world()
+	var rec := WorldRecorder.attach(b, {"root": sub("equiv")})
+	scripted(b)
+	check(world_hash(b) == ha, "recording changes nothing: leave, return, birth, death, reeve_day, pay_guards, a theft, a succession and two hours leave to_dict and the RNG state identical to the unrecorded run")
+	check(int(rec.counts.event) > 50 and rec.unknown_codes.is_empty(), "and the recorded run produced events (%d) with no unknown code" % int(rec.counts.event))
+	a.dispose()
+	b.dispose()
+
+
+## Every person reference in an archive is a registered permanent id; none is p:player.
+func test_person_refs() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("refs")})
+	scripted(w)
+	var bad := []
+	var seen_refs := {}
+	for e in rows(rec, "event"):
+		seen_refs[e.actor] = true
+	for x in rows(rec, "participant"):
+		seen_refs[x.ref] = true
+	for c in rows(rec, "state_change"):
+		seen_refs[c.ref] = true
+	for sm in rows(rec, "sample"):
+		seen_refs[sm.entity] = true
+	for r in seen_refs:
+		if str(r).begins_with("p:") and not w.people.has(int(str(r).substr(2))):
+			bad.append(r)
+	check(bad.is_empty() and not seen_refs.has("p:player"), "every person reference in the archive is a permanent id the register knows; none is p:player (%d refs, bad: %s)" % [seen_refs.size(), str(bad)])
 	w.dispose()
 
 
