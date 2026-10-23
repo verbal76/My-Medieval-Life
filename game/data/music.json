@@ -1,0 +1,181 @@
+{
+ "format": "mml-music/1",
+ "note": "Music and ambience (MUSIC-18, SFX-18; owner directive 2026-10-23, docs/directives/2026-10-23_game_music.md), read by GameAudio (game/scripts/core/audio.gd) and by .github/workflows/release.yml (which downloads each song's WAV from its release URL, checks bytes and sha256, and saves it as game/assets/music/<id>.wav for the Windows and Linux packages). Android carries game/assets/music/<id>.ogg (Ogg Vorbis, made by tools/game_audio.py); the game plays the WAV when it is present, else the Ogg. Fight and countryside songs are Minifantasy: Forgotten Plains music by Leohpaz (private pack; committed as Ogg for every platform, never as WAV). Priority: fight, countryside, underground, time of day. Slot boundaries are agent decisions (docs/DECISIONS.md): morning from the villagers' waking hour (6) to 10, day to the end of the working day (18), night after (the same 18 and 6 that rest uses); the title screen counts as morning and every level below the surface as night.",
+ "slot_hours": {
+  "morning": [
+   6.0,
+   10.0
+  ],
+  "day": [
+   10.0,
+   18.0
+  ]
+ },
+ "slots": {
+  "morning": "sunrise_over_the_village",
+  "day": "prosperous_village",
+  "night": "misted_ancient",
+  "fight": "fair_fight",
+  "countryside": "plain_sight"
+ },
+ "fade_seconds": 3.0,
+ "gap_seconds": 6.0,
+ "tracks": [
+  {
+   "id": "sunrise_over_the_village",
+   "title": "Sunrise over the Village",
+   "url": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+   "source_name": "Sunrise.over.the.Village.wav",
+   "bytes": 47975440,
+   "sha256": "c858cfbd79fbc29a8cca0e2a220559be454e82070317b37de2ab6405422f18f0",
+   "wav": "assets/music/sunrise_over_the_village.wav",
+   "ogg": "assets/music/sunrise_over_the_village.ogg"
+  },
+  {
+   "id": "prosperous_village",
+   "title": "Prosperous Village",
+   "url": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+   "source_name": "Prosperous.Village.wav",
+   "bytes": 39105040,
+   "sha256": "85e68fa3efdb7c32336a25cffbf74d5b5d84542a7d1222f997132b8bb4111ac6",
+   "wav": "assets/music/prosperous_village.wav",
+   "ogg": "assets/music/prosperous_village.ogg"
+  },
+  {
+   "id": "misted_ancient",
+   "title": "Misted Ancient",
+   "url": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav",
+   "source_name": "misted.ancient.wav",
+   "bytes": 86337040,
+   "sha256": "a04980a71119ea35b4741d3567153d97103a77bd24ce58859a6f36ce82d3c8c6",
+   "wav": "assets/music/misted_ancient.wav",
+   "ogg": "assets/music/misted_ancient.ogg"
+  },
+  {
+   "id": "fair_fight",
+   "title": "Fair Fight (Battle)",
+   "pack": "Minifantasy: Forgotten Plains music by Leohpaz",
+   "ogg": "assets/music/fair_fight.ogg"
+  },
+  {
+   "id": "plain_sight",
+   "title": "Plain Sight (Regular)",
+   "pack": "Minifantasy: Forgotten Plains music by Leohpaz",
+   "ogg": "assets/music/plain_sight.ogg"
+  }
+ ],
+ "ambience": {
+  "fade_seconds": 2.5,
+  "db": -8.0,
+  "loops": {
+   "forest": "Cozy RPG SFX: ambience-forest (birds), outdoors by day",
+   "cave_wind": "ambience-cave-wind, in the natural cave (level -2)",
+   "dungeon": "ambience-dungeon (drips), in the mine gallery (level -1) and the shafts below the cave",
+   "campfire": "ambience-campfire, imported, not played yet",
+   "birds": "Minifantasy 13_Birds_loop: outdoors by day in the village",
+   "crickets": "Minifantasy 11_Crickets_2_loop: outdoors at night",
+   "cicada": "Minifantasy 12_Cicada_loop: summer days outdoors (second layer)",
+   "wind": "Minifantasy 14_Wind_loop: the countryside beyond the village (second layer)"
+  },
+  "forest": "the Cozy forest loop is the woods variant: the countryside by day",
+  "db_by_id": {
+   "forest": -8.0,
+   "birds": -9.0,
+   "crickets": -11.0,
+   "cicada": -15.0,
+   "wind": -13.0,
+   "cave_wind": -8.0,
+   "dungeon": -8.0
+  }
+ },
+ "sfx": {
+  "pool": 6,
+  "default_gap_ms": 150,
+  "gaps_ms": {
+   "coin": 300,
+   "door_wood": 900,
+   "book_page": 200,
+   "sword_swing_1": 120,
+   "sword_swing_2": 120,
+   "player_hurt": 600,
+   "enemy_hit": 120,
+   "secret_found": 1500,
+   "bush_rustling": 300,
+   "tree_rustling": 600,
+   "fruit_drop": 300,
+   "hit_on_wood": 150,
+   "hit_on_brick": 150
+  },
+  "ids": [
+   "sword_swing_1",
+   "sword_swing_2",
+   "sword_hit_1",
+   "sword_hit_2",
+   "critical_hit",
+   "enemy_hit",
+   "enemy_defeat",
+   "player_hurt",
+   "fireball",
+   "coin",
+   "chest_open",
+   "equip_armor",
+   "equip_weapon",
+   "potion_drink",
+   "door_wood",
+   "book_page",
+   "jingle_quest_accepted",
+   "jingle_quest_complete",
+   "jingle_level_up",
+   "jingle_inn_rest",
+   "secret_found",
+   "save_crystal",
+   "bush_rustling_1",
+   "bush_rustling_2",
+   "bush_rustling_3",
+   "tree_rustling_1",
+   "tree_rustling_2",
+   "tree_rustling_3",
+   "tree_rustling_4",
+   "fruit_drop_1",
+   "fruit_drop_2",
+   "step_grass_1",
+   "step_grass_2",
+   "step_grass_3",
+   "step_dirt_1",
+   "step_dirt_2",
+   "step_dirt_3",
+   "step_stone_1",
+   "step_stone_2",
+   "step_stone_3",
+   "hit_on_wood_1",
+   "hit_on_wood_2",
+   "hit_on_brick_1",
+   "hit_on_brick_2"
+  ],
+  "variants": {
+   "bush_rustling": 3,
+   "tree_rustling": 4,
+   "fruit_drop": 2,
+   "step_grass": 3,
+   "step_dirt": 3,
+   "step_stone": 3,
+   "hit_on_wood": 2,
+   "hit_on_brick": 2
+  },
+  "steps": {
+   "db": -16.0,
+   "pitch_spread": 0.05,
+   "stride_cells": 1.15,
+   "min_gap_ms": 260,
+   "note": "The footstep level, in dB under the other effects (the owner: soft, not loud and annoying); turn it down here. Each step varies its pitch by up to this fraction and never repeats the variant before it."
+  }
+ },
+ "slot_priority": [
+  "fight",
+  "countryside",
+  "underground",
+  "time of day"
+ ],
+ "fight_hold_seconds": 6.0,
+ "fight_fade_seconds": 1.5
+}

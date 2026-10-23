@@ -35,6 +35,8 @@ records each file's source archive and path. This is that step. It writes:
                                                      B14-07's ways through a cliff and its two items, by
                                                      tools/terrain_art.py (Forgotten Memories, from private-assets/,
                                                      and Miniworld's bridge)
+    game/assets/music/*.ogg, game/assets/sfx/*.ogg     MUSIC-18, SFX-18: the owner's songs (release WAVs, Android's copy) and the
+                                                     Cozy RPG SFX (private-assets/), encoded with ffmpeg by tools/game_audio.py
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
 Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E, NE, N, NW, W,
@@ -63,6 +65,7 @@ import animal_farm  # noqa: E402
 import craftpix_plants  # noqa: E402
 import living_forest
 import terrain_art  # noqa: E402
+import game_audio  # noqa: E402
 
 OUT = REPO / "game" / "assets"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
@@ -819,6 +822,7 @@ def main():
     craftpix_plants.import_into(prov, record)         # fruit trees (B14): from the private Craftpix zip, else kept as they are
     animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
     terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
+    game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

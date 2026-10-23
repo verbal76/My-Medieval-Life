@@ -12872,6 +12872,188 @@
     }
    ],
    "imported": []
+  },
+  {
+   "id": "owner_music",
+   "name": "The owner's songs (Suno)",
+   "creator": "Hot Attic Games (made with Suno)",
+   "sources": [
+    "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+    "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+    "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav"
+   ],
+   "storage": "release",
+   "licence": "own",
+   "permissions": "The owner's own songs, made with Suno; published as GitHub release assets (Songsmall, Songmed, Songbig), 173 MB of WAV that is never committed.",
+   "categories": [
+    "music"
+   ],
+   "status": "integrated",
+   "used_for": "MUSIC-18: game music by time of day (title and morning: Sunrise over the Village; day: Prosperous Village; evening, night and underground: Misted Ancient). Android carries Ogg Vorbis (game/assets/music, tools/game_audio.py); Windows and Linux carry the WAVs, fetched and sha256-checked by tools/fetch_music.py in release.yml (game/data/music.json lists URL, size and sha256).",
+   "decision": "Owner 2026-10-23: 'Ogg for Android only'. WAVs are imported as plain PCM (compress/mode=0) so the PC build keeps the original quality; the WAV is loaded whole into memory while it plays (Godot cannot stream a WAV), the Ogg is streamed.",
+   "opportunities": "More songs by slot (seasons, the feast, the chapel); a main-menu theme.",
+   "scan": [
+    {
+     "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+     "present": false
+    },
+    {
+     "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+     "present": false
+    },
+    {
+     "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/music/misted_ancient.ogg",
+    "assets/music/prosperous_village.ogg",
+    "assets/music/sunrise_over_the_village.ogg"
+   ]
+  },
+  {
+   "id": "cozy_rpg_sfx",
+   "name": "Cozy RPG SFX (ambience 1 and 2, and the 48 effects)",
+   "creator": "Spaceyyy (Bramble & Byte), aquumgifts.itch.io",
+   "sources": [
+    "private-assets/cozy-rpg-sfx.zip",
+    "private-assets/cozy-rpg-sfx-ambience-1.zip",
+    "private-assets/cozy-rpg-sfx-ambience-2.zip"
+   ],
+   "storage": "private",
+   "licence": "free",
+   "permissions": "Use in personal and commercial games and apps, no royalties; modify allowed; the sounds themselves may not be resold or redistributed as assets (so private-assets; only the imported Ogg files are committed). Credit appreciated: 'Cozy RPG SFX by Bramble & Byte' (the owner's credit: by Spaceyyy).",
+   "categories": [
+    "sounds",
+    "ambience",
+    "music"
+   ],
+   "status": "partial",
+   "used_for": "SFX-18, through GameAudio.play_sfx on the SFX bus. Ambience loops (game/assets/sfx): forest (the woods: the countryside by day), cave_wind (the natural cave, level -2), dungeon (drips: the mine gallery and the shafts). Effects wired: sword_swing_1/2 (the player's swing), sword_hit_1/2 and critical_hit (a landed blow), enemy_hit (a blow on game), enemy_defeat (a foe or game falls to the player), player_hurt (a point of health lost), fireball (the cast), coin (a purchase or sale), chest_open (a chest window opens), equip_weapon / equip_armor (wielding or wearing), potion_drink (a healing food or medicine used), door_wood (the player steps through a doorway), book_page (a wiki page opens), jingle_quest_accepted / jingle_quest_complete, jingle_level_up (a skill level), jingle_inn_rest (the player rests), secret_found (a trial pit strikes ore), save_crystal (a manual save).",
+   "opportunities": "Unwired for want of a matching event in the game: campfire (ambience; the game has no cheap 'beside a lit fire' test: a fire or the tavern hearth could play it by distance), spell-cast, ice-spell, lightning, heal, buff, debuff, teleport, magic-shield, mana-restore, potion-bubble (the game has one spell, the fireball, and no other magic), arrow-hit and bow-shot (no bow), shield-block (no shield), punch (no unarmed attack sound distinct from the swing), slime-squish (no slimes), key-pickup, gem (no event distinct from the pack's pickups), scroll-open, door-iron (no iron doors), step-stone-1/2 (replaced by Minifantasy footsteps), torch-light, lever, trap-spikes (no such objects), jingle-victory and jingle-defeat (a fight's end and the death panel could use them), the quest jingles for contracts.",
+   "scan": [
+    {
+     "source": "private-assets/cozy-rpg-sfx.zip",
+     "present": false
+    },
+    {
+     "source": "private-assets/cozy-rpg-sfx-ambience-1.zip",
+     "present": false
+    },
+    {
+     "source": "private-assets/cozy-rpg-sfx-ambience-2.zip",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/sfx/book_page.ogg",
+    "assets/sfx/campfire.ogg",
+    "assets/sfx/cave_wind.ogg",
+    "assets/sfx/chest_open.ogg",
+    "assets/sfx/coin.ogg",
+    "assets/sfx/critical_hit.ogg",
+    "assets/sfx/door_wood.ogg",
+    "assets/sfx/dungeon.ogg",
+    "assets/sfx/enemy_defeat.ogg",
+    "assets/sfx/enemy_hit.ogg",
+    "assets/sfx/equip_armor.ogg",
+    "assets/sfx/equip_weapon.ogg",
+    "assets/sfx/fireball.ogg",
+    "assets/sfx/forest.ogg",
+    "assets/sfx/jingle_inn_rest.ogg",
+    "assets/sfx/jingle_level_up.ogg",
+    "assets/sfx/jingle_quest_accepted.ogg",
+    "assets/sfx/jingle_quest_complete.ogg",
+    "assets/sfx/player_hurt.ogg",
+    "assets/sfx/potion_drink.ogg",
+    "assets/sfx/save_crystal.ogg",
+    "assets/sfx/secret_found.ogg",
+    "assets/sfx/sword_hit_1.ogg",
+    "assets/sfx/sword_hit_2.ogg",
+    "assets/sfx/sword_swing_1.ogg",
+    "assets/sfx/sword_swing_2.ogg"
+   ]
+  },
+  {
+   "id": "minifantasy_plains_sfx",
+   "name": "Minifantasy: Forgotten Plains SFX",
+   "creator": "Leohpaz",
+   "sources": [
+    "private-assets/Minifantasy_Forgotten_Plains_SFX.zip"
+   ],
+   "storage": "private",
+   "licence": "paid",
+   "permissions": "Personal and commercial projects; the pack may not be sold or distributed (so private-assets; only the imported Ogg files are committed); credit appreciated: 'Minifantasy: Forgotten Plains SFX by Leohpaz'.",
+   "categories": [
+    "sounds",
+    "ambience"
+   ],
+   "status": "partial",
+   "used_for": "SFX-18: soft footsteps by the ground (step_grass, step_dirt on roads, step_stone underground and indoors; about -16 dB, pitch +/-5%, spaced by distance walked), bush_rustling (picking a plant or field harvest), tree_rustling (a tree falls near the player), fruit_drop (picking fruit), hit_on_wood (each chop), hit_on_brick (a mining or tunnelling stroke). Ambience loops: birds (the village by day), crickets (outdoors at night), cicada (summer days outdoors), wind (the countryside beyond the village).",
+   "opportunities": "Unwired: water loops and waterfalls (the game's map has no river or pond: one animated water tile, so there is nothing to scale by distance; revisit if water is added), landing_on_grass / landing_on_stone (the player cannot jump or fall), crickets_1 and 3 (variants of the loop used), water_1/2.",
+   "known_issues": "Its two songs are in minifantasy_plains_music.",
+   "scan": [
+    {
+     "source": "private-assets/Minifantasy_Forgotten_Plains_SFX.zip",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/sfx/birds.ogg",
+    "assets/sfx/bush_rustling_1.ogg",
+    "assets/sfx/bush_rustling_2.ogg",
+    "assets/sfx/bush_rustling_3.ogg",
+    "assets/sfx/cicada.ogg",
+    "assets/sfx/crickets.ogg",
+    "assets/sfx/fruit_drop_1.ogg",
+    "assets/sfx/fruit_drop_2.ogg",
+    "assets/sfx/hit_on_brick_1.ogg",
+    "assets/sfx/hit_on_brick_2.ogg",
+    "assets/sfx/hit_on_wood_1.ogg",
+    "assets/sfx/hit_on_wood_2.ogg",
+    "assets/sfx/step_dirt_1.ogg",
+    "assets/sfx/step_dirt_2.ogg",
+    "assets/sfx/step_dirt_3.ogg",
+    "assets/sfx/step_grass_1.ogg",
+    "assets/sfx/step_grass_2.ogg",
+    "assets/sfx/step_grass_3.ogg",
+    "assets/sfx/step_stone_1.ogg",
+    "assets/sfx/step_stone_2.ogg",
+    "assets/sfx/step_stone_3.ogg",
+    "assets/sfx/tree_rustling_1.ogg",
+    "assets/sfx/tree_rustling_2.ogg",
+    "assets/sfx/tree_rustling_3.ogg",
+    "assets/sfx/tree_rustling_4.ogg",
+    "assets/sfx/wind.ogg"
+   ]
+  },
+  {
+   "id": "minifantasy_plains_music",
+   "name": "Minifantasy: Forgotten Plains music",
+   "creator": "Leohpaz",
+   "sources": [
+    "private-assets/Minifantasy_ForgottenPlains_Music.zip"
+   ],
+   "storage": "private",
+   "licence": "paid",
+   "permissions": "Personal and commercial projects; the pack may not be sold or distributed (so private-assets; only the encoded Ogg files are committed); credit appreciated: 'Minifantasy: Forgotten Plains music by Leohpaz'.",
+   "categories": [
+    "music"
+   ],
+   "status": "integrated",
+   "used_for": "MUSIC-18 (owner 2026-10-23, 'Fight music + countryside'): Fair Fight (Battle) plays during a fight, Plain Sight (Regular) in the countryside beyond the village (game/assets/music/fair_fight.ogg, plain_sight.ogg; Ogg Vorbis -q:a 6 on every platform).",
+   "decision": "The WAVs are not committed even though each is under 25 MB: committing them would redistribute the pack in a public repository, which its licence and CLAUDE.md section 3 forbid. They ship as high-quality Ogg on every platform (see DECISIONS).",
+   "scan": [
+    {
+     "source": "private-assets/Minifantasy_ForgottenPlains_Music.zip",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/music/fair_fight.ogg",
+    "assets/music/plain_sight.ogg"
+   ]
   }
  ]
 }

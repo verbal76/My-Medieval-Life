@@ -75,6 +75,7 @@ jobs:
           $godot --headless --path game --script res://tests/world_test.gd
           $godot --headless --path game --script res://tests/aging_test.gd
           $godot --headless --path game --script res://tests/wiki_test.gd
+          $godot --headless --path game --script res://tests/audio_test.gd
           $godot --headless --path game --script res://tests/stone_test.gd
           $godot --headless --path game --script res://tests/job_board_test.gd
           $godot --headless --path game --script res://tests/early_game_test.gd

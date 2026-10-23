@@ -3276,6 +3276,405 @@
    "member": "TileSet.png",
    "transform": "the 32 x 32 piece of the laid-stone paving at (1472, 608), reduced 1/2 (box), a step line darkened to 0.62 every 4 rows",
    "sha256": "f6915916f816a78d7b3ea05b5beb14c28caa1854f1a25a66b7a29d0fe28460d2"
+  },
+  {
+   "file": "assets/music/sunrise_over_the_village.ogg",
+   "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+   "member": "Sunrise.over.the.Village.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4 (Android's copy; PC builds use the original WAV: 47975440 bytes, sha256 c858cfbd79fbc29a8cca0e2a220559be454e82070317b37de2ab6405422f18f0)",
+   "sha256": "75611323c1938f71149450b72684b672193d9f35ba468d2283c601b9c7bd1264"
+  },
+  {
+   "file": "assets/music/prosperous_village.ogg",
+   "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+   "member": "Prosperous.Village.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4 (Android's copy; PC builds use the original WAV: 39105040 bytes, sha256 85e68fa3efdb7c32336a25cffbf74d5b5d84542a7d1222f997132b8bb4111ac6)",
+   "sha256": "61812f9e36a6db6ba8232e21822794c82152effdbd431b3166813d1581567028"
+  },
+  {
+   "file": "assets/music/misted_ancient.ogg",
+   "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav",
+   "member": "misted.ancient.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4 (Android's copy; PC builds use the original WAV: 86337040 bytes, sha256 a04980a71119ea35b4741d3567153d97103a77bd24ce58859a6f36ce82d3c8c6)",
+   "sha256": "5bd291ab78c00a6479ae5c741e73ee29e6d3274e45b7450d7d7a65ce8e99937c"
+  },
+  {
+   "file": "assets/music/fair_fight.ogg",
+   "source": "Minifantasy_ForgottenPlains_Music.zip",
+   "member": "Minifantasy_ForgottenPlains_Music/Music/Fair_Fight_(Battle).wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 6 (used on every platform: the pack may not be redistributed, so its WAV is not committed)",
+   "sha256": "36d1b95d255949de747afb85f5822692f92da4391c7f587c95a62fe7637f9e05"
+  },
+  {
+   "file": "assets/music/plain_sight.ogg",
+   "source": "Minifantasy_ForgottenPlains_Music.zip",
+   "member": "Minifantasy_ForgottenPlains_Music/Music/Plain_Sight_(Regular).wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 6 (used on every platform: the pack may not be redistributed, so its WAV is not committed)",
+   "sha256": "ba4158c0bd90c134f29565879f3073dc48ab07ff13a351ffc6216a18aae750af"
+  },
+  {
+   "file": "assets/sfx/birds.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "13_Birds_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "1c9b017851a247c76c9bc0d8e2dd08015a063f415cf0cb3d12b2f5a2221ea774"
+  },
+  {
+   "file": "assets/sfx/book_page.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/book-page.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "a5d0520daeb68b65116274ace05d29c4923c6d698a293bdde8769f90d8970872"
+  },
+  {
+   "file": "assets/sfx/bush_rustling_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "01_bush_rustling_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "7f4a0617737967e6317cc9c93a888da80613679ab15ceb68b15a4731992eb666"
+  },
+  {
+   "file": "assets/sfx/bush_rustling_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "01_bush_rustling_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "0e1f92c42922ad8e7756ca4ae85c4694335be1f372be1c7f9771713a7debf562"
+  },
+  {
+   "file": "assets/sfx/bush_rustling_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "01_bush_rustling_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "04be64cd4b73bf03a5103bf70327daa600baad8407fa5a076572c6eba98ae771"
+  },
+  {
+   "file": "assets/sfx/campfire.ogg",
+   "source": "cozy-rpg-sfx-ambience-1.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-campfire.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "24cc59853d221894143483a05b93fa08ca591f12fe734fc66bcf0c6c5ebd34b2"
+  },
+  {
+   "file": "assets/sfx/cave_wind.ogg",
+   "source": "cozy-rpg-sfx-ambience-2.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-cave-wind.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "1ab73ecca0a42ced6662bc662faa38fc46f1d1bf65dd5dcc4917e4c022b90e0e"
+  },
+  {
+   "file": "assets/sfx/chest_open.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/chest-open.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "3e4f6f4afdb1b56a0188c97baf34a0baf0469dc6b44e72b3e22d256f89e0a450"
+  },
+  {
+   "file": "assets/sfx/cicada.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "12_Cicada_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "641d5f747516e0aad3edb0d23c83ecc310400e0026da96058c74d3571a3ac922"
+  },
+  {
+   "file": "assets/sfx/coin.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/coin.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "8ad297724e1f4e037d336d7de3a918da8af0a4c22e74490705bed5cf2e257398"
+  },
+  {
+   "file": "assets/sfx/crickets.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "11_Crickets_2_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "8e6636c9ef092db49b0f55cbf6b175be28cb70fcb93b17cb1c6af3d5427756c3"
+  },
+  {
+   "file": "assets/sfx/critical_hit.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/critical-hit.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f41b1fc907f3f9da9846ad3df59ffb47ee29a6d28aff1d1ee350dcd3048d35c3"
+  },
+  {
+   "file": "assets/sfx/door_wood.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/door-wood.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f96e518bcdb932504e070bd4032a3514b3fce732feb39b166231764d30c17e87"
+  },
+  {
+   "file": "assets/sfx/dungeon.ogg",
+   "source": "cozy-rpg-sfx-ambience-1.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-dungeon.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "437efd93c00b9b266e703a4ad68868ee43fdddc40a1e5b8428857c52e2d6a23f"
+  },
+  {
+   "file": "assets/sfx/enemy_defeat.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/enemy-defeat.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "eccb586c813a23a325f4af64b659bfdf9e25d559a3b9b2a43500f4b6cea664a0"
+  },
+  {
+   "file": "assets/sfx/enemy_hit.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/enemy-hit.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b80ff99a9253c1d3b5a41743a0fa905b65e988ae35248b65312f13a554e51b23"
+  },
+  {
+   "file": "assets/sfx/equip_armor.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/equip-armor.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "20d856849e039f39b60489e6cac756cd8d56f0c68e0ddb22d85ce251f176bd2d"
+  },
+  {
+   "file": "assets/sfx/equip_weapon.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/equip-weapon.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "fc0b050d4ce05061e34eb78aa55be03314d4b346f8341d63496777005bd7bbb5"
+  },
+  {
+   "file": "assets/sfx/fireball.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/fireball.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "19a0325c5c967d0018a432b322320fff002870410d13b6a444822fa79f35d444"
+  },
+  {
+   "file": "assets/sfx/forest.ogg",
+   "source": "cozy-rpg-sfx-ambience-2.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-forest.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "4d94ef03a2de6b5201f9a691fd242811a74d6a9079b57fbaf7119ccb07f7a869"
+  },
+  {
+   "file": "assets/sfx/fruit_drop_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "03_fruit_drop_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "0a78800b33198bf5dc5d0eba441db41908042c6bb96e6d402298e6fa0124f46e"
+  },
+  {
+   "file": "assets/sfx/fruit_drop_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "03_fruit_drop_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "2284af84b6bced2323efcf0b5ef10296e49ae03536f8fd8a574d69c1019e710b"
+  },
+  {
+   "file": "assets/sfx/hit_on_brick_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "16_Hit_on_brick_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "cafee451ef65e819e53364d7d343715773956c46c832e1517b20f696d1e39932"
+  },
+  {
+   "file": "assets/sfx/hit_on_brick_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "16_Hit_on_brick_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "be089a893c86b7740d8b40bc07ec4360aa9697b2c900ed0bb1116533d66c7614"
+  },
+  {
+   "file": "assets/sfx/hit_on_wood_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "15_Hit_on_wood_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "625b8d9a6e7f49f2a40ad7c47ac477c26c09d46ea2384b7a0bade45aa4881efe"
+  },
+  {
+   "file": "assets/sfx/hit_on_wood_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "15_Hit_on_wood_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "30bde707794bb0325dfc6c2b30927c0ddb45fef22dd018dcd87863ca74a12d4b"
+  },
+  {
+   "file": "assets/sfx/jingle_inn_rest.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-inn-rest.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "2735649e8a3755c1b5b362d544b3d255c96e0b91a50f3a5d73a407e10e67c88d"
+  },
+  {
+   "file": "assets/sfx/jingle_level_up.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-level-up.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "eb20ba8f6b3a65b3b6124e3f1b000a511f4aeda973a6272b21f0f2703ae55643"
+  },
+  {
+   "file": "assets/sfx/jingle_quest_accepted.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-quest-accepted.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "c8c930010c3678cdc89664e239735c43dfc94bb4c78c424a6f285355de1b810b"
+  },
+  {
+   "file": "assets/sfx/jingle_quest_complete.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-quest-complete.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "6de8323fa57a337c5aa366a7ef7e9b1e60c42f531a157172bc94446a5518bf76"
+  },
+  {
+   "file": "assets/sfx/player_hurt.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/player-hurt.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "ece3d527e0414886a1962eb15f159b1aa4d2a9a0883cd90cbdf35352d13b4cf8"
+  },
+  {
+   "file": "assets/sfx/potion_drink.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/potion-drink.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "3838d5bdcc8f9077cd05db892166b3a0c5ce884319b2415539627b9ec9377c0d"
+  },
+  {
+   "file": "assets/sfx/save_crystal.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/save-crystal.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b4f651feb69cf82ebb0adb058ab4e54583e6e75b7b42b069df4d155ec8abbc90"
+  },
+  {
+   "file": "assets/sfx/secret_found.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/secret-found.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "4825410d8abbbfbbc5c349c2ce431e1e119ab5db60156fcced8c1cbd431251d3"
+  },
+  {
+   "file": "assets/sfx/step_dirt_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "05_step_dirt_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f1be00094e43f28300ef98b51289931b62ff097d0a3ee471ded9e3008f752f10"
+  },
+  {
+   "file": "assets/sfx/step_dirt_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "05_step_dirt_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "ca57319f1f9eef97aadc9a612c66f77483d979ef8cbf0d435dec902b9a8ac80f"
+  },
+  {
+   "file": "assets/sfx/step_dirt_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "05_step_dirt_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b558c9dc723be575ffbd7e914d24aa99b2e5a78d347bb6eeab879591ea36e396"
+  },
+  {
+   "file": "assets/sfx/step_grass_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "04_step_grass_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "8ff7f29c98ac1cf03929db91165fb8da0529d7d7587cc37973b7ac5ce3fdae23"
+  },
+  {
+   "file": "assets/sfx/step_grass_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "04_step_grass_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "3773c6971bd27d1fb2c6dbd1d177fbaca1165cfd838cbf0d81b53309442b7167"
+  },
+  {
+   "file": "assets/sfx/step_grass_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "04_step_grass_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "0a9733e6d3450dc145a0c2b7133fc3dcaa6a31679f885d822787e1ada1aa6ec4"
+  },
+  {
+   "file": "assets/sfx/step_stone_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "06_step_stone_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "e8de2e7d1f160eb16c5723bea2dff2916377deef0e86a0b4d0e015384e085a11"
+  },
+  {
+   "file": "assets/sfx/step_stone_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "06_step_stone_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "7f6b343b4b0e52bb6f3aa2d00fe40ee0579177ec728ae953b8560049d714f20b"
+  },
+  {
+   "file": "assets/sfx/step_stone_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "06_step_stone_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "a6d67b99c53b4ff26cc39283a0af4a5267908e681a13b0126698ae6e5654913b"
+  },
+  {
+   "file": "assets/sfx/sword_hit_1.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-hit-1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b280932f981094e63183f3c09744659c0b0b772744a3caa0def48653c2c45754"
+  },
+  {
+   "file": "assets/sfx/sword_hit_2.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-hit-2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f0e9cf6305765309b607802af88b0dc8865888e40bfa5f3f7d2d6b83e5e30bc3"
+  },
+  {
+   "file": "assets/sfx/sword_swing_1.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-swing-1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "64e7f946c3555fa438bc88b9e2c9d0463fc3a44efe0b694b3b7db0b7b16af32b"
+  },
+  {
+   "file": "assets/sfx/sword_swing_2.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-swing-2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "de455e41f8714af3bd2fbea23508f726a0c67afc8dfcb9ce208fa19acc788dc9"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b133cca60977a5498bf4ee221d6038109c07165ff4d698139900312d0043d6ec"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "16fa0c9ed045719ab94b986fae595576005d352e7e0e2a6f8ead41af3944487b"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "61ecf894e6d28ed03be946c144fc694cf97828d7af74d5298e95c779ad204cc0"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_4.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_4.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "d9f72f51ee6f9e18f2eac02e72e39932f81ede8c1f0fcb46d4d498740f81c744"
+  },
+  {
+   "file": "assets/sfx/wind.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "14_Wind_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "63069d9e3772ff7e99487037a998a7e11d55306461f083ccebd5314062ccec54"
   }
  ]
 }
