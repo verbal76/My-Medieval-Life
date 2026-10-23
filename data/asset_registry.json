@@ -13042,8 +13042,8 @@
     "music"
    ],
    "status": "integrated",
-   "used_for": "MUSIC-18 (owner 2026-10-23, 'Fight music + countryside'): Fair Fight (Battle) plays during a fight, Plain Sight (Regular) in the countryside beyond the village (game/assets/music/fair_fight.ogg, plain_sight.ogg; Ogg Vorbis -q:a 6 on every platform).",
-   "decision": "The WAVs are not committed even though each is under 25 MB: committing them would redistribute the pack in a public repository, which its licence and CLAUDE.md section 3 forbid. They ship as high-quality Ogg on every platform (see DECISIONS).",
+   "used_for": "MUSIC-18 (owner 2026-10-23, 'Fight music + countryside'): Fair Fight (Battle) plays during a fight, Plain Sight (Regular) in the countryside beyond the village (Android: game/assets/music/fair_fight.ogg, plain_sight.ogg (Ogg Vorbis -q:a 6); Windows and Linux: the original WAVs, fetched at release from the owner's Minifantasy release zip and checked by sha256).",
+   "decision": "The pack and its WAVs are never committed (licence; CLAUDE.md section 3). The PC packages take the WAVs at release time from the owner's own Minifantasy release (see DECISIONS).",
    "scan": [
     {
      "source": "private-assets/Minifantasy_ForgottenPlains_Music.zip",

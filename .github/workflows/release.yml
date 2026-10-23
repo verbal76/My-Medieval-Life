@@ -130,8 +130,9 @@ jobs:
           export/android/debug_keystore_pass = "${pass}"
           EOF
 
-      - name: Fetch the owner's songs as WAV (Windows and Linux carry them; Android carries Ogg)
-        # MUSIC-18: the three songs are release assets of this repository (173 MB, never committed). Each is checked
+      - name: Fetch the music as WAV (Windows and Linux carry it; Android carries Ogg)
+        # MUSIC-18: the owner's three songs are release assets of this repository (173 MB, never committed), and the two
+        # Minifantasy songs come from the zip in the owner's Minifantasy release (the pack is never committed). Each is checked
         # against the size and sha256 in game/data/music.json, and saved with an import file that keeps plain PCM. The
         # Android preset excludes the WAVs and the PC presets exclude the Ogg copies (game/export_presets.cfg).
         run: python3 tools/fetch_music.py

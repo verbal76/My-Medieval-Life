@@ -1,6 +1,6 @@
 {
  "format": "mml-music/1",
- "note": "Music and ambience (MUSIC-18, SFX-18; owner directive 2026-10-23, docs/directives/2026-10-23_game_music.md), read by GameAudio (game/scripts/core/audio.gd) and by .github/workflows/release.yml (which downloads each song's WAV from its release URL, checks bytes and sha256, and saves it as game/assets/music/<id>.wav for the Windows and Linux packages). Android carries game/assets/music/<id>.ogg (Ogg Vorbis, made by tools/game_audio.py); the game plays the WAV when it is present, else the Ogg. Fight and countryside songs are Minifantasy: Forgotten Plains music by Leohpaz (private pack; committed as Ogg for every platform, never as WAV). Priority: fight, countryside, underground, time of day. Slot boundaries are agent decisions (docs/DECISIONS.md): morning from the villagers' waking hour (6) to 10, day to the end of the working day (18), night after (the same 18 and 6 that rest uses); the title screen counts as morning and every level below the surface as night.",
+ "note": "Music and ambience (MUSIC-18, SFX-18; owner directive 2026-10-23, docs/directives/2026-10-23_game_music.md), read by GameAudio (game/scripts/core/audio.gd) and by .github/workflows/release.yml (which downloads each song's WAV from its release URL, checks bytes and sha256, and saves it as game/assets/music/<id>.wav for the Windows and Linux packages). Android carries game/assets/music/<id>.ogg (Ogg Vorbis, made by tools/game_audio.py); the game plays the WAV when it is present, else the Ogg. Fight and countryside songs are Minifantasy: Forgotten Plains music by Leohpaz (the pack is never committed: Android carries the committed Ogg; for Windows and Linux the release workflow takes the original WAV from the owner's \"Minifantasy\" release zip, checked by size and sha256, as for the owner's songs). Priority: fight, countryside, underground, time of day. Slot boundaries are agent decisions (docs/DECISIONS.md): morning from the villagers' waking hour (6) to 10, day to the end of the working day (18), night after (the same 18 and 6 that rest uses); the title screen counts as morning and every level below the surface as night.",
  "slot_hours": {
   "morning": [
    6.0,
@@ -55,12 +55,28 @@
    "id": "fair_fight",
    "title": "Fair Fight (Battle)",
    "pack": "Minifantasy: Forgotten Plains music by Leohpaz",
+   "zip_url": "https://github.com/verbal76/My-Medieval-Life/releases/download/Minifantasy/Minifantasy_ForgottenPlains_Music.zip",
+   "zip_name": "Minifantasy_ForgottenPlains_Music.zip",
+   "zip_bytes": 36308083,
+   "zip_sha256": "50a47734f93459ef0f6dada2f8315ab558507d3e5cab119e4021b31c6450e34a",
+   "zip_member": "Minifantasy_ForgottenPlains_Music/Music/Fair_Fight_(Battle).wav",
+   "bytes": 16229536,
+   "sha256": "d0a88280a265b53e3dc5a129a08ee1c832f0ae78026b25bc2e1d9b7e40e6efb1",
+   "wav": "assets/music/fair_fight.wav",
    "ogg": "assets/music/fair_fight.ogg"
   },
   {
    "id": "plain_sight",
    "title": "Plain Sight (Regular)",
    "pack": "Minifantasy: Forgotten Plains music by Leohpaz",
+   "zip_url": "https://github.com/verbal76/My-Medieval-Life/releases/download/Minifantasy/Minifantasy_ForgottenPlains_Music.zip",
+   "zip_name": "Minifantasy_ForgottenPlains_Music.zip",
+   "zip_bytes": 36308083,
+   "zip_sha256": "50a47734f93459ef0f6dada2f8315ab558507d3e5cab119e4021b31c6450e34a",
+   "zip_member": "Minifantasy_ForgottenPlains_Music/Music/Plain_Sight_(Regular).wav",
+   "bytes": 21874336,
+   "sha256": "fc92bd7df6de3bd460c781798a6aed558f7afad05b8cda5a8ca70039d8359469",
+   "wav": "assets/music/plain_sight.wav",
    "ogg": "assets/music/plain_sight.ogg"
   }
  ],
