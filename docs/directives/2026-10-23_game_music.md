@@ -43,3 +43,5 @@ itself may not be sold or distributed; credits appreciated.
 
 Owner's answer on the two tracks (verbatim choice): **"Fight music + countryside"**: Fair Fight while the player is in a
 fight, Plain Sight in the countryside beyond the village; the three songs keep the village by time of day.
+
+Owner on footsteps (2026-10-23, verbatim): "1 is my choice just soft not loud and annoying" (keep the footsteps, soft).
