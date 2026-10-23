@@ -214,6 +214,8 @@ func procure() -> int:
 			seller.coins += price
 			seller.earned += price
 			w.treasury -= price
+			if w.recorder != null:
+				w.recorder.manor_flow("mine_supply", seller, price, false)      # REC-19
 			spent += price
 			left -= 1
 			w.stat("gov_mine_equipment", price)
@@ -228,6 +230,8 @@ func procure() -> int:
 			maker.coins += advance
 			maker.earned += advance
 			w.treasury -= advance
+			if w.recorder != null:
+				w.recorder.manor_flow("mine_supply", maker, advance, false)      # REC-19
 			spent += advance
 			w.manor_orders.append({"smith": maker.id, "tool": str(id), "for": -1, "paid": advance, "day": w.day()})
 			w.stat("gov_mine_equipment", advance)

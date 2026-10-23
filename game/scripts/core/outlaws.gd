@@ -98,6 +98,7 @@ static func arrive(w: World) -> Array:
 		w.stat("outlaw_coins_in", n.coins)
 		w.npcs.append(n)
 		w.by_id[n.id] = n
+		Identity.register_npc(w, n, "outlaw")
 		out.append(n)
 	w.outlaw_gone_day = -1
 	w.stat("outlaws_arrived", out.size())

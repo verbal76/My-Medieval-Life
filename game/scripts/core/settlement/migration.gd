@@ -111,7 +111,7 @@ static func _food_need_pts(ms: Array) -> float:
 ## The record of a villager that travels (their age in years, sex, the will to marry, name, skills).
 static func _person_of(w: World, n: NPC) -> Dictionary:
 	return {"age": Life.npc_age(w, n), "sex": 1 if n.sex == "female" else 0, "unw": 0 if w.relations.willing(n) else 1, "pair": 0,
-		"n": n.name, "f": n.family, "sk": n.skills.duplicate()}
+		"n": n.name, "f": n.family, "sk": n.skills.duplicate(), "id": n.id}
 
 
 ## Pack up villagers who are leaving for `s`: their records, purses and everything they carry (and, with `pantry` set, the
@@ -152,6 +152,7 @@ static func _gone(w: World, s: OffMapSettlement, ms: Array, load_: Dictionary, p
 		o.away = s.id
 		o.plan.clear()
 		o.target = -1
+		Identity.move(w, o.id, s.id)                  # ID-01: the same person, now in the settlement
 	if pantry != null:
 		pantry.items.clear()
 	if int(load_.coins) > 0:
@@ -195,11 +196,19 @@ static func _names(ms: Array) -> String:
 
 
 # ------------------------------------------------------------------ arrivals in the village ----------------
-## A new villager from a traveller's record: the name, age, sex and skills they carried (a settlement-born member's skills come
-## from the village's own starting rule for their trade, `_who`), a full stomach and the purse they brought.
+## The villager a traveller's record is. ID-01: the same person, never a replacement: a traveller who left the village (their record
+## names an NPC kept with alive false and `away` set) is reactivated, with the age, skills and purse they come back with; their old
+## ties, memories, family links and civic history, all keyed by that id, are simply there again. A person born in a settlement (an id
+## from the settlement band, no record yet) gets their first villager record under that id. The name, age, sex and skills are what
+## they carried (a settlement-born member's skills come from the village's own starting rule for their trade, `_who`), with a full
+## stomach and the purse they brought. Until `_settled` they are not in a household; `_undo_villager` takes them back.
 static func _villager(w: World, p: Dictionary, coins: int) -> NPC:
+	var id := int(p.get("id", 0))
+	var old: NPC = w.by_id.get(id) if id > 0 else null
+	if old != null and not old.alive and old.away != "" and not old.became_player:
+		return _reactivate(w, old, p, coins)
 	var n := NPC.new()
-	n.id = w.brain._next_npc_id()
+	n.id = id if id > 0 and old == null else w.new_person_id()
 	n.name = str(p.n)
 	n.family = str(p.f)
 	n.sex = "female" if int(p.sex) == 1 else "male"
@@ -213,7 +222,74 @@ static func _villager(w: World, p: Dictionary, coins: int) -> NPC:
 	Skills.seed_trades_for(n)
 	w.npcs.append(n)
 	w.by_id[n.id] = n
+	if not w.people.has(n.id):
+		Identity.register_npc(w, n, "arrival")                     # (a person the register does not know yet: it always does after a world loads)
 	return n
+
+
+## Static: the state a reactivated villager had when the move began, by id, for `_undo_villager`; cleared by `_settled`.
+static var _returning := {}
+
+
+static func _reactivate(w: World, n: NPC, p: Dictionary, coins: int) -> NPC:
+	_returning[n.id] = {"alive": n.alive, "away": n.away, "household": n.household, "home": n.home, "workplace": n.workplace, "job": n.job,
+		"role": n.role, "coins": n.coins, "hunger": n.hunger, "hp": n.hp, "born": n.born, "skills": n.skills.duplicate(), "doing": n.doing,
+		"partner": n.partner, "pos": n.pos, "family": n.family}
+	n.alive = true
+	n.away = ""
+	n.born = Life.born_for_age(float(p.age), w.minutes)
+	n.skills = {}
+	for k in p.get("sk", {}):
+		n.skills[str(k)] = int(p.sk[k])
+	Skills.seed_trades_for(n)
+	n.coins = coins
+	n.hunger = 100.0
+	n.hp = n.max_hp
+	n.household = -1
+	n.home = ""
+	n.job = ""
+	n.workplace = ""
+	n.doing = "idle"
+	n.plan.clear()
+	n.target = -1
+	n.role = Life.role_for(w, n)
+	if n.partner >= 0:                                  # a partner link survives only if it is still mutual (or the partner is away too)
+		var o := w.npc(n.partner)
+		if o == null or o.partner != n.id:
+			n.partner = -1
+	return n
+
+
+## The move did not go through (no home or room could be had): the person is as they were before `_villager`.
+static func _undo_villager(w: World, n: NPC) -> void:
+	if _returning.has(n.id):
+		var snap: Dictionary = _returning[n.id]
+		for k in snap:
+			n.set(k, snap[k])
+		n.plan.clear()
+		_returning.erase(n.id)
+		return
+	w.npcs.erase(n)
+	w.by_id.erase(n.id)
+	if w.people.has(n.id) and str(w.people[n.id].where) == Identity.VILLAGE:     # (made for this move: a member's own entry says where they are)
+		w.release_person_id(n.id)
+
+
+## After the people are housed: each is in exactly one household's list, the register says they are in the village (and under what
+## name), and the undo record is done with.
+static func _arrived(w: World, n: NPC) -> void:
+	_returning.erase(n.id)
+	for hh in w.households:
+		var list: Array = hh.members
+		var keep: bool = int(hh.id) == n.household
+		while list.has(n.id):
+			list.erase(n.id)
+		if keep:
+			list.append(n.id)
+	Identity.move(w, n.id, Identity.VILLAGE)
+	if w.people.has(n.id):
+		w.people[n.id].name = n.name
+		w.people[n.id].family = n.family
 
 
 ## Where `ms` (new villagers, one purse) live: with `prefer_h` if it lives, else a home of their own leased from the manor if they
@@ -302,6 +378,8 @@ static func _settled(w: World, s: OffMapSettlement, ms: Array, h: int, goods: Di
 	if find_home and own and str(w.households[h].home) == "":
 		w.construction._find_home(h)
 	_place(w, ms)
+	for o: NPC in ms:
+		_arrived(w, o)
 	_book(w, s, "in", reason, ms.size(), coins, goods)
 	var names := _names(ms)
 	w.note("%s %s from %s %s." % [names, "arrives" if ms.size() == 1 else "arrive", s.name, WHY[reason]])
@@ -513,8 +591,7 @@ static func _work_in(w: World, s: OffMapSettlement, market_: Dictionary = {}) ->
 	var ms := [n]
 	var at := _house(w, ms, int(vac.get("household", -1)), str(vac.get("home", "")))
 	if at < 0:
-		w.npcs.erase(n)
-		w.by_id.erase(n.id)
+		_undo_villager(w, n)
 		return false
 	s.release_person(cand[0], cand[1])
 	if not vac.is_empty():
@@ -589,8 +666,7 @@ static func _household_in(w: World, s: OffMapSettlement, hi: int, reason: String
 		at = _house(w, ms)
 	if at < 0:
 		for o: NPC in ms:
-			w.npcs.erase(o)
-			w.by_id.erase(o.id)
+			_undo_villager(w, o)
 		return false
 	s.release_household(hi)
 	_settled(w, s, ms, at, load_.goods, int(load_.coins), reason, reason == "land")

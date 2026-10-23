@@ -17,7 +17,7 @@ timing change). Details, tests and measurements: DESIGN.md section 15a.
 ## Build 19: Expansion 19 complete (2026-10-23, `wip/expansion19-preparation`)
 
 Owner directive `docs/directives/2026-10-23_x19_complete_release_scope.md`: judgment, personality, relationships, family name, gossip, memory, lies, family stories, stubbornness and
-the family-first hierarchy including danger are all ON by default and influence decisions. Numbers, files and agent decisions: DESIGN.md section 16; interactions INT-405..411;
+the family-first hierarchy including danger are all ON by default and influence decisions. Numbers, files and agent decisions: DESIGN.md section 16; interactions INT-407..413 (renumbered at the Build 19 integration; INT-405 and INT-406 are the identity entries);
 wiki page "What villagers think of you"; tests `judgment_x19_test`, `family_first_test` (danger) and the updated judgment suites. Judgment off (`JudgmentLive.test_disabled`,
 `economy_sim --no-judgment`) is the Build 18 path and passes the determinism gate against the baseline.
 

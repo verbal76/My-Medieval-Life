@@ -62,6 +62,7 @@ var father := -1
 var partner := -1            # npc id, Life.PLAYER_ID for the player, -1 none
 var children: Array = []     # npc ids
 var away := ""               # MIGRATE-18: the settlement this villager moved to (alive is false then; Migration); "" otherwise
+var became_player := false   # ID-01: this child became the player character (Life.make_heir): the record is kept (alive is false), not a body
 
 
 func cell() -> Vector2i:
@@ -121,6 +122,8 @@ func to_dict() -> Dictionary:
 		d.level = depth                  # MIN-A: written only below the surface
 	if away != "":
 		d.away = away                    # MIGRATE-18: written only for a villager who moved away
+	if became_player:
+		d.became_player = true           # ID-01: written only for a child who became the player
 	return d
 
 
@@ -137,6 +140,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.inv = Inventory.from_dict(d.inv)
 	n.pos = Vector2(float(d.pos[0]), float(d.pos[1]))
 	n.away = str(d.get("away", ""))                           # MIGRATE-18: older saves: nobody has moved away
+	n.became_player = bool(d.get("became_player", false))     # ID-01: older saves: no child had been kept as the player
 	n.depth = int(d.get("level", 0))                          # MIN-A: older saves and the surface: none
 	n.memory = d.memory.duplicate()
 	n.income_days = d.get("income_days", []).duplicate()         # older saves: no history yet

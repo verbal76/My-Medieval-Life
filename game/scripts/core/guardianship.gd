@@ -203,6 +203,8 @@ static func join_clan(w: World, k: NPC) -> void:
 	k.plan.clear()
 	k.pos = Vector2(w.bandit_camp) + Vector2(0.5, 1.5)
 	w.stat("orphans_to_clan")
+	if w.recorder != null:
+		w.recorder.clan_joined(k, old)      # REC-19
 	w.note("No household can take in %s %s: the child goes to the bandits' camp." % [k.name, k.family])
 	if old >= 0 and not w.property._anyone_alive(old):
 		w.property.household_ended(old)
@@ -243,6 +245,8 @@ static func move(w: World, k: NPC, h: int, tier: String) -> void:
 	w.stat("orphans_taken_in")
 	w.stat("orphans_taken_in_by_" + tier)
 	var host := w.construction.responsible_adult(h)
+	if w.recorder != null:
+		w.recorder.guardianship(k, old, h, tier, host)      # REC-19
 	w.note("%s %s is taken in by %s (%s)." % [k.name, was_family, "the %s household" % w.households[h].family if host == null else "%s %s" % [host.name, host.family], tier])
 	if old >= 0 and not w.property._anyone_alive(old):
 		w.property.household_ended(old)

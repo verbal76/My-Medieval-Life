@@ -99,6 +99,7 @@ jobs:
           $godot --headless --path game --script res://tests/horse_test.gd
           $godot --headless --path game --script res://tests/luxury_test.gd
           $godot --headless --path game --script res://tests/migration_test.gd
+          $godot --headless --path game --script res://tests/identity_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd
@@ -117,6 +118,7 @@ jobs:
           $godot --headless --path game --script res://tests/save_transfer_test.gd
           $godot --headless --path game --script res://tests/housing_test.gd
           $godot --headless --path game --script res://tests/conservation_test.gd
+          $godot --headless --path game --script res://tests/recf1_test.gd
           $godot --headless --path game --script res://tests/family_test.gd
           $godot --headless --path game --script res://tests/od16_test.gd
           $godot --headless --path game --script res://tests/parity_test.gd
@@ -152,6 +154,8 @@ jobs:
           $godot --headless --path game --script res://tests/judgment_guard_save_test.gd
           $godot --headless --path game --script res://tests/judgment_decay_demo.gd
           $godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10
+          # REC-19 (wip/recorder): the flight recorder, off by default; archive, context links, cap, recovery, coin audit
+          $godot --headless --path game --script res://tests/recorder_test.gd
           # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
           $godot --headless --path game --script res://tests/interdependency_test.gd   # WDR-002-C: Rule 2 verification scenario
           $godot --headless --path game --script res://tests/settlement_test.gd

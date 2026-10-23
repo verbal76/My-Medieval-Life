@@ -6,6 +6,7 @@ extends RefCounted
 var name := "Wat"
 var family := "Ashdown"
 var generation := 1
+var pid := 0                  # ID-01: this character's permanent person id (World.people); 0 until World gives one (an older save: on load)
 var sprite := "res://assets/characters/player_00.png"
 var heir_sprite := "res://assets/characters/player_01.png"
 var pos := Vector2.ZERO
@@ -301,7 +302,7 @@ func _tidy(id: String) -> void:
 
 func to_dict() -> Dictionary:
 	return {
-		"name": name, "family": family, "generation": generation, "sprite": sprite, "heir_sprite": heir_sprite,
+		"pid": pid, "name": name, "family": family, "generation": generation, "sprite": sprite, "heir_sprite": heir_sprite,
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
@@ -317,6 +318,7 @@ static func from_dict(d: Dictionary) -> PlayerState:
 		p.set(k, str(d[k]))
 	for k in ["generation", "coins", "deaths"]:
 		p.set(k, int(d[k]))
+	p.pid = int(d.get("pid", 0))                     # ID-01 (save 20): absent in an older save; World gives one on load
 	for k in ["hp", "max_hp", "hunger", "stamina"]:
 		p.set(k, float(d[k]))
 	p.pos = Vector2(float(d.pos[0]), float(d.pos[1]))

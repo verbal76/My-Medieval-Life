@@ -930,8 +930,10 @@ func resume_after_origin() -> void:
 func continue_game() -> void:
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state == "ok":
-		_load_save(r.data)
-		return
+		var why := _load_save(r.data)
+		if why == "":
+			return
+		r = {"state": "unmigratable", "reason": why}     # ID-01: a save that could not be brought up to date is kept as it is, like one that cannot be read
 	var note := ""
 	if r.state != "missing":
 		var kept := SaveStore.preserve(save_path, r.state)
@@ -942,28 +944,33 @@ func continue_game() -> void:
 			note = "Your save could not be read: %s. It was kept unchanged as %s." % [r.reason, kept.get_file()]
 	var bak_path := save_path + SaveStore.BAK
 	var b := SaveStore.inspect(bak_path, World.SAVE_VERSION)
-	if b.state == "ok":
-		_load_save(b.data)
+	if b.state == "ok" and _load_save(b.data) == "":
 		ui.message((note + " " if note != "" else "") + "The previous save (its backup) was loaded instead.", 12.0)
 		return
 	if b.state != "missing" and SaveStore.preserve(bak_path, b.state) == "":
 		save_blocked = "the backup save could not be read or moved aside, so saving is off this session to protect it"
 	for dated in SaveStore.dated_backups(save_path):          # an earlier day's save (DVW-A2), newest first
 		var o := SaveStore.inspect(dated, World.SAVE_VERSION)
-		if o.state == "ok":
-			_load_save(o.data)
+		if o.state == "ok" and _load_save(o.data) == "":
 			ui.message((note + " " if note != "" else "") + "The save of %s was loaded instead." % str(dated).get_file().get_basename().get_slice(SaveStore.DATED, 1), 12.0)
 			return
 	new_game()
 	ui.message((note if note != "" else "No save could be loaded.") + " A new game was started.", 12.0)
 
 
-func _load_save(d: Dictionary) -> void:
+## Load a save into a new world. Returns "" or why it was refused (ID-01: an older save that could not be given its people's
+## identities): nothing is written then, so the file stays exactly as it was.
+func _load_save(d: Dictionary) -> String:
 	save_meta = d.get("meta", {}).duplicate()
 	_clear_world()
 	map = VillageMap.load_default()
 	world = World.new()
 	world.load_dict(map, d)
+	if world.load_error != "":
+		var why := world.load_error
+		world.dispose()
+		world = null
+		return why
 	save_extra = {}
 	var known := world.to_dict()
 	for k in d:
@@ -972,6 +979,7 @@ func _load_save(d: Dictionary) -> void:
 	_build_scene()
 	_apply_world_changes()
 	_start()
+	return ""
 
 
 ## `fresh`: a new game, which also says where paid work is (owner, 2026-10-18: guidance, no tutorial).
@@ -1511,8 +1519,8 @@ func _sync_sprites() -> void:
 			actors.add_child(s)
 			sprites[n.id] = s
 		var near := n.pos.distance_to(cam) < 30.0
-		if not n.alive and n.away != "":
-			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls
+		if not n.alive and (n.away != "" or n.became_player):
+			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls (ID-01: nor a child who became the player)
 			continue
 		if not n.alive:
 			# the body falls, flickers and is gone
@@ -4649,6 +4657,8 @@ func save_game(show := true) -> bool:
 		save_failing = true
 		return false
 	save_failing = false
+	if world.recorder != null:
+		world.recorder.saved(d)        # REC-19
 	_update_linked_copy()
 	if show:
 		audio.play_sfx("save_crystal")

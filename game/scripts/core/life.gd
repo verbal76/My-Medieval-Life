@@ -200,7 +200,10 @@ static func sync_roles(w: World) -> void:
 			continue
 		var r := role_for(w, n)
 		if r != n.role:
+			var was := n.role
 			_set_role(w, n, r)
+			if w.recorder != null and n.role != was:
+				w.recorder.role_changed(n, was)      # REC-19: ageing into a role
 
 
 static func _set_role(w: World, n: NPC, r: String) -> void:
@@ -406,6 +409,8 @@ static func _player_dawn(w: World) -> void:
 		p.last_damage = "old age"
 		p.deaths += 1
 		w.note("%s %s died (old age)." % [p.name, p.family])
+		if w.recorder != null:
+			w.recorder.player_died(p, "old age")     # REC-19
 
 
 static func _living_in(w: World, h: int) -> int:
@@ -521,6 +526,8 @@ static func partner_player(w: World, n: NPC) -> String:
 	n.partner = PLAYER_ID
 	kin_version += 1
 	w.stat("partnerships")
+	if w.recorder != null:
+		w.recorder.partnered(w.player, n)      # REC-19
 	w.note("%s %s and %s %s become partners." % [w.player.name, w.player.family, n.name, n.family])
 	return ""
 
@@ -591,7 +598,10 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	hh.members.append(k.id)
 	w.npcs.append(k)
 	w.by_id[k.id] = k
+	Identity.register_npc(w, k, "birth")
 	w.stat("births")
+	if w.recorder != null:
+		w.recorder.birth(k, mother, father, h)      # REC-19
 	var m_name: String = mother.name if mother != null else father.name
 	w.note("A %s, %s, is born to %s." % ["girl" if k.sex == "female" else "boy", k.name, m_name])
 	return k
@@ -668,8 +678,15 @@ static func make_heir(w: World, heir: PlayerState, kid: NPC, parent: PlayerState
 		bag.add(id, kid.inv.count(id))
 	if bag.total() > 0 or kid.coins > 0:
 		w.loot.append({"pos": kid.pos, "inv": bag, "coins": kid.coins, "from": kid.name})
-	w.npcs.erase(kid)
-	w.by_id.erase(kid.id)
+	# ID-01: the child keeps their own permanent id and record (their history, ties and family links stay theirs, and the id is never
+	# issued again); the record is a person who became the player, not a villager and not a body: empty-handed (what they carried is
+	# in the loot above), not alive, drawn by nobody.
+	kid.inv = Inventory.new()
+	kid.coins = 0
+	kid.plan.clear()
+	kid.target = -1
+	kid.alive = false
+	kid.became_player = true
 	w.stat("child_heirs")
 
 

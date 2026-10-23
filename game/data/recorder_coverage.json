@@ -1,0 +1,193 @@
+{
+ "format": "mml-recorder-coverage/1",
+ "note": "What the flight recorder instruments, system by system (docs/design/FLIGHT_RECORDER_DESIGN.md section 2). Never read a row as broader than its scope text. A row is 'Fully instrumented' only when it names a test in game/tests/recorder_test.gd that exercises it (checked by that test); everything not listed as instrumented is not recorded. Updated by the stage that instruments a system.",
+ "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23",
+ "rows": [
+  {
+   "system": "Decisions",
+   "interaction": "top-level priority chain of NPCBrain.decide: which branch took the decision, the guard values (hunger, health, hour, role, job) read, branches before it passed over, later ones 'not evaluated'",
+   "where": "NPCBrain.decide",
+   "status": "Partially instrumented",
+   "stage": "D2",
+   "test": "test_live_world",
+   "note": "Branch level only. Job routines inside a branch (_plan_job, _crafter, _guard, _bandit ...), recipe order, seller and buyer searches, the labour market and succession are not instrumented (D4). A branch before the winner is recorded as passed over: the chain does not say whether its guard was false or its planner returned no plan. Factors are the values read before the call; scores do not exist in a priority chain."
+  },
+  {
+   "system": "Actions",
+   "interaction": "every plan-step action run by World._run_plan (about 60 act kinds): kind, args summary, ok or failed, parent = the plan's decision",
+   "where": "World._act_step",
+   "status": "Fully instrumented",
+   "stage": "D2",
+   "test": "test_live_world",
+   "note": "Scope: actions executed from a villager's plan. The effects inside an action (items made, coins paid outside trade, relations, contracts) are recorded only where another row of this file says so; a failed action carries reason act_returned_false (the code gives no finer reason). Actions called directly by other code (fights, the player's verbs) are not plan steps and are not recorded."
+  },
+  {
+   "system": "Interruptions",
+   "interaction": "walk lost (no path, no level route), station wait given up",
+   "where": "World._walk, World._run_plan",
+   "status": "Partially instrumented",
+   "stage": "D2",
+   "test": "test_interruptions",
+   "note": "The two interruption points named. The walk-lost event for 'no path' is recorded by the same code but no test reaches it (the village map's path search never returned empty in the probe); 'no level route' and the station give-up are exercised. Other places that clear a plan (fights, collapse, death) are not recorded."
+  },
+  {
+   "system": "Trade",
+   "interaction": "World.trade: accepted and refused sales with participants, coins and items before and after",
+   "where": "World.trade",
+   "status": "Fully instrumented",
+   "stage": "D2",
+   "test": "test_live_world",
+   "note": "Every call to World.trade, villager and player. Coin or goods changes made by code that does not call trade are not recorded here (see the coin audit)."
+  },
+  {
+   "system": "Transfer",
+   "interaction": "World.transfer: gifts, pantry, deposits, accepted and refused, with item changes before and after",
+   "where": "World.transfer",
+   "status": "Partially instrumented",
+   "stage": "D2",
+   "test": "test_live_world",
+   "note": "Every call is an event. Owners are named only for villagers, the player, household pantries and the granary; chests, carts, stalls, loot and other stores appear as inv:?. Item changes made by Inventory.add/remove called directly (8 sites edit items directly, many callers add or remove) are not recorded."
+  },
+  {
+   "system": "Currency",
+   "interaction": "hourly balance audit: each purse, the manor treasury and World.total_coins against the recorded coin changes; any difference is an unattributed event and an alert",
+   "where": "WorldRecorder._audit_coins",
+   "status": "Partially instrumented",
+   "stage": "D2",
+   "test": "test_unattributed_coins",
+   "note": "REC-D4: detects, does not attribute. About 150 coin mutation sites outside World.trade (wages, rents, tax, pay, rewards, tills, deposits ...) are not instrumented; their changes appear as unattributed events once an hour per holder, naming the amount but not the site. Holders audited: villagers, the player, the manor treasury, the world total (tills, reserves, loot, the offerings fund and courier fees are inside the total only)."
+  },
+  {
+   "system": "Needs",
+   "interaction": "hourly samples of hunger, health, cell, doing and coins of each living villager and the player",
+   "where": "WorldRecorder.hour",
+   "status": "Fully instrumented",
+   "stage": "D3",
+   "test": "test_live_world",
+   "note": "Samples only (REC-D3); a threshold crossing (starving, arriving) is not recorded as an event yet. Never a substitute for an interaction record."
+  },
+  {
+   "system": "Production and consumption",
+   "interaction": "work outputs, crafting, eating",
+   "where": "work_goods, work_mine, work_felled, work_craft, eat acts",
+   "status": "Partially instrumented",
+   "stage": "D2",
+   "note": "Only as the action event (kind, ok or failed) of the plan step that did it; the goods produced and consumed are not recorded as state changes."
+  },
+  {
+   "system": "Life",
+   "interaction": "births (child, mother, father, household), deaths with cause and the purse passing to the heir or the loot, ageing into a role (child to adult, adult to elder), partnerships (courting villagers and the player), guardianship placements and the clan fallback, the player character's death",
+   "where": "Life.birth, Life.sync_roles, World.kill, damage_player, Life._player_dawn, Life.partner_player, Relations (proposal accepted), Guardianship.move and join_clan",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "test": "test_life_events",
+   "note": "Not recorded: the starting population's ages and partner links (founding state, not events), courting stages and gifts (relations), the player adopting a child (Guardianship.player_adopt), pregnancy and fertility checks that did not lead to a birth, the old-age mortality rolls that did not kill. A death records what the dead carried only as the purse and its recipient; goods inherited are not itemised."
+  },
+  {
+   "system": "Employment",
+   "interaction": "job changes (taken, lost, switched) with the job before and after and the reason, vacancies opened and filled with the vacancy count, the manor's hiring wage offers raised and eased",
+   "where": "NPCBrain._change_job, _open_vacancy, _post_left, _reeve_succession, _guard_posts, _install, _hiring_competition",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "test": "test_employment_events",
+   "note": "Not recorded: who applied and why they were passed over (the job market, seek_work, apprentice choice scores), vacancies that close because the trade is back at strength, a newcomer's selection, stall lets, job-switch scoring. A job change is recorded after the fact with its reason text only."
+  },
+  {
+   "system": "Government",
+   "interaction": "the daily reeve_day and pay_guards passes as events with the treasury and granary before and after; tax collected per payer, wages (sage, reeve, guards, manor hands), repair and public-works purchases, granary purchases, tool purchases and advances, relief purchases, mine supplies, each as paired coin state changes; layoffs; unpaid wages",
+   "where": "NPCBrain.reeve_day, pay_guards, manor_flow call sites, MineSupply.procure",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "test": "test_government_events",
+   "note": "Not recorded: the tax-rate decision (TaxPolicy.step) as factors, relief selection (which household, why), manor_work reservations and refunds (coins set aside for a job move between the treasury and the job), rents and sales to the manor (Property), stall and till money passed to the manor, the manor buying wheat from a settlement, the reeve's succession choices. Any treasury change the pass makes outside the listed sites shows as the difference between the pass's summary row and the sum of its flows; the coin audit still flags it."
+  },
+  {
+   "system": "Crime",
+   "interaction": "the player's thefts as seen by the village (offender, victim, witnesses, crime count), a guard's confrontation with the fine and goods returned (coins and goods before and after), raise_alarm with the reports it causes, report_crime, a bandit's robbery of a villager",
+   "where": "World.witness, guard_confront, raise_alarm, report_crime, NPCBrain.fight (bandit robbery)",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "test": "test_crime_events",
+   "note": "Not recorded: pickpocketing attempts and their odds, fencing recognition detail beyond the sell verb, the Expansion 19 judgment of a crime, bandit raids on stalls, villagers fighting each other, guards chasing, deliver_report. witness records the witnesses present, not those who failed to notice."
+  },
+  {
+   "system": "Relationships",
+   "interaction": "shared hours, gifts, help, harm, courtship, marriage",
+   "where": "relations.gd",
+   "status": "Not instrumented",
+   "stage": "D4"
+  },
+  {
+   "system": "Contracts and credit",
+   "interaction": "offer, counter, accept, decline, deliver, lapse, debt, repay, default",
+   "where": "contracts.gd, credit.gd",
+   "status": "Not instrumented",
+   "stage": "D4",
+   "note": "The object-thread mechanism (link rows, same_object) exists in the core and is tested; no contract or debt event uses it yet."
+  },
+  {
+   "system": "Business, stalls, property, construction",
+   "interaction": "tills, wages, stall sales, leases, rents, sites, deliveries",
+   "where": "business*.gd, stalls.gd, property.gd, construction.gd",
+   "status": "Not instrumented",
+   "stage": "D4"
+  },
+  {
+   "system": "Farming, mining, manor work, chapel, feasts, quests",
+   "interaction": "their scripts",
+   "where": "farming.gd, mining scripts, manor_work.gd, chapel.gd, feast",
+   "status": "Not instrumented",
+   "stage": "D4"
+  },
+  {
+   "system": "Settlements (abstract)",
+   "interaction": "only the register transitions of people who move between the village and the settlements and the births registered in a settlement; the abstract daily phases and couriers are not recorded",
+   "where": "Identity.move (leave and return via Migration), Identity.register_member (settlement births)",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "test": "test_identity_events",
+   "note": "Not recorded: the settlements' daily steps, their trade, tax and journals, migration decisions (why a household moves), couriers (D6)."
+  },
+  {
+   "system": "Judgment (Expansion 19)",
+   "interaction": "facts, beliefs, gossip, ledgers, decision weighting",
+   "where": "JudgmentStore, JudgmentLive",
+   "status": "Not instrumented",
+   "stage": "D5"
+  },
+  {
+   "system": "Player",
+   "interaction": "the player verbs that change the world: trade (buy, sell), take, strike, craft, loot, each a verb event on the player's permanent reference with the pack, the purse and the target's health before and after; what a verb triggers (a trade, a witness, an alarm, a death) is its child",
+   "where": "World.player_buy_many, player_sell, player_take, player_craft, player_hit_npc, player_loot (wrappers); World.trade",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "note": "Not recorded: moving, eating, resting, equipping, dropping, harvesting, mining, felling, planting, building, renting, quests, spells (player_cast_fireball), player_home_move, pickpocket, lock picking, barber visits, the player's skill gains. The verb's state rows are a summary (authority summary): what a child event recorded is not counted twice.",
+   "test": "test_player_verbs"
+  },
+  {
+   "system": "Succession and the identity register",
+   "interaction": "every register transition of a person with their permanent id: registered (founding, birth, newcomer, outlaw, arrival, settlement birth, player), left the village, returned (same id), died, became ancestor, became player; and succession as one event: predecessor and heir as two different references, the player role passing between them, the live -2 view's tie count before and after",
+   "where": "Identity.register_npc, register_member, register_player, move, succeed",
+   "status": "Fully instrumented",
+   "stage": "D3",
+   "test": "test_succession_events",
+   "note": "Scope: the register and the succession event. Events are recorded where the transition is made (Identity.*), so any code that changes a person's whereabouts without calling Identity.move is not seen. The founding population is recorded as registered_founding events at world creation."
+  },
+  {
+   "system": "Save and load",
+   "interaction": "a loaded world: a session note with the save version, the count of people and whether their ids are unchanged (alert identity.ids_changed_on_load otherwise); a save written: a session event with the save version and register counters",
+   "where": "World.load_dict (end), main.gd save_game",
+   "status": "Partially instrumented",
+   "stage": "D3",
+   "test": "test_save_load_events",
+   "note": "The load note is exercised by a test (mid-journey save, load, return under the same reference). The save event is called from main.gd save_game, which no headless test runs: the recorder method is tested directly. A game loaded with the recorder enabled attaches a new session; a loaded game never continues an earlier session's archive."
+  },
+  {
+   "system": "Expansions 20, 21, 22 (hybrid), 23",
+   "interaction": "their future systems",
+   "where": "",
+   "status": "Not instrumented",
+   "stage": "hooks in D1; instrumented with each feature"
+  }
+ ]
+}

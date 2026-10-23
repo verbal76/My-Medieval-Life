@@ -35,6 +35,21 @@ var seed := 1
 var minutes := 7.0 * 60.0          # game time since the start (day 0, 07:00)
 var npcs: Array = []               # NPC
 var by_id := {}
+## ID-01 (save 20): one id space for every person, never reused. `next_person_id` is the counter only ever raised (new_person_id);
+## `people` is the register of identity and whereabouts, id -> {name, family, sex, born, mother, father, where, since}, never pruned
+## (Identity); `identity_report` is what the upgrade of an older save found (kept so it can be read later); `tie_history` holds, for
+## each former player character (by person id), a read-only snapshot of the village's ties with them when they died.
+var next_person_id := 1
+## ID-D2 option B (owner, 2026-10-23): settlement residents (off-map members, including those born there) and player characters take their
+## ids from a separate band that starts at BAND_START, with its own counter (only raised). The village's own sequence (village-born
+## people, newcomers) stays below it, as in Build 18, so the id-seeded village rules do not move. An id keeps its value wherever its
+## person goes. See docs/design/IDENTITY.md for the headroom.
+const BAND_START := 1000000
+var next_band_id := BAND_START
+var people := {}
+var identity_report := {}
+var tie_history := {}
+var load_error := ""                # set by load_dict when the save cannot be brought up to date (the caller refuses it and leaves the file)
 var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
 var stations := {}                 # id -> dict
@@ -111,6 +126,7 @@ var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the le
 var mine_works: MineWorks     # MIN-F: tunnels cut, timber supports, track (scripts/core/mine_works.gd; saved in "mine_works")
 var judgment_foreign := {}    # a saved "judgment" section while judgment is off: kept untouched, written back unchanged (never parsed, never switches judgment on)
 var judgment = null           # PROSPECTIVE (Expansion 19, PROS-19): a JudgmentStore, or null (off; JudgmentLive)
+var recorder = null           # REC-19: the flight recorder (WorldRecorder), or null (off: the default; recorder.json "enabled")
 
 
 func _init() -> void:
@@ -132,6 +148,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	contracts = Contracts.new(self)
 	if JudgmentLive.enabled():
 		JudgmentLive.attach(self)      # PROSPECTIVE (PROS-19): off unless judgment.json enables it
+	if FlightRecorder.enabled():
+		WorldRecorder.attach(self)     # REC-19: off unless recorder.json enables it (or a test/harness does)
 	credit = Credit.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
@@ -189,7 +207,15 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	_guard_posts()
 	Population.populate(self)
 	_open_treasury()
+	for n: NPC in npcs:
+		Identity.register_npc(self, n, "founding")           # ID-01: the register learns the settlers
+	next_person_id = 1
+	for n: NPC in npcs:
+		next_person_id = maxi(next_person_id, n.id + 1)       # the village's sequence goes on above the settlers (as Build 18's highest-plus-one did)
+	next_band_id = BAND_START
 	regions = Regions.create(world_seed)
+	regions.assign_member_ids(self)              # ID-01: every settlement member has an id from the band (after the settlers' own)
+	regions.bind_world(self)
 	# the settlers' grain store: a finite stock of last year's harvest, 7 days of the village's food
 	# (its need weighted by age: children eat less)
 	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
@@ -206,6 +232,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	give_start_kit(player)
 	Life.init_player(self)             # B8-029
+	Identity.register_player(self, player)       # ID-01: the founder's person id
 	Skills.seed_villagers(self)        # PAR-01A: the settlers' history at their trades (only here and in an old save's migration)
 	Skills.seed_trades(self)           # SKILL-TRADES-18: Carpentry, Masonry and Tanning start from each person's Crafting
 	experience.seed_once(self)              # X18 HOOK (owner D1): the settlers' starting industry experience, once, from their recorded skills
@@ -372,6 +399,8 @@ func famine() -> bool:
 
 
 func _on_hour(h: int) -> void:
+	if recorder != null:
+		recorder.hour()                # REC-19: write the buffer, audit the coins, take the hourly samples
 	if regions != null:
 		var tr := Time.get_ticks_usec() if profiling else 0
 		regions.step_hour(day(), h)   # SET-C-SIM: the settlements take their day's step one after another through the morning
@@ -529,6 +558,8 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 					n.doing = "waiting for the %s" % str(stations[st_id].type)
 					if float(s.waited) >= float(GameData.b("station_wait_minutes")):
 						brain.release_station(n, st_id)
+						if recorder != null:
+							recorder.interruption(n, "station_giveup", "abandoned", "station_wait_exceeded", st_id)     # REC-19
 						n.plan.clear()
 						stat("station_gave_way")
 					return
@@ -539,20 +570,30 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 				n.work_left -= gm
 				if n.work_left <= 0.0:
 					n.plan.pop_front()
-					if s.has("act") and not brain.act(n, s.act, s.get("args", {})):
+					if s.has("act") and not _act_step(n, s):
 						n.plan.clear()
 					if not n.plan.is_empty() and n.plan[0].k == "work":
 						n.work_left = float(n.plan[0].min)
 				return
 			"do":
 				n.plan.pop_front()
-				if not brain.act(n, s.act, s.get("args", {})):
+				if not _act_step(n, s):
 					n.plan.clear()
 					return
 				if not n.plan.is_empty() and n.plan[0].k == "work":
 					n.work_left = float(n.plan[0].min)
 			_:
 				n.plan.pop_front()
+
+
+## Run one plan step's action (REC-19: as one recorded action event when the recorder is on; the action itself is unchanged).
+func _act_step(n: NPC, s: Dictionary) -> bool:
+	if recorder == null:
+		return brain.act(n, s.act, s.get("args", {}))
+	var ev: int = recorder.act_begin(n, s)
+	var ok: bool = brain.act(n, s.act, s.get("args", {}))
+	recorder.act_end(ev, n, ok)
+	return ok
 
 
 ## Move along a path to s.to; returns true on arrival.
@@ -564,6 +605,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	if n.depth != int(s.get("level", 0)):
 		leg = underground.next_leg(n.depth, int(s.get("level", 0))) if underground != null else {}
 		if leg.is_empty():
+			if recorder != null:
+				recorder.interruption(n, "walk_lost", "interrupted", "no_level_route")     # REC-19
 			n.plan.clear()
 			n.doing = "lost"
 			return false
@@ -573,6 +616,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 		n.path = map.find_path(n.cell(), to) if n.depth == 0 else underground.find_path(n.depth, n.cell(), to)
 		n.path_i = 0
 		if n.path.is_empty() and n.cell() != to:
+			if recorder != null:
+				recorder.interruption(n, "walk_lost", "interrupted", "no_path")     # REC-19
 			n.plan.clear()
 			n.doing = "lost"
 			return false
@@ -657,6 +702,8 @@ func damage_player(amount: float, source: String) -> void:
 		p.death_cause = source
 		p.deaths += 1
 		note("%s %s died (%s)." % [p.name, p.family, source])
+		if recorder != null:
+			recorder.player_died(p, source)     # REC-19
 
 
 ## Permanent death: the next of the family line takes over. The world is not reset.
@@ -710,6 +757,7 @@ func continue_as_heir() -> void:
 	heir.chest = p.chest
 	heir.chest_stolen = p.chest_stolen
 	heir.deaths = p.deaths
+	Identity.succeed(self, p, heir, kid)       # ID-01: the predecessor is an ancestor under their own id; the heir keeps their own
 	give_start_kit(heir)
 	coin_sources += heir.coins
 	heir.spells = {}
@@ -739,10 +787,11 @@ var trade_hook := Callable()
 ## `total_price` (optional) is the whole bill when the units are priced one by one (player_buy_many).
 func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1) -> bool:
 	var total := qty * price_each if total_price < 0 else total_price
-	if qty <= 0 or price_each < 0 or buyer == seller:
+	if qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
+		if recorder != null:
+			recorder.trade_refused(buyer, seller, id, qty, price_each, total)     # REC-19: a refused sale is an event too
 		return false
-	if int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
-		return false
+	var rec_trade: Array = recorder.trade_begin(buyer, seller, id, qty, total) if recorder != null else []     # REC-19
 	seller.inv.remove(id, qty)
 	buyer.inv.add(id, qty)
 	buyer.coins -= total
@@ -751,6 +800,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		buyer.spent += total
 	if seller is NPC:
 		seller.earned += total
+	if recorder != null:
+		recorder.trade_end(rec_trade, buyer, seller, id)
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
 	if relations:                      # X18 HOOK (X18-Q12-POST): the pair become commercial contacts (a record only)
@@ -771,9 +822,14 @@ func note_settlement_trade(actor: Object, settlement: Object) -> void:
 ## Move items between two inventories without money (gifts, deposits, pantry).
 func transfer(from: Inventory, to: Inventory, id: String, qty: int) -> bool:
 	if not from.has(id, qty) or not to.can_add(id):
+		if recorder != null:
+			recorder.transfer_refused(from, to, id, qty)     # REC-19
 		return false
+	var rec_move: Array = recorder.transfer_begin(from, to, id, qty) if recorder != null else []     # REC-19
 	from.remove(id, qty)
 	to.add(id, qty)
+	if recorder != null:
+		recorder.transfer_end(rec_move, from, to, id)
 	return true
 
 
@@ -1040,6 +1096,16 @@ func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
 ## Buy `qty` of `id` from `vendor` at player_quote prices, all or nothing: the vendor must hold them, the
 ## pack must have room and the player's own coins must cover the whole bill. Returns {result, text, bought, paid}.
 func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
+	if recorder == null:
+		return _player_buy_many(vendor, id, qty)
+	var rec: Array = recorder.verb_begin("buy", "%s x%d from %d" % [id, qty, vendor.id], vendor)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_buy_many(vendor, id, qty)
+	recorder.verb_end(rec, "ok" if r.result == "bought" else "failed", "" if r.result == "bought" else "buy_failed", str(r.text))
+	return r
+
+
+## (player_buy_many's own work; the wrapper above records it when the flight recorder is on.)
+func _player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	var prices := player_quote(vendor, id, qty, true)
 	var bill := 0
 	for c in prices:
@@ -1649,6 +1715,16 @@ func player_craft_begin(recipe: String, station := "") -> Dictionary:
 ## DVW-A12 R3: the player's work on `recipe` is done: work_craft from the pack into the pack, as a villager's (PAR-01,
 ## PAR-04). Returns work_craft's result.
 func player_craft(recipe: String) -> Dictionary:
+	if recorder == null:
+		return _player_craft(recipe)
+	var rec: Array = recorder.verb_begin("craft", recipe, null)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_craft(recipe)
+	recorder.verb_end(rec, "ok" if str(r.get("result", "")) == "ok" else "failed", "" if str(r.get("result", "")) == "ok" else "craft_refused", "result=" + str(r.get("result", "")))
+	return r
+
+
+## (player_craft's own work; the wrapper above records it when the flight recorder is on.)
+func _player_craft(recipe: String) -> Dictionary:
 	return work_craft(player, recipe, player.inv)
 
 
@@ -1685,6 +1761,16 @@ func player_melee_npc(n: NPC) -> Dictionary:
 ## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
 ## slain by the player, and a bandit put down near villagers is a defence (CRT-10). Returns {dealt, killed}.
 func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
+	if recorder == null:
+		return _player_hit_npc(n, dmg)
+	var rec: Array = recorder.verb_begin("strike", "dmg=%.1f" % dmg, n)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_hit_npc(n, dmg)
+	recorder.verb_end(rec, "ok", "", "dealt=%.1f killed=%s" % [r.dealt, str(r.killed)])
+	return r
+
+
+## (player_hit_npc's own work; the wrapper above records it when the flight recorder is on.)
+func _player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 	var dealt := harm_npc(n, dmg)
 	wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
 	if n.role != "bandit":
@@ -2072,6 +2158,16 @@ func player_home_move(id: String, from_chest: bool, qty: int) -> bool:
 ## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
 ## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
 func player_loot(i: int) -> Dictionary:
+	if recorder == null:
+		return _player_loot(i)
+	var rec: Array = recorder.verb_begin("loot", "pile %d" % i, null)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_loot(i)
+	recorder.verb_end(rec, "ok" if str(r.get("far", "")) == "" else "failed", "" if str(r.get("far", "")) == "" else "too_far", "coins=%d items=%d left=%d" % [int(r.coins), (r.items as Array).size(), int(r.left)])
+	return r
+
+
+## (player_loot's own work; the wrapper above records it when the flight recorder is on.)
+func _player_loot(i: int) -> Dictionary:
 	var l: Dictionary = loot[i]
 	var far := player_reach_point(l.pos, TARGET_PROBE + TARGET_REACH)
 	if far != "":
@@ -2194,6 +2290,58 @@ func npc(id: int) -> NPC:
 	return by_id.get(id)
 
 
+## ID-01: a new person id, never one that has been used. The counter is only raised; a villager record or player made without it
+## (a test, a hand-built record) lifts it above their id first, so it can never hand out an id that is in use.
+func new_person_id() -> int:
+	var top := next_person_id
+	for o: NPC in npcs:
+		if o.id < BAND_START:
+			top = maxi(top, o.id + 1)
+	if player.pid < BAND_START:
+		top = maxi(top, player.pid + 1)
+	if top >= BAND_START:       # (returns -1, nothing issued) unreachable in play (docs/design/IDENTITY.md, headroom): refuse loudly rather than collide with the band
+		push_error("village person ids are exhausted (%d): refusing to issue one that would collide with the settlement band" % top)
+		return -1
+	next_person_id = top + 1
+	return top
+
+
+## ID-D2: a new id from the settlement band (a person born or founded in a settlement, a player character). Never lowered, never
+## reused; a record or player already holding a band id lifts the counter above it first. The band has no upper collision: nothing else
+## issues ids at or above BAND_START.
+func new_band_id() -> int:
+	var top := next_band_id
+	for o: NPC in npcs:
+		if o.id >= BAND_START:
+			top = maxi(top, o.id + 1)
+	if player.pid >= BAND_START:
+		top = maxi(top, player.pid + 1)
+	next_band_id = top + 1
+	return top
+
+
+## The id of a person born or founded in a settlement (the band).
+func new_offmap_person_id() -> int:
+	return new_band_id()
+
+
+## The id taken a moment ago went to nobody (a move that was not made): it is given back, but only if nothing has been issued since.
+func release_person_id(id: int) -> void:
+	if id < BAND_START and id == next_person_id - 1 and not by_id.has(id):
+		next_person_id = id
+		people.erase(id)
+
+
+## What a settlement tells the register (OffMapSettlement.person_hook).
+func offmap_person(event: String, info: Dictionary) -> int:
+	if event == "death":
+		Identity.move(self, int(info.id), Identity.DEAD)
+		return int(info.id)
+	var id := new_offmap_person_id()
+	Identity.register_member(self, id, str(info.settlement), int(info.sex), int(info.born), {}, int(info.mother), int(info.father), "settlement_birth")
+	return id
+
+
 func kill(n: NPC, cause: String) -> void:
 	if not n.alive:
 		return
@@ -2209,6 +2357,8 @@ func kill(n: NPC, cause: String) -> void:
 			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
+	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
+	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)
 	credit.on_death(n, heir if not cause.begins_with("slain") else null)     # TRADE-CREDIT: its debts pass to the heir, else are written off
 	if heir != null and not cause.begins_with("slain"):
@@ -2221,6 +2371,8 @@ func kill(n: NPC, cause: String) -> void:
 		n.inv = Inventory.new()
 		loot.append({"pos": n.pos, "inv": bag, "coins": n.coins, "from": n.name})
 		n.coins = 0
+	if recorder != null:
+		recorder.death_end(rec_death, n, cause, heir)     # REC-19
 	var who := "%s %s" % [n.name, n.family] if n.family != "" else n.name
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
@@ -2926,6 +3078,7 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 			"items": taken.duplicate(), "qty": count, "value": worth})
 	if worth > 0:
 		stat("player_stolen_value", worth)
+	var rec_ev: int = recorder.witness_begin(kind, what, victim, seen, worth) if recorder != null else 0     # REC-19: stays open over the guard's answer
 	if judgment != null:
 		JudgmentLive.on_theft(self, kind, victim, seen, worth)     # PROSPECTIVE (PROS-19)
 	if seen.size() > 0:
@@ -2934,6 +3087,8 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 	stat("player_" + kind)
 	if guard:
 		last_guard = guard_confront(guard, taken, back, victim)
+	if recorder != null:
+		recorder.end(rec_ev)
 	return seen.size()
 
 
@@ -2960,6 +3115,7 @@ static func theft_fine_for(goods: Dictionary) -> int:
 ## pays theft_fine_for(taken) (a base fine plus a share of the goods' value) to the manor's treasury. One who cannot pay it all pays what they have and the
 ## guard comes after them, as for an attack (main.gd::_crime). Coins and goods only move.
 func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> String:
+	var rec_guard: Array = recorder.guard_begin(g) if recorder != null else []     # REC-19: the fine and the goods returned, before and after
 	var returned := []
 	for id in taken:
 		var k := mini(int(taken[id]), player.inv.count(id))
@@ -3013,6 +3169,8 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 	if paid < fine:
 		g.target = -2
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
+	if recorder != null:
+		recorder.guard_end(rec_guard, g, owner, fine, paid, warned)
 	return text
 
 
@@ -3031,6 +3189,7 @@ func aware_of_attack(at: Vector2, victim: NPC) -> Dictionary:
 ## id, or -2 for the player); the victim and the others who saw it carry a report to a guard (report_crime). Returns
 ## how many guards answered at once.
 func raise_alarm(aware: Dictionary, attacker: int) -> int:
+	var rec_alarm: int = recorder.alarm_begin(attacker, aware) if recorder != null else 0     # REC-19: the reports it causes are its children
 	if judgment != null:
 		JudgmentLive.on_attack(self, attacker, aware)              # PROSPECTIVE (PROS-19)
 	var k := 0
@@ -3050,6 +3209,8 @@ func raise_alarm(aware: Dictionary, attacker: int) -> int:
 			report_crime(v, attacker, "victim")
 	if k > 0:
 		stat("guards_alarmed", k)
+	if recorder != null:
+		recorder.alarm_end(rec_alarm, k)
 	return k
 
 
@@ -3062,6 +3223,8 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack") -> void
 	if crime != "attack":
 		n.report.crime = crime
 	stat("crime_reports_made")
+	if recorder != null:
+		recorder.report(n, offender, how, crime)      # REC-19
 
 
 ## Whether the offender of a report can still be pursued: alive (the player alive, or the villager).
@@ -3254,6 +3417,16 @@ func container_pick(c: Dictionary) -> String:
 ## there was nothing, "full" if the pack has no room, or "far" if it is out of the player's reach (DVW-A12 R15:
 ## player_container_reach says why).
 func player_take(c: Dictionary) -> String:
+	if recorder == null:
+		return _player_take(c)
+	var rec: Array = recorder.verb_begin("take", "%s" % container_place(c), null)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_take(c)
+	recorder.verb_end(rec, "ok" if r != "" and r != "far" and r != "full" else "failed", "" if r != "" and r != "far" and r != "full" else ("too_far" if r == "far" else ("pack_full" if r == "full" else "nothing_to_take")), "took " + r)
+	return r
+
+
+## (player_take's own work; the wrapper above records it when the flight recorder is on.)
+func _player_take(c: Dictionary) -> String:
 	if player_container_reach(c) != "":
 		return "far"
 	var id := container_pick(c)
@@ -3481,6 +3654,16 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 ## the piece goes back to its owner and the fine is paid. Marked goods are sold first.
 ## Returns {result: sold|recognised|questioned|failed, text}.
 func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
+	if recorder == null:
+		return _player_sell(buyer, id, price)
+	var rec: Array = recorder.verb_begin("sell", "%s for %d to %d" % [id, price, buyer.id], buyer)     # REC-19: the verb is the parent of what it triggers
+	var r = _player_sell(buyer, id, price)
+	recorder.verb_end(rec, "ok" if r.result == "sold" else "failed", "" if r.result == "sold" else (str(r.result) if r.result in ["recognised", "questioned"] else "sale_failed"), str(r.text))
+	return r
+
+
+## (player_sell's own work; the wrapper above records it when the flight recorder is on.)
+func _player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 	player.trim_stolen()
 	var marks: Dictionary = player.stolen.get(id, {})
 	var owners := marks.keys()
@@ -3811,7 +3994,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 19          # Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 20          # 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -4136,6 +4319,9 @@ func _station_owners() -> void:
 
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
+	if recorder != null:
+		recorder.finish()              # REC-19: write what is buffered and close the session
+		recorder = null
 	brain = null
 	fauna = null
 	construction = null
@@ -4174,12 +4360,76 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
+		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
 		out.judgment = judgment_foreign.duplicate(true)            # off: a saved section is carried unchanged
+	return out
+
+
+## ID-01: the register of a version 20 save, or (a save from before it) the one-time upgrade, deterministic and reported. False when the
+## save cannot be upgraded: `load_error` then says why, and the caller refuses the save and leaves the file as it is.
+func _load_identity(d: Dictionary) -> bool:
+	if d.has("people"):
+		next_person_id = int(d.get("next_person_id", 1))
+		next_band_id = int(d.get("next_band_id", BAND_START))
+		for k in d.people:
+			var e: Dictionary = d.people[k]
+			people[int(k)] = {"name": str(e.get("name", "")), "family": str(e.get("family", "")), "sex": str(e.get("sex", "male")), "born": float(e.get("born", 0.0)),
+				"mother": int(e.get("mother", -1)), "father": int(e.get("father", -1)), "where": str(e.get("where", Identity.VILLAGE)), "since": int(e.get("since", 0))}
+		identity_report = _whole_numbers(d.get("identity_report", {})) as Dictionary
+		for pid in d.get("tie_history", {}):
+			var th: Dictionary = d.tie_history[pid]
+			var ts := {}
+			for other in th.get("ties", {}):
+				ts[str(other)] = Relations.tie_from(th.ties[other])
+			tie_history[str(pid)] = {"day": int(th.get("day", 0)), "ties": ts}
+		regions.assign_member_ids(self)                 # (none lack one in a version 20 save)
+		regions.bind_world(self)
+		var bad := Identity.verify(self)
+		if bad != "":
+			load_error = "the save's register of people is inconsistent (%s)" % bad
+			return false
+		return true
+	var from := int(d.get("save_version", 0))
+	var why := Identity.upgrade(self, from if from < SAVE_VERSION else SAVE_VERSION - 1)
+	if why != "":
+		load_error = "this older save could not be given its people's identities (%s)" % why
+		return false
+	regions.bind_world(self)
+	note("Identity upgrade: %d villagers and %d people of the settlements now have permanent ids (%d cases reported)." % [npcs.size(), int(identity_report.counts.members), (identity_report.notes as Array).size()])
+	return true
+
+
+## A value read from JSON with its whole numbers as integers again (JSON gives every number as a float).
+static func _whole_numbers(v):
+	if v is Dictionary:
+		var o := {}
+		for k in v:
+			o[k] = _whole_numbers(v[k])
+		return o
+	if v is Array:
+		return (v as Array).map(func(x): return _whole_numbers(x))
+	if v is float and v == floorf(v) and absf(v) < 1.0e15:
+		return int(v)
+	return v
+
+
+func _people_to_dict() -> Dictionary:
+	if player.pid > 0 and people.has(player.pid) and str(people[player.pid].where) == Identity.PLAYER:
+		var e: Dictionary = people[player.pid]                 # the current player's own entry follows their name, looks and age (set after the world began)
+		e.name = player.name
+		e.family = player.family
+		e.sex = player.sex
+		e.born = player.born
+	var out := {}
+	var ids: Array = people.keys()
+	ids.sort()
+	for id in ids:
+		out[str(id)] = (people[id] as Dictionary).duplicate()
 	return out
 
 
@@ -4349,6 +4599,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	if not _load_identity(d):
+		return
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
 	if int(d.get("save_version", 0)) < 15:
 		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills
@@ -4453,6 +4705,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	_unstick()
+	if recorder == null and FlightRecorder.enabled():
+		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
+	if recorder != null:
+		recorder.world_loaded(d)       # REC-19: a session note: loaded, its save version, the ids unchanged
 
 
 ## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
