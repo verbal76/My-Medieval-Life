@@ -18510,6 +18510,11 @@
      "date": "2026-10-23",
      "change": "tests: recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1) -> recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0; test_commit: c27aaa2 -> b113f73; commits + b113f73; next_action",
      "why": "SIM-F9 correction committed b113f73 on wip/fix-recf1; recf1_test 23/23 (base fails 6). 10-day before/after (c27aaa2 vs b113f73): eat 1747/1715 and 1679/1646, rest 1275/1271 and 1290/1299, medicine 0/0; villager deaths are old-age elders only in all four runs (no villager starved); the bandit band's survival flips both ways (seed 1: 2 -> 6 bandits starve; seed 2: 6 -> 0), the SIM-F4 fragility (bandits eat only by poaching), not a SIM-F9 effect"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "wording corrected per owner 2026-10-23: the bandit starvation differences between base and SIM-F9 runs are unattributed until the recorder's death causes establish them; no villager starved in the four runs"
     }
    ],
    "assigned_worker": "lead",
@@ -42207,9 +42212,14 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "SIM-F9 comparison: the whole band starves on seed 2 (base) and seed 1 (with SIM-F9) within 10 days; outcome depends on run divergence, supporting F4"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner 2026-10-23: stays open for targeted correction once the recorder confirms the cause; the starvation differences in the SIM-F9 comparison are not attributed to SIM-F9 (or cleared of it) without evidence"
     }
    ],
-   "next_action": "confirm with recorded death causes in run 2; owner decides the health gate"
+   "next_action": "recorder run 2 (already planned, bounded) records death causes; then a targeted correction proposal"
   },
   {
    "id": "SIM-F9",
@@ -52124,7 +52134,7 @@
    "description": "How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)?",
    "source": "docs/directives/2026-10-23_x19_foundations_round.md",
    "owner_wording": null,
-   "owner_answer": "see docs/design/X19_RELEASE_DECISIONS.md and the owner's answers file",
+   "owner_answer": "extended relatives through second cousins, weights falling with distance; per-ring weights provisional (agent starting values, tunable)",
    "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
@@ -52141,6 +52151,11 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered 2026-10-23 (docs/directives/2026-10-23_owner_answers_x19_release_decisions.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "owner_answer",
+     "why": "owner clarification 2026-10-23 (docs/directives/2026-10-23_owner_clarifications_famrep_simf4.md): cousins included, down to second cousins, at progressively reduced weights by relationship distance; inherited reputation kept separate from direct relationship-weighted reactions to witnessed deeds; the no-independent-refusal cap kept; the 15% second-degree value is PROVISIONAL, not owner-selected"
     }
    ]
   },

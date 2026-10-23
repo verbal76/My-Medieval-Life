@@ -47,7 +47,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | ID-01 | identity worker 2 (done) | `wip/foundation-identity` | 84d1880 | option B done; gate divergences explained (docs/design/IDENTITY_GATE_ANALYSIS.md); waits on ID-D3 (candidate baseline); then merge into wip/recorder |
 | RECON-01 | reconciliation worker (done) | `wip/expansion19-preparation` 4a0459f, `wip/expansion20-preparation` 1befd0e | - | one tolerance calculation; reservations recognise contract holds; gate identical |
 | REC-19 | recorder worker (Sonnet subagent) | `wip/recorder` | 94b1304 | merging the verified identity foundation (84d1880) with targeted tests, then D3 (life, employment, government, crime, player verbs, save/load); gate compared with the candidate baseline, real baseline untouched |
-| FIX-RECF1 | lead | `wip/fix-recf1` | c27aaa2, SIM-F9 b113f73 | root cause and fix in docs/design/RECF1_ROOT_CAUSE.md; SIM-F9 done and compared (no villager starved; bandit band outcome flips both ways, SIM-F4); to merge into wip/recorder before run 2 |
+| FIX-RECF1 | lead | `wip/fix-recf1` | c27aaa2, SIM-F9 b113f73 | root cause and fix in docs/design/RECF1_ROOT_CAUSE.md; SIM-F9 done and compared (no villager starved; bandit starvation differences unattributed until the recorder shows causes; SIM-F4 open); to merge into wip/recorder before run 2 |
 | FAM-SAC-01 | family worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | 3ec38d2+ | family sacrifice rule inside the Expansion 19 decision engine, behind its switch (docs/directives/2026-10-23_family_sacrifice_responsibility.md) |
 | REC-DIAG | lead | recorder archives (scratchpad), read-only runs of `wip/recorder` | 94b1304 | simulation-first analysis (docs/directives/2026-10-23_simulation_first_diagnostics.md); findings in docs/design/SIM_FINDINGS.md |
 
@@ -87,7 +87,7 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    Expansions 20 and 21: decision packet given to the owner; no work until answered.
 8. **Build 19 complete scope (owner 2026-10-23, X19-SCOPE, `docs/directives/2026-10-23_x19_complete_release_scope.md`): the
    priority.** All Expansion 19 numbers are now answered (`docs/directives/2026-10-23_owner_answers_x19_release_decisions.md`,
-   packet `docs/design/X19_RELEASE_DECISIONS.md`; spillover reach is the wider option, second degree at half share). Plan:
+   packet `docs/design/X19_RELEASE_DECISIONS.md`; spillover reach: extended kin through second cousins at falling, provisional weights, per the owner's clarification `docs/directives/2026-10-23_owner_clarifications_famrep_simf4.md`). Plan:
    (a) FAM-SAC-01 worker lands; (b) a completion worker on `wip/expansion19-preparation` sets the approved numbers, switches
    personality, family reputation, lies (X19-MISINFO), family stories (X19-STORY-LIFE), stubbornness and self-defence live,
    judgment on by default; (c) integrate with identity (84d1880), FIX-RECF1/SIM-F9 (b113f73) and the recorder (off in public
