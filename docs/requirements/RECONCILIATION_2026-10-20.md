@@ -416,10 +416,10 @@ None.
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

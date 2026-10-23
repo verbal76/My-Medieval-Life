@@ -8602,7 +8602,15 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner approved option A: implement the missing alms leg of Priest + alms (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 5bdecb7",
+     "why": "alms implemented (5bdecb7) with the owner's reserve and rule; verified (test_alms; probe on the release code: alms reach every short household); released in the Build 18 draft. The fund still grows under the provisional offering values (owner-review D10)"
     }
+   ],
+   "commits": [
+    "5bdecb7"
    ]
   },
   {
@@ -12970,13 +12978,14 @@
     "A chapel stands in the village with a preacher and an assistant (low-paid); villagers and the player give offerings; donations are spent first on food relief before any other relief source; the church has a small farm plot worked by volunteers or else the clergy, its crop going to relief; villagers in need ask at the church; coins and goods conserved; deterministic; wiki page"
    ],
    "implementation": "",
-   "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd",
+   "tests": "chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd; chapel_test 108 (test_alms)",
    "playtest": [],
    "branch": "wip/b18-farming",
    "commits": [
     "1b1b2f5",
     "71b6285",
-    "69990cb"
+    "69990cb",
+    "5bdecb7"
    ],
    "parent": "DVW-B3",
    "depends_on": [],
@@ -13059,6 +13068,11 @@
      "date": "2026-10-22",
      "change": "tests: chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge -> chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd; commits + 69990cb",
      "why": "B18-DP-12: the player volunteers on the church field by the villagers' rule (shared FarmPlots.work_cell), merged 9f44bbd"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd -> chapel_test.gd (68 checks); all 67 Godot suites exit 0, run_tests 3593 checks; economy_sim 30 days seeds 1 and 2: no FATAL, currency and item leaks 0; Python suites, check_interactions, check_resources on the merge; chapel_test 91 (test_player_volunteers) on 9f44bbd; chapel_test 108 (test_alms); commits + 5bdecb7",
+     "why": "alms leg of Priest + alms implemented (CHAPEL-R2, 5bdecb7)"
     }
    ],
    "target_build": "18",
@@ -26118,11 +26132,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: music worker (Sonnet subagent) -> ; branch: wip/b18-music -> ; tests: None -> audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; test_commit: None -> 7d50095; commits + 6beb4b3; commits + 7d50095; integrated_in + Build 18 wip/build18 95578d8; remaining_work",
      "why": "audio merged into Build 18 (45e4287, 6beb4b3, 7d50095; head 95578d8): music by slot, ambience, sound effects, soft footsteps; Android Ogg, PC WAV fetched at release; all 85 suites pass"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads -> audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; release run music step success; package contents checked",
+     "why": "packaged in the Build 18 draft (run 39935635926, draft release Build 18 from 61ec528): music fetch step succeeded; PC packages carry the five songs as WAV, Android as Ogg with 57 sound files"
     }
    ],
    "assigned_worker": "",
    "branch": "",
-   "tests": "audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads",
+   "tests": "audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; release run music step success; package contents checked",
    "test_commit": "7d50095",
    "commits": [
     "6beb4b3",
@@ -38091,10 +38110,15 @@
      "date": "2026-10-23",
      "change": "tests: sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md) -> sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb; test_commit: 9a86f5c -> 37526cb",
      "why": "re-run on 37526cb after the old-save fixes: PASS, identical to the baseline"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb -> sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb; sim_gate PASS on 5bdecb7; test_commit: 37526cb -> 5bdecb7",
+     "why": "gate PASS on the alms code (identical to the baseline at days 10 and 30)"
     }
    ],
-   "tests": "sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb",
-   "test_commit": "37526cb",
+   "tests": "sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb; sim_gate PASS on 5bdecb7",
+   "test_commit": "5bdecb7",
    "commits": [
     "b2f5c5d"
    ],
@@ -38146,8 +38170,8 @@
    "target_build": "18",
    "workstream": "release gate",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -38157,7 +38181,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> SHA256SUMS match for APK 86.2 MB, Windows 231.1 MB, Linux 221.4 MB; Linux release binary headless 900 frames exit 0; test_commit: None -> 61ec528; commits + 61ec528; integrated_in + Build 18 draft release",
+     "why": "three packages built from one commit (61ec528) with build number 18 (run 39935635926, draft release Build 18 from 61ec528); downloaded back, checksums match, audio contents checked, Linux binary launched"
     }
+   ],
+   "tests": "SHA256SUMS match for APK 86.2 MB, Windows 231.1 MB, Linux 221.4 MB; Linux release binary headless 900 frames exit 0",
+   "test_commit": "61ec528",
+   "commits": [
+    "61ec528"
+   ],
+   "integrated_in": [
+    "Build 18 draft release"
    ]
   },
   {
@@ -38199,10 +38236,15 @@
      "date": "2026-10-23",
      "change": "commits + cb5eb9b",
      "why": "chapel audit found no mechanical defect (provisional values, CHAPEL-R2); runs stay valid, no re-run needed; firewood counter fixed (cb5eb9b, count only)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md -> run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md; post-alms run 39904513181 seeds 1-4: leak 0, no FATAL, no script error; test_commit: 9a86f5c -> 61ec528",
+     "why": "repeated on the final code with the alms: run 39904513181 on 61ec528, seeds 1-4, 365 days, no leak, FATAL or script error (LONG_RUNS_365_ALMS.md)"
     }
    ],
-   "tests": "run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md",
-   "test_commit": "9a86f5c",
+   "tests": "run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md; post-alms run 39904513181 seeds 1-4: leak 0, no FATAL, no script error",
+   "test_commit": "61ec528",
    "commits": [
     "95578d8",
     "ed6fd18",
@@ -38234,8 +38276,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "remaining_work",
+     "why": "owner authorized a private or access-controlled GitHub playtest release (docs/directives/2026-10-23_build18_overnight_completion_release.md); released as a private draft; no public release"
     }
-   ]
+   ],
+   "remaining_work": "public publication only with the owner's approval"
   },
   {
    "id": "REL18-PACKAGE",
@@ -38253,8 +38301,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -38267,9 +38315,27 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "Owner clarified the packaging sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; commits + 239bdff; integrated_in + Build 18 draft release",
+     "why": "gate met: every implementation item closed or deferred by the owner (REG-CIRC-D1, SET-D multigeneration), then the final candidates built (run 39935635926, draft release Build 18 from 61ec528)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: None -> final candidates verified: SHA256SUMS match, audio contents per platform, Linux binary launch (BUILD_18_PACKET.md); test_commit: None -> 61ec528",
+     "why": "evidence"
     }
    ],
-   "remaining_work": "The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md)"
+   "remaining_work": "The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md)",
+   "commits": [
+    "239bdff"
+   ],
+   "integrated_in": [
+    "Build 18 draft release"
+   ],
+   "tests": "final candidates verified: SHA256SUMS match, audio contents per platform, Linux binary launch (BUILD_18_PACKET.md)",
+   "test_commit": "61ec528"
   },
   {
    "id": "REL18-SAVE",
@@ -40448,11 +40514,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: music worker (Sonnet subagent) -> ; branch: wip/b18-music -> ; tests: None -> audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; test_commit: None -> 7d50095; commits + 6beb4b3; commits + 7d50095; integrated_in + Build 18 wip/build18 95578d8; remaining_work",
      "why": "audio merged into Build 18 (45e4287, 6beb4b3, 7d50095; head 95578d8): music by slot, ambience, sound effects, soft footsteps; Android Ogg, PC WAV fetched at release; all 85 suites pass"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads -> audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; release run music step success; package contents checked",
+     "why": "packaged in the Build 18 draft (run 39935635926, draft release Build 18 from 61ec528): music fetch step succeeded; PC packages carry the five songs as WAV, Android as Ogg with 57 sound files"
     }
    ],
    "assigned_worker": "",
    "branch": "",
-   "tests": "audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads",
+   "tests": "audio_test 171; all 85 suites pass on 7d50095 (run_tests 3595); sim_gate PASS (worker); fetch_music checked against the real release downloads; release run music step success; package contents checked",
    "test_commit": "7d50095",
    "commits": [
     "6beb4b3",

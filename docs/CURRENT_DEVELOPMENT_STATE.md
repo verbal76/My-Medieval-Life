@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `ecd91d4` (2026-10-23; release candidate code `61ec528`) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
+| `wip/build18` | `239bdff` (2026-10-23; Build 18 draft release from `61ec528`) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -59,10 +59,10 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    paid in the first 30 days: households still hold enough); tester notes committed.
 3. DONE: long-sims run 39904513181 on 61ec528, seeds 1-4: no leak, FATAL or script error; before/after comparison and a
    probe showing the alms reach every short household (LONG_RUNS_365_ALMS.md on wip/build18, ecd91d4); decisions D10-D11.
-4. RUNNING: release.yml on wip/build18 at 61ec528 (private draft, build_number 18, temporary key), dispatched about
-   08:40 UTC. When it finishes: check the run (tests, the music fetch, three exports), the draft release `build-18` and its
-   three files and SHA256SUMS; write the Build 18 packet (release docs, BUILD_18_PACKET.md); update the register (REL18-*,
-   MUSIC-18, SFX-18, CHAPEL-R2); morning report to the owner (directive section 9).
+4. DONE: Build 18 released as a private draft (run 39935635926 on 61ec528; packet BUILD_18_PACKET.md on wip/build18,
+   239bdff): three packages downloaded back, checksums match, audio per platform checked, Linux binary launched.
+5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
+   report was given in the session.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner
