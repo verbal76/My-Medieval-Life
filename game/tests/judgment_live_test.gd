@@ -45,6 +45,7 @@ func _init() -> void:
 	test_q14_credit()
 	test_q14_family_help()
 	test_event_feeds()
+	test_bonds_live()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -783,3 +784,37 @@ func test_personality_live() -> void:
 		else:
 			check(j.pers.is_empty() and not w.to_dict().judgment.has("traits"), "live, shipped config: the same theft records no personality state and saves no key")
 		w.dispose()
+## X19-FOUND-BONDS: a pair's history through Relations' own paths in a real world (the dawn cooling, shared hours, help):
+## a friendship that cools below friendship level makes former friends, whose later gains count +10% before the caps.
+func test_bonds_live() -> void:
+	var w := new_world()
+	var j := JudgmentLive.attach(w)
+	var people := adults(w)
+	var a: NPC = people[3]
+	var b: NPC = people[4]
+	var t := w.relations.tie(a.id, b.id)
+	for d in 3:
+		w.minutes = float(d + 2) * World.DAY + 600.0
+		w.relations.helped(a.id, b)
+	check(is_equal_approx(float(t.regard), 30.0) and j.bonds.peak(a.id, b.id) == 30000, "bonds: Relations tells the history the pair reached friendship level (peak 30)")
+	for i in 30:                                                  # no contact: the tie cools at every dawn
+		w.minutes += World.DAY
+		w.relations.dawn()
+	check(float(t.regard) < float(Relations.cfg().befriend_at) and j.bonds.familiar(a.id, b.id), "...and cooling below it at dawn makes them former friends")
+	var before := float(t.regard)
+	w.minutes += World.DAY + 600.0
+	w.relations.share(a.id, b.id, "work")
+	check(is_equal_approx(float(t.regard) - before, float(Relations.cfg().shared.work_regard) * 1.1), "an hour of work together then counts 10% more (the shared-hours path)")
+	var w2 := new_world()
+	var p2 := adults(w2)
+	var t2 := w2.relations.tie(p2[3].id, p2[4].id)
+	w2.minutes = 2.0 * World.DAY + 600.0
+	w2.relations.share(p2[3].id, p2[4].id, "work")
+	check(is_equal_approx(float(t2.regard), float(Relations.cfg().shared.work_regard)), "a pair with no history gains exactly as before")
+	check(w.to_dict().has("judgment") and (w.to_dict().judgment as Dictionary).has("bonds"), "the history is saved with the judgment section")
+	var w3 := new_world()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w3.judgment != null and w3.judgment.bonds.familiar(a.id, b.id), "...and loads with the world")
+	w.dispose()
+	w2.dispose()
+	w3.dispose()

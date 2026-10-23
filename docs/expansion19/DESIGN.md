@@ -869,3 +869,83 @@ Owner answers 2026-10-23: Q03 "Own tolerance each: personality-based thresholds 
 
 **Evidence.** `judgment_personality_test` 65 checks; `judgment_live_test` +3 (live publish path, with and without fixture traits); `sim_gate` PASS identical; `judgment_perf --traits` (fixture traits on) at 100 and 500 people vs. shipped: memory live 500 2.30 to 2.32 MB, stress 500 14.60 to 15.05 MB; worst frame live 500 4.83 vs 4.08 ms, stress 500 26.96 vs 26.25 ms (noise level; the per-event work is a few integer operations).
 
+
+## 15e. Relationship history and family reputation (X19-FOUND-BONDS, X19-FOUND-FAMREP; foundations round 2026-10-23)
+
+Owner directive `docs/directives/2026-10-23_x19_foundations_round.md` sections 3 to 5. New logic: `judgment/judgment_bonds.gd`
+(`JudgmentBonds`, owned by the store as `store.bonds`); settings: `judgment.json` `"bonds"`; save: an optional `"bonds"` key of the
+judgment section (absent in older saves: empty; `VERSION` unchanged). The live game is unchanged: judgment stays `enabled: false`.
+
+**Existing systems reused, not copied.** Regard (liking) stays Relations' number; trust stays `store.trust` (15b); moral judgment is
+`store.net`; the family graph is Life's (mother, father, children, partner) through the new `JudgmentSocial.relatives()` adapter
+(the live one reads Life); memories and gossip are the store's. The bonds module keeps only what none of them holds, and reads the rest.
+
+### What is kept (and kept apart)
+| Value | Where | Meaning |
+|---|---|---|
+| peak | per pair | the highest regard ever reached, once the pair reached friendship level (Relations `befriend_at`, 25); never lowered |
+| familiar flag | per pair | set once when a pair that reached friendship level falls back below it. One flag, not a counter |
+| betrayals | per pair | a bad deed done to someone by a friend (or by someone whose regard once reached friendship level), firsthand to the victim. Never erased |
+| resentment | per direction (victim to actor) | milli-points, raised by the severity of a bad deed done to the victim, firsthand. Separate from regard, trust and NET |
+| family reputation | computed, not stored | the observer's inherited impression of a subject's family (below) |
+
+### Familiarity (about +10%)
+- Applies as a multiplier of 1100 permille on a **regard gain** while the familiar flag is set, whatever the current level: it persists
+  after the former level is restored. A new separation and reunion changes nothing (one flag), so bonuses cannot stack.
+- **Active negative standing** (defined from existing values) suspends it: resentment above zero in either direction, or either person's NET of the
+  other below `negative_net_below` (0). It returns when the standing is no longer negative.
+- Neutrality restores neither friendship nor trust: nothing in the module writes regard or trust. A resentment that reaches zero leaves peak, flag
+  and betrayals untouched; while NET is still negative the advantage stays suspended.
+
+### Resentment
+- Raised on the victim's first firsthand belief of a bad deed (once per event): severity x the actor's share x `resentment_permille_of_severity` (1000).
+- **It does not fade with time.** A serious grievance (severity at least `serious_severity`, 1000 as a placeholder) cannot soften at all before
+  `serious_floor_days` (0: `Life.year_days()`, one in-game year; 8 days at the current calendar) after it. Afterwards, and for lesser grievances at once, it softens
+  only through personality growth: `store.personality_growth(person)` when that method exists (Worker A; until merged, 0), at
+  `soften_milli_per_day` x growth / 1000 a day. **`soften_milli_per_day` ships 0: inert.** No decay curve is invented. A new serious grievance restarts the floor.
+- Event driven: the dawn step scans only people who carry resentment, and does nothing at all while the rate is 0.
+
+### Family reputation (about +5%; both about +12%)
+- The observer's impression of a subject's family = transmit( sum over the subject's relatives R in reach of max(NET(observer, R), 0) x inherit weight
+  minus max(-NET, 0) x spill weight ). NET(observer, R) already comes **only from stories the observer remembers or was told**, so a descendant
+  knows what they themselves remember or were told; one who has not heard has nothing.
+- **Spillover** is the negative term: a relative's wrongdoing lowers the impression of the subject's family by `spill_weight_permille` (300, placeholder) of the
+  observer's NET, without moving the deed, the subject's NET or ledger, trust, resentment or betrayals.
+- A positive impression (at least `qualify_net`) gives +5% (1050). **Personal experience gradually overrides:** each judged contribution the observer
+  holds about the subject takes `override_permille_per_experience` (100) of the inheritance away; at ten it is gone.
+- Familiarity is never inherited: the flag belongs to the pair.
+- Both qualifying: `combined_permille` 120 (the owner's 12%, a configured value, not 100 + 50). With the inheritance only partly intact the bonus runs
+  between the single and the combined value by what is left (900 permille left: 100 + 20 x 0.9 = 118).
+- The tie is one number for both people, so either person's inherited impression of the other qualifies; the two do not add.
+
+### The effect on Relations (one guarded call; judgment off changes nothing)
+`Relations._raise` takes the pair's ids (`who`). When `World.judgment` is attached: a positive regard gain is scaled by `bonds.boost` **first**, then meets the
+existing caps, and the pair's history is told the change (`bonds.on_regard`). Callers with their own cap (`share`'s `shared.daily_cap`, `_presence`'s
+`close.daily_regard`) scale **before** applying it (`_bonus`), so **no cap is raised, no diminishing return is bypassed and no days-known gate is shortened**.
+With `World.judgment == null` neither call is made and `who` is ignored. Paths covered: gifts, help, talk, the player's closeness, shared hours,
+defending, feast and credit repayment; harm and cooling are told to the history only. Gains in `Relations._raise` callers that do not know the pair stay unscaled (none remain). `Relations.dawn` parses the tie key only when judgment is attached.
+
+### Unresolved, built as interfaces and shipped inert
+| Decision | Interface | Shipped |
+|---|---|---|
+| X19-SPILL-REACH: how far through the extended family | `bonds.reach_fn(subject) -> [[relative, inherit permille, spill permille]]`, or mode `bonds.reach`: `none`, `line` (parents, children), `family` (+ siblings, partner) | `none`: no family reputation exists, so +5% and spillover are off until the owner chooses |
+| X19-REP-TRANSMIT: how stories are weighed and passed down | `bonds.transmit_fn(observer, subject, raw) -> int` | identity (stories count as the judgment already weighs them) |
+| X19-BOND-LIMITS: whether balancing limits are needed | the `bonds` numbers | placeholders; softening 0 |
+
+Owner-set: 10%, 5%, 12%, the one-year floor. Placeholders awaiting the owner: `serious_severity`, `resentment_permille_of_severity`, `negative_net_below`, `qualify_net`,
+`inherit_weight_permille`, `spill_weight_permille`, `override_permille_per_experience`, `soften_milli_per_day`, the friendship level used for "former friend".
+
+### Tests
+`game/tests/judgment_bonds_test.gd` (97 checks): shipped inert, peak and flag, exact +10% (5.0 becomes 5.5), persistence, no stacking over five separations, suspension by NET and by
+resentment in either direction, betrayals (never erased, survive save), the floor and softening (with a stub growth), neutrality restores no regard, trust or NET, the family
+tests (only those who know the story, 12% combined, 118 partial, familiarity not inherited, override to 0, a replaced reach and transmit, spillover without the deed or trust),
+determinism, save and load, an older save, and in a real World: exact +10% of a help (10 counts 11), both caps held with and without the bonus, +5% through the live family
+graph, and judgment-attached-without-history equal to judgment-off. `judgment_live_test::test_bonds_live` (the dawn cooling, shared hours, save).
+
+### Measurements (2026-10-23, this machine, shared)
+- `tools/sim_gate.py` (seeds 1 and 2, days 10 and 30): PASS, identical to the baseline (judgment off).
+- `judgment_perf` live rate, 500 people, 10 days, spread: frame p99 0.99 ms, p99.9 1.39 ms, worst 3.75 ms (the recorded baseline: p99 1.41, p99.9 3.67); 100 people: p99 0.43 ms, worst 2.26 ms.
+  The harness drives the store only (it builds no Relations), so it shows the new belief hook (one extra check per firsthand belief), not the gain path.
+- Gain path: `gain_permille` 4.3 microseconds on average, over a mix of unflagged pairs and former friends (which read two NETs); nothing runs per frame.
+- Memory: judgment off allocates nothing (no store, no bonds). With a store, an empty bonds object is a few hundred bytes; history of one former-friend pair plus one grievance per person is
+  about 340 bytes per person (35 KB at 100 people, 171 KB at 500). The save grows only by the bonds key, absent when empty.

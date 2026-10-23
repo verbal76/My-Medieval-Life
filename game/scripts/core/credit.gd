@@ -327,7 +327,7 @@ func repay(id: int, force := false) -> bool:
 		JudgmentLive.on_deal(w, "trade_fair", _rid(str(d.debtor)), _rid(str(d.creditor)), int(d.value))    # PROSPECTIVE (PROS-19): a debt repaid on time
 	var reg: float = float(cfg().repay_regard) * (0.5 if late else 1.0)
 	var t: Dictionary = w.relations.tie(_rid(str(d.creditor)), _rid(str(d.debtor)))
-	w.relations._raise(t, reg, 0.0)
+	w.relations._raise(t, reg, 0.0, true, Vector2i(_rid(str(d.creditor)), _rid(str(d.debtor))))
 	w.stat("credit_repaid_late" if late else "credit_repaid")
 	w.stat("credit_repaid_coins", float(d.value))
 	if str(d.debtor) == World.PLAYER or str(d.creditor) == World.PLAYER:
@@ -345,11 +345,11 @@ func _default(d: Dictionary) -> void:
 		if c is NPC:
 			w.relations.harmed(c, amount)               # the creditor's regard falls, and their kin's and friends' (CRT-12)
 	else:
-		w.relations._raise(w.relations.tie(_rid(cre), _rid(deb)), -amount, 0.0, false)
+		w.relations._raise(w.relations.tie(_rid(cre), _rid(deb)), -amount, 0.0, false, Vector2i(_rid(cre), _rid(deb)))
 		var share := float(Relations.cfg().friend_harm_share)      # and the creditor's friends think less of the debtor
 		for o: NPC in w.npcs:                                      # (the player's friends too: PAR-02)
 			if o.alive and o.id != _rid(deb) and o.id != _rid(cre) and w.relations.friends(o.id, _rid(cre)):
-				w.relations._raise(w.relations.tie(o.id, _rid(deb)), -amount * share, 0.0, false)
+				w.relations._raise(w.relations.tie(o.id, _rid(deb)), -amount * share, 0.0, false, Vector2i(o.id, _rid(deb)))
 	if w.judgment != null:
 		JudgmentLive.on_deal(w, "trade_cheat", _rid(deb), _rid(cre), int(d.value))      # PROSPECTIVE (PROS-19): a debt not repaid
 	w.stat("credit_defaulted")
