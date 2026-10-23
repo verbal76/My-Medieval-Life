@@ -45,9 +45,8 @@ All had 0 failures. Python unittest OK; `check_interactions`, `check_resources` 
 One 30-day `economy_sim --judgment` on seed 1 had no leaks at days 10, 20 and 30. `judgment_perf` at 500 people, live
 rate: frame p99 1.41 ms and p99.9 3.67 ms, unchanged from round 4.
 
-Outstanding from the sync: Build 17's contract breaches and acceptance (CON-01/02), and collapse deaths as remembered
-facts, are new event feeds and decision points. They are not wired (no new judgment behaviour); they go in at the Build
-18/19 reconciliation.
+Outstanding from the sync: collapse deaths as remembered facts is a new event feed, not wired. Contract breaches (feeds)
+were wired in round 8 and contract acceptance (a decision point) in round 9.
 
 ## Investigation round (owner-directed, 2026-10-22, on `05adc9d`)
 
@@ -246,3 +245,39 @@ Tolerance per person scales the rival and share NET thresholds; decision weights
 firsthand life events shift tolerance (victims) and the disposition weight (the helped), bounded and saved in the
 judgment section as `life`. Design and numbers: DESIGN.md section 15c. No personality system exists in the game, so
 temperament is a seed-and-id hash. Everything stays behind `enabled: false`.
+
+
+## Round 9: Q14 stage 2, the remaining live decision points (PROS-19)
+
+Six more hooks, through the same `JudgmentWeighting`/`JudgmentLive` path, each on only with a store attached and its
+`decision.integration` flag (all in `game/data/judgment.json`; judgment stays `enabled: false`): `contract_accept`
+(`Contracts.evaluate`), `contract_seller` (`Contracts._order`, the prospector's kit order), `credit_lend`
+(`Credit.credit_refusal`), `barter_accept` (`Credit.barter_quote`), `food_seller` (`Credit._cheapest_food`), `family_help`
+(`Construction._family_help`). Table, tests and the unwired list: DESIGN.md sections 9.1 and 9.2. Neutral judgment leaves the
+live answer word for word (tested for every adult and every personality); a strong dislike moves it (a seller with coin to
+spare declines; need outweighs); feasibility is always checked first.
+
+**Not wired, and why**
+- Payment up front for mixed feelings (SJD-Q04): needs a trade-terms choice the owner has not made. Left.
+- Courtship refusals (X19-CRT12): the fixed cut-offs stay; `court_choice` unchanged.
+- `Contracts.buyer_answer`: a terms tolerance, not a choice among options.
+- Food relief and alms (manor, chapel): institutions, no personal judgment. Crime reporting and testimony (Q08): law stays separate.
+- Player's courtship, gifts and quests: player-facing, Q10 words and CRT rules; no villager decision point.
+- Villagers' thefts other than bandit robberies: no act (DVW-B2).
+
+Tests (0 failures each): `judgment_live_test` 133 checks (was 91 + new per-hook checks), `judgment_test` 217, `judgment_decay_demo` 24,
+`relations_test` 79, `credit_test` 98, `contracts_test` 154, `prospecting_test` 73, `family_test` 51, `housing_test` 115,
+`migration_test` 92, `save_transfer_test` 21. `tools/sim_gate.py`: PASS, identical to the baseline (seeds 1 and 2, days 10 and 30).
+`economy_sim --judgment` 30 days seed 1 (checkpoints 10, 20, 30): no currency or item leak, no FATAL, no script errors; 0
+villagers starved. Hook counters: contract_accept asked 15, contract_seller choices 67, food_seller choices 3; no hook changed a
+decision (nobody held a strong dislike in the quiet village), so the changed-by-judgment counts are 0 per hook; the changes are
+proved by the unit tests. `judgment_perf` 500 people live, scheduled: frame p99 1.31 ms, worst 3.27 ms (against about 7.0 ms live
+scheduled); this synthetic benchmark does not exercise the new hooks, whose cost in the village is a handful of weighed choices a day.
+
+## Outstanding for PROS-19 before it could be offered for Gate E
+
+- Owner: the Q02 decay rate (X19-DECAY, untouched), the remaining agent-proposed numbers (weights, forgo 20 points for the
+  new hooks, closeness floor, runner-up 150), whether any trade-terms use of judgment (up-front payment, price shading) is wanted.
+- Engineering: INT entries in `docs/SYSTEM_INTERACTION_MANIFEST.md` at the Build 18/19 reconciliation (ids), a calibration
+  run at 100 and 365 days matched seeds (off vs on), a device performance check, wiki pages (judgment is invisible while off).
+- Event feeds without a source: `self_defence`, `hoard_in_famine`, `false_accusation`, `meeting`, collapse deaths.

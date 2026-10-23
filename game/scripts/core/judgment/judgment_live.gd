@@ -20,6 +20,12 @@ extends RefCounted
 ##                   work_accept     Construction.hire, Business.hire  whether a villager takes the work offered
 ##                   befriend        Relations._befriend_if_close  whether close villagers become friends
 ##                   court_choice    Relations._villagers_court    whom a single villager takes an interest in
+##                   contract_accept Contracts.evaluate      whether a seller takes on the contract or service offered
+##                   contract_seller Contracts._order, Prospecting kit order   which seller a villager buyer asks first
+##                   credit_lend     Credit.credit_refusal   whether a villager sells on credit
+##                   barter_accept   Credit.barter_quote     whether a villager takes the swap
+##                   food_seller     Credit._cheapest_food   whom a short household asks for food
+##                   family_help     Construction._family_help  whether a relative household gives toward a home
 ##                 each on only with a store attached and its decision.integration flag set; feasibility (stock,
 ##                 coins, purchase_qty, can_hire, can_court, regard thresholds) and conservation are never overridden.
 
@@ -385,3 +391,102 @@ static func pick_court(w, n: NPC, people: Array, attraction: Dictionary) -> NPC:
 		if r.chosen != null and o.id == int(r.chosen):
 			return o
 	return people[0]
+
+
+# ---------------------------------------------------------------- Q14 stage 2: promises, credit, family help --------
+## The person id of a contract party: the player, a villager, or a household's responsible adult; -1 for the manor and
+## anyone judgment has no opinion of (an institution has no personal judgment).
+static func person_of_ref(w, ref: String) -> int:
+	if ref == World.PLAYER:
+		return Life.PLAYER_ID
+	if ref.begins_with("npc:"):
+		return World.ref_id(ref)
+	if ref.begins_with("hh:"):
+		var boss: NPC = w.construction.responsible_adult(World.ref_id(ref))
+		return boss.id if boss != null else -1
+	return -1
+
+
+## Whether `chooser` is willing to do a favour or a service for `counterparty` (a person id) under `profile`: the live
+## rule said yes (live_order 100 points), weighed with the chooser's need for coin (`need`, when the profile weighs it)
+## and what they think of the other, against doing without (the profile's forgo). With neutral judgment the live yes
+## stands; a strong dislike can make someone who can spare it refuse; need outweighs dislike. Feasibility is the caller's.
+## An unknown counterparty (the manor) is not judged.
+static func willing(w, profile: String, chooser: NPC, counterparty: int, key: Array, need := 0) -> bool:
+	if counterparty == -1 or counterparty == chooser.id:
+		return true
+	var j: JudgmentStore = w.judgment
+	var r := JudgmentWeighting.choose(j, j.cfg, chooser.id, profile,
+			[{"id": "yes", "counterparty": counterparty, "factors": {"live_order": 100000, "necessity": need}}], key)
+	j._stat(profile + "_asked")
+	if str(r.chosen) == "yes":
+		return true
+	j._stat(profile + "_declined")
+	return false
+
+
+## A villager's need for coin as the work and sale hooks read it: rising under 50 coins.
+static func coin_need(n: NPC) -> int:
+	return JudgmentMath.clampi_((50 - n.coins) * 2000, 0, 100000)
+
+
+## contract_accept (Contracts.evaluate): why villager `n` will not take the offer of `buyer_ref`, or "". The caller has
+## found the offer feasible; this only adds the seller's own reluctance.
+static func contract_refusal(w, n: NPC, buyer_ref: String) -> String:
+	var who := person_of_ref(w, buyer_ref)
+	if willing(w, "contract_accept", n, who, [w.day(), who], coin_need(n)):
+		return ""
+	return "I'd rather not take work from you." if who == Life.PLAYER_ID else "I'd rather not deal with them."
+
+
+## contract_seller: of the sellers `people` (the live rule's order), the one villager buyer `b` asks first (the rest keep
+## the live order after it, so a refusal or an infeasible seller changes nothing). Returns the sellers in the order to ask.
+static func seller_order(w, b: NPC, people: Array, key: Array) -> Array:
+	if people.size() < 2:
+		return people
+	var first := _pick(w, b.id, people, "contract_seller", key)
+	if first == null or first == people[0]:
+		return people
+	var out := [first]
+	for o in people:
+		if o != first:
+			out.append(o)
+	return out
+
+
+## credit_lend (Credit.credit_refusal): why villager `seller` will not sell `buyer` on credit although the rule allows it.
+static func lend_refusal(w, seller: NPC, buyer) -> String:
+	var who: int = buyer.id if buyer is NPC else Life.PLAYER_ID
+	if willing(w, "credit_lend", seller, who, [w.day(), who], coin_need(seller)):
+		return ""
+	return "%s would rather not lend to you." % seller.name if who == Life.PLAYER_ID else "%s would rather not lend to %s." % [seller.name, buyer.name]
+
+
+## barter_accept (Credit.barter_quote): whether villager `seller` takes the swap with `buyer` that is otherwise sound.
+static func barter_ok(w, seller: NPC, buyer) -> bool:
+	var who: int = buyer.id if buyer is NPC else Life.PLAYER_ID
+	return willing(w, "barter_accept", seller, who, [w.day(), who], coin_need(seller))
+
+
+## food_seller (Credit._cheapest_food): among the neighbours with food to spare, `cands` [{seller, id, per}] in the live
+## rule's order (cheapest per food point first, a villager before the player on a tie), the one a short household's
+## member asks. The cheapest stands unless judgment moves it. Returns the entry.
+static func pick_food_seller(w, buyer: NPC, cands: Array) -> Dictionary:
+	var cs := []
+	for i in cands.size():
+		var s = cands[i].seller
+		cs.append({"id": i, "counterparty": s.id if s is NPC else Life.PLAYER_ID, "factors": {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i)}})
+	var j: JudgmentStore = w.judgment
+	var r := JudgmentWeighting.choose(j, j.cfg, buyer.id, "food_seller", cs, [w.day(), buyer.household])
+	j._stat("food_seller_choices")
+	if r.chosen == null:
+		return cands[0]
+	if int(r.chosen) != 0:
+		j._stat("food_seller_changed")
+	return cands[int(r.chosen)]
+
+
+## family_help (Construction._family_help): whether the responsible adult of a relative household `giver` gives toward
+## `builder`'s home. The amount and the means are the live rule's.
+static func family_gives(w, giver: NPC, builder: NPC) -> bool:
+	return willing(w, "family_help", giver, builder.id, [w.day(), builder.id])

@@ -212,6 +212,8 @@ func barter_quote(seller: Object, buyer: Object, want: String, qty: int, give: S
 		if got >= ask:
 			if not seller.inv.can_add(give):
 				return no.call("%s has no room for %s." % [sname, GameData.item_name(give).to_lower()])
+			if seller is NPC and JudgmentLive.on(w, "barter_accept") and not JudgmentLive.barter_ok(w, seller, buyer):     # PROSPECTIVE (PROS-19, Q14)
+				return no.call("%s would rather not swap with %s." % [sname, "you" if buyer == w.player else buyer.name])
 			return {"ok": true, "give_qty": k + 1, "ask": ask, "offered": got, "why": ""}
 	return no.call("That is not worth enough: %s asks %d coins' worth and your %s fetch %d." % [sname, ask, GameData.item_name(give).to_lower(), got])
 
@@ -261,6 +263,8 @@ func credit_refusal(seller: Object, buyer: Object, value: int) -> String:
 		return "%s will not lend more than %d coins at a time (%d owed)." % [sname, cap, owed(c, b)]
 	if seller is NPC and seller.coins < w.reserve_of(seller):
 		return "%s is short of coins themselves and sells for coin only." % sname
+	if seller is NPC and JudgmentLive.on(w, "credit_lend"):     # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
+		return JudgmentLive.lend_refusal(w, seller, buyer)
 	return ""
 
 
@@ -434,28 +438,53 @@ func _barter_for_food(s: Object, b: NPC, want: String, qty: int) -> bool:
 func _cheapest_food(buyer: NPC, reach: float, no_player := false) -> Dictionary:
 	var best := {}
 	var per := INF
+	var judged := JudgmentLive.on(w, "food_seller")          # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
+	var cands := []                                          # each neighbour's cheapest food, in the live rule's order
 	for s: NPC in w.npcs:
 		if not s.alive or s == buyer or s.role != "adult" or s.household == buyer.household or s.pos.distance_to(buyer.pos) > reach:
 			continue
+		var mine := INF
+		var mine_id := ""
 		for id in NPCBrain.FOOD:
 			var pts := NPCBrain.food_points(id)
 			if pts <= 0.0 or available(s, id) < 1 or not buyer.inv.can_add(id):
 				continue
 			var price := float(ask_prices(s, buyer, id, 1)[0]) / pts
-			if price < per:
-				per = price
-				best = {"seller": s, "id": id}
+			if price < mine:
+				mine = price
+				mine_id = id
+		if mine_id != "":
+			cands.append({"seller": s, "id": mine_id, "per": mine})
+			if mine < per:
+				per = mine
+				best = {"seller": s, "id": mine_id}
 	var p: PlayerState = w.player
-	if no_player or not p.alive or w.player_level != 0 or p.pos.distance_to(buyer.pos) > reach or refused.has(buyer.id) or request_for(buyer.id).size() > 0:
-		return best
-	for id in NPCBrain.FOOD:                              # the player is last: a villager wins a tie
-		var pts := NPCBrain.food_points(id)
-		if pts <= 0.0 or available(p, id) < 1 or not buyer.inv.can_add(id):
-			continue
-		var price := float(ask_prices(p, buyer, id, 1)[0]) / pts
-		if price < per:
-			per = price
-			best = {"seller": p, "id": id}
+	if not (no_player or not p.alive or w.player_level != 0 or p.pos.distance_to(buyer.pos) > reach or refused.has(buyer.id) or request_for(buyer.id).size() > 0):
+		var mine := INF                                       # the player is last: a villager wins a tie
+		var mine_id := ""
+		for id in NPCBrain.FOOD:
+			var pts := NPCBrain.food_points(id)
+			if pts <= 0.0 or available(p, id) < 1 or not buyer.inv.can_add(id):
+				continue
+			var price := float(ask_prices(p, buyer, id, 1)[0]) / pts
+			if price < mine:
+				mine = price
+				mine_id = id
+		if mine_id != "":
+			cands.append({"seller": p, "id": mine_id, "per": mine})
+			if mine < per:
+				per = mine
+				best = {"seller": p, "id": mine_id}
+	if judged and cands.size() > 1:
+		var order := []                                       # by price, ties in the order found (the live rule's)
+		for i in cands.size():
+			order.append([float(cands[i].per), i])
+		order.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
+		var ranked := []
+		for o in order:
+			ranked.append(cands[int(o[1])])
+		var pick := JudgmentLive.pick_food_seller(w, buyer, ranked)
+		return {"seller": pick.seller, "id": pick.id}
 	return best
 
 

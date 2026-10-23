@@ -60,8 +60,15 @@
       "hire_choice": {"weights": {"live_order": 400, "disposition": 150}, "forgo": 0},
       "work_accept": {"weights": {"necessity": 300, "wage": 100, "disposition": 300}, "forgo": 15000},
       "befriend": {"weights": {"closeness": 500, "disposition": 500}, "forgo": 0},
-      "court_choice": {"weights": {"attraction": 600, "disposition": 400}, "forgo": 0}
+      "court_choice": {"weights": {"attraction": 600, "disposition": 400}, "forgo": 0},
+      "contract_accept": {"weights": {"live_order": 150, "necessity": 300, "disposition": 300, "ambivalence": 0}, "forgo": 20000},
+      "credit_lend": {"weights": {"live_order": 150, "necessity": 300, "disposition": 300, "ambivalence": 0}, "forgo": 20000},
+      "barter_accept": {"weights": {"live_order": 150, "necessity": 300, "disposition": 300, "ambivalence": 0}, "forgo": 20000},
+      "family_help": {"weights": {"live_order": 150, "disposition": 300, "ambivalence": 0}, "forgo": 20000},
+      "contract_seller": {"weights": {"live_order": 400, "disposition": 150}, "forgo": 0},
+      "food_seller": {"weights": {"live_order": 400, "disposition": 150}, "forgo": 0}
     },
-    "integration": {"trade_sell": true, "trade_buy_from": true, "hire_choice": true, "work_accept": true, "befriend": true, "court_choice": true}
+    "integration": {"trade_sell": true, "trade_buy_from": true, "hire_choice": true, "work_accept": true, "befriend": true, "court_choice": true,
+      "contract_accept": true, "contract_seller": true, "credit_lend": true, "barter_accept": true, "food_seller": true, "family_help": true}
   }
 }

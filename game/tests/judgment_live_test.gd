@@ -8,6 +8,7 @@ extends SceneTree
 var failures := 0
 var checks := 0
 const ME := Life.PLAYER_ID
+const Census := preload("res://tests/census.gd")
 const STEP := 0.5
 
 
@@ -39,6 +40,9 @@ func _init() -> void:
 	test_q14_court()
 	test_q14_buy_from()
 	test_q14_hiring()
+	test_q14_promises()
+	test_q14_credit()
+	test_q14_family_help()
 	test_event_feeds()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -399,6 +403,204 @@ func test_q14_hiring() -> void:
 		j.set_ledger(boss.id, o.id, 0, 0)
 	check(JudgmentLive.pick_helper(w, h, wage) != hirable[0], "someone who would turn the work down is not hired")
 	w.dispose()
+
+
+# ---------------------------------------------------------------- Q14 stage 2 (round 9) ----------------------------
+## Every adult, rich enough not to need the sale, under `profile`: how many are willing to deal with `other`.
+func willing_count(w: World, profile: String, other: int) -> int:
+	var k := 0
+	for n: NPC in adults(w):
+		n.coins = 200
+		if JudgmentLive.willing(w, profile, n, other, [w.day(), other], JudgmentLive.coin_need(n)):
+			k += 1
+	return k
+
+
+## contract_accept (Contracts.evaluate) and contract_seller (Contracts._order, Prospecting kit order).
+func test_q14_promises() -> void:
+	var w := new_world()
+	var all := adults(w).size()
+	var m: NPC = w.brain._first_with_job("miner")
+	if not m.inv.has("pickaxe"):
+		m.inv.add("pickaxe")
+	m.coins = 300
+	w.player.pos = m.pos
+	var live := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3)
+	check(str(live.answer) == "accept", "setup: a miner with a pickaxe accepts the offer without judgment (%s)" % str(live.say))
+	var j := JudgmentLive.attach(w)
+	var r := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3)
+	check(str(r.answer) == str(live.answer) and str(r.say) == str(live.say) and int(r.price_each) == int(live.price_each), "contract_accept: neutral judgment, the live answer stands, word for word")
+	for profile in ["contract_accept", "credit_lend", "barter_accept", "family_help"]:
+		check(willing_count(w, profile, ME) == all, "%s: with neutral judgment every villager (all personalities) stands by the live yes" % profile)
+	j.set_ledger(m.id, ME, 0, 60000)
+	var bad := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3)
+	check(str(bad.answer) == "reject" and str(bad.say).contains("rather not") and not str(bad.say).contains("6"), "a miner with coin to spare who strongly dislikes the player turns the work down, in words (\"%s\")" % str(bad.say))
+	check(str(w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3).say) == str(bad.say), "...the same again (deterministic)")
+	check(bool(bad.terms.get("judgment", false)), "...and the terms say it was judgment, not the means")
+	var far_off := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 0)
+	check(str(far_off.say) == "That's no kind of offer.", "a nonsense offer is still refused for its own reason: feasibility first")
+	m.coins = 0
+	check(str(w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3).answer) == "accept", "...with no coin the same miner accepts: need outweighs the dislike")
+	m.coins = 300
+	j.set_ledger(m.id, ME, 0, 0)
+	check(str(w.contracts.evaluate(m, World.MANOR, "iron_ore", 3, 30, 3).answer) == str(w.contracts.evaluate(m, World.MANOR, "iron_ore", 3, 30, 3).answer), "the manor is no person: not judged")
+	# a miner who cannot do the work says so, whatever they think of the buyer
+	var idle: NPC = null
+	var live_why := ""
+	w.judgment = null
+	var thing := ""
+	for id in ["plate_armor", "sword", "axe", "bread", "nails"]:
+		for o: NPC in adults(w):
+			if o != m and idle == null and str(w.contracts.evaluate(o, World.PLAYER, id, 2, 30, 1).answer) == "reject":
+				idle = o
+				thing = id
+				live_why = str(w.contracts.evaluate(o, World.PLAYER, id, 2, 30, 1).say)
+	w.judgment = j
+	if idle != null:
+		j.set_ledger(idle.id, ME, 0, 60000)
+		check(str(w.contracts.evaluate(idle, World.PLAYER, thing, 2, 30, 1).say) == live_why, "an infeasible offer gets its own reason (\"%s\"), not a judgment refusal" % live_why)
+	else:
+		print("note: no adult here refuses a plain order for infeasibility")
+	# contract_seller: whom a villager buyer asks first
+	var people := adults(w).slice(0, 4)
+	var b: NPC = adults(w)[5]
+	for o in people:
+		j.set_ledger(b.id, o.id, 0, 0)
+	var ord := JudgmentLive.seller_order(w, b, people, [w.day(), 1])
+	check(ord == people, "contract_seller: neutral judgment, the live order")
+	j.set_ledger(b.id, people[0].id, 0, 60000)
+	var ord2 := JudgmentLive.seller_order(w, b, people, [w.day(), 1])
+	check(ord2[0] != people[0] and ord2.size() == people.size() and ord2.has(people[0]), "a strong dislike of the first asks another first, and still asks the first (nobody dropped)")
+	check(JudgmentLive.seller_order(w, b, people, [w.day(), 1]) == ord2, "...deterministic")
+	check(JudgmentLive.seller_order(w, b, [people[0]], [w.day(), 1]) == [people[0]], "a single seller is the only one asked, liked or not")
+	w.dispose()
+
+
+## credit_lend, barter_accept and food_seller (Credit).
+func test_q14_credit() -> void:
+	var w := new_world()
+	var s: NPC = null
+	var b: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.household >= 0:
+			if s == null:
+				s = n
+			elif n.household != s.household and b == null:
+				b = n
+	s.job = "smith"
+	s.inv = Inventory.new()
+	b.inv = Inventory.new()
+	s.inv.add("bread", 6)
+	s.coins = 5000
+	b.coins = 0
+	w.relations.tie(s.id, b.id).regard = Credit.trust_needed()
+	b.inv.add("coal", 12)
+	var bill: int = w.credit.ask_prices(s, b, "bread", 1)[0]
+	var live_no := w.credit.credit_refusal(s, b, bill)
+	var live_swap := bool(w.credit.barter_quote(s, b, "bread", 1, "coal").ok)
+	check(live_no == "" and live_swap, "setup: this seller lends to and swaps with this buyer without judgment")
+	var j := JudgmentLive.attach(w)
+	check(w.credit.credit_refusal(s, b, bill) == "", "credit_lend: neutral judgment, the live yes")
+	check(bool(w.credit.barter_quote(s, b, "bread", 1, "coal").ok), "barter_accept: neutral judgment, the live yes")
+	j.set_ledger(s.id, b.id, 0, 60000)
+	var no := w.credit.credit_refusal(s, b, bill)
+	check(no.contains("would rather not lend") and not no.contains("6"), "a seller who strongly dislikes the buyer will not lend, in words (\"%s\")" % no)
+	check(w.credit.credit_refusal(s, b, bill) == no, "...deterministic")
+	var q := w.credit.barter_quote(s, b, "bread", 1, "coal")
+	check(not bool(q.ok) and str(q.why).contains("rather not swap"), "...nor swap (\"%s\")" % str(q.why))
+	var goods := Census.goods(w)
+	check(str(w.credit.sell_on_credit(s, b, "bread", 1, bill).result) == "failed" and w.credit.debts.is_empty() and Census.goods(w) == goods, "a refused loan moves nothing and records no debt")
+	var from_far := w.credit.credit_refusal(s, w.player, bill)
+	check(from_far != "", "(the player is refused for want of regard first)")
+	w.relations.tie(s.id, Life.PLAYER_ID).regard = Credit.trust_needed()
+	check(w.credit.credit_refusal(s, w.player, bill) == "", "a seller with no opinion of the player lends to them")
+	j.set_ledger(s.id, ME, 0, 60000)
+	check(w.credit.credit_refusal(s, w.player, bill).contains("rather not lend to you"), "...and a seller who dislikes the player says so")
+	j.set_ledger(s.id, b.id, 0, 0)
+	j.set_ledger(s.id, ME, 0, 0)
+	# food_seller: whom a short household asks for food
+	for n: NPC in w.npcs:
+		n.inv = Inventory.new()
+	var near := []
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.household != b.household and near.size() < 2:
+			near.append(n)
+	for n: NPC in near:
+		n.pos = b.pos
+		n.inv.add("bread", 6)
+	w.judgment = null                       # the live rule's own pick, for comparison
+	var first: NPC = w.credit._cheapest_food(b, 999.0, true).seller
+	w.judgment = j
+	var other: NPC = near[1] if first == near[0] else near[0]
+	var pick := w.credit._cheapest_food(b, 999.0, true)
+	check(pick.seller == first, "food_seller: neutral judgment, the cheapest (the live rule)")
+	j.set_ledger(b.id, first.id, 0, 60000)
+	var pick2 := w.credit._cheapest_food(b, 999.0, true)
+	check(pick2.seller == other and pick2.id == "bread", "a strong dislike of the first sends the household to the other neighbour")
+	check(w.credit._cheapest_food(b, 999.0, true).seller == other, "...deterministic")
+	other.inv = Inventory.new()
+	check(w.credit._cheapest_food(b, 999.0, true).seller == first, "the only neighbour with food is asked despite the dislike (feasibility)")
+	first.inv = Inventory.new()
+	check(w.credit._cheapest_food(b, 999.0, true).is_empty(), "no neighbour with food: no ask, however well liked")
+	w.dispose()
+
+
+## family_help (Construction._family_help): a relative who thinks ill of the builder may keep their coins.
+func test_q14_family_help() -> void:
+	for pass_ in 2:
+		var w := new_world()
+		var c := w.construction
+		var from := -1
+		for hh in w.households:
+			var h0 := int(hh.id)
+			var ad: Array = w.brain._members(h0).filter(func(o: NPC) -> bool: return o.role == "adult")
+			if h0 < 3 or ad.size() != 2 or ad[0].partner != ad[1].id:
+				continue
+			var mom: NPC = ad[0] if ad[0].sex == "female" else ad[1]
+			while not c.crowded(h0):
+				Life.birth(w, mom, w.npc(mom.partner), h0)
+			from = h0
+			break
+		var child: NPC = null
+		for o: NPC in w.brain._members(from):
+			if o.role == "adult" and c.responsible_adult(from) != o:
+				child = o
+		if from < 0 or child == null:
+			print("note: no family to found a household from in this village")
+			w.dispose()
+			return
+		var nh := {"id": w.households.size(), "family": child.family, "home": "", "members": [], "pantry": Inventory.new(),
+			"founded_from": from, "founded_day": w.day()}
+		w.households.append(nh)
+		var h := int(nh.id)
+		w.households[from].members.erase(child.id)
+		child.household = h
+		nh.members.append(child.id)
+		var ref := World.hh_ref(h)
+		var rect := c.find_ground("house", w.building_door(str(w.households[from].home)), ref)
+		var p := c.place("house", rect, ref)
+		w.start_site(p, "house", ref)
+		nh.build = str(p.id)
+		child.coins = 5
+		var family: Array = w.brain._members(from)
+		for o: NPC in family:
+			o.coins = 0
+		family[0].coins = 400
+		var total := w.total_coins()
+		var j: JudgmentStore = null
+		if pass_ == 1:
+			j = JudgmentLive.attach(w)
+			j.set_ledger(c.responsible_adult(from).id, child.id, 0, 60000)
+		c._family_help(h)
+		if pass_ == 0:
+			check(child.coins > 5, "family_help: without judgment the family gives (the live rule)")
+		else:
+			check(child.coins == 5 and w.total_coins() == total, "a relative who strongly dislikes the builder keeps their coins: nothing moves, nothing is made or lost")
+			j.set_ledger(c.responsible_adult(from).id, child.id, 0, 0)
+			c._family_help(h)
+			check(child.coins > 5, "...and with a neutral opinion the family gives (family_help is judgment's only, the rest is the live rule's)")
+		w.dispose()
+
 
 
 # ---------------------------------------------------------------- the event feeds (PROS-19, SJD-Q12) ----------------

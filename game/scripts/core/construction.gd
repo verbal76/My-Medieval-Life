@@ -1343,6 +1343,10 @@ func _family_help(h: int) -> void:
 		var give := mini(short, w.property.purse(ref) - _keep(f, members.size()) - _tool_reserve(f))
 		if give <= 0:
 			continue
+		if JudgmentLive.on(w, "family_help"):       # PROSPECTIVE (PROS-19, Q14): a relative who thinks ill of the builder may keep their coins
+			var giver := responsible_adult(f)
+			if giver != null and not JudgmentLive.family_gives(w, giver, builder):
+				continue
 		_take(ref, give)
 		builder.coins += give
 		short -= give

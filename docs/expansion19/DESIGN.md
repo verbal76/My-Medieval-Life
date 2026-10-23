@@ -330,7 +330,7 @@ now fed from the live acts that perform them (section 9.3); what has no act is l
   baseline without colliding with Build 17 and 18's entries. The hooks are off, so no live interaction exists yet.
 - `.github/workflows/tests.yml` lists the three judgment suites on this branch; it runs only on staging pushes.
 
-## 9. Q14: universal integration plan and status (round 4)
+## 9. Q14: universal integration plan and status (round 4; stage 2 in round 9)
 
 ### 9.1 Wired (each behind the off switch: a store attached and `decision.integration.<point>` set)
 
@@ -346,16 +346,40 @@ code still decides who is feasible; with every judgment neutral the live choice 
 | Whether two villagers become friends (`Relations._befriend_if_close`) | closeness (regard) and the lower of their two judgments, at the live threshold | a dislike holds back a just-close-enough friendship; great closeness outweighs it; a high opinion never befriends below the threshold |
 | Whom a single villager courts (`Relations._villagers_court`) | attraction and the villager's judgment, among the live candidates | the slightly less attractive but not disliked one; much greater attraction outweighs dislike; no candidate, no interest |
 
+Stage 2 (round 9) wires six more, on the same interface (`JudgmentLive.willing` for a yes or no, `_pick`/`seller_order`/
+`pick_food_seller` for a choice). Each is behind its own `decision.integration` flag and a store; the live code still
+decides feasibility, amounts, prices and terms. A "willing" hook asks only whether the person who could do it does so:
+the live yes (live_order, 100 points) plus their need for coin (under 50 coins) and what they think of the other, against
+doing without (forgo 20 points), so with neutral judgment every personality says yes (tested for every adult), a person
+with coin to spare who strongly dislikes the other says no in words (no numbers: Q10), and need outweighs dislike.
+
+| Decision point (existing code) | What judgment weighs | Tests |
+|---|---|---|
+| Whether a seller takes on a contract or service (`Contracts.evaluate`, `contract_accept`) | need for coin, the seller's judgment of the buyer (a player, a villager, a household's responsible adult; the manor is no person and is not judged); asked only after the offer is feasible | neutral: the live answer word for word; a disliked player is refused ("I'd rather not take work from you") by a seller with coin and accepted by one without; an infeasible offer keeps its own reason; the manor is not judged |
+| Which seller a villager buyer asks first (`Contracts._order`, the prospector's kit order in `Prospecting`; `contract_seller`) | live order, the buyer's judgment | neutral: live order; a disliked first seller is asked second, nobody is dropped (the rest keep the live order, so a refusal still falls through); a single seller is asked regardless |
+| Whether a villager sells on credit (`Credit.credit_refusal`, `credit_lend`) | need for coin, the creditor's judgment of the debtor, after trust (regard), limit, old debts and reserve | neutral: lends; disliked: "would rather not lend" (player or villager buyer); nothing moves, no debt |
+| Whether a villager takes a swap (`Credit.barter_quote`, `barter_accept`) | same | neutral: swaps; disliked: "would rather not swap" |
+| Whom a short household asks for food (`Credit._cheapest_food`, `food_seller`) | live order (cheapest per food point, a villager before the player on a tie), the member's judgment of each neighbour | neutral: the cheapest; a disliked cheapest is passed over for the next; the only neighbour with food is asked anyway; none, no ask |
+| Whether a relative household gives toward a home (`Construction._family_help`, `family_help`) | the relative household's responsible adult's judgment of the builder; amount and means unchanged | neutral: gives; strongly disliked: gives nothing, no coin made or lost; neutral again: gives |
+
+Not changed by design: **Q04** mixed feelings are "wary but willing" (ambivalence is stored with weight 0 in every profile):
+a person who feels both ways is not made to refuse; asking for payment up front would be a trade-terms choice the owner has
+not made, so it is NOT added. **Q08**: none of these hooks decides whether a law applies, and the guard's fine stays X19-GUARD's.
+**X19-CRT12**: courtship refusals keep the fixed cut-offs (courtship stays `court_choice` among those the cut-offs allow).
+**X19-HARMED**: `Relations.harmed` unchanged. The buyer's answer to a counter (`Contracts.buyer_answer`) is not wired: it
+is a calculation of terms within the buyer's tolerance, not a choice among options, and moving prices by opinion would be a
+trade-terms choice (as for Q04).
+
 With judgment on for 10 village days (`economy_sim --judgment`, seed 1) there were no currency or item leaks (section 12).
 
 ### 9.2 Not wired yet, and why
 
 | Domain (owner's list) | Status | Dependency |
 |---|---|---|
-| Negotiated contracts and services | not in Build 16 | CON-01 `evaluate` exists only on `wip/build17`: integrate at the Build 18/19 reconciliation through the same interface |
-| Business relationships (stall custom, supplier loyalty) | partly: trade choices above | Expansion 18 settlement trade and the Living Economy actors (proposed Build 20) |
-| Requests for favours, cooperation and assistance | candidates: relatives' house help (HOUSE-04, `Construction` family help), food relief | relief is the manor's (an institution, no personal judgment); HOUSE-04 family help could weigh judgment (next stage) |
-| Courtship proposals and marriage acceptance between villagers | not wired | conflicts with CRT-12's fixed regard threshold (section 10): needs the owner's choice first |
+| Negotiated contracts and services | wired in round 9 (`contract_accept`, `contract_seller`, section 9.1); the breach feed (`trade_cheat`) was wired in round 8 | `buyer_answer` (terms tolerance) is not a choice and stays the live rule's |
+| Business relationships (stall custom, supplier loyalty) | partly: trade choices above, credit and swaps (`credit_lend`, `barter_accept`), whom a short household asks (`food_seller`) | Expansion 18 settlement trade and the Living Economy actors (proposed Build 20) have no decision point yet |
+| Requests for favours, cooperation and assistance | relatives' house help wired in round 9 (`family_help`); food relief and alms: no decision point | relief and alms are the manor's and the chapel's (institutions, no personal judgment); a villager's ask of the player (`Credit._ask_player`) is the player's choice |
+| Courtship proposals and marriage acceptance between villagers | deliberately not wired | X19-CRT12 (owner, 2026-10-23): the fixed cut-offs stay; only `court_choice` among those they allow |
 | Player's courtship, gifts, quests | not wired | player-facing; Q10 words and CRT rules |
 | Crime reporting, testimony | deliberately not wired | Q08: law is separate; reporting stays World's |
 | Villagers' thefts | bandit robberies fed (section 9.3); other villager thefts have no act | DVW-B2 |

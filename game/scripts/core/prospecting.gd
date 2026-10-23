@@ -579,9 +579,13 @@ func _get_kit(n: NPC) -> bool:
 		var price := GameData.value(KIT)
 		var days := int(Contracts.cfg().npc_order_days)
 		if k.fund_refusal(me, price) == "":
+			var smiths := []
 			for s: NPC in w.npcs:
-				if s == n or not s.alive or s.role != "adult" or s.job != "smith":
-					continue
+				if s != n and s.alive and s.role == "adult" and s.job == "smith":
+					smiths.append(s)
+			if JudgmentLive.on(w, "contract_seller"):        # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
+				smiths = JudgmentLive.seller_order(w, n, smiths, [w.day(), KIT.hash()])
+			for s: NPC in smiths:
 				var r := k.propose(me, s, KIT, 1, price, days)
 				if r.has("contract") or r.has("signing") or k.meet_counter(n, s, KIT, 1, price, 1, r):     # a smith's counter, by every buyer's rule
 					break

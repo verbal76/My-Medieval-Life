@@ -513,6 +513,12 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 			r.say = "I've not the time to get %s by then, with what I've promised already." % item
 			r.terms.why = "time"
 			return r
+	if w.judgment != null and JudgmentLive.on(w, "contract_accept"):        # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
+		var unwilling := JudgmentLive.contract_refusal(w, n, buyer_ref)
+		if unwilling != "":
+			r.say = unwilling
+			r.terms.judgment = true
+			return r
 	var c_price := maxi(price_each, int(r.min_price))
 	if c_qty == qty and c_days == days and c_price == price_each:
 		r.answer = "accept"
@@ -1121,9 +1127,13 @@ func _offered_by(b: NPC) -> bool:
 
 func _order(b: NPC, id: String, qty: int, price: int, days: int) -> bool:
 	var me := World.npc_ref(b.id)
+	var sellers := []
 	for s: NPC in w.npcs:
-		if s == b or not s.alive or s.role != "adult":
-			continue
+		if s != b and s.alive and s.role == "adult":
+			sellers.append(s)
+	if JudgmentLive.on(w, "contract_seller"):                # PROSPECTIVE (PROS-19, Q14): the buyer asks the one it thinks best of first
+		sellers = JudgmentLive.seller_order(w, b, sellers, [w.day(), id.hash()])
+	for s: NPC in sellers:
 		var r := propose(me, s, id, qty, price, days)
 		if r.has("contract") or r.has("signing"):           # signed here, or to be signed when the buyer reaches the seller
 			return true
