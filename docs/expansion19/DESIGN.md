@@ -1045,3 +1045,13 @@ existing record of a bad deed by a former friend; its memory is made permanent. 
 
 **Tests.** `judgment_x19_test` (numbers, decay, event rules, lies and their frequency, family stories, reach, colour and caps, stubbornness, clock, save and upgrade, world hooks),
 `family_first_test` (danger), and the updated `judgment_*` suites; the fixtures of the older suites switch the Build 19 layers off where they test the older mechanism.
+
+**Measured 2026-10-23 (this machine, shared).** Gate: `tools/sim_gate.py --sim-args=--no-judgment` is PASS, identical to the Build 18 baseline (judgment off adds nothing to the old path).
+With judgment on the gate differs from the baseline, as expected (fingerprint, alive, currency, treasury, animals and the flow table at days 10 and 30, seeds 1 and 2), with
+no leak: currency leak 0 and item leaks {} at both checkpoints of both seeds. The first difference is on day 1 for both seeds (seed 1 at 17:32, seed 2 at 15:58, found by
+running both worlds in lockstep): a villager sells to a different buyer, a trade choice judgment changed (`trade_choices_changed`, the owner's 15% near-best choice, X19-RUNNERUP),
+so a purse differs; everything later follows from it. Two runs of the same seed with judgment on give identical fingerprints at every day of 10 and the same judgment state hash.
+10 days, judgment on against off (seed 1 / seed 2): deaths 3 (1 starvation) against 2, and 2 against 4. The starved guard of seed 1 stood stuck at one spot for 30 hours
+on a "recover what was left lying" walk (path index 30 of 36, never moving), so he never reached the food at home: a walking defect of the existing guard loot plan, exposed by
+the changed course of the days, not judgment logic; left for the owner's SIM-F4 work. Cost: the 30-day gate runs took 350 and 383 s a seed with judgment on and 353 and 383 s off;
+`judgment_perf --sizes 100 --days 10`: 57 ms per simulated day for 100 people at the live event rate (about 2.4 ms per game hour; worst frame 2 ms), 144 ms at the stress rate.

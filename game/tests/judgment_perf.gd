@@ -175,8 +175,7 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 								j.call("meet_hourly", p, q, d * 1440 + hr * 60)
 							else:
 								j.meet(p, q)
-				if spread:
-					j.call("gossip_tick", d * 1440 + hr * 60 + tick)
+				j.call("gossip_tick", d * 1440 + hr * 60 + tick)      # the world clock reaches the store either way (anger fades by the minute); with nothing queued it tells nothing
 				var t3 := Time.get_ticks_usec()
 				for p in range(dec_from + (dec_to - dec_from) * tick / TICKS, dec_from + (dec_to - dec_from) * (tick + 1) / TICKS):
 					for k in DECISIONS_PER_PERSON:

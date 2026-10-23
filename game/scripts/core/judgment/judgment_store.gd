@@ -2154,4 +2154,6 @@ static func migrate(d: Dictionary) -> Dictionary:
 
 ## A hash of the whole state (determinism tests: same seed and events, same hash).
 func state_hash() -> int:
-	return JSON.stringify(to_dict()).hash()
+	var d := to_dict()
+	d.erase("clock")          # when the world last told the store the time is not state: telling at once or over ticks ends the same
+	return JSON.stringify(d).hash()
