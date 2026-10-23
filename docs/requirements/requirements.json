@@ -18551,11 +18551,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; integrated_in + wip/recorder 2d5d49c",
      "why": "merged into wip/recorder at 2d5d49c with the identity foundation; tests pass"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0 -> recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0; recf1_test 23/0; recorder_test 160/0; world_test 339/0; sim_gate 2d5d49c: no leaks, differs from day 10 (expected class, unattributed)",
+     "why": "sim_gate on 2d5d49c (identity + REC-F1 + SIM-F9, recorder off, no --write): 0 currency and 0 item leaks at all four checkpoints; differs from the identity candidate from day 10 on both seeds, as REC-F1 was known to (seed 1 day 10 alive 109 -> 106, seed 2 111 -> 110; day 30 seed 2 118 -> 120); the differences are not yet attributed; the first-divergence verification and the one proposed baseline are done on the Build 19 integration commit, where judgment-on changes the gate again"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/fix-recf1",
-   "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0",
+   "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0; recf1_test 23/0; recorder_test 160/0; world_test 339/0; sim_gate 2d5d49c: no leaks, differs from day 10 (expected class, unattributed)",
    "test_commit": "b113f73",
    "commits": [
     "c27aaa2",
