@@ -108,7 +108,7 @@ func _add_member(s: OffMapSettlement, hi: int, sex: int, age := 24.0) -> void:
 func _member_named(s: OffMapSettlement, name: String) -> Array:
 	for h in s.hh:
 		for m in h.mem:
-			if m.size() > OffMapSettlement.M_WHO and str(m[OffMapSettlement.M_WHO].n) == name:
+			if OffMapSettlement.has_who(m) and str(m[OffMapSettlement.M_WHO].n) == name:
 				return [h, m]
 	return []
 
@@ -234,6 +234,7 @@ func test_work() -> void:
 	s.biz.farm.rate = 12.0
 	var before := _books(w)
 	var pop0 := s.population()
+	var age_left := Life.npc_age(w, who)
 	check(Migration._work_out(w, s, _closed_market()), "out: an adult without a trade, in a household that cannot live on its income, with no place open, goes to a trade that pays")
 	check(not who.alive and who.away == "higham" and s.population() == pop0 + 1, "they are away, and the settlement has one more person")
 	check(_same(before, _books(w)) and _sound(w), "the books balance: the purse of 33 coins and the axe crossed")
@@ -255,9 +256,9 @@ func test_work() -> void:
 	var alive0 := w.alive_count()
 	check(Migration._work_in(w, s, mk), "in: an adult of a household short of work takes an open place that pays more than it earned")
 	check(w.alive_count() == alive0 + 1 and _same(before2, _books(w)) and _sound(w), "one more villager, and the books balance")
-	var back: NPC = w.npcs.back()
-	check(back.alive and back.name == who.name and back.skills.get("mining", 0) == 777 and back.job == "manor_hand", "they are a new villager with the same name and skills, in the work they came for")
-	check(absf(Life.npc_age(w, back) - Life.npc_age(w, who)) < 2.0 / float(Life.year_days()), "and the same age")
+	var back: NPC = w.by_id[who.id]
+	check(back == who and back.alive and back.away == "" and back.name == who.name and back.skills.get("mining", 0) == 777 and back.job == "manor_hand", "ID-01: they are the same villager (the same record and id) with the same name and skills, in the work they came for")
+	check(absf(Life.npc_age(w, back) - age_left) < 2.0 / float(Life.year_days()), "and the same age")
 	# in, for a post nobody could fill (the newcomer's place)
 	var w2 := _world()
 	var s2: OffMapSettlement = w2.regions.by_id["higham"]
@@ -497,7 +498,7 @@ func test_conservation_and_save() -> void:
 	var kept := false
 	for h in w2.regions.by_id["wulstead"].hh:
 		for mm in h.mem:
-			kept = kept or (mm.size() > 4 and mm[4] is Dictionary and str(mm[4].n) != "")
+			kept = kept or (OffMapSettlement.has_who(mm) and str(mm[4].n) != "")
 	check(kept, "and the settlement's members keep the names they carried")
 	# the loaded copy goes on exactly as the original
 	for d in 3:
