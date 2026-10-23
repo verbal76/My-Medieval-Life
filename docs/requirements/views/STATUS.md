@@ -12,9 +12,9 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Design work still required | 2 | 3 | 0 | 0 |
 | Design unknown | 15 | 8 | 9 | 4 |
 | Not started (incl. READY) | 2 | 7 | 9 | 2 |
-| In development (worker assigned) | 0 | 4 | 0 | 2 |
+| In development (worker assigned) | 0 | 4 | 0 | 0 |
 | Partially implemented | 1 | 3 | 0 | 0 |
-| Implemented on a task branch | 0 | 3 | 0 | 0 |
+| Implemented on a task branch | 0 | 3 | 0 | 2 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
 | Integrated | 80 of 83 (96%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
 | Automated tests passed (targeted or better) | 78 of 83 (94%) | 4 of 17 (24%) | 0 of 9 (0%) | 0 of 4 (0%) |
@@ -25,7 +25,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Release blockers (open in-scope requirements) | 81 | 17 | 9 | 4 |
 | Open owner decisions (of which blocking) | 1 (0) | 11 (0) | 14 (14) | 9 (9) |
 | Deferred with approval | 2 | 1 | 0 | 0 |
-| Proposals and ideas (not counted) | 3 | 1 | 2 | 5 |
+| Proposals and ideas (not counted) | 3 | 2 | 2 | 5 |
 | Integrated, awaiting gameplay or owner verification | 78 | 0 | 0 | 0 |
 | Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | XS 2, M 3, L 5, XL 1, UNKNOWN 6 | UNKNOWN 9 | UNKNOWN 4 |
 | Readiness | RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23)) | PROTOTYPE ONLY (isolated branch; not integrated) | NOT STARTED | IN DEVELOPMENT (not feature complete) |

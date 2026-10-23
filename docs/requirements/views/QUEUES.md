@@ -6,10 +6,10 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| LE-00 | 20+ | IN DEVELOPMENT | lead | wip/expansion20-preparation |
+| LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
-| P21-00 | 21 | IN DEVELOPMENT | lead | wip/expansion21-preparation |
-| P21-02 | 21 | IN DEVELOPMENT | lead | wip/expansion21-preparation |
+| P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
+| P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X19-FOUND-FAMREP | 19 | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) | wip/x19-bonds |
 | X19-FOUND-PERS | 19 | IN DEVELOPMENT | X19 Worker A personality (Sonnet subagent) | wip/x19-personality |
 
-## Implemented but not tested (40)
+## Implemented but not tested (43)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -36,12 +36,15 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
+| LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH |  |
 | MIN-G | 17 | INTEGRATED |  |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH |  |
 | OWN-08 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-19 | 20+ | PARTIALLY IMPLEMENTED |  |
 | OWN-22 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-28 | 20+ | PARTIALLY IMPLEMENTED |  |
+| P21-00 | 21 | IMPLEMENTED ON TASK BRANCH |  |
+| P21-02 | 21 | IMPLEMENTED ON TASK BRANCH |  |
 | PERF-01 | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | PL1-07 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL1-11 | owner decision | PARTIALLY IMPLEMENTED | stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11) |

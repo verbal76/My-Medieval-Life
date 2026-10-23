@@ -303,7 +303,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | K-2 | Tavern child and sage on pallets; no lying frame |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | K-3 | Every provisional number awaits the owner's balance review |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | 20+ | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | UNKNOWN | OPEN |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | 20+ | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | UNKNOWN | OPEN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -369,9 +369,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OWN-26 | Animal breeding, hunger, livestock as meat, wild animals hunted |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | OWN-27 | Manor government B3 |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | 21 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | 21 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | 21 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | 21 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | 21 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -586,7 +586,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | 19 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | 19 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 
-## Proposal awaiting an owner decision (not approved) (36)
+## Proposal awaiting an owner decision (not approved) (37)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -608,6 +608,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B11 | No instant fast travel (rule) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DVW-B12 | Ethics/lore: thralldom, Church, content note | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DVW-B13 | Story kept as sparks; audit `story: true` quests | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| E20-RISK-QUEUES | Unbounded growth and population-wide scans found in Build 18 economic code: NPCBrain.miss_log never cleared; courier jobs, agreements and contacts never pruned; credit._villager_deals O(n^2) at dawn; the heir-removal id reuse (life.gd:660) | 19 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | ECON-P1.1 | Demand-driven mining (:71) | 17 | REJECTED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ECON-P1.2 | Manor mining rights, royalty, quota, stone reserve (:72) | 17 | REJECTED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ECON-P1.4 | Prospecting new seams (:74) | 17 | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |

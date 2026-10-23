@@ -66,11 +66,12 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | OPEN | no |  |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | OPEN | no |  |
 
-## Not counted: umbrellas, proposals, ideas, deferred (4)
+## Not counted: umbrellas, proposals, ideas, deferred (5)
 
 | ID | Item | Kind | Approval |
 |---|---|---|---|
 | B17F-PERF | Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93) | idea | PROPOSED |
+| E20-RISK-QUEUES | Unbounded growth and population-wide scans found in Build 18 economic code: NPCBrain.miss_log never cleared; courier jobs, agreements and contacts never pruned; credit._villager_deals O(n^2) at dawn; the heir-removal id reuse (life.gd:660) | proposal | PROPOSED |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | umbrella | OWNER APPROVED |
 | FR-09 | Crime from desperation | approved | DEFERRED |
 | PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | umbrella | OWNER APPROVED |

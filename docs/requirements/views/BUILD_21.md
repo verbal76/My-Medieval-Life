@@ -18,18 +18,13 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 4 |
 | Open owner decisions (blocking) | 9 (9) |
 
-## In development (worker assigned) (2)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion21-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion21-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
-## Blocked (open owner decision, unfinished dependency or unsettled design) (2)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
+| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | owner review | design: UNKNOWN | UNKNOWN |
 | P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | owner answers the packet (structure and noble authority first) | design: UNKNOWN | UNKNOWN |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | OWNER APPROVED | NOT STARTED | wip/expansion21-preparation | NOT TESTED |  | GM-01, DVW-B1, design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (9)

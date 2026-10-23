@@ -13718,6 +13718,32 @@
    ]
   },
   {
+   "id": "E20-RISK-QUEUES",
+   "kind": "proposal",
+   "title": "Unbounded growth and population-wide scans found in Build 18 economic code: NPCBrain.miss_log never cleared; courier jobs, agreements and contacts never pruned; credit._villager_deals O(n^2) at dawn; the heir-removal id reuse (life.gd:660)",
+   "description": "Unbounded growth and population-wide scans found in Build 18 economic code: NPCBrain.miss_log never cleared; courier jobs, agreements and contacts never pruned; credit._villager_deals O(n^2) at dawn; the heir-removal id reuse (life.gd:660)",
+   "source": "docs/directives/2026-10-23_expansion20_phase1_authorization.md",
+   "owner_wording": null,
+   "approval": "",
+   "acceptance": [],
+   "target_build": "19",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "PROPOSED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansion20_phase1_authorization.md"
+    }
+   ]
+  },
+  {
    "id": "EARTH-01",
    "title": "Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1)",
    "kind": "approved",
@@ -22600,7 +22626,8 @@
    "playtest": [],
    "branch": "wip/expansion20-preparation",
    "commits": [
-    "d82f173"
+    "d82f173",
+    "953998a"
    ],
    "parent": "EXP-D",
    "depends_on": [],
@@ -22608,7 +22635,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "owner reviews the architecture and answers the blocking OD-LE decisions (02, 04, 07, 10, 13, 15)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -22653,6 +22680,11 @@
      "date": "2026-10-23",
      "change": "verification_status: INTEGRATION VERIFIED -> NOT TESTED; completion: COMPLETE -> OPEN",
      "why": "the owner's phase-1 directive asks to complete LE-00: the Build 17 audit is refreshed against Build 18 before it closes again"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; commits + 953998a; next_action",
+     "why": "refreshed against Build 18 (953998a on wip/expansion20-preparation: corrections, data-owner map, LE-01 inventory, OD-LE table, risks, Expansion 19 interface); awaiting the owner's review of the architecture"
     }
    ],
    "target_build": "20+",
@@ -22662,7 +22694,7 @@
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "approval_status": "OWNER APPROVED",
    "legacy_evidence": "v1 status COMPLETE AND VERIFIED with its recorded evidence (implementation, tests or commits)",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "UNKNOWN",
    "completion": "OPEN",
@@ -30707,7 +30739,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -30721,10 +30753,19 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion21-preparation",
      "why": "lead starts it"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; commits + 64317eb; next_action",
+     "why": "audit written (64317eb on wip/expansion21-preparation)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/expansion21-preparation"
+   "branch": "wip/expansion21-preparation",
+   "commits": [
+    "64317eb"
+   ],
+   "next_action": "owner review"
   },
   {
    "id": "P21-01",
@@ -30774,7 +30815,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -30788,10 +30829,19 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion21-preparation",
      "why": "lead starts it"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; commits + 64317eb; next_action",
+     "why": "decision map and twelve-topic packet written (64317eb)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/expansion21-preparation"
+   "branch": "wip/expansion21-preparation",
+   "commits": [
+    "64317eb"
+   ],
+   "next_action": "owner answers the packet (structure and noble authority first)"
   },
   {
    "id": "PACK-Q",
