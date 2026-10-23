@@ -13705,8 +13705,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -13719,10 +13719,22 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X20 foundation worker (Sonnet subagent); branch: None -> wip/expansion20-preparation",
      "why": "foundation worker assigned: reservation record, economic event record, actor resolver behind economy.json enabled false"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> economy_foundation_test 66, world_test 339, migration_test 92, save_transfer_test 21, conservation_test 8, unittest 115; sim_gate identical; test_commit: None -> 4d9bc05; commits + 1efb59f; commits + 4d9bc05; next_action",
+     "why": "foundation built (1efb59f, 4d9bc05): reservation record, economic event record, actor resolver; economy.json enabled false; economy_foundation_test 66, world 339, migration 92, save_transfer 21, conservation 8, unittest 115; gate identical"
     }
    ],
    "assigned_worker": "X20 foundation worker (Sonnet subagent)",
-   "branch": "wip/expansion20-preparation"
+   "branch": "wip/expansion20-preparation",
+   "tests": "economy_foundation_test 66, world_test 339, migration_test 92, save_transfer_test 21, conservation_test 8, unittest 115; sim_gate identical",
+   "test_commit": "4d9bc05",
+   "commits": [
+    "1efb59f",
+    "4d9bc05"
+   ],
+   "next_action": "owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15"
   },
   {
    "id": "E20-RISK-QUEUES",
@@ -30793,7 +30805,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -30802,8 +30814,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansion21_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X21 foundation worker (Sonnet subagent); branch: None -> wip/expansion21-preparation",
+     "why": "assigned: office registry, tenure and succession events, legacy record, civic.json enabled false"
     }
-   ]
+   ],
+   "assigned_worker": "X21 foundation worker (Sonnet subagent)",
+   "branch": "wip/expansion21-preparation"
   },
   {
    "id": "P21-02",

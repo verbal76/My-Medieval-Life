@@ -10,7 +10,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|
 | Approved requirements in scope | 9 |
 | Integrated | 0 of 9 (0%) |
-| Automated tests passed | 0 of 9 (0%) |
+| Automated tests passed | 1 of 9 (11%) |
 | Integration verified | 0 of 9 (0%) |
 | Gameplay verified | 0 of 9 (0%) |
 | Owner playtested | 0 of 9 (0%) |
@@ -18,16 +18,11 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 9 |
 | Open owner decisions (blocking) | 14 (14) |
 
-## In development (worker assigned) (1)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | IN DEVELOPMENT | X20 foundation worker (Sonnet subagent) / wip/expansion20-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
-## Blocked (open owner decision, unfinished dependency or unsettled design) (8)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
+| E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) / wip/expansion20-preparation | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 | design: UNKNOWN | UNKNOWN |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

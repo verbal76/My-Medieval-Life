@@ -11,13 +11,13 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Waiting on an owner decision (design) | 0 | 0 | 0 | 0 |
 | Design work still required | 2 | 3 | 0 | 0 |
 | Design unknown | 15 | 8 | 9 | 4 |
-| Not started (incl. READY) | 2 | 7 | 8 | 2 |
-| In development (worker assigned) | 0 | 3 | 1 | 0 |
+| Not started (incl. READY) | 2 | 7 | 8 | 1 |
+| In development (worker assigned) | 0 | 3 | 0 | 1 |
 | Partially implemented | 1 | 3 | 0 | 0 |
-| Implemented on a task branch | 0 | 4 | 0 | 2 |
+| Implemented on a task branch | 0 | 4 | 1 | 2 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
 | Integrated | 80 of 83 (96%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
-| Automated tests passed (targeted or better) | 78 of 83 (94%) | 5 of 17 (29%) | 0 of 9 (0%) | 0 of 4 (0%) |
+| Automated tests passed (targeted or better) | 78 of 83 (94%) | 5 of 17 (29%) | 1 of 9 (11%) | 0 of 4 (0%) |
 | Integration verified (suite on the integrated build) | 58 of 83 (70%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
 | Gameplay verified | 0 of 83 (0%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
 | Owner playtested | 0 of 83 (0%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
