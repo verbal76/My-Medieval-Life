@@ -109,6 +109,7 @@ var underground: Underground  # MIN-A: the levels below the surface and their po
 var player_level := 0         # MIN-A: the depth the player is on (0 the surface, -1 the mine gallery); saved in "underground"
 var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the level router walks them through the portals); MIN-F: every level a portal reaches ([0, -1, -2] with the cave), set from Underground.reachable_levels
 var mine_works: MineWorks     # MIN-F: tunnels cut, timber supports, track (scripts/core/mine_works.gd; saved in "mine_works")
+var judgment_foreign := {}    # a saved "judgment" section while judgment is off: kept untouched, written back unchanged (never parsed, never switches judgment on)
 var judgment = null           # PROSPECTIVE (Expansion 19, PROS-19): a JudgmentStore, or null (off; JudgmentLive)
 
 
@@ -4164,6 +4165,8 @@ func to_dict() -> Dictionary:
 	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
+	elif not judgment_foreign.is_empty():
+		out.judgment = judgment_foreign.duplicate(true)            # off: a saved section is carried unchanged
 	return out
 
 
@@ -4197,8 +4200,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	judgment = null
-	if d.has("judgment") or JudgmentLive.enabled():                # PROSPECTIVE (PROS-19): Build 16 saves have none
+	judgment_foreign = {}
+	if JudgmentLive.enabled():                                     # PROSPECTIVE (PROS-19): only the switch attaches it, never a saved section
 		JudgmentLive.attach(self).load_dict(d.get("judgment", {}))
+	elif d.get("judgment") is Dictionary:
+		judgment_foreign = (d.judgment as Dictionary).duplicate(true)
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)

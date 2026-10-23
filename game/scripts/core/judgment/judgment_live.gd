@@ -41,8 +41,11 @@ static func on(w, domain: String) -> bool:
 	return bool((w.judgment.cfg.decision.get("integration", {}) as Dictionary).get(domain, false))
 
 
+static var test_enabled := false     # tests only: switch judgment on without editing judgment.json
+
+
 static func enabled() -> bool:
-	return bool(JudgmentStore.default_cfg().get("enabled", false))
+	return test_enabled or bool(JudgmentStore.default_cfg().get("enabled", false))
 
 
 ## Attach a judgment store to `w` (reading kinship and friendship from the live world). Returns it.

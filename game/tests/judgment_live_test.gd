@@ -182,8 +182,10 @@ func test_save() -> void:
 	j.meet(victim.id, people[5].id)
 	var d := w.to_dict()
 	check(d.has("judgment") and int(d.save_version) == World.SAVE_VERSION, "with judgment attached the save carries a judgment section; SAVE_VERSION unchanged (%d)" % World.SAVE_VERSION)
+	JudgmentLive.test_enabled = true       # D1: a saved section no longer switches judgment on by itself
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	JudgmentLive.test_enabled = false
 	check(w2.judgment != null and JSON.stringify(w2.judgment.to_dict()) == JSON.stringify(j.to_dict()), "the judgment section saves and loads unchanged")
 	check(w2.judgment.bad(victim.id, ME) == 1000 and str(w2.judgment.belief(people[5].id, 1).src) == "told", "...the victim's judgment and the told villager's provenance survive")
 	d.erase("judgment")
@@ -193,7 +195,9 @@ func test_save() -> void:
 	var bad := w.to_dict()
 	bad.judgment = {"format": "mml-judgment/1", "version": 42}
 	var w4 := World.new()
+	JudgmentLive.test_enabled = true
 	w4.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(bad)))
+	JudgmentLive.test_enabled = false
 	check(w4.judgment != null and int(w4.to_dict().judgment.version) == 42, "a section from a newer game is kept and written back, not dropped")
 	for x in [w, w2, w3, w4]:
 		x.dispose()
@@ -813,7 +817,9 @@ func test_bonds_live() -> void:
 	check(is_equal_approx(float(t2.regard), float(Relations.cfg().shared.work_regard)), "a pair with no history gains exactly as before")
 	check(w.to_dict().has("judgment") and (w.to_dict().judgment as Dictionary).has("bonds"), "the history is saved with the judgment section")
 	var w3 := new_world()
+	JudgmentLive.test_enabled = true
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	JudgmentLive.test_enabled = false
 	check(w3.judgment != null and w3.judgment.bonds.familiar(a.id, b.id), "...and loads with the world")
 	w.dispose()
 	w2.dispose()
