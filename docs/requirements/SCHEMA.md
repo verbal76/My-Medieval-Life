@@ -18,7 +18,7 @@ Owner directives: 2026-10-19 (requirements preservation) and 2026-10-23 (master 
 - **Generated, never edited:**
   - `docs/DEVELOPMENT_LEDGER.md` (every record);
   - `docs/requirements/views/STATUS.md` (scorecard for Builds 18–21);
-  - `BUILD_18.md` to `BUILD_21.md`;
+  - `BUILD_18.md` to `BUILD_24.md`;
   - `DECISIONS.md` (open owner decisions);
   - `BACKLOG.md` (Build 20+ and unassigned);
   - `QUEUES.md` (workers, untested work, owner playtest queue);

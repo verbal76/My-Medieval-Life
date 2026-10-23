@@ -45,6 +45,26 @@
    "integration_branch": "",
    "released": "",
    "authority": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md): phase 1 only: P21-00 audit, P21-01 isolated civic foundations (records only, all political behaviour disabled), P21-02 decision mapping on wip/expansion21-preparation; no politics active, no merge to staging or main, no builds"
+  },
+  "22": {
+   "name": "Settlement Advancement Phase 2",
+   "implementation_authorized": true,
+   "integration_branch": "",
+   "released": "",
+   "authority": "owner 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): read-only audit and architecture only; no implementation until the owner reviews the audit and approves the architecture; builds on Build 18's settlement systems, never duplicating them"
+  },
+  "23": {
+   "name": "Bandit Factions and Criminal Careers",
+   "implementation_authorized": true,
+   "integration_branch": "",
+   "released": "",
+   "authority": "owner 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): BAN-A audit and requirements reconciliation only; no criminal actions or faction behaviour"
+  },
+  "24": {
+   "name": "Generational Legacy",
+   "implementation_authorized": false,
+   "released": "",
+   "authority": "OD-30 renumbered 2026-10-23: numbering only"
   }
  },
  "requirements": [
@@ -13761,6 +13781,134 @@
      "why": "docs/directives/2026-10-23_expansion20_phase1_authorization.md"
     }
    ]
+  },
+  {
+   "id": "E22-OD-01",
+   "kind": "approved",
+   "title": "Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history",
+   "description": "Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": "E22-OD-01: Hybrid regional simulation with detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state, and history.",
+   "approval": "owner directive 2026-10-23 (design approval only; no implementation)",
+   "acceptance": [
+    "Design approval only: implementation awaits the owner's architecture approval"
+   ],
+   "target_build": "22",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
+  },
+  {
+   "id": "E22-OD-02",
+   "kind": "approved",
+   "title": "Continuous geography: streamed regions, persistent world coordinates, persistent player and NPC modifications",
+   "description": "Continuous geography: streamed regions, persistent world coordinates, persistent player and NPC modifications",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": "E22-OD-02: Continuous geography with streamed regions, persistent world coordinates, and persistent player/NPC modifications.",
+   "approval": "owner directive 2026-10-23 (design approval only; no implementation)",
+   "acceptance": [
+    "Design approval only: implementation awaits the owner's architecture approval"
+   ],
+   "target_build": "22",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
+  },
+  {
+   "id": "E22-P1",
+   "kind": "approved",
+   "title": "Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation",
+   "description": "Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": "Continue the read-only audit against the actual Build 18 implementation ... Do not begin implementation until we review the audit and approve the architecture.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Every specification section classed complete, partial or missing with code references",
+    "Shows how the five settlements, regional trade, migration and worker experience extend to the continuous world (E22-OD-01, E22-OD-02)",
+    "No code; nothing from Build 18 rebuilt or duplicated"
+   ],
+   "target_build": "22",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
+     "why": "lead audits (read-only research agent)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "staging/my-medieval-life"
+  },
+  {
+   "id": "E23-BANA",
+   "kind": "approved",
+   "title": "Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour",
+   "description": "Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour",
+   "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
+   "owner_wording": "Begin the architecture audit and requirements reconciliation only.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "What exists mapped against Rule 016 and BAN-B..E; criminal reputation, social judgment and legal status kept distinct"
+   ],
+   "target_build": "23",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
+     "why": "lead audits (read-only research agent)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "staging/my-medieval-life"
   },
   {
    "id": "EARTH-01",
@@ -28000,9 +28148,14 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner authorized Expansion 21 phase 1 (builds map); docs/directives/2026-10-23_expansion21_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "owner_answer",
+     "why": "owner renumbered 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): Expansion 22 is Settlement Advancement Phase 2 building on Build 18's settlement systems (the Settlement Advancement specification was first developed as Expansion 18 and released in Build 18), 23 Bandit Factions and Criminal Careers, 24 Generational Legacy; 20 and 21 unchanged"
     }
    ],
-   "owner_answer": "Approved as the official long-term planning sequence (organization and sequencing only; unresolved design decisions, implementation and release dates not approved)",
+   "owner_answer": "2026-10-21: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy. Renumbered by the owner 2026-10-23: 20 Living Economy, 21 Politics, 22 Settlement Advancement Phase 2, 23 Bandit Factions and Criminal Careers, 24 Legacy; Exploration unnumbered; Multiplayer a separate track",
    "target_build": "owner decision",
    "roadmap_gate": "Owner designation",
    "roadmap_reason": "Roadmap numbering",

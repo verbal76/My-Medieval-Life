@@ -152,7 +152,7 @@ class ValidationTest(unittest.TestCase):
     def test_unauthorized_builds_cannot_hold_work(self):
         new = copy.deepcopy(REGISTER)
         r = _open_approved(new)
-        r["target_build"], r["implementation_status"] = "20", "INTEGRATED"
+        r["target_build"], r["implementation_status"] = "24", "INTEGRATED"   # Build 24 (Legacy) is not authorized (OD-30, 2026-10-23)
         r["commits"] = ["abc"]
         self.assertTrue(any("not authorized" in e for e in _errs(new)))
 
@@ -214,9 +214,12 @@ class ReportTest(unittest.TestCase):
                 self.assertFalse(r.get("umbrella"))
                 self.assertIn(r["approval_status"], ("OWNER APPROVED", "OWNER DECISION REQUIRED"))
 
-    def test_builds_20_and_21_are_marked_not_authorized(self):
-        for b in ("20", "21"):
-            self.assertIn("NOT AUTHORIZED", rr.build_view(REGISTER, b))
+    def test_unauthorized_builds_are_marked_not_authorized(self):
+        # Builds 20 to 23 were authorized for phase 1 by the owner on 2026-10-23; Build 24 (Legacy) is not.
+        for b, info in REGISTER["builds"].items():
+            if not info.get("implementation_authorized"):
+                self.assertIn("NOT AUTHORIZED", rr.build_view(REGISTER, b))
+        self.assertFalse(REGISTER["builds"]["24"]["implementation_authorized"])
 
 
 if __name__ == "__main__":

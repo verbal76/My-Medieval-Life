@@ -25,7 +25,7 @@ OUT_MD = REPO / "docs/requirements/AUDIT_2026-10-23.md"
 OUT_JSON = REPO / "docs/requirements/audit_2026-10-23.json"
 CODE_REFS = ["origin/wip/build18", "origin/wip/build17", "origin/wip/expansion18-preparation", "origin/wip/expansion19-preparation",
              "origin/wip/multiplayer", "origin/staging/my-medieval-life"]
-BUILDS = ["18", "19", "20", "21"]
+BUILDS = ["18", "19", "20", "21", "22", "23", "24"]
 
 # The agent's assessment of each open decision (not a decision): is it owner-level, can work continue without it.
 ASSESS = {

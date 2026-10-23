@@ -20,7 +20,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import check_requirements as cr  # noqa: E402
 
 VIEWS = REPO / "docs" / "requirements" / "views"
-BUILDS = ["18", "19", "20", "21"]
+BUILDS = ["18", "19", "20", "21", "22", "23", "24"]
 HEAD = ("Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. "
         "Do not edit: change the register (`tools/requirements_update.py`) and regenerate.")
 OPEN_DISP = ("OPEN", "REOPENED", "PROVISIONAL")
