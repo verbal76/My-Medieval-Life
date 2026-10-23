@@ -185,61 +185,73 @@ func _home_meal(n: NPC) -> Array:
 
 # ---------------------------------------------------------------- deciding -------------------
 func decide(n: NPC) -> void:
+	var rec = w.recorder
+	if rec == null:
+		_decide(n)
+		return
+	var pre: Dictionary = rec.decide_begin(n)          # REC-19: a read-only record of the decision (never changes the choice)
+	rec.decide_end(pre, n, _decide(n))
+
+
+## The priority chain: the first branch that makes a plan wins. Returns the winning branch's id (game/data/recorder_codes.json
+## "decision_chain" lists them in this order); the return value is read only by the flight recorder.
+func _decide(n: NPC) -> String:
 	var h := w.hour()
 	if n.anim == "sleep" or n.anim == "sit":
 		n.anim = "idle"                    # up from bed, or from the chair (PL1-07)
 	if n.role == "bandit":
 		_bandit(n, h)
-		return
+		return "bandit"
 	if n.clan == "bandit":
 		_clan_child(n, h)
-		return
+		return "clan_child"
 	if not n.report.is_empty() and _report(n):
-		return
+		return "report"
 	if n.hunger < float(GameData.b("eat_below")) and _plan_eat(n):
-		return
+		return "eat"
 	if (h >= WAKE and h < SLEEP) and _plan_rest_hurt(n):
-		return
+		return "rest_hurt"
 	if n.job == "guard":
 		_guard(n, h)
-		return
+		return "guard"
 	if h >= SLEEP or h < WAKE:
 		_plan_sleep(n)
-		return
+		return "sleep"
 	if w.feast.plan_attend(n):                 # DVW-B3-FEAST: an invited guest goes to the tavern in the evening
-		return
+		return "feast"
 	if n.role == "child":
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.6 else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
 		n.doing = "playing"
 		n.plan = [go(wander_cell(spot, 6), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
-		return
+		return "child_play"
 	if n.role == "elder":
 		if w.farm_plots.plan_work(n):          # FARM-04: an elder's light work on the family's farmland, by day
-			return
+			return "elder_farm"
 		if w.chapel.plan_volunteer(n):         # DVW-B3-CHAPEL: or on the church's plot, when they volunteered
-			return
+			return "elder_chapel"
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
 		n.doing = "taking the air"
 		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
-		return
+		return "elder_air"
 	# hired to carry building materials (or carrying for their own new house): the day's work
 	if h >= WORK_START and h < WORK_END and w.construction.plan_helper(n):
-		return
+		return "construction_helper"
 	# minding the player's stall or shop (PL1-10 stage 4)
 	if h >= WORK_START and h < WORK_END and w.business.plan_attendant(n):
-		return
+		return "stall_attendant"
 	# a job taken for the manor is carried on to the end (ManorWork)
 	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
-		return
+		return "manor_work"
 	# a contract it accepted is worked on and delivered (CON-01, Contracts.plan)
 	if h >= WORK_START and h < WORK_END and w.contracts.plan(n):
-		return
+		return "contract"
 	if h >= WORK_START and h < WORK_END and n.job != "":
 		if h < 12.0 and _day_labour(n):
-			return
+			return "day_labour"
 		if _plan_job(n):
-			return
+			return "job"
 	_plan_evening(n, h)
+	return "evening"
 
 
 func _plan_sleep(n: NPC) -> void:

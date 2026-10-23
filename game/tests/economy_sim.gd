@@ -10,6 +10,7 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
+##       [--record DIR]   (REC-19: the flight recorder writes its archive under DIR; changes nothing in the run)
 ##       [--judgment]   (PROS-19 prospective: attach the judgment prototype, off by default; prints its counts at the end)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
 ##       analysis only: tests/capability_metrics.gd)
@@ -81,6 +82,9 @@ func _init() -> void:
 	if "--judgment" in args:              # PROSPECTIVE (PROS-19): a run with the judgment prototype attached
 		JudgmentLive.attach(w)
 		print("judgment: attached (prototype)")
+	if "--record" in args:                # REC-19: the flight recorder writes its archive under DIR (off by default; the run is otherwise identical)
+		WorldRecorder.attach(w, {"root": str(arg.call("--record", ""))})
+		print("recorder: recording to ", w.recorder.dir)
 	w.event.connect(_on_event)
 	w.brain.track_misses = true
 	w.trade_hook = _on_trade
@@ -166,7 +170,10 @@ func _init() -> void:
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty()
+	var rec = w.recorder
 	w.dispose()
+	if rec != null:
+		print("recorder: %s; rows %s; chunks %d; %d bytes; peak buffer %d; early flushes %d" % [rec.completeness(), JSON.stringify(rec.counts), rec.chunks, rec.bytes, rec.peak_buffer, rec.early_flushes])
 	quit(0 if ok else 1)
 
 

@@ -111,6 +111,7 @@ var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the le
 var mine_works: MineWorks     # MIN-F: tunnels cut, timber supports, track (scripts/core/mine_works.gd; saved in "mine_works")
 var judgment_foreign := {}    # a saved "judgment" section while judgment is off: kept untouched, written back unchanged (never parsed, never switches judgment on)
 var judgment = null           # PROSPECTIVE (Expansion 19, PROS-19): a JudgmentStore, or null (off; JudgmentLive)
+var recorder = null           # REC-19: the flight recorder (WorldRecorder), or null (off: the default; recorder.json "enabled")
 
 
 func _init() -> void:
@@ -132,6 +133,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	contracts = Contracts.new(self)
 	if JudgmentLive.enabled():
 		JudgmentLive.attach(self)      # PROSPECTIVE (PROS-19): off unless judgment.json enables it
+	if FlightRecorder.enabled():
+		WorldRecorder.attach(self)     # REC-19: off unless recorder.json enables it (or a test/harness does)
 	credit = Credit.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
@@ -372,6 +375,8 @@ func famine() -> bool:
 
 
 func _on_hour(h: int) -> void:
+	if recorder != null:
+		recorder.hour()                # REC-19: write the buffer, audit the coins, take the hourly samples
 	if regions != null:
 		var tr := Time.get_ticks_usec() if profiling else 0
 		regions.step_hour(day(), h)   # SET-C-SIM: the settlements take their day's step one after another through the morning
@@ -526,6 +531,8 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 					n.doing = "waiting for the %s" % str(stations[st_id].type)
 					if float(s.waited) >= float(GameData.b("station_wait_minutes")):
 						brain.release_station(n, st_id)
+						if recorder != null:
+							recorder.interruption(n, "station_giveup", "abandoned", "station_wait_exceeded", st_id)     # REC-19
 						n.plan.clear()
 						stat("station_gave_way")
 					return
@@ -536,20 +543,30 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 				n.work_left -= gm
 				if n.work_left <= 0.0:
 					n.plan.pop_front()
-					if s.has("act") and not brain.act(n, s.act, s.get("args", {})):
+					if s.has("act") and not _act_step(n, s):
 						n.plan.clear()
 					if not n.plan.is_empty() and n.plan[0].k == "work":
 						n.work_left = float(n.plan[0].min)
 				return
 			"do":
 				n.plan.pop_front()
-				if not brain.act(n, s.act, s.get("args", {})):
+				if not _act_step(n, s):
 					n.plan.clear()
 					return
 				if not n.plan.is_empty() and n.plan[0].k == "work":
 					n.work_left = float(n.plan[0].min)
 			_:
 				n.plan.pop_front()
+
+
+## Run one plan step's action (REC-19: as one recorded action event when the recorder is on; the action itself is unchanged).
+func _act_step(n: NPC, s: Dictionary) -> bool:
+	if recorder == null:
+		return brain.act(n, s.act, s.get("args", {}))
+	var ev: int = recorder.act_begin(n, s)
+	var ok: bool = brain.act(n, s.act, s.get("args", {}))
+	recorder.act_end(ev, n, ok)
+	return ok
 
 
 ## Move along a path to s.to; returns true on arrival.
@@ -561,6 +578,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	if n.depth != int(s.get("level", 0)):
 		leg = underground.next_leg(n.depth, int(s.get("level", 0))) if underground != null else {}
 		if leg.is_empty():
+			if recorder != null:
+				recorder.interruption(n, "walk_lost", "interrupted", "no_level_route")     # REC-19
 			n.plan.clear()
 			n.doing = "lost"
 			return false
@@ -570,6 +589,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 		n.path = map.find_path(n.cell(), to) if n.depth == 0 else underground.find_path(n.depth, n.cell(), to)
 		n.path_i = 0
 		if n.path.is_empty() and n.cell() != to:
+			if recorder != null:
+				recorder.interruption(n, "walk_lost", "interrupted", "no_path")     # REC-19
 			n.plan.clear()
 			n.doing = "lost"
 			return false
@@ -736,10 +757,11 @@ var trade_hook := Callable()
 ## `total_price` (optional) is the whole bill when the units are priced one by one (player_buy_many).
 func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1) -> bool:
 	var total := qty * price_each if total_price < 0 else total_price
-	if qty <= 0 or price_each < 0 or buyer == seller:
+	if qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
+		if recorder != null:
+			recorder.trade_refused(buyer, seller, id, qty, price_each, total)     # REC-19: a refused sale is an event too
 		return false
-	if int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
-		return false
+	var rec_trade: Array = recorder.trade_begin(buyer, seller, id, qty, total) if recorder != null else []     # REC-19
 	seller.inv.remove(id, qty)
 	buyer.inv.add(id, qty)
 	buyer.coins -= total
@@ -748,6 +770,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		buyer.spent += total
 	if seller is NPC:
 		seller.earned += total
+	if recorder != null:
+		recorder.trade_end(rec_trade, buyer, seller, id)
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
 	if relations:                      # X18 HOOK (X18-Q12-POST): the pair become commercial contacts (a record only)
@@ -768,9 +792,14 @@ func note_settlement_trade(actor: Object, settlement: Object) -> void:
 ## Move items between two inventories without money (gifts, deposits, pantry).
 func transfer(from: Inventory, to: Inventory, id: String, qty: int) -> bool:
 	if not from.has(id, qty) or not to.can_add(id):
+		if recorder != null:
+			recorder.transfer_refused(from, to, id, qty)     # REC-19
 		return false
+	var rec_move: Array = recorder.transfer_begin(from, to, id, qty) if recorder != null else []     # REC-19
 	from.remove(id, qty)
 	to.add(id, qty)
+	if recorder != null:
+		recorder.transfer_end(rec_move, from, to, id)
 	return true
 
 
@@ -4133,6 +4162,9 @@ func _station_owners() -> void:
 
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
+	if recorder != null:
+		recorder.finish()              # REC-19: write what is buffered and close the session
+		recorder = null
 	brain = null
 	fauna = null
 	construction = null
