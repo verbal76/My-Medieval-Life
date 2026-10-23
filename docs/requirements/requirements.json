@@ -22153,7 +22153,7 @@
    "description": "One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history",
    "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
    "owner_wording": "Design and implement one authoritative identity mechanism ... Do not create replacement people ... Do not reuse historical identities.",
-   "approval": "owner directive 2026-10-23",
+   "approval": "owner 2026-10-23 (docs/directives/2026-10-23_identity_foundation_approval.md)",
    "acceptance": [
     "Design and save-migration plan approved by the owner before the schema change",
     "Tests: migration, inheritance, persistence, historical continuity"
@@ -22163,7 +22163,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22182,10 +22182,20 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
      "why": "design and save-migration plan written for approval (docs/design/IDENTITY_AND_RECONCILIATION_PROPOSAL.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "approval",
+     "why": "owner approved the design, save version 20 and a dedicated foundation branch, with clarifications (docs/directives/2026-10-23_identity_foundation_approval.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: lead -> identity worker (Sonnet subagent); branch: staging/my-medieval-life -> wip/foundation-identity",
+     "why": "assigned: identity foundation on wip/foundation-identity (from Build 18 239bdff)"
     }
    ],
-   "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life",
+   "assigned_worker": "identity worker (Sonnet subagent)",
+   "branch": "wip/foundation-identity",
    "next_action": "owner approves the design, the foundation branch and save version 20, and answers ID-D1"
   },
   {
@@ -22195,8 +22205,8 @@
    "description": "Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager?",
    "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Keep Build 18's family-reputation continuity as the compatibility baseline, but the heir keeps their own permanent identity; predecessor and heir stay separate people in historical, relationship, civic and economic records; family reputation may colour first impressions without erasing the heir's own reputation or implying identical opinions; no new inheritance reputation formula now",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "unassigned",
    "related": [],
@@ -22207,6 +22217,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-23_identity_foundation_approval.md)"
     }
    ]
   },
@@ -38170,7 +38185,7 @@
    "description": "Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off",
    "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
    "owner_wording": "There must be one authoritative calculation for each behavioral factor and one authoritative reservation mechanism for each inventory quantity.",
-   "approval": "owner directive 2026-10-23",
+   "approval": "owner 2026-10-23 (docs/directives/2026-10-23_identity_foundation_approval.md)",
    "acceptance": [
     "Audit and proposal first; no working system replaced merely for a newer alternative"
    ],
@@ -38179,7 +38194,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -38193,9 +38208,21 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "proposal written (same document, section 6)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "approval",
+     "why": "owner approved both reconciliations (docs/directives/2026-10-23_identity_foundation_approval.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> reconciliation worker (Sonnet subagent); branch: None -> wip/expansion19-preparation, wip/expansion20-preparation",
+     "why": "assigned: tolerance on wip/expansion19-preparation, reservations on wip/expansion20-preparation (the code to reconcile lives only there)"
     }
    ],
-   "next_action": "owner approves the two reconciliations"
+   "next_action": "owner approves the two reconciliations",
+   "assigned_worker": "reconciliation worker (Sonnet subagent)",
+   "branch": "wip/expansion19-preparation, wip/expansion20-preparation"
   },
   {
    "id": "REG-BUY-01",
