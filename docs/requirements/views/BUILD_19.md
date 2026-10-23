@@ -8,22 +8,23 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 24 |
-| Integrated | 0 of 24 (0%) |
-| Automated tests passed | 11 of 24 (46%) |
-| Integration verified | 0 of 24 (0%) |
-| Gameplay verified | 0 of 24 (0%) |
-| Owner playtested | 0 of 24 (0%) |
-| Complete | 0 of 24 (0%) |
-| Open (release blockers) | 24 |
-| Open owner decisions (blocking) | 11 (0) |
+| Approved requirements in scope | 25 |
+| Integrated | 0 of 25 (0%) |
+| Automated tests passed | 11 of 25 (44%) |
+| Integration verified | 0 of 25 (0%) |
+| Gameplay verified | 0 of 25 (0%) |
+| Owner playtested | 0 of 25 (0%) |
+| Complete | 0 of 25 (0%) |
+| Open (release blockers) | 25 |
+| Open owner decisions (blocking) | 14 (0) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | OWNER APPROVED | IN DEVELOPMENT | REC-F1 worker (Sonnet subagent) / wip/fix-recf1 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | merge the verified identity foundation; then D3 systems (life, employment, government, crime, player, save) and D4 records | design: UNKNOWN | UNKNOWN |
+| REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | 30 days on seeds 1 and 2 after FIX-RECF1 and recorder D3 land | design: UNKNOWN | UNKNOWN |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
@@ -57,10 +58,13 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Open owner decisions (11)
+## Open owner decisions (14)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
+| SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  |
+| SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  |
+| SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | OPEN | no |  |
 | X19-BOND-LIMITS | Do specific relationship or reputation effects need additional balancing limits? | OPEN | no |  |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | PROVISIONAL | no | SJD-G |
 | X19-EVENT-Q | Expansion 19 event feeds raised four questions: (1) should a guard killing an assailant count as a killing (today it does: the game cannot tell them apart)? (2) should first acquaintance be recorded as a meeting fact? (3) should a late repayment score as a fair deal? (4) self-defence cannot yet be told from an attack: add that distinction later? | OPEN | no |  |

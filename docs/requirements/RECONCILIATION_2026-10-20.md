@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 486 (248 of them still open) |
-| **Open entries now** (rules excluded) | | **425** |
+| Entries added since | | 490 (252 of them still open) |
+| **Open entries now** (rules excluded) | | **429** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (486)
+## Added since the baseline (490)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -432,6 +432,7 @@ None.
 | REC-D2 | Flight recorder storage cap: stop and mark the session incomplete, or rotate out the oldest days? | decision | APPROVED | 19 |
 | REC-D3 | Flight recorder per-tick quantities (hunger, movement, work minutes): hourly samples plus threshold events rather than per-frame records? | decision | APPROVED | 19 |
 | REC-D4 | Flight recorder money attribution: move the hottest coin-change sites to one transfer helper (touches Build 18 code paths, gate identical), or rely on balance reconciliation only? | decision | APPROVED | 19 |
+| REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
 | REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed. | proposal | NOT STARTED / NOT TESTED / OPEN | 19 |
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
@@ -473,6 +474,9 @@ None.
 | SIM-01 | Continuous long-run simulation testing: the longest run once per seed, monitored, with checkpoints | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | SIM-02 | Simulation monitoring: observe, never restart active runs without owner approval; check-ins from measured runtimes; prompt reporting | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | SIM-B17 | SIM-01 in Build 17: one monitored longest run per seed, checkpoints for shorter milestones, stop at the first broken ledger | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 17 |
+| SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | decision | OPEN | 19 |
+| SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | decision | OPEN | 19 |
+| SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | decision | OPEN | 19 |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (593)
+## Approved requirement (594)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -466,6 +466,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REC-016 | NPC self-improvement and prosperity (as a game system) |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | 19 | OWNER APPROVED | IN DEVELOPMENT | TARGETED TESTS PASSED | NOT READY | OPEN |
+| REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | 19 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -695,7 +696,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (208)
+## Owner decisions (211)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -857,6 +858,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REG-DEMO-D1 | Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome? | 18 | APPROVED |  |
 | REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | 18 | APPROVED |  |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | 15 | APPROVED |  |
+| SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | 19 | OPEN |  |
+| SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | 19 | OPEN |  |
+| SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | 19 | OPEN |  |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | 19 | APPROVED |  |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | 19 | APPROVED |  |
 | SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | 19 | APPROVED |  |

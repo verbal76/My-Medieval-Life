@@ -48,6 +48,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | RECON-01 | reconciliation worker (done) | `wip/expansion19-preparation` 4a0459f, `wip/expansion20-preparation` 1befd0e | - | one tolerance calculation; reservations recognise contract holds; gate identical |
 | REC-19 | recorder worker (Sonnet subagent) | `wip/recorder` | 94b1304 | merging the verified identity foundation (84d1880) with targeted tests, then D3 (life, employment, government, crime, player verbs, save/load); gate compared with the candidate baseline, real baseline untouched |
 | FIX-RECF1 | REC-F1 worker (Sonnet subagent) | `wip/fix-recf1` (worktree `.claude/worktrees/recf1`) | 4a0459f | owner-approved investigation and narrow fix of the unsold-goods re-decision loop (docs/directives/2026-10-23_recf1_storage_decisions.md) |
+| REC-DIAG | lead | recorder archives (scratchpad), read-only runs of `wip/recorder` | 94b1304 | simulation-first analysis (docs/directives/2026-10-23_simulation_first_diagnostics.md); findings in docs/design/SIM_FINDINGS.md |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
 Alignment report and capability matrices: `docs/design/EXPANSIONS_19_21_ALIGNMENT.md` (2026-10-23). No worker is running; every next step waits on the owner's answers.

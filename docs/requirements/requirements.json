@@ -38465,6 +38465,48 @@
    ]
   },
   {
+   "id": "REC-DIAG",
+   "kind": "approved",
+   "title": "Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner",
+   "description": "Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner",
+   "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
+   "owner_wording": "Begin using the flight recorder for autonomous simulation analysis now.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Findings report per run: systems, evidence, cause, defect or emergent, recommendation",
+    "Short runs first; longer only when results justify it"
+   ],
+   "target_build": "19",
+   "parent": "REC-19",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/recorder (read-only runs)",
+     "why": "lead analyses the existing 10-day archive first"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "run 1 analysed (10 days, seed 1): eight findings with evidence in docs/design/SIM_FINDINGS.md; three need the owner (SIM-F2..F4)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/recorder (read-only runs)",
+   "next_action": "30 days on seeds 1 and 2 after FIX-RECF1 and recorder D3 land"
+  },
+  {
    "id": "REC-F1",
    "kind": "proposal",
    "title": "Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed.",
@@ -42026,6 +42068,72 @@
    "verification_status": "INTEGRATION VERIFIED",
    "release_status": "RELEASED",
    "completion": "COMPLETE"
+  },
+  {
+   "id": "SIM-F2",
+   "kind": "decision",
+   "title": "Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix?",
+   "description": "Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix?",
+   "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    }
+   ]
+  },
+  {
+   "id": "SIM-F3",
+   "kind": "decision",
+   "title": "Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)?",
+   "description": "Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)?",
+   "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    }
+   ]
+  },
+  {
+   "id": "SIM-F4",
+   "kind": "decision",
+   "title": "Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases?",
+   "description": "Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases?",
+   "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    }
+   ]
   },
   {
    "id": "SJD-A",
