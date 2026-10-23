@@ -133,7 +133,7 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 | SJD-Q12 which events count | Affects them, kin or property, plus witnessed crimes and kindnesses; trivia ignored | already matches: the catalog holds only significant deeds; observers are the affected (victim, property owner, beneficiary), witnesses, and those told (kin and friends by the tie rules); fair trade and meetings carry no moral score; `min_value` is a per-type threshold (0 now, so any theft counts) |
 | SJD-Q13 weights | Born with + shaped by life | not yet wired (profiles are data, no learning) |
 | X19-ASSAULT | Permanent | **changed**: `events.assault.permanent` true: memories never fade for anyone, judgments never decay (`test_x19_assault_permanent`) |
-| X19-GUARD | Reduce, never waive | APPLIED in live code (`World.guard_confront`): a friend guard halves the fine, a friend nearby halves it again, always at least 1 coin (agent proposal for the amount, `docs/DECISIONS.md`); outside the judgment (section 10.3) |
+| X19-GUARD | Reduce, never waive | APPLIED in `World.guard_confront` ONLY when the judgment store is attached (judgment off: Build 18 behaviour exactly, friend guard waives with a warning, nearby friend halves): a friend guard halves the fine, a friend nearby halves it again, always at least 1 coin (agent proposal for the amount, `docs/DECISIONS.md`) |
 | X19-REGARD | Separate them: liking and trust tracked apart | **changed**: a separate trust value in the store (section 15b); regard stays liking and gossip closeness (`test_x19_regard`) |
 | X19-HARMED | Keep instant | already matches: `Relations.harmed` unchanged |
 | X19-CRT12 | Keep fixed cut-offs | already matches: `Relations.refusal` and `marry_regard` unchanged |
@@ -442,7 +442,7 @@ cannot tell); whether first acquaintance should be a `meeting` fact; whether lat
      still weigh heavily);
    - (c) keep the killer rule as an absolute refusal (owner's earlier rule) and weigh the rest.
    Recommendation: (c).
-3. **CRT-06 friendly guard vs Q08 (ANSWERED 2026-10-23: X19-GUARD "Reduce, never waive"; APPLIED in `World.guard_confront`: a friend guard halves the fine, never waives it).** A guard who is the player's friend lets them off with a warning
+3. **CRT-06 friendly guard vs Q08 (ANSWERED 2026-10-23: X19-GUARD "Reduce, never waive"; APPLIED in `World.guard_confront` only while the judgment store is attached: a friend guard halves the fine, never waives it; with judgment off the Build 18 rule stands, post-audit repair D3).** A guard who is the player's friend lets them off with a warning
    (`World.guard_confront`), and a friend nearby halves the fine. Q08: "A guard can personally like someone while still
    enforcing the law." Options:
    - (a) keep CRT-06 as the owner's earlier, explicit rule;

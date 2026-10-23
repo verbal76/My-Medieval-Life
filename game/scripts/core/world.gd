@@ -2970,19 +2970,26 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 		if player.get(slot) != "" and not player.inv.has(player.get(slot)):
 			player.set(slot, "")
 	var fine := theft_fine_for(taken)
-	# friends back the player up (CRT-06; X19-GUARD, owner 2026-10-23 "reduce, never waive"): a guard who is a friend
-	# halves the fine, and a friend among those near who speaks up halves it again; a guard always fines, at least 1 coin
+	# friends back the player up (CRT-06). Judgment off (Build 18): a guard who is a friend lets them off with a warning and
+	# a friend among those near halves the fine. Judgment attached (X19-GUARD, owner 2026-10-23 "reduce, never waive"): a
+	# guard who is a friend halves the fine, a friend near halves it again, and a guard always fines, at least 1 coin
 	var spoke: NPC = null
 	var guard_friend := relations.player_friend(g)
+	var warned := guard_friend and judgment == null
 	for o: NPC in near(player.pos, float(GameData.b("witness_radius"))):
 		if o != g and o != owner and relations.player_friend(o):
 			spoke = o
 			break
-	if guard_friend:
-		fine = fine / 2
-	if spoke != null:
-		fine = fine / 2
-	fine = maxi(fine, 1)
+	if warned:
+		fine = 0
+		spoke = null
+	else:
+		if guard_friend:
+			fine = fine / 2
+		if spoke != null:
+			fine = fine / 2
+		if judgment != null:
+			fine = maxi(fine, 1)
 	var paid := mini(fine, player.coins)
 	player.coins -= paid
 	treasury += paid
@@ -2994,9 +3001,12 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 		text += " The %s goes back to %s." % [", ".join(returned), "its owner" if owner == null else owner.name]
 	if spoke != null:
 		text += " Your friend %s speaks up for you." % spoke.name
-	if guard_friend:
-		text += " \"Don't let me catch you at it again, friend.\" The fine is lowered for a friend, but a theft is still fined."
-	text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
+	if warned:
+		text += " \"Don't let me catch you at it again, friend.\" You are let off with a warning."
+	else:
+		if guard_friend:
+			text += " \"Don't let me catch you at it again, friend.\" The fine is lowered for a friend, but a theft is still fined."
+		text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
 	if paid < fine:
 		g.target = -2
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
