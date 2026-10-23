@@ -40278,9 +40278,7 @@
    "owner_wording": "we will need a volume slider in settings for music and sfx I will add those too",
    "approval": "owner, 2026-10-23",
    "acceptance": [
-    "the supplied ambience loops play where they fit (outdoors by day, caves and the mine, beside a fire), seamlessly looped, on the SFX bus",
-    "imported from private-assets/ with provenance; the source packs never committed; credited on the credits page",
-    "further sounds the owner supplies enter the same pipeline"
+    "the ambience loops play where they fit, seamlessly looped; the sound effects play for the player's own actions and nearby events the game already has (combat, coins, chests, equipping, doors, quests, level-ups, rest), rate-limited, on the SFX bus; imported from private-assets/ with provenance, the source packs never committed; credited; unwired effects recorded as opportunities"
    ],
    "target_build": "18",
    "parent": null,
@@ -40301,6 +40299,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> music worker (Sonnet subagent); branch: None -> wip/b18-music",
      "why": "assigned with MUSIC-18 (one audio player)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance",
+     "why": "owner supplied the 48 sound effects (cozy-rpg-sfx.zip); the worker wires those matching existing game events"
     }
    ],
    "assigned_worker": "music worker (Sonnet subagent)",

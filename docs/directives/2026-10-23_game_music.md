@@ -29,3 +29,7 @@ Kept in `private-assets/` (git-ignored); only the imported game files are commit
 
 Owner, 2026-10-23 (verbatim): "Wav for Linux and exe unless ogg has no quality loss". Ogg Vorbis is lossy, so Windows
 and Linux ship the original WAVs, as planned; Android carries Ogg.
+
+The owner then sent the full set (2026-10-23, "This is supposed to be the three files"): `cozy-rpg-sfx-ambience-1.zip`,
+`cozy-rpg-sfx-ambience-2.zip` (as before) and `cozy-rpg-sfx.zip` (48 sound effects: combat, magic, items, world,
+jingles; sha256 8a17adcd…), all kept in `private-assets/`.
