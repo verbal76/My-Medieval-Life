@@ -492,7 +492,7 @@ func player_feast(kind: String, size: int) -> Dictionary:
 	var reg := float(cfg().player_regard)
 	for g in s.order:
 		if g is NPC:
-			w.relations._raise(w.relations.tie(PLAYER, g.id), reg, 0.0)
+			w.relations._raise(w.relations.tie(PLAYER, g.id), reg, 0.0, true, Vector2i(PLAYER, g.id))
 	w.stat("feast_player")
 	if kind == "wedding":
 		var p := _player_wedding_plan()

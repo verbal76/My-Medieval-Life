@@ -45,6 +45,7 @@ var interests := {}     # villager id -> the id of the one they are courting (CR
 var trades := {}         # X18 (Expansion 18, X18-Q12-POST): "a:b" -> {n, last}: the pair traded n times, the last on day
                          # `last`. A commercial contact: a courier may deliver to a business one has traded with. Saved
                          # (absent in older saves: none). Nothing in the game reads it yet.
+const NO_PAIR := Vector2i(-99999, -99999)   # _raise without the pair's ids: no judgment bonus, no history (judgment off ignores `who`)
 var killings := 0       # villagers the player has slain (CRT-12: no one marries a killer lightly)
 
 
@@ -190,7 +191,7 @@ func give(giver: int, n: NPC, id: String) -> String:
 	(t.recent as Array).append(id)
 	while (t.recent as Array).size() > 3:
 		(t.recent as Array).pop_front()
-	_raise(t, float(e.regard), float(e.attraction))
+	_raise(t, float(e.regard), float(e.attraction), true, Vector2i(giver, n.id))
 	w.stat("gifts_given")
 	if w.judgment != null and first_today and float(e.regard) > 0.0:
 		JudgmentLive.on_gift(w, giver, n, id)                      # PROSPECTIVE (PROS-19)
@@ -209,15 +210,22 @@ func helped(helper: int, n: NPC, amount := -1.0) -> void:
 		return
 	var t := tie(helper, n.id)
 	t.last = w.day()
-	_raise(t, float(cfg().help_regard) if amount < 0.0 else amount, 0.0)
+	_raise(t, float(cfg().help_regard) if amount < 0.0 else amount, 0.0, true, Vector2i(helper, n.id))
 
 
 ## Add to a tie, within the day's limits (regard_daily_cap, attraction_daily_cap; losses are never capped).
+## `who` (the pair's ids, Vector2i) is given by every caller that knows it. Only with a judgment store attached (World.judgment,
+## off in the game): a regard gain is first scaled by the pair's bonds multiplier (X19-FOUND-BONDS/FAMREP: familiarity ~10%,
+## family reputation ~5%, both ~12%) and THEN meets the daily caps below, so no cap is raised; and the pair's history
+## (peak regard, former-friend flag) is told the change. With judgment off neither call is made and nothing differs.
 ## Any gain is contact: the first of a day counts a day known, unless `touch` is false (a few minutes
 ## nearby are not yet a day's acquaintance: _presence touches once close.known_minutes have passed).
-func _raise(t: Dictionary, regard: float, attraction: float, touch := true) -> void:
+func _raise(t: Dictionary, regard: float, attraction: float, touch := true, who := NO_PAIR) -> void:
 	var c := cfg()
 	var d: int = w.day()
+	var before := float(t.regard)
+	if regard > 0.0 and who != NO_PAIR and w.judgment != null:
+		regard = w.judgment.bonds.boost(who.x, who.y, regard)
 	if int(t.att_day) != d:
 		t.att_day = d
 		t.att_today = 0.0
@@ -230,8 +238,26 @@ func _raise(t: Dictionary, regard: float, attraction: float, touch := true) -> v
 		t.att_today = float(t.att_today) + attraction
 	t.regard = clampf(float(t.regard) + regard, 0.0, 100.0)
 	t.attraction = clampf(float(t.attraction) + attraction, 0.0, 100.0)
+	if who != NO_PAIR and w.judgment != null and float(t.regard) != before:
+		w.judgment.bonds.on_regard(who.x, who.y, before, float(t.regard))
 	if touch and (regard > 0.0 or attraction > 0.0):
 		_touch(t)
+
+
+## X19-FOUND-BONDS: a regard gain scaled by the pair's bonds multiplier, for callers that apply their own daily cap to it
+## first. With judgment off (World.judgment null) the gain is returned as it is.
+func _bonus(a: int, b: int, gain: float) -> float:
+	if w.judgment == null or gain <= 0.0:
+		return gain
+	return w.judgment.bonds.boost(a, b, gain)
+
+
+## _raise for a gain already scaled by _bonus (so not scaled again), then tells the pair's history what happened.
+func _raise_noted(t: Dictionary, regard: float, attraction: float, a: int, b: int, touch := true) -> void:
+	var before := float(t.regard)
+	_raise(t, regard, attraction, touch)
+	if w.judgment != null and float(t.regard) != before:
+		w.judgment.bonds.on_regard(a, b, before, float(t.regard))
 
 
 ## Real contact today: the first counts one more day known.
@@ -250,7 +276,7 @@ func harmed(n: NPC, amount: float, spread := true) -> void:
 	if n == null or n.role == "bandit":
 		return
 	if n.alive:
-		_raise(tie(Life.PLAYER_ID, n.id), -amount, -amount * 0.5, false)
+		_raise(tie(Life.PLAYER_ID, n.id), -amount, -amount * 0.5, false, Vector2i(Life.PLAYER_ID, n.id))
 	if not spread:
 		return
 	var c := cfg()
@@ -263,7 +289,7 @@ func harmed(n: NPC, amount: float, spread := true) -> void:
 		elif friends(o.id, n.id):
 			share = float(c.friend_harm_share)
 		if share > 0.0:
-			_raise(tie(Life.PLAYER_ID, o.id), -amount * share, -amount * share * 0.5, false)
+			_raise(tie(Life.PLAYER_ID, o.id), -amount * share, -amount * share * 0.5, false, Vector2i(Life.PLAYER_ID, o.id))
 
 
 ## The player slew a villager (World.kill): their family and friends turn hard against the player
@@ -337,7 +363,7 @@ func defended(at: Vector2) -> void:
 		if int(t.defend_day) == w.day():
 			continue
 		t.defend_day = w.day()
-		_raise(t, float(cfg().defend_regard), float(cfg().defend_regard) * 0.3 if can_court(Life.PLAYER_ID, n.id) else 0.0)
+		_raise(t, float(cfg().defend_regard), float(cfg().defend_regard) * 0.3 if can_court(Life.PLAYER_ID, n.id) else 0.0, true, Vector2i(Life.PLAYER_ID, n.id))
 	if w.judgment != null:
 		JudgmentLive.on_defence(w, at)                             # PROSPECTIVE (PROS-19)
 
@@ -383,11 +409,11 @@ func _presence(n: NPC, mins: float, weight := 1.0) -> void:
 		t.near_reg = 0.0
 	var before := float(t.near_min)
 	t.near_min = before + mins
-	var full := float(cl.regard_per_hour) * mins * weight / 60.0
+	var full := _bonus(Life.PLAYER_ID, n.id, float(cl.regard_per_hour) * mins * weight / 60.0)    # X19-FOUND-BONDS: before close.daily_regard
 	var reg := minf(full, maxf(0.0, float(cl.daily_regard) - float(t.near_reg)))
 	t.near_reg = float(t.near_reg) + reg
 	var att := float(cl.attraction_per_hour) * mins * weight / 60.0 * chemistry(Life.PLAYER_ID, n.id) if can_court(Life.PLAYER_ID, n.id) else 0.0
-	_raise(t, reg, att, false)
+	_raise_noted(t, reg, att, Life.PLAYER_ID, n.id, false)
 	if before < float(cl.known_minutes) and float(t.near_min) >= float(cl.known_minutes):
 		_touch(t)
 
@@ -550,7 +576,8 @@ func share(a: int, b: int, kind: String) -> void:
 		t.shared_day = d
 		t.shared_today = 0.0
 		t.talks_today = 0
-	var reg := minf(float(sh.get(kind + "_regard", 0.0)), maxf(0.0, float(sh.daily_cap) - float(t.shared_today)))
+	var want := _bonus(a, b, float(sh.get(kind + "_regard", 0.0)))     # X19-FOUND-BONDS: scaled before shared.daily_cap, so the cap stands
+	var reg := minf(want, maxf(0.0, float(sh.daily_cap) - float(t.shared_today)))
 	t.shared_today = float(t.shared_today) + reg
 	t.last = d
 	var att := float(sh.get(kind + "_attraction", 0.0)) * chemistry(a, b) if can_court(a, b) else 0.0
@@ -558,7 +585,7 @@ func share(a: int, b: int, kind: String) -> void:
 		att *= float(sh.courting_factor)              # time together while courting counts for more
 	if reg <= 0.0 and att <= 0.0:
 		return
-	_raise(t, reg, att)
+	_raise_noted(t, reg, att, a, b)
 	_befriend_if_close(a, b, t)
 
 
@@ -582,7 +609,7 @@ func talked(n: NPC) -> void:
 	var k := int(t.get("talks_today", 0))
 	var reg := float(sh.talk_first) if k == 0 else float(sh.talk_more) * pow(float(sh.talk_decay), k - 1)
 	t.talks_today = k + 1
-	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(Life.PLAYER_ID, n.id) else 0.0)
+	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(Life.PLAYER_ID, n.id) else 0.0, true, Vector2i(Life.PLAYER_ID, n.id))
 
 
 # ---------------------------------------------------------------- every dawn -----------------
@@ -593,7 +620,8 @@ func dawn() -> void:
 	for k in ties.keys():
 		var t: Dictionary = ties[k]
 		if int(t.last) < d - 1:
-			_raise(t, -float(c.decay_per_day) * 0.5, -float(c.decay_per_day))
+			var ids: PackedStringArray = str(k).split(":") if w.judgment != null else PackedStringArray()
+			_raise(t, -float(c.decay_per_day) * 0.5, -float(c.decay_per_day), true, Vector2i(int(ids[0]), int(ids[1])) if w.judgment != null else NO_PAIR)
 	_villagers_court()
 
 

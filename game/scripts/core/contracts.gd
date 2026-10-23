@@ -964,7 +964,7 @@ func _lapse(c: Dictionary) -> void:
 	var b := rel_id(c.seller)
 	if a != -1 and b != -1:
 		var t: Dictionary = w.relations.tie(a, b)
-		w.relations._raise(t, -float(cfg().default_regard), 0.0, false)
+		w.relations._raise(t, -float(cfg().default_regard), 0.0, false, Vector2i(a, b))
 	var buyer := _npc_of(c.buyer)
 	if buyer:
 		buyer.remember("let down by %s over %s" % [w.ref_name(c.seller), describe(c) if is_service(c) else GameData.item_name(c.item).to_lower()])
