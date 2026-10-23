@@ -49618,9 +49618,14 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "design specification and audit drafted (docs/design/EXPANSION25_WEATHER_DESIGN.md); seven questions for the owner (E25-OD-01..07)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner answered E25-OD-01, 02, 04, 05 as recommended"
     }
    ],
-   "next_action": "owner reviews the design and answers E25-OD-01..07; no code before approval"
+   "next_action": "owner: E25-OD-03, 06, 07 and approval of the design; no code before approval"
   },
   {
    "id": "WIKI-01",

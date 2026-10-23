@@ -42,3 +42,15 @@ Fires should be able to spread through towns if they come from a forest fire. Th
   wild animals move to new grounds for a while; farm animals may break out of pens.
 - Player: **"Same as everyone (Recommended)"**: the player can be burned, injured, chilled or swept away (washing up
   downstream and walking back) and can die; the heir continues.
+
+## Owner answers, third round (same day, on docs/design/EXPANSION25_WEATHER_DESIGN.md section 4)
+
+- E25-OD-01 Rivers: **"River and creek (Recommended)"**: a river along one side of the village and a creek crossing it,
+  with a bridge on the road; made with the existing map tools; other settlements get their own streams; new worlds get
+  water, old saves keep their map.
+- E25-OD-02 Flood risk: **"A few on the banks (Recommended)"**: a few low houses and fields near the banks; a flood can
+  take some homes but not the whole village.
+- E25-OD-04 Rebuild: **"Their choice (Recommended)"**: where it stood by default; a household that lost its home to a
+  flood may move to a free plot away from the banks, remembering the flood.
+- E25-OD-05 Settlements: **"Yes, in their numbers (Recommended)"**: droughts and floods cut off-map harvests and can cost
+  people, changing regional trade and migration.
