@@ -9,20 +9,14 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 81 |
-| Integrated | 71 of 81 (88%) |
-| Automated tests passed | 69 of 81 (85%) |
-| Integration verified | 54 of 81 (67%) |
+| Integrated | 72 of 81 (89%) |
+| Automated tests passed | 70 of 81 (86%) |
+| Integration verified | 55 of 81 (68%) |
 | Gameplay verified | 0 of 81 (0%) |
 | Owner playtested | 0 of 81 (0%) |
-| Complete | 1 of 81 (1%) |
-| Open (release blockers) | 80 |
+| Complete | 2 of 81 (2%) |
+| Open (release blockers) | 79 |
 | Open owner decisions (blocking) | 6 (1) |
-
-## In development (worker assigned) (1)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
-| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | OWNER APPROVED | IN DEVELOPMENT | contract-verification worker (Sonnet subagent) / wip/b18-verconore | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (70)
 
@@ -118,11 +112,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED | The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md) | design: UNKNOWN | UNKNOWN |
 
-## Complete (1)
+## Complete (2)
 
 | ID | Requirement | Verification | Release |
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | INTEGRATION VERIFIED | NOT READY |
 
 ## Open owner decisions (6)
 

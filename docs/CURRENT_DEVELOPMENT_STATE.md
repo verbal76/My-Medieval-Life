@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `b2f5c5d` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
+| `wip/build18` | `5181dc7` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -36,9 +36,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 
 Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
-| Record | Worker | Branch | Started from | Notes |
-|---|---|---|---|---|
-| VER-CON-50ORE | contract-verification worker (Sonnet subagent) | `wip/b18-verconore` | `wip/build18` b2f5c5d | one focused 50-ore CON-01 contract through the live World; no new features |
+None in flight (VER-CON-50ORE reported and merged at 5181dc7). A read-only investigator is checking CHAPEL-R3/R4.
 
 ### Running processes (never restart or cancel; SIM-02)
 
@@ -58,7 +56,7 @@ On their reports:
 1. Implementation is complete except owner items (B18-DP-17 STONECUT-R1 blocks WDR-002-C; DP-18, DP-19 non-blocking).
    Pre-package verification done: REL18-DET, REL18-SAVE, REL18-SUITES, REL18-WIKI. Still to do: read the 365-day runs
    (REL18-LONGRUN, SET-C, the 100-day read), WDR-004-C scarcity audit and REG-EVAL-01 against the preserved baseline
-   (`docs/investigations/evidence_2026-10-23_regional/`) from those runs, VER-CON-50ORE, then the three-platform candidate
+   (`docs/investigations/evidence_2026-10-23_regional/`) from those runs, then the three-platform candidate
    export (REL18-EXPORT) for the owner's device playtest; no distributable published without the owner. SET-D's
    multi-generation check stays outstanding unless a run with a sufficient horizon is shown (B18-DP-05).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with

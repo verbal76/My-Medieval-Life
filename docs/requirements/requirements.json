@@ -8752,6 +8752,11 @@
      "date": "2026-10-23",
      "change": "schema v2: IMPLEMENTED — TESTING REQUIRED -> approval OWNER APPROVED; implementation INTEGRATED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "known_defects + a buyer without a home cannot receive contract deliveries; the contract lapses (found by VER-CON-50ORE, 5181dc7)",
+     "why": "VER-CON-50ORE found: deliveries are walked to the buyer's home, so a buyer with no home receives nothing and the contract lapses"
     }
    ],
    "target_build": "17",
@@ -8766,7 +8771,10 @@
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "known_defects": [
+    "a buyer without a home cannot receive contract deliveries; the contract lapses (found by VER-CON-50ORE, 5181dc7)"
+   ]
   },
   {
    "id": "CON-02",
@@ -44502,10 +44510,10 @@
    "title": "Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline)",
    "target_build": "18",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "source": "docs/directives/2026-10-23_dp15_dp16_con02_empperm.md",
    "approval": "Owner 2026-10-23 (docs/directives/2026-10-23_dp15_dp16_con02_empperm.md)",
    "owner_wording": "When contract verification next runs, include a focused real-world example of a 50-ore quantity contract using existing functionality. Verify actual production, inventory conservation, delivery, payment, and deadline behavior. Do not start a separate full regression campaign for this.",
@@ -44526,10 +44534,23 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> contract-verification worker (Sonnet subagent); branch: None -> wip/b18-verconore",
      "why": "focused 50-ore contract verification assigned (owner, CON-02 decision)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE; assigned_worker: contract-verification worker (Sonnet subagent) -> ; branch: wip/b18-verconore -> ; tests: None -> contract_50ore_test 18 checks, contracts_test 154, conservation_test 8, Python 115 OK; test_commit: None -> 5181dc7; commits + 5181dc7; integrated_in + Build 18 wip/build18 5181dc7",
+     "why": "focused 50-ore contract verified on the live World (5181dc7, fast-forwarded into wip/build18): accepted, fulfilled in 3 days in lots of 6-7, paid 8 a unit from the player's funds, coins and ore conserved; a second case shows the lapse at the deadline with delivered and paid units standing. Limitation found: deliveries go to the buyer's home, so a homeless buyer's contract lapses"
     }
    ],
-   "assigned_worker": "contract-verification worker (Sonnet subagent)",
-   "branch": "wip/b18-verconore"
+   "assigned_worker": "",
+   "branch": "",
+   "tests": "contract_50ore_test 18 checks, contracts_test 154, conservation_test 8, Python 115 OK",
+   "test_commit": "5181dc7",
+   "commits": [
+    "5181dc7"
+   ],
+   "integrated_in": [
+    "Build 18 wip/build18 5181dc7"
+   ]
   },
   {
    "id": "VIS-ANIMAL-01",

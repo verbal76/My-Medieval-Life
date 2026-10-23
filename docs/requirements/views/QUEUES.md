@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (5)
+## Workers and task branches (4)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -10,7 +10,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| VER-CON-50ORE | 18 | IN DEVELOPMENT | contract-verification worker (Sonnet subagent) | wip/b18-verconore |
 
 ## Implemented but not tested (42)
 
