@@ -64,3 +64,11 @@ Verbatim:
 > No public publication without my approval.
 >
 > Apply RCA-01 and MSW-01. Avoid additional agents, unnecessary full-suite reruns, or unrelated economic changes.
+
+## The owner's answers on the unspecified alms rules (requirement 8; 2026-10-23, verbatim choices)
+
+- Reserve: **"Owed + one week"**: keep any wages already owed plus one week's wages (the time until the next service
+  refills the fund), from the existing wages and weekly service only.
+- Alms rule: **"Fill up to their reserve"**: on the service day, after wages, adults and elders whose coins are below their
+  own necessity reserve (OD-19/PAR-02A) get coins up to that reserve, households with the largest shortfall first, until the
+  alms money runs out; anything left stays in the fund.
