@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (577)
+## Approved requirement (580)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -372,6 +372,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | 21 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | 21 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | 21 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
+| P21-MAYOR | Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities | 21 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -585,6 +586,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-FOUND-BONDS | Relationship history and reconciliation: resentment softens with growth, neutrality restores neither friendship nor trust, familiarity gives about 10% more friendship progression to former friends (non-stacking, suspended by negative standing), trust recovers only by reliability; serious grievances last at least about one game year | 19 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | 19 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | 19 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 
 ## Proposal awaiting an owner decision (not approved) (37)
 
@@ -678,7 +681,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (191)
+## Owner decisions (196)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -767,10 +770,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OD-29 | Owner decisions (2026-10-21): Build 17 starts now beside Build 16; separate underground maps tied to their surface locations, open pits on the surface; contract defaults provisional | 17 | APPROVED |  |
 | OD-30 | Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track | owner decision | APPROVED |  |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | owner decision | APPROVED |  |
-| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | 20 | OPEN | yes |
+| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | 20 | APPROVED | yes |
+| OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | 20 | OPEN |  |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | 20 | OPEN | yes |
 | OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | 20 | OPEN | yes |
-| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | 20 | OPEN | yes |
+| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | 20 | APPROVED | yes |
+| OD-LE-05B | Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05) | 20 | OPEN |  |
 | OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | 20 | OPEN | yes |
 | OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | 20 | OPEN | yes |
 | OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | 20 | OPEN | yes |
@@ -778,10 +783,13 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | 20 | OPEN | yes |
 | OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | 20 | OPEN | yes |
 | OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | 20 | OPEN | yes |
-| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | 20 | OPEN | yes |
+| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | 20 | APPROVED | yes |
+| OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | 20 | OPEN |  |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | 20 | OPEN | yes |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | 20 | OPEN | yes |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided |  | APPROVED |  |
+| P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | 21 | OPEN |  |
+| P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | 21 | OPEN |  |
 | PACK-Q | Pack capacity: how many kinds the player can carry | owner decision | APPROVED |  |
 | Q-C1 | CON-01 Q-C1: Manor tool orders stay separate from CON-01 (advance payment preserved; counted as obligations) | 17 | APPROVED |  |
 | Q-C2 | CON-01 Q-C2: Paid work quests stay separate (full payment on completion or none) | 17 | APPROVED |  |
@@ -793,8 +801,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q-C8 | CON-01 Q-C8: offer_days = 2: an unsigned formal agreement expires after two days, nothing reserved or moved before signing | 17 | APPROVED |  |
 | Q-C9 | CON-01 Q-C9: npc_counter_tolerance = 0.25 above the buyer's own price, within its real purchasing power; quantity limits and 10-day wait kept | 17 | APPROVED |  |
 | Q-POL-1 | Political structure of the starting village (manor with a reeve, elected mayor, council, or a mix; what the lord retains) | 21 | OPEN | yes |
-| Q-POL-2 | Franchise: who votes and who may stand | 21 | OPEN | yes |
-| Q-POL-3 | Office terms, election season and by-elections (with the 8-day game year) | 21 | OPEN | yes |
+| Q-POL-2 | Franchise: who votes and who may stand | 21 | APPROVED | yes |
+| Q-POL-3 | Office terms, election season and by-elections (with the 8-day game year) | 21 | APPROVED | yes |
 | Q-POL-4 | Vote privacy and which totals are public | 21 | OPEN | yes |
 | Q-POL-5 | Ties in elections | 21 | OPEN | yes |
 | Q-POL-6 | Removal from office | 21 | OPEN | yes |

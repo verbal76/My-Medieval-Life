@@ -8,14 +8,14 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 17 |
-| Integrated | 0 of 17 (0%) |
-| Automated tests passed | 5 of 17 (29%) |
-| Integration verified | 0 of 17 (0%) |
-| Gameplay verified | 0 of 17 (0%) |
-| Owner playtested | 0 of 17 (0%) |
-| Complete | 0 of 17 (0%) |
-| Open (release blockers) | 17 |
+| Approved requirements in scope | 19 |
+| Integrated | 0 of 19 (0%) |
+| Automated tests passed | 5 of 19 (26%) |
+| Integration verified | 0 of 19 (0%) |
+| Gameplay verified | 0 of 19 (0%) |
+| Owner playtested | 0 of 19 (0%) |
+| Complete | 0 of 19 (0%) |
+| Open (release blockers) | 19 |
 | Open owner decisions (blocking) | 11 (0) |
 
 ## In development (worker assigned) (3)
@@ -32,7 +32,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (13)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (15)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -49,6 +49,8 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model | design: DESIGN WORK REQUIRED | L |
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) / wip/x19-personality | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (11)
 

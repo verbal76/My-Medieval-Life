@@ -28116,6 +28116,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered the pricing model (consolidated directive 2026-10-23 s.3.2); offer visibility rules remain open as OD-LE-02B"
     }
    ],
    "target_build": "20",
@@ -28123,8 +28128,31 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "owner_answer": "Combined market pricing: supply, demand, scarcity and completed transactions inform asking prices; buyers and sellers negotiate actual deals with limited counteroffers, individual willingness to compromise, influence from urgency, alternatives, experience and personality; no guaranteed transaction because price ranges overlap"
+  },
+  {
+   "id": "OD-LE-02B",
+   "kind": "decision",
+   "title": "Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02",
+   "description": "Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": null,
+   "owner_answer": null,
    "disposition": "OPEN",
-   "blocks_implementation": true
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
+   ]
   },
   {
    "id": "OD-LE-03",
@@ -28292,6 +28320,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: related",
      "why": "overlaps a Build 18 owner answer of 2026-10-23; to be reconciled with the owner, not assumed answered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered repayment and collateral (s.3.5); interest and further lending products and enforcement remain open as OD-LE-05B"
     }
    ],
    "target_build": "20",
@@ -28299,10 +28332,33 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "related": [
     "TRADE-CREDIT"
+   ],
+   "owner_answer": "Borrowers may negotiate extensions, installments or payment in goods; specifically pledged collateral may be claimed when the contract permits; valuation defined by the agreement; surplus over the debt returned to the borrower; no authority to seize unrelated property"
+  },
+  {
+   "id": "OD-LE-05B",
+   "kind": "decision",
+   "title": "Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05)",
+   "description": "Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05)",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
    ]
   },
   {
@@ -28775,6 +28831,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered breach handling (s.3.4); death of a party remains open as OD-LE-13B"
     }
    ],
    "target_build": "20",
@@ -28782,8 +28843,31 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "owner_answer": "Context-sensitive breach consequences: parties may negotiate partial delivery, extensions, changed payment terms or cancellation depending on the original agreement and circumstances; no automatic penalty on every breach"
+  },
+  {
+   "id": "OD-LE-13B",
+   "kind": "decision",
+   "title": "Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13)",
+   "description": "Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13)",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": null,
+   "owner_answer": null,
    "disposition": "OPEN",
-   "blocks_implementation": true
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
+   ]
   },
   {
    "id": "OD-LE-14",
@@ -30868,6 +30952,78 @@
     "64317eb"
    ],
    "next_action": "owner answers the packet (structure and noble authority first)"
+  },
+  {
+   "id": "P21-MAYOR",
+   "kind": "approved",
+   "title": "Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities",
+   "description": "Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": "Mayors are elected. Mayoral terms last four in-game years. Incumbents may seek reelection. Established adult residents are eligible to vote. Eligible voters are also eligible to run for mayor.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "No fixed residency period invented (P21-RESIDENCY open)"
+   ],
+   "target_build": "21",
+   "parent": "VP-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
+   ]
+  },
+  {
+   "id": "P21-RESIDENCY",
+   "kind": "decision",
+   "title": "How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)?",
+   "description": "How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)?",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "21",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
+   ]
+  },
+  {
+   "id": "P21-STRUCTURE",
+   "kind": "decision",
+   "title": "Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government",
+   "description": "Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "21",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
+   ]
   },
   {
    "id": "PACK-Q",
@@ -35420,8 +35576,8 @@
    "description": "Franchise: who votes and who may stand",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "see P21-MAYOR",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -35435,6 +35591,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "answered in part by the owner's mayoral structure (P21-MAYOR, 2026-10-23); residency length open as P21-RESIDENCY"
     }
    ]
   },
@@ -35445,8 +35606,8 @@
    "description": "Office terms, election season and by-elections (with the 8-day game year)",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "see P21-MAYOR",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -35460,6 +35621,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "answered in part by the owner's mayoral structure (P21-MAYOR, 2026-10-23); residency length open as P21-RESIDENCY"
     }
    ]
   },
@@ -50507,6 +50673,34 @@
    "test_commit": "2456294"
   },
   {
+   "id": "X19-MISINFO",
+   "kind": "approved",
+   "title": "Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships",
+   "description": "Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": "NPCs may deliberately fabricate false accusations. Listeners evaluate credibility, and accusations can be investigated. When an NPC learns that a particular accusation has been proven false, the negative judgment caused by that accusation is immediately corrected.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "No global omniscient reputation; information travels a plausible path"
+   ],
+   "target_build": "19",
+   "parent": "PROS-19",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    }
+   ]
+  },
+  {
    "id": "X19-PERS-FORMULA",
    "kind": "decision",
    "title": "The numerical formulas for personality evolution (rates by frequency, severity and duration; soft limits; learning acceleration; emotion length; recovery)",
@@ -50756,6 +50950,40 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-STORY-LIFE",
+   "kind": "approved",
+   "title": "Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold",
+   "description": "Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold",
+   "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
+   "owner_wording": "Important family stories may survive generations. Minor stories can fade when no longer transmitted.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Stories reach observers only along a plausible path (memory, gossip); no global reputation score",
+    "Important stories can outlive the generation that saw them; minor ones fade when not retold; positive conduct can restore a family's reputation in an observer's eyes"
+   ],
+   "target_build": "19",
+   "parent": "PROS-19",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "acceptance criteria added",
+     "why": "from the owner's wording, consolidated directive s.2.3"
     }
    ]
   },

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 452 (225 of them still open) |
-| **Open entries now** (rules excluded) | | **402** |
+| Entries added since | | 460 (228 of them still open) |
+| **Open entries now** (rules excluded) | | **405** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (452)
+## Added since the baseline (460)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -314,10 +314,12 @@ None.
 | OD-29 | Owner decisions (2026-10-21): Build 17 starts now beside Build 16; separate underground maps tied to their surface locations, open pits on the surface; contract defaults provisional | decision | APPROVED | 17 |
 | OD-30 | Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track | decision | APPROVED | owner decision |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | APPROVED | owner decision |
-| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | OPEN | 20 |
+| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | APPROVED | 20 |
+| OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | decision | OPEN | 20 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | OPEN | 20 |
 | OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | decision | OPEN | 20 |
-| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | decision | OPEN | 20 |
+| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | decision | APPROVED | 20 |
+| OD-LE-05B | Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05) | decision | OPEN | 20 |
 | OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | decision | OPEN | 20 |
 | OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | decision | OPEN | 20 |
 | OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | decision | OPEN | 20 |
@@ -325,7 +327,8 @@ None.
 | OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | decision | OPEN | 20 |
 | OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | decision | OPEN | 20 |
 | OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | decision | OPEN | 20 |
-| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | decision | OPEN | 20 |
+| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | decision | APPROVED | 20 |
+| OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | decision | OPEN | 20 |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | decision | OPEN | 20 |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | decision | OPEN | 20 |
 | OD01-QUEST | Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 17 |
@@ -335,6 +338,9 @@ None.
 | P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 21 |
 | P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 21 |
 | P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 21 |
+| P21-MAYOR | Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities | approved | NOT STARTED / NOT TESTED / OPEN | 21 |
+| P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | decision | OPEN | 21 |
+| P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | decision | OPEN | 21 |
 | PACK-Q | Pack capacity: how many kinds the player can carry | decision | APPROVED | owner decision |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
@@ -380,8 +386,8 @@ None.
 | Q-C8 | CON-01 Q-C8: offer_days = 2: an unsigned formal agreement expires after two days, nothing reserved or moved before signing | decision | APPROVED | 17 |
 | Q-C9 | CON-01 Q-C9: npc_counter_tolerance = 0.25 above the buyer's own price, within its real purchasing power; quantity limits and 10-day wait kept | decision | APPROVED | 17 |
 | Q-POL-1 | Political structure of the starting village (manor with a reeve, elected mayor, council, or a mix; what the lord retains) | decision | OPEN | 21 |
-| Q-POL-2 | Franchise: who votes and who may stand | decision | OPEN | 21 |
-| Q-POL-3 | Office terms, election season and by-elections (with the 8-day game year) | decision | OPEN | 21 |
+| Q-POL-2 | Franchise: who votes and who may stand | decision | APPROVED | 21 |
+| Q-POL-3 | Office terms, election season and by-elections (with the 8-day game year) | decision | APPROVED | 21 |
 | Q-POL-4 | Vote privacy and which totals are public | decision | OPEN | 21 |
 | Q-POL-5 | Ties in elections | decision | OPEN | 21 |
 | Q-POL-6 | Removal from office | decision | OPEN | 21 |
@@ -534,6 +540,7 @@ None.
 | X19-GOSSIP-FLOOR | Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value? | decision | OPEN | 19 |
 | X19-GUARD | A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine? | decision | APPROVED | 19 |
 | X19-HARMED | Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)? | decision | APPROVED | 19 |
+| X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | X19-PERS-FORMULA | The numerical formulas for personality evolution (rates by frequency, severity and duration; soft limits; learning acceleration; emotion length; recovery) | decision | OPEN | 19 |
 | X19-PERSONALITY | Agent-proposed numbers for per-person temperament (SJD-Q03, Q13): tolerance and weights vary by up to 30% between people; being wronged lowers tolerance 4% per severity point, being helped raises regard for opinion 3% per point, at most 25% either way; a shift applies to all dealings, not only the kind of deed. Keep, or change? | decision | OPEN | 19 |
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | decision | APPROVED | 19 |
@@ -541,6 +548,7 @@ None.
 | X19-REP-TRANSMIT | The numerical formulas for family reputation transmission (how stories, their significance and retelling set an inherited impression) | decision | OPEN | 19 |
 | X19-RUNNERUP | Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value? | decision | OPEN | 19 |
 | X19-SPILL-REACH | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)? | decision | OPEN | 19 |
+| X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | OPEN | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | OPEN | 19 |
 

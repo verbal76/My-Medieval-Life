@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 9 (0%) |
 | Complete | 0 of 9 (0%) |
 | Open (release blockers) | 9 |
-| Open owner decisions (blocking) | 14 (14) |
+| Open owner decisions (blocking) | 14 (11) |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
@@ -36,10 +36,10 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | OPEN | yes |  |
+| OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | OPEN | no |  |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | OPEN | yes | ECON-P3.4 |
 | OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | OPEN | yes |  |
-| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | OPEN | yes |  |
+| OD-LE-05B | Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05) | OPEN | no |  |
 | OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | OPEN | yes |  |
 | OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | OPEN | yes |  |
 | OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | OPEN | yes |  |
@@ -47,7 +47,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | OPEN | yes |  |
 | OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | OPEN | yes |  |
 | OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | OPEN | yes |  |
-| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | OPEN | yes |  |
+| OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
 

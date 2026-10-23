@@ -6,28 +6,28 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 
 | Measure | Build 18 | Build 19 | Build 20 | Build 21 |
 |---|---|---|---|---|
-| Approved requirements (in scope) | 83 | 17 | 9 | 4 |
-| Fully specified (design SPECIFIED) | 66 of 83 (80%) | 6 of 17 (35%) | 0 of 9 (0%) | 0 of 4 (0%) |
+| Approved requirements (in scope) | 83 | 19 | 9 | 5 |
+| Fully specified (design SPECIFIED) | 66 of 83 (80%) | 6 of 19 (32%) | 0 of 9 (0%) | 0 of 5 (0%) |
 | Waiting on an owner decision (design) | 0 | 0 | 0 | 0 |
 | Design work still required | 2 | 3 | 0 | 0 |
-| Design unknown | 15 | 8 | 9 | 4 |
-| Not started (incl. READY) | 2 | 7 | 8 | 1 |
+| Design unknown | 15 | 10 | 9 | 5 |
+| Not started (incl. READY) | 2 | 9 | 8 | 2 |
 | In development (worker assigned) | 0 | 3 | 0 | 1 |
 | Partially implemented | 1 | 3 | 0 | 0 |
 | Implemented on a task branch | 0 | 4 | 1 | 2 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
-| Integrated | 80 of 83 (96%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
-| Automated tests passed (targeted or better) | 78 of 83 (94%) | 5 of 17 (29%) | 1 of 9 (11%) | 0 of 4 (0%) |
-| Integration verified (suite on the integrated build) | 58 of 83 (70%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
-| Gameplay verified | 0 of 83 (0%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
-| Owner playtested | 0 of 83 (0%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
-| Complete | 2 of 83 (2%) | 0 of 17 (0%) | 0 of 9 (0%) | 0 of 4 (0%) |
-| Release blockers (open in-scope requirements) | 81 | 17 | 9 | 4 |
-| Open owner decisions (of which blocking) | 1 (0) | 11 (0) | 14 (14) | 9 (9) |
+| Integrated | 80 of 83 (96%) | 0 of 19 (0%) | 0 of 9 (0%) | 0 of 5 (0%) |
+| Automated tests passed (targeted or better) | 78 of 83 (94%) | 5 of 19 (26%) | 1 of 9 (11%) | 0 of 5 (0%) |
+| Integration verified (suite on the integrated build) | 58 of 83 (70%) | 0 of 19 (0%) | 0 of 9 (0%) | 0 of 5 (0%) |
+| Gameplay verified | 0 of 83 (0%) | 0 of 19 (0%) | 0 of 9 (0%) | 0 of 5 (0%) |
+| Owner playtested | 0 of 83 (0%) | 0 of 19 (0%) | 0 of 9 (0%) | 0 of 5 (0%) |
+| Complete | 2 of 83 (2%) | 0 of 19 (0%) | 0 of 9 (0%) | 0 of 5 (0%) |
+| Release blockers (open in-scope requirements) | 81 | 19 | 9 | 5 |
+| Open owner decisions (of which blocking) | 1 (0) | 11 (0) | 14 (11) | 9 (7) |
 | Deferred with approval | 2 | 1 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 2 | 2 | 5 |
 | Integrated, awaiting gameplay or owner verification | 78 | 0 | 0 | 0 |
-| Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | XS 2, M 3, L 5, XL 1, UNKNOWN 6 | UNKNOWN 9 | UNKNOWN 4 |
+| Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | XS 2, M 3, L 5, XL 1, UNKNOWN 8 | UNKNOWN 9 | UNKNOWN 5 |
 | Readiness | RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23)) | PROTOTYPE ONLY (isolated branch; not integrated) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) |
 
 Build authority:
