@@ -7,7 +7,7 @@ extends RefCounted
 ## but for the trees and boulders on them, reachable only through the rim. Facing the rim, the player can make a way
 ## through it, one to `max_span` rim cells deep, straight on to the ground beyond:
 ##   steps    cut into the rock: a pickaxe and Mining (the game's carving skill); from the ground up to a top, or down;
-##   stairs   built of planks and nails: a mallet and Carpentry (the game's Crafting skill); up or down, as steps;
+##   stairs   built of planks and nails: a mallet and Carpentry; up or down, as steps;
 ##   walkway  built of planks and nails, from one top across the rim to another top (between raised edges).
 ## A way made is never undone (Overworld.works, saved), and every way runs both ways, so whoever goes up can come down
 ## (DVW-A10). A top's felled tree never grows back (Overworld.note_tree) and nothing can be planted there, so a top's open
@@ -125,7 +125,7 @@ static func plan(w: World, t: Dictionary, p: PlayerState) -> Dictionary:
 	if no != "":
 		return {"ok": false, "why": no}
 	var k := cost(what, (s.cells as Array).size())
-	var secs := float(k.seconds) * (Skills.value(p, "mining", "mine_time", 1.0) if what == "steps" else Skills.value(p, "crafting", "craft_time", 1.0))
+	var secs := float(k.seconds) * (Skills.value(p, "mining", "mine_time", 1.0) if what == "steps" else Skills.value(p, str(k.skill), "craft_time", 1.0))
 	var dir: Vector2i = t.dir
 	return {"ok": true, "label": "Cutting steps" if what == "steps" else "Building", "secs": secs, "anim": "swing", "tool": p.tool_of(str(k.tool)),
 			"run": func() -> Dictionary: return {"items": {}, "text": build(w, p, what, at, dir)}}

@@ -24,6 +24,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	test_counted_wording()
 	test_accept_and_reserve()
 	test_reject_by_real_signals()
 	test_counteroffers()
@@ -96,6 +97,14 @@ func _shows(text: String) -> bool:
 
 ## The player proposes through the talk window: "Propose a contract", the goods, the terms with - and +, Propose; a
 ## too-low price is countered and the counter agreed to; the open contract is listed and its goods collected.
+func test_counted_wording() -> void:
+	check(Contracts.counted(3, "axe") == "3 axes", "three axes are counted in the plural")
+	check(Contracts.counted(1, "axe") == "1 axe", "one axe stays singular")
+	check(Contracts.counted(10, "coal") == "10 coal", "mass goods stand bare")
+	check(Contracts.counted(4, "iron bar") == "4 iron bars", "a two-word name takes the plural on its noun")
+	check(Contracts.counted(2, "red berries") == "2 red berries", "plural goods stand bare")
+
+
 func test_window() -> void:
 	main.new_game()
 	var w: World = main.world
@@ -105,14 +114,28 @@ func test_window() -> void:
 	w.player.coins = 300
 	ui.show_talk(m)
 	check(_press("Propose a contract") and ui.is_open("contract"), "the talk offers \"Propose a contract\", which opens the contract window")
-	check(_press("★ Iron ore"), "the goods the miner can come by are listed first, iron ore among them")
+	check(_shows("Step 1 of 5") and _press("★ Iron ore"), "step one lists the goods the miner can come by first, iron ore among them")
+	check(_shows("Step 2 of 5") and _shows("Quantity:"), "choosing the goods moves on to the quantity step")
 	var c0 := coins(w)
-	for row in ["Quantity", "Price each", "Days"]:     # each down to 1 (each press redraws the window; 1 is the least)
-		for i in 12:
-			_press_on(row, "-1")
-	check(_shows("Quantity: 1") and _shows("Price each: 1") and _shows("Days: 1"), "quantity, price and days are set with - and +")
+	for i in 12:     # each press redraws the window; 1 is the least
+		_press_on("Quantity", "-1")
+	check(_shows("Quantity: 1"), "the quantity is set with - and +")
 	check(_press_on("Quantity", "+10") and _shows("Quantity: 11"), "+10 raises the quantity")
+	check(_press("Next") and _shows("Step 3 of 5") and _shows("Price each:"), "Next moves to the price step")
+	for i in 60:
+		_press_on("Price each", "-1")
+	check(_shows("Price each: 1"), "the price is set with - and +")
+	check(_press("Next") and _shows("Step 4 of 5") and _shows("Days:"), "Next moves to the days step")
+	for i in 5:
+		_press_on("Days", "-1")
 	check(_press_on("Days", "+1") and _shows("Days: 2"), "+1 gives the seller another day")
+	check(_press("Next") and _shows("Step 5 of 5") and _shows("%s delivers 11 iron ore by the end of day %d for 11 coins (1 each)." % [m.name, w.day() + 2]),
+			"the summary says the agreement in one sentence")
+	check(_press("Back") and _shows("Step 4 of 5") and _shows("Days: 2") and _press("Back") and _shows("Step 3 of 5") and _shows("Price each: 1"),
+			"Back returns to each step before, with its terms kept")
+	check(_press("Next") and _press("Next") and _shows("Step 5 of 5"), "and forward again to the summary")
+	check(ui.inner_back.is_valid() and ui.inner_back.call() and _shows("Step 4 of 5") and _press("Next") and _shows("Step 5 of 5"), "Esc, X and the pad's B step back one step before closing the window")
+	check(w.contracts.list.is_empty(), "nothing exists until Propose")
 	check(_press("Propose") and _shows("least I'd take"), "a price of 1 is countered with the miner's least price")
 	check(w.contracts.list.is_empty() and coins(w) == c0, "nothing is set aside for a counteroffer")
 	check(_press("Agree:") and w.contracts.open_of(World.PLAYER, "buyer").size() == 1, "agreeing to the counter opens the contract")
@@ -132,9 +155,10 @@ func test_window() -> void:
 	var off: Dictionary = w.contracts.offer_to_player(smith, "coal", 10, 8, 3)
 	ui.show_contract(smith)
 	check(_shows("asks you for 10 coal") and _press("Counter"), "the offer is listed with Agree, Counter and Decline")
+	check(_shows("Step 1 of 4") and _shows("Quantity: 10") and _press("Next"), "a counter starts at the quantity: the goods are the villager's")
 	for i in 20:
 		_press_on("Price each", "+1")
-	check(_shows("Price each: 28") and _press("Put these terms"), "the player raises the price and puts the terms back")
+	check(_shows("Price each: 28") and _press("Next") and _press("Next") and _shows("You deliver 10 coal to") and _press("Put these terms"), "the player raises the price and puts the terms back")
 	check(str(off.state) == "offered" and int(off.price_each) == floori(8 * float(Contracts.cfg().npc_counter_tolerance)) and _shows("most I'd pay"),
 			"the smith counters with the most it pays; the offer now stands on those terms")
 	check(_press("Agree") and str(off.state) == "accepted" and int(off.reserved) == 10 * int(off.price_each), "agreeing to it face to face opens the contract")
@@ -151,10 +175,14 @@ func test_window() -> void:
 	w.player.pos = m2.pos
 	w.player.coins = 500
 	ui.show_contract(m2)
-	check(not pit.is_empty() and _press("Dig your open pit") and _shows("units at"), "the window offers to hire the miner to dig the player's open pit")
+	check(not pit.is_empty() and _press("Dig your open pit") and _shows("Quantity:"), "the window offers to hire the miner to dig the player's open pit")
 	var before := w.contracts.open_of(World.PLAYER, "buyer").size()
+	_press("Next")
 	_press_on("Price each", "+1")
 	_press_on("Price each", "+1")
+	_press("Next")
+	_press("Next")
+	check(_shows("does this work for you"), "the work's summary names who does it and for how much")
 	_press("Propose")
 	var made: Array = w.contracts.open_of(World.PLAYER, "buyer").filter(func(x): return Contracts.is_service(x))
 	check(made.size() == 1 or _shows("least I'd take"), "proposing it makes a service contract, or the miner answers with its terms")

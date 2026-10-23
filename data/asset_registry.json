@@ -595,7 +595,7 @@
     "terrain"
    ],
    "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json).",
+   "used_for": "VIS-STEPS-01: its stone cliff-stair tile (96, 96) is the cut-steps tile drawn over a cliff rim (game/assets/terrain/steps_ns.png, steps_ew.png; tools/terrain_art.py). Overworld grass/cliff wangset (overworld_tiles.json).",
    "scale": "16 px, 1:1",
    "scan": [
     {
@@ -633,6 +633,10 @@
     }
    ],
    "imported": [
+    "assets/terrain/steps_ew.png",
+    "assets/terrain/steps_ew_mid.png",
+    "assets/terrain/steps_ns.png",
+    "assets/terrain/steps_ns_mid.png",
     "assets/tiles/punyworld-overworld-tiles.png"
    ]
   },
@@ -652,7 +656,7 @@
     "animations"
    ],
    "status": "integrated",
-   "used_for": "Every villager, bandit and the player (generated layered sheets in game/assets/characters).",
+   "used_for": "Every villager, bandit and guard (generated layered sheets in game/assets/characters); the player, drawn at run time from a recipe of the uncoloured layer sheets in game/assets/characters/layers (CC-01, CharacterLook, game/data/character_style.json).",
    "scale": "32 px frames, about 14 x 16 px visible: the reference human",
    "scan": [
     {
@@ -3779,6 +3783,38 @@
     "assets/characters/guard_03.png",
     "assets/characters/guard_04.png",
     "assets/characters/guard_05.png",
+    "assets/characters/layers/clothes/basic.png",
+    "assets/characters/layers/clothes/metal-armour.png",
+    "assets/characters/layers/clothes/tunic.png",
+    "assets/characters/layers/eyelashes/f1.png",
+    "assets/characters/layers/eyelashes/f2.png",
+    "assets/characters/layers/eyelashes/f3.png",
+    "assets/characters/layers/eyelashes/m1.png",
+    "assets/characters/layers/eyelashes/m2.png",
+    "assets/characters/layers/eyelashes/n1.png",
+    "assets/characters/layers/eyelashes/n2.png",
+    "assets/characters/layers/eyelashes/n3.png",
+    "assets/characters/layers/eyes/eyes.png",
+    "assets/characters/layers/facial-hair/beard1.png",
+    "assets/characters/layers/facial-hair/beard2.png",
+    "assets/characters/layers/facial-hair/mustache.png",
+    "assets/characters/layers/hair/f1.png",
+    "assets/characters/layers/hair/f2.png",
+    "assets/characters/layers/hair/f3.png",
+    "assets/characters/layers/hair/f4.png",
+    "assets/characters/layers/hair/m1.png",
+    "assets/characters/layers/hair/m2.png",
+    "assets/characters/layers/hair/m3.png",
+    "assets/characters/layers/hair/m4.png",
+    "assets/characters/layers/hair/m5.png",
+    "assets/characters/layers/hair/m6.png",
+    "assets/characters/layers/hair/m7.png",
+    "assets/characters/layers/hair/m8.png",
+    "assets/characters/layers/hair/m9.png",
+    "assets/characters/layers/headwear/novice-helm.png",
+    "assets/characters/layers/race/human.png",
+    "assets/characters/layers/shoes/leather-boots.png",
+    "assets/characters/layers/weapon-overlay/weapon-overlay.png",
     "assets/characters/player_00.png",
     "assets/characters/player_01.png",
     "assets/characters/player_02.png",
@@ -7634,7 +7670,7 @@
     "tiles"
    ],
    "status": "integrated",
-   "used_for": "Cows, pigs, sheep, chickens, rabbits (with baby sheets), farm produce icons, the inventory window, farm tiles; seed packets as the crop seed icons and (SEED-02) the wild flower seed (yellow-flower packet) and, standing in for the red and blue berry cuttings, the red and blue berry-cluster packets (no pack has a cutting or sprig).",
+   "used_for": "Cows, pigs, sheep, chickens, rabbits (with baby sheets), farm produce icons, the inventory window, farm tiles; seed packets as the crop seed icons and (SEED-02) the wild flower seed (yellow-flower packet) and, standing in for the red and blue berry cuttings, the red and blue berry-cluster packets (no pack has a cutting or sprig); the field plants by growth stage for wheat, carrots, potatoes and herbs, and wheat stubble cut from the ripe wheat (farming/crops.png, VIS-CROP-01); the animal sheets are imported with a 1 px gutter round each frame (VIS-ANIMAL-01).",
    "scale": "16-24 px animals, 1:1",
    "scan": [
     {
@@ -7738,6 +7774,7 @@
     "assets/icons/wool.png",
     "assets/icons/wool_cloth.png",
     "assets/tiles/cozyfarm-tiles.png",
+    "assets/tiles/crops.png",
     "assets/ui/inventory_panel.png",
     "assets/ui/inventory_tabs.png",
     "assets/ui/tab_all.png"
@@ -7950,7 +7987,7 @@
     "icons"
    ],
    "status": "integrated",
-   "used_for": "Most item icons, including the cart parts.",
+   "used_for": "Most item icons, including the cart parts; the HUD food-bar drumstick (Food/Fowl-04, UI-HUNGER-01).",
    "scale": "16 px icons",
    "scan": [
     {
@@ -7980,6 +8017,7 @@
     "assets/icons/cart_axle.png",
     "assets/icons/cart_ironwork.png",
     "assets/icons/cart_wheel.png",
+    "assets/icons/chisel.png",
     "assets/icons/coal.png",
     "assets/icons/coins.png",
     "assets/icons/copper_bar.png",
@@ -7987,6 +8025,7 @@
     "assets/icons/copper_sword.png",
     "assets/icons/dirt.png",
     "assets/icons/feather.png",
+    "assets/icons/fine_cloth.png",
     "assets/icons/fireball.png",
     "assets/icons/flower.png",
     "assets/icons/gold_bar.png",
@@ -8023,11 +8062,13 @@
     "assets/icons/rabbit_pelt.png",
     "assets/icons/red_berries.png",
     "assets/icons/roast_meat.png",
+    "assets/icons/rubble.png",
     "assets/icons/rusty_pickaxe.png",
     "assets/icons/rusty_sword.png",
     "assets/icons/shovel.png",
     "assets/icons/shovel_blade.png",
     "assets/icons/shovel_haft.png",
+    "assets/icons/spice.png",
     "assets/icons/spoil.png",
     "assets/icons/stone.png",
     "assets/icons/strong_healing_tonic.png",
@@ -8041,6 +8082,7 @@
     "assets/markers/skill.png",
     "assets/markers/tool.png",
     "assets/markers/wood.png",
+    "assets/ui/hud_hunger.png",
     "assets/ui/tab_journal.png"
    ]
   },
@@ -8095,7 +8137,8 @@
    "imported": [
     "assets/icons/amulet.png",
     "assets/icons/copper_ring.png",
-    "assets/icons/gold_ring.png"
+    "assets/icons/gold_ring.png",
+    "assets/icons/jewellery.png"
    ]
   },
   {
@@ -12081,7 +12124,7 @@
    "opportunities": "The horse: a draught animal (the plough's deferred 'draught animal', then carts) and the first horse in the game; it needs a source (a manor stable pen in the village map, or the caravan) and the owner's choice of role. Bull, ram, rooster, sow, piglet, calf, lamb and chick: same species as Cozy Farm's in another style; not mixed in, so the pens keep one look.",
    "scale": "96 px cells, the horse about 80 px long: scale 1/3 (box) to about 27 px, against a 24 px Cozy cow and a 14 px human",
    "known_issues": "1.0 arrived as a .rar; extracted with unar into private-assets/Animal_Farm_Project_Sprite_Pack_1.0 (byte for byte).",
-   "used_for": "Imported, not yet in play: the horse sheet (game/assets/animals/farm_horse.png, tools/animal_farm.py, 1/3 box to 32 px frames, a 28 x 22 px horse) and AnimalSprite's 'farm' layout (stand, walk, graze; wildlife_test). Waiting on the owner's choice of how horses enter the village and what they do (CLAUDE.md section 11).",
+   "used_for": "The plough horse (B14-11, owner answers 2026-10-23): the horse sheet (game/assets/animals/farm_horse.png, tools/animal_farm.py, 1/3 box to 32 px frames, a 28 x 22 px horse) drawn through AnimalSprite's 'farm' layout (stand, walk, graze; wildlife_test, horse_test) as the 'horse' species of balance.json animals, bought from the visiting caravan into the player's horse pen. The other Animal Farm species stay unused.",
    "scan": [
     {
      "source": "private-assets/Animal_Farm_Project_Sprite_Pack_1.0",
@@ -12596,7 +12639,7 @@
    "opportunities": "Plum and yellow-fruit trees (new fruit items); crop growth stages for the existing crops (wheat, carrot, potato, herb) where they read better than Cozy Farm's; produce crates as storefront and stall displays (the storefront counter is a stand-in); produce icons; grapes on vines and sunflowers. Palms and pineapples do not fit an English medieval setting.",
    "scale": "Trees and crops drawn at the world's pixel density: 1:1",
    "used_for": "Apple trees (5 growth stages and the fruiting stage; tools/craftpix_plants.py): orchard trees by the houses that bear apples, felled and replanted like any tree (INT-147).",
-   "known_issues": "The pack has no stump or cut art: the stump is the mature tree's foot and the notches are drawn by the import tool. The grass patch under each tree is a slightly different green from the village grass.",
+   "known_issues": "The pack has no stump or cut art: a felled apple tree shows Living Forest's summer oak stump (VIS-TREE-02: the earlier stump, the mature tree's clipped foot, read as a broken piece of tree in a grass patch) and the notches are drawn by the import tool. The grass patch under each tree is a slightly different green from the village grass.",
    "scan": [
     {
      "source": "private-assets/craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
@@ -12692,7 +12735,6 @@
     "assets/trees/apple_orchard_growing.png",
     "assets/trees/apple_orchard_mature.png",
     "assets/trees/apple_orchard_sapling.png",
-    "assets/trees/apple_orchard_stump.png",
     "assets/trees/apple_orchard_young.png",
     "assets/trees/fruit_trees.json"
    ]
@@ -12830,6 +12872,188 @@
     }
    ],
    "imported": []
+  },
+  {
+   "id": "owner_music",
+   "name": "The owner's songs (Suno)",
+   "creator": "Hot Attic Games (made with Suno)",
+   "sources": [
+    "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+    "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+    "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav"
+   ],
+   "storage": "release",
+   "licence": "own",
+   "permissions": "The owner's own songs, made with Suno; published as GitHub release assets (Songsmall, Songmed, Songbig), 173 MB of WAV that is never committed.",
+   "categories": [
+    "music"
+   ],
+   "status": "integrated",
+   "used_for": "MUSIC-18: game music by time of day (title and morning: Sunrise over the Village; day: Prosperous Village; evening, night and underground: Misted Ancient). Android carries Ogg Vorbis (game/assets/music, tools/game_audio.py); Windows and Linux carry the WAVs, fetched and sha256-checked by tools/fetch_music.py in release.yml (game/data/music.json lists URL, size and sha256).",
+   "decision": "Owner 2026-10-23: 'Ogg for Android only'. WAVs are imported as plain PCM (compress/mode=0) so the PC build keeps the original quality; the WAV is loaded whole into memory while it plays (Godot cannot stream a WAV), the Ogg is streamed.",
+   "opportunities": "More songs by slot (seasons, the feast, the chapel); a main-menu theme.",
+   "scan": [
+    {
+     "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+     "present": false
+    },
+    {
+     "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+     "present": false
+    },
+    {
+     "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/music/misted_ancient.ogg",
+    "assets/music/prosperous_village.ogg",
+    "assets/music/sunrise_over_the_village.ogg"
+   ]
+  },
+  {
+   "id": "cozy_rpg_sfx",
+   "name": "Cozy RPG SFX (ambience 1 and 2, and the 48 effects)",
+   "creator": "Spaceyyy (Bramble & Byte), aquumgifts.itch.io",
+   "sources": [
+    "private-assets/cozy-rpg-sfx.zip",
+    "private-assets/cozy-rpg-sfx-ambience-1.zip",
+    "private-assets/cozy-rpg-sfx-ambience-2.zip"
+   ],
+   "storage": "private",
+   "licence": "free",
+   "permissions": "Use in personal and commercial games and apps, no royalties; modify allowed; the sounds themselves may not be resold or redistributed as assets (so private-assets; only the imported Ogg files are committed). Credit appreciated: 'Cozy RPG SFX by Bramble & Byte' (the owner's credit: by Spaceyyy).",
+   "categories": [
+    "sounds",
+    "ambience",
+    "music"
+   ],
+   "status": "partial",
+   "used_for": "SFX-18, through GameAudio.play_sfx on the SFX bus. Ambience loops (game/assets/sfx): forest (the woods: the countryside by day), cave_wind (the natural cave, level -2), dungeon (drips: the mine gallery and the shafts). Effects wired: sword_swing_1/2 (the player's swing), sword_hit_1/2 and critical_hit (a landed blow), enemy_hit (a blow on game), enemy_defeat (a foe or game falls to the player), player_hurt (a point of health lost), fireball (the cast), coin (a purchase or sale), chest_open (a chest window opens), equip_weapon / equip_armor (wielding or wearing), potion_drink (a healing food or medicine used), door_wood (the player steps through a doorway), book_page (a wiki page opens), jingle_quest_accepted / jingle_quest_complete, jingle_level_up (a skill level), jingle_inn_rest (the player rests), secret_found (a trial pit strikes ore), save_crystal (a manual save).",
+   "opportunities": "Unwired for want of a matching event in the game: campfire (ambience; the game has no cheap 'beside a lit fire' test: a fire or the tavern hearth could play it by distance), spell-cast, ice-spell, lightning, heal, buff, debuff, teleport, magic-shield, mana-restore, potion-bubble (the game has one spell, the fireball, and no other magic), arrow-hit and bow-shot (no bow), shield-block (no shield), punch (no unarmed attack sound distinct from the swing), slime-squish (no slimes), key-pickup, gem (no event distinct from the pack's pickups), scroll-open, door-iron (no iron doors), step-stone-1/2 (replaced by Minifantasy footsteps), torch-light, lever, trap-spikes (no such objects), jingle-victory and jingle-defeat (a fight's end and the death panel could use them), the quest jingles for contracts.",
+   "scan": [
+    {
+     "source": "private-assets/cozy-rpg-sfx.zip",
+     "present": false
+    },
+    {
+     "source": "private-assets/cozy-rpg-sfx-ambience-1.zip",
+     "present": false
+    },
+    {
+     "source": "private-assets/cozy-rpg-sfx-ambience-2.zip",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/sfx/book_page.ogg",
+    "assets/sfx/campfire.ogg",
+    "assets/sfx/cave_wind.ogg",
+    "assets/sfx/chest_open.ogg",
+    "assets/sfx/coin.ogg",
+    "assets/sfx/critical_hit.ogg",
+    "assets/sfx/door_wood.ogg",
+    "assets/sfx/dungeon.ogg",
+    "assets/sfx/enemy_defeat.ogg",
+    "assets/sfx/enemy_hit.ogg",
+    "assets/sfx/equip_armor.ogg",
+    "assets/sfx/equip_weapon.ogg",
+    "assets/sfx/fireball.ogg",
+    "assets/sfx/forest.ogg",
+    "assets/sfx/jingle_inn_rest.ogg",
+    "assets/sfx/jingle_level_up.ogg",
+    "assets/sfx/jingle_quest_accepted.ogg",
+    "assets/sfx/jingle_quest_complete.ogg",
+    "assets/sfx/player_hurt.ogg",
+    "assets/sfx/potion_drink.ogg",
+    "assets/sfx/save_crystal.ogg",
+    "assets/sfx/secret_found.ogg",
+    "assets/sfx/sword_hit_1.ogg",
+    "assets/sfx/sword_hit_2.ogg",
+    "assets/sfx/sword_swing_1.ogg",
+    "assets/sfx/sword_swing_2.ogg"
+   ]
+  },
+  {
+   "id": "minifantasy_plains_sfx",
+   "name": "Minifantasy: Forgotten Plains SFX",
+   "creator": "Leohpaz",
+   "sources": [
+    "private-assets/Minifantasy_Forgotten_Plains_SFX.zip"
+   ],
+   "storage": "private",
+   "licence": "paid",
+   "permissions": "Personal and commercial projects; the pack may not be sold or distributed (so private-assets; only the imported Ogg files are committed); credit appreciated: 'Minifantasy: Forgotten Plains SFX by Leohpaz'.",
+   "categories": [
+    "sounds",
+    "ambience"
+   ],
+   "status": "partial",
+   "used_for": "SFX-18: soft footsteps by the ground (step_grass, step_dirt on roads, step_stone underground and indoors; about -16 dB, pitch +/-5%, spaced by distance walked), bush_rustling (picking a plant or field harvest), tree_rustling (a tree falls near the player), fruit_drop (picking fruit), hit_on_wood (each chop), hit_on_brick (a mining or tunnelling stroke). Ambience loops: birds (the village by day), crickets (outdoors at night), cicada (summer days outdoors), wind (the countryside beyond the village).",
+   "opportunities": "Unwired: water loops and waterfalls (the game's map has no river or pond: one animated water tile, so there is nothing to scale by distance; revisit if water is added), landing_on_grass / landing_on_stone (the player cannot jump or fall), crickets_1 and 3 (variants of the loop used), water_1/2.",
+   "known_issues": "Its two songs are in minifantasy_plains_music.",
+   "scan": [
+    {
+     "source": "private-assets/Minifantasy_Forgotten_Plains_SFX.zip",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/sfx/birds.ogg",
+    "assets/sfx/bush_rustling_1.ogg",
+    "assets/sfx/bush_rustling_2.ogg",
+    "assets/sfx/bush_rustling_3.ogg",
+    "assets/sfx/cicada.ogg",
+    "assets/sfx/crickets.ogg",
+    "assets/sfx/fruit_drop_1.ogg",
+    "assets/sfx/fruit_drop_2.ogg",
+    "assets/sfx/hit_on_brick_1.ogg",
+    "assets/sfx/hit_on_brick_2.ogg",
+    "assets/sfx/hit_on_wood_1.ogg",
+    "assets/sfx/hit_on_wood_2.ogg",
+    "assets/sfx/step_dirt_1.ogg",
+    "assets/sfx/step_dirt_2.ogg",
+    "assets/sfx/step_dirt_3.ogg",
+    "assets/sfx/step_grass_1.ogg",
+    "assets/sfx/step_grass_2.ogg",
+    "assets/sfx/step_grass_3.ogg",
+    "assets/sfx/step_stone_1.ogg",
+    "assets/sfx/step_stone_2.ogg",
+    "assets/sfx/step_stone_3.ogg",
+    "assets/sfx/tree_rustling_1.ogg",
+    "assets/sfx/tree_rustling_2.ogg",
+    "assets/sfx/tree_rustling_3.ogg",
+    "assets/sfx/tree_rustling_4.ogg",
+    "assets/sfx/wind.ogg"
+   ]
+  },
+  {
+   "id": "minifantasy_plains_music",
+   "name": "Minifantasy: Forgotten Plains music",
+   "creator": "Leohpaz",
+   "sources": [
+    "private-assets/Minifantasy_ForgottenPlains_Music.zip"
+   ],
+   "storage": "private",
+   "licence": "paid",
+   "permissions": "Personal and commercial projects; the pack may not be sold or distributed (so private-assets; only the encoded Ogg files are committed); credit appreciated: 'Minifantasy: Forgotten Plains music by Leohpaz'.",
+   "categories": [
+    "music"
+   ],
+   "status": "integrated",
+   "used_for": "MUSIC-18 (owner 2026-10-23, 'Fight music + countryside'): Fair Fight (Battle) plays during a fight, Plain Sight (Regular) in the countryside beyond the village (Android: game/assets/music/fair_fight.ogg, plain_sight.ogg (Ogg Vorbis -q:a 6); Windows and Linux: the original WAVs, fetched at release from the owner's Minifantasy release zip and checked by sha256).",
+   "decision": "The pack and its WAVs are never committed (licence; CLAUDE.md section 3). The PC packages take the WAVs at release time from the owner's own Minifantasy release (see DECISIONS).",
+   "scan": [
+    {
+     "source": "private-assets/Minifantasy_ForgottenPlains_Music.zip",
+     "present": false
+    }
+   ],
+   "imported": [
+    "assets/music/fair_fight.ogg",
+    "assets/music/plain_sight.ogg"
+   ]
   }
  ]
 }

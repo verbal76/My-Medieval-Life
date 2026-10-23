@@ -579,11 +579,17 @@ func _pl2_004() -> void:
 	check(pile.inv.count("meat") >= 1 and pile.inv.count("hide") >= 1 and int(pile.coins) == 0, "PL2-004: a boar leaves meat and a hide, no coins")
 	check(main._loot_at(spot) == pile.pos and main._loot_at(spot + Vector2(3, 0)) == Vector2.INF, "PL2-004: a tap on the pile finds it")
 	p.pos = spot + Vector2(0, 0.6)
+	var herd := []                     # the prompt is about the pile: any herd-mate standing beside it is set aside for the check
+	for o: Animal in w.fauna.animals.duplicate():
+		if o != boar and o.pos.distance_to(spot) < 4.0:
+			herd.append(o)
+			w.fauna.animals.erase(o)
 	main._find_target()
 	check(main.target.get("kind", "") == "loot" and str(main.target.label).contains("meat") and str(main.target.label).contains("hide"), "PL2-004: the prompt names what is there: \"%s\"" % main.target.get("label", ""))
 	var meat0 := p.inv.count("meat")
 	main.interact()
 	check(p.inv.count("meat") > meat0 and p.inv.has("hide") and not w.loot.has(pile), "PL2-004: taking it fills the pack and removes the pile")
+	w.fauna.animals.append_array(herd)
 	check(int(GameData.recipes.tan_leather.in.hide) == 1 and int(GameData.recipes.tan_leather.out.leather) == 1, "PL2-004: a hide is tanned to leather at the workbench")
 	w.loot.append({"pos": Vector2(5.5, 5.5), "inv": Inventory.from_dict({"items": {"meat": 2}}), "coins": 0, "from": "the wild boar", "t": w.minutes - 4.0 * 1440.0})
 	w.loot.append({"pos": Vector2(6.5, 5.5), "inv": Inventory.from_dict({"meat": 1}), "coins": 0, "from": "Somebody", "t": w.minutes - 4.0 * 1440.0})
@@ -851,9 +857,12 @@ func _ctr04_counter_terms(s: NPC) -> void:
 	p.coins += bill
 	var p1 := p.coins
 	var s1 := s.coins
+	var armoury: Dictionary = w.business.money.counter_building(s)     # ECON-P3: a trade counter's takings go to its till
+	var till1 := BusinessMoney.counter_till_of(armoury) if not armoury.is_empty() else 0
 	r = w.player_buy_many(s, "pickaxe", 1)
-	check(r.result == "bought" and int(r.paid) == bill and p.coins == p1 - bill and s.coins == s1 + bill,
-			"CTR-04: and buys a pickaxe there: the smith gets the whole %d coins, no commission (%s)" % [bill, str(r)])
+	var till_in := (BusinessMoney.counter_till_of(armoury) - till1) if not armoury.is_empty() else 0
+	check(r.result == "bought" and int(r.paid) == bill and p.coins == p1 - bill and (s.coins - s1) + till_in == bill,
+			"CTR-04: and buys a pickaxe there: the whole %d coins go to the smith's counter (till %d, purse %d), no commission (%s)" % [bill, till_in, s.coins - s1, str(r)])
 	check(w.total_coins() == total0 + bill and w.treasury == treasury0, "CTR-04: no coin goes to the realm or anywhere else at a counter")
 	s.inv.remove("pickaxe", s.inv.count("pickaxe"))
 	s.inv.add("pickaxe", keep[4])
@@ -1571,7 +1580,7 @@ func _dvw_a12_crafting() -> void:
 	var cp := w.player_craft_begin("saw_planks")
 	check(not cp.ok and str(cp.why) == "You do not have the materials." and not w.player_at_station(sid), "DVW-A12 R3: a refused craft does not hold the station")
 	p.inv.add("leather", 4)
-	check(w.player_craft_refusal("leather_armor") == "Needs Crafting level 2.", "DVW-A12 R3: a recipe above the player's level is refused (%s)" % w.player_craft_refusal("leather_armor"))
+	check(w.player_craft_refusal("leather_armor") == "Needs Tanning level 2.", "DVW-A12 R3: a recipe above the player's level is refused (%s)" % w.player_craft_refusal("leather_armor"))
 	p.inv.add("log", 2)
 	cp = w.player_craft_begin("saw_planks")
 	var want := float(rec.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
@@ -1596,7 +1605,7 @@ func _dvw_a12_crafting() -> void:
 	var used0 := float(w.stats.get("used_log", 0.0))
 	var res := w.player_craft("saw_planks")
 	check(res.result == "ok" and p.inv.count("log") == 1 and p.inv.count("plank") == 2, "DVW-A12 R3: a log in, two planks out")
-	check(float(w.stats.get("made_plank", 0.0)) - made0 == 2.0 and float(w.stats.get("used_log", 0.0)) - used0 == 1.0 and int(p.skills.get("crafting", 0)) == int(rec.xp), "DVW-A12 R3: counted (made_plank, used_log) and the recipe's xp")
+	check(float(w.stats.get("made_plank", 0.0)) - made0 == 2.0 and float(w.stats.get("used_log", 0.0)) - used0 == 1.0 and int(p.skills.get("carpentry", 0)) == int(rec.xp), "DVW-A12 R3: counted (made_plank, used_log) and the recipe's xp")
 	# the craft window's Make button follows core's refusal
 	main.ui.show_craft(sid)
 	var make_on := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
@@ -1620,7 +1629,7 @@ func _dvw_a12_crafting() -> void:
 	check(p.inv.count("plank") == 4 and not p.inv.has("log") and not w.player_at_station(sid), "DVW-A12 R3: the work makes the planks and frees the station")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
-	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("crafting", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
+	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("carpentry", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
 	_restore_pack(keep)
 
 

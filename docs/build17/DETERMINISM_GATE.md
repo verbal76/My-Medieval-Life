@@ -1,5 +1,20 @@
 # Build 17 determinism gate
 
+## 2026-10-21, final: all Build 17 feature streams merged (release-candidate code `cd7439c`)
+
+Code: `wip/build17` at `cd7439c` (MIN-A..F, MIN-H, MIN-F2, CON-01, CON-02, STONE-01, MIN-D2/D3/SHOVEL/RIGHTS/SKILLCAP,
+MIN-EQUIP/MIN-COLLAPSE, LOG-01, crafts, decay, terrain, OD-01). Baseline written (`--write`), then a second, independent
+run: `determinism gate: PASS, identical to the baseline`. CI Tests run 39689213264 on the same commit: success.
+
+| Seed | Day | Fingerprint | Alive | Households | Currency | Leaks |
+|---|---|---|---|---|---|---|
+| 1 | 10 | `adba9dd5ce9e905cb28511fc6a492e14` | 105 | 24 | 4579 | currency 0, items {} |
+| 1 | 30 | `1c755f53d12c72bd470b7913fb5e52a6` | 110 | 24 | 4915 | currency 0, items {} |
+| 2 | 10 | `8af83493bb640ec777596cd1f01f871b` | 108 | 24 | 4345 | currency 0, items {} |
+| 2 | 30 | `d9082cf57510b15d97f938c35f998d5d` | 109 | 24 | 4906 | currency 0, items {} |
+
+(Days 10 and 30 come from one 30-day run per seed with checkpoints, SIM-01; two runs per seed for the comparison.)
+
 `tools/sim_gate.py` (seeds 1 and 2, checkpoints at days 10 and 30, each seed in its own process and data directory).
 
 ## 2026-10-21, after MIN-D (owner direction: "Proceed with the Build 17 determinism gate using seeds 1 and 2 at days 10 and 30")

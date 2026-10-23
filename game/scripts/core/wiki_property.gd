@@ -28,6 +28,7 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.bullets([
 			"One room of each kind to a property; a room being built must be finished before the next is begun.",
 			"Rooms are separate buildings with their own door, walls, roof and inside; the roof of the one you stand in fades. Their stations work as anywhere else.",
+			"Where two rooms of your property stand side by side, a doorway is cut through the wall they share, so you can walk from one into the other without going out into the street. It opens only where nothing is in the way on either side (the wall must be bare and the floor inside it free and reachable), so it appears when the second room is finished, and not at all if furniture lines the wall. A house's east wall is lined with furniture, so a room to its east gets no doorway; the suggested place for a new room goes to the house's west side when that gives one. Rooms one above the other have a yard between them and no doorway. Nothing in either room is moved, and the street doors stay.",
 			"No room ties you to a trade: anyone may use a forge, an oven or a workbench they have leave to use, and a house can have a smithy, a kitchen and a bakehouse together.",
 			"A standalone shop (a workshop on its own ground) is still possible once you own a house; it just does not need to be. Storerooms and living quarters only come as rooms of a property.",
 			"Older saves load as they were: every existing building is a property of its own."]),
@@ -54,6 +55,6 @@ static func add_pages(w: Wiki) -> void:
 			"", "room module add property " + str(kind))
 	w.add_page("guide:property_rooms", "Add a room or workshop to my house", "guides", [
 		Wiki.p("Lease or buy ground and build a house (Build menu). When it stands, open the Build menu again: your property is listed with Open. It shows the rooms you have and each room you can add, with its materials."),
-		Wiki.p("Choose a place, move the footprint against the house (it starts at the nearest ground that works) and place it. It turns red with the reason where it cannot go: a tree to fell, a road, a house, or a door it would block."),
+		Wiki.p("The two plots the manor sells in a new village lie on open ground in the north-east, with room on every side for rooms (a side with trees waits until they are felled); a village saved before keeps its plots where they were. Choose a place, move the footprint against the house (it starts at the nearest ground that works, preferring a place where a doorway between the rooms can be cut) and place it. It turns red with the reason where it cannot go: a tree to fell, a road, a house, or a door it would block."),
 		Wiki.p("When it is placed, the ground is yours (or leased) and the frame is up. Deliver the materials. The room's stations appear at once when it is finished."),
 		Wiki.links(pages + ["sys:property_modules"], "The rooms")])

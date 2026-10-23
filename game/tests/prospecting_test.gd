@@ -25,6 +25,7 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	GameData.ensure()
 	_test_generation()
+	_test_settlement_footprint()
 	_test_kit()
 	_test_sampling_parity()
 	_test_assay()
@@ -103,6 +104,47 @@ func _test_generation() -> void:
 
 
 # ---------------------------------------------------------------- the kit --------------------
+## ORE-PLACE-01 (owner 2026-10-22): natural deposits belong outside the developed village. On representative seeds no
+## stain, sample spot or mineral body lies in the settlement footprint (recomputed here from the village map and the
+## margins, independently of Prospecting), clues and bodies remain on the wild ground, and the mine yard's seams stay.
+func _test_settlement_footprint() -> void:
+	var m := VillageMap.load_default()
+	var d: Dictionary = m.data
+	var fp: Dictionary = Prospecting.cfg().settlement
+	var dev := {}
+	var mark := func(x0: int, y0: int, w: int, h: int, mg: int) -> void:
+		for y in range(y0 - mg, y0 + h + mg):
+			for x in range(x0 - mg, x0 + w + mg):
+				dev[Vector2i(x, y)] = true
+	for key in ["buildings", "plots", "fields", "pens"]:
+		for e in d[key]:
+			mark.call(int(e.x), int(e.y), int(e.w), int(e.h), int(fp.structures))
+	for c in d.road:
+		mark.call(int(c[0]), int(c[1]), 1, 1, int(fp.roads))
+	for e in d.stalls:
+		mark.call(int(e.x), int(e.y), 1, 1, int(fp.market))
+	check(int(fp.structures) > 0 and int(fp.roads) > 0 and int(fp.market) > 0, "the settlement footprint has margins (prospecting.json settlement)")
+	for seed_value in [1, 2, 3, 4, 7, 11, 42, 1234]:
+		var clues := Prospecting.generate(seed_value, m)
+		var inside := 0
+		var bodies := 0
+		for c in clues:
+			var cells: Array = [Vector2i(int(c.x), int(c.y))] + (c.spots as Array)
+			if not (c.body as Dictionary).is_empty():
+				bodies += 1
+				cells.append(Vector2i(int(c.body.x), int(c.body.y)))
+			for cell in cells:
+				if dev.has(cell):
+					inside += 1
+		check(inside == 0, "seed %d: no stain, spot or body inside the settlement (%d clues, %d bodies)" % [seed_value, clues.size(), bodies])
+		check(clues.size() >= 1 and bodies >= 1, "seed %d: ore evidence remains outside the settlement" % seed_value)
+	check(d.deposits.size() == 15, "the mine yard keeps its 15 seams")
+	var w := _world(3)
+	var c0: Dictionary = w.prospecting.clues[0]
+	var built := Vector2i(int(d.buildings[0].x), int(d.buildings[0].y))
+	check(w.discovery.ground_refusal(c0, built) != "", "no trial pit inside the settlement")
+
+
 func _test_kit() -> void:
 	var w := _world(1)
 	var p := w.player
@@ -252,7 +294,7 @@ func _test_prospector_day() -> void:
 	w.brain._change_job(n, Prospecting.JOB, "a test")
 	n.coins = 200
 	n.plan.clear()
-	var coins0 := _coins(w) + w.caravan_purse
+	var coins0 := _coins(w) + w.regions.coins()
 	var goods0: Dictionary = Census.goods(w)
 	var ordered := false
 	var had_kit := false
@@ -272,7 +314,7 @@ func _test_prospector_day() -> void:
 	check(_st(w, "mined_" + Prospecting.ITEM) >= 2, "the prospector takes samples at the clues (%d)" % _st(w, "mined_" + Prospecting.ITEM))
 	check(not mine.is_empty() and _st(w, "assays") >= 1, "and has them assayed by the smith (%d readings)" % mine.size())
 	check(not unreported.call(), "every find is reported to the manor (%d of %d readings found traces)" % [mine.filter(func(r): return str(r.ore) != "").size(), mine.size()])
-	check(_coins(w) + w.caravan_purse == coins0, "coins conserved over the prospector's day (fees, the kit's price)")
+	check(_coins(w) + w.regions.coins() == coins0, "coins conserved over the prospector's day (fees, the kit's price)")
 	var goods1: Dictionary = Census.goods(w)
 	var held := int(goods1.get(Prospecting.ITEM, 0))
 	check(held == _st(w, "mined_" + Prospecting.ITEM) - _st(w, "used_" + Prospecting.ITEM), "every sample is held or was assayed (%d held)" % held)
@@ -292,7 +334,7 @@ func _test_saves() -> void:
 	pr.take_sample(w.player, c, c.spots[1])
 	pr.assay(w.player, s)
 	var d := w.to_dict()
-	check(int(d.save_version) == 17, "no new save version (17)")
+	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	var p2 := w2.prospecting

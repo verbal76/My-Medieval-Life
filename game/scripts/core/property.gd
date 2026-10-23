@@ -405,6 +405,10 @@ func _release(u: Array, ref: String) -> void:
 			r.erase("arrears")
 		if w.owner_of(r) == ref and r != u[0]:
 			w.set_owner(r, World.MANOR)
+	if ref == World.PLAYER and w.business != null:
+		for r in u:
+			if r.has("shop") and not w.holds(World.PLAYER, r):    # B18-DP-01: a shop in a house that is no longer the player's closes with the lease
+				w.note(w.business.close(r.shop, "Your lease of the house ended."))
 
 
 ## Weekly rent, collected each morning for every lease due (owner rule: weekly, to the manor). A
@@ -556,6 +560,8 @@ func can_claim(rect: Rect2i) -> String:
 	for f in w.fields:
 		if Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).intersects(rect):
 			return "the manor's fields"
+	if w.chapel != null and w.chapel.present and w.chapel.plot_rect().intersects(rect):
+		return "the church's farm plot"
 	var pens: Array = w.fauna.pens.keys()
 	pens.sort()
 	for id in pens:

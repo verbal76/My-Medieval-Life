@@ -205,3 +205,46 @@ class RealDataTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EvidencedExceptionTest(unittest.TestCase):
+    """B18-DP-15 (owner): a supplies_nobody exception stands only on a functioning cross-profession relationship the
+    checker can see; an unsupported one fails, and missing demand never passes by being written down."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.data = cm.load()
+
+    def _sage(self, data):
+        return next(e for e in data["exceptions"] if e.get("profession") == "sage" and e["finding"] == "supplies_nobody")
+
+    def _stale_for_sage(self, data):
+        return [s for s in cm.build_report(data)["stale"] if "sage" in s]
+
+    def test_the_real_sage_exception_is_evidenced(self):
+        self.assertEqual(self._stale_for_sage(self.data), [])
+        self.assertTrue(cm.errors(cm.build_report(self.data)) == [])
+
+    def test_without_evidence_it_fails(self):
+        d = copy.deepcopy(self.data)
+        e = self._sage(d)
+        e.pop("evidence")
+        e.pop("_checked", None)
+        self.assertTrue(any("unsupported" in s for s in self._stale_for_sage(d)))
+
+    def test_a_missing_test_or_code_fails(self):
+        for part in ("test", "code", "mentions"):
+            d = copy.deepcopy(self.data)
+            self._sage(d)["_checked"][part] = False
+            self.assertTrue(any("unsupported" in s for s in self._stale_for_sage(d)), part)
+
+    def test_goods_the_profession_does_not_make_fail(self):
+        d = copy.deepcopy(self.data)
+        self._sage(d)["evidence"]["goods"] = ["iron_bar"]
+        self.assertTrue(any("unsupported" in s for s in self._stale_for_sage(d)))
+
+    def test_other_findings_are_unchanged(self):
+        d = copy.deepcopy(self.data)
+        d["exceptions"] = [e for e in d["exceptions"] if e.get("finding") != "supplies_nobody"]
+        r = cm.build_report(d)
+        self.assertIn(("profession", "sage", "supplies_nobody"), {(v["kind"], v["subject"], v["finding"]) for v in r["open"]})

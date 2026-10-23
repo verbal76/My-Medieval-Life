@@ -554,8 +554,10 @@ func _shop() -> void:
 	w.player.pos = Vector2(5, 5)
 	w.minutes += 1440.0
 	var coins := w.player.coins
+	var till0 := int(s.till)
+	var lic := int(GameData.b("shop_licence_day"))
 	b.daily()
-	check(w.player.coins == coins - int(GameData.b("shop_licence_day")) and int(s.costs.licence) == 2 * int(GameData.b("shop_licence_day")), "the licence is taken each morning")
+	check(int(s.costs.licence) == 2 * lic and w.player.coins == coins - maxi(0, lic - till0) and int(s.till) == maxi(0, till0 - lic), "the licence is taken each morning, from the shop's till first (ECON-P3)")
 	# taking the counter up closes the shop and returns everything
 	var pack := w.player.inv.count("plank")
 	check(f.remove(h, "counter") == "" and not h.has("shop"), "taking up the counter closes the shop")

@@ -31,6 +31,8 @@ static func add_pages(w: Wiki) -> void:
 	_journal(sys)
 	_causes(sys)
 	_caravan(sys)
+	_neighbours(sys)
+	_couriers(sys)
 	_bandits(sys)
 
 
@@ -64,7 +66,7 @@ static func _journal(sys: Callable) -> void:
 			"Quests: each quest and job you have taken, who asked and on which day, what they want (with how much you already have) and whether it is ready to hand in, your work for the manor and its next step, and a reminder of how to earn money.",
 			"Resources: every resource you can gather, where it is, the tool it needs and where to get one, what it gives and whether it comes back; choose one to see what its products are used for."]),
 		Wiki.h("The village map"),
-		Wiki.p("Open it with M on a keyboard, LB on a pad or the Map button on a phone; the same key, the X or B closes it. It draws the whole village small: grass, trees, rock, water and paths in their colours, fields by how ripe they are, the pens, plots and buildings. The named buildings, the Manor, the Mine, the Market, the Fields, the Animal pens and the Plots for sale are labelled, your home is outlined in gold, a red pulsing dot is you and a pale box shows what the screen shows now."),
+		Wiki.p("Open it with M on a keyboard, LB on a pad or the Map button on a phone; the same key, the X or B closes it. It draws the whole village small: grass, trees, rock, water and paths in their colours, fields by how ripe they are, the pens, plots and buildings. The named buildings, the Manor, the Mine, the Market, the Fields, the Animal pens and the Plots for sale are labelled, your home is outlined in gold, a red pulsing dot is you and a pale box shows what the screen shows now. Out in the country beyond the village the map still shows only the village: your dot waits at its edge with an arrow pointing your way and how far you are, for example \"You: 57 tiles south-west of the village\", so head the other way to come back."),
 		Wiki.p("Tap or click a spot on the map to close it and look there. Recenter (C, pressing the right stick, or the Recenter button) brings the view back to you."),
 		Wiki.links(["sys:employer_star", "sys:gather", "place:mine", "controls:kbm", "controls:gamepad", "controls:touch"])], "journal map book record quests log")
 
@@ -102,23 +104,111 @@ static func _caravan(sys: Callable) -> void:
 	var every := int(GameData.b("caravan_every_days"))
 	var farm: Dictionary = GameData.b("farming")
 	var stone: Dictionary = GameData.b("caravan_stone")
+	var lux: Dictionary = GameData.b("luxury")
 	sys.call("caravan", "The merchant caravan", [
-		Wiki.p("Every %d days, at noon, a merchant caravan passes through. It is the village's trade with the world outside: it deals with the village's merchants, smiths and sage, not with you, and each visit is written in the Journal's village record. What you sell to the merchants and the smith may end up on its carts." % every),
+		Wiki.p("Every %d days, at noon, a merchant caravan passes through. It is the traders of the five neighbouring settlements (see The neighbouring settlements): the village's trade with the world outside. It deals with the village's merchants, smiths and sage, with households and the manor for food when the village has none to offer them, and with you only for two things, a plough horse and costly goods (see below), and each visit is written in the Journal's village record, with the settlements whose traders came. What you sell to the merchants and the smith may end up on its carts." % every),
+		Wiki.p("Which traders come depends on the road: %s, and all of them on the very first visit. A trader sells only what it has brought and buys only with the coins in its own purse, so a visit can be a poor one: a trader may come with nothing to sell, or with no money to buy." % Wiki._and_list(OffMapSettlement.data().settlements.map(func(s): return "%s's %s" % [str(s.name), _every_time(maxi(1, ceili(float(s.miles) / 20.0)))]))),
 		Wiki.h("What it buys"),
 		Wiki.p("It buys the merchants' and smiths' surplus (the smiths' %s), what each holds above half of the most they stock, at %d%% of its value. It never buys the mine's raw %s. While the village has less than %d days of food it buys no food, and it leaves behind as many axes and pickaxes as villagers need: workers whose trade needs one they lack, and householders building a home without an axe." % [_names(GameData.resources.exports.smith_caps.keys()), 80, _names(NPCBrain.NOT_EXPORTED), int(GameData.b("caravan_food_reserve_days"))]),
 		Wiki.p("Nobody is served first for their trade. It buys one piece at a time, each from the seller who needs the sale most: the one holding the most surplus for its stock, and the one whose coins fall furthest short of the inputs its trade lacks. A seller well stocked, with coins to restock, may sell nothing when the purse is short."),
-		Wiki.p("It also buys from the producers: what hunters hold beyond their own stock of meat, hides and pelts, and tanners beyond their leather (each keeps %s), within the same purse and the same food rule." % Wiki._and_list((GameData.b("caravan_producer_keep") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_producer_keep")[k]), GameData.item_name(k).to_lower()]))),
-		Wiki.p("It pays from its own purse, which starts at %d coins. It spends at most %d a visit and never more than it holds. The region's demand adds up to %d coins a day (never taking the purse past %d), less as the village's coins near %d a head and nothing at that, and every coin the village pays it for goods goes into it. So a surplus it cannot pay for stays on the shelf." % [int(GameData.b("caravan_float")), int(GameData.b("caravan_coins")), int(GameData.b("caravan_allowance")), int(GameData.b("caravan_float")), int(GameData.b("caravan_ceiling_per_head"))]),
+		Wiki.p("It also buys from the producers: what hunters hold beyond their own stock of meat, hides and pelts, and tanners beyond their leather (each keeps %s), within the traders' purses and the same food rule." % Wiki._and_list((GameData.b("caravan_producer_keep") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_producer_keep")[k]), GameData.item_name(k).to_lower()]))),
+		Wiki.p("It buys only what a settlement still wants (what its people, workshops and council would use, less what it makes itself), and it pays from the traders' own purses: every coin it pays the village is a coin that settlement had, and every coin the village pays it goes into the trader's purse. No coin is made for it. So a surplus nobody wants, or one the traders cannot pay for, stays on the shelf."),
 		Wiki.h("What it sells"),
 		Wiki.bullets([
 			"Ore and coal: once the village's own seams of one are down to %d or less, each smith buys up to %s." % [int(GameData.b("caravan_import_when_left")), Wiki._and_list((GameData.b("caravan_import_stock") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_import_stock")[k]), GameData.item_name(k).to_lower()]))],
 			"Stone: once the village's stone (its stone seams, the grey rock of worked-out seams and its boulders) is down to %d or less, a cart of up to %d at %s times its value, for the raw-goods merchants." % [int(GameData.b("caravan_import_when_left")), int(stone.load), str(stone.markup)],
 			"Medicine: up to %d pieces a visit for the sage's Apothecary, the scarcest first (%s)." % [int(GameData.b("caravan_apothecary_per_visit")), _names((GameData.b("caravan_apothecary_stock") as Dictionary).keys())],
-			"Seed: up to %d a visit for the food merchant, the scarcest first (%s)." % [int(farm.caravan_seed_per_visit), _names((farm.caravan_seed_stock as Dictionary).keys())]]),
+			"Seed: up to %d a visit for the food merchant, the scarcest first (%s)." % [int(farm.caravan_seed_per_visit), _names((farm.caravan_seed_stock as Dictionary).keys())],
+			"Food: a trader may bring food from its own settlement's farms, herds and cookshop, and sells it at that place's own prices (they rise and fall with the place's harvests and shortages, and the nearest trader is not always the cheapest). A settlement lets go only of food it can spare: what is left once its people's needs for the next %d days are counted, less what they already hold and what its fields and herds will make. A farm or herd that cannot pay its wages and bills may sell some of the food its place would rather keep, but no more than the money it is short, so a hard-pressed place can sell food it will go without. The village buys it only when it cannot find that food here: a household with none to be had in the village (it pays from its own coins), the manor when its granary is under target (from money above its reserve), and the food merchant, cook or tavern when their stock is short. The coins go to the trader and leave the village." % int(GameData.b("reserve_days")),
+			"Luxuries: %s. Only the traders of %s carry them, from the stock they hold; nothing makes more, so when they have sold what they hold, there are no more. Every coin paid goes into the trader's purse and leaves the village." % [Wiki._and_list((lux.items as Array).map(func(k): return "%s at %d coins" % [GameData.item_name(str(k)).to_lower(), Luxury.price(str(k))])), Wiki._and_list(_luxury_places())]]),
+		Wiki.p("Luxuries are bought for show and kept: nobody eats or uses them up. A villager buys one on a visit day only if they are an adult with a taste for such things (a fixed trait), their household has food in hand, and the price is no more than half of what they hold beyond their reserve and %d coins of savings; each takes the dearest it can afford, owns at most %s of a kind, and no more than %d villagers buy on one visit, those with the most to spare first. A household short of money or food buys none. You buy them yourself at the wagon (see below). The game has no measure of a person's standing yet, so owning them does not change how anyone is treated (see Not in the game yet)." % [int(lux.keep_coins), Wiki._and_list((lux.items as Array).map(func(k): return "%d %s" % [int(lux.own_max[k]), GameData.item_name(str(k)).to_lower()])), int(lux.buyers_per_visit)]),
+		Wiki.p("At the wagon: while the caravan is in the village (visit days, from noon for %d hours, its wagon at the market road), stand beside it and you are offered each luxury a trader on the road still holds, one at a time, if you have the coins and room in your pack. You can also buy food there (%s), one unit at a time, from what the traders on the road hold: the cheapest trader's price for that food, paid into its purse; the coins leave the village and a trader that has none left sells no more." % [int(farm.caravan_horse.hours), Wiki._and_list(CaravanFood.FOODS.map(func(k): return GameData.item_name(str(k)).to_lower()))]),
+		Wiki.p("Plough horse: while the caravan is in the village (visit days, from noon for %d hours, its wagon at the market road), you can buy a plough horse for %d coins if you have a horse pen with room (see How do I keep animals). The horse is one of a settlement's own, led along by its trader; %s keep horses, and the nearest one on the road that day sells. If no trader who has come has a horse, there is none for sale that day. The coins go to that settlement and leave the village." % [int(farm.caravan_horse.hours), int(farm.caravan_horse.price), Wiki._and_list(_horse_places())]),
 		Wiki.p("Buyers pay from their own coins and keep back what their household will need over the next %d days: food it has not got, a log a night, medicine for anyone hurt, rent falling due, less wages it can count on. They spend that money only on food, firewood and medicine, so a smith or sage with a hungry family buys less stock, and one with full stores buys freely." % int(GameData.b("reserve_days"))),
 		Wiki.h("Newcomers"),
 		Wiki.p("When a trade falls short (a %s dies or retires, or the last farmer, woodcutter or miner), the post stays open for %d days; then an adult without a trade, a labourer or a manor hand takes it as an apprentice. If nobody can, a newcomer comes with the next caravan (at the latest %d days after the death), with %d coins of their own, takes the post and its workplace, and lodges with the dead worker's household or in an empty house." % [_or_list(NPCBrain.SKILLED), int(GameData.b("succession_days")), int(GameData.b("newcomer_max_days")), int(GameData.b("newcomer_coins"))]),
-		Wiki.links(["sys:trading", "job:merchant", "job:smith", "job:sage", "place:mine", "item:stone", "sys:journal_map"])], "caravan trade export import newcomer merchant")
+		Wiki.links(["sys:neighbours", "sys:trading", "job:merchant", "job:smith", "job:sage", "place:mine", "item:stone", "item:spice", "item:fine_cloth", "item:jewellery", "sys:journal_map", "guide:animals", "animal:horse", "todo:luxury_status"])], "caravan trade export import newcomer merchant trader luxury luxuries spices fine cloth jewellery")
+
+
+# game/data/settlements.json, OffMapSettlement, Regions (SET-C-SIM, SET-C-FIVE); docs/expansion18/SETTLEMENTS.md for the lore.
+static func _neighbours(sys: Callable) -> void:
+	var d := OffMapSettlement.data()
+	var rows := []
+	for s in d.settlements:
+		rows.append("%s, %s %s about %d miles away: %s." % [str(s.name), "an" if str(s.kind)[0] in "aeiou" else "a", str(s.kind), int(s.miles), _names_plain(s.industries)])
+	sys.call("neighbours", "The neighbouring settlements", [
+		Wiki.p("Five other places lie along the road: Wulstead, Netherton, Garton, Higham-on-the-Way and Bourton Abbas, named in the old tale of the Well at the World's End. You cannot walk to them yet, but they are real: each is a small economy of its own, with households that have money and food, workshops and farms that make and sell things, and a council, steward or abbey that collects a tax and a market toll and pays its officials. They run by the same rules as the village, in less detail, a day at a time. Their people live a life too: they are born, grow up and come of age at sixteen, marry from eighteen and set up households of their own that go to work for a trade, and die of old age as the village's people do, as the years pass (a year is eight days). A household whose last grown member dies leaves its money and food to kin in the same place, or, with none, to the council."),
+		Wiki.bullets(rows),
+		Wiki.h("What they do for you"),
+		Wiki.p("Their traders are the caravan (see The merchant caravan). They bring what their places have: ore and coal and stone from Garton's diggings and Bourton Abbas's quarry, medicines from the herb gardens, seed and cuttings from the farms, food they can spare, costly goods (spices, fine cloth, jewellery) from %s, and plough horses from %s. They take from the village what their people and workshops still need, and pay for it from their own purses. The traders also trade with each other every few days, so Garton's ore can reach a forge in Higham." % [Wiki._and_list(_luxury_places()), Wiki._and_list(_horse_places())]),
+		Wiki.h("Growing, shrinking and changing trades"),
+		Wiki.p("A place has no fixed size and no fixed trades. When its people keep going without something it could make (planks, leather, ale, cloth) week after week, a household that has the savings and is not earning much may take up that trade and open the workshop with its own money, provided the place has what the workshop needs to work. A workshop, farm or quarry whose families have all died or gone shuts after two weeks: its money goes to the council, and its stock is bought up by the traders or kept by the council. The fields, woods and quarry stay, and another household may open them again. All of this follows from the households' own sums, not from a plan."),
+		Wiki.h("What can go wrong"),
+		Wiki.p("Nothing is made for them. A place with a poor harvest, or whose workshops sell little, has little money to spend, and its traders buy less. A household that cannot buy food goes hungry, and one that stays hungry loses people; the council gives day labour and buys food for the hungry while it has money to spare. A place can shrink: one with few young people may dwindle as its old die, and one whose families grow faster than its harvests may lose people to hunger or to the road. Nothing rescues it, and what the village sells it or buys from it can matter."),
+		Wiki.h("People coming and going"),
+		Wiki.p("People move between the village and these places, always for a reason, and always with the caravan, so the nearer places see more of it. A villager or a whole household may leave for hunger (when the village is short of food and the manor's relief cannot reach them, and the other place has food to spare), for work (an adult with no trade, in a household that cannot get by, when the village has no work open and the other place pays well), for land (a household that has long waited for a home it could not pay for), or to marry. Folk arrive the same ways: a household that cannot buy food comes to a village with food to spare; a worker from a household short of work takes a post the village could not fill, before anyone else is sent for; a young couple who married there and can pay for a house on the manor's market come to take it; and a bride or groom comes to marry someone from the village after the two have known each other a while. They bring their name, age, skills, purse and belongings, and the village's rules for houses and jobs apply to them as to anyone. The reeve, the guards, the clergy and the market traders do not leave. Each place writes its own tax announcements and its comings and goings in a record of its own, and taxes there follow the manor's own rule: a rate changes only after notice."),
+		Wiki.h("Not in the game yet"),
+		Wiki.p("You cannot visit them in person, swap goods for goods or owe or be owed money. Goods and word go between you only by the caravan and by courier (see Couriers and the courier booth)."),
+		Wiki.links(["sys:caravan", "sys:couriers", "sys:trading", "sys:manor_treasury", "animal:horse"])], "neighbouring settlements towns Wulstead Netherton Garton Higham Bourton Abbas trade traders caravan")
+
+
+# game/data/couriers.json, CourierService (couriers.gd), CourierWindow (ui/courier_window.gd), main.gd (the booth action),
+# Regions.village_route_table; REG-COURIER-01, X18-Q12, X18-Q12-BOOTH, X18-Q12-POST.
+static func _couriers(sys: Callable) -> void:
+	var r: Dictionary = CourierService.cfg().routes
+	var names := []
+	for sp in OffMapSettlement.data().settlements:
+		names.append(str(sp.name))
+	sys.call("couriers", "Couriers and the courier booth", [
+		Wiki.p("A courier carries your goods to someone you know, here or in one of the neighbouring settlements (%s), and can bring back payment. Every settlement has a courier booth kept by its own trader, and the village has one at a market stall, kept by a villager. Stand beside the village booth and choose the courier option to open the courier form." % Wiki._and_list(names)),
+		Wiki.h("Sending something"),
+		Wiki.p("Fill in the form like a parcel slip: the service, the item and how many, whom to deliver to, where, whether the courier should collect payment (coins or an item, and how much), and whether the payment comes back to you or waits for you at your booth. Review shows the instruction in plain words and the fee before you confirm. Nothing is sent until you confirm."),
+		Wiki.bullets([
+			"Regular route: the courier leaves the booth every %d days for the settlement and takes up to %d goods a load for a flat fee of %d coins a load, paid when you book. Your goods wait at the booth until it leaves." % [int(r.every_days), int(r.load_units), int(r.fee_per_load)],
+			"Special delivery: a courier carries it at once, for a fee you agree. You offer a price; the courier accepts it if it covers the work (the days there and back, the loads, the stops) and otherwise names the least it will take. The fee is held at the booth and paid to the courier only when the work is done.",
+		]),
+		Wiki.h("Shop booths"),
+		Wiki.p("A business with a shop may keep a courier booth of its own: the merchants and the smith at their stalls and workplaces, and you at a market stall you have built (stand beside it and choose to open a booth). A shop booth has its own regular route to each settlement, at the same flat fee; the goods wait in that booth and the village's courier carries them. The fee goes to the courier, never to the shop's own keeper. When no market stall is free the village's booth is a stall its keeper builds near the market from their own planks."),
+		Wiki.h("Formal contracts and the notary"),
+		Wiki.p("A small agreement (a payment of %d coins or less) needs no signature. A payment worth more is a formal contract and must be signed: only a special delivery, carried by a courier who knows the law (Law %d or more, shown beside their name in the form), can carry it. You sign before the courier as it leaves, the other party signs before the courier when it arrives, and the courier brings the document back; it binds only then. Nothing is signed from afar or at once, and a regular route cannot carry such a payment. A recipient who will not sign sends the goods back; a courier who dies on the road loses the document, and the contract is not made. The courier learns some Law from every signature witnessed and every document carried home." % [int(CourierService.cfg().contracts.small_value), int(CourierService.cfg().notary.min_level)]),
+		Wiki.h("Carters"),
+		Wiki.p("For a special delivery you may also hire the trader of a settlement you have dealt with, who carries on its own way home to that settlement for a fee agreed like any other and paid only when the work is done. Nobody carries for nothing."),
+		Wiki.h("Whom you can send to"),
+		Wiki.p("Only people and businesses you know: villagers you have come to know, and shops or traders you have really dealt with. A settlement's trader is someone you know once you have bought from or sold to the caravan's trader from that place. There are no typed addresses and no strangers; the form lists only those you may send to."),
+		Wiki.h("The road"),
+		Wiki.p("Nothing is instant. The courier takes your goods on the road, and the days it takes depend on how many miles lie between the places. At the end it hands the goods over, takes the payment you asked for if the other side can and will pay (if not, the goods come back to you), and returns. The delivery counts as done only when the courier is home and every part is settled. Proceeds come back to your pack, or wait at the village booth if you asked, or if your pack was full; go to the booth and collect them there."),
+		Wiki.h("What can go wrong"),
+		Wiki.p("A courier who dies on the road drops the load where they fell; it can be found by anyone, and the fee that was held goes back to you. A recipient who has died, cannot take the goods or refuses the payment sends the goods back. Without a keeper, the village booth waits until another villager takes it over at dawn. You need the goods and the fee in hand when you book. A settlement whose trader is gone cannot be reached."),
+		Wiki.h("Not in the game yet"),
+		Wiki.p("You cannot carry a document for someone yourself yet: only the village's couriers and the settlements' traders do. A villager's own sending is limited to the goods that the caravan would also take from a merchant or smith. Property, land and house sales are still settled in person."),
+		Wiki.links(["sys:neighbours", "sys:caravan", "sys:trading", "skill:law"])], "courier couriers booth deliver delivery send post parcel route special delivery fee regular route settlements notary formal contract signing carter shop booth")
+
+
+## The settlements whose traders carry luxuries from the start (settlements.json "start", DVW-B3-LUX).
+static func _luxury_places() -> Array:
+	var out := []
+	for sp in OffMapSettlement.data().settlements:
+		for k in (sp.get("start", {}).get("merchant", {}) as Dictionary):
+			if Luxury.is_luxury(str(k)):
+				out.append(str(sp.name))
+				break
+	return out
+
+
+## The settlements that keep working horses to sell (settlements.json "horses").
+static func _horse_places() -> Array:
+	return OffMapSettlement.data().settlements.filter(func(s): return int(s.get("horses", 0)) > 0).map(func(s): return str(s.name))
+
+
+static func _every_time(n: int) -> String:
+	return {1: "every time", 2: "every second time", 3: "every third time", 4: "every fourth time"}.get(n, "every %dth time" % n)
+
+
+static func _names_plain(ids: Array) -> String:
+	var out := []
+	for i in ids:
+		out.append(str(i))
+	return "known for " + Wiki._and_list(out)
 
 
 # Population.generate (the band), NPCBrain._bandit, _prey_for, fight (robbing, fleeing), act "poach",
@@ -130,5 +220,6 @@ static func _bandits(sys: Callable) -> void:
 		Wiki.p("Guards on duty attack any bandit they can see (within %d tiles, and not through a wall), but do not follow one into the camp. A bandit badly hurt (below 30%% of its health) breaks off and runs back to the camp." % int(GameData.b("witness_radius"))),
 		Wiki.p("An attack is known only to those who see it (not through a wall) and to its victim, the same for you and for a bandit. A guard who sees it answers it; the victim and the others who saw it go and tell a guard (one within %d tiles), who then comes after the attacker. Word that has not reached a guard within %d hours is let go." % [int(GameData.b("report").range), int(GameData.b("report").hours)]),
 		Wiki.p("Stolen coins do not stay in the woods. By day a bandit holding %d coins or more slips into the market and buys a little food from a stall with no guard close by. Coins left lying where someone fell are collected by a guard on duty after %d hours, if it lies within %d tiles of the guard's rounds, and go to the manor's treasury; the goods stay where they lie." % [int(GameData.b("bandit_spend_min")), int(GameData.b("loot_recover_hours")), int(GameData.b("guard_loot_range"))]),
-		Wiki.p("Fight them with the sword or a fireball. Striking a bandit is no crime, and your sword strikes them before any bystander. One put down stays dead (the band never grows back) and drops what it carried, stolen goods included, for anyone to pick up; villagers who see it think better of you. A villager a bandit robbed may ask you to deal with that bandit as a quest (Bandit trouble) and pay you for it."),
+		Wiki.p("Fight them with the sword or a fireball. Striking a bandit is no crime, and your sword strikes them before any bystander. One put down stays dead and drops what it carried, stolen goods included, for anyone to pick up; villagers who see it think better of you. A villager a bandit robbed may ask you to deal with that bandit as a quest (Bandit trouble) and pay you for it."),
+		Wiki.p("A band wiped out is not gone for ever. Some time after the last bandit falls, a few outlaws drift in from outside along the roads and make camp in the woods again, and the band grows from there as orphaned children grow up among them."),
 		Wiki.links(["sys:fighting", "sys:magic", "job:guard", "skill:combat", "sys:death_causes", "sys:courting"])], "bandit camp robber thief outlaw poach")

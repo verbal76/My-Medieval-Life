@@ -9,3 +9,7 @@ private-assets/
 
 # temporary diagnostic scripts run with Godot (never committed)
 game/tests/_probe*
+
+# MUSIC-18: the PC packages' music WAVs are downloaded by the release workflow from the owner's GitHub releases, never committed (173 MB)
+game/assets/music/*.wav
+game/assets/music/*.wav.import

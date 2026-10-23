@@ -10,8 +10,10 @@ The art is drawn at the world's pixel density (docs/assets/ASSET_SCALING_STANDAR
 holds every plant twice, on soil (left half) and on grass (right half); the grass versions are used. A fruit
 tree's row has five stages left to right: seedling, small, medium, large, large in fruit. They become the
 tree model's stages (tools/living_forest.py): sapling, young, growing, mature, plus `fruit` (the mature tree
-with ripe fruit, drawn while its fruit hangs). The pack has no stump or cut art: the stump is the mature
-tree's foot (its lowest rows) and the cut marks are small notches drawn here, both recorded as such.
+with ripe fruit, drawn while its fruit hangs). The pack has no stump or cut art: the stump is Living
+Forest's summer oak stump (trees.json, already imported), placed on the apple tree's trunk base, and the cut
+marks are small notches drawn here. (VIS-TREE-02: the stump used to be the mature tree's lowest rows, a
+clipped tree foot of roots in a grass patch that read as a broken piece of tree.)
 
     python3 tools/craftpix_plants.py      # also run by tools/import_game_assets.py
 """
@@ -36,7 +38,7 @@ ICONS = REPO / "game" / "assets" / "icons"
 FRUIT_TREES = {"apple_orchard": (145, 212)}
 GRASS_X = 505
 STAGES = ["sapling", "young", "growing", "mature", "fruit"]
-STUMP_ROWS = 10                 # the mature tree's lowest rows make the stump
+STUMP_FROM = "oak_summer"       # the Living Forest variant whose stump a fruit tree's stump is
 SAPLING_ICON = {"apple_sapling": "apple_orchard"}
 DRAWN = "(drawn by tools/craftpix_plants.py)"
 
@@ -103,14 +105,13 @@ def import_trees(record, pkg_path):
         pivot = _pivot(mature)
         v["pivot"] = pivot
         v["top"] = {"file": mf, "off": [0, 0], "w": mature.width, "h": mature.height}
-        foot = mature.crop((0, mature.height - STUMP_ROWS, mature.width, mature.height))
-        box = foot.getbbox()
-        stump = foot.crop(box)
-        path = OUT / ("%s_stump.png" % vid)
-        stump.save(path)
-        record(path, PACKAGE, SHEET, "the mature stage's lowest %d rows, cropped to its pixels (the pack has no stump)" % STUMP_ROWS)
-        v["stump"] = {"file": path.name, "off": [box[0], mature.height - STUMP_ROWS + box[1]], "w": stump.width, "h": stump.height}
-        written += 1
+        lf = art["variants"][STUMP_FROM]           # the stump's place relative to its own trunk base, kept
+        st = lf["stump"]
+        v["stump"] = {"file": st["file"], "off": [pivot[0] + st["off"][0] - lf["pivot"][0], pivot[1] + st["off"][1] - lf["pivot"][1]],
+                      "w": st["w"], "h": st["h"]}
+        old = OUT / ("%s_stump.png" % vid)           # the clipped foot an older import wrote
+        if old.exists():
+            old.unlink()
         v["cuts"] = {"left": [], "right": []}
         for side, dx in (("left", -3), ("right", 1)):
             for n in (1, 2, 3):

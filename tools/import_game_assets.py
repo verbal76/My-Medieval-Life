@@ -11,14 +11,20 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/characters/guard_NN.png
     game/assets/icons/<item>.png                     16x16 Survival RPG Icons.zip, one icon per item
     game/assets/tiles/cozyfarm-tiles.png             CozyFarm_full_version.zip (fences, gates)
+    game/assets/tiles/crops.png                      CozyFarm_full_version.zip (field plants by stage, CROP_ROWS)
     game/assets/animals/<species>.png                CozyFarm_full_version.zip (livestock, bunnies) and
                                                      PunyMonsters.zip (boars)
-    game/assets/characters/player_<s><n>_<outfit>.png player looks for character creation (listed in
-                                                     game/data/appearances.json)
+    game/assets/characters/player_<s><n>_<outfit>.png the Build 7-17 player looks (game/data/appearances.json,
+                                                     now each with its recipe: what old saves migrate from)
+    game/assets/characters/layers/<layer>/<option>.png  CC-01: the uncoloured PUNY CHARACTERS (TDSM) layer
+                                                     sheets character creation offers, copied unchanged and
+                                                     drawn at run time from a recipe (CharacterLook), with
+    game/data/character_style.json                   the draw order, palette ramps and choice lists they use
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
     game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
-    game/assets/ui/inventory_*.png, tab_*.png        CozyFarm_full_version.zip (the pack window, its tabs and
+    game/assets/ui/hud_<name>.png                    16x16 Survival RPG Icons.zip (HUD status icons, HUD_ICONS)
+    game/assets/ui/inventory_*.png, tab_*.png       CozyFarm_full_version.zip (the pack window, its tabs and
                                                      bag icon) and tab icons from the Assorted and Survival packs
     game/assets/prompts/<name>.png                   kenney_input-prompts_1.5.zip (keys, pad buttons, touch)
     game/assets/trees/*, icons/oak_sapling.png, icons/pine_sapling.png
@@ -29,13 +35,15 @@ records each file's source archive and path. This is that step. It writes:
                                                      B14-07's ways through a cliff and its two items, by
                                                      tools/terrain_art.py (Forgotten Memories, from private-assets/,
                                                      and Miniworld's bridge)
+    game/assets/music/*.ogg, game/assets/sfx/*.ogg     MUSIC-18, SFX-18: the owner's songs (release WAVs, Android's copy) and the
+                                                     Cozy RPG SFX (private-assets/), encoded with ffmpeg by tools/game_audio.py
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
 Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E, NE, N, NW, W,
 SW), columns as listed in tools/puny_chargen.py ANIMS.
 
 Cozy Farm animal sheets are 4 frames x 5 rows (down, up, left, right, sleep), square frames of the size
-in the pack's info.txt; Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
+in the pack's info.txt, each given a 1 px transparent gutter (cells 2 px larger, VIS-ANIMAL-01); Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
 
 The flat UI pack is Illustrator files; they are rasterised with pdftoppm (poppler-utils), which
 must be installed.
@@ -57,6 +65,7 @@ import animal_farm  # noqa: E402
 import craftpix_plants  # noqa: E402
 import living_forest
 import terrain_art  # noqa: E402
+import game_audio  # noqa: E402
 
 OUT = REPO / "game" / "assets"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
@@ -94,6 +103,11 @@ UI_SKILL_ICONS = {
     "skill_magic": ("icons_set_2.ai", 9, 3), "skill_trading": ("icons_set_2.ai", 6, 0),
     "skill_stealth": ("icons_set_2.ai", 4, 3), "journal": ("icons_set_2.ai", 9, 6),
 }
+# pixel-art status icons for the HUD from the survival pack, copied unchanged (16 px, the pack's own dark outline).
+# UI-HUNGER-01 (owner, B18-DIR Part 7): a roast drumstick for the food bar, in place of the bread item's butter-block
+# placeholder. The pack's "Chicken" icons are whole roast birds; its "Fowl" icons are the drumsticks, and Fowl-04
+# (golden roast) reads clearest on the dark status box.
+HUD_ICONS = {"hud_hunger": "Food/Fowl-04"}
 UI_GLYPH_BROWN = (111, 74, 44)    # the same wood brown as the buttons
 UI_GLYPH_EDGE = (246, 236, 214)   # the interface's cream text colour
 UI_TILE = 128          # icon tiles are saved at this size
@@ -111,6 +125,7 @@ PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
 PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
                                                                 "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"
+COZY_GUTTER = 1   # transparent px around each Cozy Farm animal frame (VIS-ANIMAL-01; see _gutter)
 # MiniFolks forest animals (B14, LYASeeK; a loose folder, the owner's .7z extracted byte for byte): skin -> the
 # outlined side-view sheet (32 px frames, the bird's 16 px; one row per animation, facing right)
 FOREST_DIR = "MiniFolks Forest Animals"
@@ -180,11 +195,18 @@ ICONS = {
     "minecart": "Metal/Metal-Bucket-02",
     # STONE-01: the light grey dressed block as the finished building block (squared faces), apart from raw stone's chunk
     "building_block": "Blocks/Stone-Block-02",
+    # STONE-06: the grey iron-bladed knife stands in for the iron chisel (the pack has no chisel)
+    "chisel": "Tools/Knife-05",
+    # STONE-04: pale grey rock fragments for the rubble a dressing leaves
+    "rubble": "Stone/Rocks-05",
     # MIN-F2: a bundle of sticks stands in for the ladder (the pack has none)
     "ladder": "Wood/Sticks-01",
     # MIN-SHOVEL: the grey iron-headed shovel as the shovel; the plain wooden shovel as the carpenter's haft (a
     # medieval shovel was a wooden blade and handle shod with iron); a grey iron slab as the smith's blade (its iron shoe)
     "shovel": "Tools/Shovel-05", "shovel_haft": "Tools/Shovel-15", "shovel_blade": "Blocks/Metal-Slab-05",
+    # DVW-B3-LUX luxury imports: the orange-red dried herb bundle as the spices (the pack has no spice jar), a crimson silk
+    # fabric as the fine cloth (the white one is the bandage)
+    "spice": "Plants & Alchemy/Herb-Bundle-04", "fine_cloth": "Textile/Silk-Fabric-16",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).
@@ -200,9 +222,20 @@ COZY_ITEMS = {
     "flower_seed": ("full version/farming/seeds.png", 1, 5),
     "red_berry_cutting": ("full version/farming/seeds.png", 0, 3), "blue_berry_cutting": ("full version/farming/seeds.png", 5, 3),
 }
+# VIS-CROP-01 (owner, B18-DIR Part 9): the plants drawn over every field cell, one 16 px plant per cell, from Cozy
+# Farm's crop sheet (farming/crops.png: one crop a row, seeds then the growth stages left to right; the rows match the
+# seed packets used as the seed icons). game crop -> (sheet row, columns for the four growing quarters, the ripe column).
+# The herb (it yields wild flowers) is the small yellow flower, the crop the herb seed packet's colour; its row has one
+# stage fewer.
+CROP_SHEET = "full version/farming/crops.png"
+CROP_ROWS = {"wheat": (9, [1, 2, 3, 4], 5), "carrot": (0, [1, 2, 3, 4], 5), "potato": (5, [1, 2, 3, 4], 5),
+             "herb": (36, [1, 1, 2, 3], 4)}
+CROP_ORDER = ["wheat", "carrot", "potato", "herb"]      # the rows of game/assets/tiles/crops.png (CropView.ROWS)
+STUBBLE_FROM = 11      # a cut wheat field's stubble: the ripe wheat's pixels from this row down (the stalks' feet)
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
-JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05"}
+JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05",
+           "jewellery": "Necklaces/Necklace-28"}      # DVW-B3-LUX: the gold chain with a blue stone
 # Cozy Farm's inventory window (full version/ui/inventory.png, 848 x 1360): the panel with flat tabs
 # and the 9 x 3 bag grid is at INV_PANEL; below it, 8 copies with tab 0..7 raised start at INV_RAISED
 # rows, INV_RAISED_STEP apart. A raised tab stands INV_HEAD px higher than the flat strip.
@@ -221,6 +254,112 @@ HATS = {
     "bandit": ["thief-bandana", "assassin-bandana", "rogue-hood"],
     "guard": ["soldier-helm", "knight-helm", "novice-helm"],
 }
+# CC-01 (owner, 2026-10-22: an ordinary medieval civilian, appearance only): what character creation offers.
+# None = "none". No headwear, armour, foreign or fantasy clothes, gloves, horns or ears; human only.
+CREATION_PICKS = {
+    "race": ["human"],
+    "hair": [None, "f1", "f2", "f3", "f4", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"],
+    "facial-hair": [None, "beard1", "beard2", "mustache"],
+    "eyelashes": [None, "f1", "f2", "f3", "m1", "m2", "n1", "n2", "n3"],
+    "clothes": ["basic", "tunic"],
+    "shoes": [None, "leather-boots"],
+}
+# swatch rows offered per colour selection: natural skin (0-6); natural hair: golden, brown, black, grey, white
+# (NATURAL_HAIR without row 6, which is lemon yellow (255, 255, 27) in the game, not a blonde; the other rows are
+# pure reds, greens, blues and magentas); eyes without the red (10, 11) and blank white (13) rows; every row of
+# the clothes, tunic and leather ramps (plain dyed cloth and leather)
+CREATION_SWATCHES = {
+    "skin": list(range(7)), "hair": [0, 1, 2, 3, 4], "eyes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12],
+    "clothes": list(range(7)), "tunic": list(range(5)), "leather_shoes": list(range(3)),
+}
+CREATION_LINKED = {"facial_hair": "hair"}    # a beard takes the hair's colour, as the importer's looks always had
+ALWAYS_LAYERS = {"eyes": "eyes", "weapon-overlay": "weapon-overlay"}   # drawn without a pick (puny_chargen.render)
+HUMAN_ONLY = ["eyes", "eyelashes"]
+# ARMOR-01 (owner Option A, 2026-10-22; docs/DECISIONS.md): worn item id -> the layer it draws while worn. iron_armor is
+# the pack's metal-armour clothes layer, iron_helmet its novice-helm (a plain open iron helm; the face stays
+# readable), both on metal ramp row 1 (the cool steel grey; row 0 is the warm reference grey, rows 2-3 gold).
+# leather_armor and leather_cap have no art: drawn as nothing extra. Not offered by creation.
+WORN_LAYERS = {
+    "iron_armor": {"layer": "clothes", "option": "metal-armour", "swatches": {"metal_armour": 1}},
+    "iron_helmet": {"layer": "headwear", "option": "novice-helm", "swatches": {"metal_headwear": 1}},
+}
+
+
+def civilian_recipe(recipe):
+    """The part of a puny_chargen recipe the run-time look keeps: the creation layers' picks and the swatches
+    the layers drawn actually use. Drawing it gives the same sheet as puny_chargen.render(recipe) when the
+    recipe has nothing outside the creation layers."""
+    picks = {k: recipe["picks"].get(k) for k in CREATION_PICKS}
+    sels = {"eyes"}
+    for layer, code in picks.items():
+        if code is not None:
+            sels |= {sel for _, sel in dict(STYLE_CHOICES[layer])[code]}
+    return {"picks": picks, "swatches": {s: recipe["swatches"][s] for s in sorted(sels)}}
+
+
+STYLE_CHOICES = {}
+
+
+def _import_character_layers(record, style, zip_name):
+    """CC-01: the layer sheets creation offers (copied unchanged) and game/data/character_style.json, the rules
+    CharacterLook (game/scripts/view/character_look.gd) draws by, all taken from puny_chargen's port of the
+    pack's manifest.tds: draw order, which ramp and colour selection recolours each layer, and the ramps."""
+    layers, used_ramps = {}, {"eyes"}
+    wanted = {layer: [c for c in codes if c is not None] for layer, codes in CREATION_PICKS.items()}
+    wanted.update({layer: [code] for layer, code in ALWAYS_LAYERS.items()})
+    for w in WORN_LAYERS.values():
+        wanted.setdefault(w["layer"], [])
+        if w["option"] not in wanted[w["layer"]]:
+            wanted[w["layer"]].append(w["option"])
+    for layer in puny_chargen.DRAW_ORDER:
+        if layer not in wanted:
+            continue
+        pairs_of = dict(style.choices.get(layer, []))
+        layers[layer] = {}
+        for code in wanted[layer]:
+            pairs = [["eyes", "eyes"]] if layer == "eyes" else [list(p) for p in pairs_of.get(code, [])]
+            member = f"assets/{layer}/{code}.png"
+            dest = OUT / "characters" / "layers" / layer / f"{code}.png"
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(style.z.read(member))
+            record(dest, zip_name, member, "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)")
+            layers[layer][code] = {"sheet": "res://" + str(dest.relative_to(REPO / "game")), "ramps": pairs}
+            used_ramps |= {r for r, _ in pairs}
+    ramps = {}
+    for r in sorted(used_ramps):
+        img = style.ramps[r].convert("RGBA")
+        ramps[r] = [["%02x%02x%02x%02x" % img.getpixel((x, y)) for x in range(img.width)] for y in range(img.height)]
+    selections = {sel: ramp for sel, ramp in sorted(puny_chargen.SELECTIONS.items()) if ramp in used_ramps
+                  and any(sel == s for lay in layers.values() for o in lay.values() for _, s in o["ramps"])}
+    data = {
+        "format": "mml-character-style/1",
+        "source": zip_name + " (rules: tools/puny_chargen.py, a port of the pack's manifest.tds)",
+        "dim": puny_chargen.DIM, "frames": puny_chargen.FRAMES, "directions": puny_chargen.DIRECTIONS,
+        "draw_order": puny_chargen.DRAW_ORDER, "always": ALWAYS_LAYERS, "human_only": HUMAN_ONLY,
+        "selections": selections, "ramps": ramps, "layers": layers,
+        "creation": {"picks": CREATION_PICKS, "swatches": CREATION_SWATCHES, "linked": CREATION_LINKED},
+        # ARMOR-01: worn item id -> {"layer", "option", "swatches", "hides": [layers]} (WORN_LAYERS above)
+        "worn_layers": WORN_LAYERS,
+    }
+    (REPO / "game" / "data" / "character_style.json").write_text(json.dumps(data, indent=1) + "\n")
+
+
+def _gutter(sheet, cols, rows, gutter):
+    """A copy of an unpadded frame grid with every frame centred in a cell 2 x `gutter` px larger. VIS-ANIMAL-01:
+    Cozy Farm's animal frames touch their cells' edges (feet on the bottom edge, noses and tails at the sides), so a
+    frame drawn at a fractional zoom or a snapped sub-pixel position could sample its neighbour's edge row: the
+    stray strips seen over pigs, sheep and chickens. With transparent gutters nothing of a neighbour is in reach.
+    The frames' pixels and their centres are unchanged, so AnimalSprite's grid counts and feet offset still hold."""
+    from PIL import Image
+    fw, fh = sheet.width // cols, sheet.height // rows
+    assert fw * cols == sheet.width and fh * rows == sheet.height, f"{sheet.size} is not a {cols} x {rows} grid"
+    sheet = sheet.convert("RGBA")
+    out = Image.new("RGBA", ((fw + 2 * gutter) * cols, (fh + 2 * gutter) * rows))
+    for r in range(rows):
+        for c in range(cols):
+            frame = sheet.crop((c * fw, r * fh, (c + 1) * fw, (r + 1) * fh))
+            out.paste(frame, (c * (fw + 2 * gutter) + gutter, r * (fh + 2 * gutter) + gutter))
+    return out
 
 
 def sha(path):
@@ -422,6 +561,31 @@ def _seal(img):
     return img
 
 
+def _import_crops(record):
+    """The field plants sheet (CropView): a row per crop of CROP_ORDER, 16 px cells: columns 0-3 the plant a quarter,
+    half, three quarters and nearly grown, column 4 ripe, and on the wheat row column 5 the stubble of a cut field
+    (the ripe wheat cut to its lowest rows: no pack has stubble)."""
+    from PIL import Image
+    sheet = AssetZip(COZY_ZIP).image(CROP_SHEET)
+    out = Image.new("RGBA", (6 * 16, len(CROP_ORDER) * 16))
+
+    def cell(row, col):
+        return sheet.crop((col * 16, row * 16, col * 16 + 16, row * 16 + 16))
+    parts = []
+    for r, crop in enumerate(CROP_ORDER):
+        row, growing, ripe = CROP_ROWS[crop]
+        for k, col in enumerate(growing + [ripe]):
+            out.paste(cell(row, col), (k * 16, r * 16))
+        parts.append(f"{crop}: row {row}, columns {growing} growing, {ripe} ripe")
+    stubble = cell(CROP_ROWS["wheat"][0], CROP_ROWS["wheat"][2])
+    stubble.paste(Image.new("RGBA", (16, STUBBLE_FROM)), (0, 0))
+    out.paste(stubble, (5 * 16, 0))
+    dest = OUT / "tiles" / "crops.png"
+    out.save(dest)
+    record(dest, COZY_ZIP, CROP_SHEET, "16 px cells rearranged, a row per crop (" + "; ".join(parts) + "); the wheat "
+           f"row's column 5 is its ripe plant with the rows above {STUBBLE_FROM} cleared (stubble)")
+
+
 def _import_inventory(record, survival):
     """The pack window from Cozy Farm's inventory sheet: the panel with flat tabs (8 px of empty
     headroom on top, where a raised tab reaches), a strip of the 8 tab rows with each tab raised in
@@ -487,6 +651,8 @@ def main():
     chars.mkdir(parents=True, exist_ok=True)
     style = puny_chargen.Style()
     zip_name = "PUNY_CHARACTERS_v2.1_tdsm-2026.zip"
+    STYLE_CHOICES.update(style.choices)
+    _import_character_layers(record, style, zip_name)
     groups = (("villager", VILLAGERS, 1000), ("bandit", BANDITS, 2000), ("player", PLAYERS, 3000),
               ("guard", GUARDS, 4000))
     for kind, count, seed0 in groups:
@@ -524,8 +690,10 @@ def main():
                 img.save(dest)
                 record(dest, zip_name, "assets/* layers per recipe",
                        f"tools/puny_chargen.py recipe seed {seed}, {sex}, {outfit} clothes: " + json.dumps(recipe["picks"], sort_keys=True))
-                looks.append({"id": name, "sex": sex, "face": i, "outfit": outfit, "sprite": f"res://assets/characters/{name}.png"})
-    (REPO / "game" / "data" / "appearances.json").write_text(json.dumps({"format": "mml-appearances/1", "looks": looks}, indent=1) + "\n")
+                looks.append({"id": name, "sex": sex, "face": i, "outfit": outfit, "sprite": f"res://assets/characters/{name}.png",
+                              "recipe": civilian_recipe(recipe)})
+    # mml-appearances/2: each look carries its recipe, which saves holding only the look or its sprite migrate to
+    (REPO / "game" / "data" / "appearances.json").write_text(json.dumps({"format": "mml-appearances/2", "looks": looks}, indent=1) + "\n")
     icons = OUT / "icons"
     icons.mkdir(parents=True, exist_ok=True)
     iz = AssetZip(ICON_ZIP)
@@ -548,10 +716,17 @@ def main():
     member = "full version/tiles/tiles.png"
     (tiles / "cozyfarm-tiles.png").write_bytes(AssetZip(COZY_ZIP).read(member))
     record(tiles / "cozyfarm-tiles.png", COZY_ZIP, member, "copied unchanged")
+    _import_crops(record)
     animals = OUT / "animals"
     animals.mkdir(parents=True, exist_ok=True)
     for species, (zname, member) in sorted(ANIMALS.items()):
         dest = animals / f"{species}.png"
+        if zname == COZY_ZIP:
+            sheet = _gutter(AssetZip(zname).image(member), 4, 5, COZY_GUTTER)
+            sheet.save(dest)
+            record(dest, zname, member, f"each frame of the 4 x 5 grid moved into a cell {2 * COZY_GUTTER} px larger, centred "
+                   f"({COZY_GUTTER} px of transparent gutter on every side), pixels unchanged")
+            continue
         dest.write_bytes(AssetZip(zname).read(member))
         record(dest, zname, member, "copied unchanged")
     for skin, name in sorted(FOREST.items()):
@@ -629,6 +804,11 @@ def main():
     prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",
                  "transform": "generated: solid dark brown 432 px background for the Android adaptive icon", "sha256": sha(dest)})
     _import_ui(record)
+    for name, rel in sorted(HUD_ICONS.items()):
+        member = f"16x16 Survival RPG Icons/{rel}.png"
+        dest = OUT / "ui" / f"{name}.png"
+        dest.write_bytes(iz.read(member))
+        record(dest, ICON_ZIP, member, "copied unchanged (a HUD status icon)")
     _import_markers(record, iz)
     _import_inventory(record, iz)
     prompts = OUT / "prompts"
@@ -642,6 +822,7 @@ def main():
     craftpix_plants.import_into(prov, record)         # fruit trees (B14): from the private Craftpix zip, else kept as they are
     animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
     terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
+    game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

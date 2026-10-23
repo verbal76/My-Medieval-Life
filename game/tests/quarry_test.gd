@@ -279,4 +279,4 @@ func _test_saves() -> void:
 		if x.ore != "stone" and (not x.has("host") or int(x.host.amount) != 20):
 			ok = false
 	check(ok and int(w3.deposit_at(Vector2i(iron.x, iron.y)).amount) == 20, "an older save's ore seams get their host rock whole (the worked-out iron seam can be quarried)")
-	check(int(d.save_version) == 17, "no new save version (17)")
+	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17, "no new save version of its own (17; 18 is CC-01)")

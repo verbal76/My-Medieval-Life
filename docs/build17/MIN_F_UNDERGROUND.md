@@ -63,7 +63,14 @@ SUPPORTED** (the architecture does not carry it; documented, not invented).
    rails and supports are drawn procedurally at 16 px as PitView's stakes are; the cave floor is the free atlas's
    plain dirt, shaded. Icons: Survival pack stand-ins (log block, plank, iron tub).
 
-## 4. Owner questions (OPEN; not built)
+## 4. Owner questions (ANSWERED 2026-10-21; kept as asked)
+
+All five were answered by the owner (MIN-F-Q1..Q5, `docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md`) and built in
+MIN-F2, MIN-EQUIP and MIN-COLLAPSE: unsupported spans collapse and supports wear and are repaired (`MIN_F2_STRUCTURE.md`);
+the manor's tunnel job and hidden underground ore; miners' minecart-or-carry choice and household minecarts where the
+player laid track; shafts and deeper levels; player-ordered backfilling only; a collapse's outcome for people
+(`MIN_EQUIP_COLLAPSE.md`). Ventilation and lighting were not part of the answers and are not built. The questions as
+first asked:
 
 1. **Collapse and safety:** should unsupported spans fail (and with what consequence), should supports decay (DVW-B4)
    and need repair, and should ventilation and lighting (lamps, torches) be real needs?

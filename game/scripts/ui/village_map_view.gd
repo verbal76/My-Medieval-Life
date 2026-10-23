@@ -160,7 +160,7 @@ func places() -> Array:
 	out.append(["Market", _centre(map.data.stalls) + Vector2(0, -1.5)])
 	out.append(["Fields", _centre(map.data.fields)])
 	out.append(["Animal pens", _centre(map.data.pens)])
-	out.append(["Plots for sale", _centre(map.data.plots) + Vector2(0, -6)])
+	out.append(["Plots for sale", _centre(main.world.plots.filter(func(q): return map.data.plots.any(func(mp): return str(mp.id) == str(q.id)))) + Vector2(0, -6)])   # the world's own plots: a saved world keeps its old ones (ROOMS-18)
 	return out
 
 
@@ -185,6 +185,20 @@ func player_point() -> Vector2:
 	var r := map_rect()
 	var at: Vector2 = r.position + main.world.player.pos * (r.size.x / float(main.map.w))
 	return at.clamp(r.position, r.end)            # outside the village the marker stays on the map's edge
+
+
+## Where the player is when beyond the village map (MAP-01, owner: "the map isn't following me"): {tiles (from the
+## nearest edge of the village), way ("south-west"), dir (unit vector, screen axes)}; {} inside it.
+func outside() -> Dictionary:
+	var map: VillageMap = main.map
+	var at: Vector2 = main.world.player.pos
+	var edge := at.clamp(Vector2.ZERO, Vector2(map.w, map.h))
+	var off := at - edge
+	if off.length() < 0.5:
+		return {}
+	var names := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
+	var i := int(round(fposmod(off.angle(), TAU) / (TAU / 8.0))) % 8
+	return {"tiles": roundi(off.length()), "way": names[i], "dir": off.normalized()}
 
 
 ## The control fills the window under its title: the panel body scrolls, so its height is set here.
@@ -228,6 +242,17 @@ func _draw() -> void:
 	draw_arc(pos, rad + pulse * rad * 2.0, 0, TAU, 24, Color(YOU, 1.0 - pulse), 2.0)
 	draw_circle(pos, rad + 1.5, WALL)
 	draw_circle(pos, rad, YOU)
+	var away := outside()                          # MAP-01: beyond the map, an arrow at its edge toward the player, and how far
+	if not away.is_empty():
+		var dir: Vector2 = away.dir
+		var tip := pos + dir * (rad + 14.0)
+		var side := Vector2(-dir.y, dir.x) * 6.0
+		draw_colored_polygon(PackedVector2Array([tip, pos + dir * (rad + 4.0) + side, pos + dir * (rad + 4.0) - side]), YOU)
+		var say := "You: %d tiles %s of the village" % [int(away.tiles), str(away.way)]
+		var w := font.get_string_size(say, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var lp := Vector2(clampf(pos.x - w / 2.0, r.position.x + 2, r.end.x - w - 2), clampf(pos.y - dir.y * 28.0 - rad, r.position.y + fs, r.end.y - 4))
+		draw_string_outline(font, lp, say, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 5, Color.BLACK)
+		draw_string(font, lp, say, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, PALE)
 	# the legend
 	var y := size.y - 6.0
 	var x := r.position.x

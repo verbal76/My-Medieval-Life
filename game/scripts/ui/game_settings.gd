@@ -75,7 +75,7 @@ func sizes_that_fit() -> Array:
 
 
 func apply(tree: SceneTree) -> void:
-	_buses()
+	ensure_buses()
 	for bus in [["Master", master], ["Music", music], ["SFX", sfx]]:
 		var i := AudioServer.get_bus_index(bus[0])
 		AudioServer.set_bus_volume_db(i, linear_to_db(maxf(float(bus[1]), 0.0001)))
@@ -100,8 +100,8 @@ func apply(tree: SceneTree) -> void:
 			DisplayServer.window_set_position(DisplayServer.screen_get_position() + (screen - size) / 2)
 
 
-## Music and SFX buses under Master, created once (the game has no sounds yet; they will play on these).
-func _buses() -> void:
+## Music and SFX buses under Master, created once: GameAudio plays the music on "Music" and the ambience and effects on "SFX".
+static func ensure_buses() -> void:
 	for name in ["Music", "SFX"]:
 		if AudioServer.get_bus_index(name) == -1:
 			AudioServer.add_bus()

@@ -16,6 +16,230 @@
    "sha256": "db6e36b368fd7fafc66aefa3adc23f8e527c2d4f45109f5079f8d73c41f0e15d"
   },
   {
+   "file": "assets/characters/layers/race/human.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/race/human.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "6b9e0e471566ebd24170f010fa32e9fedefa6709409dc4c0b8a3ac0c267e26ce"
+  },
+  {
+   "file": "assets/characters/layers/shoes/leather-boots.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/shoes/leather-boots.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "9dee36475bdcb01bea7ee1a6216518c7ce9c1952e3dd336ce74c482b0206d115"
+  },
+  {
+   "file": "assets/characters/layers/clothes/basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/clothes/basic.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "57afcd9f5bacf4dd3dd8570e290748201b88cc619a4e0ed97539ce79a5a05301"
+  },
+  {
+   "file": "assets/characters/layers/clothes/tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/clothes/tunic.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "57584df85ad2020ebfda7810ace8130de8021a6a198435581cb0b9b871f3cc5b"
+  },
+  {
+   "file": "assets/characters/layers/clothes/metal-armour.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/clothes/metal-armour.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "c119efb120231bc99fcef8f10445dfd8d29edb03abdf01663379fc47507f6cec"
+  },
+  {
+   "file": "assets/characters/layers/hair/f1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "14a01d333bf464ea5c444ae0cc2660f1257589c6aaaa7ee3f7e1105454de179d"
+  },
+  {
+   "file": "assets/characters/layers/hair/f2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "af11ecd4f7fb122102e5b81dfa7e792855dc6407fad23a7b575a054bf892fb2a"
+  },
+  {
+   "file": "assets/characters/layers/hair/f3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "be8b1744c75f7666376d75d7f2568610c7560c7bd8b5dd0eb906251e9a91895a"
+  },
+  {
+   "file": "assets/characters/layers/hair/f4.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/f4.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "9f8d4c7e966ae33f4a5f507570ca563d63949de6aff095b344c45832c93177d5"
+  },
+  {
+   "file": "assets/characters/layers/hair/m1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "57a56d53919089a29b889a9b395acb714f68e1e36ebb5ab48f08133f53713160"
+  },
+  {
+   "file": "assets/characters/layers/hair/m2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "65312a202fe5ad9fa85e6ee1fab7eeea1f863e35fb3050f8fbef411d2cd2d0bc"
+  },
+  {
+   "file": "assets/characters/layers/hair/m3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "5d9dc336cf8cef3a8de79d31719f6d6a89a96a30b1aca34465bf95b2fea97c1c"
+  },
+  {
+   "file": "assets/characters/layers/hair/m4.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m4.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "ef8c29d18bd7fc397a77589f5405b3810f79f780c6ac90194c1c5addafbb3121"
+  },
+  {
+   "file": "assets/characters/layers/hair/m5.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m5.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "8dc28017856ba78f2d744641fd7620668cc9378d079614bffd50764c6454f6ef"
+  },
+  {
+   "file": "assets/characters/layers/hair/m6.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m6.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "af3db6abe4c87c824dded023e2f62156d43beac2010ccb967aac6dd058a0f444"
+  },
+  {
+   "file": "assets/characters/layers/hair/m7.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m7.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "2f486222762e56cf25d5f9377a65e55e4131bf8eee22b968799b343e23c5ac59"
+  },
+  {
+   "file": "assets/characters/layers/hair/m8.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m8.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3666550b668aae7400d97b80d6875f9589ebfa06489b32390aaad4fff187aa0a"
+  },
+  {
+   "file": "assets/characters/layers/hair/m9.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/hair/m9.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "8a56bd273f94bb40f16a81e27ec6295373516d5c9aef12dce409cef5b5230a7d"
+  },
+  {
+   "file": "assets/characters/layers/facial-hair/beard1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/facial-hair/beard1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "60e7859d6922d8c8492c7e20eff2148c77860f2026254a2cee3568e42cec8fe9"
+  },
+  {
+   "file": "assets/characters/layers/facial-hair/beard2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/facial-hair/beard2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "94a65f1e8e3df585370983e9ccbe31ec0961b29e8e4f4accde269b34ddc82c38"
+  },
+  {
+   "file": "assets/characters/layers/facial-hair/mustache.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/facial-hair/mustache.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3557a64df20c776568118ed5dca854fd1b5fdd78a651c4ebaf1f0edc901333fb"
+  },
+  {
+   "file": "assets/characters/layers/eyes/eyes.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyes/eyes.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "8839730b488b4a0db84e5bd222755dc1817e422af2d0f5da5a375d7e4483a10a"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/f1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/f1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "e43a24eed4135c31971ba7ff1af4387a8a1ddda16fb44c5f4d3b22c1fced4799"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/f2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/f2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "7d9b5b935536facf93b27412b0a3ee99efc9924bfaeb5481600262ddd34050fb"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/f3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/f3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "306acffe294060895c8ef8d1b9d3cf5eb9bca26b54ee3ea37644725715758fdb"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/m1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/m1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "557a10d03c5a40c010e46f3c6836aa7c384991e1ae7f621963d35cb6beb0a28c"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/m2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/m2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "9904d05efb449e140ba24902385cdfedccac71df1093a39e7cf40ab4e6685d7a"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/n1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/n1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "bd8680197d00556559e51ca9695ebcc22c1352b2fedf9f6bb1d6b18b7f6f4dde"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/n2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/n2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "1f580759bbf25099b2c8f76de2d9c2a1887ced1b4a5b6f1e84f615226d00d280"
+  },
+  {
+   "file": "assets/characters/layers/eyelashes/n3.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/eyelashes/n3.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "b2adc0f4f670ff8eb3696203d10fa29cf619ea131889b0516c63b0ba15fd0025"
+  },
+  {
+   "file": "assets/characters/layers/headwear/novice-helm.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/headwear/novice-helm.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "215256052e6edcf20d190ebb70b4bc75b792c588194a766bbc2824528befdc32"
+  },
+  {
+   "file": "assets/characters/layers/weapon-overlay/weapon-overlay.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/weapon-overlay/weapon-overlay.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "5df971546131eb2f57bfb9807bb06f35594ca1baf42ce98ee1e1e98a7877b9fa"
+  },
+  {
    "file": "assets/characters/villager_00.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
@@ -625,6 +849,13 @@
    "sha256": "d1a6bf7a571a53b0b5a583150388b06ed49ac23d2a5aafd4fc7fe83f2264fd07"
   },
   {
+   "file": "assets/icons/chisel.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Knife-05.png",
+   "transform": "copied unchanged",
+   "sha256": "1f28c458b6ecaceaaae343b4bba42e0bb41f91d5de3c37b2444cd4edf4a3543d"
+  },
+  {
    "file": "assets/icons/coal.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Coal-01.png",
@@ -672,6 +903,13 @@
    "member": "16x16 Survival RPG Icons/Plants & Alchemy/Leaf-05.png",
    "transform": "copied unchanged",
    "sha256": "e56e0c4a01e30e5f3c7e35afc3a7aab7bde4f95de4d23ad76aa16ac9da89bdcf"
+  },
+  {
+   "file": "assets/icons/fine_cloth.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Textile/Silk-Fabric-16.png",
+   "transform": "copied unchanged",
+   "sha256": "60bd2f513c2a95b0e88b200c2fb430f3b2f0cc2c90fd2ff587649e34146eb8c8"
   },
   {
    "file": "assets/icons/fireball.png",
@@ -912,6 +1150,13 @@
    "sha256": "de18287ebf5a766d0a64872b6fe931340e979bcd42ec2bac4be383adb9abf98f"
   },
   {
+   "file": "assets/icons/rubble.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Stone/Rocks-05.png",
+   "transform": "copied unchanged",
+   "sha256": "15d7a8811e610701638e22a24c4b0a87a01022a8b9a3feadb7f014045a9654ff"
+  },
+  {
    "file": "assets/icons/shovel.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Tools/Shovel-05.png",
@@ -931,6 +1176,13 @@
    "member": "16x16 Survival RPG Icons/Tools/Shovel-15.png",
    "transform": "copied unchanged",
    "sha256": "16b91b174215899643714488cd2b8951dae8be62d1200889871cd0767f4e4e86"
+  },
+  {
+   "file": "assets/icons/spice.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herb-Bundle-04.png",
+   "transform": "copied unchanged",
+   "sha256": "31c214e2c5e6d8946d775905578e32daf41fe96c80c2eb501d0795f9d7d8b49c"
   },
   {
    "file": "assets/icons/spoil.png",
@@ -1101,11 +1353,25 @@
    "sha256": "3c8d9b32670b936946127003e8dc54e4eff218610784fc157fd92295b7bf8c0a"
   },
   {
+   "file": "assets/icons/jewellery.png",
+   "source": "16x16 Jewelry RPG Icons.zip",
+   "member": "16x16 Jewelry RPG Icons/Necklaces/Necklace-28.png",
+   "transform": "copied unchanged",
+   "sha256": "b3304b3c2d832898b3a60e96499ab7bbe78202542081c6b596d3b5c575f46b04"
+  },
+  {
    "file": "assets/tiles/cozyfarm-tiles.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/tiles/tiles.png",
    "transform": "copied unchanged",
    "sha256": "cd3c0a91c3466ea54061f5fb008bb77aa8dc257e0d027f3d0505dc4e35b8f49e"
+  },
+  {
+   "file": "assets/tiles/crops.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/crops.png",
+   "transform": "16 px cells rearranged, a row per crop (wheat: row 9, columns [1, 2, 3, 4] growing, 5 ripe; carrot: row 0, columns [1, 2, 3, 4] growing, 5 ripe; potato: row 5, columns [1, 2, 3, 4] growing, 5 ripe; herb: row 36, columns [1, 1, 2, 3] growing, 4 ripe); the wheat row's column 5 is its ripe plant with the rows above 11 cleared (stubble)",
+   "sha256": "9c6163688d245958bb2c062ea8f80a45de86c9c53ae7baab080b8c3af5fbc5ea"
   },
   {
    "file": "assets/animals/boar.png",
@@ -1125,113 +1391,113 @@
    "file": "assets/animals/chicken.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken animation.png",
-   "transform": "copied unchanged",
-   "sha256": "b7d2b1ea354375cc539942d502ae1969d58be2af51e63c57db94c7fee76dc65a"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "890c88fee1a92d5b323b0f8f08738565aa500bb7176205157998e7e388f7d0b5"
   },
   {
    "file": "assets/animals/chicken_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "9112cf5bfc68cf2943af8cc6ce130b8d9bc31fd1b180f8d81639e488593aab88"
   },
   {
    "file": "assets/animals/chicken_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_brown animation.png",
-   "transform": "copied unchanged",
-   "sha256": "b9555dff39a77435af43e9f2b23fb504d89a687230f6bb2edaf9258098fc89f8"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "10054fb6fbca289174b43cf7aee8d051277878634a8e9cb2d4ebb0131ad891ff"
   },
   {
    "file": "assets/animals/chicken_brown_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "9112cf5bfc68cf2943af8cc6ce130b8d9bc31fd1b180f8d81639e488593aab88"
   },
   {
    "file": "assets/animals/cow.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow animation.png",
-   "transform": "copied unchanged",
-   "sha256": "f1100c1f866d0fefdeac466c506b7addeec5c50fecfc96d78e05c79bf9a01692"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "b5fe72467e4edbdd66c6636904519ea59922cb4d584b80e0864a8c7bb88f3ad5"
   },
   {
    "file": "assets/animals/cow_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "b88b52d37f053ed7b0e9cf00191d87be14659d14182a643ba20466b9978f0e75"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "d405a0537580343705c1f95c5cc32a4275763ef90269324511e9cebe83f74dc6"
   },
   {
    "file": "assets/animals/cow_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_brown animation.png",
-   "transform": "copied unchanged",
-   "sha256": "7897a910749e63d8bb82238a4c903b60eb3798dfdc096034f9110b29e31e3bbb"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "377c0edee7b02024c2f3c3a198c1bd4e1a305926135301e5200388368bd35e0a"
   },
   {
    "file": "assets/animals/cow_brown_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_baby_brown animation.png",
-   "transform": "copied unchanged",
-   "sha256": "6fdfd0608932b28b68170d3c6e9d0a24ff5caf6375d9171620f4a581b35ad41d"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "0b1aa9094bbe4e5ed5351284442a1ed0680c455525f8eda73d5cde987af47d38"
   },
   {
    "file": "assets/animals/pig.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/pig animation.png",
-   "transform": "copied unchanged",
-   "sha256": "dc6df6749d46ef78224ef56f129af3e6a50fdb3f91a56cefb44f1ccab1345851"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "af81bbf16d5ef358f8c33f5bbd6b8c32a224aa99b3271afc47e9f5ee0880f16f"
   },
   {
    "file": "assets/animals/pig_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/pig_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "459c910e7d1d8a8e3f855efb51d7a700b00d4ec5bf68ce935f41017e0c31acc0"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "14258a4f4b2b81a6730ed572985bd397ef4427e3faf901f16a188f294e56f7bc"
   },
   {
    "file": "assets/animals/rabbit.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_animations.png",
-   "transform": "copied unchanged",
-   "sha256": "d0cf0b0dc7ed9c0fcf6e43b0278a4c1da49612bcceb9f5d89472c137430eab71"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "947000a8e3828022b60514fcd22876a25976f12d637c27fc0ee34d92e211103a"
   },
   {
    "file": "assets/animals/rabbit_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "f2daf1d0fd386171377b0585c8495d7dc03cb5c9f7c9ae281b2e4e8098e37120"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "352f77f04df28400332c47bb017b3252d9c8322ea1c9d3d172bb33c5aa0b7aee"
   },
   {
    "file": "assets/animals/rabbit_grey.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_grey animation.png",
-   "transform": "copied unchanged",
-   "sha256": "9d147c615ec0feb4497c09d84f360fff3a764a4116a3919fccdb0ae4232b5b91"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "f286c6fff23cf4030719bb208c006f2fe27362c45b81e59ef28161d7bfac3018"
   },
   {
    "file": "assets/animals/rabbit_grey_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_baby_grey animation.png",
-   "transform": "copied unchanged",
-   "sha256": "9d20fce6eddb7e42ea0455e48a8144583691e4bf7877734e8aabafbc13fb7043"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "bca3c77ce7b312031eec17d8b3d4685d0577a5ee7df5c1d8ce67ee5245e409f0"
   },
   {
    "file": "assets/animals/sheep.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/sheep animation.png",
-   "transform": "copied unchanged",
-   "sha256": "aa423f2e063ba97e7c526ff0d269ccf7c0ba3eb2a9cce7ea7212e7707c365b0c"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "79ba80272e6e3892f768fe61d5c186b026e013b0697df009ac77829fa01091c9"
   },
   {
    "file": "assets/animals/sheep_baby.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/sheep_baby animation.png",
-   "transform": "copied unchanged",
-   "sha256": "970740a455db94f22e3d32381c3ea69ea181c97235277840afb63253ca43e092"
+   "transform": "each frame of the 4 x 5 grid moved into a cell 2 px larger, centred (1 px of transparent gutter on every side), pixels unchanged",
+   "sha256": "38a98830165006d9e131217f445918420f5f18643d1e612b01dae5b7c85b4458"
   },
   {
    "file": "assets/animals/mini_bear.png",
@@ -1687,6 +1953,13 @@
    "member": "Flat_game_UI_set_3.ai",
    "transform": "rasterised at 100 dpi with pdftoppm; a 40 px square from a blank tile of the dark LEVELS window (the pack's button colour), recoloured to wood brown (111, 74, 44)",
    "sha256": "5d50e5678aed025b80534c89cf15d6aa1e7b9119eb0ea8653562033db7fb362f"
+  },
+  {
+   "file": "assets/ui/hud_hunger.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Food/Fowl-04.png",
+   "transform": "copied unchanged (a HUD status icon)",
+   "sha256": "1d8aa9db1506e911346b975ba2ac7590974c1a46acefb4861f3a22ab11c1bf89"
   },
   {
    "file": "assets/markers/combat.png",
@@ -2865,13 +3138,6 @@
    "sha256": "c0290c56a80127d17b1fd5f291417146059948357a7ee5aeaa1da4de2e093e48"
   },
   {
-   "file": "assets/trees/apple_orchard_stump.png",
-   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
-   "member": "PNG/Plants.png",
-   "transform": "the mature stage's lowest 10 rows, cropped to its pixels (the pack has no stump)",
-   "sha256": "401859657a35b0f285369e20c17c70e50c626c11fd16f8ee043531e7007608d4"
-  },
-  {
    "file": "assets/trees/apple_orchard_cut_left_1.png",
    "source": "",
    "member": "(drawn by tools/craftpix_plants.py)",
@@ -2918,7 +3184,7 @@
    "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
    "member": "(generated)",
    "transform": "tools/craftpix_plants.py: what each fruit-tree file is, its size, offset and pivot",
-   "sha256": "788b2ccf811fd9dac30a0194a8d31393e162786528a95f41ad8d2d974859c188"
+   "sha256": "453c758cc4581427021a002eddef7a4ed4d794bfd638aa4c5a35825e0be9385f"
   },
   {
    "file": "assets/icons/apple_sapling.png",
@@ -2963,6 +3229,34 @@
    "sha256": "891d24941af8f5a1c59b631b68cc2178748fe3c674eba53af2d4543e7d5f7cd4"
   },
   {
+   "file": "assets/terrain/steps_ns_mid.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
+   "transform": "the same tile at (96, 96) with its bottom three rows continuing the treads, for a cell with steps below it",
+   "sha256": "1fbb6fecea80b2c625897356ad8f4fb2486778404c0a9ce5a3cd5dbdae086c5b"
+  },
+  {
+   "file": "assets/terrain/steps_ew_mid.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
+   "transform": "the same, turned a quarter, for a cell with steps beside it to the east",
+   "sha256": "f62a3adae37ce68d4ae718014ebef192c2f9202058977a2af075c404025c5116"
+  },
+  {
+   "file": "assets/terrain/steps_ns.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
+   "transform": "the 16 x 16 stone cliff-stair tile at (96, 96), 1:1, its bottom three rows (grass) made transparent",
+   "sha256": "c3e3936e44acce73edd84559d0966ff8547764807973e2809903193072ccc7dc"
+  },
+  {
+   "file": "assets/terrain/steps_ew.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png",
+   "transform": "the same tile at (96, 96) turned a quarter, for steps running east-west",
+   "sha256": "ef7dcdab3d3ce8cbe7b82d3b27aeb080d2da058c0d06504d4a0d7681dd684fb6"
+  },
+  {
    "file": "assets/icons/nails.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Metal/Metal-Nugget-03.png",
@@ -2982,6 +3276,405 @@
    "member": "TileSet.png",
    "transform": "the 32 x 32 piece of the laid-stone paving at (1472, 608), reduced 1/2 (box), a step line darkened to 0.62 every 4 rows",
    "sha256": "f6915916f816a78d7b3ea05b5beb14c28caa1854f1a25a66b7a29d0fe28460d2"
+  },
+  {
+   "file": "assets/music/sunrise_over_the_village.ogg",
+   "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
+   "member": "Sunrise.over.the.Village.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4 (Android's copy; PC builds use the original WAV: 47975440 bytes, sha256 c858cfbd79fbc29a8cca0e2a220559be454e82070317b37de2ab6405422f18f0)",
+   "sha256": "75611323c1938f71149450b72684b672193d9f35ba468d2283c601b9c7bd1264"
+  },
+  {
+   "file": "assets/music/prosperous_village.ogg",
+   "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav",
+   "member": "Prosperous.Village.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4 (Android's copy; PC builds use the original WAV: 39105040 bytes, sha256 85e68fa3efdb7c32336a25cffbf74d5b5d84542a7d1222f997132b8bb4111ac6)",
+   "sha256": "61812f9e36a6db6ba8232e21822794c82152effdbd431b3166813d1581567028"
+  },
+  {
+   "file": "assets/music/misted_ancient.ogg",
+   "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav",
+   "member": "misted.ancient.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4 (Android's copy; PC builds use the original WAV: 86337040 bytes, sha256 a04980a71119ea35b4741d3567153d97103a77bd24ce58859a6f36ce82d3c8c6)",
+   "sha256": "5bd291ab78c00a6479ae5c741e73ee29e6d3274e45b7450d7d7a65ce8e99937c"
+  },
+  {
+   "file": "assets/music/fair_fight.ogg",
+   "source": "Minifantasy_ForgottenPlains_Music.zip",
+   "member": "Minifantasy_ForgottenPlains_Music/Music/Fair_Fight_(Battle).wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 6 (used on every platform: the pack may not be redistributed, so its WAV is not committed)",
+   "sha256": "36d1b95d255949de747afb85f5822692f92da4391c7f587c95a62fe7637f9e05"
+  },
+  {
+   "file": "assets/music/plain_sight.ogg",
+   "source": "Minifantasy_ForgottenPlains_Music.zip",
+   "member": "Minifantasy_ForgottenPlains_Music/Music/Plain_Sight_(Regular).wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 6 (used on every platform: the pack may not be redistributed, so its WAV is not committed)",
+   "sha256": "ba4158c0bd90c134f29565879f3073dc48ab07ff13a351ffc6216a18aae750af"
+  },
+  {
+   "file": "assets/sfx/birds.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "13_Birds_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "1c9b017851a247c76c9bc0d8e2dd08015a063f415cf0cb3d12b2f5a2221ea774"
+  },
+  {
+   "file": "assets/sfx/book_page.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/book-page.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "a5d0520daeb68b65116274ace05d29c4923c6d698a293bdde8769f90d8970872"
+  },
+  {
+   "file": "assets/sfx/bush_rustling_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "01_bush_rustling_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "7f4a0617737967e6317cc9c93a888da80613679ab15ceb68b15a4731992eb666"
+  },
+  {
+   "file": "assets/sfx/bush_rustling_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "01_bush_rustling_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "0e1f92c42922ad8e7756ca4ae85c4694335be1f372be1c7f9771713a7debf562"
+  },
+  {
+   "file": "assets/sfx/bush_rustling_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "01_bush_rustling_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "04be64cd4b73bf03a5103bf70327daa600baad8407fa5a076572c6eba98ae771"
+  },
+  {
+   "file": "assets/sfx/campfire.ogg",
+   "source": "cozy-rpg-sfx-ambience-1.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-campfire.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "24cc59853d221894143483a05b93fa08ca591f12fe734fc66bcf0c6c5ebd34b2"
+  },
+  {
+   "file": "assets/sfx/cave_wind.ogg",
+   "source": "cozy-rpg-sfx-ambience-2.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-cave-wind.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "1ab73ecca0a42ced6662bc662faa38fc46f1d1bf65dd5dcc4917e4c022b90e0e"
+  },
+  {
+   "file": "assets/sfx/chest_open.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/chest-open.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "3e4f6f4afdb1b56a0188c97baf34a0baf0469dc6b44e72b3e22d256f89e0a450"
+  },
+  {
+   "file": "assets/sfx/cicada.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "12_Cicada_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "641d5f747516e0aad3edb0d23c83ecc310400e0026da96058c74d3571a3ac922"
+  },
+  {
+   "file": "assets/sfx/coin.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/coin.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "8ad297724e1f4e037d336d7de3a918da8af0a4c22e74490705bed5cf2e257398"
+  },
+  {
+   "file": "assets/sfx/crickets.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "11_Crickets_2_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "8e6636c9ef092db49b0f55cbf6b175be28cb70fcb93b17cb1c6af3d5427756c3"
+  },
+  {
+   "file": "assets/sfx/critical_hit.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/critical-hit.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f41b1fc907f3f9da9846ad3df59ffb47ee29a6d28aff1d1ee350dcd3048d35c3"
+  },
+  {
+   "file": "assets/sfx/door_wood.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/door-wood.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f96e518bcdb932504e070bd4032a3514b3fce732feb39b166231764d30c17e87"
+  },
+  {
+   "file": "assets/sfx/dungeon.ogg",
+   "source": "cozy-rpg-sfx-ambience-1.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-dungeon.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "437efd93c00b9b266e703a4ad68868ee43fdddc40a1e5b8428857c52e2d6a23f"
+  },
+  {
+   "file": "assets/sfx/enemy_defeat.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/enemy-defeat.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "eccb586c813a23a325f4af64b659bfdf9e25d559a3b9b2a43500f4b6cea664a0"
+  },
+  {
+   "file": "assets/sfx/enemy_hit.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/enemy-hit.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b80ff99a9253c1d3b5a41743a0fa905b65e988ae35248b65312f13a554e51b23"
+  },
+  {
+   "file": "assets/sfx/equip_armor.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/equip-armor.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "20d856849e039f39b60489e6cac756cd8d56f0c68e0ddb22d85ce251f176bd2d"
+  },
+  {
+   "file": "assets/sfx/equip_weapon.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/equip-weapon.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "fc0b050d4ce05061e34eb78aa55be03314d4b346f8341d63496777005bd7bbb5"
+  },
+  {
+   "file": "assets/sfx/fireball.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/fireball.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "19a0325c5c967d0018a432b322320fff002870410d13b6a444822fa79f35d444"
+  },
+  {
+   "file": "assets/sfx/forest.ogg",
+   "source": "cozy-rpg-sfx-ambience-2.zip",
+   "member": "cozy-rpg-sfx/ambience/ambience-forest.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "4d94ef03a2de6b5201f9a691fd242811a74d6a9079b57fbaf7119ccb07f7a869"
+  },
+  {
+   "file": "assets/sfx/fruit_drop_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "03_fruit_drop_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "0a78800b33198bf5dc5d0eba441db41908042c6bb96e6d402298e6fa0124f46e"
+  },
+  {
+   "file": "assets/sfx/fruit_drop_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "03_fruit_drop_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "2284af84b6bced2323efcf0b5ef10296e49ae03536f8fd8a574d69c1019e710b"
+  },
+  {
+   "file": "assets/sfx/hit_on_brick_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "16_Hit_on_brick_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "cafee451ef65e819e53364d7d343715773956c46c832e1517b20f696d1e39932"
+  },
+  {
+   "file": "assets/sfx/hit_on_brick_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "16_Hit_on_brick_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "be089a893c86b7740d8b40bc07ec4360aa9697b2c900ed0bb1116533d66c7614"
+  },
+  {
+   "file": "assets/sfx/hit_on_wood_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "15_Hit_on_wood_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "625b8d9a6e7f49f2a40ad7c47ac477c26c09d46ea2384b7a0bade45aa4881efe"
+  },
+  {
+   "file": "assets/sfx/hit_on_wood_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "15_Hit_on_wood_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "30bde707794bb0325dfc6c2b30927c0ddb45fef22dd018dcd87863ca74a12d4b"
+  },
+  {
+   "file": "assets/sfx/jingle_inn_rest.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-inn-rest.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "2735649e8a3755c1b5b362d544b3d255c96e0b91a50f3a5d73a407e10e67c88d"
+  },
+  {
+   "file": "assets/sfx/jingle_level_up.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-level-up.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "eb20ba8f6b3a65b3b6124e3f1b000a511f4aeda973a6272b21f0f2703ae55643"
+  },
+  {
+   "file": "assets/sfx/jingle_quest_accepted.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-quest-accepted.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "c8c930010c3678cdc89664e239735c43dfc94bb4c78c424a6f285355de1b810b"
+  },
+  {
+   "file": "assets/sfx/jingle_quest_complete.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/jingle-quest-complete.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "6de8323fa57a337c5aa366a7ef7e9b1e60c42f531a157172bc94446a5518bf76"
+  },
+  {
+   "file": "assets/sfx/player_hurt.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/player-hurt.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "ece3d527e0414886a1962eb15f159b1aa4d2a9a0883cd90cbdf35352d13b4cf8"
+  },
+  {
+   "file": "assets/sfx/potion_drink.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/potion-drink.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "3838d5bdcc8f9077cd05db892166b3a0c5ce884319b2415539627b9ec9377c0d"
+  },
+  {
+   "file": "assets/sfx/save_crystal.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/save-crystal.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b4f651feb69cf82ebb0adb058ab4e54583e6e75b7b42b069df4d155ec8abbc90"
+  },
+  {
+   "file": "assets/sfx/secret_found.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/secret-found.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "4825410d8abbbfbbc5c349c2ce431e1e119ab5db60156fcced8c1cbd431251d3"
+  },
+  {
+   "file": "assets/sfx/step_dirt_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "05_step_dirt_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f1be00094e43f28300ef98b51289931b62ff097d0a3ee471ded9e3008f752f10"
+  },
+  {
+   "file": "assets/sfx/step_dirt_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "05_step_dirt_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "ca57319f1f9eef97aadc9a612c66f77483d979ef8cbf0d435dec902b9a8ac80f"
+  },
+  {
+   "file": "assets/sfx/step_dirt_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "05_step_dirt_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b558c9dc723be575ffbd7e914d24aa99b2e5a78d347bb6eeab879591ea36e396"
+  },
+  {
+   "file": "assets/sfx/step_grass_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "04_step_grass_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "8ff7f29c98ac1cf03929db91165fb8da0529d7d7587cc37973b7ac5ce3fdae23"
+  },
+  {
+   "file": "assets/sfx/step_grass_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "04_step_grass_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "3773c6971bd27d1fb2c6dbd1d177fbaca1165cfd838cbf0d81b53309442b7167"
+  },
+  {
+   "file": "assets/sfx/step_grass_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "04_step_grass_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "0a9733e6d3450dc145a0c2b7133fc3dcaa6a31679f885d822787e1ada1aa6ec4"
+  },
+  {
+   "file": "assets/sfx/step_stone_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "06_step_stone_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "e8de2e7d1f160eb16c5723bea2dff2916377deef0e86a0b4d0e015384e085a11"
+  },
+  {
+   "file": "assets/sfx/step_stone_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "06_step_stone_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "7f6b343b4b0e52bb6f3aa2d00fe40ee0579177ec728ae953b8560049d714f20b"
+  },
+  {
+   "file": "assets/sfx/step_stone_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "06_step_stone_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "a6d67b99c53b4ff26cc39283a0af4a5267908e681a13b0126698ae6e5654913b"
+  },
+  {
+   "file": "assets/sfx/sword_hit_1.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-hit-1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b280932f981094e63183f3c09744659c0b0b772744a3caa0def48653c2c45754"
+  },
+  {
+   "file": "assets/sfx/sword_hit_2.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-hit-2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "f0e9cf6305765309b607802af88b0dc8865888e40bfa5f3f7d2d6b83e5e30bc3"
+  },
+  {
+   "file": "assets/sfx/sword_swing_1.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-swing-1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "64e7f946c3555fa438bc88b9e2c9d0463fc3a44efe0b694b3b7db0b7b16af32b"
+  },
+  {
+   "file": "assets/sfx/sword_swing_2.ogg",
+   "source": "cozy-rpg-sfx.zip",
+   "member": "cozy-rpg-sfx/sfx/sword-swing-2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "de455e41f8714af3bd2fbea23508f726a0c67afc8dfcb9ce208fa19acc788dc9"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_1.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "b133cca60977a5498bf4ee221d6038109c07165ff4d698139900312d0043d6ec"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_2.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_2.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "16fa0c9ed045719ab94b986fae595576005d352e7e0e2a6f8ead41af3944487b"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_3.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_3.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "61ecf894e6d28ed03be946c144fc694cf97828d7af74d5298e95c779ad204cc0"
+  },
+  {
+   "file": "assets/sfx/tree_rustling_4.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "02_tree_rustling_4.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4",
+   "sha256": "d9f72f51ee6f9e18f2eac02e72e39932f81ede8c1f0fcb46d4d498740f81c744"
+  },
+  {
+   "file": "assets/sfx/wind.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "14_Wind_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "63069d9e3772ff7e99487037a998a7e11d55306461f083ccebd5314062ccec54"
   }
  ]
 }

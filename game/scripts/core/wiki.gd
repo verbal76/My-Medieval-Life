@@ -25,21 +25,42 @@ const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"],
 const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "items_gear", "head": "items_gear",
 	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials", "medicine": "items_medicine"}
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
+## Player-facing wording for resource pages whose data notes are written for developers (WIKI-B17): what the player sees,
+## without code names. The mining nodes' wording is WikiMining.NODE_TEXT.
+const NODE_PLAYER_TEXT := {
+	"tree": {"notes": "Only a full-grown tree can be felled: saplings and young trees give nothing and say why. A few blows of an axe bring it down for 4 logs; with Woodcutting 2 you get one more, and sometimes a sapling to plant. Villagers fell by the same blows and get 4 logs."},
+	"wheat_field": {"notes": "You can take a handful of a ripe field's grain each time it ripens (less if less is left); the farmer who works it takes the whole crop."},
+	"flower_patch": {"notes": "One flower a plant, all at once. Now and then whoever picks it, you or a villager, also finds a flower seed, which grows a new flower where it is planted."},
+	"red_berry_bush": {"notes": "Two red berries a bush, all at once. Now and then whoever picks it also takes a cutting, which grows a new bush where it is planted."},
+	"blue_berry_bush": {"notes": "Two blueberries a bush, all at once. Now and then whoever picks it also takes a cutting, which grows a new bush where it is planted."},
+	"apple_tree": {"where": "The cottagers' orchards near the houses, and any apple tree grown from a sapling.", "back": "Picked bare, it bears again in a later fruiting season (summer and autumn), never in winter or spring.", "notes": "A grown apple tree in fruit gives its apples all at once. It can also be felled like any tree for logs, and sometimes an apple sapling."},
+	"wild_boar": {"back": "A well-fed female and male sharing a wood have young from time to time, while the wood is not full. Nothing comes in from outside: a group of one sex never breeds again.", "notes": "A young animal gives half the meat (at least 1) and no hide. Your kill is left as a bag where it fell."},
+	"wild_rabbit": {"back": "As for boar: young while a well-fed pair shares the wood and it is not full.", "notes": "A rabbit gives no hide, but an adult gives a pelt, which you can tan to leather at the workbench or sell to the tanner or the goods merchant. A young one gives at least 1 meat and no pelt."},
+	"wild_bear": {"back": "Young while a well-fed pair shares the wood and it is not full.", "notes": "A young bear gives half the meat and no hide. Bears are tough."},
+	"wild_bird": {"back": "Young while a well-fed pair shares the wood and it is not full.", "notes": "A bird gives a feather and no meat."},
+	"sheep_pen": {"back": "Young while a well-fed pair shares the pen and it is not full.", "notes": "A young animal gives half the meat and no hide. The manor's sheep are not shorn: only a sheep in your own pen gives wool."},
+	"chicken_pen": {"back": "Young while a well-fed pair shares the pen and it is not full.", "notes": "Chickens give no hide and lay no eggs. An adult gives feathers, which only the goods merchant buys. A young one gives none."},
+	"player_field": {"notes": "Each ripe cell gives its crop (the herb crop is the wild flower the sage buys) and some seed of the same crop to sow again. Farmers and the food stall's merchant also sell seed."},
+}
+
 const JOB_TEXT := {
 	"miner": "Works the ore seams in the mine yard, the gallery and the cave, quarries the grey rock of worked-out seams, and sells ore and stone to the smith and the raw-goods merchant. When its ore is worked out it takes the manor's trial pit and digging work.",
 	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor. Takes the manor's surveys. See Prospecting and trial pits.",
-	"laborer": "Day labour: mines and quarries stone, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them.",
+	"laborer": "Day labour: mines and quarries stone, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them (with a mallet and an iron chisel).",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
-	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
+	"stonecutter": "A trade of its own, taken up when blocks are wanted and stone is on sale: buys raw stone with its own coins, dresses it into building blocks at a workbench with a mallet and an iron chisel, and sells the blocks and its rubble to the raw-goods merchant, and the blocks to builders or on contract. It earns only what the blocks fetch above the stone and the tools cost; when nobody wants blocks it earns nothing and, like anyone, looks for other work.",
+	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour (iron chisels for the stoneworkers among them) at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
-	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them.",
+	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them. The farmers of a field cut it together and share its grain, and the seed kept back for the next sowing, by the work each put into the cutting, after the field's animals are fed.",
 	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",
 	"tavernkeeper": "Keeps The Well House and sells food and ale.",
 	"hunter": "Hunts wild boar and rabbits for meat and hides.",
 	"merchant": "Runs a market stall or shop and trades goods.",
 	"guard": "Watches the village: stops thieves, returns stolen goods and fines the thief.",
 	"reeve": "Runs the manor's accounts and posts its jobs on the job board (talk to the reeve and ask for work).",
+	"tailor": "Opens the locked rows of your pack: the second row for %d coins, then the third for %d, each in all eight tabs at once. Works from the manor's pitch beside the market in the day, rent-free like the merchants' stalls, and earns only from these two sales. Talk to the tailor there (not asleep, not away) and choose Backpack. A world has one; if the tailor dies or an older game had none, the village's labour market opens the place for an adult who becomes free.",
+	"barber": "Changes your hair, beard and hair colour (the same choices as the character creator, with a preview) for %d coins a visit, paid to the barber. Works from the manor's pitch beside the market in the day. Talk to the barber there and choose Hair, beard and colour. Your clothes and armour are not touched. A world has one; if the barber dies or an older game had none, the labour market opens the place for an adult who becomes free.",
 	"sage": "The village lorekeeper; tells the story and keeps the Apothecary (medicine brewed from flowers, bandages from the tanner).",
 }
 
@@ -116,6 +137,8 @@ static func build() -> Wiki:
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
+	WikiFeast.add_pages(w)          # DVW-B3-FEAST: wedding and seasonal feasts at the tavern
+	WikiChapel.add_pages(w)         # DVW-B3-CHAPEL: the chapel, offerings, asking for help, the church's plot
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
 	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
@@ -341,7 +364,10 @@ func _items() -> void:
 		if not uses.is_empty():
 			blocks.append(h("Other uses"))
 			blocks.append(bullets(uses))
-		if from_nodes.is_empty() and making.is_empty():
+		if Luxury.is_luxury(id):                   # DVW-B3-LUX
+			blocks.append(p("A costly good from beyond the neighbouring settlements. You cannot gather or make it: the caravan's traders sell it from the stock they hold, for %d coins, when the caravan is in the village (see The merchant caravan). Villagers buy it too, for show, when they have money to spare. Nothing uses it up; it is kept." % Luxury.price(id)))
+			blocks.append(links(["sys:caravan"]))
+		elif from_nodes.is_empty() and making.is_empty():
 			blocks.append(p("It is not gathered or made by the player; buy it from a merchant or find it in the world, or it is part of your starting kit."))
 		add_page(_item_link(id), it.name, ITEM_GROUPS.get(it.type, "items_materials"), blocks, icon_path(id), id.replace("_", " "))
 
@@ -373,7 +399,7 @@ func _nodes() -> void:
 		for i in n.get("yields", {}):
 			y.append(_iname(i))
 		rows.append(["Gives", ", ".join(y)])
-		var ov: Dictionary = WikiMining.NODE_TEXT.get(id, {})     # player-facing wording for the mining nodes (Build 17)
+		var ov: Dictionary = WikiMining.NODE_TEXT.get(id, NODE_PLAYER_TEXT.get(id, {}))     # player-facing wording (Build 17)
 		rows[0][1] = str(ov.get("where", rows[0][1]))
 		rows.append(["Comes back?", str(ov.get("back", str(n.get("regeneration", "?")).split(" Once")[0].split("; ")[0]))])
 		var blocks := [stats(rows)]
@@ -424,6 +450,8 @@ func _skills() -> void:
 		for l in Skills.shown_levels(id):
 			rows.append(["Level " + str(l), Skills.tier_text(id, l)])
 		var blocks := [p("Levels 1 to %d. You gain experience by doing the work; see Skills and levels for the curve." % Skills.max_level()), stats(rows)]
+		if str(s.get("about", "")) != "":
+			blocks.insert(0, p(str(s.about)))
 		var rl := []
 		for r in GameData.recipes:
 			if GameData.recipes[r].skill == id:
@@ -457,7 +485,8 @@ func _animals() -> void:
 		var dd: Array = Animal.death_days(a) if (a.get("death_years", []) as Array).size() == 2 else []
 		if dd.size() == 2:
 			rows.append(["Dies of old age", "between %d and %d days old" % [int(dd[0]), int(dd[1])]])
-		rows.append(["Young per litter", str(int(a.get("litter", 1)))])
+		if id != "horse":                          # B14-11: the plough horse is bought, one to a pen, and never breeds
+			rows.append(["Young per litter", str(int(a.get("litter", 1)))])
 		var blocks := [stats(rows)]
 		var node: String = "node:wild_" + id if wild else "node:" + id + "_pen"
 		var ls := [node, "item:meat"]
@@ -471,7 +500,11 @@ func _animals() -> void:
 			diet += " At night a hungry one takes %s from the pens." % str(an[a.raids].name).to_lower()
 		if bool(a.get("people", false)):
 			diet += " Struck, it fights back (%d a bite), and a starving one goes for a person alone in its wood." % int(a.bite)
-		blocks.append(p("Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown." if not wild
+		var kept := "Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown."
+		if id == "horse":                          # B14-11
+			kept = "The plough horse is bought from the visiting caravan (%d coins) into your own horse pen, one at a time. It gets hungry and dies unfed like the other pen animals; it does not breed. With it and the hand plough in your pack, you till a cell in %.1f second for %.0f stamina." % [
+					int(Farming.cfg().caravan_horse.price), float(Farming.cfg().till.horse.seconds), float(Farming.cfg().till.horse.stamina)]
+		blocks.append(p(kept if not wild
 				else "Wild animals feed and breed in the woods. " + diet + " Hunting them takes a weapon."))
 		var rs := Refuges.spec(id)
 		if wild and not rs.is_empty():             # WR-01: the breeding refuges, as Refuges implements them
@@ -501,6 +534,20 @@ func _jobs() -> void:
 		if tools_kept.has(j):
 			blocks.append(links(tools_kept[j].map(func(i): return _item_link(i)), "Keeps for work"))
 		add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", blocks, "", j)
+	for j in JOB_TEXT:
+		if not Population.JOBS.has(j):          # a trade nobody starts in, taken up later by the job rules (the prospector)
+			var text: String = JOB_TEXT[j]
+			var where := "none at the start; taken up when the village has need of it"
+			if j == "tailor":
+				text = text % [int(GameData.b("tailor").pack_rows[0]), int(GameData.b("tailor").pack_rows[1])]
+				where = "one in every new world, at the pitch beside the market"
+			elif j == "barber":
+				text = text % int(GameData.b("barber").price)
+				where = "one in every new world, at the pitch beside the market"
+			var extra := [p(text), stats([["In the village", where]])]
+			if tools_kept.has(j):
+				extra.append(links(tools_kept[j].map(func(i): return _item_link(i)), "Keeps for work"))
+			add_page("job:" + j, str(j).replace("_", " ").capitalize(), "jobs", extra, "", j)
 
 
 func _controls() -> void:
@@ -576,13 +623,23 @@ func _systems() -> void:
 		p("Pressing Attack again near the end of a swing (the last %.2f seconds) is remembered and swings again at once; pressing faster than that does not swing faster. Space or J on a keyboard, X on a pad, or a right-click on the target." % float(GameData.b("player_combat").buffer)),
 		p("On a phone, the Attack button swings at a bandit, someone fighting you or game within reach; with none near it turns attack mode on, and a tap on someone walks you into sword reach and strikes. Striking a villager or a keeper's animal is a crime: those who see it remember it, a guard who sees it comes for you, and the victim and other witnesses go and tell a guard. Killing a keeper's animal is a theft from them, seen as a theft is."),
 		links(["skill:combat", "sys:magic", "sys:bandits", "sys:theft", "controls:touch", "controls:kbm", "controls:gamepad"])])
+	# INV-18 (Build 18): the pack's categories, places, locked rows and gear (PlayerState.PACK_CAPS, GameData.CATEGORIES)
+	sys.call("pack", "Your pack and gear", [
+		p("Your pack (I on a keyboard; see Controls for touch and a pad) has eight tabs, one for each kind of thing: %s. Everything goes into its own tab by itself when you pick it up, buy it, make it, harvest it or take it out of a chest; you never sort it by hand. Each item belongs to exactly one tab: a sword is a weapon and a pickaxe a tool however they were made, bread is food, a tonic is medicine, and rings and amulets are crafted goods and valuables." % _category_list()),
+		p("Each tab is a grid of three rows of nine. At the start only the first row is open: %d kinds of thing in every tab. A kind is one place however many you carry of it: fifty logs take one place, as one log does. The second and third rows are shown locked; when they open, they open in every tab at once (%d, then %d kinds a tab). The tailor, who works at the pitch beside the market, opens them: the second row for %d coins, then the third for %d (see the Tailor). The top of the pack says how full the open tab is, such as \"Tools: 4 / %d\"." % [int(PlayerState.PACK_CAPS[0]), int(PlayerState.PACK_CAPS[1]), int(PlayerState.PACK_CAPS[2]), int(GameData.b("tailor").pack_rows[0]), int(GameData.b("tailor").pack_rows[1]), int(PlayerState.PACK_CAPS[0])]),
+		p("When a tab is full you can still take more of anything you already carry in it, but not a new kind: the game says which tab is full (\"Raw materials inventory full: %d of %d slots.\"), and the other tabs keep their own room. Nothing is ever lost to a full tab: a purchase is not made and not paid, goods stay in the chest, stall or heap, and what you mine, fell or make with no room is set down at your feet." % [int(PlayerState.PACK_CAPS[0]), int(PlayerState.PACK_CAPS[0])]),
+		p("The six gear slots beside your figure (in hand, tool, body, head, amulet, ring) take no place in the tabs: what you wield or wear leaves its tab while it is on you, and a second one of the same kind in the pack takes a place as usual. Taking something off puts it back in its tab, and is refused (it stays on) when that tab is full; putting on something that would push the old one back into a full tab is refused too, so nothing is dropped."),
+		p("A pack from a game saved before Build 18 keeps everything it held. A tab holding more kinds than it now has room for shows it (\"Raw materials: 12 / %d\") and takes no new kind until you have sold, stored or used enough of them." % int(PlayerState.PACK_CAPS[0])),
+		links(["sys:trading", "sys:gather", "sys:decay", "job:tailor", "controls:kbm"])])
 	sys.call("trading", "Trading", [
 		p("Talk to a merchant or villager to buy and sell. Prices depend on each item's base value and on supply: a seller asks more as their stock runs low, and a buyer offers less as they fill up. A seller also asks less when other traders (or your own stall and shops) offer the same thing within %d tiles, and the most when nobody near sells it: so you can make a scarce thing yourself, pay the lone seller's price, or make and sell it to bring the price down. In a bulk deal every unit is priced in turn, so buying a seller's last few costs more each and selling a buyer a big stack fetches less each; the quantity control shows the real total. Merchants have limited coins and stock: they never buy what they cannot pay for, and a trade either completes or does not happen. Villagers buy what their work needs." % int(GameData.b("local_supply").radius)),
+		p("Barter and credit: in a villager's trade window press Credit and barter. By barter you swap goods for goods and no coin changes hands: pick what you want, then what you give for it. The seller works out, unit by unit at its own prices, how many of your goods it takes to match what it gives, and takes only what its trade uses or it is glad of; goods you stole are never offered. Either of you can refuse. On credit a seller hands over one thing now for a debt in coins, at the price of the day, with no interest. A seller lends only to someone it thinks well of (about as well as it thinks of a friend), only up to %d coins owed at a time, only while you owe it nothing overdue, and only if it is not short of coins itself. You have %d days to pay; Repay in the same page pays it from your purse. Nobody collects it for you. It works the other way too: a villager whose household is short of food and has no coins may ask you for food, by barter with goods you can use or on credit, if you are the neighbour with the cheapest food near them; the button then reads Credit and barter with their name, and you Accept or Refuse (a refusal costs nothing, but they will not ask again for a few days; an ask you ignore lapses at the next dawn). From the same page you can offer a villager one of your goods on credit (Lend 1) or by barter, if they can use it and think well enough of you; they repay at dawn when they can afford it, and a villager who does not repay a day after the due day defaults: they think less of you and you lend them nothing more while it stands. If you die, your debts and what you are owed pass to your heir, unless you were killed by someone, or the debt was with the child who becomes your heir; then it is written off." % [int(Credit.cfg().limit), int(Credit.cfg().days)]),
+		p("An unpaid debt is not forgotten. A day after it falls due it becomes a default: the lender thinks less of you (and your default is told to their family and friends), nothing more is sold to you on credit while it stands, and paying it late clears the block but wins back only half as much goodwill as paying on time. Paying on time raises how well the lender thinks of you, which is what makes the next loan possible. Villagers do the same among themselves: a household short of food and out of coins first swaps its spare goods for food, and failing that buys on credit from a neighbour who trusts it. They repay from coins above what their household needs, so a family in need can fail to repay, and that is allowed to happen. When a villager dies their debts and what they were owed pass to their heir, or are lost if there is none; when you die your debts are written off, and your heir starts as a stranger."),
 		links(["guide:money", "job:merchant", "sys:caravan", "sys:theft"])])
 	sys.call("home_work", "Villagers at home: food, medicine and wounds", [
 		p("Villagers look after their own households. In the evening an adult gathers wild flowers or berries near home (what they pick is gone until it grows back, for you as for them) and brews flowers into herbal poultices at the home's hearth, keeping %d in store. Berries go into the pantry as food." % int(GameData.b("home_production").poultice_keep)),
 		p("Villagers do not heal by themselves. One badly hurt (below %d%% of their health) uses a medicine they carry or the household keeps, or walks to the Apothecary and buys one with their own coins." % roundi(float(GameData.b("home_production").medicine_use_below) * 100.0)),
-		p("A household can add a storefront: a counter by its door (%s). Use the door of a house you hold to build yours; it opens as your shop with no rent or licence. Industrious villagers buy the materials with their own coins and build one, and in the evening an adult sells the household's spare poultices and berries there, to you and to their neighbours." % ", ".join(Business.storefront_cost().keys().map(func(k): return "%d %s" % [int(Business.storefront_cost()[k]), GameData.item(k).name.to_lower()]))),
+		p("A household can add a storefront: a counter by its door (%s). Use the door of a house you hold, owned or leased from the manor, to build yours; it opens as your shop with no rent or licence beyond the lease, and it closes with the lease (your goods and the till come back to you). Industrious villagers buy the materials with their own coins and build one, and in the evening an adult sells the household's spare poultices and berries there, to you and to their neighbours. What the counter earns goes into the household's own till, apart from anyone's purse: each morning the household takes what its food, fuel and medicine still lack, the owner pays themselves part of what is above a small float, and a bare till is topped up only from coins the household can spare. The tavern's counter and the smithy's armoury counter keep their takings the same way, in a till of their own, apart from the keeper's purse." % ", ".join(Business.storefront_cost().keys().map(func(k): return "%d %s" % [int(Business.storefront_cost()[k]), GameData.item(k).name.to_lower()]))),
 		p("Carts are made from the village's own materials: the carpenter saws cart wheels from planks, the smith forges the axle and the ironwork from iron bars, planks and coal, and a handcart is put together from two wheels, the axle, the ironwork and four planks at a workbench. You can make every part yourself, or buy the parts and assemble them. A storefront household with coins to spare does the same, or buys the carpenter's finished handcart when that is cheaper."),
 		p("A handcart in your pack is set down from the inventory (Set it down) and becomes a cart in the world that holds %d kinds of goods. Pull your cart to take it along a step behind you (you walk at %d%% of your speed) and let go of it anywhere; open it to store and take goods like a chest. Only the owner, their family or their hired help may pull or fill a cart: taking from someone else's is theft. Park your cart at a cart stop by the market and the attendant of your market stall unloads it into the stall's store each hour. A household with a cart and spare goods loads them in the morning, pulls them to the merchants who buy them and brings the cart home, with whatever did not sell." % [int(Carts.cfg().stacks), roundi(Carts.pull_speed() * 100.0)]),
 		p("Some of the trees by the houses are apple trees. A grown one bears apples in summer and autumn: pick them, as villagers short of berries do, and the tree is bare for a few days. Felled, it gives logs like any tree, and sometimes an apple sapling to plant."),
@@ -608,6 +665,7 @@ func _systems() -> void:
 	sys.call("family", "Families, partners and births", [
 		p("Households are not families: people who share a house are not automatically related. Family links are real and explicit: mother, father, partner and children. Partners come from courting (see Friendship and courting): two unmarried, unrelated adults aged %d to %d (villagers court someone at most %d years apart), of either sex. A new couple moves into one of their homes if it has a free bed; with no room they live apart for a while. Children are born only to a mother and father who are partners: a mother aged %d to %d, enough food, and no baby in the last year. A baby needs no free bed: a house that grows too full for its beds is what sends a grown son or daughter (with their partner) out to found a home of their own." % [int(lf.partner_min_age), int(lf.partner_max_age), int(lf.partner_max_gap), int(lf.birth_mother_min_age), int(lf.birth_mother_max_age)]),
 		p("A newborn joins the parents' household and grows through the stages. The player's own partner and children are made through the same links."),
+		p("A villager may marry someone from one of the neighbouring settlements (see The neighbouring settlements). A willing, unmarried adult of marrying age and a person of a neighbouring place who meet at the caravan and have known each other as long as a courtship takes may wed: the bride goes to the groom's place, to his house if it has a bed. Until then nothing is decided, and some people do not mean to marry at all."),
 		p("Couples make homes of their own. Partners who live apart, or a grown son or daughter and their partner in a full family house, leave to found a household when they and their families can spare enough: they buy or lease an empty house, or buy ground and start a house with a quarter of the materials paid for, building the rest as they earn. Until it stands they sleep where they did."),
 		links(["sys:ageing", "sys:inheritance", "sys:property", "sys:courting"])])
 	var rc: Dictionary = GameData.b("relations")
@@ -619,25 +677,42 @@ func _systems() -> void:
 		p("Gifts to someone you could marry also draw them to you. When they are drawn to you, Ask to court appears; ask too early and they say you hardly know each other. While courting, keep up the gifts and visits: Propose when the time is right. Propose too soon (before %d days of courting, or before they are truly in love) and they say it is too soon, and cool a little. Feelings fade slowly if you stay away." % int(rc.propose_min_days)),
 		p("A proposal can be refused even after a good courtship. Some people do not mean to marry at all. Someone else courting them may hold more of their heart. They may not think well enough of you: harm you have done them lowers it, and so does harm to their family or friends, such as robbing their mother or a friend. Nobody will court or marry someone who has killed a villager, or who has been seen stealing again and again; that reputation takes time to fade, and a killing never does."),
 		p("Villagers court each other the same way: they take an interest in someone they have come to know, bring gifts or spend time together, court, and propose. Anyone may court anyone of the same age range who is not kin and not already spoken for, man or woman."),
-		links(["sys:family", "sys:trading"])])
+		p("When two villagers become partners (or you and a villager do), a wedding feast follows at the tavern (see Feasts at the tavern)."),
+		links(["sys:family", "sys:trading", "sys:feasts"])])
 	sys.call("inheritance", "Inheritance", [
 		p("When a villager dies their coins and goods go to the family first: the eldest adult child, then the partner, then other kin; only with no family does the household take them. A household with nobody left leaves the goods where they fell and its house returns to the manor."),
-		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps your name and look; with none, a new heir of your family takes over. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
+		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps their own name and looks; with none, a relative of your family takes over, looking as you did when you began. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
 		links(["sys:death", "sys:saving", "sys:family", "sys:orphans", "sys:posts"])])
 	sys.call("animal_life", "Animals through life", [
 		p("Animals are newborn, juvenile, adult and elderly by their age in game days. Only adults breed, and breeding slows as an area fills up. The elderly move slower and die of old age somewhere in their last stage. Young animals are drawn with the baby art. Each animal's page lists its stage lengths."),
-		links(["animal:cow", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "animal:deer", "animal:wolf", "animal:fox", "animal:bear", "animal:bird", "sys:calendar"])])
+		links(["animal:cow", "animal:horse", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "animal:deer", "animal:wolf", "animal:fox", "animal:bear", "animal:bird", "sys:calendar"])])
 	sys.call("saving", "Saving and your heir", [
 		p("Saves are versioned and keep your world. Resting at home and the pause menu's Save write the save; Continue loads it. If you die, an heir takes over: see Inheritance."),
 		p("Your save lives inside the game, and uninstalling the game deletes it, as can installing a test build that cannot update the old one. To keep your world, open Settings, Saves: Copy my save to a file puts a copy wherever you choose (Documents, Downloads, a cloud folder), and Keep a copy up to date rewrites that copy every time the game saves. After reinstalling, choose Import a save file and pick your copy: the game checks it, keeps a backup of it and of any save it replaces, brings it up to this version and continues your world. A file it cannot use (damaged, from a newer version, or from before the village was rebuilt) is refused and nothing changes. On Android you pick the file again after each reinstall. Inside the game, each save keeps the one before it as a backup, and the first save of each day keeps the previous save under that day's date, the last three days; if a save and its backup cannot be read, Continue loads the newest of those."),
 		links(["sys:inheritance", "sys:death", "guide:save"])])
+	sys.call("sound", "Music and sound", [
+		p("The village has music. The morning and the title screen have one song, the working day another, and the evening, the night and the dark under the ground a third. A song fades into the next when the time or the place changes, and rests for a few seconds before it plays again. Out in the countryside beyond the village another song plays, and a fight has its own music that fades back a few seconds after the fight is over."),
+		p("Ambient sound follows where you are and the time: birds by day, crickets at night, wind out in the open, and drips or a cold draught underground. Your own actions have small sounds: your steps, swings and blows, chopping and mining, picking plants and fruit, coins changing hands, opening a chest, doors, resting and saving."),
+		p("Open Settings, Audio: Master volume, Music and Sound effects each have a slider, and they act at once. The ambient sound and the effects share the Sound effects slider."),
+		links(["sys:saving"])])
 	sys.call("death", "Death", [
 		p("At 0 health, or of old age, you die; Causes of death lists what can kill you and the villagers. The world carries on. What you carried stays where you fell, for anyone to take, your heir too. Your heir inherits the house and chest and starts with the starting kit."),
 		links(["sys:death_causes", "sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
+	sys.call("appearance", "Your appearance", [
+		p("When you start a new game you choose how you look: your skin, hair style and hair colour, a beard or none, eye colour, eyelashes, plain clothes or a tunic and their colour, and leather boots or bare feet. Randomize picks a whole new look; the arrows beside each feature step through its choices, and the figure beside them shows you from the front and three sides."),
+		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. Iron armour and the iron helmet show on your figure while you wear them (the armour over your clothes, the helmet over your hair) and your own look returns when you take them off; leather armour and the leather cap have no picture and change nothing you see. Your look itself is kept in your save."),
+		links(["sys:inheritance", "sys:saving"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
 		{"t": "chain", "id": "pickaxe"}, {"t": "chain", "id": "iron_sword"}, {"t": "chain", "id": "leather_armor"}, {"t": "chain", "id": "plank"}, {"t": "chain", "id": "roast_meat"}, {"t": "chain", "id": "ale"},
 		links(["guide:planks", "guide:smelt", "guide:cook"])])
+
+
+## "general things, food and drink, ..." from the eight pack categories (INV-18), in tab order.
+func _category_list() -> String:
+	var words := {"general": "general things", "food": "food and drink", "raw": "raw materials", "tools": "tools", "weapons": "weapons",
+		"armour": "armour and clothing", "medicine": "medicine", "crafted": "crafted goods and valuables"}
+	return ", ".join(GameData.CATEGORIES.map(func(c): return str(words.get(c, GameData.category_name(c)).to_lower())))
 
 
 ## "Linen bandage (15 health, 3 coins), ..." from items.json's medicines.
@@ -652,9 +727,12 @@ func _medicine_list() -> String:
 
 func _not_yet() -> void:
 	var items := {
-		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built, fit it with equipment and hire an attendant (see the guides). Not built yet: attendants and hired workers who craft at the shop's stations from its stock, shops in houses you only rent from a neighbour, a stall display shown over the stall, and trading skill perks on your sales."],
+		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built or a house you hold, fit it with equipment, hire an attendant and have them make goods at your own stations (see the guides). Not built yet: permanent staff beyond the one attendant, a worker hired by contract to make goods for your shop, shops in houses you rent from a neighbour rather than from the manor, and trading skill perks on your sales."],
+		"other_towns": ["Visiting the other towns and villages", "Five neighbouring settlements exist and their traders are the caravan (see The neighbouring settlements), but none is on the map yet: you cannot walk to one, trade there, or meet its people in person. The countryside has only animals and passers-by (see the countryside)."],
+		"luxury_status": ["Standing from owning luxuries", "Villagers buy spices, fine cloth and jewellery from the caravan to show they can, and keep them, but the village has no measure of a person's standing yet, so owning them changes nothing about how anyone is treated, you included. They are kept in a pack and go to an heir; they are not worn."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
-		"farm_more": ["Draught animals, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself (see the farming guides), but there are no horses or oxen to pull a plough, no roofed coops or shelters, no watering or weather, no traps for rabbits, no animals from the caravan and no hired farmhands yet."],
+		"looks_more": ["Leather armour on your figure", "Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
+		"farm_more": ["Oxen, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself, and a plough horse from the caravan speeds the plough (see the farming guides), but there are no oxen, no riding or carts drawn by horses, no roofed coops or shelters, no watering or weather, no traps for rabbits, no other animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:
 		add_page("todo:" + id, items[id][0], "notyet", [note("Not in the game yet. " + items[id][1])], "", "not implemented planned")

@@ -17,7 +17,8 @@ const BUYS := {
 	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
-	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20,
+	"stonecutter": {"stone": 12},      # X18-STONECUT: raw stone to dress, bought with its own coins; only while it holds a mallet and an iron chisel (batch_unit)
+	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "rubble": 20, "log": 20, "plank": 20,
 		"building_block": 20},        # STONE-01: dressed blocks kept for builders, as the stone was
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
 		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
@@ -29,23 +30,23 @@ const BUYS := {
 		# like the other made goods, and the caravan carries the surplus away
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
 		"herbal_poultice": 8,                      # households' home-brewed poultices, brought to market (B14)
-		"nails": 24, "mallet": 2,                  # B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
+		"nails": 24, "mallet": 2, "chisel": 2,     # STONE-06: the smith's iron chisels, forged to order for the dressers; B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
 		"shovel": 2},                              # MIN-SHOVEL (owner MIN-E-Q4): diggers' shovels, assembled to order
 }
 # SHOP-01 (owner, 2026-10-20 section 6): the stations each producing trade works at. Their recipes (recipes.json) are
 # what its purchases of their inputs are for: it buys an input only for a recipe it has the skill for, up to its want
 # (batch_unit, wants). Goods in BUYS that no recipe of the trade consumes are stock it holds for sale or use.
-const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"],
+const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"], "stonecutter": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
 # items an NPC keeps for its own work and will not sell
-const KEEPS := {"sage": ["flower"], "miner": ["pickaxe", "shovel"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "shovel", "mallet"], "woodcutter": ["axe"], "smith": ["hammer"],
+const KEEPS := {"sage": ["flower"], "miner": ["pickaxe", "shovel"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "shovel", "mallet", "chisel"], "stonecutter": ["mallet", "chisel"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
 	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed", "flower_seed", "red_berry_cutting", "blue_berry_cutting"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
 # who to sell each item to, in order of preference
 const OUTLETS := {
 	"iron_ore": ["smith", "merchant_raw"], "copper_ore": ["smith", "merchant_raw"], "gold_ore": ["smith", "merchant_goods"],
-	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
+	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "rubble": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
@@ -61,7 +62,7 @@ const OUTLETS := {
 	# PAR-04 (owner OD-18.4): the made goods only the player used to make, and where their makers sell them
 	"copper_ring": ["merchant_goods"], "gold_ring": ["merchant_goods"], "amulet": ["merchant_goods"], "iron_helmet": ["merchant_goods"],
 	"leather_cap": ["merchant_goods"], "gold_bar": ["merchant_goods"], "plough": ["merchant_goods"],
-	"nails": ["merchant_goods"], "mallet": ["merchant_goods"],     # B14-07: the smith's nails, the carpenter's mallets
+	"nails": ["merchant_goods"], "mallet": ["merchant_goods"], "chisel": ["merchant_goods"],     # STONE-06; B14-07: the smith's nails, the carpenter's mallets
 	"shovel": ["merchant_goods"], "shovel_blade": ["carpenter"],   # MIN-SHOVEL: the carpenter's shovels, the smith's blades for them
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple"]
@@ -71,7 +72,7 @@ const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese
 const EDIBLE := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple", "egg", "milk", "carrot", "potato"]
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
-const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block"]     # STONE-01: blocks are the village's stone, dressed
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "rubble", "building_block"]     # STONE-01: blocks are the village's stone, dressed
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -205,6 +206,8 @@ func decide(n: NPC) -> void:
 	if h >= SLEEP or h < WAKE:
 		_plan_sleep(n)
 		return
+	if w.feast.plan_attend(n):                 # DVW-B3-FEAST: an invited guest goes to the tavern in the evening
+		return
 	if n.role == "child":
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.6 else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
 		n.doing = "playing"
@@ -212,6 +215,8 @@ func decide(n: NPC) -> void:
 		return
 	if n.role == "elder":
 		if w.farm_plots.plan_work(n):          # FARM-04: an elder's light work on the family's farmland, by day
+			return
+		if w.chapel.plan_volunteer(n):         # DVW-B3-CHAPEL: or on the church's plot, when they volunteered
 			return
 		var spot := w.building_door(n.home) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
 		n.doing = "taking the air"
@@ -640,7 +645,7 @@ func _carpenter_shovel(n: NPC) -> bool:
 ## STONE-01 (owner decision 2026-10-21: "Quarry extraction → Raw stone → Stoneworking → Finished building blocks →
 ## Construction"): the labourer is the village's stoneworker. While building blocks are wanted (the raw-goods merchant
 ## buys them for builders, or open sites need more than anyone has on sale) a labourer with a mallet dresses the raw
-## stone they hold into blocks at a workbench (dress_stone, the player's recipe: two stone, half an hour, Crafting 1)
+## stone they hold into blocks at a workbench (dress_stone, the player's recipe: two stone, half an hour, Masonry 1)
 ## and sells them on; without a mallet they buy one (the goods merchant's, made by the carpenter); without stone in
 ## hand they quarry it as before (false: _miner), or, when no stone is left to quarry or the merchant has all the stone
 ## it will take, buy the merchant's (quarried stone, or the caravan's). Nothing is dressed for nobody: with no demand, false and the day goes on as before.
@@ -654,28 +659,56 @@ func _mason(n: NPC) -> bool:
 	var rec: Dictionary = GameData.recipes["dress_stone"]
 	if n.level(str(rec.skill)) < int(rec.level):
 		return false
-	if w.craft_tool(n, "dress_stone") == "-":
-		for o: NPC in w.npcs:
-			if o.alive and o != n and not w.asleep(o) and (o.job == "carpenter" or buy_role(o) == "merchant_goods") \
-					and o.inv.has("mallet") and not keeps(o, "mallet") and n.coins - w.reserve_of(n) >= w.sell_price(o, "mallet"):
-				n.doing = "buying a mallet to dress stone"
-				n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": "mallet", "qty": 1})]
-				return true
-		return false
+	var miss := w.craft_tool_missing(n, "dress_stone")
+	if miss != "":
+		return _fetch_dress_tool(n, miss)
 	if n.inv.has_all(rec["in"]):
 		if _do_recipe(n, "dress_stone"):
 			n.doing = "dressing stone into building blocks"
 			return true
 		return false
-	if _buyer_for(n, "stone") != null and not w.nearest_seam(n, ["stone"]).is_empty():
+	if n.job == "laborer" and _buyer_for(n, "stone") != null and not w.nearest_seam(n, ["stone"]).is_empty():
 		return false                                    # quarry it (_miner: a labourer quarries stone while it sells)
-	var short := int(rec["in"]["stone"]) - n.inv.count("stone")
+	return _fetch_dress_stone(n)
+
+
+## STONE-01, STONE-06: a trip to buy the dressing tool `kind` (the mallet: the carpenter's, the iron chisel: the smith's,
+## either from the goods merchant) with the villager's own coins above their reserve; false when none is for sale.
+func _fetch_dress_tool(n: NPC, kind: String) -> bool:
+	var maker := "smith" if kind == "chisel" else "carpenter"
+	for o: NPC in w.npcs:
+		if o.alive and o != n and not w.asleep(o) and (o.job == maker or buy_role(o) == "merchant_goods") \
+				and o.inv.has(kind) and not keeps(o, kind) and n.coins - w.reserve_of(n) >= w.sell_price(o, kind):
+			n.doing = "buying %s to dress stone" % ("an iron chisel" if kind == "chisel" else "a " + kind)
+			n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": kind, "qty": 1})]
+			return true
+	return false
+
+
+## STONE-01: a trip to buy the stone one batch of dressing is short of from the raw-goods merchant (or a labourer's), with
+## the villager's own coins above their reserve; false when none is for sale or they cannot pay.
+func _fetch_dress_stone(n: NPC) -> bool:
+	var short := int(GameData.recipes["dress_stone"]["in"]["stone"]) - n.inv.count("stone")
 	for v: NPC in _with_buy_role("merchant_raw"):
 		if v != n and not w.asleep(v) and v.inv.count("stone") >= short and n.coins - w.reserve_of(n) >= w.sell_price(v, "stone") * short:
 			n.doing = "buying stone to dress"
 			n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": "stone", "qty": short})]
 			return true
 	return false
+
+
+## X18-STONECUT (owner B18-DP-09, X18-STONECUT: an independent trade and business in the ordinary economy): the
+## stonecutter buys raw stone with its own coins, dresses it (_mason: the one recipe, the mallet and the chisel, a workbench,
+## Masonry) only while someone will buy blocks, and sells them to the raw-goods merchant and to builders. No free stone, no
+## customer guaranteed: with none it waits, earns nothing and, as any villager, in time looks for other work (seek_work).
+func _stonecutter(n: NPC) -> bool:
+	if n.inv.count("rubble") > 0 and _buyer_for(n, "rubble") != null:
+		return _plan_sell(n, "rubble")                   # the dressing's rubble goes to the raw-goods merchant, for the manor's mending
+	if _mason(n):
+		return true
+	n.doing = "waiting for stone to dress and customers for blocks"
+	n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
+	return true
 
 
 ## STONE-01: whether building blocks are wanted now: a buyer takes them from `n` (the raw-goods merchant's stock for
@@ -753,7 +786,7 @@ func _plan_cart(n: NPC, house: Dictionary) -> bool:
 	if bench != "" and (parts < whole or maker == null):
 		w.stations[bench].users[n.id] = w.minutes + w.map.data.w * 3 + float(rec.minutes) + 120.0
 		n.doing = "gathering parts for a handcart"
-		n.plan = parts_plan + [go(w.station_use(bench)), work(float(rec.minutes) * Skills.value(n, "crafting", "craft_time", 1.0), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
+		n.plan = parts_plan + [go(w.station_use(bench)), work(CapabilityHook.work_time(float(rec.minutes), "carpentry", Skills.value(n, "carpentry", "craft_time", 1.0), n), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
 		return true
 	if maker != null and n.coins >= whole:
 		n.doing = "buying a handcart"
@@ -807,7 +840,11 @@ func _plan_evening(n: NPC, h: float) -> void:
 		return
 	if _plan_buy_seed(n):
 		return
+	if w.chapel.plan_ask(n):                   # DVW-B3-CHAPEL: a household short of food asks the church first
+		return
 	if w.farm_plots.plan_work(n):              # FARM-04: the family's farmland, in the time the day leaves
+		return
+	if w.chapel.plan_volunteer(n):             # DVW-B3-CHAPEL: a volunteer on the church's plot
 		return
 	if _plan_home_work(n):
 		return
@@ -940,6 +977,8 @@ func _plan_job(n: NPC) -> bool:
 			return _miner(n)
 		"woodcutter":
 			return _woodcutter(n)
+		"stonecutter":                       # X18-STONECUT: an independent trade: dresses stone it bought, sells the blocks
+			return _stonecutter(n)
 		"prospector":
 			return w.prospecting.plan(n)          # MIN-C: clues, samples and the assayer (Prospecting.plan)
 		"carpenter":
@@ -966,12 +1005,17 @@ func _plan_job(n: NPC) -> bool:
 			return _farmer(n)
 		"hunter":
 			return _hunter(n)
-		"tavernkeeper", "merchant", "reeve":
+		"tavernkeeper", "merchant", "reeve", "tailor", "barber":
 			if n.job == "reeve" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.reeve_fallback(n):
 				return true          # LOG-01: an unclaimed delivery with no free manor hand
-			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor"}[n.job]
+			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor",
+				"tailor": "sewing at the pitch", "barber": "waiting at the barber's pitch"}[n.job]
 			n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
+			if n.job == "merchant":
+				n.plan[1]["industry"] = "trade"      # X18-D4: the hours a trader keeps the stall open are trade experience
 			return true
+		"preacher", "church_assistant":
+			return w.chapel.plan_clergy(n)          # DVW-B3-CHAPEL: keeping the chapel; with no volunteers, the church's plot
 		"manor_hand":
 			for f in w.fields:
 				if w.field_workers(f).is_empty():
@@ -1164,7 +1208,9 @@ func seam_steps(n: NPC, d: Dictionary, act: String, args: Dictionary) -> Array:
 	if lv != 0:
 		a.level = lv
 	var from := n.cell() if n.depth == lv else at
-	return [go(beside(at, from, lv), 1.0, lv), work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), act, a, "work", at)]
+	# X18 HOOK (Expansion 18, X18-SIM): CapabilityHook is off in the game (exactly base x skill time); analysis runs only
+	var mins := CapabilityHook.work_time(float(GameData.b("mine_minutes")), "mining", Skills.value(n, "mining", "mine_time", 1.0), n)
+	return [go(beside(at, from, lv), 1.0, lv), work(mins, act, a, "work", at)]
 
 
 ## PAR-01: whether `n` may work a seam of `ore` (gold ore needs Mining level 3, as for the player).
@@ -1201,7 +1247,8 @@ func _woodcutter(n: NPC) -> bool:
 	t.claimed = n.id
 	var at := Vector2i(t.x, t.y)
 	n.doing = "felling a tree"
-	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0), "chop", {"x": t.x, "y": t.y}, "work", at)]
+	var mins := CapabilityHook.work_time(float(GameData.b("chop_minutes")), "forestry", Skills.value(n, "woodcutting", "chop_time", 1.0), n)   # X18 HOOK
+	n.plan = [go(beside(at, n.cell())), work(mins, "chop", {"x": t.x, "y": t.y}, "work", at)]
 	return true
 
 
@@ -1213,11 +1260,15 @@ func _can_make(n: NPC, r: String) -> bool:
 
 
 ## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
-const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet", "shovel_blade",
+const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet", "chisel", "shovel_blade",
 	"timber_support", "ladder", "minecart"]       # MIN-EQUIP: the carpenter's, for the manor's orders and a miner's household
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
+	var fixed := _first_ready(n, recipes)
+	recipes = by_return(n, recipes)                 # WDR-012-C: the better return under local prices first
+	if fixed != "" and _first_ready(n, recipes) != fixed:
+		w.stat("spec_switches")
 	for r in recipes:
 		var rec: Dictionary = GameData.recipes[r]
 		if n.inv.has_all(rec.in) and _do_recipe(n, r):        # reserves the station, or tries the next recipe
@@ -1230,6 +1281,37 @@ func _crafter(n: NPC, recipes: Array) -> bool:
 	n.doing = "waiting for materials"
 	n.plan = [go(_workplace_cell(n)), work(30, "", {}, "idle")]
 	return true
+
+
+## WDR-012-C (owner B18-DP-08): what one batch of recipe `r` is expected to return `n` under the actual local prices: the
+## products at the price a seller in their position asks (World.sell_price: dearer as their stock runs low, cheaper among
+## many local sellers) less the inputs at what they would cost to replace at the local asking price. Nothing is invented:
+## the same prices the player meets (World.sell_price_at).
+func recipe_return(n: NPC, r: String) -> float:
+	var rec: Dictionary = GameData.recipes[r]
+	var got := 0.0
+	for id in rec.out:
+		got += float(rec.out[id]) * float(w.sell_price(n, id))
+	var cost := 0.0
+	for id in rec["in"]:
+		cost += float(rec["in"][id]) * float(World.sell_price_at(id, 0, w.local_supply(id, n.pos, n)))
+	return got - cost
+
+
+## `recipes` ordered by expected return, best first; equal returns keep the order given (deterministic).
+func by_return(n: NPC, recipes: Array) -> Array:
+	var keyed := []
+	for i in recipes.size():
+		keyed.append([recipe_return(n, recipes[i]), i, recipes[i]])
+	keyed.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
+	return keyed.map(func(k: Array) -> String: return k[2])
+
+
+func _first_ready(n: NPC, recipes: Array) -> String:
+	for r in recipes:
+		if n.inv.has_all(GameData.recipes[r]["in"]):
+			return r
+	return ""
 
 
 ## The tanner (Build 13): hides and pelts to leather, wool to cloth, and cloth to bandages for the
@@ -1286,6 +1368,7 @@ func _smith(n: NPC) -> bool:
 	# forge whatever is scarcest (not with the iron an open order of the manor's is waiting for)
 	var ordered := w.manor_orders.any(func(x): return int(x.smith) == n.id and inv.count(str(x.tool)) == 0)
 	var wants := []
+	var for_buyer := []                           # the recipes a buyer wants made (WDR-012-C: they come before goods for stock)
 	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock", "forge_cart_axle", "forge_cart_ironwork"]:
 		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
 			continue
@@ -1294,15 +1377,22 @@ func _smith(n: NPC) -> bool:
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in) and _can_make(n, r):
 			wants.append([inv.count(out), r])
 	# PAR-04: the jewellery, the helmet and nails (B14-07) only for a buyer who wants them
-	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring", "forge_nails", "forge_shovel_blade"]:
+	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring", "forge_nails", "forge_shovel_blade", "forge_chisel"]:
 		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
 			continue
 		var out: String = GameData.recipes[r].out.keys()[0]
 		if inv.count(out) < 1 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and _buyer_for(n, out) != null:
 			wants.append([inv.count(out), r])
+			for_buyer.append(r)
 	wants.sort()
 	if not wants.is_empty():
-		return _do_recipe(n, wants[0][1])
+		var rs: Array = wants.map(func(x: Array) -> String: return x[1])
+		if not for_buyer.is_empty():
+			rs = rs.filter(func(r: String) -> bool: return for_buyer.has(r))       # a buyer's want is demand: it goes before stock
+		var best: String = by_return(n, rs)[0]         # WDR-012-C: what pays best under local prices, not the scarcest first
+		if best != wants[0][1]:
+			w.stat("spec_switches")
+		return _do_recipe(n, best)
 	# with nothing to forge, the forge's inputs from the raw-goods merchant once the mine no longer brings them (EQ-07): the
 	# caravan's ore and coal (B7-007) sat unsold at the merchant while the axes wore out, the woodcutters
 	# stopped felling and the carpenter, and every house site, ran out of planks
@@ -1385,6 +1475,27 @@ func _cook(n: NPC) -> bool:
 	return true
 
 
+## FARM-08-Q-CROP: each cutter's work on field `f` when `n` finishes its cutting (`done` minutes): `n`'s whole cutting
+## and, for every other farmer of the field cutting it now, the minutes already worked; those stop cutting (their step
+## ends with their share). A farmer not cutting at that moment did no cutting work and gets no share. Owner D7
+## (2026-10-23): work is minutes x the cutter's own work rate (CapabilityHook.rate: 1.0 with no experience effect), so a
+## faster cutter's share follows the ground cut, not the clock. id -> base-minute equivalents.
+func _cutting_shares(n: NPC, f: Dictionary, done: float) -> Dictionary:
+	var out := {n.id: maxf(done, 0.001) * CapabilityHook.rate("farming", n)}
+	for o: NPC in w.field_workers(f):
+		if o == n or o.plan.is_empty() or o.plan[0].k != "work" or str(o.plan[0].get("act", "")) != "harvest" \
+				or str(o.plan[0].get("args", {}).get("field", "")) != str(f.id):
+			continue
+		var worked := float(o.plan[0].min) - o.work_left
+		if worked <= 0.0:
+			continue
+		out[o.id] = worked * CapabilityHook.rate("farming", o)       # X18-D7: work done, in base-minute equivalents
+		o.plan.pop_front()
+		if not o.plan.is_empty() and o.plan[0].k == "work":
+			o.work_left = float(o.plan[0].min)
+	return out
+
+
 func _farmer(n: NPC) -> bool:
 	if _keeper(n):
 		return true
@@ -1401,8 +1512,8 @@ func _farmer(n: NPC) -> bool:
 	match "hired" if f.state == "ripe" and not w.quests.hired_on(f).is_empty() else st:
 		"ripe":
 			n.doing = "harvesting wheat"
-			var cut := w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0
-			n.plan = [go(spot), work(cut, "harvest", {"field": f.id}, "work")]
+			var cut := CapabilityHook.time(w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0, "farming", n)   # X18 HOOK
+			n.plan = [go(spot), work(cut, "harvest", {"field": f.id, "min": cut}, "work")]   # min: this cutter's share of the work (FARM-08-Q-CROP)
 		"tilled":
 			if Farming.seasonal_fields() and not w.farm.can_sow_now():
 				n.doing = "waiting for the sowing season"     # FSE-13: no sowing in winter, as for the player
@@ -1414,7 +1525,7 @@ func _farmer(n: NPC) -> bool:
 				n.plan = [go(spot), work(60, "", {}, "idle")]
 				return true
 			n.doing = "sowing"
-			var sow := w.farm.field_work_minutes(mini(Farming.field_cells(f), w.farm.field_seed(f)), "sow") if Farming.shared_manor() else 45.0
+			var sow := CapabilityHook.time(w.farm.field_work_minutes(mini(Farming.field_cells(f), w.farm.field_seed(f)), "sow") if Farming.shared_manor() else 45.0, "farming", n)   # X18 HOOK
 			n.plan = [go(spot), work(sow, "sow", {"field": f.id}, "work")]
 		_:
 			if n.inv.count("wheat") > reserve(n, "wheat") and _buyer_for(n, "wheat") != null:
@@ -1457,7 +1568,8 @@ func _keeper(n: NPC) -> bool:
 	# the pen's eggs, milk and wool (Build 13): collected at the gate, then sold to the cook and the tanner
 	if not w.farm.products_in(pen).is_empty():
 		n.doing = "collecting from the %s" % GameData.b("animals")[pen.kind].name.to_lower()
-		n.plan = [go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))), work(10, "collect_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+		# X18 HOOK (X18-CAPNUM farming F1): off in the game (exactly 10); collecting eggs, milking, shearing: faster, the same products
+		n.plan = [go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))), work(CapabilityHook.time(10.0, "farming", n), "collect_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 		return true
 	var sells := ["meat", "hide", "feather", "egg", "milk", "wool"].filter(func(i): return n.inv.has(i))
 	if not sells.is_empty():
@@ -1476,7 +1588,8 @@ func _keeper(n: NPC) -> bool:
 			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cut.id, "why": "famine"}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
 			return true
 	if int(pen.trough) < need * 2:
-		var feed_step := work(15, "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
+		# X18 HOOK (X18-CAPNUM F1): off in the game (exactly 15); the same feed
+		var feed_step := work(CapabilityHook.time(15.0, "farming", n), "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
 		n.doing = "feeding the %s" % GameData.b("animals")[pen.kind].name.to_lower()
 		if n.inv.has("wheat"):
 			n.plan = [go(at), feed_step]
@@ -2052,7 +2165,7 @@ func _do_recipe(n: NPC, r: String) -> bool:
 	# the station is reserved for the walk there and the work, plus an hour's slack
 	w.stations[st].users[n.id] = w.minutes + w.map.data.w + float(rec.minutes) + 60.0
 	n.doing = "%s" % r.replace("_", " ")
-	var mins := float(rec.minutes) * Skills.value(n, str(rec.skill), "craft_time", 1.0)
+	var mins := CapabilityHook.work_time(float(rec.minutes), CapabilityHook.recipe_industry(r), Skills.value(n, str(rec.skill), "craft_time", 1.0), n)   # X18 HOOK
 	n.plan = [go(w.station_use(st)), work(mins, "craft", {"recipe": r, "station": st}, "work", _station_at(st))]
 	return true
 
@@ -2096,6 +2209,8 @@ func _workplace_cell(o: NPC) -> Vector2i:
 		return Vector2i(int(s.use[0]), int(s.use[1]))
 	if o.workplace == "manor":
 		return w.building_door(o.home)
+	if o.workplace == "chapel" and w.chapel != null and w.chapel.present:
+		return w.chapel.door_cell()
 	return o.cell()
 
 
@@ -2241,6 +2356,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					from.remove(m)
 					n.hp = minf(n.max_hp, n.hp + float(GameData.item(m).heal))
 					w.stat("npc_used_" + m)
+					Skills.gain(n, "healing", Skills.action_xp("treat"))     # DVW-B8
 					w.stat("used_" + m)                   # consumed, as when the player uses one (EQ-10)
 					return true
 			return false
@@ -2421,29 +2537,57 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return w.prospecting.report(n, int(a.id))
 		"craft":
 			release_station(n, a.get("station", ""))
+			if a.has("biz"):
+				return w.business.works.finish(n, a)       # B18-DP-01: the player's attendant at the player's own station
 			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
 		"harvest":
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
 				return false                                       # (left to the player hired to cut it)
-			if Farming.shared_manor():                    # FSE-12: the crop of the sown cells and their seed back
-				w.farm.seed_back(n, f)
-				n.inv.add("wheat", w.take_crop(f, 1 << 30))
-			else:
-				n.inv.add("wheat", w.farm.save_seed(n, w.take_crop(f, 1 << 30)))   # whatever is left on the field, less the seed kept back
+			# FARM-08-Q-CROP + FARM-CROP-SEED (owner, 2026-10-22/23): the seed kept back and the rest of the crop belong to the
+			# farmers who cut it, by their work (minutes x their own work rate, X18-D7), whoever finishes first; the others
+			# stop cutting, their share in hand
+			var shares := _cutting_shares(n, f, float(a.get("min", 90.0)))
+			var taken := w.take_crop(f, 1 << 30)               # whatever is on the field (the shared model's cells' crop)
+			var sp := w.farm.seed_pool(f, taken)
+			var crop: int = int(sp.grain)
+			var shared := Farming.shared_manor()
+			var seed_split := Farming.split_crop(int(sp.pool), shares)
+			if seed_split.is_empty() and int(sp.pool) > 0:
+				seed_split[n.id] = int(sp.pool)
+			var sids := seed_split.keys()
+			sids.sort()
+			for id in sids:
+				var sc: NPC = n if int(id) == n.id else w.npc(int(id))
+				var back := int(seed_split[id])
+				var kept := w.farm.keep_seed(sc, back, shared)
+				if not shared:
+					crop += back - kept                        # seed that finds no room stays grain, as before
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
-			# who shares this field before anything is sold
+			# who shares this field before anything is shared out; the cutter carries it there
+			var feed := 0
 			for pid in w.fauna.pens:
 				var pen: Dictionary = w.fauna.pens[pid]
 				var need := w.fauna.daily_need(pen)
 				var days := 1 if w.famine() else 4
 				var keeper := w.pen_keeper(pen)
 				if keeper and keeper.workplace == f.id and int(pen.trough) < need * days and need > 0:
+					feed += mini(need * days - int(pen.trough), crop - feed)
 					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * days - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
 					n.plan.push_front(go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))))
-			var pantry: Inventory = w.households[n.household].pantry
-			var keep := maxi(0, 10 - pantry.count("wheat"))
-			w.transfer(n.inv, pantry, "wheat", mini(keep, n.inv.count("wheat")))
+			n.inv.add("wheat", feed)
+			var split := Farming.split_crop(crop - feed, shares)
+			if split.is_empty() and crop - feed > 0:
+				split[n.id] = crop - feed
+			var ids := split.keys()
+			ids.sort()
+			for id in ids:
+				var c: NPC = n if int(id) == n.id else w.npc(int(id))
+				c.inv.add("wheat", int(split[id]))
+				if c.household >= 0:
+					var pantry: Inventory = w.households[c.household].pantry
+					var keep := maxi(0, 10 - pantry.count("wheat"))
+					w.transfer(c.inv, pantry, "wheat", mini(keep, int(split[id])))
 			w.set_field(f, "tilled")
 			return true
 		"sow":
@@ -2460,6 +2604,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if prey == null or prey.pos.distance_to(n.pos) > 3.0:
 				return true            # it got away; the hunter picks another
 			w.stat("hunted_" + prey.species)
+			Skills.gain(n, "hunting", Skills.action_xp("hunt"))     # DVW-B8: the hunt trains Hunting, as the player's
 			Skills.gain(n, "combat", Skills.kill_xp(prey.species, n.damage * Skills.value(n, "combat", "damage_mult", 1.0)))     # per kill, the player's rule (FSE-B12)
 			var bag: Inventory = w.fauna.kill(prey)
 			for id in bag.ids():
@@ -2533,6 +2678,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
+		"church_ask":                           # DVW-B3-CHAPEL: asking the church for food
+			return w.chapel.ask(n)
 		"fp_work", "fp_fence":                  # FARM-02..04: work on the family's farmland (FarmPlots)
 			return w.farm_plots.act(n, what, a)
 	return true
@@ -2637,8 +2784,11 @@ func reeve_day() -> void:
 	var obligations := daily_obligations()
 	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
 	var taxed := 0
-	if w.treasury < obligations * float(GameData.b("treasury_tax_holiday_days")):
-		var rate := float(GameData.b("tax_rate_low_treasury")) if w.treasury < reserve else float(GameData.b("tax_rate_normal"))
+	var tax := TaxPolicy.step(w.tax_state, float(w.treasury), obligations, w.day())   # DVW-B5: banded, announced
+	for line: String in tax.notes:
+		w.note(line)
+	var rate := float(tax.rate)
+	if rate > 0.0:
 		for h in w.households.size():
 			var members := _members(h)
 			if members.is_empty():
@@ -2672,11 +2822,11 @@ func reeve_day() -> void:
 	w.mine_works.supply.procure()                    # MIN-EQUIP: the supports, repair goods, ladders and mallet its shore work needs
 	w.manor_work.post_shore()                        # MIN-EQUIP: set up, repair or ladder below ground, with the yard's goods
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
-	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
+	for id in ["plank", "stone", "rubble", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths; rubble (STONE-04) mends as stone does
 		if id == "stone" and quarrying:
 			continue                          # the manor's own stone is being quarried
 		for o: NPC in w.npcs:
-			if not o.alive or not (o.job in ["carpenter", "laborer", "smith"] or buy_role(o) == "merchant_raw"):
+			if not o.alive or not (o.job in ["carpenter", "laborer", "smith", "stonecutter"] or buy_role(o) == "merchant_raw"):
 				continue
 			while o.inv.count(id) > 6 + w.construction.open_need(id) and budget > 0 and bought < 40 and w.manor_work.works_want():
 				var price := w.buy_price(o, id)
@@ -2921,9 +3071,9 @@ func _public_works(obligations: float) -> int:
 	var budget := int(maxf(0.0, excess) * float(GameData.b("public_works_share")))
 	var keep: Dictionary = GameData.b("public_works_seller_keeps")
 	var used := 0
-	for id in ["plank", "iron_bar", "stone"]:
+	for id in ["plank", "iron_bar", "stone", "rubble"]:
 		for o: NPC in w.npcs:
-			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer"] or w.asleep(o):
+			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer", "stonecutter"] or w.asleep(o):
 				continue
 			# what open building sites still need stays on sale for their builders (audit: public
 			# works would starve builders)
@@ -3240,7 +3390,7 @@ func daily_obligations() -> float:
 		if o.alive and o.job == "guard":
 			n += float(GameData.b("guard_wage_per_day"))
 		elif o.alive and o.job == "manor_hand":
-			n += float(GameData.b("manor_wage_per_day"))
+			n += float(manor_hand_wage())
 	return n
 
 
@@ -3332,7 +3482,7 @@ func pay_guards() -> void:
 				w.stat("gov_wages", wage)
 			else:
 				once("unpaid_%d" % w.day(), "The manor cannot pay the guards today.")
-	var hand_wage := int(GameData.b("manor_wage_per_day"))
+	var hand_wage := manor_hand_wage()
 	if w.treasury < 2.0 * daily_obligations():
 		# the manor cannot keep everyone on: the most recently hired hand is let go
 		var last: NPC = null
@@ -3416,7 +3566,7 @@ func job_market() -> Dictionary:
 	var avg := func(job: String, fallback: float) -> float:
 		return float(earn[job]) / int(heads[job]) if heads.has(job) else fallback
 	var market := {}
-	var wage := float(GameData.b("manor_wage_per_day"))
+	var wage := float(manor_hand_wage())
 	var reserve := daily_obligations() * float(GameData.b("treasury_reserve_days"))
 	market["manor_hand"] = {"pay": wage, "open": maxi(0, int((w.treasury - reserve) / (wage * float(GameData.b("manor_hire_runway_days"))))),
 		"tool": "", "at": w.building_door(_manor_id())}
@@ -3441,7 +3591,137 @@ func job_market() -> Dictionary:
 	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
 		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
 	market["prospector"] = w.discovery.prospector_place(avg.call("prospector", 0.0))     # MIN-D: adoption by the job rules
+	market["stonecutter"] = stonecutter_place(avg.call("stonecutter", 0.0))               # X18-STONECUT: adoption by the job rules
+	for sj in Population.SERVICE_JOBS:
+		market[sj] = service_place(sj)
+	for cj in Population.CLERGY:
+		market[cj] = w.chapel.place(cj)             # DVW-B3-CHAPEL: the clergy's places, open when nobody holds them
 	return market
+
+
+## X18-STONECUT: the stonecutter's place in the labour market. One place, open while nobody living cuts stone for a living,
+## blocks are wanted (_block_demand: the raw-goods merchant buys them or open sites need more than anyone holds) and raw
+## stone is on sale to buy (a raw-goods merchant holds enough for a batch). The pay is what stonecutters have earned a day,
+## else the manor's day wage; the trade's tool, the iron chisel, is the setup a villager weighs (seek_work). Nothing is
+## promised: the place is a chance, and a stonecutter whose blocks do not sell is paid nothing and moves on as any other.
+func stonecutter_place(avg_pay: float) -> Dictionary:
+	var open := 0
+	var stone := int(GameData.recipes["dress_stone"]["in"]["stone"])
+	if living_in("stonecutter") == 0 and _blocks_wanted() and _with_buy_role("merchant_raw").any(func(v: NPC) -> bool: return v.inv.count("stone") >= stone):
+		open = 1
+	var at := Vector2i.ZERO
+	var benches := w.stations_of("workbench")
+	if not benches.is_empty():
+		at = w.station_use(benches[0])
+	return {"pay": avg_pay if avg_pay > 0.0 else float(GameData.b("manor_wage_per_day")), "open": open, "tool": "chisel", "at": at}
+
+
+## X18-STONECUT: whether anyone would buy building blocks now, whoever dresses them (the raw-goods merchant has room and
+## coins for them, or the open sites need more than the village's labourers and merchants hold).
+func _blocks_wanted() -> bool:
+	for v: NPC in _with_buy_role("merchant_raw"):
+		if wants(v, "building_block") > 0 and v.coins > w.reserve_of(v):
+			return true
+	var held := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and (o.job in ["laborer", "stonecutter"] or buy_role(o) == "merchant_raw"):
+			held += o.inv.count("building_block")
+	return w.construction.open_need("building_block") > held
+
+
+## WDR-012-C hiring competition (owner B18-DP-08). The manor's day wage for a hand: the established wage plus the raise it
+## has had to offer to fill its places (World.wage_offers). Every hand is paid the same, the treasury pays it, and the
+## manor takes on only as many as its treasury can pay at that wage (job_market), so a raise never breaks the books.
+func manor_hand_wage() -> int:
+	return int(GameData.b("manor_wage_per_day")) + int((w.wage_offers.get("manor_hand", {}) as Dictionary).get("raise", 0))
+
+
+## Called at the end of each morning's seek_work with the places the manor still has open and how many villagers looked for
+## work that morning and did not take them. Places that stay open `unfilled_days` mornings with seekers about raise the
+## offer one step (up to `raise_max`); places that are filled `unfilled_days` mornings in a row ease it one step. The
+## seekers choose by the ordinary job-switch rule, now with the better pay in the score.
+func _hiring_competition(open_left: int, seekers: int) -> void:
+	var cfg: Dictionary = GameData.b("hiring_competition")
+	var o: Dictionary = (w.wage_offers.get("manor_hand", {"raise": 0, "short": 0, "met": 0}) as Dictionary).duplicate()
+	if open_left > 0 and seekers > 0:
+		o.short = int(o.short) + 1
+		o.met = 0
+		if int(o.short) >= int(cfg.unfilled_days) and int(o.raise) < int(cfg.raise_max):
+			o.raise = int(o.raise) + int(cfg.raise_step)
+			o.short = 0
+			w.stat("wage_offers_raised")
+			w.note("The manor cannot fill its places and offers its hands %d coins a day." % (int(GameData.b("manor_wage_per_day")) + int(o.raise)))
+	elif open_left <= 0 and int(o.raise) > 0:
+		o.met = int(o.met) + 1
+		o.short = 0
+		if int(o.met) >= int(cfg.unfilled_days):
+			o.raise = maxi(0, int(o.raise) - int(cfg.raise_step))
+			o.met = 0
+			w.stat("wage_offers_eased")
+	if int(o.raise) > 0 or int(o.short) > 0 or int(o.met) > 0 or w.wage_offers.has("manor_hand"):
+		w.wage_offers["manor_hand"] = o
+
+
+## WDR-012-C relocation (owner B18-DP-08): a merchant whose household is not living on the stall (the same test that sends
+## a villager looking for other work) moves to a vacant stall of the manor's market, of the same kind (their stock suits it),
+## where what they hold would fetch clearly more under the local supply there (World.local_supply: fewer rivals within the
+## radius, a dearer price) by the job-switch margin. Their old stall is let again as any vacant one (Property.relet_stalls).
+## NPC villagers only: the player decides for themselves where to trade, under the same prices.
+func _relocate_stall(n: NPC) -> bool:
+	if not w.stalls.has(n.workplace) or w.tenant_of(w.stalls[n.workplace]) != World.npc_ref(n.id):
+		return false
+	var cur: Dictionary = w.stalls[n.workplace]
+	var best := ""
+	var best_value := stall_value(n, cur) * float(GameData.b("job_switch_margin"))
+	var ids: Array = w.stalls.keys()
+	ids.sort()
+	for sid in ids:
+		var s: Dictionary = w.stalls[sid]
+		if Business.is_pitch(s) or s.get("built", false) or str(s.get("kind", "")) != str(cur.kind) or w.tenant_of(s) != "":
+			continue
+		var v := stall_value(n, s)
+		if v > best_value:
+			best_value = v
+			best = sid
+	if best == "":
+		return false
+	var old := n.workplace
+	w.set_tenant(cur, "")
+	w.set_tenant(w.stalls[best], World.npc_ref(n.id))
+	n.workplace = best
+	n.left_job = "merchant"                    # just changed place: time to settle, as after a job change
+	n.job_since = w.day()
+	n.plan.clear()
+	w.stat("stall_relocations")
+	w.note("%s %s moves the trade from %s to %s, where it should sell better." % [n.name, n.family, old, best])
+	return true
+
+
+## What `n`'s goods in hand would fetch, at the asking prices there, if sold from stall `s`.
+func stall_value(n: NPC, s: Dictionary) -> float:
+	var at := Vector2(int(s.use[0]), int(s.use[1]))
+	var v := 0.0
+	for id in n.inv.items:
+		var q := n.inv.count(id)
+		if q > 0 and GameData.value(id) > 0 and not keeps(n, id):
+			v += float(q) * float(World.sell_price_at(id, q, w.local_supply(id, at, n)))
+	return v
+
+
+## TAILOR-18, BARBER-18: the place of a service trade in the labour market. Open (one place) while nobody living holds the
+## trade and its manor pitch is free (a pitch whose tenant has died or left the trade is freed first): a new world has the
+## trade filled; a save made before it, or a trade whose holder has died, opens its place for an adult who becomes free.
+## No villager is made for it.
+func service_place(job: String) -> Dictionary:
+	var s := Business.service_pitch(w, job)
+	var open := 0
+	if not s.is_empty():
+		var t: NPC = w.party(w.tenant_of(s))
+		if w.tenant_of(s) != "" and (t == null or not t.alive or t.job != job):
+			w.set_tenant(s, "")
+		if w.tenant_of(s) == "" and not w.npcs.any(func(o): return o.alive and o.role == "adult" and o.job == job):
+			open = 1
+	return {"pay": float(GameData.b("manor_wage_per_day")), "open": open, "tool": "", "at": Vector2i(int(s.x), int(s.y) + 1) if not s.is_empty() else Vector2i.ZERO}
 
 
 func _field_workers(f: Dictionary) -> int:
@@ -3459,6 +3739,7 @@ func seek_work() -> void:
 	# EQ-03: a hunter in woods with no game left above its floors (Fauna.takeable_game: the keep and the hunters' spare,
 	# by real counts) has no work to do, and looks for other work as an adult out of work does
 	var no_game: bool = w.fauna.takeable_game() == 0
+	var seekers := 0               # WDR-012-C: villagers looking for work this morning
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
 		if econ.is_empty():
@@ -3466,7 +3747,7 @@ func seek_work() -> void:
 		var members := _members(h)
 		members.sort_custom(func(x: NPC, y: NPC) -> bool: return x.id < y.id)
 		for n: NPC in members:
-			if n.role != "adult" or n.job in ["guard", "reeve", "sage"]:
+			if n.role != "adult" or n.job in ["guard", "reeve", "sage", "tailor", "barber", "preacher", "church_assistant"]:
 				continue
 			var unemployed := n.job == "" or tool_short(n) or (n.job == "hunter" and no_game)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
@@ -3476,11 +3757,14 @@ func seek_work() -> void:
 					continue
 				if n.income_days.size() < 5 or n.avg_income(5) >= share:
 					continue
+				if n.job == "merchant" and _relocate_stall(n):         # WDR-012-C: first to a better stall
+					continue
+			seekers += 1
 			var current := 0.0 if unemployed else n.avg_income(5)
 			var best := ""
 			var best_score := -1e9
 			var home := w.building_door(n.home)
-			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector"]:
+			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher", "church_assistant"]:
 				var opt: Dictionary = market[job]
 				if int(opt.open) <= 0 or job == n.job:
 					continue
@@ -3508,6 +3792,7 @@ func seek_work() -> void:
 			var left_place := n.workplace
 			_change_job(n, best, why)
 			_post_left(n, left, left_place)
+	_hiring_competition(int(market.manor_hand.open), seekers)
 
 
 ## A merchant's stall falls vacant when they die or change work.
@@ -3546,6 +3831,16 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 			w.set_tenant(w.stalls[place], World.npc_ref(n.id))
 		"smith", "carpenter", "tanner", "cook", "tavernkeeper":
 			n.workplace = place                      # the workstation of the trade (succession)
+		"stonecutter":
+			n.workplace = ""                          # X18-STONECUT: works at the workbench a free one gives (_station_for)
+			for st in w.stations_of("workbench"):
+				if w.npc_may_use(n, w.stations[st]):
+					n.workplace = st
+					break
+		"tailor", "barber":
+			Business.let_service_pitch(w, n, job)
+		"preacher", "church_assistant":
+			n.workplace = "chapel"                   # DVW-B3-CHAPEL
 		_:
 			n.workplace = ""
 	if job == "":
@@ -3832,6 +4127,7 @@ func dawn(record := true) -> void:
 		w.quests.drop_failed()
 		w.quests.refresh()
 		w.contracts.dawn()                           # CON-01: lapses, withdrawn offers, businesses' orders
+		w.credit.dawn()                              # TRADE-CREDIT: debts fall due, are repaid or default; households short of food barter or borrow
 		Decay.dawn(w)                                # DVW-B4: a day's spoilage of stored food and wear of what is worn
 
 
@@ -3848,30 +4144,24 @@ func _day_labour(n: NPC) -> bool:
 	return true
 
 
-## A merchant caravan passes through. It is a finite regional market (B7-014, agent decision under the
-## owner's authorization of 2026-10-18; every number provisional): it holds a purse (World.caravan_purse),
-## which gains the regional demand for the village's goods (`caravan_allowance` coins a day, up to
-## `caravan_float`, tapering to nothing as the village's coins reach `caravan_ceiling_per_head` a head)
-## and every coin the village pays it for ore, coal and stone; it spends from it, at
-## most `caravan_coins` a visit, and never pays out a coin it does not hold. It sells first, then buys
-## the market's surplus (never the mine's raw ore, coal and stone, NOT_EXPORTED) at 0.8 x value, one unit at a time,
-## each to the seller that needs the sale most (EQ-22: caravan_line_need), so a short purse goes where the need is.
-## The village's currency can therefore grow only by the allowance, and never past its ceiling; the
-## goods leave the village; the coins are logged in coin_sources.
+## The caravan passes through (every `caravan_every_days`, at noon): the traders of the five neighbouring settlements
+## (Regions; ECON-P1.3, owner 2026-10-23: "their traders, carrying only what they actually have and paying with their actual
+## coins; the daily allowance goes away"). Whichever traders are on the road today (Regions.visiting: the nearer settlements
+## come more often) sell the village what they hold (ore, coal, stone, medicines, seed) and buy the market's and the
+## producers' surplus at 0.8 x value, one unit at a time, each to the seller that needs the sale most (EQ-22:
+## caravan_line_need), but only what their settlement still wants (OffMapSettlement.wants) and only with the coins in
+## the trader's own till above its floor. Nothing is bought for coins the trader does not hold and nothing is sold that it
+## does not carry. The village's currency changes only by what the village pays them and what they pay it; the goods
+## cross the boundary the same way; the coins are logged in coin_sources.
 func caravan() -> void:
+	Migration.visit(w)                               # MIGRATE-18: people travel with the caravan, a real migrant before a made newcomer
 	succession_caravan()                             # newcomers for the posts nobody could take (B8-016)
-	var every := maxi(1, int(GameData.b("caravan_every_days")))
-	var float_coins := int(GameData.b("caravan_float"))
-	if w.caravan_purse < float_coins:
-		# the region's demand tops the purse up, less and less as the village's coins near their ceiling
-		var ceiling := float(GameData.b("caravan_ceiling_per_head")) * float(w.alive_count() - w.alive_count("bandit"))
-		var room := clampf(1.0 - float(w.total_coins()) / maxf(1.0, ceiling), 0.0, 1.0)
-		w.caravan_purse = mini(float_coins, w.caravan_purse + roundi(float(GameData.b("caravan_allowance")) * every * room))
-	var sold := _caravan_imports()
-	var stone := _caravan_stone()
-	_caravan_apothecary()
-	_caravan_seeds()
-	var budget := mini(int(GameData.b("caravan_coins")), w.caravan_purse)
+	var on_road: Array = w.regions.begin_visit(w.day())
+	var sold := _caravan_imports(on_road)
+	var stone := _caravan_stone(on_road)
+	_caravan_apothecary(on_road)
+	_caravan_seeds(on_road)
+	var food_in := _caravan_food(on_road)             # REG-BUY-01: the traders' food, to the buyers that cannot find it in the village
 	var bought := 0
 	# merchants do not sell the village's food away when there is less than a few days of it (the
 	# village's need weighted by age, as everywhere)
@@ -3911,9 +4201,7 @@ func caravan() -> void:
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
-		var caps: Dictionary = BUYS.get(buy_role(o), {})
-		if o.job == "smith":
-			caps = {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
+		var caps: Dictionary = export_caps(o)
 		for id in o.inv.ids():
 			if not caps.has(id) or NOT_EXPORTED.has(id) or (keep_food and (FOOD.has(id) or id == "meat")):
 				continue
@@ -3929,13 +4217,13 @@ func caravan() -> void:
 		var o: NPC = line[0]
 		if not restock.has(o.id):
 			restock[o.id] = restock_cost(o)
-	while budget > 0:
+	while true:
 		var best: Array = []
 		var best_need := -1.0
 		for line in lines:
 			var o: NPC = line[0]
 			var id: String = line[1]
-			if int(line[2]) <= 0 or maxi(1, roundi(GameData.value(id) * 0.8)) > budget:
+			if int(line[2]) <= 0 or w.regions.buyer_for(id, maxi(1, roundi(GameData.value(id) * 0.8)), on_road) == null:
 				continue
 			var need := caravan_line_need(o, id, int(line[2]), int(restock[o.id]))
 			if best.is_empty() or need > best_need or (need == best_need and (o.id < (best[0] as NPC).id
@@ -3953,19 +4241,22 @@ func caravan() -> void:
 			continue
 		tool_stock[id] = int(tool_stock.get(id, 0)) - 1
 		best[2] = int(best[2]) - 1
+		var buyer: OffMapSettlement = w.regions.buyer_for(id, price, on_road)
+		buyer.buy_from_village(id, 1, price)             # the trader pays from its own till; the goods enter its stock
+		w.note_settlement_trade(o, buyer)                # REG-COURIER-01: a dealing with that trader (a record only)
 		o.inv.remove(id)
 		w.stat("exported_" + id)
 		o.coins += price
 		o.earned += price
-		budget -= price
-		w.caravan_purse -= price
 		w.coin_sources += price
 		w.stat("caravan_coins_in", price)
 		w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
 		bought += price
-	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s%s." % [bought,
+	Luxury.visit(w, on_road)                         # DVW-B3-LUX: spare coins buy the traders' costly goods, which they keep
+	w.note("Traders from %s pass through, buy %d coins' worth from the market%s%s%s." % [", ".join(on_road.map(func(r): return r.name)), bought,
 		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
-		(" and %d stone to the market" % stone) if stone > 0 else ""])
+		(" and %d stone to the market" % stone) if stone > 0 else "",
+		(" and sell %d coins' worth of food they can spare" % food_in) if food_in > 0 else ""])
 
 
 ## What the inputs a trader's trade buys (BUYS of its role) and it lacks would cost at their value: what it
@@ -3981,6 +4272,14 @@ func restock_cost(o: NPC) -> int:
 ## owner 2026-10-21; the measure is an agent proposal): the share of its holding of `id` that is surplus over what
 ## it keeps (0 to 1), plus the share of its inputs' cost (`restock`) its coins cannot pay (0 to 1). A seller well
 ## stocked, or with the coins to restock, needs the sale less than one short of its trade's inputs and coins.
+## What the caravan, and the couriers a business posts goods by (CourierService.villagers_post), take from a merchant or smith: item ->
+## the most they stock; their surplus is what they hold beyond half of it.
+func export_caps(o: NPC) -> Dictionary:
+	if o.job == "smith":
+		return {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
+	return BUYS.get(buy_role(o), {})
+
+
 func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
 	var held := maxi(1, o.inv.count(id))
 	var surplus := clampf(float(extra) / float(held), 0.0, 1.0)
@@ -3993,7 +4292,9 @@ func caravan_line_need(o: NPC, id: String, extra: int, restock: int) -> float:
 ## When the village's own seams of an ore (or coal) are worked out, the caravan brings it: each
 ## smith buys up to `caravan_import_stock` at the caravan's price while keeping the trader cash
 ## floor. The coins leave the village (coin_sources falls). Returns the coins spent.
-func _caravan_imports() -> int:
+func _caravan_imports(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var left := {}
 	for d in w.deposits:
 		if w.villagers_reach(d):           # MIN-A: the village's own ore is what its workers can reach
@@ -4008,11 +4309,15 @@ func _caravan_imports() -> int:
 				continue
 			var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
 			while o.inv.count(id) < int(stock[id]) and w.can_afford(o, price, false, id):
+				var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
+				if seller == null:
+					break                          # no trader on the road carries any
+				seller.sell_to_village(id, 1, price)
+				w.note_settlement_trade(o, seller)
 				o.coins -= price
 				o.spent += price
 				o.inv.add(id)
 				w.coin_sources -= price
-				w.caravan_purse += price
 				w.stat("caravan_coins_out", price)
 				spent += price
 				w.stat("imported_" + id)
@@ -4022,7 +4327,9 @@ func _caravan_imports() -> int:
 ## The caravan's medicines (PL1-04): each visit it sells the sage up to caravan_apothecary_per_visit
 ## pieces, the scarcest first, towards caravan_apothecary_stock, at base value from the sage's own coins
 ## (above the trader cash floor). Finite: it stops when the sage cannot pay.
-func _caravan_apothecary() -> int:
+func _caravan_apothecary(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var sage := w.npc(w.sage_id)
 	if sage == null or not sage.alive:
 		return 0
@@ -4033,17 +4340,19 @@ func _caravan_apothecary() -> int:
 		var worst := 1.0
 		for id in stock:
 			var fill := float(sage.inv.count(id)) / float(stock[id])
-			if fill < worst and w.can_afford(sage, GameData.value(id)):
+			if fill < worst and w.can_afford(sage, GameData.value(id)) and w.regions.seller_for(id, on_road) != null:
 				worst = fill
 				pick = id
 		if pick == "":
 			break
 		var price := GameData.value(pick)
+		var from_trader: OffMapSettlement = w.regions.seller_for(pick, on_road)
+		from_trader.sell_to_village(pick, 1, price)
+		w.note_settlement_trade(sage, from_trader)
 		sage.coins -= price
 		sage.spent += price
 		sage.inv.add(pick)
 		w.coin_sources -= price
-		w.caravan_purse += price
 		w.stat("caravan_coins_out", price)
 		w.stat("imported_" + pick)
 		spent += price
@@ -4053,7 +4362,9 @@ func _caravan_apothecary() -> int:
 ## The caravan's seed (Build 13 economy rule 3): each visit it sells the food merchant up to
 ## caravan_seed_per_visit seeds, the scarcest first, towards caravan_seed_stock, at seed value from the
 ## merchant's own coins above the trader cash floor. Finite like the apothecary's resupply.
-func _caravan_seeds() -> int:
+func _caravan_seeds(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var cfg: Dictionary = GameData.b("farming")
 	var stock: Dictionary = cfg.caravan_seed_stock
 	var spent := 0
@@ -4065,20 +4376,182 @@ func _caravan_seeds() -> int:
 			var worst := 1.0
 			for id in stock:
 				var fill := float(o.inv.count(id)) / float(stock[id])
-				if fill < worst and w.can_afford(o, GameData.value(id)) and o.inv.can_add(id):
+				if fill < worst and w.can_afford(o, GameData.value(id)) and o.inv.can_add(id) and w.regions.seller_for(id, on_road) != null:
 					worst = fill
 					pick = id
 			if pick == "":
 				break
 			var price := GameData.value(pick)
+			var from_trader: OffMapSettlement = w.regions.seller_for(pick, on_road)
+			from_trader.sell_to_village(pick, 1, price)
+			w.note_settlement_trade(o, from_trader)
 			o.coins -= price
 			o.spent += price
 			o.inv.add(pick)
 			w.coin_sources -= price
-			w.caravan_purse += price
 			w.stat("caravan_coins_out", price)
 			w.stat("imported_" + pick)
 			spent += price
+	return spent
+
+
+## Food from the traders (REG-BUY-01, owner Q18-10 "anyone may purchase goods from another settlement"; REG-BUY-D1 and REG-BUY-P1
+## say what the settlements release, OffMapSettlement.stock_trader_food). Villagers' existing buyers buy what the village's own
+## sellers cannot supply, one unit at a time from the cheapest trader on the road (Regions.food_seller: a settlement's prices
+## float), each under the rule it already follows, and the coins and goods cross the border as every caravan trade does
+## (coin_sources, imported_*, caravan_coins_out):
+##  - households, in the order of their number: a household whose foreseeable food need over reserve_days (World.necessity's
+##    food, in points) is not covered by what it holds and that finds no grain seller or food vendor in the village
+##    (_grain_seller, _vendor_with_food, the paths _plan_provision and _plan_eat take) buys, with the coins its members hold
+##    (food is a necessity: can_afford's for_need);
+##  - the settlement's treasury: the granary's target (granary_target_days) less what it holds and what the farmers and food
+##    merchants can still spare it this evening (surplus_wheat), paid from money above treasury_reserve_days of obligations,
+##    the rule of the evening's procurement (reeve_day); in a famine, when that procurement does not buy, the farmers' surplus
+##    is not counted on;
+##  - food businesses (the food merchant, the cook, the tavern): the stock BUYS says they keep (wants), less what the village's
+##    sellers hold for sale (_local_food_for_sale), when they can afford it (World.can_afford).
+## Returns the coins paid.
+func _caravan_food(on_road := []) -> int:
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
+	var spent := 0
+	spent += _caravan_food_households(on_road)
+	spent += _caravan_food_treasury(on_road)
+	spent += _caravan_food_businesses(on_road)
+	return spent
+
+
+## One unit of `item` from the cheapest trader on the road at its settlement's price; returns the price paid, 0 when none sells it
+## (the unit has left the trader's stock and its coins are in the till: the caller pays and keeps the goods).
+func _food_unit(item: String, on_road: Array, limit := 1 << 30) -> int:
+	var seller: OffMapSettlement = w.regions.food_seller(item, on_road)
+	if seller == null:
+		return 0
+	var price := seller.food_price(item)
+	if price > limit or not seller.sell_to_village(item, 1, price):
+		return 0
+	w.coin_sources -= price
+	w.stat("caravan_coins_out", price)
+	w.stat("imported_" + item)
+	w.stat("caravan_food_units")
+	w.stat("caravan_food_coins", price)
+	return price
+
+
+## The cheapest food per food point that a trader on the road sells (`allowed`: the foods the buyer can use), "" when none.
+func _cheapest_road_food(on_road: Array, allowed: Array) -> String:
+	var best := ""
+	var best_cost := INF
+	for f in allowed:
+		var s: OffMapSettlement = w.regions.food_seller(f, on_road)
+		if s == null or food_points(f) <= 0.0:
+			continue
+		var cost := float(s.food_price(f)) / food_points(f)
+		if cost < best_cost:
+			best_cost = cost
+			best = f
+	return best
+
+
+func _caravan_food_households(on_road: Array) -> int:
+	var spent := 0
+	var days := float(GameData.b("reserve_days"))
+	var allowed := ["wheat", "pottage", "roast_meat", "bread", "cheese"]          # eaten from the pantry as they are (raw meat needs logs to roast)
+	for h in w.households.size():
+		var mem := _members(h)
+		if mem.is_empty():
+			continue
+		var gap := people_day_food(mem) * days - store_points(household_stores(h))
+		if gap <= 0.0:
+			continue
+		var head := _richest_in_household(mem[0])
+		if head == null or _grain_seller(head) != null or _vendor_with_food(head) != null:
+			continue                                   # the village can still feed it: the villagers' own paths do
+		var pantry: Inventory = w.households[h].pantry
+		while gap > 0.0:
+			var item := _cheapest_road_food(on_road, allowed)
+			if item == "" or not pantry.can_add(item):
+				break
+			var seller: OffMapSettlement = w.regions.food_seller(item, on_road)
+			var price := seller.food_price(item)
+			var payer := _payer_for(head, price)
+			if payer == null or not w.can_afford(payer, price, true):
+				break
+			if _food_unit(item, on_road, price) == 0:
+				break
+			payer.coins -= price
+			payer.spent += price
+			pantry.add(item)
+			gap -= food_points(item)
+			spent += price
+			w.stat("caravan_food_households", price)
+	return spent
+
+
+func _caravan_food_treasury(on_road: Array) -> int:
+	var obligations := daily_obligations()
+	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
+	var target := int(village_day_food() * float(GameData.b("granary_target_days")) / food_points("wheat"))
+	var gap := target - w.granary.count("wheat") - w.manor_work.bound("granary", "wheat")
+	if not w.famine() and w.food_days >= float(GameData.b("relief_fill_days")):
+		for o: NPC in w.npcs:
+			if o.alive and (o.job == "farmer" or buy_role(o) == "merchant_food"):
+				gap -= surplus_wheat(o)                 # this evening's procurement buys these first
+	var spent := 0
+	while gap > 0:
+		var seller: OffMapSettlement = w.regions.food_seller("wheat", on_road)
+		if seller == null:
+			break
+		var price := seller.food_price("wheat")
+		if w.treasury - price < reserve or _food_unit("wheat", on_road, price) == 0:
+			break
+		w.treasury -= price
+		w.granary.add("wheat")
+		gap -= 1
+		spent += price
+		w.stat("caravan_food_treasury", price)
+		w.stat("gov_granary_in", 1)
+	return spent
+
+
+## What the village's sellers hold for sale of food `id` besides `buyer` (the sellers _relief_offers lists: farmers' grain beyond
+## what they keep, the food vendors' stock, farmers' eggs and milk, hunters' and farmers' meat).
+func _local_food_for_sale(id: String, buyer: NPC) -> int:
+	var n := 0
+	for o: NPC in w.npcs:
+		if not o.alive or o == buyer or o.role == "bandit":
+			continue
+		var vendor := o.job in ["tavernkeeper", "cook"] or buy_role(o) == "merchant_food"
+		if id == "wheat":
+			n += surplus_wheat(o) if o.job == "farmer" or vendor else 0
+		elif vendor or (o.job == "farmer" and id in ["egg", "milk", "meat"]) or (o.job == "hunter" and id == "meat"):
+			n += o.inv.count(id)
+	return n
+
+
+func _caravan_food_businesses(on_road: Array) -> int:
+	var spent := 0
+	for o: NPC in w.npcs:
+		if not o.alive or not (o.job in ["tavernkeeper", "cook"] or buy_role(o) == "merchant_food"):
+			continue
+		var caps: Dictionary = BUYS.get(buy_role(o), {})
+		for id in ["wheat", "meat", "pottage", "roast_meat", "bread", "cheese"]:
+			if not caps.has(id):
+				continue
+			var want := wants(o, id) - _local_food_for_sale(id, o)
+			while want > 0:
+				var seller: OffMapSettlement = w.regions.food_seller(id, on_road)
+				if seller == null:
+					break
+				var price := seller.food_price(id)
+				if not w.can_afford(o, price, false, id) or not o.inv.can_add(id) or _food_unit(id, on_road, price) == 0:
+					break
+				o.coins -= price
+				o.spent += price
+				o.inv.add(id)
+				want -= 1
+				spent += price
+				w.stat("caravan_food_businesses", price)
 	return spent
 
 
@@ -4092,9 +4565,11 @@ func _stone_scarce() -> bool:
 ## raw-goods merchants, the village's stone sellers (Construction.SELLERS), buy it up to their
 ## stock cap while keeping the trader cash floor; what they cannot pay for goes back with the cart.
 ## The coins leave the village (coin_sources falls). Returns the stone sold.
-func _caravan_stone() -> int:
+func _caravan_stone(on_road := []) -> int:
 	if not _stone_scarce():
 		return 0
+	if on_road.is_empty():
+		on_road = w.regions.begin_visit(w.day())
 	var cfg: Dictionary = GameData.b("caravan_stone")
 	var cart := int(cfg.load)
 	var price := maxi(1, roundi(GameData.value("stone") * float(cfg.markup)))
@@ -4103,11 +4578,15 @@ func _caravan_stone() -> int:
 		if not o.alive or buy_role(o) != "merchant_raw":
 			continue
 		while cart > 0 and wants(o, "stone") > 0 and w.can_afford(o, price, false, "stone"):
+			var seller: OffMapSettlement = w.regions.seller_for("stone", on_road)
+			if seller == null:
+				break
+			seller.sell_to_village("stone", 1, price)
+			w.note_settlement_trade(o, seller)
 			o.coins -= price
 			o.spent += price
 			o.inv.add("stone")
 			w.coin_sources -= price
-			w.caravan_purse += price
 			w.stat("imported_stone")
 			w.stat("caravan_stone_coins", price)
 			w.stat("caravan_coins_out", price)

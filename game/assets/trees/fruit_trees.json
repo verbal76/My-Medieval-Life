@@ -67,13 +67,13 @@
     "h": 59
    },
    "stump": {
-    "file": "apple_orchard_stump.png",
+    "file": "oak_summer_stump.png",
     "off": [
-     6,
-     49
+     12,
+     39
     ],
-    "w": 37,
-    "h": 10
+    "w": 23,
+    "h": 19
    },
    "cuts": {
     "left": [

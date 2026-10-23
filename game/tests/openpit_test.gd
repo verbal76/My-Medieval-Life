@@ -51,7 +51,7 @@ func _st(w: World, k: String) -> int:
 
 
 func _coins(w: World) -> int:
-	return w.total_coins() - w.coin_sources + w.caravan_purse
+	return w.total_coins() - w.coin_sources + w.regions.coins()
 
 
 func _sites(w: World) -> Array:
@@ -311,7 +311,7 @@ func _exposable(w: World) -> Dictionary:
 
 func _test_exposure() -> void:
 	var found := false
-	for sd in [1, 7]:
+	for sd in [1, 7, 2, 3, 4]:           # (the chapel took ground, so the hidden bodies lie elsewhere: any of these seeds with a reachable one)
 		var w := _world(sd)
 		var e := _exposable(w)
 		if e.is_empty():
@@ -354,14 +354,14 @@ func _test_exposure() -> void:
 		check(stand.x >= 0 and mr.result in ["ok", "gold"] and (mr.result == "gold" or (int(seam.amount) < a0 and _st(w, "mined_" + str(seam.ore)) == m0 + a0 - int(seam.amount))),
 				"the seam is mined by work_mine from the pit beside it, counted mined_ (%s)" % str(mr.result))
 		check(w.discovery.trial_dig(n, c, sc, "shovel").result == "refused", "the clue is opened: no trial pit finds it again")
-	check(found, "seed 1 or 7 has a body an open pit can reach")
+	check(found, "one of seeds 1, 7, 2, 3, 4 has a body an open pit can reach")
 
 
 # ---------------------------------------------------------------- the manor ------------------
 func _test_manor() -> void:
 	var w: World = null
 	var e := {}
-	for sd in [1, 7]:
+	for sd in [1, 7, 2, 3, 4]:           # (the chapel took ground, so the hidden bodies lie elsewhere: the first seed with a reachable one)
 		w = _world(sd)
 		e = _exposable(w)
 		if not e.is_empty():
@@ -515,7 +515,7 @@ func _test_saves() -> void:
 			n.inv.add("shovel")
 	pp.tip(p, n.inv)
 	var sd := w.to_dict()
-	check(int(sd.save_version) == 17 and sd.has("pits"), "no new save version (17); the pits are saved")
+	check(int(sd.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 17 and sd.has("pits"), "no new save version of its own (17; 18 is CC-01); the pits are saved")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(sd)))
 	check(JSON.stringify(w2.pits.to_dict()) == JSON.stringify(pp.to_dict()), "every pit's depths and heaps round-trip exactly")

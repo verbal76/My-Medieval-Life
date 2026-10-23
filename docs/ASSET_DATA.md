@@ -161,6 +161,20 @@ south, west the road joins) from its "pathways" edge wangset; `trees` are the vi
 (trunk, top, bottom) stamps with a look group; `rock`, `flowers`, `bushes` and `sapling` are paid-tileset
 tiles. `tests/test_tools.py` checks the file is what the tool writes.
 
+`game/data/character_style.json` (`mml-character-style/1`, CC-01) is written by `tools/import_game_assets.py` (never
+hand-edited) from `tools/puny_chargen.py`'s port of the PUNY CHARACTERS (TDSM) style: `dim`, `frames` and
+`directions` of a sheet; `draw_order` of the layers; `always` (layers drawn without a pick: the eyes and the weapon
+overlay) and `human_only` (eyes, eyelashes); `layers` (layer -> option -> the imported uncoloured `sheet` in
+`game/assets/characters/layers/` and its `ramps`, `[ramp, colour selection]` pairs: the first pair to name a reference
+colour recolours it); `selections` (colour selection -> ramp); `ramps` (ramp -> rows of `rrggbbaa` colours; row 0 is
+the reference the sheets are drawn in); `creation` (what character creation offers: `picks` per layer, `null` = none;
+swatch `rows` per selection; `linked` selections that follow another, a beard the hair's colour); and `worn_layers`,
+the empty hook for equipment drawn on the body (worn item id -> `layer`, `option`, `swatches`, `hides`). The game draws
+a recipe `{"picks": {layer: option or ""}, "swatches": {selection: row}}` by these rules in `CharacterLook`
+(`game/scripts/view/character_look.gd`). `game/data/appearances.json` (`mml-appearances/2`, also written by the
+importer) lists the baked player looks of Builds 7-17, each with its `recipe` (new in /2): saves from before CC-01
+migrate to it.
+
 `game/data/underground.json` (`mml-underground/1`, hand-kept; MIN-A, `docs/build17/MIN_A_ARCHITECTURE.md`) describes
 the underground galleries `Underground` (`game/scripts/core/underground.gd`) generates from the world seed. Each
 gallery has an `id`, a `level` (depth: -1 is the first level below the surface), the `portal` joining it to the

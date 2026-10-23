@@ -15,6 +15,8 @@ extends RefCounted
 ## Animals: the player fences a pen of one species on their ground (planks), buys stock from a keeper (real
 ## animals out of the manor's pen, paid to the keeper), feeds it from the trough like the village's pens, and
 ## collects eggs, milk and wool, which the well-fed adults make (see daily_products).
+## The plough horse (B14-11): bought from the visiting caravan (farming.caravan_horse) into the player's own horse
+## pen, fed from the trough like any pen animal; with it and the hand plough tilling is faster (till.horse).
 ## The manor's own fields (World.fields) and their farmers are untouched: nothing here is theirs to cut.
 
 const COZY := 200000                  # atlas offset of the Cozy Farm tiles (as tools/build_village.py)
@@ -163,9 +165,12 @@ func clear_seconds(t: Dictionary) -> float:
 
 
 # ---------------------------------------------------------------- tilling --------------------
-## {seconds, stamina} one cell costs: by hand, or with the hand plough when the player carries one.
+## {seconds, stamina} one cell costs: by hand, with the hand plough when the player carries one, and with the plough
+## drawn by a plough horse of the player's own (B14-11) faster again.
 func till_cost(p: PlayerState) -> Dictionary:
-	return cfg().till.plough if p.tool_of("plough") != "" else cfg().till.hand
+	if p.tool_of("plough") == "":
+		return cfg().till.hand
+	return cfg().till.horse if plough_horse() != null else cfg().till.plough
 
 
 func till_refusal(c: Vector2i, p: PlayerState) -> String:
@@ -198,6 +203,7 @@ func till(c: Vector2i, p: PlayerState) -> String:
 			p.tool = ""
 	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0}
 	w.stat("farm_tilled")
+	w.player_xp("farming", Skills.action_xp("till"))      # DVW-B8
 	_show_around(c)
 	return ""
 
@@ -229,6 +235,7 @@ func sow(c: Vector2i, crop: String, p: PlayerState) -> String:
 	w.stat("used_" + str(crops()[crop].seed))          # the seed is used up (SEED-02: the ledger counts it)
 	cells[c] = {"crop": crop, "state": "growing", "progress": 0.0}
 	w.stat("farm_sown_" + crop)
+	w.player_xp("farming", Skills.action_xp("sow"))       # DVW-B8
 	_show_around(c)
 	return ""
 
@@ -267,12 +274,12 @@ func harvest(c: Vector2i, p: PlayerState) -> Dictionary:
 	var out := harvest_goods(c)
 	if out.is_empty():
 		return {}
-	for id in out:
-		if not p.inv.can_add(id):
-			return {}
+	if not p.inv.can_add_all(out):
+		return {}
 	for id in out:
 		p.inv.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))
+	w.player_xp("farming", Skills.action_xp("harvest"))   # DVW-B8
 	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0}
 	_show(c)
 	return out
@@ -313,11 +320,11 @@ func building_refusal(p: Dictionary) -> String:
 
 
 # ---------------------------------------------------------------- drawing --------------------
-## The tile of a field cell: the pack's tilled, growing or ripe tile, closed at the edges of the field's
-## shape (a cell with no field cell beside it on a side gets that side's edge tile).
+## The ground tile of a field cell: the tilled-soil set whatever the cell's state, closed at the edges of the
+## field's shape (a cell with no field cell beside it on a side gets that side's edge tile). The crop is drawn over
+## it by CropView (VIS-CROP-01): one ground for every state, so sown and unsown cells join cleanly.
 func tile_for(c: Vector2i) -> int:
-	var cell: Dictionary = cells[c]
-	var base: int = w.map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[cell.state]]
+	var base: int = w.map.data.tiles.field.tilled
 	var cols := int(w.map.data.atlases[0].columns)
 	var l := cells.has(c + Vector2i.LEFT)
 	var r := cells.has(c + Vector2i.RIGHT)
@@ -457,6 +464,66 @@ func animal_price(a: Animal) -> int:
 	return base if a.adult(w.minutes) else maxi(1, roundi(base * float(cfg().young_price_share)))
 
 
+## The player's living plough horse (in one of their pens), or null.
+func plough_horse() -> Animal:
+	for a: Animal in w.fauna.animals:
+		if a.alive and a.species == "horse" and w.fauna.pens.has(a.area) and w.fauna.pens[a.area].get("player", false):
+			return a
+	return null
+
+
+## B14-11: the caravan is at its stop (its visit day, from_hour for `hours` game hours; the day rule is World.update's).
+func caravan_here() -> bool:
+	var c: Dictionary = cfg().caravan_horse
+	var h: float = w.hour()
+	return w.day() % int(GameData.b("caravan_every_days")) == 1 and h >= float(c.from_hour) and h < float(c.from_hour) + float(c.hours)
+
+
+func caravan_stop() -> Vector2:
+	var s: Array = cfg().caravan_horse.stop
+	return Vector2(float(s[0]) + 0.5, float(s[1]) + 0.5)
+
+
+func buy_horse_refusal(p: PlayerState) -> String:
+	var c: Dictionary = cfg().caravan_horse
+	if not caravan_here():
+		return "The caravan is not here."
+	if w.regions.horse_dealer(w.day()) == null:
+		return "None of the traders here has a horse to sell."
+	if plough_horse() != null:
+		return "You already have a plough horse."
+	if pen_with_room("horse").is_empty():
+		return "You need a horse pen with room: fence one on your ground."
+	if p.coins < int(c.price):
+		return "You need %d coins." % int(c.price)
+	return ""
+
+
+## Buy the plough horse from the visiting caravan into your horse pen. The horse is one a visiting trader's settlement
+## holds (Regions.horse_dealer: a horse-dealer among the traders on the road today, the nearest settlement first;
+## SET-C-FIVE, ECON-P1.3): the settlement's herd is one less, and the coins go to the dealer's till and leave the village
+## (coin_sources falls, as for any coin the village pays the caravan). "" when done.
+func buy_horse(p: PlayerState) -> String:
+	var no := buy_horse_refusal(p)
+	if no != "":
+		return no
+	var price := int(cfg().caravan_horse.price)
+	var dst := pen_with_room("horse")
+	var dealer: OffMapSettlement = w.regions.horse_dealer(w.day())
+	dealer.sell_horse(price)
+	w.note_settlement_trade(p, dealer)          # REG-COURIER-01: a dealing with that trader (a record only)
+	p.coins -= price
+	w.coin_sources -= price
+	var a: Animal = w.fauna.spawn(dst.id, "horse", "m", null)
+	a.born = w.minutes - (Animal.stage_days(a.spec(), "grow") + 1.0) * 1440.0       # a grown horse
+	a.next_birth = w.minutes + Animal.stage_days(a.spec(), "breed") * 1440.0
+	a.goal = Vector2.INF
+	w.stat("farm_bought_horse")
+	w.stat("caravan_sold_horse")
+	w.note("%s %s bought a plough horse from the caravan's trader from %s for %d coins." % [p.name, p.family, dealer.name, price])
+	return ""
+
+
 ## The animal of this sex a keeper can spare from a manor pen: not a newborn, and the pen keeps more than its
 ## breeding stock; the youngest first. null if none.
 func spare_animal(src: Dictionary, sex: String) -> Animal:
@@ -571,6 +638,8 @@ func collect(pen: Dictionary, p: PlayerState) -> Dictionary:
 			pen.products[id] = int(pen.products[id]) - n
 			got[id] = n
 			w.stat("made_" + id, float(n))           # a pen's products become goods when collected
+	if not got.is_empty():
+		w.player_xp("husbandry", Skills.action_xp("collect_pen"))      # DVW-B8
 	return got
 
 
@@ -707,8 +776,65 @@ func save_seed(n: NPC, wheat: int) -> int:
 	return wheat - keep
 
 
+## FARM-CROP-SEED (owner, 2026-10-23, "Share seed by work too"): the seed kept back from a field cut by several workers is
+## split by their work, as the grain is (split_crop: largest remainder, ties to the smaller id). One cutter's part:
+## `share` seed units, given to them as seed (the pool is made by seed_pool). Under the earlier model the farmer's store
+## holds at most seed_cap and only farmers keep seed: what does not fit is returned for the caller to add to the grain,
+## so nothing is made or lost. Returns the units kept as seed.
+func keep_seed(c: NPC, share: int, shared: bool) -> int:
+	if share <= 0:
+		return 0
+	var kept := share
+	if not shared:
+		if c.job != "farmer":
+			return 0
+		kept = mini(share, maxi(0, int(seed_cfg().seed_cap) - c.inv.count("wheat_seed")))
+	if kept > 0:
+		c.inv.add(str(crops().wheat.seed), kept)
+		w.stat("made_" + str(crops().wheat.seed) if shared else "farm_seed_saved", float(kept))
+	return kept
+
+
+## The seed kept back from the cutting of field `f` whose crop `crop` has been taken: the shared model returns
+## `seeds_back` seed a sown cell (new seed, as the player's rule) and clears the sowing; the earlier model keeps seed_keep
+## of the crop. {pool: seed units to split, grain: the crop that stays grain}.
+func seed_pool(f: Dictionary, crop: int) -> Dictionary:
+	if shared_manor():
+		var back := int(f.get("sown", 0)) * int(crops().wheat.seeds_back)
+		f.sown = 0
+		return {"pool": maxi(back, 0), "grain": crop}
+	var keep := mini(int(seed_cfg().seed_keep), maxi(crop, 0))
+	return {"pool": keep, "grain": crop - keep}
+
+
 func seed_price(crop: String) -> int:
 	return seed_item_price(str(crops()[crop].seed), w.player)
+
+
+## FARM-08-Q-CROP (owner, 2026-10-22): `total` whole units shared in proportion to `shares` (id -> work), by largest
+## remainder, ties to the smaller id: equal work gets equal shares, no work no share, and the parts add up to `total`
+## exactly. {} when there is nothing to share or no work.
+static func split_crop(total: int, shares: Dictionary) -> Dictionary:
+	var out := {}
+	var ids := shares.keys().filter(func(i): return float(shares[i]) > 0.0)
+	ids.sort()
+	var sum := 0.0
+	for id in ids:
+		sum += float(shares[id])
+	if total <= 0 or ids.is_empty() or sum <= 0.0:
+		return out
+	var given := 0
+	var rems := []
+	for id in ids:
+		var exact := float(total) * float(shares[id]) / sum
+		var q := int(floor(exact))
+		out[id] = q
+		given += q
+		rems.append([exact - float(q), id])
+	rems.sort_custom(func(x, y): return x[0] > y[0] + 1e-9 or (absf(x[0] - y[0]) <= 1e-9 and int(x[1]) < int(y[1])))
+	for i in total - given:
+		out[rems[i][1]] = int(out[rems[i][1]]) + 1
+	return out
 
 
 ## The planting material a seed seller deals in besides crop seed (MERCH-01): berry cuttings and wild flower seed
@@ -761,7 +887,7 @@ func buy_seed_item(n: NPC, item: String, qty: int, buyer) -> String:
 	if int(buyer.coins) < price * qty:
 		return "You need %d coins." % (price * qty)
 	if not buyer.inv.can_add(item):
-		return "Your pack is full."
+		return buyer.inv.full_text(item)
 	if not w.trade(buyer, n, item, qty, price):
 		return "The trade fell through."
 	w.stat("farm_seed_bought", float(qty))
@@ -778,6 +904,8 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 	var out := Terrain.targets_at(w, c, p)       # B14-07: a cliff's rim faced in the world outside: steps, stairs, walkways
 	if not out.is_empty():
 		return out
+	if w.farm_plots != null and w.farm_plots.in_church_plot(c):      # B18-DP-12: volunteering on the church's field
+		return w.farm_plots.church_targets(c, p)
 	if cells.has(c):
 		var cell: Dictionary = cells[c]
 		match str(cell.state):
@@ -811,7 +939,7 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 		return out
 	if exact:
 		var cost := till_cost(p)
-		out.append(_t("till", c, "Till the ground (%s, %.0f stamina)" % ["with the plough" if p.tool_of("plough") != "" else "by hand: slow", float(cost.stamina)], {"low": true}))
+		out.append(_t("till", c, "Till the ground (%s, %.0f stamina)" % ["with the plough and horse" if p.tool_of("plough") != "" and plough_horse() != null else ("with the plough" if p.tool_of("plough") != "" else "by hand: slow"), float(cost.stamina)], {"low": true}))
 	return out
 
 
@@ -823,30 +951,33 @@ func _t(act: String, c: Vector2i, label: String, extra := {}) -> Dictionary:
 
 ## A farm target as a timed action: {ok, why, label, secs, anim, tool, run: Callable -> {items: {id: n}, text}}.
 ## main.gd runs `run` when the action's time is up; the tests call it at once.
+## X18 HOOK (Expansion 18, X18-CAPNUM farming F1): tilling, sowing and harvesting take CapabilityHook.time of their
+## seconds: off in the game (exactly the configured seconds); stamina, seed and crop are unchanged, never more yield.
 func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 	var c: Vector2i = t.cell
 	var bad := func(text: String) -> Dictionary: return {"ok": false, "why": text}
 	if str(t.act) == "terrain":
 		return Terrain.plan(w, t, p)              # B14-07
+	if str(t.act) == "church":
+		return w.farm_plots.church_plan(t, p)     # B18-DP-12
 	match str(t.act):
 		"till":
 			var no := till_refusal(c, p)
 			if no != "":
 				return bad.call(no)
 			var plough := p.tool_of("plough")
-			return {"ok": true, "label": "Ploughing" if plough != "" else "Digging", "secs": float(till_cost(p).seconds), "anim": "swing" if plough != "" else "gather",
+			return {"ok": true, "label": "Ploughing" if plough != "" else "Digging", "secs": CapabilityHook.time(float(till_cost(p).seconds), "farming", p), "anim": "swing" if plough != "" else "gather",
 					"tool": plough, "run": func() -> Dictionary: return {"items": {}, "text": till(c, p)}}
 		"sow":
 			var no := sow_refusal(c, str(t.crop), p)
 			if no != "":
 				return bad.call(no)
-			return {"ok": true, "label": "Sowing", "secs": float(cfg().sow_seconds), "anim": "gather", "tool": "",
+			return {"ok": true, "label": "Sowing", "secs": CapabilityHook.time(float(cfg().sow_seconds), "farming", p), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": {}, "text": sow(c, str(t.crop), p)}}
 		"harvest":
-			for id in harvest_goods(c):
-				if not p.inv.can_add(id):
-					return bad.call("Your pack is full.")
-			return {"ok": true, "label": "Harvesting", "secs": float(cfg().harvest_seconds), "anim": "gather", "tool": "",
+			if not p.inv.can_add_all(harvest_goods(c)):             # INV-18: crop and seed together, or neither
+				return bad.call(p.inv.full_text_all(harvest_goods(c)))
+			return {"ok": true, "label": "Harvesting", "secs": CapabilityHook.time(float(cfg().harvest_seconds), "farming", p), "anim": "gather", "tool": "",
 					"run": func() -> Dictionary: return {"items": harvest(c, p), "text": ""}}
 		"clear_tree":
 			var tr: Dictionary = t.tree
