@@ -33772,7 +33772,8 @@
     "1b05da0",
     "e91d903",
     "05adc9d",
-    "c4b10e4"
+    "c4b10e4",
+    "e8d4122"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -33850,6 +33851,11 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "next prospective task: SJD-Q03 and SJD-Q13"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + e8d4122",
+     "why": "live event feeds behind the judgment switch (e8d4122): gift, help, rescue, fair and cheating trade, robbery, killing, unseen pickpocket, marriage; judgment_live_test 98, world 339, contracts 154, credit 98, run_tests 3595; 30-day judgment run clean; gate identical. Next: the SJD-Q14 decision hooks"
     }
    ],
    "target_build": "19",
@@ -49884,6 +49890,28 @@
    "migrated_from_status": "BLOCKED",
    "disposition": "PROVISIONAL",
    "blocks_implementation": false
+  },
+  {
+   "id": "X19-EVENT-Q",
+   "kind": "decision",
+   "title": "Expansion 19 event feeds raised four questions: (1) should a guard killing an assailant count as a killing (today it does: the game cannot tell them apart)? (2) should first acquaintance be recorded as a meeting fact? (3) should a late repayment score as a fair deal? (4) self-defence cannot yet be told from an attack: add that distinction later?",
+   "description": "Expansion 19 event feeds raised four questions: (1) should a guard killing an assailant count as a killing (today it does: the game cannot tell them apart)? (2) should first acquaintance be recorded as a meeting fact? (3) should a late repayment score as a fair deal? (4) self-defence cannot yet be told from an attack: add that distinction later?",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
+    }
+   ]
   },
   {
    "id": "X19-GOSSIP-FLOOR",

@@ -38,7 +38,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c2ece16 | Build 18 merged (c2ece16); X19-Q-TIMING done (3f89816); rule answers done (2456294: SJD-Q05, Q09, X19-ASSAULT; Q12, HARMED, CRT12 already matched; Q04 partial). Done on the branch: X19-GUARD (949b5b9), X19-REGARD (46b46e5), SJD-Q03 and Q13 (ca2e9ba). Now: publish the catalog's events from live code behind the judgment switch (help, gifts, rescue, fair and cheating trade, thefts, killings, legal facts); X19-DECAY stays provisional |
+| PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c2ece16 | Build 18 merged (c2ece16); X19-Q-TIMING done (3f89816); rule answers done (2456294: SJD-Q05, Q09, X19-ASSAULT; Q12, HARMED, CRT12 already matched; Q04 partial). Done on the branch: X19-GUARD (949b5b9), X19-REGARD (46b46e5), SJD-Q03 and Q13 (ca2e9ba). Live event feeds done (e8d4122). Now: the SJD-Q14 decision hooks (DESIGN 9.2) behind the switch; X19-DECAY stays provisional |
 
 Expansions 20 and 21: implementation not authorized (register `builds` map: OD-30, OD-LE-01); no worker.
 Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).
@@ -69,9 +69,9 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
 5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
    report was given in the session.
 6. Expansions directive (2026-10-23): Build 18 merged into `wip/expansion19-preparation` (c2ece16, reviewed); the worker is on
-   the live event feeds behind the switch. Done: X19-Q-TIMING (3f89816), the rule answers (2456294), X19-GUARD (949b5b9),
+   the SJD-Q14 decision hooks behind the switch. Done: event feeds (e8d4122), X19-Q-TIMING (3f89816), the rule answers (2456294), X19-GUARD (949b5b9),
    X19-REGARD (46b46e5), SJD-Q03/Q13 (ca2e9ba). Open number questions for the owner: X19-GOSSIP-FLOOR, X19-RUNNERUP,
-   X19-TRUST-RATES, X19-PERSONALITY; X19-DECAY awaits the calendar explanation (given 2026-10-23 in the session).
+   X19-TRUST-RATES, X19-PERSONALITY, X19-EVENT-Q; X19-DECAY awaits the calendar explanation (given 2026-10-23 in the session).
    Expansions 20 and 21: decision packet given to the owner; no work until answered.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
