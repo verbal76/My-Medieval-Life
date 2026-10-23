@@ -33845,6 +33845,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker:  -> X19 sync worker (Sonnet subagent)",
      "why": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansions_19_20_21_progress.md): resume Expansion 19; first task: synchronize wip/expansion19-preparation with the released Build 18"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "next prospective task: SJD-Q03 and SJD-Q13"
     }
    ],
    "target_build": "19",
@@ -49894,17 +49899,19 @@
     "Owner decides"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "relations_test 79, wiki_test pass, check_interactions 0; sim_gate identical",
    "playtest": [],
    "branch": "wip/expansion19-preparation",
-   "commits": [],
+   "commits": [
+    "949b5b9"
+   ],
    "parent": "PROS-19",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "replace the friend's waiver with a reduction (agent proposal: halved like a nearby friend, at least 1 coin), update the wiki line; log the amount for owner review",
+   "next_action": "owner review of the halving amount (X19-TRUST-RATES packet)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -49939,6 +49946,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: None -> IN DEVELOPMENT; branch:  -> wip/expansion19-preparation; next_action",
      "why": "the waiver is live code (World.guard_confront sets fine 0 for a friend; wiki.gd says let off with a warning); assigned to the X19 worker on the prospective branch"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; tests:  -> relations_test 79, wiki_test pass, check_interactions 0; sim_gate identical; test_commit: None -> 949b5b9; commits + 949b5b9; next_action",
+     "why": "implemented on the prospective branch: a friend guard halves the fine, at least 1 coin (agent amount, logged for owner review); wiki and INT-148 updated"
     }
    ],
    "target_build": "19",
@@ -49947,7 +49959,9 @@
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
    "blocks_implementation": false,
-   "implementation_status": "IN DEVELOPMENT"
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "949b5b9"
   },
   {
    "id": "X19-HARMED",
@@ -50104,10 +50118,12 @@
     "Owner decides"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 200, judgment_live_test 53, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, wiki_test; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "46b46e5"
+   ],
    "parent": "PROS-19",
    "depends_on": [],
    "blockers": [],
@@ -50144,6 +50160,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=19",
      "why": "a Build 19 judgment decision (parent PROS-19); the build is established by its parent"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 200, judgment_live_test 53, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, wiki_test; sim_gate identical; test_commit: None -> 46b46e5; commits + 46b46e5",
+     "why": "implemented on the prospective branch: a separate trust value in the judgment store (saved), credibility reads trust, closeness stays liking"
     }
    ],
    "target_build": "19",
@@ -50151,7 +50172,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "46b46e5"
   },
   {
    "id": "X19-RUNNERUP",
@@ -50172,6 +50196,28 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-TRUST-RATES",
+   "kind": "decision",
+   "title": "Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any?",
+   "description": "Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any?",
+   "source": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md"
     }
    ]
   }

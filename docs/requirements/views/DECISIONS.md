@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 31 |
+| OPEN | 32 |
 | APPROVED | 147 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -25,13 +25,14 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 
-## Build 19: NPC Judgment System: open, reopened or provisional (3)
+## Build 19: NPC Judgment System: open, reopened or provisional (4)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | PROVISIONAL | no | SJD-G | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
 | X19-GOSSIP-FLOOR | Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md |
 | X19-RUNNERUP | Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
+| X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md |
 
 ## Build 20: Living Economy: open, reopened or provisional (14)
 
