@@ -51339,6 +51339,42 @@
    ]
   },
   {
+   "id": "XAUDIT-01",
+   "kind": "approved",
+   "title": "Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence",
+   "description": "Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence",
+   "source": "docs/directives/2026-10-23_cross_expansion_preservation_audit.md",
+   "owner_wording": "Before proceeding with further major development, perform a comprehensive cross-expansion audit of Expansions 19–23 against the actual repository.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "One consolidated report with the fifteen deliverables; every conclusion labelled verified, partially verified or unverified, with files, commits and tests",
+    "Read-only: no implementation, merge, activation, test changes or new assignments"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_cross_expansion_preservation_audit.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
+     "why": "lead runs the audit with read-only research agents"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "staging/my-medieval-life"
+  },
+  {
    "id": "XEXPL-01",
    "kind": "approved",
    "title": "Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion",

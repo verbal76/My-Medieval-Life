@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (14)
+## Workers and task branches (15)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -20,6 +20,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X19-FOUND-BONDS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
 | X19-FOUND-FAMREP | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
 | X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/expansion19-preparation |
+| XAUDIT-01 | unassigned | IN DEVELOPMENT | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)
 

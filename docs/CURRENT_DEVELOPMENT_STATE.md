@@ -42,6 +42,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | E20-P1 | X20 foundation worker (done) | `wip/expansion20-preparation` | 4d9bc05 | reservation record, event record, actor resolver built, off, tested, gate identical; waits on the owner's architecture review and OD-LE answers |
 | P21-01 | X21 foundation worker (done) | `wip/expansion21-preparation` | 8ac88f5 | civic records built, off, tested, gate identical; P21-00 and P21-02 done (64317eb) |
 | E22-P1, E23-BANA | lead (done) | staging (documents) | - | audit written: docs/design/EXPANSIONS_22_23_AUDIT.md; waits on the owner's review; no implementation |
+| XAUDIT-01 | lead (read-only research agents) | staging (documents) | - | cross-expansion preservation audit (docs/directives/2026-10-23_cross_expansion_preservation_audit.md); report for owner review; no implementation |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
 Alignment report and capability matrices: `docs/design/EXPANSIONS_19_21_ALIGNMENT.md` (2026-10-23). No worker is running; every next step waits on the owner's answers.
