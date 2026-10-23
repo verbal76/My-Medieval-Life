@@ -7,15 +7,19 @@ extends RefCounted
 ##   - PRACTICAL WISDOM learnt from costly mistakes (per kind of situation, with a share carried to every situation);
 ##   - TEMPORARY EMOTION: anger with a timer in game days, a peak that is remembered, and a stubborn override;
 ##   - an EVENT HISTORY (`record`) of every experience, never erased even when the feelings it caused fade.
-## The framework is mechanism only. NO number here is approved: every rate, limit and duration lives in judgment.json
-## section "traits" as a placeholder that leaves the behaviour inert (owner formula pending, X19-PERS-FORMULA and
-## X19-TRAIT-DIST); tests give fixture values. Each curve's SHAPE is one function in `curves` (below), replaceable
-## without touching the rest. Approved and shipped: about 30% of villagers (a fixed per-person hash, never a roll per
-## decision) have a potential for self-defeating stubbornness (`traits.stubbornness_share_permille`, 300).
+## The owner approved the formula on 2026-10-23 (X19-PERS-FORMULA, X19-TRAIT-DIST; docs/design/X19_RELEASE_DECISIONS.md
+## section B) and every number lives in judgment.json section "traits"; tests may give fixture values. Each curve's SHAPE
+## is one function in `curves` (below), replaceable without touching the rest. About 30% of villagers (a fixed
+## per-person hash, never a roll per decision) have the potential for self-defeating stubbornness
+## (`traits.stubbornness_share_permille`, 300), starting between start_min and start_max permille (a fixed hash of the
+## person id; the others start at 0). Wisdom tops out at learning.cap_permille. Anger is kept in game MINUTES (it fades
+## evenly over its duration, not in day steps); every time argument is `today` (a game day) plus an optional
+## `minute` of that day (default 0, so a caller that works in whole days sees whole-day behaviour).
 ## Event driven: the store calls `experience` when a firsthand deed touches a person; nothing runs per frame or per
 ## day (anger fades on read). With every rate at 0 `active` is false, nothing is recorded and nothing is saved.
 
-const FORMAT_V := 1
+const FORMAT_V := 2                   # 2: anger is kept in game minutes (1 stored it in days; load_dict converts)
+const MIN_DAY := 1440
 const TRAITS := ["tolerance", "stubbornness"]
 const T_TOL := 0
 const T_STUB := 1
@@ -29,7 +33,7 @@ var world_seed := 0
 var c := {}                           # the "traits" config section
 var active := false                   # any rate above 0: otherwise the whole layer is inert
 var drift := {}                       # person -> [tolerance drift, stubbornness drift] permille from origin (saved)
-var anger := {}                       # person -> [intensity at set, set day, duration days, peak, override until day] (saved)
+var anger := {}                       # person -> [intensity at set, set minute, duration minutes, peak, override until minute] (saved)
 var wisdom := {}                      # person -> {kind hash (0 = carried to every situation) -> permille} (saved)
 var record := {}                       # person -> PackedInt64Array of LOGW-wide rows, oldest first, never erased (saved)
 var life_tol := {}                    # person -> tolerance shift permille from firsthand bad deeds (SJD-Q13 effect, RECON-01; saved under "tol")
@@ -38,6 +42,12 @@ var _q13_step := 0                    # personality.tolerance_per_point: permill
 var _q13_max := 0                     # personality.max_shift_permille: the bound on that shift, both ways
 var _share := 300
 var _start := 0
+var _start_lo := 0
+var _start_hi := 0
+var _l_capw := 1000
+var _s_resent := 0
+var _s_switch := 0
+var _s_override := 0
 var _rate := 0
 var _eff := {}
 var _f_window := 0
@@ -48,6 +58,7 @@ var _d_cap := 0
 var _soft := 0
 var _floor := 0
 var _recover := 1000
+var _growth := 1000                   # growth_past_origin_permille: a positive experience past the person's origin works at this rate (half)
 var _l_rate := 0
 var _l_window := 0
 var _l_accel := 0
@@ -81,11 +92,13 @@ static func curve_shift(severity: int, rate: int, freq: int, f_gain: int, dur_da
 
 
 ## How much of a pull still works when it pushes a value AWAY from its origin by `away` permille: 1000 at the origin,
-## falling to `floor` at the soft limit `scale` and staying there (never 0: no wall). scale 0 switches resistance off.
+## falling evenly to `floor` (a fifth of its force, 200, for the approved traits) at the soft limit `scale` and staying
+## there (never 0: no wall). scale 0 switches resistance off. Without a floor the fall runs to 1 permille at `scale`.
 static func curve_resistance(away: int, scale: int, floor_: int) -> int:
 	if scale <= 0 or away <= 0:
 		return 1000
-	return maxi(maxi(floor_, 1), 1000 - JudgmentMath.mul_div(1000, away, scale))
+	var lo := maxi(floor_, 1)
+	return maxi(lo, 1000 - JudgmentMath.mul_div(1000 - lo, away, scale))
 
 
 ## Wisdom gained from one costly mistake: cost (milli-points) x rate, accelerated by `repeats` similar earlier ones.
@@ -116,6 +129,12 @@ func configure(config: Dictionary) -> void:
 	c = config
 	_share = clampi(int(c.get("stubbornness_share_permille", 300)), 0, 1000)
 	_start = int(c.get("stubbornness_start_permille", 0))
+	_start_lo = int(c.get("stubbornness_start_min_permille", 0))
+	_start_hi = int(c.get("stubbornness_start_max_permille", 0))
+	var sb: Dictionary = c.get("stubborn", {})
+	_s_resent = int(sb.get("resent_penalty", 0))
+	_s_switch = int(sb.get("switch_penalty", 0))
+	_s_override = int(sb.get("override_penalty", 0))
 	_rate = int(c.get("rate_permille_per_point", 0))
 	_eff = c.get("effects", {})
 	var f: Dictionary = c.get("frequency", {})
@@ -129,6 +148,7 @@ func configure(config: Dictionary) -> void:
 	_soft = int(s.get("scale_permille", 0))
 	_floor = int(s.get("floor_permille", 0))
 	_recover = int(c.get("recovery_gain_permille", 1000))
+	_growth = int(c.get("growth_past_origin_permille", 1000))
 	var l: Dictionary = c.get("learning", {})
 	_l_rate = int(l.get("rate_permille_per_point", 0))
 	_l_window = int(l.get("repeat_window_days", 0))
@@ -136,6 +156,7 @@ func configure(config: Dictionary) -> void:
 	_l_cap = int(l.get("repeat_cap", 0))
 	_l_transfer = int(l.get("transfer_permille", 0))
 	_l_limit = int(l.get("limit_permille", 0))
+	_l_capw = int(l.get("cap_permille", 1000))
 	var e: Dictionary = c.get("emotion", {})
 	_a_rate = int(e.get("anger_permille_per_point", 0))
 	_a_days = int(e.get("anger_days", 0))
@@ -215,28 +236,36 @@ func adopt_life_tolerance(person: int, shift: int) -> void:
 	life_tol[person] = clampi(int(life_tol.get(person, 0)) + shift, -_q13_max, _q13_max)
 
 
+## The starting stubbornness of a holder, permille: a fixed hash of the world seed and the id between start_min and
+## start_max (approved 20% to 60%); without a range, the single stubbornness_start_permille.
+func start_level(person: int) -> int:
+	if _start_hi > _start_lo:
+		return _start_lo + JudgmentMath.hash_ints([world_seed, person, 7213]) % (_start_hi - _start_lo + 1)
+	return _start
+
+
 ## Stubbornness level in permille: 0 for a person without the potential; else the starting level plus drift, never
-## below 0. While a stubborn override is running (see `provoke`) a holder is at least back at the starting level.
-func stubbornness(person: int, today: int) -> int:
+## below 0. While a stubborn override is running (see `_provoke`) a holder is at least back at the starting level.
+func stubbornness(person: int, today: int, minute := 0) -> int:
 	if not holds_stubbornness(person):
 		return 0
-	var lv := maxi(0, _start + trait_drift(person, T_STUB))
-	if anger.has(person) and int((anger[person] as Array)[4]) > today:
-		lv = maxi(lv, _start)
+	var lv := maxi(0, start_level(person) + trait_drift(person, T_STUB))
+	if overriding(person, today, minute):
+		lv = maxi(lv, start_level(person))
 	return lv
 
 
-## Whether the person is inside an emotional override of their stubbornness today.
-func overriding(person: int, today: int) -> bool:
-	return holds_stubbornness(person) and anger.has(person) and int((anger[person] as Array)[4]) > today
+## Whether the person is inside an emotional override of their stubbornness now.
+func overriding(person: int, today: int, minute := 0) -> bool:
+	return holds_stubbornness(person) and anger.has(person) and int((anger[person] as Array)[4]) > today * MIN_DAY + minute
 
 
-## Anger today, permille, fading from the day it was set.
-func anger_at(person: int, today: int) -> int:
+## Anger now, permille, fading evenly from the moment it was set.
+func anger_at(person: int, today: int, minute := 0) -> int:
 	if not anger.has(person):
 		return 0
 	var a: Array = anger[person]
-	return int(curves.fade.call(int(a[0]), today - int(a[1]), int(a[2])))
+	return int(curves.fade.call(int(a[0]), today * MIN_DAY + minute - int(a[1]), int(a[2])))
 
 
 ## The most anger the person has ever felt (remembered, so a reminder can modestly revive it).
@@ -249,7 +278,7 @@ func practical_wisdom(person: int, kind: String) -> int:
 	if not wisdom.has(person):
 		return 0
 	var w: Dictionary = wisdom[person]
-	return clampi(int(w.get(kind_code(kind), 0)) + int(w.get(0, 0)), 0, 1000)
+	return clampi(int(w.get(kind_code(kind), 0)) + int(w.get(0, 0)), 0, mini(1000, _l_capw))
 
 
 ## The part of wisdom that applies to every situation (the share carried over from lessons anywhere).
@@ -263,8 +292,22 @@ func general_wisdom(person: int) -> int:
 func growth(person: int) -> int:
 	var g := maxi(0, trait_drift(person, T_TOL)) + general_wisdom(person)
 	if holds_stubbornness(person):
-		g += mini(maxi(0, -trait_drift(person, T_STUB)), _start)
+		g += mini(maxi(0, -trait_drift(person, T_STUB)), start_level(person))
 	return clampi(g, 0, 1000)
+
+
+## How heavily stubbornness weighs in a choice of this `kind` for `person` now, permille 0..1000: stubbornness x
+## (1 - practical wisdom of the kind): wisdom reduces the weight by its share (X19-PERS-FORMULA). 0 for most people.
+func stubborn_weight(person: int, kind: String, today: int, minute := 0) -> int:
+	var sv := stubbornness(person, today, minute)
+	if sv <= 0:
+		return 0
+	return JudgmentMath.mul_div(mini(sv, 1000), 1000 - practical_wisdom(person, kind), 1000)
+
+
+## The penalties a stubborn choice adds (milli-points at full weight), configured under traits.stubborn.
+func penalties() -> Array:
+	return [_s_resent, _s_switch, _s_override]
 
 
 static func kind_code(kind: String) -> int:
@@ -293,7 +336,7 @@ func history(person: int) -> PackedInt64Array:
 ## A meaningful experience: `kind` "provocation" (a wrong done to them) or "positive" (kindness, security). `severity`
 ## in milli-points, `duration_days` how long it lasted (0: a single event). Moves each trait the config names for it
 ## (frequency, severity and duration are the inputs); a provocation also raises anger. Recorded in the history.
-func experience(person: int, kind: String, severity: int, today: int, duration_days := 0) -> void:
+func experience(person: int, kind: String, severity: int, today: int, duration_days := 0, minute := 0) -> void:
 	if not active or severity <= 0:
 		return
 	var ch := CH_PROVOKE if kind == "provocation" else CH_POSITIVE
@@ -305,16 +348,16 @@ func experience(person: int, kind: String, severity: int, today: int, duration_d
 		var w := int(ef.get(TRAITS[i], 0))
 		if w == 0 or mag == 0 or (i == T_STUB and not holds_stubbornness(person)):
 			continue
-		ds[i] = _apply(person, i, JudgmentMath.mul_div(mag, w, 1000))
+		ds[i] = _apply(person, i, JudgmentMath.mul_div(mag, w, 1000), ch == CH_POSITIVE)
 	var shown := 0
 	if ch == CH_PROVOKE:
-		shown = _provoke(person, severity, today)
+		shown = _provoke(person, severity, today, minute)
 	_log(person, today, ch, 0, severity, ds[0], ds[1], shown)
 
 
 ## Move a trait by `want` permille: a push away from the origin meets the soft limit's rising resistance (never a
 ## wall); a push back toward it is the recovery, scaled by recovery_gain. Returns the change made.
-func _apply(person: int, which: int, want: int) -> int:
+func _apply(person: int, which: int, want: int, positive := false) -> int:
 	var rec: Array = drift.get(person, [0, 0])
 	var cur := int(rec[which])
 	var out := (cur >= 0 and want > 0) or (cur <= 0 and want < 0)
@@ -323,36 +366,48 @@ func _apply(person: int, which: int, want: int) -> int:
 		amt = JudgmentMath.mul_div(want, int(curves.resistance.call(absi(cur), _soft, _floor)), 1000)
 	elif not out:
 		amt = JudgmentMath.mul_div(want, _recover, 1000)
+	if out and positive:
+		amt = JudgmentMath.mul_div(amt, _growth, 1000)      # growth beyond the original: half rate (X19-PERS-FORMULA)
 	rec[which] = cur + amt
 	drift[person] = rec
 	return amt
 
 
-## Anger from a provocation: adds to what is left, restarts the timer, remembers the peak; strong enough anger starts
-## a stubborn override for override_days (holders only).
-func _provoke(person: int, severity: int, today: int) -> int:
+## Anger from a provocation: adds to what is left, restarts the timer, remembers the peak; anger at or above the
+## override threshold starts a stubborn override for the anger's remaining time (holders only).
+func _provoke(person: int, severity: int, today: int, minute := 0) -> int:
 	if _a_rate <= 0 or _a_days <= 0:
 		return 0
-	var cur := anger_at(person, today)
+	var now := today * MIN_DAY + minute
+	var cur := anger_at(person, today, minute)
 	var lvl := mini(1000, cur + JudgmentMath.mul_div(severity, _a_rate, 1000))
 	var old: Array = anger.get(person, [0, 0, 0, 0, 0])
 	var until := int(old[4])
-	if lvl >= _o_at and _o_days > 0 and holds_stubbornness(person):
-		until = maxi(until, today + _o_days)
-	anger[person] = [lvl, today, _a_days, maxi(int(old[3]), lvl), until]
+	if lvl >= _o_at and holds_stubbornness(person):
+		until = maxi(until, now + _override_minutes())
+	anger[person] = [lvl, now, _a_days * MIN_DAY, maxi(int(old[3]), lvl), until]
 	return lvl
+
+
+## How long an override lasts, minutes: override_days when set, else the anger's own duration ("its remaining time").
+func _override_minutes() -> int:
+	return (_o_days if _o_days > 0 else _a_days) * MIN_DAY
 
 
 ## A reminder of a past wrong (a retelling, the wrongdoer seen again): modestly reactivates remembered anger. Returns
 ## the anger after the reminder. Nothing happens for a person who was never angry.
-func remind(person: int, today: int) -> int:
+func remind(person: int, today: int, minute := 0) -> int:
 	if not active or _a_remind <= 0 or not anger.has(person):
-		return anger_at(person, today)
+		return anger_at(person, today, minute)
 	var a: Array = anger[person]
-	var cur := anger_at(person, today)
+	var cur := anger_at(person, today, minute)
 	var lvl := int(curves.reminder.call(cur, int(a[3]), _a_remind, _a_cap))
 	if lvl > cur:
-		anger[person] = [lvl, today, _a_days, int(a[3]), int(a[4])]
+		var now := today * MIN_DAY + minute
+		var until := int(a[4])
+		if lvl >= _o_at and holds_stubbornness(person):
+			until = maxi(until, now + _override_minutes())
+		anger[person] = [lvl, now, int(a[2]), int(a[3]), until]
 		_log(person, today, CH_REMIND, 0, 0, 0, 0, lvl)
 	return lvl
 
@@ -368,8 +423,8 @@ func mistake(person: int, kind: String, cost: int, today: int) -> int:
 	var w: Dictionary = wisdom.get(person, {})
 	var cur := int(w.get(code, 0))
 	gain = JudgmentMath.mul_div(gain, int(curves.resistance.call(cur, _l_limit, _floor)), 1000)
-	w[code] = cur + gain
-	w[0] = int(w.get(0, 0)) + JudgmentMath.mul_div(gain, _l_transfer, 1000)
+	w[code] = mini(cur + gain, _l_capw)
+	w[0] = mini(int(w.get(0, 0)) + JudgmentMath.mul_div(gain, _l_transfer, 1000), _l_capw)
 	wisdom[person] = w
 	_log(person, today, CH_MISTAKE, code, cost, 0, 0, gain)
 	return gain
@@ -430,8 +485,12 @@ func load_dict(d: Dictionary) -> void:
 	clear()
 	for r in d.get("drift", []):
 		drift[int(r[0])] = [int(r[1]), int(r[2])]
+	var days_unit := int(d.get("v", FORMAT_V)) < 2        # a section written before minutes: set day, days, peak, until day
 	for r in d.get("anger", []):
-		anger[int(r[0])] = [int(r[1]), int(r[2]), int(r[3]), int(r[4]), int(r[5])]
+		if days_unit:
+			anger[int(r[0])] = [int(r[1]), int(r[2]) * MIN_DAY, int(r[3]) * MIN_DAY, int(r[4]), int(r[5]) * MIN_DAY]
+		else:
+			anger[int(r[0])] = [int(r[1]), int(r[2]), int(r[3]), int(r[4]), int(r[5])]
 	for r in d.get("wisdom", []):
 		if not wisdom.has(int(r[0])):
 			wisdom[int(r[0])] = {}

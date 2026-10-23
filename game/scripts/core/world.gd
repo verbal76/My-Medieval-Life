@@ -407,6 +407,7 @@ func _on_hour(h: int) -> void:
 		brain.caravan()
 	if judgment != null:
 		judgment.dawn_hour()           # PROSPECTIVE (PROS-19): a slice of the day's judgment update (JudgmentStore)
+		JudgmentLive.tell_family_tick(self)     # X19-STORY-LIFE: parents tell a new adult the family stories, at home
 
 
 func _new_day() -> void:
@@ -480,6 +481,8 @@ func _update_npc(n: NPC, dt: float) -> void:
 	var gm: float = dt * float(GameData.b("game_minutes_per_second"))
 	n.hunger = maxf(0.0, n.hunger - gm / 60.0 * float(GameData.b("hunger_per_hour")) * NPCBrain.food_factor(n))     # a child more slowly
 	if n.hunger <= 0.0:
+		if judgment != null:
+			JudgmentLive.on_hungry(self, n)          # a missed meal with food to hand is a costly mistake (practical wisdom)
 		n.hp -= gm / 60.0 * float(GameData.b("starve_damage_per_hour"))
 		if n.hp <= 0.0:
 			kill(n, "starvation")

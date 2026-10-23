@@ -367,6 +367,8 @@ func _bite(a: Animal, foe: Vector2) -> void:
 		if n == null:
 			return
 		w.harm_npc(n, dmg)                       # their Combat damage_taken and armour (PAR-01)
+		if w.judgment != null:
+			JudgmentLive.costly_mistake(w, n.id, "wild_wood", dmg / 5.0)       # hurt by a beast in its wood: a costly mistake
 		if n.hp <= 0.0:
 			w.kill(n, "killed by a %s" % a.label())
 			a.anger = ""

@@ -75,7 +75,7 @@ extends RefCounted
 ## A story that does not pass this time may pass in a later meeting. A floor of 1000 turns the weighting off.
 
 const FORMAT := "mml-judgment/1"
-const VERSION := 1
+const VERSION := 2                       # 2 (Build 19): optional keys clock, lied, stories, choices, fights; traits v2 (anger in minutes). Version 1 sections load unchanged.
 const SOURCES := ["participant", "witnessed", "told", "rumour"]
 const TOLD := 2
 # a memory: [type, day, src, by, hops, conf, sal, actor count, actor, share, actor, share...]
@@ -115,7 +115,13 @@ var told_today := {}     # teller -> tellings today (gossip.daily_budget)
 var stats := {}          # counters for diagnostics and performance reports
 var unread := {}         # a saved section this version cannot read: kept and written back unchanged (CLAUDE.md s.7)
 var last_trace := {}     # the last interpretation's parts (diagnostics: "why was the theft rated 0.55 BAD?"), kept when trace is on
+var threat_cache := {}   # FAMILY-01 danger: the threats of the current game minute (JudgmentFamily._threats; never saved)
 var family_trace := []   # FAMILY-01: the last family-priority decisions with their weighing traces (JudgmentFamily; for the recorder; never saved)
+var clock_abs := 0       # game minutes at the last gossip_tick (see now_minute); saved as "clock"
+var lied := {}           # liar -> day of their last invented story (X19-MISINFO: at most one per liar per game year; saved)
+var story_pending := {}  # child -> [day they came of age, parents who have told them (bit 0 mother, bit 1 father)] (X19-STORY-LIFE; saved)
+var last_choice := {}    # chooser -> {decision key -> [token, day]}: a stubborn person's last choice in a decision (saved)
+var fights := {}         # pair key -> [aggressor, first blow minute, last blow minute]: a fight under way (X19-EVENT-Q self-defence; saved)
 var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
 var timing := {}         # microseconds spent, by part (measurement only: never saved, never read by the simulation)
 
@@ -185,6 +191,14 @@ var _t_seed := 0                        # trust.seed_from_regard_permille: a fir
 var _t_ev := PackedInt64Array()         # per event type: trust milli-points a firsthand or told account of it moves the actor's trust
 var _t_true := 0                        # trust.rumour_confirmed: milli-points the teller gains when what they told is borne out
 var _t_false := 0                       # trust.rumour_false: ... loses when it is shown wrong
+var _lie_chance := 0                    # lies.chance_permille: of the meetings where a teller with a motive gossips about that person (X19-MISINFO)
+var _lie_gap := 0                       # lies.gap_days: days between one liar's inventions (0: one game year, Life.year_days())
+var _lie_res := 2000                    # lies.min_resentment: serious resentment toward the subject (milli-points) that gives a motive
+var _lie_types := []                    # lies.types: what an invented story accuses the subject of
+var _story_good := 2000                 # family_story.good_severity: a good deed this serious is passed on to children (X19-STORY-LIFE)
+var _story_days := 4                    # family_story.expire_days: how long a new adult waits to be told, at home with a parent
+var _fight_min := 10                    # self_defence.fight_minutes: a fight ends when no blow has fallen for this long
+var _col_cap := 250                     # bonds.inherit_cap_permille: inherited impression never more than this share of the strongest personal judgment
 var _g_floor := 1000                     # gossip.closeness_floor_permille
 var _snext := -1                         # the next minute whose meetings are still to tell (-1: none queued yet)
 
@@ -237,6 +251,16 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_t_seed = clampi(int(tc.get("seed_from_regard_permille", 1000)), 0, 1000)
 	_t_true = int(tc.get("rumour_confirmed", 0))
 	_t_false = int(tc.get("rumour_false", 0))
+	var lc: Dictionary = cfg.get("lies", {})
+	_lie_chance = int(lc.get("chance_permille", 0)) if _g_sched else 0     # the "hour" reference mode never invents (identity measurements)
+	_lie_gap = int(lc.get("gap_days", 0))
+	_lie_res = int(lc.get("min_resentment", 2000))
+	_lie_types = (lc.get("types", ["theft", "trade_cheat"]) as Array).duplicate()
+	var fc: Dictionary = cfg.get("family_story", {})
+	_story_good = int(fc.get("good_severity", 2000))
+	_story_days = int(fc.get("expire_days", 4))
+	_fight_min = int((cfg.get("self_defence", {}) as Dictionary).get("fight_minutes", 10))
+	_col_cap = int((cfg.get("bonds", {}) as Dictionary).get("inherit_cap_permille", 250))
 	_b_hop = int(bc.hop_factor)
 	_b_cred_stranger = int(bc.credibility_stranger)
 	_b_cred_pp = int(bc.credibility_permille_per_point)
@@ -503,9 +527,11 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 			_trait_experience(observer, ev)
 		bonds.on_belief(observer, ev)               # X19-FOUND-BONDS: resentment and betrayal history
 	if fresh and _t_ev[t] != 0:
+		var late: bool = (fact_tags.get(ev, []) as Array).has("late")      # X19-EVENT-Q (3): a late repayment is a fair deal with half the trust gain
 		for a in actors:                            # reliability shown by the deed itself: a fair deal, a cheat, a false charge
 			if int(a[0]) != observer:
-				trust_add(observer, int(a[0]), JudgmentMath.mul_div(JudgmentMath.mul_div(_t_ev[t], conf, 1000), int(a[1]), 1000))
+				var dt := JudgmentMath.mul_div(JudgmentMath.mul_div(_t_ev[t], conf, 1000), int(a[1]), 1000)
+				trust_add(observer, int(a[0]), dt / 2 if late and dt > 0 else dt)
 	_bound(observer)
 	return true
 
@@ -723,8 +749,14 @@ func _trait_experience(observer: int, ev: int) -> void:
 		at += 1 + f[at]
 	for i in f[at]:
 		if f[at + 1 + i] == observer:
-			pers.experience(observer, "provocation" if _pol[t] < 0 else "positive", _sev[t], day)
+			var nm := now_minute()
+			pers.experience(observer, "provocation" if _pol[t] < 0 else "positive", _sev[t], nm / 1440, 0, nm % 1440)
 			return
+
+
+## The game minute now: the live world's clock as last told by gossip_tick, never earlier than the start of the store's day.
+func now_minute() -> int:
+	return maxi(clock_abs, day * 1440)
 
 
 ## Personality growth for other systems, permille, 0 = none (Worker B's resentment softening calls this if present).
@@ -1020,7 +1052,46 @@ func bad(observer: int, subject: int) -> int:
 ## The judgment as a decision factor on the spec's 0..100 scale (milli): disposition_mid + NET, clamped (spec s.7.3:
 ## NET -6.59 -> 43.41).
 func disposition(observer: int, subject: int) -> int:
+	return JudgmentMath.clampi_(int(c("decision").disposition_mid) + net(observer, subject) + colour(observer, subject), 0, 100000)
+
+
+## The disposition from the observer's own judgment of the subject alone, without the family name's colour.
+func personal_disposition(observer: int, subject: int) -> int:
 	return JudgmentMath.clampi_(int(c("decision").disposition_mid) + net(observer, subject), 0, 100000)
+
+
+## The colour the subject's family name gives the observer's disposition, milli-points (X19-BOND-LIMITS): the inherited
+## impression (JudgmentBonds.family_reputation: the observer's own remembered judgments of the subject's relatives, by
+## relationship distance), weakened by every dealing the observer has had with the subject, and never more than
+## bonds.inherit_cap_permille (a quarter) of the strongest personal judgment the observer holds of anyone. Kept apart
+## from the direct, relationship-weighted reaction to a witnessed deed (interpret). It only colours: JudgmentWeighting
+## never lets it alone cause a refusal.
+func colour(observer: int, subject: int) -> int:
+	if not bonds.family_active() or observer == subject or not ledgers.has(observer):
+		return 0
+	var raw := bonds.family_reputation(observer, subject)
+	if raw == 0:
+		return 0
+	var used := int((ledger(observer, subject) as Array)[2]) * bonds.override_per_experience()
+	var left := maxi(0, 1000 - used)
+	if left == 0:
+		return 0
+	var v := JudgmentMath.mul_div(raw, left, 1000)
+	var strongest := 0
+	for sub_ in subjects(observer):
+		strongest = maxi(strongest, absi(net(observer, int(sub_))))
+	var cap := JudgmentMath.mul_div(strongest, _col_cap, 1000)
+	return JudgmentMath.clampi_(v, -cap, cap)
+
+
+## The most the colour could add to anyone's disposition for `observer`, milli-points (a bound for shortcuts).
+func colour_bound(observer: int) -> int:
+	if not bonds.family_active():
+		return 0
+	var strongest := 0
+	for sub_ in subjects(observer):
+		strongest = maxi(strongest, absi(net(observer, int(sub_))))
+	return JudgmentMath.mul_div(strongest, _col_cap, 1000)
 
 
 ## Large GOOD and BAD together (SJD-Q04): min(GOOD, BAD), clamped to 0..100 points.
@@ -1102,6 +1173,8 @@ func meet_at(a: int, b: int, at: int) -> void:
 ## The live tick (World.update): "hour" timing tells gossip.pump_per_tick queued meetings; "scheduled" tells every
 ## meeting whose minute has come (up to game minute `now`).
 func gossip_tick(now: int) -> void:
+	if now > clock_abs:
+		clock_abs = now
 	if _g_sched:
 		_tell_due(now)
 	else:
@@ -1247,6 +1320,7 @@ func tell(teller: int, listener: int) -> int:
 	var heard: Dictionary = memories.get(listener, {})
 	var mine: Dictionary = contrib.get(listener, {})
 	var keys := PackedInt64Array()
+	var about := {}                                # whom the stories told in this meeting were about
 	for ev in mem:
 		var m: PackedInt64Array = mem[ev]
 		if not facts.has(ev) or _mem_names(m, listener):
@@ -1281,6 +1355,11 @@ func tell(teller: int, listener: int) -> int:
 			continue
 		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
 		var actors := _mem_actors(m)
+		if is_lie(ev):                                   # X19-MISINFO: a guard or a firsthand witness shows an invented story false
+			var liar := liar_of(ev)
+			if listener != liar and _contradicts(listener, actors):
+				_refute(teller, listener, ev, liar)
+				continue
 		if _g_mis > 0 and JudgmentMath.roll([world_seed, ev, teller, listener]) < _g_mis:
 			var other := most_disliked(teller, int(actors[0][0]))
 			if other != -999 and other != listener:
@@ -1291,6 +1370,10 @@ func tell(teller: int, listener: int) -> int:
 		told_today[teller] = int(told_today.get(teller, 0)) + 1
 		_stat("tellings")
 		k += 1
+		for a in actors:
+			about[int(a[0])] = true
+	if k > 0 and _lie_chance > 0:
+		k += _maybe_lie(teller, listener, about)
 	return k
 
 
@@ -1300,6 +1383,222 @@ func tell(teller: int, listener: int) -> int:
 func close_chance(a: int, b: int) -> int:
 	var reg := clampi(social.regard(a, b), 0, 100)
 	return _g_floor + (JudgmentMath.ONE - _g_floor) * reg / 100
+
+
+# ---------------------------------------------------------------- X19-MISINFO: deliberate lies -----
+## Whether fact `ev` is an invented story (tagged ["lie", liar]); the fact is what was SAID, no such deed happened.
+func is_lie(ev: int) -> bool:
+	var tg: Array = fact_tags.get(ev, [])
+	return tg.size() >= 2 and str(tg[0]) == "lie"
+
+
+func liar_of(ev: int) -> int:
+	return int((fact_tags.get(ev, [0, -1]) as Array)[1])
+
+
+## Whether `person` has a motive to invent a story about `subject` (owner, X19-MISINFO: serious resentment or a rivalry):
+## resentment of at least lies.min_resentment, or their NET of the subject at or below the rival line (their tolerance).
+func lie_motive(person: int, subject: int) -> bool:
+	return bonds.resentment(person, subject) >= _lie_res or net(person, subject) <= threshold(person, _i[6])
+
+
+## The teller `teller` has just told `listener` real stories about the people in `about`. If the teller has a motive against
+## one of them (sorted by id, the first), may invent a story about them: at most one per liar per game year, in
+## lies.chance_permille (5%) of such meetings, decided by a seeded hash of the people and the meeting (never World.rng).
+## The invented story is a fact tagged as a lie that only the liar's memory and the listener's belief hold. Returns 1 when told.
+func _maybe_lie(teller: int, listener: int, about: Dictionary) -> int:
+	var gap := _lie_gap if _lie_gap > 0 else Life.year_days()
+	if lied.has(teller) and day - int(lied[teller]) < gap:
+		return 0
+	var subs := about.keys()
+	subs.sort()
+	for sub_ in subs:
+		var who := int(sub_)
+		if who == listener or who == teller or not lie_motive(teller, who):
+			continue
+		if JudgmentMath.roll([world_seed, teller, listener, who, _stamp, day, 9137]) >= _lie_chance:
+			return 0
+		return 1 if _invent(teller, listener, who) else 0
+	return 0
+
+
+func _invent(liar: int, listener: int, subject: int) -> bool:
+	if _lie_types.is_empty():
+		return false
+	var type := str(_lie_types[JudgmentMath.hash_ints([world_seed, liar, subject, day, 9139]) % _lie_types.size()])
+	var ev := publish(type, [subject], [], [], 0, ["lie", liar])
+	if ev < 0:
+		return false
+	lied[liar] = day
+	var f: PackedInt64Array = facts[ev]
+	var t := f[F_TYPE]
+	if not memories.has(liar):
+		memories[liar] = {}
+		_add_person(liar)
+	# the liar holds the story they made up (flag 2): it can be retold, but they judge nobody by it
+	(memories[liar] as Dictionary)[ev] = _pack_mem(t, day, TOLD, -1, 0, JudgmentMath.ONE, _sev[t], [[subject, JudgmentMath.ONE]], 2)
+	_hold(liar, ev)
+	_gver += 1
+	var conf := JudgmentMath.mul_div(JudgmentMath.ONE * _b_hop, credibility(listener, liar), 1000000)
+	if conf > 0:
+		learn(listener, ev, "told", liar, 1, conf, [[subject, JudgmentMath.ONE]])
+	told_today[liar] = int(told_today.get(liar, 0)) + 1
+	_stat("lies")
+	_stat("tellings")
+	return true
+
+
+## A guard (the village's reports show no such crime), or kin of the accused (a firsthand witness of how they live), who
+## hears the story knows it false.
+func _contradicts(listener: int, actors: Array) -> bool:
+	if social.is_guard(listener):
+		return true
+	for a in actors:
+		if social.kin(listener, int(a[0])):
+			return true
+	return false
+
+
+## `listener` shows `teller`'s story false: the listener never takes it up, a teller who held it takes back what they had
+## judged from it (only those who learn it correct their judgment), and the liar loses rumour_false (15 points) of trust
+## with each of them.
+func _refute(teller: int, listener: int, ev: int, liar: int) -> void:
+	_stat("lies_refuted")
+	_gver += 1
+	_hold(listener, ev)
+	if listener != liar:
+		trust_add(listener, liar, -_t_false)
+	var mem: Dictionary = memories.get(teller, {})
+	if teller != liar and mem.has(ev):
+		_post(teller, ev, {}, false)
+		mem.erase(ev)
+		(contrib.get(teller, {}) as Dictionary).erase(ev)
+		trust_add(teller, liar, -_t_false)
+		_stat("lies_corrected")
+
+
+## `observer`'s memory of `ev` becomes permanent (never fades, never pushed out, its fact never retires): a betrayal by a
+## friend is never erased.
+func keep_forever(observer: int, ev: int) -> void:
+	var mem: Dictionary = memories.get(observer, {})
+	if not mem.has(ev):
+		return
+	var m: PackedInt64Array = mem[ev]
+	if (m[M_FLAGS] & 1) == 1:
+		return
+	m[M_FLAGS] = m[M_FLAGS] | 1
+	mem[ev] = m
+	_perm_refs[ev] = int(_perm_refs.get(ev, 0)) + 1
+	_gver += 1
+
+
+## Note that `person` has dealt with event `ev` (the dedup key): they will not take it up again.
+func _hold(person: int, ev: int) -> void:
+	var k: PackedInt64Array = knowers.get(ev, PackedInt64Array())
+	var i := k.bsearch(person)
+	if i >= k.size() or k[i] != person:
+		k.insert(i, person)
+		knowers[ev] = k
+
+
+# ---------------------------------------------------------------- X19-STORY-LIFE: family stories --
+## Whether a parent's memory is worth handing down: a permanent one (a killing, an assault, a betrayal) or a good deed at
+## least family_story.good_severity serious. Ordinary deeds fade with the rest and are not passed on.
+func _story_worthy(m: PackedInt64Array) -> bool:
+	if (m[M_FLAGS] & 2) != 0:
+		return false                                   # an invented story is not a family story
+	if (m[M_FLAGS] & 1) == 1:
+		return true
+	return _pol[m[M_TYPE]] == 1 and _sev[m[M_TYPE]] >= _story_good
+
+
+## `parent` tells `child` the family stories they hold, as they would at home: each passes at the gossip rate (the
+## closeness chance, a seeded roll of the story and the pair), believed as a told story is (credibility of the parent).
+## Returns how many the child took up.
+func tell_family_stories(parent: int, child: int) -> int:
+	if parent == child or not memories.has(parent):
+		return 0
+	_cu(parent)
+	_cu(child)
+	var mem: Dictionary = memories[parent]
+	var evs := mem.keys()
+	evs.sort()
+	var n := 0
+	var cred := -1
+	for ev in evs:
+		var m: PackedInt64Array = mem[ev]
+		if not facts.has(ev) or _mem_names(m, child) or not _story_worthy(m):
+			continue
+		if has_contribution(child, ev) or (memories.get(child, {}) as Dictionary).has(ev):
+			continue
+		if _g_floor < 1000 and JudgmentMath.roll([world_seed, ev, parent, child, 4241]) >= close_chance(child, parent):
+			_stat("stories_withheld")
+			continue
+		if cred < 0:
+			cred = credibility(child, parent)
+		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
+		if conf <= 0:
+			continue
+		if learn(child, ev, "told" if m[M_HOPS] == 0 else "rumour", parent, m[M_HOPS] + 1, conf, _mem_actors(m)):
+			n += 1
+			_stat("family_stories")
+	return n
+
+
+# ---------------------------------------------------------------- X19-EVENT-Q: fights and self-defence --
+## A blow `attacker` strikes at `victim` now. Returns true when it is SELF-DEFENCE: the victim had struck first in this same
+## fight (a fight ends when no blow has fallen for self_defence.fight_minutes), so the answer is not judged as an attack.
+## Otherwise the attacker starts, or goes on with, the fight as its aggressor.
+func note_blow(attacker: int, victim: int) -> bool:
+	var now := now_minute()
+	var k := JudgmentBonds._pk(attacker, victim)
+	var f = fights.get(k)
+	if f != null and now - int(f[2]) <= _fight_min:
+		f[2] = now
+		fights[k] = f
+		return int(f[0]) != attacker
+	fights[k] = [attacker, now, now]
+	return false
+
+
+## Whether `victim` struck first in a fight with `killer` that is still under way (the killing is then self-defence).
+func struck_first(victim: int, killer: int) -> bool:
+	var f = fights.get(JudgmentBonds._pk(victim, killer))
+	return f != null and now_minute() - int(f[2]) <= _fight_min and int(f[0]) == victim
+
+
+func _end_old_fights() -> void:
+	if fights.is_empty():
+		return
+	var now := now_minute()
+	for k in fights.keys():
+		if now - int((fights[k] as Array)[2]) > _fight_min:
+			fights.erase(k)
+
+
+# ---------------------------------------------------------------- stubborn choices ---------------
+## What `chooser` chose last time in the decision `dkey` ("" if they never did): a stubborn person is slow to give it up.
+func last_token(chooser: int, dkey: String) -> String:
+	var row: Dictionary = last_choice.get(chooser, {})
+	return str((row[dkey] as Array)[0]) if row.has(dkey) else ""
+
+
+func remember_choice(chooser: int, dkey: String, token: String) -> void:
+	if not last_choice.has(chooser):
+		last_choice[chooser] = {}
+	var row: Dictionary = last_choice[chooser]
+	row[dkey] = [token, day]
+	if row.size() > 16:                                   # keep the 16 most recent decisions per person
+		var oldest := ""
+		var od := 1 << 60
+		var ks := row.keys()
+		ks.sort()
+		for k in ks:
+			var dd := int((row[k] as Array)[1])
+			if dd < od:
+				od = dd
+				oldest = str(k)
+		row.erase(oldest)
 
 
 ## Trust, X19-REGARD (owner 2026-10-23, "separate them"): how far `a` relies on `b`, milli-points 0..100000, apart from
@@ -1357,7 +1656,9 @@ func begin_day(d: int) -> void:
 	_reach_cache.clear()
 	_steps = d - day
 	day = d
+	clock_abs = maxi(clock_abs, d * 1440)
 	told_today.clear()
+	_end_old_fights()
 	bonds.dawn(d)                                # X19-FOUND-BONDS: softening through personality growth (inert as shipped)
 	var cutoff := d - int(c("memory").horizon_days)
 	var days := by_day.keys()
@@ -1657,6 +1958,29 @@ func to_dict() -> Dictionary:
 			for i in range(0, row.size(), 2):
 				sc.append([int(mm), row[i], row[i + 1]])
 		out.scheduled = sc                       # scheduled timing: meetings whose minute has not come yet
+	out.clock = now_minute()                     # Build 19 keys below, each written only when it has something (version 1 sections have none)
+	if not lied.is_empty():
+		var ld := []
+		for o in _sorted(lied):
+			ld.append([int(o), int(lied[o])])
+		out.lied = ld                            # X19-MISINFO: when each liar last invented a story
+	if not story_pending.is_empty():
+		var sp := []
+		for o in _sorted(story_pending):
+			sp.append([int(o), int(story_pending[o][0]), int(story_pending[o][1])])
+		out.stories = sp                         # X19-STORY-LIFE: new adults not yet told their family stories
+	if not last_choice.is_empty():
+		var lc := []
+		for o in _sorted(last_choice):
+			for k in _sorted(last_choice[o]):
+				lc.append([int(o), str(k), str(last_choice[o][k][0]), int(last_choice[o][k][1])])
+		out.choices = lc                         # stubborn people's last choices
+	if not fights.is_empty():
+		var fl := []
+		for k in _sorted(fights):
+			var f: Array = fights[k]
+			fl.append([int((k >> 32) - JudgmentBonds.FAR), int((k & 0xFFFFFFFF) - JudgmentBonds.FAR), int(f[0]), int(f[1]), int(f[2])])
+		out.fights = fl                          # fights under way (self-defence)
 	return out
 
 
@@ -1670,7 +1994,7 @@ static func _sorted(d: Dictionary) -> Array:
 ## unknown format, a newer version, or naming an event type this catalog lacks is refused with a message and kept
 ## unread, written back unchanged, never dropped (CLAUDE.md section 7). Returns "" or the reason it was not read.
 func load_dict(d: Dictionary) -> String:
-	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, life, _early, _retiring]:
+	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, life, _early, _retiring, lied, story_pending, last_choice, fights]:
 		(x as Dictionary).clear()
 	pers.clear()
 	_people = PackedInt64Array()
@@ -1686,6 +2010,7 @@ func load_dict(d: Dictionary) -> String:
 	_gver += 1
 	_sched.clear()
 	_snext = -1
+	clock_abs = 0
 	bonds.load_dict({})
 	unread = {}
 	if d.is_empty():
@@ -1768,6 +2093,17 @@ func load_dict(d: Dictionary) -> String:
 		elif int(r[1]) != 0:
 			life[int(r[0])] = clampi(int(r[1]), -_shift_max, _shift_max)
 	bonds.load_dict(m.get("bonds", {}))
+	clock_abs = maxi(int(m.get("clock", 0)), day * 1440)
+	for r in m.get("lied", []):
+		lied[int(r[0])] = int(r[1])
+	for r in m.get("stories", []):
+		story_pending[int(r[0])] = [int(r[1]), int(r[2])]
+	for r in m.get("choices", []):
+		if not last_choice.has(int(r[0])):
+			last_choice[int(r[0])] = {}
+		last_choice[int(r[0])][str(r[1])] = [str(r[2]), int(r[3])]
+	for r in m.get("fights", []):
+		fights[JudgmentBonds._pk(int(r[0]), int(r[1]))] = [int(r[2]), int(r[3]), int(r[4])]
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))
@@ -1804,12 +2140,15 @@ static func migrate(d: Dictionary) -> Dictionary:
 		return {"error": "judgment section of unknown format '%s': kept unread" % fmt}
 	if int(d.get("version", 0)) > VERSION:
 		return {"error": "judgment section version %d is newer than this game's %d: kept unread" % [int(d.version), VERSION]}
+	# version 1 (Builds 16-18 prototype sections) -> 2: nothing is rewritten here; the Build 19 keys (clock, lied, stories,
+	# choices, fights) are optional and absent in version 1, and "traits" v1 (anger in days) is converted by its own loader
 	for k in ["facts", "memories", "contrib", "ledgers"]:
 		if not (d.get(k, null) is Array):
 			return {"error": "judgment section damaged (no %s): kept unread" % k}
 	var out := d.duplicate(true)
 	if not out.has("told_today"):
 		out.told_today = []
+	out.version = VERSION                              # read as the current layout; written back as version 2
 	return out
 
 

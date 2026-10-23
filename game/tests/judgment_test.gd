@@ -36,6 +36,9 @@ func cfg() -> Dictionary:
 	c.gossip.closeness_floor_permille = 1000 # closeness weighting off here; test_closeness_gossip turns it on
 	c.decision.trait_spread_permille = 0     # SJD-Q03/Q13 personality (shipped proposal: spread 300, life steps) is off for the
 	c.personality = {"tolerance_spread_permille": 0, "tolerance_per_point": 0, "weight_per_point": 0, "max_shift_permille": 250}   # fixtures; test_personality turns it on
+	c.traits = {"stubbornness_share_permille": 300}      # the Build 19 trait formula (judgment_personality_test) is off in these fixtures
+	c.bonds.reach = "none"                               # ... and the family name's colour (judgment_bonds_test)
+	c.lies.chance_permille = 0
 	return c
 
 

@@ -1,7 +1,9 @@
 extends SceneTree
 ## Post-audit repairs D1 and D3 (Expansion 19, PROS-19): a saved "judgment" section never switches judgment on while the
-## switch is off, and is carried through saves unchanged; a friend guard waives the fine (Build 18) with judgment off and
-## only halves it (never 0) with judgment on. Run headless:
+## switch is off (Build 19 ships it ON; JudgmentLive.test_disabled is the Build 18 path these tests exercise), and is carried
+## through saves unchanged; a friend guard waives the fine (Build 18) with judgment off and only halves it (never 0) with
+## judgment on. Also the Build 19 default: a new world, and a Build 18 save without a section, start with a clean store.
+## Run headless:
 ##   godot --headless --path game --script res://tests/judgment_guard_save_test.gd
 
 var failures := 0
@@ -18,9 +20,12 @@ func check(cond: bool, what: String) -> void:
 		print("ok   ", what)
 
 
-func new_world(seed := 1) -> World:
+func new_world(seed := 1, off := false) -> World:
+	var prev := JudgmentLive.test_disabled
+	JudgmentLive.test_disabled = off or prev
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
+	JudgmentLive.test_disabled = prev
 	return w
 
 
@@ -52,16 +57,17 @@ func _saved_section() -> Dictionary:
 
 
 func test_foreign_section() -> void:
-	check(not JudgmentLive.enabled(), "judgment.json still ships disabled")
+	check(JudgmentLive.enabled(), "judgment.json ships enabled for Build 19")
 	var sec := _saved_section()
-	var base := new_world()
+	var base := new_world(1, true)
 	var d: Dictionary = JSON.parse_string(JSON.stringify(base.to_dict()))
 	d.judgment = sec
+	JudgmentLive.test_disabled = true
 	var w := World.new()
 	w.load_dict(VillageMap.load_default(), d)
 	check(w.judgment == null, "judgment off + a saved judgment section: nothing is attached")
 	var a: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job != "guard")[0]
-	var plain := new_world()
+	var plain := new_world(1, true)
 	var pa: NPC = plain.npcs[w.npcs.find(a)]
 	w.relations.helped(ME, a)
 	plain.relations.helped(ME, pa)
@@ -76,6 +82,7 @@ func test_foreign_section() -> void:
 		if cur != w:
 			cur.dispose()
 		cur = nxt
+	JudgmentLive.test_disabled = false
 	cur.dispose()
 	w.dispose()
 	base.dispose()
@@ -86,31 +93,33 @@ func test_enabled_restores() -> void:
 	var base := new_world()
 	var d: Dictionary = JSON.parse_string(JSON.stringify(base.to_dict()))
 	d.judgment = sec
-	JudgmentLive.test_enabled = true
 	var w := World.new()
 	w.load_dict(VillageMap.load_default(), d)
 	check(w.judgment != null and JSON.stringify(JSON.parse_string(JSON.stringify(w.judgment.to_dict()))) == JSON.stringify(sec), "judgment on: the saved section is restored and working")
 	check(w.to_dict().has("judgment") and w.judgment_foreign.is_empty(), "...and nothing is held aside")
 	var w2 := reload(w)
 	check(w2.judgment != null and JSON.stringify(w2.judgment.to_dict()) == JSON.stringify(w.judgment.to_dict()), "...and saves and loads unchanged")
-	JudgmentLive.test_enabled = false
 	for x in [w, w2, base]:
 		x.dispose()
 
 
 func test_old_save() -> void:
-	var base := new_world()
+	var base := new_world(1, true)
 	var d: Dictionary = JSON.parse_string(JSON.stringify(base.to_dict()))
-	check(not d.has("judgment"), "a save without the key has none")
+	check(not d.has("judgment"), "judgment off: a save without the key has none")
+	JudgmentLive.test_disabled = true
 	var w := World.new()
 	w.load_dict(VillageMap.load_default(), d)
+	JudgmentLive.test_disabled = false
 	check(w.judgment == null and not w.to_dict().has("judgment"), "...loads with judgment off and saves as it was")
-	JudgmentLive.test_enabled = true
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
-	check(w2.judgment != null, "...and with the switch on gets a fresh store")
-	JudgmentLive.test_enabled = false
-	for x in [w, w2, base]:
+	check(w2.judgment != null and w2.judgment.facts.is_empty() and w2.judgment.memories.is_empty() and w2.judgment.ledgers.is_empty(),
+		"Build 19: the same Build 18 save loads with judgment on and a clean, empty store")
+	check(w2.judgment.day == w2.day() and w2.to_dict().has("judgment"), "...started on the loaded day, and it saves a section from now on")
+	var w3 := reload(w2)
+	check(w3.judgment != null and JSON.stringify(w3.judgment.to_dict()) == JSON.stringify(w2.judgment.to_dict()), "...which loads back unchanged")
+	for x in [w, w2, w3, base]:
 		x.dispose()
 
 
@@ -120,9 +129,7 @@ func _guard(w: World) -> NPC:
 
 func test_guard() -> void:
 	for on in [false, true]:
-		var w := new_world()
-		if on:
-			JudgmentLive.attach(w)
+		var w := new_world(1, not on)
 		var g: NPC = _guard(w)
 		w.relations.befriend(ME, g.id)
 		var full := World.theft_fine_for({"bread": 1})
@@ -138,9 +145,7 @@ func test_guard() -> void:
 		else:
 			check(paid == 0 and said.contains("let off with a warning"), "judgment off: a friend guard waives the fine with the Build 18 message")
 		# a friend nearby, guard not a friend
-		var w2 := new_world()
-		if on:
-			JudgmentLive.attach(w2)
+		var w2 := new_world(1, not on)
 		var g2: NPC = _guard(w2)
 		var pal: NPC = w2.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job != "guard")[0]
 		pal.pos = w2.player.pos

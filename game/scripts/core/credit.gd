@@ -323,8 +323,8 @@ func repay(id: int, force := false) -> bool:
 	if cre is NPC:
 		cre.earned += int(d.value)
 	_end(d, LATE if late else REPAID)
-	if w.judgment != null and not late:
-		JudgmentLive.on_deal(w, "trade_fair", _rid(str(d.debtor)), _rid(str(d.creditor)), int(d.value))    # PROSPECTIVE (PROS-19): a debt repaid on time
+	if w.judgment != null:
+		JudgmentLive.on_deal(w, "trade_fair", _rid(str(d.debtor)), _rid(str(d.creditor)), int(d.value), late)    # a debt repaid; late is a fair deal with half the trust gain (X19-EVENT-Q)
 	var reg: float = float(cfg().repay_regard) * (0.5 if late else 1.0)
 	var t: Dictionary = w.relations.tie(_rid(str(d.creditor)), _rid(str(d.debtor)))
 	w.relations._raise(t, reg, 0.0, true, Vector2i(_rid(str(d.creditor)), _rid(str(d.debtor))))

@@ -230,6 +230,8 @@ static func _set_role(w: World, n: NPC, r: String) -> void:
 		n.plan.clear()
 		w.note("%s comes of age." % who)
 		w.stat("came_of_age")
+		if w.judgment != null:
+			JudgmentLive.on_come_of_age(w, n)         # X19-STORY-LIFE: the parents will tell them the family stories
 	else:
 		n.role = r
 		n.plan.clear()

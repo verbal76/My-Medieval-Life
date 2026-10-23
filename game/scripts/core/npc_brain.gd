@@ -196,6 +196,8 @@ func decide(n: NPC) -> void:
 		return
 	if not n.report.is_empty() and _report(n):
 		return
+	if JudgmentLive.on(w, JudgmentFamily.FLAG) and JudgmentFamily.danger(w, n):      # FAMILY-01: shield the family, fetch help
+		return
 	if n.hunger < float(GameData.b("eat_below")) and _plan_eat(n):
 		return
 	if (h >= WAKE and h < SLEEP) and _plan_rest_hurt(n):
@@ -2741,6 +2743,8 @@ func fight(n: NPC, dt: float) -> void:
 	n.attack_cd = 1.0 * Skills.value(n, "combat", "attack_time", 1.0)     # the player's Combat rule (PAR-01)
 	n.anim = "sword"
 	n.plan = []
+	if w.judgment != null:
+		w.judgment.note_blow(n.id, n.target)        # X19-EVENT-Q: who struck first in this fight, so an answer is not judged as an attack
 	# a bandit robs ordinary villagers rather than killing them
 	if n.role == "bandit" and tnpc != null and tnpc.job != "guard":
 		var take := tnpc.coins / 2

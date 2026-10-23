@@ -21,10 +21,22 @@ func check(cond: bool, what: String) -> void:
 		print("ok   ", what)
 
 
-func new_world(seed := 1) -> World:
+func new_world(seed := 1, off := false) -> World:
+	JudgmentLive.test_disabled = off                  # Build 19 ships judgment on; off is the Build 18 path
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
+	JudgmentLive.test_disabled = false
 	return w
+
+
+## The shipped config with the Build 19 layers that colour a choice beyond the plain weighing (stubbornness penalties,
+## the family name, lies) off: these tests prove the decision hooks themselves. Each layer has its own tests (judgment_x19_test.gd).
+func plain_cfg() -> Dictionary:
+	var c := JudgmentStore.default_cfg()
+	c.traits.stubborn = {"resent_penalty": 0, "switch_penalty": 0, "override_penalty": 0}
+	c.bonds.reach = "none"
+	c.lies.chance_permille = 0
+	return c
 
 
 func _init() -> void:
@@ -59,9 +71,12 @@ func adults(w: World) -> Array:
 
 
 func test_off_by_default() -> void:
-	check(not JudgmentLive.enabled(), "judgment.json ships with enabled false")
+	check(JudgmentLive.enabled(), "judgment.json ships with enabled true (Build 19)")
 	var w := new_world()
-	check(w.judgment == null, "a new world has no judgment store")
+	check(w.judgment != null and w.to_dict().has("judgment"), "a new world has a judgment store, and its save has the section")
+	w.dispose()
+	w = new_world(1, true)
+	check(w.judgment == null, "judgment off (test_disabled, the Build 18 path): no judgment store")
 	check(not w.to_dict().has("judgment"), "...and its save has no judgment section (Build 16 layout unchanged)")
 	w.dispose()
 
@@ -69,7 +84,7 @@ func test_off_by_default() -> void:
 ## A theft seen by villagers (World.witness, the player's channel): the victim and those who saw it judge the player.
 func test_observation() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	var victim: NPC = people[0]
 	w.player.pos = victim.pos
@@ -96,7 +111,7 @@ func test_observation() -> void:
 ## The same assault by the player and by a villager, seen by the same people, posts the same points.
 func test_same_rules_live() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	var victim: NPC = people[0]
 	var attacker: NPC = people[1]
@@ -126,7 +141,7 @@ func test_trade_choice() -> void:
 	seller.inv.add("iron_ore", 3)
 	var live: NPC = w.brain._buyer_for(seller, "iron_ore")
 	check(live != null, "the live rule finds a buyer for iron ore (%s)" % (live.job if live else "none"))
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var all := []
 	for outlet in NPCBrain.OUTLETS.iron_ore:
 		for b in w.brain._with_buy_role(outlet):
@@ -173,7 +188,7 @@ func test_trade_choice() -> void:
 
 func test_save() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	var victim: NPC = people[0]
 	w.player.pos = victim.pos
@@ -189,9 +204,15 @@ func test_save() -> void:
 	check(w2.judgment != null and JSON.stringify(w2.judgment.to_dict()) == JSON.stringify(j.to_dict()), "the judgment section saves and loads unchanged")
 	check(w2.judgment.bad(victim.id, ME) == 1000 and str(w2.judgment.belief(people[5].id, 1).src) == "told", "...the victim's judgment and the told villager's provenance survive")
 	d.erase("judgment")
+	JudgmentLive.test_disabled = true
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
-	check(w3.judgment == null and not w3.to_dict().has("judgment"), "a Build 16 save (no section) loads with judgment off, and saves as it was")
+	JudgmentLive.test_disabled = false
+	check(w3.judgment == null and not w3.to_dict().has("judgment"), "judgment off: a Build 16 save (no section) loads with judgment off, and saves as it was")
+	var w3b := World.new()
+	w3b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	check(w3b.judgment != null and w3b.judgment.facts.is_empty() and w3b.judgment.memories.is_empty(), "Build 19: the same save (no section) loads with a clean judgment store")
+	w3b.dispose()
 	var bad := w.to_dict()
 	bad.judgment = {"format": "mml-judgment/1", "version": 42}
 	var w4 := World.new()
@@ -210,7 +231,7 @@ func test_running_world() -> void:
 	var prints := []
 	for run in 2:
 		var w := new_world(3)
-		var j := JudgmentLive.attach(w)
+		var j := JudgmentLive.attach(w, plain_cfg())
 		var people := adults(w)
 		var victim: NPC = people[0]
 		w.player.pos = victim.pos
@@ -264,7 +285,7 @@ func test_q10_no_numbers_in_ui() -> void:
 			hits.append(f)
 	check(files.size() > 1 and hits.is_empty(), "no UI script reads judgment (%d scripts checked; %s)" % [files.size(), str(hits)])
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	j.set_ledger(people[0].id, ME, 0, 5000)
 	var ins := j.inspect(people[0].id, ME)
@@ -275,7 +296,7 @@ func test_q10_no_numbers_in_ui() -> void:
 ## Q06 in the live world: liking is still the existing Relations regard (no second friendship system); trust (X19-REGARD) starts as a first impression of it.
 func test_q06_live_trust() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	var a: NPC = people[0]
 	var b: NPC = people[1]
@@ -290,7 +311,7 @@ func test_q06_live_trust() -> void:
 ## closeness outweighs a dislike; with neutral judgment the live rule stands; never friends below the live threshold.
 func test_q14_befriend() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	var a: NPC = people[3]
 	var b: NPC = people[4]
@@ -317,7 +338,7 @@ func test_q14_befriend() -> void:
 ## Q14 court_choice (Relations._villagers_court): whom a single villager takes an interest in.
 func test_q14_court() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var people := adults(w)
 	var n: NPC = people[0]
 	var o1: NPC = people[1]
@@ -351,7 +372,7 @@ func test_q14_buy_from() -> void:
 	sellers[0].inv.add("log", 5)
 	sellers[1].inv.add("log", 5)
 	var live: NPC = w.brain._seller_of("log", buyer)
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	check(w.brain._seller_of("log", buyer) == live, "neutral judgment: the live rule's seller (%s)" % live.name)
 	j.set_ledger(buyer.id, live.id, 0, 60000)
 	var other: NPC = w.brain._seller_of("log", buyer)
@@ -368,7 +389,7 @@ func test_q14_buy_from() -> void:
 ## Q14 hire_choice and work_accept (Construction._keep_building, Construction.hire, Business.hire).
 func test_q14_hiring() -> void:
 	var w := new_world()
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var wage := int(GameData.b("helper_wage"))
 	var worker: NPC = adults(w)[0]
 	worker.coins = 200
@@ -433,7 +454,7 @@ func test_q14_promises() -> void:
 	w.player.pos = m.pos
 	var live := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3)
 	check(str(live.answer) == "accept", "setup: a miner with a pickaxe accepts the offer without judgment (%s)" % str(live.say))
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	var r := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 30, 3)
 	check(str(r.answer) == str(live.answer) and str(r.say) == str(live.say) and int(r.price_each) == int(live.price_each), "contract_accept: neutral judgment, the live answer stands, word for word")
 	for profile in ["contract_accept", "credit_lend", "barter_accept", "family_help"]:
@@ -505,7 +526,7 @@ func test_q14_credit() -> void:
 	var live_no := w.credit.credit_refusal(s, b, bill)
 	var live_swap := bool(w.credit.barter_quote(s, b, "bread", 1, "coal").ok)
 	check(live_no == "" and live_swap, "setup: this seller lends to and swaps with this buyer without judgment")
-	var j := JudgmentLive.attach(w)
+	var j := JudgmentLive.attach(w, plain_cfg())
 	check(w.credit.credit_refusal(s, b, bill) == "", "credit_lend: neutral judgment, the live yes")
 	check(bool(w.credit.barter_quote(s, b, "bread", 1, "coal").ok), "barter_accept: neutral judgment, the live yes")
 	j.set_ledger(s.id, b.id, 0, 60000)
@@ -595,7 +616,7 @@ func test_q14_family_help() -> void:
 		var total := w.total_coins()
 		var j: JudgmentStore = null
 		if pass_ == 1:
-			j = JudgmentLive.attach(w)
+			j = JudgmentLive.attach(w, plain_cfg())
 			j.set_ledger(c.responsible_adult(from).id, child.id, 0, 60000)
 		c._family_help(h)
 		if pass_ == 0:
@@ -634,7 +655,7 @@ func test_event_feeds() -> void:
 	var hashes := []
 	for run in 2:
 		var w := new_world(5)
-		var j := JudgmentLive.attach(w)
+		var j := JudgmentLive.attach(w, plain_cfg())
 		var people := adults(w)
 		var a: NPC = people[0]
 		var b: NPC = people[1]
@@ -781,13 +802,13 @@ func test_personality_live() -> void:
 		victim.inv.add("bread", 1)
 		w.witness("theft", "bread", victim, {"bread": 1})
 		if armed:
-			check(j.pers.tolerance_drift(victim.id) < 0 and j.pers.anger_at(victim.id, j.day) > 0 and j.tolerance(victim.id) < JudgmentMath.ONE + 300,
-				"live: the robbed villager's personality drifts (%d) and they are angry (%d)" % [j.pers.tolerance_drift(victim.id), j.pers.anger_at(victim.id, j.day)])
+			check(j.pers.tolerance_drift(victim.id) < 0 and j.pers.anger_at(victim.id, j.now_minute() / 1440, j.now_minute() % 1440) > 0 and j.tolerance(victim.id) < JudgmentMath.ONE + 300,
+				"live: the robbed villager's personality drifts (%d) and they are angry (%d)" % [j.pers.tolerance_drift(victim.id), j.pers.anger_at(victim.id, j.now_minute() / 1440, j.now_minute() % 1440)])
 			var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 			check(d.judgment.has("traits"), "...and the world save carries the traits key")
 		else:
-			var sv: Dictionary = w.to_dict().judgment.get("traits", {})
-			check(j.pers.record.is_empty() and j.pers.drift.is_empty() and j.pers.anger.is_empty() and sv.get("log", []).is_empty(), "live, shipped config: the same theft records no personality experience (only the SJD-Q13 tolerance shift, traits.tol)")
+			check(j.pers.tolerance_drift(victim.id) < 0 and j.pers.record.has(victim.id) and j.pers.anger_at(victim.id, j.now_minute() / 1440, j.now_minute() % 1440) > 0 and j.pers.life_tol.is_empty(),
+				"live, shipped config (Build 19): the same theft pulls the victim's tolerance down by the trait formula, makes them angry and is kept in their history; the old SJD-Q13 step does not also apply (RECON-01)")
 		w.dispose()
 ## X19-FOUND-BONDS: a pair's history through Relations' own paths in a real world (the dawn cooling, shared hours, help):
 ## a friendship that cools below friendship level makes former friends, whose later gains count +10% before the caps.

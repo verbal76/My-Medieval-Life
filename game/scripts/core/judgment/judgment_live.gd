@@ -1,9 +1,12 @@
 class_name JudgmentLive
 extends RefCounted
-## PROSPECTIVE (Expansion 19, PROS-19): the provisional adapter between the live World and the judgment prototype.
-## OFF by default: World.judgment is null unless judgment.json "enabled" is true (it is false) or a test attaches a
-## store (attach). Every hook in live code is one guarded line, `if judgment != null`, so with it off the game runs
-## exactly as before (proved by the determinism gate, tools/sim_gate.py, and the existing suites).
+## Expansion 19 (Build 19): the adapter between the live World and the judgment system.
+## ON by default in Build 19 (owner 2026-10-23, docs/directives/2026-10-23_x19_complete_release_scope.md): judgment.json
+## "enabled" is true, so a new game and a loaded Build 18 save (which has no judgment section and starts clean) run with
+## memory, gossip, opinions, personality, family name, lies, family stories and the family-first rules. A test turns it
+## off with `test_disabled` (the Build 18 path: World.judgment stays null, a saved section is carried untouched) or on with
+## `test_enabled`. Every hook in live code is one guarded line, `if judgment != null`, so with it off the game runs
+## exactly as Build 18 (proved by the determinism gate against its baseline when switched off, tools/sim_gate.py).
 ##
 ## What it connects, and what it leaves alone:
 ##   observation   World.witness (a theft seen, PAR-05's one channel for seeing), World.raise_alarm (an attack by
@@ -42,9 +45,12 @@ static func on(w, domain: String) -> bool:
 
 
 static var test_enabled := false     # tests only: switch judgment on without editing judgment.json
+static var test_disabled := false    # tests only: the Build 18 path, judgment off whatever judgment.json says
 
 
 static func enabled() -> bool:
+	if test_disabled:
+		return false
 	return test_enabled or bool(JudgmentStore.default_cfg().get("enabled", false))
 
 
@@ -87,6 +93,11 @@ class Social extends JudgmentSocial:
 			out.append([int(p.partner), "partner"])
 		return out
 
+	## A guard of the village.
+	func is_guard(person: int) -> bool:
+		var n = w.npc(person) if person >= 0 else null
+		return n != null and n.alive and n.job == "guard"
+
 	## Relations.friends and Relations.peek, read without building a blank tie on every call (peek's default argument is
 	## built even when the tie exists): a missing tie is not friends and regard 0, as the blank one says.
 	func friends(a: int, b: int) -> bool:
@@ -118,6 +129,9 @@ static func on_theft(w, kind: String, victim: NPC, seen: Array, value: int) -> v
 ## An attack (World.raise_alarm): anyone's, the player's (-2) or a villager's (a bandit's robbery included).
 static func on_attack(w, attacker: int, aware: Dictionary) -> void:
 	var v: NPC = aware.get("victim", null)
+	if v != null and w.judgment.note_blow(attacker, v.id):
+		w.judgment._stat("self_defence_blows")       # X19-EVENT-Q (4): an attack answered within the same fight is not judged as an attack
+		return
 	var ev: int = w.judgment.publish("assault", [attacker], [v.id] if v != null else [])
 	if ev > 0:
 		w.judgment.observe_all(ev, _ids(aware.seen))
@@ -125,6 +139,13 @@ static func on_attack(w, attacker: int, aware: Dictionary) -> void:
 
 ## A villager slain by the player (World.kill): those who see the body fall.
 static func on_killing(w, n: NPC, killer: int) -> void:
+	var k = w.npc(killer) if killer >= 0 else null
+	if k != null and k.job == "guard":
+		w.judgment._stat("guard_killings_unjudged")  # X19-EVENT-Q (1): a guard stopping an attacker is not a killing
+		return
+	if w.judgment.struck_first(n.id, killer):
+		w.judgment._stat("self_defence_killings")    # X19-EVENT-Q (4): the dead struck first in this same fight
+		return
 	var ev: int = w.judgment.publish("killing", [killer], [n.id])
 	if ev > 0:
 		var seen: Array = w.near(n.pos, float(GameData.b("witness_radius")))
@@ -136,8 +157,8 @@ static func on_killing(w, n: NPC, killer: int) -> void:
 ## witness_radius, the one channel the world has for seeing) also saw it. Actors are not given a memory of their own
 ## deed (as for an attack); victims and beneficiaries are participants. Returns the event id (-1 when the catalog
 ## refuses it: unknown, or under its min_value).
-static func _event(w, type: String, actors: Array, victims: Array, beneficiaries: Array, value := 0, at = null) -> int:
-	var ev: int = w.judgment.publish(type, actors, victims, beneficiaries, value)
+static func _event(w, type: String, actors: Array, victims: Array, beneficiaries: Array, value := 0, at = null, tags := []) -> int:
+	var ev: int = w.judgment.publish(type, actors, victims, beneficiaries, value, tags)
 	if ev > 0:
 		var seen := []
 		if at != null:
@@ -164,11 +185,12 @@ static func on_help(w, helper: int, n: NPC, type: String, value: int) -> void:
 ## A deal kept or broken between two people (ids; -1 for a party that is not a person: nothing is published). A contract
 ## fulfilled or a debt repaid on time is trade_fair, a contract lapsed or a debt defaulted is trade_cheat; `seller` is
 ## the one who owed the goods, work or coin. Private: only the two know.
-static func on_deal(w, type: String, owed_by: int, owed_to: int, value: int) -> void:
+static func on_deal(w, type: String, owed_by: int, owed_to: int, value: int, late := false) -> void:
 	if owed_by == -1 or owed_to == -1 or owed_by == owed_to or value < 1:
 		return                                  # not between two people, or under a coin: trivia (SJD-Q12)
 	if type == "trade_fair":
-		_event(w, type, [owed_by], [], [owed_to], value)
+		_event(w, type, [owed_by], [], [owed_to], value, null, ["late"] if late else [])    # X19-EVENT-Q (3): late = half the trust gain
+		return
 	else:
 		_event(w, type, [owed_by], [owed_to], [], value)
 
@@ -208,6 +230,69 @@ static func on_robbery(w, thief: NPC, victim: NPC, value: int, aware: Dictionary
 	var ev: int = w.judgment.publish("theft", [thief.id], [victim.id], [], value)
 	if ev > 0:
 		w.judgment.observe_all(ev, _ids(aware.seen))
+	costly_mistake(w, victim.id, "travel_alone", float(value) / 10.0)      # coins lost out alone, with a guard post and a home to go to
+
+
+## A costly mistake of a kind the game already measures (X19-PERS-FORMULA "practical wisdom"): a meal missed with food
+## within reach, coins lost, a purchase refused, an injury, while a better recorded alternative existed. `cost` is in points
+## (a point is 1000 milli-points); at most one of a kind a person a day. Wisdom only grows, and reduces how much
+## stubbornness weighs in a choice (JudgmentWeighting).
+static func costly_mistake(w, person: int, kind: String, cost: float) -> void:
+	var j: JudgmentStore = w.judgment
+	if j == null or not j.pers.active or person < 0:
+		return
+	var nm: int = j.now_minute()
+	if j.pers.recent(person, JudgmentPersonality.CH_MISTAKE, JudgmentPersonality.kind_code(kind), nm / 1440, 1) > 0:
+		return
+	j.pers.mistake(person, kind, clampi(roundi(cost * 1000.0), 500, 5000), nm / 1440)
+	j._stat("mistakes")
+
+
+## A villager starves (hunger at 0) although food or the coins to buy it were to hand: a missed meal.
+static func on_hungry(w, n: NPC) -> void:
+	if w.judgment == null or not w.judgment.pers.active:
+		return
+	var food := n.coins >= 5
+	if not food and n.household >= 0:
+		food = NPCBrain.store_points([w.households[n.household].pantry]) > 0.0
+	if food:
+		costly_mistake(w, n.id, "family_meal", 1.0)
+
+
+## A new adult (Life._set_role): their parents will tell them the family stories when they are at home together.
+static func on_come_of_age(w, n: NPC) -> void:
+	w.judgment.story_pending[n.id] = [w.day(), 0]
+
+
+## Hourly (World._on_hour): the family stories of new adults, told at home by each parent who is there with them
+## (X19-STORY-LIFE). A new adult whose parents never meet them at home within family_story.expire_days goes without.
+static func tell_family_tick(w) -> void:
+	var j: JudgmentStore = w.judgment
+	if j.story_pending.is_empty():
+		return
+	var ids := j.story_pending.keys()
+	ids.sort()
+	for id in ids:
+		var rec: Array = j.story_pending[id]
+		var c: NPC = w.npc(int(id))
+		if c == null or not c.alive or w.day() - int(rec[0]) > j._story_days:
+			j.story_pending.erase(id)
+			continue
+		var mask := int(rec[1])
+		for i in 2:
+			var pid: int = c.mother if i == 0 else c.father
+			if (mask >> i) & 1 == 1:
+				continue
+			var p: NPC = w.npc(pid) if pid >= 0 else null
+			if p == null or not p.alive:
+				mask |= 1 << i                        # no parent here to tell them
+			elif c.home != "" and w.place_of(c.pos) == c.home and w.place_of(p.pos) == c.home:
+				j.tell_family_stories(p.id, c.id)
+				mask |= 1 << i
+		if mask == 3:
+			j.story_pending.erase(id)
+		else:
+			rec[1] = mask
 
 
 ## A partnership made (Relations.propose accepted, the player's included): a neutral fact for the two of them.
@@ -227,6 +312,8 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	var wt: Dictionary = dc.profiles[profile].weights
 	if str(dc.selection) != "argmax":
 		return false
+	if j.pers.active and (j.pers.holds_stubbornness(seller) or j.pers.overriding(seller, j.now_minute() / 1440, j.now_minute() % 1440)):
+		return false                            # a stubborn chooser's penalties can move the choice
 	for k in wt:
 		if not (str(k) in ["live_order", "necessity", "disposition"]) and int(wt[k]) != 0:
 			return false
@@ -238,6 +325,7 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	for s in j.subjects(seller):
 		if int(s) != first:
 			best = maxi(best, j.disposition(seller, int(s)))
+	best = mini(100000, best + j.colour_bound(seller))        # a stranger's family name can colour them up to this much
 	var gain := JudgmentMath.mul_div(wd, best, 1000) - JudgmentMath.mul_div(wd, d0, 1000)
 	var step := JudgmentMath.mul_div(wo, 100000, 1000) - JudgmentMath.mul_div(wo, 100000 - LIVE_ORDER_STEP, 1000)
 	return gain <= step
@@ -440,6 +528,7 @@ static func willing(w, profile: String, chooser: NPC, counterparty: int, key: Ar
 	if str(r.chosen) == "yes":
 		return true
 	j._stat(profile + "_declined")
+	costly_mistake(w, counterparty, profile, 0.5)                          # a purchase or favour refused: a costly mistake of dealing
 	return false
 
 

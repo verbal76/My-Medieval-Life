@@ -55,7 +55,9 @@ func holder(p: JudgmentPersonality, want := true) -> int:
 
 
 func _init() -> void:
-	test_shipped_inert()
+	test_shipped_formula()
+	test_anger_timeline()
+	test_shipped_curves()
 	test_tolerance_owner()
 	test_share()
 	test_evolution_inputs()
@@ -73,29 +75,85 @@ func _init() -> void:
 	quit(1 if failures > 0 else 0)
 
 
-func test_shipped_inert() -> void:
-	var j := JudgmentStore.new({}, JudgmentSocial.new(), 7)
-	check(not j.pers.active, "shipped config: the personality layer is inert (every rate 0)")
-	var before := j.state_hash()
-	var t0 := j.tolerance(BOB)
-	var ev := j.publish("theft", [THIEF], [BOB], [], 4)
-	j.observe_all(ev, [])
-	var saved: Dictionary = j.to_dict().get("traits", {})
-	check(j.pers.drift.is_empty() and j.pers.anger.is_empty() and j.pers.wisdom.is_empty() and j.pers.record.is_empty() and saved.get("log", []).is_empty() and saved.get("tol", []).size() == 1, "...no experience is recorded; only the SJD-Q13 tolerance shift is held and saved (traits.tol)")
-	check(j.tolerance(BOB) == t0 - 40 and j.personality_growth(BOB) == 0, "...tolerance moves only by the existing life shift; growth is 0")
-	check(j.pers.mistake(BOB, "market", 3000, 5) == 0 and j.pers.practical_wisdom(BOB, "market") == 0, "...a costly mistake teaches nothing")
-	j.pers.experience(BOB, "provocation", 3000, 5)
-	check(j.pers.remind(BOB, 6) == 0 and j.pers.anger_at(BOB, 6) == 0 and j.pers.record.is_empty(), "...no anger, no reminder, no history")
-	check(before != 0 and JudgmentStore.default_cfg().traits.stubbornness_share_permille == 300, "...the approved 30% share ships")
+func test_shipped_formula() -> void:
+	# the owner's approved numbers (2026-10-23, docs/design/X19_RELEASE_DECISIONS.md section B), as they ship
 	var d: Dictionary = JudgmentStore.default_cfg().traits
-	var zero := true
-	for k in ["rate_permille_per_point"]:
-		zero = zero and int(d[k]) == 0
-	for sec in ["learning", "emotion"]:
-		for k in d[sec]:
-			if k.ends_with("_per_point") or k.ends_with("_days") or k.ends_with("permille") and k != "override_threshold_permille":
-				zero = zero and int(d[sec][k]) == 0
-	check(zero, "...every rate, limit and duration in the shipped section is 0")
+	check(int(d.stubbornness_share_permille) == 300 and int(d.stubbornness_start_min_permille) == 200 and int(d.stubbornness_start_max_permille) == 600,
+		"starting stubbornness: 30% of villagers can hold it, starting between 20% and 60%")
+	check(int(d.rate_permille_per_point) == 20 and int(d.frequency.gain_permille) == 250 and int(d.frequency.cap) == 4 and int(d.frequency.window_days) == 8,
+		"drift 2% a severity point; each earlier same-kind experience within a game year (8 days) adds a quarter, at most double")
+	check(int(d.duration.gain_permille_per_day) == 100 and int(d.duration.cap_days) == 5, "ongoing hardship adds 10% a day it lasts, at most 50%")
+	check(int(d.soft_limit.scale_permille) == 400 and int(d.soft_limit.floor_permille) == 200 and int(d.recovery_gain_permille) == 1000 and int(d.growth_past_origin_permille) == 500,
+		"soft limit: a fifth of the force at 40% away, never 0; recovery at full rate, growth past the origin at half")
+	check(int(d.learning.rate_permille_per_point) == 20 and int(d.learning.accel_permille_per_repeat) == 500 and int(d.learning.repeat_cap) == 3 and int(d.learning.transfer_permille) == 250 and int(d.learning.cap_permille) == 500 and int(d.learning.repeat_window_days) == 8,
+		"wisdom: 2% a cost point, repeats within a year add half again (at most 3), a quarter carries to every situation, tops out at 50%")
+	check(int(d.emotion.anger_permille_per_point) == 100 and int(d.emotion.anger_days) == 1 and int(d.emotion.reminder_permille) == 250 and int(d.emotion.reminder_cap_permille) == 500 and int(d.emotion.override_threshold_permille) == 500,
+		"anger: 10% a severity point over one game day; a reminder brings back a quarter of the peak, at most half of it; override at 50%")
+	var j := JudgmentStore.new({}, JudgmentSocial.new(), 7)
+	check(j.pers.active, "shipped config: the personality layer is live")
+	# the starting level of a holder is a fixed hash between 20% and 60%; the others have none
+	var holders := 0
+	var lo := 1000
+	var hi := 0
+	for i in range(1, 1001):
+		if j.pers.holds_stubbornness(i):
+			holders += 1
+			var lv := j.pers.stubbornness(i, 1)
+			lo = mini(lo, lv)
+			hi = maxi(hi, lv)
+		else:
+			if j.pers.stubbornness(i, 1) != 0:
+				holders = -9999
+	check(holders > 250 and holders < 350 and lo >= 200 and hi <= 600 and hi - lo > 300, "of 1000 people about 30% hold stubbornness, starting %d..%d permille, the rest at 0 (%d)" % [lo, hi, holders])
+	var h := holder(j.pers)
+	check(j.pers.stubbornness(h, 1) == j.pers.start_level(h) and j.pers.start_level(h) == j.pers.start_level(h), "...a person's start is a fixed hash of the id")
+	# one theft: the victim's tolerance falls by 2% of the severity points (once, by the formula), they are angry; the Q13 step is not added
+	var t0 := j.tolerance(BOB)
+	j.observe_all(j.publish("theft", [THIEF], [BOB], [], 4), [])
+	check(j.pers.tolerance_drift(BOB) == -20 and j.tolerance(BOB) == t0 - 20 and j.pers.life_tol.is_empty(), "one theft (1 point) lowers tolerance by 2% (%d), not also by the old 4%% step" % j.pers.tolerance_drift(BOB))
+	check(j.pers.anger_at(BOB, j.now_minute() / 1440, j.now_minute() % 1440) == 100, "...and sets anger at 10% of the severity point (100 permille)")
+	check(j.pers.anger_at(BOB, 0, 720) == 50 and j.pers.anger_at(BOB, 1, 0) == 0, "...fading evenly over one game day (half at noon, gone the next morning)")
+
+
+## The 2026-10-23 packet's anger, reminder and override timeline, with the shipped numbers and minutes, not day steps.
+func test_anger_timeline() -> void:
+	var p := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
+	var h := holder(p)
+	p.experience(h, "provocation", 6000, 5, 0, 600)          # a six-point wrong at 10:00 on day 5
+	check(p.anger_at(h, 5, 600) == 600 and p.overriding(h, 5, 600), "6 severity points: anger 60%, at or above half: the stubborn override is on")
+	check(p.anger_at(h, 5, 600 + 720) == 300 and p.overriding(h, 5, 600 + 720), "...half a day later anger is half gone and the override still holds (its remaining time)")
+	check(not p.overriding(h, 6, 601) and p.anger_at(h, 6, 601) == 0, "...a day on, both are over")
+	var q := p.remind(h, 8, 0)
+	check(q == 150 and not p.overriding(h, 8, 0), "a reminder days later brings back a quarter of the peak (150 of 600), too little for the override")
+	var low := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
+	low.experience(h, "provocation", 4000, 5, 0, 0)           # 4 points: anger 40%, below half
+	check(low.anger_at(h, 5, 0) == 400 and not low.overriding(h, 5, 0), "4 severity points: anger 40%, below the override threshold")
+	var r1 := low.remind(h, 7, 0)
+	var r2 := low.remind(h, 7, 0)
+	var r3 := low.remind(h, 7, 0)
+	check(r1 == 100 and r2 == 200 and r3 == 200, "reminders each bring back a quarter of the peak (100) but never lift it above half of the first peak (%d, %d, %d)" % [r1, r2, r3])
+
+
+## The soft limit falls evenly to a fifth of the force at 40% away; wisdom caps at 50%; growth past the origin is half rate.
+func test_shipped_curves() -> void:
+	check(JudgmentPersonality.curve_resistance(0, 400, 200) == 1000 and JudgmentPersonality.curve_resistance(200, 400, 200) == 600 and JudgmentPersonality.curve_resistance(400, 400, 200) == 200 and JudgmentPersonality.curve_resistance(900, 400, 200) == 200,
+		"soft limit: full force at the origin, 600 at 20% away, a fifth (200) at 40% away and beyond, never 0")
+	var p := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
+	for i in 60:
+		p.mistake(BOB, "lend", 3000, i * 4)
+	check(p.practical_wisdom(BOB, "lend") == 500 and p.general_wisdom(BOB) <= 500, "wisdom tops out at 50% (%d)" % p.practical_wisdom(BOB, "lend"))
+	var q := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
+	var g1 := q.mistake(BOB, "lend", 2000, 1)
+	check(g1 == 40 and q.general_wisdom(BOB) == 10, "a 2-point mistake teaches 4%%, and a quarter (1%%) of it carries to every situation (%d, %d)" % [g1, q.general_wisdom(BOB)])
+	var g2 := q.mistake(BOB, "lend", 2000, 3)
+	check(g2 == 60, "...a repeat within the year teaches half again as much (%d)" % g2)
+	# growth past the original works at half rate
+	var r := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
+	r.experience(BOB, "positive", 1000, 1)
+	check(r.tolerance_drift(BOB) == 10, "a help raises tolerance by 2%% a point at half rate once it is past the origin (%d)" % r.tolerance_drift(BOB))
+	r.experience(2, "provocation", 1000, 1)
+	r.experience(2, "positive", 1000, 20)
+	check(r.tolerance_drift(2) == 0, "...but pulls a lowered tolerance back at the full rate (%d)" % r.tolerance_drift(2))
 
 
 func test_share() -> void:
@@ -142,7 +200,7 @@ func test_evolution_inputs() -> void:
 	var e := 5
 	p.experience(e, "provocation", 1000, 1)
 	p.experience(e, "provocation", 1000, 40)
-	check(p.tolerance_drift(e) == -190, "...a repeat long after the window does not count as frequent (%d)" % p.tolerance_drift(e))
+	check(p.tolerance_drift(e) == -191, "...a repeat long after the window does not count as frequent (%d)" % p.tolerance_drift(e))
 
 
 func test_stable_and_soft_limits() -> void:
@@ -371,6 +429,7 @@ func _tol_run(c: Dictionary) -> Array:
 
 func test_tolerance_owner() -> void:
 	var c := JudgmentStore.default_cfg().duplicate(true)
+	c.traits = {"stubbornness_share_permille": 300}          # the Q13 step path (the trait formula is off): RECON-01 regression values
 	var got := _tol_run(c)
 	print("TOLSNAP ", JSON.stringify(got))
 	var want = JSON.parse_string(EXPECT_TOL)
@@ -400,6 +459,8 @@ func test_tolerance_owner() -> void:
 	check(o.tolerance(2) == base2 - 90 and int(o.life.get(BOB, 0)) == 30 and int(o.life.get(3, 0)) == 60 and not o.life.has(2), "...tolerance reads them, the weight shifts stay in life")
 	var again := JudgmentStore.new(c, JudgmentSocial.new(), 7)
 	check(again.load_dict(JSON.parse_string(JSON.stringify(o.to_dict()))) == "" and again.tolerance(2) == o.tolerance(2) and JSON.stringify(again.to_dict()) == JSON.stringify(o.to_dict()), "...and the migrated section saves and loads identically in the new layout")
-	# inert by default
-	var s := JudgmentStore.new({}, JudgmentSocial.new(), 7)
-	check(not s.pers.active and not s.pers.owns_provocation_tolerance() and s.pers.tolerance_drift(BOB) == 0, "the shipped personality rates are inert: they own and move nothing")
+	# with the trait formula off the Q13 step is the one owner; shipped (Build 19) the formula owns it
+	var s := JudgmentStore.new(c, JudgmentSocial.new(), 7)
+	check(not s.pers.active and not s.pers.owns_provocation_tolerance() and s.pers.tolerance_drift(BOB) == 0, "with the trait rates 0 the layer owns and moves nothing beyond the Q13 step")
+	var sh := JudgmentStore.new({}, JudgmentSocial.new(), 7)
+	check(sh.pers.active and sh.pers.owns_provocation_tolerance(), "shipped (Build 19): the trait formula owns tolerance change; the Q13 step does not also apply")

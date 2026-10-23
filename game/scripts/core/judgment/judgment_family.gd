@@ -17,6 +17,14 @@ extends RefCounted
 ## in extreme_share_permille of them, a fixed hash of the world seed and the id) eats earlier; that is recorded as the
 ## factor self_first_temperament. Each weighed decision goes through JudgmentWeighting.choose and its trace (rows with
 ## factors and contributions) is kept in JudgmentStore.family_trace for the recorder (XEXPL-01).
+##
+## DANGER (owner 2026-10-23, docs/directives/2026-10-23_owner_answers_family_danger.md, "Shield and fetch help"): when a
+## threat (a bandit, or a wolf or bear that is fighting someone) comes within danger.radius tiles of a dependant of the
+## head who is out of doors, the head weighs `family_danger`: SHIELD (move between the threat and the dependants, send them
+## home and run for a guard by the ordinary report, PAR-05), FIGHT (stand and fight; cornered, or stubborn, the head's
+## readiness rises) or FLEE (only a badly hurt head, or the rare self-first temperament). They can be hurt or killed doing
+## it. Personality (the per-person weight spread) and stubbornness bend readiness, never the order of the family. Fire
+## (the owner's third example) has no hook until a fire exists: `danger` reads threats from `_threats`, where it will join.
 
 const TIER_CHILD := 0
 const TIER_SPOUSE := 1
@@ -194,3 +202,138 @@ static func prefers_work(w, n: NPC) -> bool:
 			[{"id": "work", "factors": f}, {"id": "leisure", "factors": {"live_order": 100000}}], [w.day(), n.id, KEY])
 	_record(w, n, "work", r, {"tier": int(u.tier)})
 	return str(r.chosen) == "work"
+
+
+# ---------------------------------------------------------------- danger ("shield and fetch help") ------
+## Threats this game minute: every bandit, and every wolf or bear that is fighting someone. Kept for the minute on the store.
+static func _threats(w) -> Array:
+	var j: JudgmentStore = w.judgment
+	var mnt := int(w.minutes)
+	if int(j.threat_cache.get("m", -1)) == mnt:
+		return j.threat_cache.list
+	var out := []
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "bandit":
+			out.append({"kind": "bandit", "id": o.id, "pos": o.pos, "depth": o.depth, "npc": o})
+	if w.fauna != null:
+		for a in w.fauna.animals:
+			if a.alive and a.anger != "" and bool(a.spec().get("people", false)):
+				out.append({"kind": "beast", "id": -1, "pos": a.pos, "depth": 0, "animal": a})
+	j.threat_cache = {"m": mnt, "list": out}
+	return out
+
+
+## Whether head `n` meets a threat near their dependants and acts on it (the plan or target is set). False when there is
+## no such threat, `n` is not the head, or the dependants are indoors or out of reach: the ordinary day goes on.
+static func danger(w, n: NPC) -> bool:
+	if n.household < 0 or n.role == "child" or n.job == "guard" or n.depth != 0:
+		return false
+	var th := _threats(w)
+	if th.is_empty():
+		return false
+	if head(w, n.household) != n:
+		return false
+	var c: Dictionary = cfg(w).get("danger", {})
+	var radius := float(c.get("radius", 10.0))
+	var reach := float(c.get("reach", 24.0))
+	var corner := float(c.get("cornered_radius", 2.5))
+	var near := []
+	var worst = null
+	var worst_d := 1e9
+	for m: NPC in w.brain._members(n.household):
+		if m == n or m.depth != n.depth or tier(w, n, m) > TIER_PARENT or w.place_of(m.pos) != "":
+			continue
+		for t in th:
+			var d: float = m.pos.distance_to(t.pos)
+			if d <= radius and int(t.depth) == m.depth:
+				if not near.has(m):
+					near.append(m)
+				if d < worst_d:
+					worst_d = d
+					worst = t
+	if near.is_empty() or n.pos.distance_to(worst.pos) > reach:
+		return false
+	var f := {"family_danger_child": 0, "family_danger_spouse": 0, "family_danger_parent": 0}
+	var cornered := worst_d <= corner or n.pos.distance_to(worst.pos) <= corner
+	for m: NPC in near:
+		var tt := tier(w, n, m)
+		var key := "family_danger_child" if tt == TIER_CHILD else ("family_danger_spouse" if tt == TIER_SPOUSE else "family_danger_parent")
+		f[key] = 100000
+	var guard := false
+	if worst.kind == "bandit":
+		var rng_ := float(GameData.b("report").range)
+		for g: NPC in w.npcs:
+			if g.alive and g.job == "guard" and g != n and not w.asleep(g) and g.pos.distance_to(n.pos) <= rng_:
+				guard = true
+				break
+	var j: JudgmentStore = w.judgment
+	var nm := j.now_minute()
+	var stub := j.pers.stubbornness(n.id, nm / 1440, nm % 1440)
+	var temper := self_first(w, n)
+	var hurt := clampi(int((1.0 - n.hp / maxf(1.0, n.max_hp)) * 100000.0), 0, 100000)
+	var opts := [
+		{"id": "shield", "factors": _merge(f, {"guard_near": 100000 if guard else 0, "live_order": 100000})},
+		{"id": "fight", "factors": _merge(f, {"cornered": 100000 if cornered else 0, "stubborn_stand": clampi(stub * 100, 0, 100000)})},
+		{"id": "flee", "factors": {"self_risk": hurt, "self_first_temperament": 100000 if temper else 0}}]
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "family_danger", opts, [w.day(), n.id, KEY, int(w.minutes / 10.0)])
+	_record(w, n, "danger", r, {"threat": str(worst.kind), "dependants": near.size(), "cornered": cornered, "temperament": temper})
+	match str(r.chosen):
+		"fight":
+			_fight(w, n, worst)
+		"flee":
+			_send_home(w, n, "running from danger")
+		_:
+			_shield(w, n, near, worst)
+	return true
+
+
+static func _merge(a: Dictionary, b: Dictionary) -> Dictionary:
+	var out := a.duplicate()
+	for k in b:
+		out[k] = b[k]
+	return out
+
+
+## Dependants out of doors go home; the head steps between the threat and the nearest of them and, for a bandit, will tell a guard.
+static func _shield(w, n: NPC, near: Array, t: Dictionary) -> void:
+	var nearest: NPC = near[0]
+	for m: NPC in near:
+		_send_home(w, m, "hurrying home from danger")
+		if m.pos.distance_to(t.pos) < nearest.pos.distance_to(t.pos):
+			nearest = m
+	var dir: Vector2 = (t.pos - nearest.pos)
+	var at := nearest.pos + (dir.normalized() * minf(1.5, dir.length()) if dir.length() > 0.01 else Vector2.ZERO)
+	n.doing = "shielding the family"
+	n.plan = [w.brain.go(Vector2i(floori(at.x), floori(at.y)), 1.3), w.brain.work(0.5, "", {}, "idle")]
+	if str(t.kind) == "bandit" and n.report.is_empty():
+		w.report_crime(n, int(t.id), "saw")                  # PAR-05: the next decision goes to the nearest guard (NPCBrain._report)
+		w.judgment._stat("family_danger_reports")
+
+
+## A bandit: the head takes it on (the ordinary fight). A beast: the head strikes it when within reach, else closes in.
+static func _fight(w, n: NPC, t: Dictionary) -> void:
+	n.doing = "defending the family"
+	if str(t.kind) == "bandit":
+		n.target = int(t.id)
+		return
+	var a: Animal = t.animal
+	if n.pos.distance_to(a.pos) > 1.6:
+		n.plan = [w.brain.go(Vector2i(floori(a.pos.x), floori(a.pos.y)), 1.3), w.brain.work(0.3, "", {}, "idle")]
+		return
+	n.anim = "sword"
+	w.fauna.provoke(a, "npc:%d" % n.id)                      # it turns on the one who struck
+	a.hp -= n.damage * Skills.value(n, "combat", "damage_mult", 1.0)
+	Skills.gain(n, "combat", 4)
+	n.plan = [w.brain.work(0.5, "", {}, "sword")]
+	if a.hp <= 0.0:
+		var bag: Inventory = w.fauna.kill(a)
+		if bag.total() > 0:
+			w.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + a.label().to_lower(), "t": w.minutes})
+		w.judgment._stat("family_danger_beast_killed")
+
+
+static func _send_home(w, m: NPC, doing: String) -> void:
+	if m.doing == doing or m.home == "" or not w.buildings.has(m.home):
+		return
+	m.doing = doing
+	m.plan = [w.brain.go(w.building_door(m.home), 1.3), w.brain.doit("enter"), w.brain.work(20.0, "", {}, "idle")]

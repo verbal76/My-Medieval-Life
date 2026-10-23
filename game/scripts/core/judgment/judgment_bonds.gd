@@ -38,9 +38,16 @@ extends RefCounted
 ## Personal experience gradually overrides: every judged contribution the observer holds about the subject lowers the
 ## impression's weight by override_permille_per_experience (all of it at 1000). Familiarity is not inherited.
 ##
-## UNRESOLVED (owner pending; built as interfaces, shipped inert): reach (X19-SPILL-REACH) is "none" (reach_fn can be
-## replaced: subject -> [[relative, inherit permille, spill permille]]), transmit (X19-REP-TRANSMIT) is the identity
-## (transmit_fn replaces it), and the limits (X19-BOND-LIMITS) are agent placeholders in judgment.json "bonds".
+## DECIDED for Build 19 (owner 2026-10-23, docs/directives/2026-10-23_owner_answers_x19_release_decisions.md and
+## ..._owner_clarifications_famrep_simf4.md): reach (X19-SPILL-REACH) is "extended": relatives by RELATIONSHIP DISTANCE over
+## the family links the game has (parents, children, siblings, partner; grandparents, grandchildren, aunts, uncles, nieces,
+## nephews and in-laws derived from the parent links; first and second cousins), the weight falling by ring: spillover
+## 300/150/75/37 permille and a good name 1000/500/250/125 (the starting values are PROVISIONAL agent values, tunable in
+## judgment.json "bonds", not owner-selected). Transmission (X19-REP-TRANSMIT) is the observer's own remembered judgments of
+## those relatives (no new store; they fade with the ordinary decay), so transmit_fn stays the identity. Limits
+## (X19-BOND-LIMITS): each personal dealing replaces a tenth of the impression; JudgmentStore.colour never lets it weigh
+## more than a quarter of the strongest personal judgment; and JudgmentWeighting never lets it alone cause a refusal.
+## reach_fn (subject -> [[relative, inherit permille, spill permille]]) and the modes "line"/"family" remain for tests.
 ## Event-driven only: nothing runs per frame or per person; the dawn step scans only pairs that carry resentment, and
 ## only when softening is configured.
 
@@ -67,6 +74,8 @@ var _inh_w := 1000
 var _spill_w := 300
 var _override := 100
 var _mode := "none"
+var _ring_spill := [300, 150, 75, 37]
+var _ring_inherit := [1000, 500, 250, 125]
 var reach_fn := Callable()          # subject -> [[relative, inherit permille, spill permille], ...]; empty: by the mode
 var growth_fn := Callable()         # person -> personality growth (a test seam; empty: the store's personality_growth when it exists, else 0)
 var transmit_fn := Callable()       # (observer, subject, raw milli) -> milli; empty: the identity
@@ -89,12 +98,22 @@ func _init(store, config: Dictionary = {}) -> void:
 	_spill_w = int(cfg.get("spill_weight_permille", 300))
 	_override = int(cfg.get("override_permille_per_experience", 100))
 	_mode = str(cfg.get("reach", "none"))
+	_ring_spill = (cfg.get("ring_spill_permille", _ring_spill) as Array).duplicate()
+	_ring_inherit = (cfg.get("ring_inherit_permille", _ring_inherit) as Array).duplicate()
 	var fl := int(cfg.get("friend_level", 0))
 	if fl > 0:
 		friend_level = fl * 1000
 	else:
 		var rel = GameData.b("relations")
 		friend_level = int(round(float(rel.get("befriend_at", 25)) * 1000.0)) if rel is Dictionary else 25000
+
+
+func family_active() -> bool:
+	return _mode != "none" or reach_fn.is_valid()
+
+
+func override_per_experience() -> int:
+	return _override
 
 
 func store() -> JudgmentStore:
@@ -202,6 +221,7 @@ func on_belief(observer: int, ev: int) -> void:
 				betrayal_log[k] = []
 			(betrayal_log[k] as Array).append([observer, actor, f[JudgmentStore.F_DAY], str(s._types[t])])
 			stats.betrayals = int(stats.get("betrayals", 0)) + 1
+			s.keep_forever(observer, ev)           # a betrayal is never erased (X19-STORY-LIFE: handed down as a family story)
 
 
 ## The daily step (Store.begin_day): resentment softens only through personality growth, and a serious grievance not
@@ -239,11 +259,93 @@ func reach(subject: int) -> Array:
 	var s := store()
 	if s == null:
 		return []
+	if _mode == "extended":
+		return _extended(subject)
 	var out := []
 	for r in s.social.relatives(subject):
 		var kind := str(r[1])
 		if kind == "parent" or kind == "child" or (_mode == "family" and (kind == "sibling" or kind == "partner")):
 			out.append([int(r[0]), _inh_w, _spill_w])
+	return out
+
+
+## The ids of `x`'s relatives of one kind ("parent", "child", "partner", "sibling") in the family links.
+func _of(x: int, kind: String) -> Array:
+	var out := []
+	for r in store().social.relatives(x):
+		if str(r[1]) == kind and not out.has(int(r[0])):
+			out.append(int(r[0]))
+	return out
+
+
+## Brothers and sisters: the other children of `x`'s parents (and any listed directly).
+func _siblings(x: int) -> Array:
+	var out := _of(x, "sibling")
+	for p in _of(x, "parent"):
+		for c in _of(int(p), "child"):
+			if int(c) != x and not out.has(int(c)):
+				out.append(int(c))
+	return out
+
+
+## Aunts and uncles: the brothers and sisters of `x`'s parents.
+func _aunts(x: int) -> Array:
+	var out := []
+	for p in _of(x, "parent"):
+		for sb in _siblings(int(p)):
+			if not out.has(int(sb)):
+				out.append(int(sb))
+	return out
+
+
+func _children_of_all(xs: Array) -> Array:
+	var out := []
+	for x in xs:
+		for c in _of(int(x), "child"):
+			if not out.has(int(c)):
+				out.append(int(c))
+	return out
+
+
+## Relatives by RELATIONSHIP DISTANCE (X19-SPILL-REACH, owner 2026-10-23: down to second cousins), derived from the parent,
+## child and partner links the game keeps: [[relative, inherit permille, spill permille], ...], each person at their nearest
+## ring only. Ring 1: parents, children, siblings, partner. Ring 2: grandparents, grandchildren, aunts and uncles, nieces and
+## nephews, in-laws (the partner's parents and siblings, the partners of siblings and children). Ring 3: first cousins.
+## Ring 4: second cousins (the children of one's parents' first cousins). The weights per ring are the bonds config's.
+func _extended(subject: int) -> Array:
+	var rings := [[], [], [], []]
+	var par := _of(subject, "parent")
+	var kids := _of(subject, "child")
+	var mates := _of(subject, "partner")
+	var sibs := _siblings(subject)
+	rings[0] = par + kids + mates + sibs
+	var gp := []
+	for p in par:
+		gp.append_array(_of(int(p), "parent"))
+	var aunts := _aunts(subject)
+	var inlaws := []
+	for m in mates:
+		inlaws.append_array(_of(int(m), "parent"))
+		inlaws.append_array(_siblings(int(m)))
+	for sb in sibs:
+		inlaws.append_array(_of(int(sb), "partner"))
+	for k in kids:
+		inlaws.append_array(_of(int(k), "partner"))
+	rings[1] = gp + _children_of_all(kids) + aunts + _children_of_all(sibs) + inlaws
+	rings[2] = _children_of_all(aunts)
+	var second := []
+	for p in par:
+		second.append_array(_children_of_all(_children_of_all(_aunts(int(p)))))
+	rings[3] = second
+	var seen := {subject: true}
+	var out := []
+	for i in 4:
+		var ids: Array = rings[i]
+		ids.sort()
+		for id in ids:
+			if not seen.has(int(id)):
+				seen[int(id)] = true
+				out.append([int(id), int(_ring_inherit[i]), int(_ring_spill[i])])
 	return out
 
 

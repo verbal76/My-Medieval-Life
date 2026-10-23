@@ -70,9 +70,11 @@ func _init() -> void:
 	quit(1 if failures > 0 else 0)
 
 
-func new_world(seed := 1) -> World:
+func new_world(seed := 1, off := false) -> World:
+	JudgmentLive.test_disabled = off                  # Build 19 ships judgment on; off is the Build 18 path
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
+	JudgmentLive.test_disabled = false
 	return w
 
 
@@ -92,13 +94,14 @@ func make_former(j: JudgmentStore, a: int, b: int) -> void:
 
 func test_shipped_inert() -> void:
 	var c: Dictionary = JudgmentStore.default_cfg()
-	check(not bool(c.enabled), "judgment.json still ships enabled false")
+	check(bool(c.enabled), "judgment.json ships enabled for Build 19")
 	var b: Dictionary = c.bonds
 	check(int(b.familiarity_permille) == 100 and int(b.family_permille) == 50 and int(b.combined_permille) == 120,
 			"the owner's targets: familiarity ~10%, family ~5%, both ~12% (a configured value, not 15%)")
-	check(str(b.reach) == "none" and int(b.soften_milli_per_day) == 0, "reach (X19-SPILL-REACH) ships none and softening ships inert")
+	check(str(b.reach) == "extended" and int(b.soften_milli_per_day) == 0, "reach (X19-SPILL-REACH) ships extended (to second cousins) and softening ships inert (no decay curve is invented)")
+	check(JSON.stringify(b.ring_spill_permille) == "[300.0,150.0,75.0,37.0]" or JSON.stringify(b.ring_spill_permille) == "[300,150,75,37]", "spillover by ring: 30% / 15% / 7.5% / 3.75% (provisional)")
 	var j := store(JudgmentStore.default_cfg())
-	check(j.bonds.family_reputation(OBS, CH) == 0 and j.bonds.gain_permille(OBS, CH) == 1000, "shipped, no family reputation exists at all")
+	check(j.bonds.family_reputation(OBS, CH) == 0 and j.bonds.gain_permille(OBS, CH) == 1000, "shipped, with no remembered story about anyone's family there is no family reputation")
 	check(j.bonds.floor_days() == Life.year_days(), "the serious-grievance floor is one in-game year (Life.year_days())")
 	check(not j.to_dict().has("bonds"), "a store with no bonds history writes no bonds key")
 
@@ -445,7 +448,7 @@ func test_relations_family() -> void:
 
 func test_judgment_off_identical() -> void:
 	var run := func(attach: bool) -> Array:
-		var w := new_world(3)
+		var w := new_world(3, not attach)
 		if attach:
 			JudgmentLive.attach(w, cfg("none"))
 		var people := adults(w)
@@ -465,6 +468,6 @@ func test_judgment_off_identical() -> void:
 	var off: Array = run.call(false)
 	var on: Array = run.call(true)
 	check(off == on, "with judgment attached but no history, Relations gives the same numbers as with judgment off")
-	var w := new_world(3)
+	var w := new_world(3, true)
 	check(w.judgment == null, "judgment off: no store, so no bonds call exists on any path")
 	w.dispose()

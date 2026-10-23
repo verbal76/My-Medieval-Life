@@ -35,8 +35,10 @@ func _init() -> void:
 ## A fresh village with a hand-built household: father F (male adult), mother M, children K1 K2, the father's mother G (elder),
 ## the mother's father G2 (elder), and a taken-in orphan O (a child of no one here). Pantry empty, everyone fed.
 func new_world(on := true, seed := 1) -> Dictionary:
+	JudgmentLive.test_disabled = not on                 # Build 19 ships judgment on; the Build 18 path is the explicit off
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
+	JudgmentLive.test_disabled = false
 	var pool := []
 	for n: NPC in w.npcs:
 		if n.alive and n.role != "bandit" and n.clan == "" and n.job != "guard" and n.household >= 0 and pool.size() < 8:
@@ -102,7 +104,7 @@ func done(fam: Dictionary) -> void:
 
 func test_config() -> void:
 	var c := JudgmentStore.default_cfg()
-	check(not bool(c.enabled), "judgment.json still ships disabled: the game is Build 18 until Expansion 19 is switched on")
+	check(bool(c.enabled), "judgment.json ships enabled: Build 19 has the family-first rules on (test_disabled is the Build 18 path)")
 	check(bool(c.decision.integration.get("family_first", false)), "decision.integration.family_first exists (on with judgment on)")
 	for p in ["family_meal", "family_pay", "family_work"]:
 		check(c.decision.profiles.has(p), "profile " + p)

@@ -12,6 +12,7 @@ var _kin := {}
 var _friends := {}
 var _regard := {}
 var _rel := {}                       # person -> [[relative, kind], ...] (fixture family graph for JudgmentBonds)
+var _guards := {}                    # person -> true: a guard (fixture)
 
 
 ## A pair's key: both ids offset to stay positive (the player is -2), the lower in the high bits.
@@ -40,7 +41,18 @@ func relatives(person: int) -> Array:
 	return (_rel.get(person, []) as Array).duplicate()
 
 
+## Whether a person is a guard of the village (X19-MISINFO: a guard's reports show an invented crime false).
+func is_guard(person: int) -> bool:
+	return _guards.has(person)
+
+
 # ---------------------------------------------------------------- fixture setters (tests) ------
+func set_guard(person: int) -> JudgmentSocial:
+	_guards[person] = true
+	return self
+
+
+
 func set_kin(a: int, b: int) -> JudgmentSocial:
 	_kin[_k(a, b)] = true
 	return self
