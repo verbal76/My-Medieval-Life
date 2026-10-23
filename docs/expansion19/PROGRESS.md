@@ -222,7 +222,7 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 ## Outstanding owner decisions
 
 - **Answered 2026-10-21:** Q01, Q02, Q06, Q07, Q08, Q10, Q11, Q14 (see above).
-- **Answered 2026-10-23 and applied (round 5):** Q05 (prior bias removed), Q09 (near-best, runner_up 150 proposed), X19-ASSAULT (assault permanent); Q04, Q12, X19-HARMED, X19-CRT12 already matched; X19-GUARD needs a live change in `World.guard_confront` (lead). Q03 and Q13 (own tolerance, shaped weights) not yet wired; X19-DECAY and X19-REGARD are the lead's next tasks.
+- **Answered 2026-10-23 and applied (round 5):** Q05 (prior bias removed), Q09 (near-best, runner_up 150 proposed), X19-ASSAULT (assault permanent); Q04, Q12, X19-HARMED, X19-CRT12 already matched; X19-GUARD applied in `World.guard_confront` (friend guard halves the fine, never waives; round 6). Q03 and Q13 (own tolerance, shaped weights) not yet wired; X19-DECAY and X19-REGARD are the lead's next tasks.
 - **Answered 2026-10-23:** X19-Q-TIMING (spread by contact and closeness): "scheduled" timing with closeness weighting is
   implemented; the floor 500 is an agent-proposed number for owner review. Options record: `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`.
 - **Needed from the owner before live integration (Gate E):**

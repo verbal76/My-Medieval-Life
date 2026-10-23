@@ -176,12 +176,15 @@ func test_friends_benefits() -> void:
 	r.befriend(ME, seller.id)
 	var after: int = w.player_quote(seller, id, 1, true)[0]
 	check(before >= 10 and after < before, "a friend sells cheaper (%d -> %d coins)" % [before, after])
-	# a guard who is a friend lets the player off with a warning
+	# a guard who is a friend lowers the fine but never waives it (X19-GUARD)
 	var guard: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.job == "guard" and n.alive)[0]
 	w.player.coins = 50
+	var gfull := World.theft_fine_for({})
+	var near_friend := false
 	r.befriend(ME, guard.id)
 	var text := w.guard_confront(guard, {}, null, null)
-	check(w.player.coins == 50 and text.contains("warning"), "a guard who is your friend lets you off with a warning")
+	var gpaid := 50 - w.player.coins
+	check(gpaid >= 1 and gpaid < gfull and text.contains("lowered"), "a guard who is your friend lowers the fine but still fines (%d of %d)" % [gpaid, gfull])
 	var w2 := new_world()
 	var g2: NPC = w2.npcs.filter(func(n: NPC) -> bool: return n.job == "guard" and n.alive)[0]
 	var pal: NPC = single(w2)
