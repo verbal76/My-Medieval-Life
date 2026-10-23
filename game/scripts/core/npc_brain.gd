@@ -141,6 +141,15 @@ func work_look(n: NPC) -> Array:
 	return [str(s.get("anim", "work")), ""]
 
 
+## REC-F1: a standing wait, the only step of its plan. World._run_plan loads a work step's minutes (`work_left`) only
+## when a walk ends or an act finishes before it; a plan that BEGINS with a work step inherited the previous step's
+## spent (<= 0) count and ended on the next tick, so decide() ran again every tick (hundreds of times a day for a
+## producer holding unsold goods). This loads the wait's own minutes, so the wait lasts as long as the plan says.
+func wait(n: NPC, minutes: float) -> Dictionary:
+	n.work_left = minutes
+	return work(minutes, "", {}, "idle")
+
+
 func doit(act: String, args := {}) -> Dictionary:
 	return {"k": "do", "act": act, "args": args}
 
@@ -184,7 +193,14 @@ func _home_meal(n: NPC) -> Array:
 
 
 # ---------------------------------------------------------------- deciding -------------------
+## REC-F1 diagnostics only (read by tests/recf1_measure.gd, never by behaviour): top-level decisions per villager id, and
+## performed actions by kind.
+var decide_calls := {}
+var act_calls := {}
+
+
 func decide(n: NPC) -> void:
+	decide_calls[n.id] = int(decide_calls.get(n.id, 0)) + 1
 	var h := w.hour()
 	if n.anim == "sleep" or n.anim == "sit":
 		n.anim = "idle"                    # up from bed, or from the chair (PL1-07)
@@ -1242,7 +1258,7 @@ func _woodcutter(n: NPC) -> bool:
 		if n.inv.has("log"):
 			return _plan_sell_all(n)
 		n.doing = "waiting for trees to grow"
-		n.plan = [work(60, "", {}, "idle")]
+		n.plan = [wait(n, 60)]
 		return true
 	t.claimed = n.id
 	var at := Vector2i(t.x, t.y)
@@ -1819,7 +1835,7 @@ func _plan_sell(n: NPC, id: String) -> bool:
 	if buyer == null:
 		once("no_buyer_%s_%d" % [id, n.id], "%s %s cannot find anyone to buy %s." % [n.name, n.family, GameData.item_name(id).to_lower()])
 		n.doing = "holding unsold %s" % GameData.item_name(id).to_lower()
-		n.plan = [work(30, "", {}, "idle")]
+		n.plan = [wait(n, 30)]
 		return true
 	n.doing = "taking %s to %s" % [GameData.item_name(id).to_lower(), buyer.name]
 	n.plan = [go(_workplace_cell(buyer)), doit("sell_to", {"buyer": buyer.id, "item": id})]
@@ -2284,6 +2300,7 @@ func _bandit_near(p: Vector2, r: float) -> NPC:
 
 # ---------------------------------------------------------------- actions --------------------
 func act(n: NPC, what: String, a: Dictionary) -> bool:
+	act_calls[what] = int(act_calls.get(what, 0)) + 1
 	match what:
 		"enter":
 			n.doing = "asleep at home" if w.hour() >= SLEEP or w.hour() < WAKE else "at home"
