@@ -54,3 +54,11 @@ Fires should be able to spread through towns if they come from a forest fire. Th
   flood may move to a free plot away from the banks, remembering the flood.
 - E25-OD-05 Settlements: **"Yes, in their numbers (Recommended)"**: droughts and floods cut off-map harvests and can cost
   people, changing regional trade and migration.
+
+## Owner design details, seasonal visuals (same day, in the session; verbatim, spoken)
+
+Also, this should tie into seasons too like spring and fall. I have the heavy rains winter. I should have some snow now accumulating you know we should see his snow flurries coming down should see snow accumulate kids build snowmen. We should see kids sled riding. We should see tracks in the snow from footsteps and carts and horses and animals
+When it rains a lot we should see trails and mud. The green grass should get like a muddy-ish texture to it. Should see trails from animals And other signs of inclement weather
+
+Owner answer (same day): rain timing **"Rains spring/fall, snow winter (Recommended)"**: heavy rains and mud in spring and
+autumn, snow in winter, drought risk in summer.

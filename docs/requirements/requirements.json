@@ -32777,6 +32777,40 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "PET-01",
+   "kind": "approved",
+   "title": "Taming small wild animals as pets (foxes, wolves, rabbits): with their liked food in hand the player gets an action to try; a few feedings tame the animal and it follows; a marker over an animal already tried; husbandry skill makes it quicker (about three feedings unskilled, one or two when skilled)",
+   "description": "Taming small wild animals as pets (foxes, wolves, rabbits): with their liked food in hand the player gets an action to try; a few feedings tame the animal and it follows; a marker over an animal already tried; husbandry skill makes it quicker (about three feedings unskilled, one or two when skilled)",
+   "source": "docs/directives/2026-10-23_animal_domestication_idea.md",
+   "owner_wording": "smaller animals that can be domesticated should be able to be big pets like foxes and wolves and bunnies ... if you give an animal food a few times, you'll be able to domesticate it and they'll follow you ... a little marker above their head so we know which ones you've already tried ... if you have no skills, it might take three food gifts ... if you have skills and husbandry, it might only take one or two the higher the level is",
+   "approval": "owner idea 2026-10-23; build and authorization pending",
+   "acceptance": [
+    "Build placement and open questions answered by the owner"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_animal_domestication_idea.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner answered: small add-on after Build 19, before the bigger expansions; pets follow, stay, need feeding; a tamed wolf or fox defends the player; villagers react; villagers with husbandry tame too; odds by animal (rabbit easiest, wolf hardest), husbandry shortens"
+    }
+   ],
+   "next_action": "short design note and implementation after Build 19 ships (does not delay Build 19)"
+  },
+  {
    "id": "PICK-01",
    "title": "A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm",
    "kind": "approved",
@@ -49623,6 +49657,16 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner answered E25-OD-01, 02, 04, 05 as recommended"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner added seasonal visual detail: rains in spring and autumn (heavy rains named for winter too), snow flurries and accumulation, children building snowmen and sledding, tracks in snow from feet, carts, horses and animals, mud and muddy grass and trails after heavy rain, animal trails, other visible signs of bad weather"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner confirmed rains spring/autumn, snow winter; seasonal visuals added to the design"
     }
    ],
    "next_action": "owner: E25-OD-03, 06, 07 and approval of the design; no code before approval"

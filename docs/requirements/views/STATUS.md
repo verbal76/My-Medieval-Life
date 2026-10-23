@@ -41,5 +41,5 @@ Build authority:
 - **Build 24 (Generational Legacy):** implementation **NOT AUTHORIZED**. OD-30 renumbered 2026-10-23: numbering only
 - **Build 25 (Weather and Natural Disasters):** implementation **NOT AUTHORIZED**. WEATHER-01 (owner 2026-10-23): design only, no code
 
-Future backlog and unassigned: 115 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
+Future backlog and unassigned: 116 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
 

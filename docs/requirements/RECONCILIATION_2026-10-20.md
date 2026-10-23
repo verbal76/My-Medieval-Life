@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 494 (243 of them still open) |
-| **Open entries now** (rules excluded) | | **420** |
+| Entries added since | | 495 (244 of them still open) |
+| **Open entries now** (rules excluded) | | **421** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (494)
+## Added since the baseline (495)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -374,6 +374,7 @@ None.
 | PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
+| PET-01 | Taming small wild animals as pets (foxes, wolves, rabbits): with their liked food in hand the player gets an action to try; a few feedings tame the animal and it follows; a marker over an animal already tried; husbandry skill makes it quicker (about three feedings unskilled, one or two when skilled) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | PL2-015-BUYANIMALS | Farming: caravan animals other than the horse (deferred from PL2-015; fits LE-05) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |

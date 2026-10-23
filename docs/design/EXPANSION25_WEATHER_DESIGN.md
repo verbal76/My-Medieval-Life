@@ -42,6 +42,12 @@ summer, storms in spring and autumn. Each year is drawn wetter or drier, so a dr
 | Snow and cold | hardship: slower walking, no crop growth, animals need shelter and feed, homes need firewood, chills for the cold and wet, heavy snow can collapse a weak roof |
 | Drought | lower yields and failed crops; drought fever (elderly and children most at risk); campfires can start fires; forest fires more likely |
 
+**Seasons and what you see (owner, 2026-10-23):** heavy rains and mud in spring and autumn, snow in winter, drought risk in
+summer. Snow flurries fall and snow builds up on the ground and roofs; children build snowmen and go sledding; footprints,
+cart ruts, hoof and paw tracks show in the snow. After heavy rain grass turns muddy, paths become muddy trails, animals
+leave trails, and other signs of bad weather show. (Visual work for the asset pipeline: snow, mud and track overlays,
+snowman and sled sprites, from the owned packs first.)
+
 **Disasters are rare but real:** a serious disaster about once in several game years, sometimes deadly; damage stays until
 rebuilt; no hidden rescue.
 
