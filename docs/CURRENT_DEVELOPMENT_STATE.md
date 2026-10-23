@@ -43,7 +43,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | P21-01 | X21 foundation worker (done) | `wip/expansion21-preparation` | 8ac88f5 | civic records built, off, tested, gate identical; P21-00 and P21-02 done (64317eb) |
 | E22-P1, E23-BANA | lead (done) | staging (documents) | - | audit written: docs/design/EXPANSIONS_22_23_AUDIT.md; waits on the owner's review; no implementation |
 | XAUDIT-01 | lead (done) | staging (documents) | - | report docs/design/CROSS_EXPANSION_PRESERVATION_AUDIT.md; awaits the owner's review; findings D1 (judgment save bypass) and D2 (economy save drop) are defects on the prospective branches, unfixed by instruction |
-| FIX-D1D2, FIX-D3 | repair workers (Sonnet subagents) | `wip/expansion19-preparation` (D1, D3), `wip/expansion20-preparation` (D2) | c756211, 4d9bc05 | owner directive docs/directives/2026-10-23_post_audit_foundation_repairs.md; checkpoint: report D1-D3 |
+| FIX-D1D2, FIX-D3 | repair workers (done) | `wip/expansion19-preparation` (fd99591 D1, 3ec38d2 D3), `wip/expansion20-preparation` (af62948 D2) | - | done and reported 2026-10-23; branches stay separate until the owner approves the integration plan |
 | ID-01, RECON-01 | lead (design done) | staging (design) | - | docs/design/IDENTITY_AND_RECONCILIATION_PROPOSAL.md; waits on the owner's approval and ID-D1; no code |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).

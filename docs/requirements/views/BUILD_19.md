@@ -10,7 +10,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|
 | Approved requirements in scope | 21 |
 | Integrated | 0 of 21 (0%) |
-| Automated tests passed | 9 of 21 (43%) |
+| Automated tests passed | 10 of 21 (48%) |
 | Integration verified | 0 of 21 (0%) |
 | Gameplay verified | 0 of 21 (0%) |
 | Owner playtested | 0 of 21 (0%) |
@@ -18,23 +18,18 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Open (release blockers) | 21 |
 | Open owner decisions (blocking) | 11 (0) |
 
-## In development (worker assigned) (1)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
-| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | OWNER APPROVED | IN DEVELOPMENT | repair workers (Sonnet subagents) / wip/expansion19-preparation, wip/expansion20-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
+| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) / wip/expansion19-preparation, wip/expansion20-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) / wip/expansion19-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | OWNER DECISION REQUIRED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | DVW-B1, design: UNKNOWN | L |
