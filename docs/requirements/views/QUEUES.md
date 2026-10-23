@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (13)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -15,10 +15,9 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| X19-FOUND | 19 | IN DEVELOPMENT | lead (merges Workers A and B) | wip/expansion19-preparation |
-| X19-FOUND-BONDS | 19 | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) | wip/x19-bonds |
-| X19-FOUND-FAMREP | 19 | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) | wip/x19-bonds |
-| X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/x19-personality |
+| X19-FOUND-BONDS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
+| X19-FOUND-FAMREP | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
+| X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/expansion19-preparation |
 
 ## Implemented but not tested (43)
 

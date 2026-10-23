@@ -34174,7 +34174,8 @@
     "05adc9d",
     "c4b10e4",
     "e8d4122",
-    "577821d"
+    "577821d",
+    "c756211"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -34267,6 +34268,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT",
      "why": "owner authorized the foundations round (X19-FOUND)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; commits + c756211",
+     "why": "foundations round merged (c756211)"
     }
    ],
    "target_build": "19",
@@ -34276,7 +34282,7 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -50376,8 +50382,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -50390,10 +50396,21 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (merges Workers A and B); branch: None -> wip/expansion19-preparation",
      "why": "split into two parallel workers"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: None -> c756211; commits + c756211; next_action",
+     "why": "round complete: A and B merged (c756211), suites and gate pass; deferred items need owner formulas and choices"
     }
    ],
    "assigned_worker": "lead (merges Workers A and B)",
-   "branch": "wip/expansion19-preparation"
+   "branch": "wip/expansion19-preparation",
+   "tests": "merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
+   "test_commit": "c756211",
+   "commits": [
+    "c756211"
+   ],
+   "next_action": "owner: X19-PERS-FORMULA, X19-TRAIT-DIST, X19-SPILL-REACH, X19-REP-TRANSMIT, X19-BOND-LIMITS; what counts as a costly mistake and a reminder; the decision effect of stubbornness"
   },
   {
    "id": "X19-FOUND-BONDS",
@@ -50412,8 +50429,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -50426,10 +50443,20 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 Worker B bonds (Sonnet subagent); branch: None -> wip/x19-bonds",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x19-bonds -> wip/expansion19-preparation; tests: None -> merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: None -> c756211; commits + c756211",
+     "why": "merged into wip/expansion19-preparation (c756211) and verified there"
     }
    ],
    "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
-   "branch": "wip/x19-bonds"
+   "branch": "wip/expansion19-preparation",
+   "tests": "merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
+   "test_commit": "c756211",
+   "commits": [
+    "c756211"
+   ]
   },
   {
    "id": "X19-FOUND-FAMREP",
@@ -50448,8 +50475,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -50462,10 +50489,20 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 Worker B bonds (Sonnet subagent); branch: None -> wip/x19-bonds",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x19-bonds -> wip/expansion19-preparation; tests: None -> merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: None -> c756211; commits + c756211",
+     "why": "merged into wip/expansion19-preparation (c756211) and verified there"
     }
    ],
    "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
-   "branch": "wip/x19-bonds"
+   "branch": "wip/expansion19-preparation",
+   "tests": "merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
+   "test_commit": "c756211",
+   "commits": [
+    "c756211"
+   ]
   },
   {
    "id": "X19-FOUND-PERS",
@@ -50504,14 +50541,20 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; test_commit: None -> a3aa237; commits + a3aa237",
      "why": "Worker A done (a3aa237 on wip/x19-personality): all section 2-3 behaviours as mechanisms tested with fixtures, shipped inert except the approved 30% share; judgment_personality_test 65, judgment_live 136, judgment 217, relations 79, migration 92, save_transfer 21; gate identical; awaits the lead's merge with Worker B"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "branch: wip/x19-personality -> wip/expansion19-preparation; tests: judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical -> judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: a3aa237 -> c756211; commits + c756211",
+     "why": "merged into wip/expansion19-preparation (c756211) and verified there"
     }
    ],
    "assigned_worker": "X19 Worker A personality (Sonnet subagent)",
-   "branch": "wip/x19-personality",
-   "tests": "judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical",
-   "test_commit": "a3aa237",
+   "branch": "wip/expansion19-preparation",
+   "tests": "judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
+   "test_commit": "c756211",
    "commits": [
-    "a3aa237"
+    "a3aa237",
+    "c756211"
    ]
   },
   {
