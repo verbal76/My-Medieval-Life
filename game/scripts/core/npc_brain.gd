@@ -851,11 +851,16 @@ func _plan_evening(n: NPC, h: float) -> void:
 	var hh: Dictionary = w.households[n.household]
 	var dependants := _dependants(hh)
 	var stocked := _stocked(hh)
+	var family_first_work := false
+	if JudgmentLive.on(w, JudgmentFamily.FLAG) and JudgmentFamily.prefers_work(w, n):
+		family_first_work = true                  # FAMILY-01: hungry dependants and short coin: paid work before leisure
+		if _family_labour(n):
+			return
 	# a single villager with coins or a gift to spare seeks out the one they court, or a friend (CRT-11)
-	if h >= WORK_END and stocked >= dependants + 1 and _plan_seek_company(n):
+	if h >= WORK_END and not family_first_work and stocked >= dependants + 1 and _plan_seek_company(n):
 		return
 	# an evening at the tavern only when the household is provided for and there is coin to spare
-	if h >= WORK_END and n.coins >= int(GameData.b("tavern_spare_coins")) and stocked >= dependants + 1 and w.rng.randf() < 0.35:
+	if h >= WORK_END and not family_first_work and n.coins >= int(GameData.b("tavern_spare_coins")) and stocked >= dependants + 1 and w.rng.randf() < 0.35:
 		var counter := w.station_use(w.stations_of("tavern_counter")[0])
 		n.doing = "at the tavern"
 		n.plan = [go(wander_cell(counter + Vector2i(-6, 4), 3)), work(w.rng.randf_range(30, 70), "drink", {}, "idle")]
@@ -917,7 +922,8 @@ func _plan_eat(n: NPC) -> bool:
 			n.plan = [work(10, "eat", {"cooked_only": true}, "idle")]
 			return true
 	var hh: Dictionary = w.households[n.household] if n.household >= 0 else {}
-	if not hh.is_empty():
+	var gives_way := JudgmentLive.on(w, JudgmentFamily.FLAG) and JudgmentFamily.defers(w, n, "pantry")      # FAMILY-01: the family eats first
+	if not hh.is_empty() and not gives_way:
 		var home_food := n.inv.has("wheat") or _can_roast(n)
 		for f in EDIBLE:
 			if hh.pantry.has(f):
@@ -942,6 +948,9 @@ func _plan_eat(n: NPC) -> bool:
 	var payer: NPC = null
 	var priced := false                    # food was on sale to someone
 	var v := _vendor_with_food(n)
+	if v and JudgmentLive.on(w, JudgmentFamily.FLAG) and JudgmentFamily.defers(w, n, "buy", _cheapest_meal(v)):
+		gives_way = true
+		v = null
 	if v:
 		priced = true
 		payer = _payer_for(n, _cheapest_meal(v))      # the family's tab at the tavern, for anyone without the coin
@@ -950,6 +959,8 @@ func _plan_eat(n: NPC) -> bool:
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": false, "payer": payer.id}), work(10, "eat", {}, "idle")]
 			return true
 	for o: NPC in w.npcs:
+		if gives_way:
+			break
 		if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
 			priced = true
 			payer = _payer_for(n, w.sell_price(o, "wheat") * 2)
@@ -959,6 +970,8 @@ func _plan_eat(n: NPC) -> bool:
 						] + _home_meal(n)
 				return true
 			break
+	if gives_way:
+		return false                       # FAMILY-01: leaves the food to those in their care, down to the survival floor
 	var why := "no_money" if priced else "no_food_for_sale"
 	w.stat("missed_meal_" + why)
 	if track_misses:
@@ -1108,6 +1121,10 @@ func _manor_id() -> String:
 ## Who pays `price` for `n`'s food: `n` when they have it, else the household member with the most coins when they have
 ## it (the family's tab), else nobody.
 func _payer_for(n: NPC, price: int) -> NPC:
+	if JudgmentLive.on(w, JudgmentFamily.FLAG):
+		var parent := JudgmentFamily.payer(w, n, price)      # FAMILY-01: the responsible parent's purse first, for those in their care
+		if parent != null:
+			return parent
 	if n.coins >= price:
 		return n
 	if n.household < 0:
@@ -4146,6 +4163,18 @@ func _day_labour(n: NPC) -> bool:
 	if not w.manor_work.seek(n):
 		return false
 	laboured_today[n.id] = true
+	return true
+
+
+## FAMILY-01: the manor's paid work for a parent whose dependants are hungry (the day-labour rule's own conditions, without
+## its household-food gate or job list: the family's need is the reason). No new job type.
+func _family_labour(n: NPC) -> bool:
+	if n.job in ["guard", "reeve", "manor_hand"] or laboured_today.has(n.id) or w.hour() >= float(GameData.b("manor_jobs").get("latest_start", 15)):
+		return false
+	if n.earned != int(earned_at_dawn.get(n.id, n.earned)) or not w.manor_work.seek(n):
+		return false
+	laboured_today[n.id] = true
+	w.stat("family_first_labour")
 	return true
 
 

@@ -115,6 +115,7 @@ var told_today := {}     # teller -> tellings today (gossip.daily_budget)
 var stats := {}          # counters for diagnostics and performance reports
 var unread := {}         # a saved section this version cannot read: kept and written back unchanged (CLAUDE.md s.7)
 var last_trace := {}     # the last interpretation's parts (diagnostics: "why was the theft rated 0.55 BAD?"), kept when trace is on
+var family_trace := []   # FAMILY-01: the last family-priority decisions with their weighing traces (JudgmentFamily; for the recorder; never saved)
 var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
 var timing := {}         # microseconds spent, by part (measurement only: never saved, never read by the simulation)
 

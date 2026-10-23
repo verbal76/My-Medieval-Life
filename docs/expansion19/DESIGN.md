@@ -951,3 +951,65 @@ graph, and judgment-attached-without-history equal to judgment-off. `judgment_li
 - Gain path: `gain_permille` 4.3 microseconds on average, over a mix of unflagged pairs and former friends (which read two NETs); nothing runs per frame.
 - Memory: judgment off allocates nothing (no store, no bonds). With a store, an empty bonds object is a few hundred bytes; history of one former-friend pair plus one grievance per person is
   about 340 bytes per person (35 KB at 100 people, 171 KB at 500). The save grows only by the bonds key, absent when empty.
+
+## 15f. Family first: sacrifice and responsibility (FAMILY-01; owner directive 2026-10-23, answers recorded in it)
+
+`docs/directives/2026-10-23_family_sacrifice_responsibility.md`. Built inside the decision engine, behind its switch: with
+judgment off (the shipped state) the game is Build 18 and the determinism gate is identical. One new flag,
+`decision.integration.family_first` (on when judgment is on), guards three existing decision points; the rules live in
+`judgment/judgment_family.gd` (`JudgmentFamily`). There is no separate family AI.
+
+**Who.** The head of a household is the father when both parents live in it, else `Construction.responsible_adult` (a mother, a
+widow, a grandparent raising grandchildren; the owner's "father and mother alike"). Tiers: children (every child in the household:
+own, the spouse's, grandchildren and orphans taken in), the head's spouse, parents (the head's and the spouse's), the head last; anyone
+else is outside the hierarchy and unaffected. The order is a rule, never a weighted choice, so personality cannot reorder it.
+
+**Where (existing decision points).**
+
+| Decision | Existing code | Change with the flag on |
+|---|---|---|
+| Household meal when food is short | `NPCBrain._plan_eat` | A member gives way to hungry members of a lower tier (children, spouse, parents, head last) when the pantry (or, for a bought meal, the family's coin) cannot cover them and the member: skips the pantry and the purchase and goes on working. Food in the member's own pack is theirs and is still eaten. |
+| Who pays on the family's tab | `NPCBrain._payer_for` | For a child, spouse or parent the head's purse pays first (replacing "richest pays"), down to `coin_floor`; otherwise the old rule. |
+| Work before leisure | `NPCBrain._plan_evening` | A parent whose dependants are hungry, whose pantry cannot cover them and who has under `work_coins_below` coins looks for the manor's paid work (`ManorWork.seek`, as day labour does; `_family_labour`) and skips the tavern and company that evening. No new job type. |
+| Danger, protection | none | There is no villager flee-or-defend decision to extend: only guards fight (`_guard`), and a villager who knows of an attack walks to a guard (`_report`). Not invented here; report to the owner. |
+| Caregiving | `Guardianship` (orphans taken in, REC-001: stores go with the child), `evaluate_household` | Already ranks children first (a taken-in child is a dependant of the host household and its food need counts); nothing added. |
+
+**Survival floor.** A giving-way person eats whatever the family needs once their hunger is at or below
+`survival_floor_hunger` (hunger runs 0 to 100, full is 100; villagers eat below `eat_below` 55 and starve at 0), and a paying head keeps
+`coin_floor` coins: enough left to keep working and protecting. Sacrifice is never to the point of dying while staying alive protects the family.
+
+**Personality.** The weighed parts (give way or eat, head pays or richest pays, work or leisure) go through
+`JudgmentWeighting.choose` with the ordinary per-person weight spread (`decision.trait_spread_permille`), so people give up
+more or less and earlier or later; the tiers do not move. The rare extreme temperament: a holder of stubbornness (`pers.holds_stubbornness`,
+a fixed hash, about 30% of villagers), of whom `extreme_share_permille` (150, about 4.5% of villagers) have the extreme form (another
+fixed hash of the seed and the id, `self_first`); such a person eats once hunger is at or below `self_first_hunger` (40, above the
+floor) and a head of that temperament keeps `self_first_coin_floor` coins. No per-decision roll; recorded as the factor `self_first_temperament`.
+
+**Recorded for XEXPL-01 and the flight recorder.** Each weighed decision appends to `JudgmentStore.family_trace` (never saved, capped at `trace_cap`):
+`{day, hour, who, household, kind, chosen, utility, trace, tier, temperament, ...}` where `kind` is `meal_pantry`, `meal_buy`, `pay` (also `for`, `price`) or `work`,
+and `trace` is the `JudgmentWeighting` trace (per candidate `factors`, `contributions`, `utility`). Factor names (0..100000, milli-points):
+
+| Factor | Meaning |
+|---|---|
+| `family_child_need` | summed unmet need (100 minus hunger) of hungry children, x1000, capped |
+| `family_spouse_need` | the same for the spouse |
+| `family_parent_need` | the same for parents |
+| `self_need` | the deciding person's own unmet need |
+| `self_floor` | 100000 when the person is at or below the survival floor |
+| `self_first_temperament` | 100000 for the extreme temperament at or below `self_first_hunger` |
+| `family_coin_short` | for work: how far the purse is under `work_coins_below` |
+| `live_order` | the old rule's pick (richest pays, leisure) |
+
+Counters: `stats.family_<kind>_<chosen>`. A recorder reads `family_trace`; the recorder itself is on `wip/recorder`.
+
+**Agent proposals awaiting owner review** (judgment.json `family`, all with the `_status` note): `survival_floor_hunger` 25, `coin_floor` 3, `extreme_share_permille` 150,
+`self_first_hunger` 40, `self_first_coin_floor` 10, `work_coins_below` 20, `trace_cap` 64; profile weights `family_meal`, `family_pay`, `family_work`.
+
+**Limits.** The head's spouse and elder parents also follow the serving order (so the table is served in order), though the owner's text speaks of the father: a mother
+puts her children first and then waits for the parents/head per tiers, so with both parents living she is served before the grandparents (the one place her own
+hierarchy and the single household order differ). A member's own pack food is not given up. Gating by the pantry's
+food points (`NPCBrain.store_points`) is an estimate of whether there is enough for all.
+
+**Tests.** `game/tests/family_first_test.gd` (registered in `.github/workflows/tests.yml`): judgment off and flag off are the Build 18 behaviour; head, tiers, the taken-in
+orphan, the spouse's parent; meal order; the floor; spending order and the coin floor; work over leisure; widow, grandparent; the extreme temperament (deterministic, recorded);
+same seed twice.

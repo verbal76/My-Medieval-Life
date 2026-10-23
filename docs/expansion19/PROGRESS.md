@@ -14,6 +14,13 @@ after the X19-Q-TIMING change (judgment is off, so nothing moves).
 (`gossip.closeness_floor_permille` 500, agent-proposed, needs owner review), pending meetings survive save/load (also across a
 timing change). Details, tests and measurements: DESIGN.md section 15a.
 
+## Family first (FAMILY-01, 2026-10-23, `wip/expansion19-preparation`)
+
+Owner directive `docs/directives/2026-10-23_family_sacrifice_responsibility.md`. `judgment/judgment_family.gd`, flag `decision.integration.family_first`, `family` and
+three `family_*` profiles in `judgment.json`, `JudgmentStore.family_trace`, hooks in `NPCBrain._plan_eat`, `_payer_for`, `_plan_evening` (`_family_labour`),
+`game/tests/family_first_test.gd`. Judgment off: Build 18, gate identical. No flee-or-defend decision exists for villagers (not invented). Details, factor names, agent
+proposals: DESIGN.md section 15f.
+
 ## Foundations round 2026-10-23, Worker B (`wip/x19-bonds`): relationship history and family reputation
 
 Owner directive `docs/directives/2026-10-23_x19_foundations_round.md` sections 3 to 5 (X19-FOUND-BONDS, X19-FOUND-FAMREP). New:
