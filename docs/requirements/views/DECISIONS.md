@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 34 |
+| OPEN | 39 |
 | APPROVED | 147 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -25,15 +25,20 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 
-## Build 19: NPC Judgment System: open, reopened or provisional (6)
+## Build 19: NPC Judgment System: open, reopened or provisional (11)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| X19-BOND-LIMITS | Do specific relationship or reputation effects need additional balancing limits? | OPEN | no |  | docs/directives/2026-10-23_x19_foundations_round.md |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | PROVISIONAL | no | SJD-G | docs/directives/2026-10-23_owner_answers_x19_assault_crt12_decay.md |
 | X19-EVENT-Q | Expansion 19 event feeds raised four questions: (1) should a guard killing an assailant count as a killing (today it does: the game cannot tell them apart)? (2) should first acquaintance be recorded as a meeting fact? (3) should a late repayment score as a fair deal? (4) self-defence cannot yet be told from an attack: add that distinction later? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
 | X19-GOSSIP-FLOOR | Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md |
+| X19-PERS-FORMULA | The numerical formulas for personality evolution (rates by frequency, severity and duration; soft limits; learning acceleration; emotion length; recovery) | OPEN | no |  | docs/directives/2026-10-23_x19_foundations_round.md |
 | X19-PERSONALITY | Agent-proposed numbers for per-person temperament (SJD-Q03, Q13): tolerance and weights vary by up to 30% between people; being wronged lowers tolerance 4% per severity point, being helped raises regard for opinion 3% per point, at most 25% either way; a shift applies to all dealings, not only the kind of deed. Keep, or change? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
+| X19-REP-TRANSMIT | The numerical formulas for family reputation transmission (how stories, their significance and retelling set an inherited impression) | OPEN | no |  | docs/directives/2026-10-23_x19_foundations_round.md |
 | X19-RUNNERUP | Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_build19_sjd.md |
+| X19-SPILL-REACH | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)? | OPEN | no |  | docs/directives/2026-10-23_x19_foundations_round.md |
+| X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | OPEN | no |  | docs/directives/2026-10-23_x19_foundations_round.md |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | OPEN | no |  | docs/directives/2026-10-23_owner_answers_x19_guard_harmed_timing_regard.md |
 
 ## Build 20: Living Economy: open, reopened or provisional (14)

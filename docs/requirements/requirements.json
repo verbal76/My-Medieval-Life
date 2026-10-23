@@ -33862,6 +33862,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; commits + 577821d; next_action",
      "why": "SJD-Q14 decision hooks wired behind the switch (577821d): contract accept and seller choice, lending, barter, food seller, family help; judgment_live_test 133 and the touched suites pass, 30-day judgment run clean, gate identical. Remaining work waits on owner numbers (calibration runs would be redone after them, MSW-01)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT",
+     "why": "owner authorized the foundations round (X19-FOUND)"
     }
    ],
    "target_build": "19",
@@ -33871,7 +33876,7 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -49749,6 +49754,28 @@
    "test_commit": "2456294"
   },
   {
+   "id": "X19-BOND-LIMITS",
+   "kind": "decision",
+   "title": "Do specific relationship or reputation effects need additional balancing limits?",
+   "description": "Do specific relationship or reputation effects need additional balancing limits?",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
    "id": "X19-CRT12",
    "title": "Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs?",
    "kind": "decision",
@@ -49916,6 +49943,126 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-FOUND",
+   "kind": "approved",
+   "title": "Expansion 19 foundations round: personality, relationship history and family reputation (judgment off)",
+   "description": "Expansion 19 foundations round: personality, relationship history and family reputation (judgment off)",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": "You are authorized to begin a limited implementation round for Expansion 19 using only the approved design decisions below.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Judgment hook stays off; with it off the sim gate is byte-identical and saves load unchanged",
+    "Approved behaviours of sections 2, 4 and 5 implemented with unit and integration tests, or deferred with the dependency documented",
+    "No invented formulas: unresolved numbers are isolated parameters or test fixtures",
+    "Performance and memory measured, larger villages included",
+    "Completion report per section 8"
+   ],
+   "target_build": "19",
+   "parent": "PROS-19",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-FOUND-BONDS",
+   "kind": "approved",
+   "title": "Relationship history and reconciliation: resentment softens with growth, neutrality restores neither friendship nor trust, familiarity gives about 10% more friendship progression to former friends (non-stacking, suspended by negative standing), trust recovers only by reliability; serious grievances last at least about one game year",
+   "description": "Relationship history and reconciliation: resentment softens with growth, neutrality restores neither friendship nor trust, familiarity gives about 10% more friendship progression to former friends (non-stacking, suspended by negative standing), trust recovers only by reliability; serious grievances last at least about one game year",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": "Section 4 of the directive",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Existing daily caps, diminishing returns and multi-day requirements unchanged",
+    "Bonus only with judgment on; off, Relations behaves identically"
+   ],
+   "target_build": "19",
+   "parent": "X19-FOUND",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-FOUND-FAMREP",
+   "kind": "approved",
+   "title": "Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual",
+   "description": "Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": "Section 5 of the directive",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Percentages are calibration targets, not independent rolls",
+    "Spillover reach and transmission formulas left as isolated parameters (unresolved)"
+   ],
+   "target_build": "19",
+   "parent": "X19-FOUND",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-FOUND-PERS",
+   "kind": "approved",
+   "title": "Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level)",
+   "description": "Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level)",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": "Section 2 and 3 of the directive",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Each section 2 behaviour has a test or a documented deferral",
+    "Personality, moral judgment, trust, resentment, temporary emotions, practical wisdom, friendship, familiarity and family reputation stay distinct values; history is never erased",
+    "Stubbornness potential is a population share, never a per-decision probability"
+   ],
+   "target_build": "19",
+   "parent": "X19-FOUND",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
     }
    ]
   },
@@ -50089,6 +50236,28 @@
    "test_commit": "2456294"
   },
   {
+   "id": "X19-PERS-FORMULA",
+   "kind": "decision",
+   "title": "The numerical formulas for personality evolution (rates by frequency, severity and duration; soft limits; learning acceleration; emotion length; recovery)",
+   "description": "The numerical formulas for personality evolution (rates by frequency, severity and duration; soft limits; learning acceleration; emotion length; recovery)",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
    "id": "X19-PERSONALITY",
    "kind": "decision",
    "title": "Agent-proposed numbers for per-person temperament (SJD-Q03, Q13): tolerance and weights vary by up to 30% between people; being wronged lowers tolerance 4% per severity point, being helped raises regard for opinion 3% per point, at most 25% either way; a shift applies to all dealings, not only the kind of deed. Keep, or change?",
@@ -50254,6 +50423,28 @@
    "test_commit": "46b46e5"
   },
   {
+   "id": "X19-REP-TRANSMIT",
+   "kind": "decision",
+   "title": "The numerical formulas for family reputation transmission (how stories, their significance and retelling set an inherited impression)",
+   "description": "The numerical formulas for family reputation transmission (how stories, their significance and retelling set an inherited impression)",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
    "id": "X19-RUNNERUP",
    "kind": "decision",
    "title": "Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value?",
@@ -50272,6 +50463,50 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-SPILL-REACH",
+   "kind": "decision",
+   "title": "How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)?",
+   "description": "How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)?",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
+    }
+   ]
+  },
+  {
+   "id": "X19-TRAIT-DIST",
+   "kind": "decision",
+   "title": "Population trait distributions and learning percentages beyond the approved 30% stubbornness potential",
+   "description": "Population trait distributions and learning percentages beyond the approved 30% stubbornness potential",
+   "source": "docs/directives/2026-10-23_x19_foundations_round.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_foundations_round.md"
     }
    ]
   },
