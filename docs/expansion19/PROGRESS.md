@@ -14,6 +14,16 @@ after the X19-Q-TIMING change (judgment is off, so nothing moves).
 (`gossip.closeness_floor_permille` 500, agent-proposed, needs owner review), pending meetings survive save/load (also across a
 timing change). Details, tests and measurements: DESIGN.md section 15a.
 
+## Foundations round 2026-10-23, Worker B (`wip/x19-bonds`): relationship history and family reputation
+
+Owner directive `docs/directives/2026-10-23_x19_foundations_round.md` sections 3 to 5 (X19-FOUND-BONDS, X19-FOUND-FAMREP). New:
+`judgment/judgment_bonds.gd`, the `"bonds"` section of `judgment.json`, an optional `"bonds"` key of the judgment save, `game/tests/judgment_bonds_test.gd`
+(97 checks) and `judgment_live_test::test_bonds_live` (live_test now 139 checks). Familiarity (+10% while a former friend, suspended by negative standing, one
+flag), betrayal history, resentment as its own value with the one-year floor, family reputation (+5%, 12% combined, spillover without the deed, personal
+experience overrides) are implemented and tested. Reach (X19-SPILL-REACH) ships `none`, transmission (X19-REP-TRANSMIT) the identity, softening 0: the +5% and
+spillover are therefore off until the owner decides (fixtures prove them). Resentment softening reads `store.personality_growth` when Worker A's method exists.
+Sim gate PASS identical; relations, judgment, migration, save_transfer, family tests pass. Details, parameters and measurements: DESIGN.md section 15d.
+
 ## Branch and latest pushed commit
 
 `wip/expansion19-preparation`, branched from staging `b721616` (Build 16 released, plus records). Round 1: `3005d6f`

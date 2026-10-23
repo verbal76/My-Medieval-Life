@@ -145,6 +145,7 @@ jobs:
           # PROSPECTIVE Expansion 19 (PROS-19, wip/expansion19-preparation): the isolated judgment prototype
           $godot --headless --path game --script res://tests/judgment_test.gd
           $godot --headless --path game --script res://tests/judgment_live_test.gd
+          $godot --headless --path game --script res://tests/judgment_bonds_test.gd
           $godot --headless --path game --script res://tests/judgment_decay_demo.gd
           $godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10
           # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
