@@ -155,6 +155,9 @@ are tested without a window. This is what keeps determinism and testing cheap.
   makes that impossible (see the save rules in CLAUDE.md, section 7).
 - Writes go to a temporary file and are then renamed, so a crash never corrupts the save. Migrations
   are functions `vN -> vN+1`, each with a fixture test.
+- Persistent person identity (save version 20, ID-01): every person has one permanent id from one counter, never reused, with a
+  register of who and where they are; the 19 to 20 step is `Identity.upgrade`, run on load, deterministic, reporting ambiguity and
+  refusing (leaving the file untouched) what it cannot do. See `docs/design/IDENTITY.md`.
 
 ### 3.8 Performance
 
