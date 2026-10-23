@@ -22163,7 +22163,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22197,9 +22197,14 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined; test_commit: None -> 0f2bb92; commits + af6409f; commits + a67efd2; commits + 0f2bb92; next_action",
      "why": "built on wip/foundation-identity (af6409f, a67efd2, 0f2bb92): never-reused counter, person register, off-map ids, migration reactivation, succession with kept heir record and ancestor snapshot, save version 20 upgrade with report and refusal path; identity_test 89 and all 87 CI suites pass; the gate differs (id shift, see ID-D2), not re-baselined"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker: identity worker (Sonnet subagent) -> identity worker 2 (Sonnet subagent)",
+     "why": "owner chose ID-D2 option B; follow-up assigned: id ranges, verification, first-divergence analysis, candidate baseline"
     }
    ],
-   "assigned_worker": "identity worker (Sonnet subagent)",
+   "assigned_worker": "identity worker 2 (Sonnet subagent)",
    "branch": "wip/foundation-identity",
    "next_action": "owner answers ID-D2 (id numbering and the gate re-baseline)",
    "tests": "identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined",
@@ -22244,8 +22249,8 @@
    "description": "Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not.",
    "source": "docs/directives/2026-10-23_identity_foundation_approval.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option B: settlement residents and player characters in a separate collision-free range from 1,000,000; village ids and Build 18 behaviour preserved where possible; ids unique, never reused, unchanged through migration, death, succession, save/load; verify against existing saves and growth; do not blindly re-baseline: record the first divergence per seed, its cause and the candidate baseline, investigate any unrelated divergence first; keep the heir child's record and its family relationships (grandmother caring for orphans); keep Build 18's transfer of village regard to the heir",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "unassigned",
    "related": [],
@@ -22256,6 +22261,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_identity_foundation_approval.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-23_id_d2_succession_decisions.md)"
     }
    ]
   },
