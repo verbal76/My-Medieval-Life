@@ -456,6 +456,8 @@ func _new_day() -> void:
 		_prof("daily: manor, rents, business, construction", t)
 	var cold := 0
 	for hh in households:
+		if hh.get("ended", false):
+			continue                   # its stores went to the granary (Property.household_ended): nobody there to be cold
 		if not hh.pantry.remove("log"):
 			cold += 1
 		else:
