@@ -100,4 +100,30 @@ reopened here.
 6. **Reversible:** yes.
 7. **Follow-up:** none.
 
+## D10. Release despite the chapel fund still growing
+1. **Question:** With the alms in place the chapel fund still ends the year at 4,400-7,600 coins (78-85% of all coins in
+   three seeds). Hold the release, or ship and report?
+2. **Options:** (a) ship: the alms work as approved and the growth comes from the provisional offering values, which only
+   the owner may change; (b) hold and change offering rates (not authorized); (c) change the alms rule (not authorized).
+3. **Selected:** (a).
+4. **Why:** a probe on the release code shows the alms reach every short household each service day (seed 2: 68 coins to
+   35 household payments by day 146, none left short); the four 365-day runs are clean (no leak, FATAL or script error); the
+   owner's gate distinguishes defects from structural outcomes, and this is the latter.
+5. **Systems and files:** none changed; evidence in `docs/build18/LONG_RUNS_365_ALMS.md`.
+6. **Reversible:** yes (a later build can change the values or the rule with the owner).
+7. **Follow-up:** the owner may wish to revisit the offering rate (coin_share, min_piety, keep_coins) or the alms rule
+   (CHAPEL-R2) with this evidence.
+
+## D11. Release parameters
+1. **Question:** Which build number, signing and visibility for the Build 18 packages?
+2. **Options:** build number 18 (the build's name) or the run number; the owner's stable test key (its secrets do not exist)
+   or the workflow's temporary key; private draft or public.
+3. **Selected:** build number 18; temporary key (`allow_temporary_key`), as Build 17; private draft (visible only to
+   collaborators), as authorized.
+4. **Why:** follows the Build 17 convention; the signing secrets are still missing; a draft is the access-controlled
+   channel the owner authorized (the repository itself is public, so a published release would not be).
+5. **Systems and files:** `.github/workflows/release.yml` run on `wip/build18` at `61ec528`.
+6. **Reversible:** yes (a draft can be deleted or published later by the owner).
+7. **Follow-up:** the APK cannot install over Build 17 (different key): export the save, uninstall, install, import.
+
 Further decisions made while packaging are added below as they are taken.
