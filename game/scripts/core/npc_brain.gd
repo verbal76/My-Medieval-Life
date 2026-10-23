@@ -150,6 +150,14 @@ func wait(n: NPC, minutes: float) -> Dictionary:
 	return work(minutes, "", {}, "idle")
 
 
+## A work step that opens a plan (no walk before it): World._run_plan loads a step's minutes only after a walk or an
+## act, so an opening step must load its own or it inherits the last step's spent count and ends at once (REC-F1,
+## SIM-F9: eating, medicine and a homeless villager's bed). The step keeps its own stated minutes.
+func first(n: NPC, step: Dictionary) -> Dictionary:
+	n.work_left = float(step.min)
+	return step
+
+
 func doit(act: String, args := {}) -> Dictionary:
 	return {"k": "do", "act": act, "args": args}
 
@@ -272,7 +280,7 @@ func _plan_bed(n: NPC, mins: float, to_morning := false) -> void:
 	var done := work(mins, "rest_end", {"min": mins, "morning": to_morning}, "sleep")
 	if n.home == "":
 		done.anim = "idle"
-		n.plan = [done]
+		n.plan = [first(n, done)]
 		return
 	if w.home_spot(n, "bed").is_empty():
 		done.anim = "idle"
@@ -349,7 +357,7 @@ func _plan_heal(n: NPC) -> bool:
 	for m in MEDICINES:
 		if n.inv.has(m):
 			n.doing = "dressing a wound"
-			n.plan = [work(10, "use_medicine", {}, "idle")]
+			n.plan = [first(n, work(10, "use_medicine", {}, "idle"))]
 			return true
 	var pantry: Inventory = w.households[n.household].pantry if n.household >= 0 else null
 	if pantry != null:
@@ -930,7 +938,7 @@ func _plan_eat(n: NPC) -> bool:
 	for f in COOKED:
 		if n.inv.has(f):
 			n.doing = "eating"
-			n.plan = [work(10, "eat", {"cooked_only": true}, "idle")]
+			n.plan = [first(n, work(10, "eat", {"cooked_only": true}, "idle"))]
 			return true
 	var hh: Dictionary = w.households[n.household] if n.household >= 0 else {}
 	if not hh.is_empty():
@@ -946,11 +954,11 @@ func _plan_eat(n: NPC) -> bool:
 	for f in EDIBLE:
 		if f != "wheat" and not COOKED.has(f) and n.inv.has(f):
 			n.doing = "eating"
-			n.plan = [work(10, "eat", {"item": f}, "idle")]
+			n.plan = [first(n, work(10, "eat", {"item": f}, "idle"))]
 			return true
 	if hh.is_empty() and n.inv.has("wheat"):
 		n.doing = "eating"
-		n.plan = [work(10, "eat", {}, "idle")]
+		n.plan = [first(n, work(10, "eat", {}, "idle"))]
 		return true
 
 	# who pays is decided at the price asked (B7-015: a fixed 2-coin test sent people with 2 coins to a vendor whose
