@@ -13705,7 +13705,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -13714,8 +13714,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansion20_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X20 foundation worker (Sonnet subagent); branch: None -> wip/expansion20-preparation",
+     "why": "foundation worker assigned: reservation record, economic event record, actor resolver behind economy.json enabled false"
     }
-   ]
+   ],
+   "assigned_worker": "X20 foundation worker (Sonnet subagent)",
+   "branch": "wip/expansion20-preparation"
   },
   {
    "id": "E20-RISK-QUEUES",
@@ -50282,8 +50289,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -50296,10 +50303,20 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 Worker A personality (Sonnet subagent); branch: None -> wip/x19-personality",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; test_commit: None -> a3aa237; commits + a3aa237",
+     "why": "Worker A done (a3aa237 on wip/x19-personality): all section 2-3 behaviours as mechanisms tested with fixtures, shipped inert except the approved 30% share; judgment_personality_test 65, judgment_live 136, judgment 217, relations 79, migration 92, save_transfer 21; gate identical; awaits the lead's merge with Worker B"
     }
    ],
    "assigned_worker": "X19 Worker A personality (Sonnet subagent)",
-   "branch": "wip/x19-personality"
+   "branch": "wip/x19-personality",
+   "tests": "judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical",
+   "test_commit": "a3aa237",
+   "commits": [
+    "a3aa237"
+   ]
   },
   {
    "id": "X19-GOSSIP-FLOOR",

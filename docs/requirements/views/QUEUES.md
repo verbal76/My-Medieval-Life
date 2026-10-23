@@ -2,10 +2,11 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| E20-P1 | 20 | IN DEVELOPMENT | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -16,7 +17,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X19-FOUND | 19 | IN DEVELOPMENT | lead (merges Workers A and B) | wip/expansion19-preparation |
 | X19-FOUND-BONDS | 19 | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) | wip/x19-bonds |
 | X19-FOUND-FAMREP | 19 | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) | wip/x19-bonds |
-| X19-FOUND-PERS | 19 | IN DEVELOPMENT | X19 Worker A personality (Sonnet subagent) | wip/x19-personality |
+| X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/x19-personality |
 
 ## Implemented but not tested (43)
 

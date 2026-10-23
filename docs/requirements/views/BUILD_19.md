@@ -10,7 +10,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|
 | Approved requirements in scope | 17 |
 | Integrated | 0 of 17 (0%) |
-| Automated tests passed | 4 of 17 (24%) |
+| Automated tests passed | 5 of 17 (29%) |
 | Integration verified | 0 of 17 (0%) |
 | Gameplay verified | 0 of 17 (0%) |
 | Owner playtested | 0 of 17 (0%) |
@@ -18,14 +18,13 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Open (release blockers) | 17 |
 | Open owner decisions (blocking) | 11 (0) |
 
-## In development (worker assigned) (4)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | OWNER APPROVED | IN DEVELOPMENT | lead (merges Workers A and B) / wip/expansion19-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X19-FOUND-BONDS | Relationship history and reconciliation: resentment softens with growth, neutrality restores neither friendship nor trust, familiarity gives about 10% more friendship progression to former friends (non-stacking, suspended by negative standing), trust recovers only by reliability; serious grievances last at least about one game year | OWNER APPROVED | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) / wip/x19-bonds | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | OWNER APPROVED | IN DEVELOPMENT | X19 Worker B bonds (Sonnet subagent) / wip/x19-bonds | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | OWNER APPROVED | IN DEVELOPMENT | X19 Worker A personality (Sonnet subagent) / wip/x19-personality | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
@@ -33,7 +32,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (12)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (13)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -49,6 +48,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-G | XS |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model | design: DESIGN WORK REQUIRED | L |
+| X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) / wip/x19-personality | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (11)
 

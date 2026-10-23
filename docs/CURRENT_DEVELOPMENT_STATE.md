@@ -38,10 +38,10 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| X19-FOUND-PERS | X19 Worker A personality (Sonnet subagent) | `wip/x19-personality` (worktree `.claude/worktrees/x19-personality`) | 577821d | directive 2026-10-23 sections 2-3: personality framework extending the temperament; formulas shipped inert (X19-PERS-FORMULA) |
+| X19-FOUND-PERS | X19 Worker A personality (done) | `wip/x19-personality` | a3aa237 | done, tested, gate identical; waits for the lead's merge with Worker B |
 | X19-FOUND-BONDS, X19-FOUND-FAMREP | X19 Worker B bonds (Sonnet subagent) | `wip/x19-bonds` (worktree `.claude/worktrees/x19-bonds`) | 577821d | sections 4-5: relationship history, resentment, familiarity +10%, family reputation +5% (12% combined); spillover reach and transmission inert (X19-SPILL-REACH, X19-REP-TRANSMIT) |
 | X19-FOUND, PROS-19 | lead | `wip/expansion19-preparation` | 577821d | merges A and B, then gate, perf and the completion report (directive section 8) |
-| LE-00, E20-P1 | lead | `wip/expansion20-preparation` | 953998a | LE-00 refreshed (docs/expansion20/LE00_BUILD18_REFRESH.md on the branch); next: the reservation record, economic event record and actor resolver as one worker task when a development slot frees |
+| E20-P1 | X20 foundation worker (Sonnet subagent) | `wip/expansion20-preparation` (worktree `.claude/worktrees/x20`) | 953998a | reservation record, economic event record, actor resolver; economy.json enabled false; LE-00 refresh done (953998a) |
 | P21-00, P21-02 | lead | `wip/expansion21-preparation` | 64317eb | audit, decision map and packet done (docs/expansion21/P21_READINESS.md on the branch); next: P21-01 civic records (office registry, tenure and succession, legacy) as one worker task after Expansion 20's |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
