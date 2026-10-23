@@ -18481,7 +18481,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -18500,16 +18500,21 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); test_commit: None -> c27aaa2; commits + c27aaa2; next_action",
      "why": "fixed (c27aaa2 on wip/fix-recf1): a plan starting with a work step never loaded its minutes, so the 30-minute 'holding unsold' wait (and the woodcutter's wait for trees) ended next tick and decide re-ran every minute; NPCBrain.wait loads the minutes; decides 51,149 to 21,816 (seed 1) and 55,922 to 21,219 (seed 2) over 10 days, work, trade and production equal or higher; recf1_test 9 checks; gate differs from day 10 (gameplay change, not re-baselined)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker: REC-F1 worker (Sonnet subagent) -> lead; next_action",
+     "why": "SIM-F9 approved: the same correction extends to eating, medicine and the homeless bed, done by the lead on wip/fix-recf1"
     }
    ],
-   "assigned_worker": "REC-F1 worker (Sonnet subagent)",
+   "assigned_worker": "lead",
    "branch": "wip/fix-recf1",
    "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1)",
    "test_commit": "c27aaa2",
    "commits": [
     "c27aaa2"
    ],
-   "next_action": "owner: whether the same stale-wait pattern in eat, use_medicine and homeless bed plans should be fixed (SIM-F9); a new gate baseline with ID-D3"
+   "next_action": "SIM-F9 correction and before/after comparison; then integrate identity + wait-plan fixes and propose one combined baseline"
   },
   {
    "id": "FR-01",
@@ -42201,8 +42206,8 @@
    "description": "The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans?",
    "source": "docs/directives/2026-10-23_recf1_storage_decisions.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved: correct the wait-plan initialization in eating, medicine and a homeless villager's bed with each activity's own duration; no universal wait or cooldown; targeted regression tests; before/after survival, food, medicine, rest and deaths; investigate unexpected changes; keep the Build 18 baseline as history; one combined baseline proposal after identity and wait-plan changes are integrated",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -42213,6 +42218,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_recf1_storage_decisions.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-23_simf9_determinism_decision.md)"
     }
    ]
   },

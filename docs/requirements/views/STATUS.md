@@ -12,9 +12,9 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Design work still required | 2 | 3 | 0 | 0 | 0 | 0 | 0 |
 | Design unknown | 15 | 17 | 9 | 5 | 3 | 1 | 0 |
 | Not started (incl. READY) | 2 | 10 | 8 | 2 | 2 | 0 | 0 |
-| In development (worker assigned) | 0 | 3 | 0 | 0 | 0 | 0 | 0 |
+| In development (worker assigned) | 0 | 4 | 0 | 0 | 0 | 0 | 0 |
 | Partially implemented | 1 | 4 | 0 | 0 | 0 | 0 | 0 |
-| Implemented on a task branch | 0 | 9 | 1 | 3 | 1 | 1 | 0 |
+| Implemented on a task branch | 0 | 8 | 1 | 3 | 1 | 1 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Integrated | 80 of 83 (96%) | 0 of 26 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Automated tests passed (targeted or better) | 78 of 83 (94%) | 12 of 26 (46%) | 1 of 9 (11%) | 1 of 5 (20%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
@@ -23,7 +23,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Owner playtested | 0 of 83 (0%) | 0 of 26 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Complete | 2 of 83 (2%) | 0 of 26 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Release blockers (open in-scope requirements) | 81 | 26 | 9 | 5 | 3 | 1 | 0 |
-| Open owner decisions (of which blocking) | 1 (0) | 15 (0) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) |
+| Open owner decisions (of which blocking) | 1 (0) | 14 (0) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) |
 | Deferred with approval | 2 | 1 | 0 | 0 | 0 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 3 | 2 | 5 | 0 | 0 | 0 |
 | Integrated, awaiting gameplay or owner verification | 78 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -40,5 +40,5 @@ Build authority:
 - **Build 23 (Bandit Factions and Criminal Careers):** implementation authorized. owner 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): BAN-A audit and requirements reconciliation only; no criminal actions or faction behaviour
 - **Build 24 (Generational Legacy):** implementation **NOT AUTHORIZED**. OD-30 renumbered 2026-10-23: numbering only
 
-Future backlog and unassigned: 116 open records (`BACKLOG.md`). Open owner decisions: 51 (`DECISIONS.md`).
+Future backlog and unassigned: 116 open records (`BACKLOG.md`). Open owner decisions: 50 (`DECISIONS.md`).
 
