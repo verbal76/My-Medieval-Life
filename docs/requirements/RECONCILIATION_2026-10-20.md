@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 493 (242 of them still open) |
-| **Open entries now** (rules excluded) | | **419** |
+| Entries added since | | 494 (243 of them still open) |
+| **Open entries now** (rules excluded) | | **420** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (493)
+## Added since the baseline (494)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -536,6 +536,7 @@ None.
 | WDR-021-C | Comply with World Design Rule 21: Household Succession and Family Care | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | unassigned |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 15 |
+| WEATHER-01 | Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 17 |
 | WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 17 |
 | WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

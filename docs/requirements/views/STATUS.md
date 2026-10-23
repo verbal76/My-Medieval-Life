@@ -40,5 +40,5 @@ Build authority:
 - **Build 23 (Bandit Factions and Criminal Careers):** implementation authorized. owner 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): BAN-A audit and requirements reconciliation only; no criminal actions or faction behaviour
 - **Build 24 (Generational Legacy):** implementation **NOT AUTHORIZED**. OD-30 renumbered 2026-10-23: numbering only
 
-Future backlog and unassigned: 115 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
+Future backlog and unassigned: 116 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
 

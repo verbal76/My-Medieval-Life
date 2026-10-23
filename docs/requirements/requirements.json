@@ -49548,6 +49548,34 @@
    "remaining_work": "unknown: needs a human review of what remains"
   },
   {
+   "id": "WEATHER-01",
+   "kind": "approved",
+   "title": "Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back)",
+   "description": "Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back)",
+   "source": "docs/directives/2026-10-23_dynamic_weather_idea.md",
+   "owner_wording": "I think we need some dynamic weather. Thunderstorms rainstorms maybe a forest fire snow, a flash flood heavy winds really dry droughts ... a tornado to come through and do some damage to buildings and people ... a flash flow be awesome. Like a river. Just rips through the town and destroy stuff and kill. Some people washes some people away and they eventually find their way back. So I think that'd be a good expansion. 24 maybe",
+   "approval": "owner idea 2026-10-23; expansion number and authorization pending",
+   "acceptance": [
+    "Expansion number, scope and authorization confirmed by the owner"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_dynamic_weather_idea.md"
+    }
+   ]
+  },
+  {
    "id": "WIKI-01",
    "title": "Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate",
    "kind": "rule",
