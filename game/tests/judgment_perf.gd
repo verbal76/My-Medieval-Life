@@ -19,6 +19,7 @@ extends SceneTree
 
 var failures := 0
 var checks := 0
+var armed_traits := false           # --traits: switch the X19 personality framework on with fixture values (the shipped config is inert)
 var breakdown := false              # --breakdown: the store's memory structure by structure (reported runs only)
 const RATES := {"live": 0.0064, "stress": 0.5}   # significant events a person a day
 const WITNESSES := 4
@@ -49,6 +50,7 @@ func _init() -> void:
 	if "--rates" in args:
 		rates = Array(str(args[args.find("--rates") + 1]).split(","))
 	breakdown = "--breakdown" in args
+	armed_traits = "--traits" in args
 	var variants := ["spread", "now", "scheduled"]
 	if "--variants" in args:
 		variants = Array(str(args[args.find("--variants") + 1]).split(","))
@@ -104,6 +106,11 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 		social.set_regard(i, (i + 5) % n, 60)
 	var config := JudgmentStore.default_cfg()
 	config.gossip.timing = "scheduled" if gossip == "scheduled" else "hour"      # "spread" and "now" are the hour reference mode
+	if armed_traits:
+		config.traits = {"stubbornness_share_permille": 300, "stubbornness_start_permille": 600, "rate_permille_per_point": 50,
+			"effects": {"provocation": {"tolerance": -1000, "stubbornness": 1000}, "positive": {"tolerance": 1000, "stubbornness": -1000}},
+			"frequency": {"window_days": 10, "gain_permille": 300, "cap": 3}, "soft_limit": {"scale_permille": 1000, "floor_permille": 100},
+			"emotion": {"anger_permille_per_point": 200, "anger_days": 20, "override_threshold_permille": 400, "override_days": 21}}
 	var j := JudgmentStore.new(config, social, 11)
 	var cfg := j.cfg
 	var sliced := j.has_method("begin_day")

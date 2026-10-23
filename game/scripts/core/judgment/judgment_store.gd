@@ -143,6 +143,7 @@ var _tol_step := 0               # personality.tolerance_per_point (Q13 life eve
 var _w_step := 0                 # personality.weight_per_point
 var _shift_max := 0              # personality.max_shift_permille
 var life := {}                   # person -> [tolerance shift, disposition-weight shift] permille, from firsthand life events (saved)
+var pers: JudgmentPersonality    # the personality framework (traits, wisdom, anger, history): judgment_personality.gd, config "traits"
 var _morality := 0               # interpret.morality_spread_permille (Q08)
 var _perm_refs := {}             # event id -> permanent memories of it: such facts never retire (Q11)
 var _cap := 24
@@ -247,6 +248,7 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_tol_step = int(pc.get("tolerance_per_point", 0))
 	_w_step = int(pc.get("weight_per_point", 0))
 	_shift_max = maxi(0, int(pc.get("max_shift_permille", 0)))
+	pers = JudgmentPersonality.new(cfg.get("traits", {}), seed)
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
 	_b_thr = int(bc.confidence_threshold)
 
@@ -493,6 +495,8 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 	_judge(observer, ev)
 	if fresh and SOURCES.find(src) < TOLD:
 		_live(observer, ev)
+		if pers.active:
+			_trait_experience(observer, ev)
 	if fresh and _t_ev[t] != 0:
 		for a in actors:                            # reliability shown by the deed itself: a fair deal, a cheat, a false charge
 			if int(a[0]) != observer:
@@ -663,12 +667,14 @@ func tolerance(person: int) -> int:
 		t += JudgmentMath.hash_ints([world_seed, person, 4099]) % (2 * _tol_spread + 1) - _tol_spread
 	if not life.is_empty() and life.has(person):
 		t += int(life[person][0])
+	if not pers.drift.is_empty():
+		t += pers.tolerance_drift(person)              # the long-term drift of the personality framework (X19-FOUND-PERS)
 	return t
 
 
 ## A NET threshold (negative milli-points) as `person` holds it: the configured one scaled by their tolerance.
 func threshold(person: int, base: int) -> int:
-	if _tol_spread <= 0 and life.is_empty():
+	if _tol_spread <= 0 and life.is_empty() and pers.drift.is_empty():
 		return base
 	return JudgmentMath.scale(base, tolerance(person))
 
@@ -701,6 +707,28 @@ func _live(observer: int, ev: int) -> void:
 		rec[1] = JudgmentMath.clampi_(int(rec[1]) + JudgmentMath.mul_div(_sev[t], _w_step, 1000), -_shift_max, _shift_max)
 	life[observer] = rec
 	_stat("life_shifts")
+
+
+## Personality framework hook (X19-FOUND-PERS): a firsthand deed that touches `observer` as victim of a BAD one or
+## beneficiary of a GOOD one is a meaningful experience (provocation or positive) for their traits and anger.
+func _trait_experience(observer: int, ev: int) -> void:
+	var f: PackedInt64Array = facts[ev]
+	var t := f[F_TYPE]
+	if _pol[t] == 0:
+		return
+	var at := F_NA + 1 + 2 * f[F_NA]
+	if _pol[t] == 1:
+		at += 1 + f[at]
+	for i in f[at]:
+		if f[at + 1 + i] == observer:
+			pers.experience(observer, "provocation" if _pol[t] < 0 else "positive", _sev[t], day)
+			return
+
+
+## Personality growth for other systems, permille, 0 = none (Worker B's resentment softening calls this if present).
+## Positive development only: tolerance drift above origin, stubbornness shed, carried-over wisdom (see JudgmentPersonality.growth).
+func personality_growth(person: int) -> int:
+	return pers.growth(person)
 
 
 ## Whether an actor list ([[id, share], ...]) names `who`.
@@ -1614,6 +1642,9 @@ func to_dict() -> Dictionary:
 		for o in _sorted(life):
 			lf.append([int(o), int(life[o][0]), int(life[o][1])])
 		out.life = lf                            # SJD-Q13: the shifts life events have given (older sections have none)
+	var pt := pers.to_dict()
+	if not pt.is_empty():
+		out.traits = pt                          # X19-FOUND-PERS: traits, wisdom, anger, history (older sections have none)
 	if not _sched.is_empty():
 		var sc := []
 		for mm in _sorted(_sched):
@@ -1636,6 +1667,7 @@ static func _sorted(d: Dictionary) -> Array:
 func load_dict(d: Dictionary) -> String:
 	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, life, _early, _retiring]:
 		(x as Dictionary).clear()
+	pers.clear()
 	_people = PackedInt64Array()
 	_queue = PackedInt64Array()
 	_qi = 0
@@ -1663,6 +1695,10 @@ func load_dict(d: Dictionary) -> String:
 			if not _tix.has(str(r[2])):
 				m = {"error": "judgment section names an event type '%s' this game does not know: kept unread" % str(r[2])}
 				break
+	if not m.has("error"):
+		var pe := JudgmentPersonality.error_of(m.get("traits", null))
+		if pe != "":
+			m = {"error": pe}
 	if m.has("error"):
 		unread = d.duplicate(true)
 		return str(m.error)
@@ -1719,6 +1755,7 @@ func load_dict(d: Dictionary) -> String:
 		trust[int(r[0])][int(r[1])] = clampi(int(r[2]), 0, 100000)
 	for r in m.get("life", []):
 		life[int(r[0])] = [clampi(int(r[1]), -_shift_max, _shift_max), clampi(int(r[2]), -_shift_max, _shift_max)]
+	pers.load_dict(m.get("traits", {}))
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))

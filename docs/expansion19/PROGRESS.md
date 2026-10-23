@@ -281,3 +281,8 @@ scheduled); this synthetic benchmark does not exercise the new hooks, whose cost
 - Engineering: INT entries in `docs/SYSTEM_INTERACTION_MANIFEST.md` at the Build 18/19 reconciliation (ids), a calibration
   run at 100 and 365 days matched seeds (off vs on), a device performance check, wiki pages (judgment is invisible while off).
 - Event feeds without a source: `self_defence`, `hoard_in_famine`, `false_accusation`, `meeting`, collapse deaths.
+
+## Foundations round: personality framework (X19-FOUND-PERS, Worker A, `wip/x19-personality`)
+
+`judgment_personality.gd` extends the temperament (traits with soft limits and recovery, practical wisdom from costly mistakes, anger with a timer, stubborn override, never-erased history, 30% stubbornness potential); `JudgmentStore.personality_growth(person)` for Worker B. Config section `traits` ships inert (owner formula pending, X19-PERS-FORMULA, X19-TRAIT-DIST); tested with fixtures in `judgment_personality_test` (65 checks) and one live-path check in `judgment_live_test`. Judgment off: `sim_gate` identical. Details, deferrals and numbers awaiting the owner: DESIGN.md section 15d.
+

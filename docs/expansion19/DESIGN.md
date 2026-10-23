@@ -842,3 +842,30 @@ Owner answers 2026-10-23: Q03 "Own tolerance each: personality-based thresholds 
 - **Saved** as an optional `life` list `[person, tolerance shift, weight shift]` in the judgment section; sections without it load (no shifts); `VERSION` stays 1. Recomputable part (temperament) is never saved.
 - **Live game unchanged**: `enabled` stays false; the store is not attached, so none of this runs. Tests in `judgment_test.gd` `test_personality`; the baseline `cfg()` there sets the spreads and steps to 0 so the exact fixtures of earlier checks keep their meaning (they assumed one scale).
 - All spreads, steps and the bound are AGENT PROPOSALS (judgment.json `personality`, `_status`).
+
+
+## 15d. Personality framework (X19-FOUND-PERS; owner foundations round 2026-10-23, directive s.2-3)
+
+`game/scripts/core/judgment/judgment_personality.gd` (`JudgmentPersonality`, owned by `JudgmentStore.pers`) extends the temperament of 15c; it is not a second personality system. Config section `traits` in `judgment.json`; optional `traits` key in the saved judgment section (absent = defaults, a newer layout is kept unread and written back). Judgment stays `enabled: false`.
+
+**Kept apart.** Personality traits (`tolerance`, `stubbornness`), practical wisdom, temporary emotion (anger) and the event history are four records of their own. They are not moral judgment (NET), trust (15b), regard, resentment, familiarity or family reputation (Worker B's `bonds`); no code path writes one from another. The only coupling: `tolerance()` adds the trait drift to the temperament and the `life` shift (so the NET thresholds move), and `personality_growth(person)` is offered to other systems.
+
+**Mechanisms (all tested with fixture values in `judgment_personality_test.gd`)**
+- *Evolution from experience.* `experience(person, "provocation"|"positive", severity, day, duration_days)` pulls each trait the config names. Inputs: severity, frequency (earlier same-channel experiences inside `frequency.window_days`, read from the history), duration. Hooked from the store at the same firsthand moment as the `life` shift (victim of a BAD deed, beneficiary of a GOOD one, once per event); the pull is a small drift, so traits are mostly stable.
+- *Soft limits.* A push away from the origin is multiplied by a resistance falling from 1000 to `floor_permille` at `scale_permille` and staying there (never 0: no wall); a push back toward the origin is the recovery, times `recovery_gain_permille`.
+- *Recovery and growth.* Sustained positive experience undoes negative drift fully and goes past the origin (positive development).
+- *Costly mistakes.* `mistake(person, kind, cost, day)`: wisdom grows by cost x rate, accelerating with each similar mistake (same kind) inside `repeat_window_days`; `transfer_permille` of every lesson is carried to all situations, so `practical_wisdom(person, kind)` helps in a kind never met. Wisdom does not decay.
+- *Anger.* A provocation sets anger (fading linearly over `anger_days`, computed when read: no daily work); the peak is remembered; `remind(person, day)` revives a modest part of the peak, capped (`reminder_cap_permille`); repeated provocations drift tolerance and stubbornness for the long term.
+- *Stubborn override.* An anger at or above `override_threshold_permille` starts an override of `override_days` game days (several weeks) in which a stubbornness holder is back at their starting stubbornness even if they had grown out of it.
+- *Stubbornness potential.* About 30% of villagers (approved): `holds_stubbornness(person)` is a hash of the world seed and id below 300 permille, fixed per person, never rolled per decision. Others stay at stubbornness 0 whatever happens (no population subdivision beyond that).
+- *History.* Every experience, mistake and reminder is a never-erased row `[day, channel, subject, severity, d_tolerance, d_stubbornness, extra]` per person.
+- *Shapes.* Each curve is one function in `JudgmentPersonality.curves` (`shift`, `resistance`, `learn`, `fade`, `reminder`); the owner's formula replaces a function, nothing else changes.
+
+**Interface for other systems.** `JudgmentStore.personality_growth(person) -> int` (permille, 0 = none): positive development only (tolerance drift above origin + stubbornness shed from the starting level + carried-over wisdom, capped 1000). Worker B calls it, if present, to soften old resentment. It never goes negative.
+
+**Shipped config is inert.** Only `stubbornness_share_permille: 300` is approved and ships; every rate, limit and duration is 0 (`_status`: owner formula pending, X19-PERS-FORMULA, X19-TRAIT-DIST), so `active` is false, nothing is recorded, saved or changed. `effects` (which trait each kind of experience pushes and the direction) is a structural placeholder awaiting X19-TRAIT-DIST. Tests supply fixtures.
+
+**Deferred (need an owner choice).** (1) All numbers and curve shapes. (2) What counts as a "costly mistake" and a "reminder" in the live village (`mistake()` and `remind()` exist and are tested, but no game event feeds them yet). (3) What stubbornness does to a decision (no behaviour is wired to `stubbornness()`/`overriding()`: the approved text defines the trait, not its decision effect). (4) Further traits beyond tolerance and stubbornness and any population split among them.
+
+**Evidence.** `judgment_personality_test` 65 checks; `judgment_live_test` +3 (live publish path, with and without fixture traits); `sim_gate` PASS identical; `judgment_perf --traits` (fixture traits on) at 100 and 500 people vs. shipped: memory live 500 2.30 to 2.32 MB, stress 500 14.60 to 15.05 MB; worst frame live 500 4.83 vs 4.08 ms, stress 500 26.96 vs 26.25 ms (noise level; the per-event work is a few integer operations).
+

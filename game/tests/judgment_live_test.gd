@@ -38,6 +38,7 @@ func _init() -> void:
 	test_q06_live_trust()
 	test_q14_befriend()
 	test_q14_court()
+	test_personality_live()
 	test_q14_buy_from()
 	test_q14_hiring()
 	test_q14_promises()
@@ -757,3 +758,28 @@ func test_event_feeds() -> void:
 		check(j.facts.size() > n0, "(events were published)")
 		w.dispose()
 	check(hashes[0] == hashes[1], "the same acts in two worlds give the same judgment state")
+
+
+## X19-FOUND-PERS: a theft seen in the live village reaches the personality framework through the real publish path
+## (World.witness), with fixture traits; with the shipped inert config the same theft records nothing.
+func test_personality_live() -> void:
+	for armed in [false, true]:
+		var w := new_world()
+		var j := JudgmentLive.attach(w)
+		if armed:
+			j.cfg.traits = {"stubbornness_share_permille": 300, "stubbornness_start_permille": 600, "rate_permille_per_point": 100,
+				"effects": {"provocation": {"tolerance": -1000, "stubbornness": 1000}}, "emotion": {"anger_permille_per_point": 300, "anger_days": 20}}
+			j.pers.configure(j.cfg.traits)
+		var people := adults(w)
+		var victim: NPC = people[0]
+		w.player.pos = victim.pos
+		victim.inv.add("bread", 1)
+		w.witness("theft", "bread", victim, {"bread": 1})
+		if armed:
+			check(j.pers.tolerance_drift(victim.id) < 0 and j.pers.anger_at(victim.id, j.day) > 0 and j.tolerance(victim.id) < JudgmentMath.ONE + 300,
+				"live: the robbed villager's personality drifts (%d) and they are angry (%d)" % [j.pers.tolerance_drift(victim.id), j.pers.anger_at(victim.id, j.day)])
+			var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+			check(d.judgment.has("traits"), "...and the world save carries the traits key")
+		else:
+			check(j.pers.is_empty() and not w.to_dict().judgment.has("traits"), "live, shipped config: the same theft records no personality state and saves no key")
+		w.dispose()
