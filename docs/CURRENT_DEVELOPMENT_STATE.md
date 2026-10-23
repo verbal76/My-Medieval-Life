@@ -42,7 +42,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | X19-FOUND-BONDS, X19-FOUND-FAMREP | X19 Worker B bonds (Sonnet subagent) | `wip/x19-bonds` (worktree `.claude/worktrees/x19-bonds`) | 577821d | sections 4-5: relationship history, resentment, familiarity +10%, family reputation +5% (12% combined); spillover reach and transmission inert (X19-SPILL-REACH, X19-REP-TRANSMIT) |
 | X19-FOUND, PROS-19 | lead | `wip/expansion19-preparation` | 577821d | merges A and B, then gate, perf and the completion report (directive section 8) |
 | E20-P1 | X20 foundation worker (done) | `wip/expansion20-preparation` | 4d9bc05 | reservation record, event record, actor resolver built, off, tested, gate identical; waits on the owner's architecture review and OD-LE answers |
-| P21-01 | X21 foundation worker (Sonnet subagent) | `wip/expansion21-preparation` (worktree `.claude/worktrees/x21`) | 64317eb | civic office registry, tenure and succession events, legacy record; civic.json enabled false. P21-00 and P21-02 done (64317eb) |
+| P21-01 | X21 foundation worker (done) | `wip/expansion21-preparation` | 8ac88f5 | civic records built, off, tested, gate identical; P21-00 and P21-02 done (64317eb) |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
 Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).

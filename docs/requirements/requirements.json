@@ -30889,8 +30889,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -30903,10 +30903,21 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X21 foundation worker (Sonnet subagent); branch: None -> wip/expansion21-preparation",
      "why": "assigned: office registry, tenure and succession events, legacy record, civic.json enabled false"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> civic_records_test 48, world_test 339, migration_test 92, save_transfer_test 21, family_test 51, succession_test 26, treasury_test 23; sim_gate identical; on/off identity 30 days; test_commit: None -> 8ac88f5; commits + 8ac88f5; next_action",
+     "why": "built (8ac88f5): office registry, tenure and succession events, legacy record; civic.json enabled false; civic_records_test 48, world 339, migration 92, save_transfer 21, family 51, succession 26, treasury 23, unittest 115; gate identical; economy_sim 30 days identical with records on and off"
     }
    ],
    "assigned_worker": "X21 foundation worker (Sonnet subagent)",
-   "branch": "wip/expansion21-preparation"
+   "branch": "wip/expansion21-preparation",
+   "tests": "civic_records_test 48, world_test 339, migration_test 92, save_transfer_test 21, family_test 51, succession_test 26, treasury_test 23; sim_gate identical; on/off identity 30 days",
+   "test_commit": "8ac88f5",
+   "commits": [
+    "8ac88f5"
+   ],
+   "next_action": "treasury attribution through Expansion 20's event record; election record design against P21-MAYOR once P21-STRUCTURE and P21-RESIDENCY are answered"
   },
   {
    "id": "P21-02",
