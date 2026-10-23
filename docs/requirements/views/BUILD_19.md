@@ -8,14 +8,14 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 26 |
-| Integrated | 0 of 26 (0%) |
-| Automated tests passed | 12 of 26 (46%) |
-| Integration verified | 0 of 26 (0%) |
-| Gameplay verified | 0 of 26 (0%) |
-| Owner playtested | 0 of 26 (0%) |
-| Complete | 0 of 26 (0%) |
-| Open (release blockers) | 26 |
+| Approved requirements in scope | 27 |
+| Integrated | 0 of 27 (0%) |
+| Automated tests passed | 12 of 27 (44%) |
+| Integration verified | 0 of 27 (0%) |
+| Gameplay verified | 0 of 27 (0%) |
+| Owner playtested | 0 of 27 (0%) |
+| Complete | 0 of 27 (0%) |
+| Open (release blockers) | 27 |
 | Open owner decisions (blocking) | 14 (0) |
 
 ## In development (worker assigned) (4)
@@ -23,7 +23,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | FAM-SAC-01 | Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder | OWNER APPROVED | IN DEVELOPMENT | family worker (Sonnet subagent) / wip/expansion19-preparation | NOT TESTED | next Expansion 19 task when a worker slot frees (after FIX-RECF1 or the recorder D3): household food, spending, work and danger decisions through the existing household and judgment code; recorder factors | design: UNKNOWN | UNKNOWN |
-| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | OWNER APPROVED | IN DEVELOPMENT | lead / wip/fix-recf1 | TARGETED TESTS PASSED | SIM-F9 correction and before/after comparison; then integrate identity + wait-plan fixes and propose one combined baseline | design: UNKNOWN | UNKNOWN |
+| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | OWNER APPROVED | IN DEVELOPMENT | lead / wip/fix-recf1 | TARGETED TESTS PASSED | merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline | design: UNKNOWN | UNKNOWN |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | merge the verified identity foundation; then D3 systems (life, employment, government, crime, player, save) and D4 records | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
 
@@ -33,7 +33,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (22)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -57,6 +57,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) / wip/expansion19-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) / wip/expansion19-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | OWNER APPROVED | NOT STARTED | none | NOT TESTED | owner answers the packet; then set numbers, enable layers, integrate and gate Build 19 | design: UNKNOWN | UNKNOWN |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (14)

@@ -18505,16 +18505,22 @@
      "date": "2026-10-23",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker: REC-F1 worker (Sonnet subagent) -> lead; next_action",
      "why": "SIM-F9 approved: the same correction extends to eating, medicine and the homeless bed, done by the lead on wip/fix-recf1"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1) -> recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0; test_commit: c27aaa2 -> b113f73; commits + b113f73; next_action",
+     "why": "SIM-F9 correction committed b113f73 on wip/fix-recf1; recf1_test 23/23 (base fails 6). 10-day before/after (c27aaa2 vs b113f73): eat 1747/1715 and 1679/1646, rest 1275/1271 and 1290/1299, medicine 0/0; villager deaths are old-age elders only in all four runs (no villager starved); the bandit band's survival flips both ways (seed 1: 2 -> 6 bandits starve; seed 2: 6 -> 0), the SIM-F4 fragility (bandits eat only by poaching), not a SIM-F9 effect"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/fix-recf1",
-   "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1)",
-   "test_commit": "c27aaa2",
+   "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0",
+   "test_commit": "b113f73",
    "commits": [
-    "c27aaa2"
+    "c27aaa2",
+    "b113f73"
    ],
-   "next_action": "SIM-F9 correction and before/after comparison; then integrate identity + wait-plan fixes and propose one combined baseline"
+   "next_action": "merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline"
   },
   {
    "id": "FR-01",
@@ -42196,8 +42202,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "SIM-F9 comparison: the whole band starves on seed 2 (base) and seed 1 (with SIM-F9) within 10 days; outcome depends on run divergence, supporting F4"
     }
-   ]
+   ],
+   "next_action": "confirm with recorded death causes in run 2; owner decides the health gate"
   },
   {
    "id": "SIM-F9",
@@ -42223,8 +42235,14 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner approved (docs/directives/2026-10-23_simf9_determinism_decision.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner approved 2026-10-23; implemented under FIX-RECF1 (b113f73), before/after compared and explained"
     }
-   ]
+   ],
+   "next_action": "integrated with FIX-RECF1"
   },
   {
    "id": "SJD-A",
@@ -52015,6 +52033,44 @@
      "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
     }
    ]
+  },
+  {
+   "id": "X19-SCOPE",
+   "kind": "approved",
+   "title": "Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x",
+   "description": "Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x",
+   "source": "docs/directives/2026-10-23_x19_complete_release_scope.md",
+   "owner_wording": "Expansion 19 must ship with its complete approved feature set. Do NOT release Build 19 with personality or family-reputation layers disabled. Both must be enabled, integrated, and actively influencing NPC decisions. Do NOT defer unfinished core Expansion 19 functionality to a 19.x update.",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "Personality and family reputation enabled and changing NPC decisions in normal play",
+    "Deliberate lies (X19-MISINFO), inherited family stories (X19-STORY-LIFE), stubbornness and FAM-SAC-01 implemented and live",
+    "Remaining formulas resolved from approved decisions or answered by the owner before the release gate",
+    "Identity, conservation and determinism preserved; recorder off in public builds",
+    "Targeted integration tests pass; Build 19 presented for release authorization, not published"
+   ],
+   "target_build": "19",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_x19_complete_release_scope.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "captured; remaining Expansion 19 choices gathered with recommendations in docs/design/X19_RELEASE_DECISIONS.md for the owner"
+    }
+   ],
+   "next_action": "owner answers the packet; then set numbers, enable layers, integrate and gate Build 19"
   },
   {
    "id": "X19-SPILL-REACH",
