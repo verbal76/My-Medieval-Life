@@ -8616,7 +8616,15 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "investigated: 12 wild flowers (not 22) and 4 boulders removed on every old save, 5 flowers outside the footprint; many old saves cannot place the chapel (villagers' land) yet still lose them; nothing owned is lost. Engineering fix in progress (keep the saved plants off the footprint, all of them when no chapel)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 37526cb",
+     "why": "engineering fix done (37526cb): nothing an old save held is dropped silently; new worlds unchanged (gate PASS). Left OPEN only for the owner's review, as the directive asked"
     }
+   ],
+   "commits": [
+    "37526cb"
    ]
   },
   {
@@ -8645,7 +8653,15 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "investigated (read-only, on 5181dc7): surface deposits and hidden ore unchanged on seeds 1-300; prospecting clues change on 154 of 300 seeds with no GEN_VERSION bump, and an old save silently drops sample marks and pits on vanished clues. A CLAUDE.md section 6/7 defect: fix in progress on wip/b18-savefix"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 37526cb",
+     "why": "engineering fix done (37526cb): nothing an old save held is dropped silently; new worlds unchanged (gate PASS). Left OPEN only for the owner's review, as the directive asked"
     }
+   ],
+   "commits": [
+    "37526cb"
    ]
   },
   {
@@ -37962,10 +37978,15 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); test_commit: None -> 9a86f5c; commits + b2f5c5d; remaining_work",
      "why": "gate run on the integrated Build 18 code: baseline written, second independent run identical; later commits touch only the load path and tests"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md) -> sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb; test_commit: 9a86f5c -> 37526cb",
+     "why": "re-run on 37526cb after the old-save fixes: PASS, identical to the baseline"
     }
    ],
-   "tests": "sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md)",
-   "test_commit": "9a86f5c",
+   "tests": "sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); sim_gate PASS on 37526cb",
+   "test_commit": "37526cb",
    "commits": [
     "b2f5c5d"
    ],
@@ -38153,17 +38174,21 @@
      "date": "2026-10-23",
      "change": "known_defects + old saves silently lose prospecting marks and pits on clues the chapel's map moved, and 12 wild flowers; ROOMS-18 relaid plant ids so Build 17 plant states may land on the wrong plants (to verify)",
      "why": "chapel investigation found old-save losses; fix in progress on wip/b18-savefix"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases) -> docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases); chapel_test 98 (test_b17_save on a real Build 17 save fixture), save_transfer 21, prospecting 73, discovery 66, profile 12, migration 92, world 339, run_tests 3591, conservation 8, wiki passed; sim_gate PASS identical on 37526cb; test_commit: 0e1a88b -> 37526cb; commits + 37526cb",
+     "why": "old-save losses fixed (37526cb, fast-forwarded into wip/build18): prospecting marks and pits kept by clue id (GEN_VERSION 3), saved wild plants kept off the chapel footprint, plant states matched by cell and kind (ROOMS-18 relaid ids; 203 of 203 plants keep cell, kind and state). Known defect removed"
     }
    ],
-   "tests": "docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases)",
-   "test_commit": "0e1a88b",
+   "tests": "docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases); chapel_test 98 (test_b17_save on a real Build 17 save fixture), save_transfer 21, prospecting 73, discovery 66, profile 12, migration 92, world 339, run_tests 3591, conservation 8, wiki passed; sim_gate PASS identical on 37526cb",
+   "test_commit": "37526cb",
    "commits": [
-    "b2f5c5d"
+    "b2f5c5d",
+    "37526cb"
    ],
    "remaining_work": "on-device import from the Android build (owner playtest)",
-   "known_defects": [
-    "old saves silently lose prospecting marks and pits on clues the chapel's map moved, and 12 wild flowers; ROOMS-18 relaid plant ids so Build 17 plant states may land on the wrong plants (to verify)"
-   ]
+   "known_defects": []
   },
   {
    "id": "REL18-SUITES",
