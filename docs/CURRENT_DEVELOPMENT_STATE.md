@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `5bdecb7` local (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
+| `wip/build18` | `61ec528` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -55,10 +55,10 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
 `OWNER_REVIEW_DECISIONS.md` (wip/build18, folder docs, build18), D1 onward):
 1. DONE: CHAPEL-R2 alms implemented on `wip/build18` (local commit 5bdecb7: `chapel.gd::alms`, `household_shortfall`,
    `chapel_test::test_alms`, wiki, INT-404, DECISIONS, owner-review log), tester notes BUILD_18_TESTER_NOTES.md (wip/build18, release docs).
-2. RUNNING (local, in `scratchpad/b18wt`): all 85 suites in two lanes (`scratchpad/suites_lane0.txt`, `_lane1.txt`, ending
-   `LANE_DONE`) and the determinism gate compared against the pre-alms baseline (`scratchpad/gate_cmp_alms.log`, ends
-   `GATE_DONE`; differences are expected from the alms: check no leaks, then re-baseline with `--write` and a second run).
-3. NEXT: push `wip/build18`; dispatch long-sims 365 days seeds 1-4 on the final commit (compare with the pre-alms runs in
+2. DONE on `wip/build18` 61ec528 (pushed): all 85 suites pass; determinism gate PASS, identical to the baseline (no alms are
+   paid in the first 30 days: households still hold enough); tester notes committed.
+3. RUNNING: long-sims run 39904513181, 365 days, seeds 1-4, on 61ec528 (dispatched 05:12 UTC; pre-alms runs took 74-133
+   min). Never cancel or redispatch (SIM-02). When done: compare (compare with the pre-alms runs in
    LONG_RUNS_365.md (wip/build18); read checkpoints from the job log, artifacts are blocked; the recover_run mode exists).
 4. THEN, only if every gate passes: release.yml on `wip/build18`, visibility private (draft), allow_temporary_key true (no
    signing secrets), build_number 18; verify the three artifacts and the music fetch step; write
