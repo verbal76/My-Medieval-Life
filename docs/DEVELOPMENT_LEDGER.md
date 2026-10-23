@@ -532,7 +532,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | 18 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |

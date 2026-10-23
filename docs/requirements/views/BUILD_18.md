@@ -18,6 +18,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 6 (1) |
 
+## In development (worker assigned) (1)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | OWNER APPROVED | IN DEVELOPMENT | contract-verification worker (Sonnet subagent) / wip/b18-verconore | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+
 ## Integrated, awaiting gameplay or owner verification (70)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
@@ -105,13 +111,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | fc25af7 | NOT TESTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | M |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (3)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED | The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md) | design: UNKNOWN | UNKNOWN |
-| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (1)
 

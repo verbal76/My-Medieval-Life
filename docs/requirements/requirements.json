@@ -44502,7 +44502,7 @@
    "title": "Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline)",
    "target_build": "18",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -44521,8 +44521,15 @@
      "date": "2026-10-23",
      "change": "entered",
      "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> contract-verification worker (Sonnet subagent); branch: None -> wip/b18-verconore",
+     "why": "focused 50-ore contract verification assigned (owner, CON-02 decision)"
     }
-   ]
+   ],
+   "assigned_worker": "contract-verification worker (Sonnet subagent)",
+   "branch": "wip/b18-verconore"
   },
   {
    "id": "VIS-ANIMAL-01",

@@ -472,7 +472,7 @@ None.
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 18 |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | VIS-CROP-01 | Ripe wheat recognizable; planted, growing, mature, harvested look distinct | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

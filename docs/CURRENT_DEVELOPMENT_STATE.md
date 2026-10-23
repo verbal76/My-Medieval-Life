@@ -36,7 +36,9 @@ Never reconstruct state from a conversation summary: these files are the record.
 
 Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
-None: the stone, competition and business workers reported and are merged.
+| Record | Worker | Branch | Started from | Notes |
+|---|---|---|---|---|
+| VER-CON-50ORE | contract-verification worker (Sonnet subagent) | `wip/b18-verconore` | `wip/build18` b2f5c5d | one focused 50-ore CON-01 contract through the live World; no new features |
 
 ### Running processes (never restart or cancel; SIM-02)
 
