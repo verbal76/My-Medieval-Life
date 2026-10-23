@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23 (`wip/build18` b2f5c5d: pre-package verification under way; determinism gate, Build 17 save, all 83 suites and the wiki gate done).
+**Updated:** 2026-10-23 night (owner asleep; overnight Build 18 completion and private release authorized: docs/directives/2026-10-23_build18_overnight_completion_release.md).
 
 ## Read first (after a compaction or in a new session)
 
@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `cb5eb9b` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
+| `wip/build18` | `5bdecb7` local (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -51,19 +51,19 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Implementation is complete except owner items (B18-DP-17 STONECUT-R1 blocks WDR-002-C; DP-18, DP-19 non-blocking).
-   Pre-package verification done: REL18-DET, REL18-SAVE, REL18-SUITES, REL18-WIKI. Still to do: read the 365-day runs
-   (REL18-LONGRUN, SET-C, the 100-day read), WDR-004-C scarcity audit and REG-EVAL-01 against the preserved baseline
-   (`docs/investigations/evidence_2026-10-23_regional/`) from those runs, then the three-platform candidate
-   export (REL18-EXPORT) for the owner's device playtest; no distributable published without the owner. SET-D's
-   multi-generation check stays outstanding unless a run with a sufficient horizon is shown (B18-DP-05).
-2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
-   design SPECIFIED). The audit's highest-value items:
-   - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);
-   - ECON-P3, DVW-B5, DVW-B3-FEAST;
-   - now unblocked by the regions merge: TRADE-CREDIT, MIGRATE-18, DVW-B3-LUX (couriers still use the old SettlementLedger parties).
-3. Human reviews flagged by the reconciliation (`docs/requirements/RECONCILIATION_2026-10-23.md`, "Needs review").
-4. The Build 18 release gate (REL18-*) only when the work is integrated; no distributable without the owner.
+Overnight plan (owner authorization 2026-10-23; decisions made on the owner's behalf go in
+`OWNER_REVIEW_DECISIONS.md` (wip/build18, folder docs, build18), D1 onward):
+1. DONE: CHAPEL-R2 alms implemented on `wip/build18` (local commit 5bdecb7: `chapel.gd::alms`, `household_shortfall`,
+   `chapel_test::test_alms`, wiki, INT-404, DECISIONS, owner-review log), tester notes BUILD_18_TESTER_NOTES.md (wip/build18, release docs).
+2. RUNNING (local, in `scratchpad/b18wt`): all 85 suites in two lanes (`scratchpad/suites_lane0.txt`, `_lane1.txt`, ending
+   `LANE_DONE`) and the determinism gate compared against the pre-alms baseline (`scratchpad/gate_cmp_alms.log`, ends
+   `GATE_DONE`; differences are expected from the alms: check no leaks, then re-baseline with `--write` and a second run).
+3. NEXT: push `wip/build18`; dispatch long-sims 365 days seeds 1-4 on the final commit (compare with the pre-alms runs in
+   LONG_RUNS_365.md (wip/build18); read checkpoints from the job log, artifacts are blocked; the recover_run mode exists).
+4. THEN, only if every gate passes: release.yml on `wip/build18`, visibility private (draft), allow_temporary_key true (no
+   signing secrets), build_number 18; verify the three artifacts and the music fetch step; write
+   a BUILD_18_PACKET.md in the release docs; morning report to the owner (format in the directive, section 9).
+Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner
 
