@@ -10,7 +10,8 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
-##       [--judgment]   (PROS-19 prospective: attach the judgment prototype, off by default; prints its counts at the end)
+##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
+##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
 ##       analysis only: tests/capability_metrics.gd)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
@@ -71,6 +72,7 @@ func _init() -> void:
 	var cap_on := CapMetrics.wanted(args)          # X18-SIM: --capability L --cap-profile P --cap-scenario S (analysis only)
 	var cap_info := CapMetrics.pre_setup(args) if cap_on else {}
 	var t0 := Time.get_ticks_msec()
+	JudgmentLive.test_disabled = "--no-judgment" in args
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
 	var parts := [w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]

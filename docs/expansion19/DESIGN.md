@@ -1013,3 +1013,35 @@ food points (`NPCBrain.store_points`) is an estimate of whether there is enough 
 **Tests.** `game/tests/family_first_test.gd` (registered in `.github/workflows/tests.yml`): judgment off and flag off are the Build 18 behaviour; head, tiers, the taken-in
 orphan, the spouse's parent; meal order; the floor; spending order and the coin floor; work over leisure; widow, grandparent; the extreme temperament (deterministic, recorded);
 same seed twice.
+
+
+## 16. Build 19: Expansion 19 complete (owner directive 2026-10-23 `x19_complete_release_scope`; approvals in `docs/design/X19_RELEASE_DECISIONS.md`)
+
+Judgment ships ON (`judgment.json` `enabled` true), with the personality, family-name, lie, family-story, stubbornness and family-first layers all live.
+A new world, and a loaded Build 18 save (no `judgment` section: it starts clean on the loaded day), keep a `JudgmentStore`. `JudgmentLive.test_disabled`
+is the Build 18 path used by tests and by `tools/sim_gate.py --sim-args=--no-judgment`. Save: section `version` 2 (reads 1 and 2; new optional keys
+`clock`, `lied`, `stories`, `choices`, `fights`; `traits.v` 2 stores anger in game minutes and converts v1 rows from days); newer layouts are kept unread.
+
+| Item | Where | Numbers (file `game/data/judgment.json`) | Status |
+|---|---|---|---|
+| X19-DECAY | store `_ldecay` | `decay.ordinary_permille_per_day` 42 (half-life 16 game days); murder, assault permanent | owner |
+| Gossip floor, runner-up, trust, personality (A) | `gossip`, `decision`, `trust`, `personality` | 500, 150 within 2 points, seed 250 / +4 / -20 / +4 / -15, 300 / 4% / 3% / 25% | owner |
+| X19-EVENT-Q | `judgment_live.gd` `on_attack`, `on_killing`, `on_deal`; store `note_blow`, `struck_first` | guard kill unjudged; no first-meeting feed; late repayment tagged `late` = half trust; self-defence window `self_defence.fight_minutes` 10 | rules owner, window agent |
+| Trait formula (B) | `judgment_personality.gd`, `traits` | holders 30%, start 20-60% by id hash; 2% a point; frequency +25% (max double, 8-day window); duration +10% a day (max 50%); soft limit to a fifth at 40%; recovery full, growth past origin half; wisdom 2% a point, repeats +50% (max 3), 25% carries, cap 50%; anger 10% a point over 1 game day, reminder 25% of peak (cap 50%), override at 50% for the anger's remaining time | owner |
+| Stubbornness in decisions | `judgment_weighting.gd` `choose`, `traits.stubborn` | penalties 20000 (resented), 10000 (giving up the last choice), 100000 (override) milli-points x stubbornness x (1 - wisdom) | form owner, sizes provisional |
+| Costly mistakes | `judgment_live.gd` `costly_mistake`, `on_hungry`; hooks in robbery, `Fauna._bite`, `willing`, `World._update_npc` | cost 0.5 to 5 points; once a kind a day | agent, from outcomes the game measures |
+| Family name (C) | `judgment_bonds.gd` `_extended`, store `colour`, weighting | spill 300/150/75/37, good name 1000/500/250/125 by ring, tenth per dealing, cap 25% of the strongest personal judgment, never alone a refusal | reach owner; ring weights PROVISIONAL |
+| Lies (D) | store `tell`, `_maybe_lie`, `_refute` | 5% of motivated gossip meetings, one a year, motive: resentment >= 2000 or rivalry; proof: a guard or kin of the accused; liar loses 15 trust | rule owner; min_resentment, proof actors agent |
+| Family stories (D) | store `tell_family_stories`; `JudgmentLive.tell_family_tick`; `Life._set_role` | permanent memories (killing, assault, betrayal by a friend made permanent) and good deeds >= 2000, told at home, at the closeness chance, within 4 days | rule owner; thresholds agent |
+| Danger (FAM-SAC-01) | `judgment_family.gd` `danger` | radius 10, reach 24, cornered 2.5 tiles, survival floor 20% of health; profile `family_danger` | behaviour owner; radii and weights agent |
+| XEXPL-D1 | existing refusal lines | in-world words only; the traces (`family_trace`, trace rows) keep a panel possible later | owner |
+
+**Agent decisions (conservative, none changes an owner number).** (1) Anger and the override are kept in game minutes, so "fading evenly over one game day" is continuous, not
+stepped by the 6 a.m. day count (`JudgmentStore.now_minute`, from `gossip_tick`). (2) The A-section 25% bound belongs to the Q13 weight shift; tolerance now moves by the B-section
+formula with its soft limit and no wall (the owner's "no wall"). (3) "Strongest personal judgment" is the observer's strongest absolute judgment of anyone. (4) "Betrayal" is the
+existing record of a bad deed by a former friend; its memory is made permanent. (5) A firsthand witness who disproves a lie is kin of the accused; a guard's report is any guard.
+(6) Guards never act on a beast, so the beast case of "run for a guard" has no step. (7) The reference `gossip.timing` "hour" never invents lies, so identity measurements stay exact.
+(8) Fire has no hook (no fire exists).
+
+**Tests.** `judgment_x19_test` (numbers, decay, event rules, lies and their frequency, family stories, reach, colour and caps, stubbornness, clock, save and upgrade, world hooks),
+`family_first_test` (danger), and the updated `judgment_*` suites; the fixtures of the older suites switch the Build 19 layers off where they test the older mechanism.

@@ -11,6 +11,7 @@ An optimization passes only when every one is identical. It changes nothing in t
     python3 tools/sim_gate.py --write          # record the baseline (docs/release/sim_baseline.json)
     python3 tools/sim_gate.py                  # compare with it; exit 1 on any difference
     python3 tools/sim_gate.py --sequential     # one seed after the other instead of side by side
+    python3 tools/sim_gate.py --sim-args=--no-judgment   # Build 19 ships judgment on: this runs the Build 18 path against the baseline
 Options: --seeds 1,2  --days 30  --check 10,30  --godot PATH (default $GODOT or /opt/godot/godot)
 """
 import argparse
@@ -27,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 BASELINE = ROOT / "docs" / "release" / "sim_baseline.json"
 
 
-def run_seed(godot, seed, days, every, work):
+def run_seed(godot, seed, days, every, work, extra=()):
     """Start one simulation process with isolated paths; returns (process, output path, log path)."""
     base = Path(work) / ("seed%d" % seed)
     (base / "userdata").mkdir(parents=True)
@@ -35,7 +36,7 @@ def run_seed(godot, seed, days, every, work):
     env = dict(os.environ, XDG_DATA_HOME=str(base / "userdata"), TMPDIR=str(base / "tmp"))
     out, log = base / "sim.json", base / "sim.log"
     cmd = [godot, "--headless", "--path", str(ROOT / "game"), "--script", "res://tests/economy_sim.gd", "--",
-           "--days", str(days), "--seed", str(seed), "--every", str(every), "--out", str(out)]
+           "--days", str(days), "--seed", str(seed), "--every", str(every), "--out", str(out)] + list(extra)
     proc = subprocess.Popen(cmd, stdout=open(log, "w"), stderr=subprocess.STDOUT, env=env)
     return proc, out, log
 
@@ -55,7 +56,7 @@ def summarise(sample):
     }
 
 
-def simulate(godot, seeds, days, check, parallel):
+def simulate(godot, seeds, days, check, parallel, extra=()):
     every = math.gcd(*check)               # a sample at every checkpoint day
     results, timing = {}, {}
     with tempfile.TemporaryDirectory(prefix="sim_gate_") as work:
@@ -63,7 +64,7 @@ def simulate(godot, seeds, days, check, parallel):
         t0 = time.time()
         for seed in seeds:
             t = time.time()
-            p = run_seed(godot, seed, days, every, work)
+            p = run_seed(godot, seed, days, every, work, extra)
             procs.append((seed, p, t))
             if not parallel:
                 p[0].wait()
@@ -105,12 +106,13 @@ def main():
     ap.add_argument("--godot", default=os.environ.get("GODOT", "/opt/godot/godot"))
     ap.add_argument("--write", action="store_true", help="record the baseline instead of comparing")
     ap.add_argument("--sequential", action="store_true", help="run the seeds one after the other")
+    ap.add_argument("--sim-args", default="", help="extra economy_sim arguments, e.g. --no-judgment (Build 19 ships judgment on; the baseline is Build 18, judgment off)")
     args = ap.parse_args()
     seeds = [int(s) for s in args.seeds.split(",")]
     check = [int(d) for d in args.check.split(",")]
     if max(check) > args.days:
         sys.exit("--check days must be within --days")
-    results, timing = simulate(args.godot, seeds, args.days, check, not args.sequential)
+    results, timing = simulate(args.godot, seeds, args.days, check, not args.sequential, args.sim_args.split())
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     print("timing: %s" % json.dumps(timing))
     for seed in results:

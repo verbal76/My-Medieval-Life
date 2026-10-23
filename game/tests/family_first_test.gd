@@ -27,6 +27,7 @@ func _init() -> void:
 	test_work_over_leisure()
 	test_guardians()
 	test_temperament()
+	test_danger()
 	test_determinism()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -351,6 +352,183 @@ func test_temperament() -> void:
 	var hd := JudgmentFamily.head(w, fam.h)
 	check(JudgmentFamily.tier(w, hd, fam.K1) < JudgmentFamily.tier(w, hd, fam.G) and JudgmentFamily.tier(w, hd, fam.G) < JudgmentFamily.tier(w, hd, hd), "tiers: children, parents, head, whoever's temperament")
 	done(fam)
+
+
+## An open-air cell near the village centre where the family can stand.
+func open_cell(w: World, skip := 0) -> Vector2:
+	var sp = w.map.data.spawns.player
+	var found := 0
+	for r in range(0, 14):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				var c := Vector2i(int(sp[0]) + dx, int(sp[1]) + dy)
+				if absi(dx) != r and absi(dy) != r:
+					continue
+				var p := Vector2(c) + Vector2(0.5, 0.5)
+				if not w.map.is_solid(c) and w.place_of(p) == "":
+					if found >= skip:
+						return p
+					found += 1
+	return Vector2(sp[0], sp[1])
+
+
+## FAM-SAC-01 danger ("Shield and fetch help", owner 2026-10-23): a threat near the head's dependants out of doors.
+func danger_scene(stubborn := false, seed := 1) -> Dictionary:
+	var fam := new_world(true, seed)
+	var w: World = fam.w
+	var j: JudgmentStore = w.judgment
+	j.cfg.decision.trait_spread_permille = 0                # personality noise off: the exact weighing
+	var tr: Dictionary = j.cfg.traits
+	tr.stubbornness_share_permille = 1000 if stubborn else 0
+	tr.stubbornness_start_min_permille = 0
+	tr.stubbornness_start_max_permille = 0
+	tr.stubbornness_start_permille = 600
+	j.pers.configure(tr)
+	var foe: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "bandit":
+			foe = n
+			break
+	fam.foe = foe
+	var at := open_cell(w)
+	for k in ["F", "K1", "K2", "M"]:
+		var n: NPC = fam[k]
+		n.pos = at + Vector2(float(["F", "K1", "K2", "M"].find(k)) * 0.4, 0.0)
+		n.depth = 0
+		n.anim = "idle"
+		n.plan = []
+		n.target = -1
+		n.report = {}
+		n.hp = n.max_hp
+	for g: NPC in w.npcs:
+		if g.job == "guard":
+			g.pos = at + Vector2(300.0, 0.0)                  # no guard within reach of the scene unless a test brings one
+	foe.pos = at + Vector2(5.0, 0.0)
+	foe.depth = 0
+	foe.target = -1
+	w.minutes = 8.0 * 1440.0 + 12 * 60.0
+	j.threat_cache = {}
+	return fam
+
+
+func test_danger() -> void:
+	var fc_keys := ["radius", "reach", "cornered_radius"]
+	var c := JudgmentStore.default_cfg()
+	check(c.decision.profiles.has("family_danger") and c.decision.family.has("danger"), "the danger profile and radii are configured")
+	for k in fc_keys:
+		check(c.decision.family.danger.has(k), "danger setting " + k)
+	# no threat near: the ordinary day
+	var fam := danger_scene()
+	var w: World = fam.w
+	var f: NPC = fam.F
+	fam.foe.pos = f.pos + Vector2(60.0, 0.0)
+	w.judgment.threat_cache = {}
+	check(not JudgmentFamily.danger(w, f), "no threat within the radius of the family: nothing changes")
+	done(fam)
+	# a bandit near the children: shield, send them home, tell a guard
+	fam = danger_scene()
+	w = fam.w
+	f = fam.F
+	var k1: NPC = fam.K1
+	check(JudgmentFamily.head(w, fam.h) == f and not JudgmentFamily.danger(w, fam.M), "the head acts; the mother (not the head while the father lives) does not")
+	check(JudgmentLive.on(w, JudgmentFamily.FLAG), "(the family flag is on)")
+	w.brain.decide(f)
+	var row: Dictionary = w.judgment.family_trace[w.judgment.family_trace.size() - 1]
+	check(row.kind == "danger" and row.chosen == "shield" and row.threat == "bandit" and int(row.dependants) >= 2, "a bandit comes within reach of the children: the head chooses to shield them (%s)" % str(row.chosen))
+	check(k1.doing == "hurrying home from danger" and not k1.plan.is_empty(), "...the children are sent home")
+	check(not f.plan.is_empty() and f.doing == "shielding the family", "...the head moves between the threat and them")
+	check(int(f.report.get("offender", -9)) == fam.foe.id, "...and will run for a guard: a report of the bandit is carried by the ordinary path (PAR-05)")
+	var traced := false
+	for r in row.trace:
+		if (r.get("factors", {}) as Dictionary).has("family_danger_child"):
+			traced = true
+	check(traced and (row.trace[0].factors as Dictionary).family_danger_child == 100000, "...the family-priority factors are recorded in the trace (XEXPL-01)")
+	# the report is delivered: a guard takes on the bandit
+	var g: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.job == "guard" and n.alive)[0]
+	g.target = -1
+	g.pos = f.pos
+	f.pos = g.pos
+	check(w.deliver_report(f, g) and g.target == fam.foe.id, "...and the guard answers it")
+	done(fam)
+	# cornered: the children are right beside the bandit
+	fam = danger_scene()
+	w = fam.w
+	f = fam.F
+	fam.foe.pos = (fam.K1 as NPC).pos + Vector2(1.2, 0.0)
+	w.judgment.threat_cache = {}
+	check(JudgmentFamily.danger(w, f) and f.target == fam.foe.id and f.doing == "defending the family", "cornered, the head stands and fights the bandit (the ordinary fight)")
+	done(fam)
+	# a stubborn head stands their ground even when not cornered; a plain one shields
+	fam = danger_scene(true)
+	w = fam.w
+	check(JudgmentFamily.danger(w, fam.F) and (fam.F as NPC).target == fam.foe.id, "a stubborn head (stubbornness 60%) fights rather than shields: stubbornness bends readiness")
+	done(fam)
+	fam = danger_scene(false)
+	w = fam.w
+	check(JudgmentFamily.danger(w, fam.F) and (fam.F as NPC).target == -1 and (fam.F as NPC).doing == "shielding the family", "...a head without the potential shields (same scene)")
+	done(fam)
+	# a badly hurt head runs; so does the rare self-first temperament, recorded
+	fam = danger_scene()
+	w = fam.w
+	(fam.F as NPC).hp = 4.0                                     # under a fifth of their health: the survival floor
+	check(JudgmentFamily.danger(w, fam.F) and (fam.F as NPC).doing == "running from danger", "a head under the survival floor runs for home rather than die (a sacrifice is not a suicide)")
+	done(fam)
+	fam = danger_scene(true)
+	w = fam.w
+	(fam.F as NPC).hp = 8.0                                     # hurt, but above the floor: the stubborn head is less fit to stand
+	check(JudgmentFamily.danger(w, fam.F) and (fam.F as NPC).doing in ["shielding the family", "defending the family"], "a hurt head above the floor still protects the family")
+	done(fam)
+	fam = danger_scene(true)
+	w = fam.w
+	w.judgment.cfg.decision.family.extreme_share_permille = 1000
+	check(JudgmentFamily.danger(w, fam.F) and (fam.F as NPC).doing == "running from danger", "the rare extreme temperament puts self first")
+	var r2: Dictionary = w.judgment.family_trace[w.judgment.family_trace.size() - 1]
+	check(bool(r2.temperament) and r2.chosen == "flee", "...and that is recorded")
+	done(fam)
+	# dependants indoors, or nobody in their care near: no response
+	fam = danger_scene()
+	w = fam.w
+	var inside := Vector2.ZERO
+	var hi: int = w.place_ids.find((fam.K1 as NPC).home)
+	for i in w.place_idx.size():
+		if w.place_idx[i] == hi:
+			inside = Vector2(i % w.map.w, i / w.map.w) + Vector2(0.5, 0.5)
+			break
+	for k in ["K1", "K2", "M"]:
+		(fam[k] as NPC).pos = inside
+	w.judgment.threat_cache = {}
+	check(not JudgmentFamily.danger(w, fam.F), "dependants indoors are not in the open: no response")
+	done(fam)
+	# a wolf at the children: shield, and strike it when cornered
+	fam = danger_scene()
+	w = fam.w
+	var wolf := Animal.new()
+	wolf.id = 9901
+	wolf.species = "wolf"
+	wolf.skin = "mini_wolf"
+	wolf.hp = 6.0
+	wolf.pos = (fam.K1 as NPC).pos + Vector2(4.0, 0.0)
+	wolf.anger = "npc:%d" % (fam.K1 as NPC).id
+	wolf.anger_left = 20.0
+	w.fauna.animals.append(wolf)
+	fam.foe.pos = (fam.F as NPC).pos + Vector2(80.0, 0.0)
+	w.judgment.threat_cache = {}
+	check(JudgmentFamily.danger(w, fam.F) and (fam.F as NPC).doing == "shielding the family" and (fam.K1 as NPC).doing == "hurrying home from danger", "a wolf going for a child: the head shields and the children go home (no guard acts on a beast, so no report)")
+	check((fam.F as NPC).report.is_empty(), "...no report is made for a beast")
+	wolf.pos = (fam.K1 as NPC).pos + Vector2(1.0, 0.0)
+	(fam.F as NPC).pos = wolf.pos + Vector2(0.5, 0.0)
+	(fam.F as NPC).plan = []
+	w.judgment.threat_cache = {}
+	var hp0 := wolf.hp
+	check(JudgmentFamily.danger(w, fam.F) and wolf.hp < hp0 and wolf.anger == "npc:%d" % (fam.F as NPC).id, "cornered, the head strikes the wolf and it turns on them")
+	done(fam)
+	# judgment off (Build 18): the day goes on as before
+	JudgmentLive.test_disabled = true
+	var off := World.new()
+	off.setup(VillageMap.load_default(), 1)
+	JudgmentLive.test_disabled = false
+	check(off.judgment == null and not JudgmentLive.on(off, JudgmentFamily.FLAG), "judgment off: no danger behaviour exists (Build 18)")
+	off.dispose()
 
 
 func run_once() -> String:

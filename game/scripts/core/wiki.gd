@@ -589,7 +589,7 @@ func _guides() -> void:
 		p("The manor sells and lets empty houses and plots of ground. A plot costs about %d coins, a house with its ground about %d; renting costs about %d%% of the price a week, and two missed weeks end a lease. Walk to the door of an empty house to see the offer." % [plot, house, rent_pct]),
 		links(["sys:property", "sys:saving"])])
 	guide.call("theft", "Avoid trouble with theft", [
-		p("Taking or selling goods marked as stolen, or being seen picking a pocket, brings the guards: they return the goods and fine you %d coins plus %d%% of what the goods are worth, so taking a whole chest costs far more than one loaf. Witnesses within %d tiles count. Pick pockets only when nobody is looking, ideally asleep victims, and do not sell stolen goods to anyone nearby." % [int(GameData.b("theft_fine")), roundi(float(GameData.b("theft_fine_share")) * 100.0), int(GameData.b("witness_radius"))]),
+		p("Taking or selling goods marked as stolen, or being seen picking a pocket, brings the guards: they return the goods and fine you %d coins plus %d%% of what the goods are worth, so taking a whole chest costs far more than one loaf. Witnesses within %d tiles count, and they think worse of you and may tell others (see What villagers think of you). Pick pockets only when nobody is looking, ideally asleep victims, and do not sell stolen goods to anyone nearby." % [int(GameData.b("theft_fine")), roundi(float(GameData.b("theft_fine_share")) * 100.0), int(GameData.b("witness_radius"))]),
 		links(["sys:theft", "skill:stealth", "job:guard"])])
 	guide.call("sprint", "Sprint", [
 		p("Hold Shift (keyboard) or press LT (gamepad) to sprint; it uses stamina and ends when you run out."),
@@ -647,7 +647,7 @@ func _systems() -> void:
 	sys.call("theft", "Theft and guards", [
 		p("Pickpocketing needs Stealth; sleeping victims are easier. Goods you steal are marked as theirs. A guard who sees a theft, or questions you about a stolen item, returns the goods and fines you %d coins plus %d%% of their value. Every theft is on your record with what was taken, how many and what it was worth." % [int(GameData.b("theft_fine")), roundi(float(GameData.b("theft_fine_share")) * 100.0)]),
 		p("A victim who catches your hand in their pocket does not cry out to every guard around. If no guard saw it, the victim and anyone else who saw the try go and tell a guard (one within %d tiles), as for an attack; told while you are in sight, the guard stops you and fines you. A pocket picked unseen is known to no guard. Word that has not reached a guard within %d hours is let go." % [int(GameData.b("report").range), int(GameData.b("report").hours)]),
-		links(["skill:stealth", "job:guard", "guide:theft"])])
+		links(["skill:stealth", "job:guard", "guide:theft", "sys:opinions"])])
 	sys.call("property", "Land, houses, workshops and rent", [
 		p("The manor sells and lets ground and empty houses; rent is weekly. You can build on ground you hold from the Build menu, with materials and hired helpers. A new property starts with a house, and rooms and workshops (a smithy, a carpenter's shop, a kitchen, living quarters and more) can be added to it later without pulling anything down. A rented home you cannot pay for is lost after missed weeks."),
 		links(["guide:rent", "sys:resting", "sys:property_modules", "guide:property_rooms"])])
@@ -678,7 +678,7 @@ func _systems() -> void:
 		p("A proposal can be refused even after a good courtship. Some people do not mean to marry at all. Someone else courting them may hold more of their heart. They may not think well enough of you: harm you have done them lowers it, and so does harm to their family or friends, such as robbing their mother or a friend. Nobody will court or marry someone who has killed a villager, or who has been seen stealing again and again; that reputation takes time to fade, and a killing never does."),
 		p("Villagers court each other the same way: they take an interest in someone they have come to know, bring gifts or spend time together, court, and propose. Anyone may court anyone of the same age range who is not kin and not already spoken for, man or woman."),
 		p("When two villagers become partners (or you and a villager do), a wedding feast follows at the tavern (see Feasts at the tavern)."),
-		links(["sys:family", "sys:trading", "sys:feasts"])])
+		links(["sys:family", "sys:trading", "sys:feasts", "sys:opinions"])])
 	sys.call("inheritance", "Inheritance", [
 		p("When a villager dies their coins and goods go to the family first: the eldest adult child, then the partner, then other kin; only with no family does the household take them. A household with nobody left leaves the goods where they fell and its house returns to the manor."),
 		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps their own name and looks; with none, a relative of your family takes over, looking as you did when you began. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),

@@ -22,7 +22,8 @@ extends RefCounted
 ## threat (a bandit, or a wolf or bear that is fighting someone) comes within danger.radius tiles of a dependant of the
 ## head who is out of doors, the head weighs `family_danger`: SHIELD (move between the threat and the dependants, send them
 ## home and run for a guard by the ordinary report, PAR-05), FIGHT (stand and fight; cornered, or stubborn, the head's
-## readiness rises) or FLEE (only a badly hurt head, or the rare self-first temperament). They can be hurt or killed doing
+## readiness rises, in proportion to their health) or FLEE (only a head below the survival floor, danger.hp_floor_permille
+## of their health, or the rare self-first temperament: "a sacrifice is never a suicide"). They can be hurt or killed doing
 ## it. Personality (the per-person weight spread) and stubbornness bend readiness, never the order of the family. Fire
 ## (the owner's third example) has no hook until a fire exists: `danger` reads threats from `_threats`, where it will join.
 
@@ -205,11 +206,12 @@ static func prefers_work(w, n: NPC) -> bool:
 
 
 # ---------------------------------------------------------------- danger ("shield and fetch help") ------
-## Threats this game minute: every bandit, and every wolf or bear that is fighting someone. Kept for the minute on the store.
+## Threats this tick: every bandit, and every wolf or bear that is fighting someone. Kept for the tick on the store (keyed by
+## the world clock, which moves every tick, so a save and load between ticks finds the same answer as a run that did not stop).
 static func _threats(w) -> Array:
 	var j: JudgmentStore = w.judgment
-	var mnt := int(w.minutes)
-	if int(j.threat_cache.get("m", -1)) == mnt:
+	var mnt: float = w.minutes
+	if float(j.threat_cache.get("m", -1.0)) == mnt:
 		return j.threat_cache.list
 	var out := []
 	for o: NPC in w.npcs:
@@ -231,11 +233,16 @@ static func danger(w, n: NPC) -> bool:
 	var th := _threats(w)
 	if th.is_empty():
 		return false
-	if head(w, n.household) != n:
-		return false
 	var c: Dictionary = cfg(w).get("danger", {})
 	var radius := float(c.get("radius", 10.0))
 	var reach := float(c.get("reach", 24.0))
+	var close := false
+	for t in th:
+		if int(t.depth) == n.depth and n.pos.distance_to(t.pos) <= reach + radius:
+			close = true
+			break
+	if not close or head(w, n.household) != n:
+		return false
 	var corner := float(c.get("cornered_radius", 2.5))
 	var near := []
 	var worst = null
@@ -270,11 +277,13 @@ static func danger(w, n: NPC) -> bool:
 	var nm := j.now_minute()
 	var stub := j.pers.stubbornness(n.id, nm / 1440, nm % 1440)
 	var temper := self_first(w, n)
-	var hurt := clampi(int((1.0 - n.hp / maxf(1.0, n.max_hp)) * 100000.0), 0, 100000)
+	var hp_frac := n.hp / maxf(1.0, n.max_hp)
+	var hurt := clampi(int((1.0 - hp_frac) * 100000.0), 0, 100000)
+	var floor_ := 100000 if hp_frac * 1000.0 < float(c.get("hp_floor_permille", 200)) else 0       # the survival floor: a sacrifice is never a suicide
 	var opts := [
 		{"id": "shield", "factors": _merge(f, {"guard_near": 100000 if guard else 0, "live_order": 100000})},
-		{"id": "fight", "factors": _merge(f, {"cornered": 100000 if cornered else 0, "stubborn_stand": clampi(stub * 100, 0, 100000)})},
-		{"id": "flee", "factors": {"self_risk": hurt, "self_first_temperament": 100000 if temper else 0}}]
+		{"id": "fight", "factors": _merge(f, {"cornered": clampi(int((100000.0 if cornered else 0.0) * hp_frac), 0, 100000), "stubborn_stand": clampi(int(float(stub) * 100.0 * hp_frac), 0, 100000)})},
+		{"id": "flee", "factors": {"self_risk": hurt, "self_floor": floor_, "self_first_temperament": 100000 if temper else 0}}]
 	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "family_danger", opts, [w.day(), n.id, KEY, int(w.minutes / 10.0)])
 	_record(w, n, "danger", r, {"threat": str(worst.kind), "dependants": near.size(), "cornered": cornered, "temperament": temper})
 	match str(r.chosen):

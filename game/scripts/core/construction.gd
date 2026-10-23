@@ -295,7 +295,8 @@ func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
 	if why == "" and not own and w.judgment != null:                # PROSPECTIVE (PROS-19, Q14): off unless attached
 		var boss: NPC = responsible_adult(int(employer.trim_prefix("hh:"))) if employer.begins_with("hh:") else null
 		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID if employer == World.PLAYER else (boss.id if boss != null else -1),
-				0 if employer == World.PLAYER and w.relations.player_friend(n) else int(GameData.b("helper_wage")))
+				0 if employer == World.PLAYER and w.relations.player_friend(n) else int(GameData.b("helper_wage")),
+				employer == World.PLAYER and w.relations.player_friend(n))
 	if why != "":
 		return why
 	# a friend of the player carries as a favour, for no wage (CRT-06)

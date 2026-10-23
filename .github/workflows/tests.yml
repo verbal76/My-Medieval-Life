@@ -148,6 +148,8 @@ jobs:
           $godot --headless --path game --script res://tests/judgment_personality_test.gd
           $godot --headless --path game --script res://tests/judgment_bonds_test.gd
           $godot --headless --path game --script res://tests/family_first_test.gd
+          $godot --headless --path game --script res://tests/judgment_x19_test.gd
+          $godot --headless --path game --script res://tests/judgment_guard_save_test.gd
           $godot --headless --path game --script res://tests/judgment_decay_demo.gd
           $godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10
           # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)

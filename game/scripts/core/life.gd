@@ -30,6 +30,11 @@ static func cfg() -> Dictionary:
 
 
 # ---------------------------------------------------------------- calendar -------------------
+## Bumped whenever a family link (mother, father, partner, children) is made, so what is derived from the family graph
+## (JudgmentBonds' relatives by distance) can be kept until it changes. Not saved; the derived values are rebuilt after a load.
+static var kin_version := 0
+
+
 static func year_days() -> int:
 	return maxi(1, int(GameData.b("calendar").year_days))
 
@@ -265,6 +270,7 @@ static func kin(a_id: int, a_mother: int, a_father: int, b_id: int, b_mother: in
 static func _link_partners(a: NPC, b: NPC) -> void:
 	a.partner = b.id
 	b.partner = a.id
+	kin_version += 1
 
 
 static func _link_child(c: NPC, mother, father) -> void:
@@ -274,6 +280,7 @@ static func _link_child(c: NPC, mother, father) -> void:
 	if father != null:
 		c.father = PLAYER_ID if father is PlayerState else (father as NPC).id
 		father.children.append(c.id)
+	kin_version += 1
 
 
 ## The starting population's explicit families, ages and sexes: derived from the households,
@@ -512,6 +519,7 @@ static func partner_player(w: World, n: NPC) -> String:
 		return why
 	w.player.partner = n.id
 	n.partner = PLAYER_ID
+	kin_version += 1
 	w.stat("partnerships")
 	w.note("%s %s and %s %s become partners." % [w.player.name, w.player.family, n.name, n.family])
 	return ""
@@ -650,6 +658,7 @@ static func make_heir(w: World, heir: PlayerState, kid: NPC, parent: PlayerState
 	heir.sex = kid.sex
 	heir.mother = kid.mother
 	heir.father = kid.father
+	kin_version += 1
 	heir.look = ""
 	heir.appearance = {}                   # CC-01: drawn from the child's own (baked) sheet
 	if kid.household >= 0:

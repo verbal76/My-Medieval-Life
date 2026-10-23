@@ -80,6 +80,7 @@ var reach_fn := Callable()          # subject -> [[relative, inherit permille, s
 var growth_fn := Callable()         # person -> personality growth (a test seam; empty: the store's personality_growth when it exists, else 0)
 var transmit_fn := Callable()       # (observer, subject, raw milli) -> milli; empty: the identity
 var stats := {}
+var _reach_cache := {}              # subject -> [family graph version, rows]: the relatives by distance, kept until the graph changes
 
 
 func _init(store, config: Dictionary = {}) -> void:
@@ -260,7 +261,13 @@ func reach(subject: int) -> Array:
 	if s == null:
 		return []
 	if _mode == "extended":
-		return _extended(subject)
+		var ver: int = s.social.graph_version()
+		var hit = _reach_cache.get(subject)
+		if hit != null and int(hit[0]) == ver:
+			return hit[1]
+		var rows := _extended(subject)
+		_reach_cache[subject] = [ver, rows]
+		return rows
 	var out := []
 	for r in s.social.relatives(subject):
 		var kind := str(r[1])

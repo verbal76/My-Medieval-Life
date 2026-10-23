@@ -101,7 +101,10 @@ func _init() -> void:
 		f.update(STEP)
 		f.player.hunger = 100.0
 	var landed := _bandits(f)
-	check(landed.size() >= 2 and landed.size() <= 3, "(real tick) outlaws arrive at the dawn after the season (%d)" % landed.size())
+	var arrived := int(f.stats.get("outlaws_arrived", 0))
+	# the count that came is the rule; how many are alive two days on is the village's business (with judgment on, a family out
+	# of doors shields itself and fetches a guard when a stranger comes near, and a guard may put one down)
+	check(arrived >= 2 and arrived <= 3 and landed.size() <= arrived, "(real tick) outlaws arrive at the dawn after the season (%d came, %d alive)" % [arrived, landed.size()])
 	var near := landed.filter(func(n: NPC) -> bool: return n.pos.distance_to(camp) < 40.0)
 	check(not landed.is_empty(), "(real tick) they are in the world and heading for the camp (%d within 40 tiles)" % near.size())
 

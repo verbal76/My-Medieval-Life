@@ -93,6 +93,9 @@ class Social extends JudgmentSocial:
 			out.append([int(p.partner), "partner"])
 		return out
 
+	func graph_version() -> int:
+		return Life.kin_version
+
 	## A guard of the village.
 	func is_guard(person: int) -> bool:
 		var n = w.npc(person) if person >= 0 else null
@@ -449,12 +452,12 @@ static func pick_helper(w, h: int, wage: int) -> NPC:
 ## -2, or a household's responsible adult), or "": they weigh their need for coin (under 50 coins), the wage, and what
 ## they think of the employer against doing without (work_accept profile). With a neutral judgment they always accept
 ## (the live rule); a strong dislike can make someone with enough coin refuse; need outweighs dislike.
-static func work_refusal(w, worker: NPC, employer: int, wage: int) -> String:
+static func work_refusal(w, worker: NPC, employer: int, wage: int, favour := false) -> String:
 	if not on(w, "work_accept") or worker == null or employer == worker.id:
 		return ""
 	var need := JudgmentMath.clampi_((50 - worker.coins) * 2000, 0, 100000)
 	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, worker.id, "work_accept",
-			[{"id": "accept", "counterparty": employer, "factors": {"necessity": need, "wage": 100000 if wage > 0 else 0}}], [w.day(), employer])
+			[{"id": "accept", "counterparty": employer, "factors": {"necessity": need, "wage": 100000 if wage > 0 or favour else 0}}], [w.day(), employer])
 	w.judgment._stat("work_offers")
 	if str(r.chosen) == "accept":
 		return ""

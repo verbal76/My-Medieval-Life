@@ -2040,7 +2040,7 @@ func load_dict(d: Dictionary) -> String:
 		facts[id] = _pack_fact(int(_tix[str(r[1])]), int(r[2]), int(r[8]), int(r[6]), _ints2(r[3]), (r[4] as Array).map(func(x): return int(x)),
 				(r[5] as Array).map(func(x): return int(x)))
 		if not (r[7] as Array).is_empty():
-			fact_tags[id] = (r[7] as Array).duplicate()
+			fact_tags[id] = (r[7] as Array).map(func(x): return int(x) if x is float and x == floorf(x) else x)    # JSON reads whole numbers as floats: ["lie", liar] keeps its integer
 		var kn := PackedInt64Array()
 		for o in r[9]:
 			kn.append(int(o))

@@ -13,6 +13,14 @@ var _friends := {}
 var _regard := {}
 var _rel := {}                       # person -> [[relative, kind], ...] (fixture family graph for JudgmentBonds)
 var _guards := {}                    # person -> true: a guard (fixture)
+var _ver := 0                        # bumped by every fixture setter that changes the family graph
+
+
+## A number that changes whenever the family graph (parents, children, partners) may have changed: JudgmentBonds keeps its
+## derived relatives by it. The live adapter reads Life.kin_version.
+func graph_version() -> int:
+	return _ver
+
 
 
 ## A pair's key: both ids offset to stay positive (the player is -2), the lower in the high bits.
@@ -70,6 +78,7 @@ func set_regard(a: int, b: int, r: int) -> JudgmentSocial:
 
 ## `parent` is the parent of `child` (both directions of the family graph).
 func set_parent(child: int, parent: int) -> JudgmentSocial:
+	_ver += 1
 	for pair in [[child, parent, "parent"], [parent, child, "child"]]:
 		if not _rel.has(pair[0]):
 			_rel[pair[0]] = []

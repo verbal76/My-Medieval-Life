@@ -17,9 +17,11 @@ func check(cond: bool, what: String) -> void:
 		print("ok   ", what)
 
 
-func new_world(seed := 1) -> World:
+func new_world(seed := 1, off := false) -> World:
+	JudgmentLive.test_disabled = off               # Build 19 ships judgment on; off is the Build 18 path
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
+	JudgmentLive.test_disabled = false
 	return w
 
 
@@ -155,7 +157,7 @@ func test_courting() -> void:
 
 # ---------------------------------------------------------------- friends' benefits ----------
 func test_friends_benefits() -> void:
-	var w := new_world()
+	var w := new_world(1, true)
 	var r := w.relations
 	var seller: NPC = null
 	var id := ""
@@ -190,7 +192,7 @@ func test_friends_benefits() -> void:
 	var gpaid := 50 - w.player.coins
 	check(gpaid >= 1 and gpaid < gfull and text.contains("lowered"), "judgment on: a guard who is your friend lowers the fine but still fines (%d of %d)" % [gpaid, gfull])
 	w.judgment = null
-	var w2 := new_world()
+	var w2 := new_world(1, true)
 	var g2: NPC = w2.npcs.filter(func(n: NPC) -> bool: return n.job == "guard" and n.alive)[0]
 	var pal: NPC = single(w2)
 	pal.pos = w2.player.pos
