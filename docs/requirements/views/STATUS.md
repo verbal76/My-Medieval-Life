@@ -11,14 +11,14 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Waiting on an owner decision (design) | 0 | 0 | 0 | 0 |
 | Design work still required | 2 | 3 | 0 | 0 |
 | Design unknown | 13 | 4 | 8 | 1 |
-| Not started (incl. READY) | 11 | 7 | 8 | 1 |
+| Not started (incl. READY) | 7 | 7 | 8 | 1 |
 | In development (worker assigned) | 0 | 0 | 0 | 0 |
 | Partially implemented | 3 | 3 | 0 | 0 |
 | Implemented on a task branch | 0 | 3 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 |
-| Integrated | 67 of 81 (83%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
-| Automated tests passed (targeted or better) | 65 of 81 (80%) | 4 of 13 (31%) | 0 of 8 (0%) | 0 of 1 (0%) |
-| Integration verified (suite on the integrated build) | 50 of 81 (62%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
+| Integrated | 71 of 81 (88%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
+| Automated tests passed (targeted or better) | 69 of 81 (85%) | 4 of 13 (31%) | 0 of 8 (0%) | 0 of 1 (0%) |
+| Integration verified (suite on the integrated build) | 54 of 81 (67%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
 | Gameplay verified | 0 of 81 (0%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
 | Owner playtested | 0 of 81 (0%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
 | Complete | 1 of 81 (1%) | 0 of 13 (0%) | 0 of 8 (0%) | 0 of 1 (0%) |
@@ -26,8 +26,8 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Open owner decisions (of which blocking) | 6 (1) | 1 (0) | 14 (14) | 9 (9) |
 | Deferred with approval | 2 | 1 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 1 | 2 | 5 |
-| Integrated, awaiting gameplay or owner verification | 66 | 0 | 0 | 0 |
-| Remaining implementation by effort band (not yet integrated) | S 5, M 5, UNKNOWN 4 | XS 2, M 3, L 5, XL 1, UNKNOWN 2 | UNKNOWN 8 | UNKNOWN 1 |
+| Integrated, awaiting gameplay or owner verification | 70 | 0 | 0 | 0 |
+| Remaining implementation by effort band (not yet integrated) | S 1, M 5, UNKNOWN 4 | XS 2, M 3, L 5, XL 1, UNKNOWN 2 | UNKNOWN 8 | UNKNOWN 1 |
 | Readiness | IN DEVELOPMENT (not feature complete) | PROTOTYPE ONLY (isolated branch; not integrated) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
 
 Build authority:

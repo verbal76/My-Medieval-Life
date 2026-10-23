@@ -37928,8 +37928,8 @@
    "target_build": "18",
    "workstream": "release gate",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -37939,8 +37939,19 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md); test_commit: None -> 9a86f5c; commits + b2f5c5d; remaining_work",
+     "why": "gate run on the integrated Build 18 code: baseline written, second independent run identical; later commits touch only the load path and tests"
     }
-   ]
+   ],
+   "tests": "sim_gate seeds 1,2 days 10,30 on 9a86f5c: PASS, identical; no leaks (docs/build18/DETERMINISM_GATE.md)",
+   "test_commit": "9a86f5c",
+   "commits": [
+    "b2f5c5d"
+   ],
+   "remaining_work": "re-run only if simulation code changes before the candidate packages"
   },
   {
    "id": "REL18-DEVICE",
@@ -38103,8 +38114,8 @@
    "target_build": "18",
    "workstream": "release gate",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -38114,8 +38125,19 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases); test_commit: None -> 0e1a88b; commits + b2f5c5d; remaining_work",
+     "why": "a real Build 17 save (cd7439c, version 17) loads into Build 18, plays two days, round-trips as version 19"
     }
-   ]
+   ],
+   "tests": "docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases)",
+   "test_commit": "0e1a88b",
+   "commits": [
+    "b2f5c5d"
+   ],
+   "remaining_work": "on-device import from the Android build (owner playtest)"
   },
   {
    "id": "REL18-SUITES",
@@ -38130,8 +38152,8 @@
    "target_build": "18",
    "workstream": "release gate",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -38141,8 +38163,19 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> 83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records); test_commit: None -> 0e1a88b; commits + 0e1a88b; remaining_work",
+     "why": "all 83 Godot suites pass on the final integration code (crafts, world and profile fixed in 0e1a88b); the 17 Build 18 suites missing from CI added to tests.yml"
     }
-   ]
+   ],
+   "tests": "83 suites, 0 failures (run_tests 3591, wiki_test, the 81 *_test suites); Python unittest OK; interactions 275, resources, assets 0 problems; materials 0 stale (19 open findings, WDR-001/002/003 records)",
+   "test_commit": "0e1a88b",
+   "commits": [
+    "0e1a88b"
+   ],
+   "remaining_work": "CI Tests run on staging after the Build 18 merge"
   },
   {
    "id": "REL18-WIKI",
@@ -38157,8 +38190,8 @@
    "target_build": "18",
    "workstream": "release gate",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
@@ -38168,7 +38201,22 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "the release gate was not tracked in the register, so release readiness could not be computed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> wiki_test all passed on 0e1a88b; page review by the lead; test_commit: None -> 0e1a88b",
+     "why": "WIKI-01 gate: every mechanic merged in Build 18's last round has its player page (stone, rubble and chisel; business production and workroom; counter tills; church volunteering; settlement trades opening and closing; manor wage offer; merchant relocation); wiki_test passes"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 0e1a88b",
+     "why": "evidence commit"
     }
+   ],
+   "tests": "wiki_test all passed on 0e1a88b; page review by the lead",
+   "test_commit": "0e1a88b",
+   "commits": [
+    "0e1a88b"
    ]
   },
   {
@@ -39506,7 +39554,8 @@
     "d63d8d7",
     "60e8318",
     "bea0ac7",
-    "84bf5f0"
+    "84bf5f0",
+    "0e1a88b"
    ],
    "parent": "EXP-B",
    "depends_on": [],
@@ -39569,6 +39618,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "Remaining after the wiring"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 0e1a88b",
+     "why": "profile load fix: a saved capability history is kept unchanged on load (0e1a88b); profile_test 12 passes"
     }
    ],
    "target_build": "18",
@@ -39609,7 +39663,8 @@
     "d63d8d7",
     "60e8318",
     "bea0ac7",
-    "84bf5f0"
+    "84bf5f0",
+    "0e1a88b"
    ],
    "parent": "EXP-B",
    "depends_on": [
@@ -39674,6 +39729,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "Remaining after the wiring"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + 0e1a88b",
+     "why": "profile load fix: a saved capability history is kept unchanged on load (0e1a88b); profile_test 12 passes"
     }
    ],
    "target_build": "18",

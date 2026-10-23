@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23 (all Build 18 workers merged into `wip/build18` 9a86f5c; 30-day conservation runs on 99dc3be clean).
+**Updated:** 2026-10-23 (`wip/build18` b2f5c5d: pre-package verification under way; determinism gate, Build 17 save, all 83 suites and the wiki gate done).
 
 ## Read first (after a compaction or in a new session)
 
@@ -25,7 +25,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | Branch | Head | Role |
 |---|---|---|
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `9a86f5c` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
+| `wip/build18` | `b2f5c5d` (2026-10-23) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
 | `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
@@ -43,7 +43,6 @@ None: the stone, competition and business workers reported and are merged.
 | What | Where | Code | Started |
 |---|---|---|---|
 | Build 18 365-day runs, seeds 1-4, checkpoints every 10 days (REL18-LONGRUN, SET-C, WDR-004-C; day 100 read from them) | GitHub Actions long-sims run 39874405723 | `wip/build18` 9a86f5c | 2026-10-22 23:50 UTC |
-| Determinism gate (REL18-DET): baseline written, then a second independent run (seeds 1 and 2, days 10 and 30) | lead's local worktree | 9a86f5c | 2026-10-22 23:52 UTC |
 
 On their reports:
 1. Review the work.
@@ -54,11 +53,12 @@ On their reports:
 
 ## Next actions (lead)
 
-1. Check the Build 18 punch list in `docs/requirements/views/BUILD_18.md` for open approved items still unbuilt.
-   Then the release verification on the final code: 365-day runs per seed (100-day read from the same runs), determinism,
-   Build 17 save into Build 18, full suites, wiki gate, three-platform export, WDR-004-C, REG-EVAL-01 against the preserved
-   baseline (`docs/investigations/evidence_2026-10-23_regional/`), SET-C long runs, VER-CON-50ORE; SET-D's multi-generation
-   check stays outstanding unless a run with a sufficient horizon is shown (B18-DP-05).
+1. Implementation is complete except owner items (B18-DP-17 STONECUT-R1 blocks WDR-002-C; DP-18, DP-19 non-blocking).
+   Pre-package verification done: REL18-DET, REL18-SAVE, REL18-SUITES, REL18-WIKI. Still to do: read the 365-day runs
+   (REL18-LONGRUN, SET-C, the 100-day read), WDR-004-C scarcity audit and REG-EVAL-01 against the preserved baseline
+   (`docs/investigations/evidence_2026-10-23_regional/`) from those runs, VER-CON-50ORE, then the three-platform candidate
+   export (REL18-EXPORT) for the owner's device playtest; no distributable published without the owner. SET-D's
+   multi-generation check stays outstanding unless a run with a sufficient horizon is shown (B18-DP-05).
 2. The approved, unblocked Build 18 work in `docs/requirements/views/BUILD_18.md` ("Open, ready" and "not started" with
    design SPECIFIED). The audit's highest-value items:
    - wiring the couriers, formal contracts and Law notary (X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, X18-Q13, LAW-SKILL);

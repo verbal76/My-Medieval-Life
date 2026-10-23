@@ -413,15 +413,15 @@ None.
 | REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | decision | APPROVED | 18 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
-| REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-EXPORT | Build 18 release gate: Android, Windows and Linux packages from one commit and one build number | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-LONGRUN | Build 18 release gate: Conservation and long runs: one 365-day run per required seed, no ledger leak (SIM-01) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
-| REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | NOT STARTED / NOT TESTED / OPEN | 18 |
+| REL18-SAVE | Build 18 release gate: Save compatibility: a real Build 17 save loads into Build 18, plus migration fixtures | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| REL18-SUITES | Build 18 release gate: All automated suites pass on the final Build 18 integration commit | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| REL18-WIKI | Build 18 release gate: WIKI-01 release gate: new and changed mechanics documented, wiki checks pass | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
