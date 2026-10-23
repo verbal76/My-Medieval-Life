@@ -1618,6 +1618,12 @@ func _short_path(p: String) -> String:
 	return p.uri_decode().get_file() if p != "" else ""
 
 
+## MUSIC-18, SFX-18: an effect for something the player did (nothing in tests, where there is no Main audio).
+func sfx(id: String) -> void:
+	if main != null and main.get("audio") != null:
+		main.audio.play_sfx(id)
+
+
 func _settings_audio() -> void:
 	var st: GameSettings = main.settings
 	for row in [["Master volume", "master"], ["Music", "music"], ["Sound effects", "sfx"]]:
@@ -1632,7 +1638,7 @@ func _settings_audio() -> void:
 			st.set(key, v / 100.0)
 			main.apply_settings())
 		_setting_row(row[0], sl)
-	_label("Sound volumes take effect once the game has sounds.", 14)
+	_label("Music follows the time of day, the ambience follows where you are, and effects answer what you do. Each slider changes it at once.", 14)
 
 
 func _settings_display() -> void:
@@ -2247,6 +2253,7 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 				if paid == -2:
 					_talk_view(n, w.quests.line(q, "unpaid"))
 					return
+				sfx("jingle_quest_complete")
 				var learned: String = w.quests.last_learned
 				if t.get("hire", false):
 					message("Work done: %s (+%d coins wage)" % [t.title, paid])
@@ -2385,6 +2392,7 @@ func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 			message(w.quests.last_refusal if w.quests.last_refusal != "" else "That is no longer on offer.")
 			_talk_view(n, Dialogue.opening(w, n))
 			return
+		sfx("jingle_quest_accepted")
 		if hire != "":
 			message("Hired: %s. It is written in your journal." % Quests.template(q.id).title)
 			_talk_view(n, "Good. Come and find me when it's done, and you'll have your wage.")
@@ -3127,6 +3135,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		if buying:
 			var b: Dictionary = w.player_buy_many(n, id, q)
 			if b.result == "bought":                    # (its Trading xp is core's, DVW-A12 R13)
+				sfx("coin")
 				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
 			else:
 				message(b.text)
@@ -3134,6 +3143,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 			return
 		var r: Dictionary = w.player_sell_many(n, id, q)
 		if r.sold > 0:                                  # (its Trading xp is core's, DVW-A12 R13)
+			sfx("coin")
 			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
 		if r.result == "sold":
 			show_trade(n)
@@ -3646,6 +3656,7 @@ func show_home(pick := {}, focus := {}) -> void:
 
 ## PL2-002: the storage window for a chest, crate or barrel (see ChestWindow).
 func show_chest(uid: String, pick := {}, focus := {}) -> void:
+	sfx("chest_open")
 	ChestWindow.new(self).show(uid, pick, focus)
 
 

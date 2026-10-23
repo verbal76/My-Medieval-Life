@@ -102,6 +102,15 @@ var strike_pending := false    # strike the target once in reach (a tap on it, o
 var swing := Combat.new()      # the sword swing: windup, blow, recovery and one buffered press (CQ-01)
 var target_marker: Sprite2D    # the sword shown over the target
 var settings := GameSettings.new()
+var audio: GameAudio           # MUSIC-18, SFX-18: the music, the ambience and the effects (audio only reads the hour, the level and the title)
+var _fight_until := 0.0        # audio clock seconds until which the fight music holds (6 s after the last engagement)
+var _fight_scan := 0.0
+var _audio_clock := 0.0
+var _last_foot := Vector2.INF  # where the player stood last frame (footsteps are spaced by distance walked)
+var _foot_dist := 0.0
+var _road_cells := {}          # the village's road cells, once (the ground under a footstep)
+var next_sound := ""           # SFX-18: the effect for the next started work, played when its stroke lands
+var _hp_seen := -1.0           # the player's health last frame (a drop of a point or more is heard as a hurt)
 var scheme := "kbm"            # the controls in use, from the last input: touch | gamepad | kbm
 var blood_layer: Node2D        # blood where someone was slain, under the actors
 var dying := {}                # npc id -> seconds left of the death flicker
@@ -128,6 +137,8 @@ func _ready() -> void:
 	# the interface is laid out for the screen (larger on a phone) and the camera zoom makes up for it
 	settings.load_file()
 	settings.apply(get_tree())
+	audio = GameAudio.new()
+	add_child(audio)
 	view_scale = settings.layout_height() / 720.0
 	scheme = "touch" if settings.phone else "kbm"
 	ui = GameUI.new()
@@ -1011,7 +1022,7 @@ func _clear_world() -> void:
 		attack_mode = false
 		ui.set_attack_mode(false)
 	for c in get_children():
-		if c != ui:
+		if c != ui and c != audio:        # the audio node outlives the worlds (a new game keeps the music)
 			c.queue_free()
 	sprites.clear()
 	animal_sprites.clear()
@@ -1120,6 +1131,7 @@ func _build_scene() -> void:
 	door_view = DoorView.new()                   # VIS-DOOR-01: doorways open dark while someone goes through
 	view.add_child(door_view)                    # the MapView's last child: over its ground layers, under the characters
 	door_view.setup(world, view, roofs)
+	door_view.player_through.connect(func(): audio.play_sfx("door_wood"))
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
 		s.setup(n.sprite)
@@ -1140,6 +1152,9 @@ func _build_scene() -> void:
 	ow_view.follow(world.player.pos, world.player.pos, 0.0, 6)      # the nearest chunks at once, the rest over the next frames
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
+	world.tree_felled.connect(func(t: Dictionary, _side: int):          # SFX-18: a tree coming down near the player rustles
+		if Vector2(float(t.x), float(t.y)).distance_to(world.player.pos) < 12.0:
+			audio.play_variant("tree_rustling"))
 	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
 	dying.clear()
 	fading.clear()
@@ -1410,6 +1425,7 @@ func _process(delta: float) -> void:
 	if world == null:
 		return
 	_refresh_player_worn()
+	_audio_step(delta)
 	if shot_path != "":
 		_screenshot_step(delta)
 	if not placing.is_empty():
@@ -1899,6 +1915,8 @@ func _player_step(delta: float) -> void:
 			if action.has("industry"):          # X18 HOOK (X18-CAPCOMP part 1): a record of the player's finished work, read by nothing
 				world.note_player_work(str(action.industry), float(action.total))
 			world.release_player_station(str(action.get("station", "")))
+			if action.has("sound"):
+				audio.play_variant(str(action.sound))          # SFX-18: the stroke lands
 			action = {}
 			done.call()                  # may begin the next blow of a felling
 			if action.is_empty():
@@ -2842,6 +2860,7 @@ func _use() -> void:
 				return
 			var pick: String = mp.tool
 			next_industry = "mining"
+			next_sound = "hit_on_brick"
 			start_action("Mining", float(mp.secs), func():
 				var r := world.player_mine(dep, pick)                  # the same swing as a miner's (PAR-01)
 				if r.result == "out":
@@ -2868,6 +2887,7 @@ func _use() -> void:
 			ui.show_craft(target.id)
 		"field":
 			var f: Dictionary = target.field
+			next_sound = "bush_rustling"
 			start_action("Harvesting", 2.5, func():
 				var got := world.player_harvest(f)
 				if got > 0:
@@ -2880,6 +2900,7 @@ func _use() -> void:
 			if not p.inv.can_add(fitem):
 				ui.message(p.inv.full_text(fitem))
 				return
+			next_sound = "fruit_drop"
 			start_action("Picking", 1.5, func():
 				var got := world.pick_fruit(ftree)
 				for id in got:
@@ -2893,6 +2914,7 @@ func _use() -> void:
 			if not p.inv.can_add_all(ResourceNodes.products(pdef)):
 				ui.message(p.inv.full_text_all(ResourceNodes.products(pdef)))
 				return
+			next_sound = "bush_rustling"
 			start_action("Picking", 1.2, func():
 				var got := world.pick_plant(pl)
 				for id in got:
@@ -3271,6 +3293,7 @@ func _tunnel_cut(cell: Vector2i, tool: String) -> void:
 		ui.message(why)
 		return
 	next_industry = "mining"   # X18-D4: survey, trial pits, excavation, tunnelling, shafts, backfill
+	next_sound = "hit_on_brick"
 	start_action("Cutting", world.mine_works.player_secs(cell, tool), func():
 		var r := world.mine_works.dig(p, cell, p.inv, tool)
 		if r.result != "ok":
@@ -3392,6 +3415,7 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 		if (r.found as Dictionary).is_empty():
 			ui.message("The trial pit finds no ore.")
 		else:
+			audio.play_sfx("secret_found")
 			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower())
 		ui.message("The earth you dug lies in a spoil pile beside the pit.")
 		if r.broke:
@@ -3423,6 +3447,7 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
 	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
 	next_industry = "forestry"
+	next_sound = "hit_on_wood"
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
 		var r := world.player_chop(tr, side, axe)          # the same felling as a woodcutter's (PAR-01, DVW-A12 R2)
 		if r.result == "gone":
@@ -3511,6 +3536,9 @@ var next_industry := ""   # X18 HOOK (X18-CAPCOMP part 1): the industry of the n
 
 func start_action(label: String, secs: float, done: Callable, anim := "gather", tool := "") -> void:
 	action = {"label": label, "left": secs, "total": secs, "done": done, "anim": anim, "tool": tool}
+	if next_sound != "":
+		action.sound = next_sound
+		next_sound = ""
 	if next_industry != "":
 		action.industry = next_industry   # X18-CAPCOMP: the industry of this work, set just before (record only)
 		next_industry = ""
@@ -3528,6 +3556,7 @@ func _xp(skill: String, n: int) -> void:
 ## The banner for a new level (`up` 0: none).
 func _level_up(skill: String, up: int) -> void:
 	if up > 0:
+		audio.play_sfx("jingle_level_up")
 		var s: Dictionary = GameData.skills[skill]
 		var unlock := Skills.tier_text(skill, up)
 		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""])
@@ -3579,12 +3608,74 @@ func attack(only: Object = null) -> String:
 	return r
 
 
+## MUSIC-18, SFX-18: the music and ambience follow the hour, the level, the title, a fight and the countryside; a drop
+## of a point of the player's health is heard as a hurt; soft footsteps follow the ground. Audio only reads the world.
+func _audio_step(delta: float) -> void:
+	var p := world.player
+	_audio_clock += delta
+	_fight_scan -= delta
+	if _fight_scan <= 0.0:
+		_fight_scan = 0.3
+		if _in_fight():
+			_fight_until = _audio_clock + float(audio.cfg.get("fight_hold_seconds", 6.0))
+	var title: bool = ui != null and ui.is_open("title")
+	audio.update(delta, {"hour": world.hour(), "level": world.player_level, "title": title,
+			"fight": _audio_clock < _fight_until and not title,
+			"countryside": not map.in_village(Vector2i(p.pos.floor())),
+			"summer": Life.season(world.minutes) == "Summer"})
+	if _hp_seen >= 0.0 and p.hp <= _hp_seen - 1.0 and p.alive:
+		audio.play_sfx("player_hurt")
+	_hp_seen = p.hp
+	_footsteps(p)
+
+
+## A fight: a bandit or anyone fighting the player within 12 cells, or a wild animal angry at the player.
+func _in_fight() -> bool:
+	var p := world.player
+	if not p.alive or world.player_level != 0:
+		return false
+	for n: NPC in world.present(p.pos, 12.0):
+		if n.alive and Combat.foe(n):
+			return true
+	for a: Animal in world.fauna.near(p.pos, 12.0):
+		if a.alive and a.anger == "player":
+			return true
+	return false
+
+
+## Soft footsteps, one every `stride_cells` walked on foot (the minimum gap in music.json drops them in a sprint).
+func _footsteps(p: PlayerState) -> void:
+	var d := p.pos.distance_to(_last_foot) if _last_foot != Vector2.INF else 0.0
+	_last_foot = p.pos
+	if d <= 0.0 or d > 1.0 or paused or not action.is_empty() or ui.modal():
+		return                                    # standing, a jump in position (a portal, a load), or not walking
+	_foot_dist += d
+	if _foot_dist >= float(audio.cfg.get("sfx", {}).get("steps", {}).get("stride_cells", 1.15)):
+		_foot_dist = 0.0
+		audio.step(_ground_under(p.pos))
+
+
+## grass | dirt | stone under a position: stone below the surface and indoors, dirt on the village's roads and the
+## countryside's, grass elsewhere.
+func _ground_under(pos: Vector2) -> String:
+	if world.player_level != 0 or world.place_of(pos) != "":
+		return "stone"
+	var c := Vector2i(pos.floor())
+	if map.in_village(c):
+		if _road_cells.is_empty():
+			for r in map.data.road:
+				_road_cells[Vector2i(int(r[0]), int(r[1]))] = true
+		return "dirt" if _road_cells.has(c) else "grass"
+	return "dirt" if map.overworld != null and map.overworld.is_road(c) else "grass"
+
+
 ## Seconds one swing takes: windup, blow and recovery (the Combat tier makes it shorter).
 func swing_time() -> float:
 	return float(Combat.cfg().swing_time) * Skills.value(world.player, "combat", "attack_time", 1.0)
 
 
 func _swing_begins() -> void:
+	audio.swing()
 	sprinting = false                  # no sprint while attacking
 	if swing.only != null and swing.only.alive:
 		player_sprite.face(swing.only.pos - world.player.pos)
@@ -3609,6 +3700,9 @@ func _blow() -> void:
 		var h := world.player_melee_npc(who)          # the strike, the harm, the crime and the xp are core's (DVW-A12 R7-R9)
 		if h.crit:
 			ui.message("A telling blow!")
+		audio.hit(bool(h.crit))
+		if not who.alive:
+			audio.play_sfx("enemy_defeat")
 		_hit_fx(sprites.get(who.id), who.max_hp, hp0 - float(h.dealt), float(h.dealt))
 		_level_up("combat", int(h.up))
 	elif who is Animal:
@@ -3617,6 +3711,9 @@ func _blow() -> void:
 		if s.crit:
 			ui.message("A telling blow!")
 		_hit_animal(who, float(s.dmg))
+		audio.play_sfx("critical_hit" if s.crit else "enemy_hit")
+		if not who.alive:
+			audio.play_sfx("enemy_defeat")
 
 
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
@@ -3780,6 +3877,7 @@ func fireball() -> void:
 		if str(cast.why) != "":
 			ui.message(str(cast.why))
 		return
+	audio.play_sfx("fireball")
 	player_sprite.play("throw", true)
 	var node := Sprite2D.new()
 	node.texture = load("res://assets/icons/fireball.png")
@@ -4553,6 +4651,7 @@ func save_game(show := true) -> bool:
 	save_failing = false
 	_update_linked_copy()
 	if show:
+		audio.play_sfx("save_crystal")
 		ui.message("Saved.")
 	return true
 
@@ -4752,6 +4851,7 @@ func _sync_player_pose() -> void:
 
 func _rest_now() -> void:
 	world.player_rest()                         # how long, the world going on and the recovery are core's (DVW-A12 R18)
+	audio.play_sfx("jingle_inn_rest")
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
 

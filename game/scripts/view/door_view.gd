@@ -23,6 +23,8 @@ const OPENING := Color(0.07, 0.05, 0.06)
 const OPEN_RECT := Rect2(1, 1, 14, 12)       # the opening inside the door tile's frame (the tile's dark edges kept)
 const T := 16
 
+signal player_through()           # MUSIC-18: the door the player is stepping through has just opened (the sound is Main's; looks only here)
+
 var world: World
 var view: MapView
 var roofs: RoofFade
@@ -102,9 +104,14 @@ static func depth(door: Dictionary, pos: Vector2) -> float:
 ## drawn). Opens the doors someone is using and darkens those going into a hidden inside.
 func update(people: Array, delta: float) -> void:
 	var using := {}
+	var first := true
 	for pp in people:
 		var pos: Vector2 = pp[0]
 		var i: int = zone.get(Vector2i(floori(pos.x), floori(pos.y)), -1)
+		if first:                      # people[0] is the player
+			first = false
+			if i >= 0 and depth(doors[i], pos) >= OPEN_AT and float(doors[i].open) <= 0.0:
+				player_through.emit()
 		var k := 0.0
 		if i >= 0:
 			var dp := depth(doors[i], pos)

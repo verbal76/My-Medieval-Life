@@ -327,12 +327,14 @@ func _build_details() -> void:
 	if it.has("food"):
 		_action("Eat", func():
 			var hp0 := p.hp
-			w.player_eat(iid)
+			if w.player_eat(iid) and it.has("heal"):      # a healing food or drink is heard; a plain meal is not
+				ui.sfx("potion_drink")
 			ui.message("You eat the %s.%s" % [GameData.item_name(iid).to_lower(), "  It makes you sick." if p.hp < hp0 else ""])
 			_after())
 	elif it.has("heal"):
 		_action("Use", func():
 			if w.player_use_medicine(iid):
+				ui.sfx("potion_drink")
 				ui.message("You use the %s and feel better (health %d)." % [GameData.item_name(iid).to_lower(), int(p.hp)])
 			else:
 				ui.message("You are not hurt: the %s is kept." % GameData.item_name(iid).to_lower())
@@ -349,6 +351,8 @@ func _build_details() -> void:
 				var why: String = w.equip_refusal(iid)
 				if why != "":
 					ui.message(why)
+				else:
+					ui.sfx("equip_weapon" if t in ["weapon", "tool"] else "equip_armor")
 				_after())
 	if it.has("plant") or it.has("propagates"):
 		_action("Plant", func(): ui.main.plant_sapling(iid))

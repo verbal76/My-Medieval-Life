@@ -521,6 +521,8 @@ func _results(q: String) -> void:
 
 
 func _page(id: String) -> void:
+	if ui != null:
+		ui.sfx("book_page")
 	var pg: Dictionary = wiki.pages[id]
 	var crumb := _button("%s" % _cat_title(pg.category), func(): show_category(pg.category))
 	crumb.name = "PageCategory"
