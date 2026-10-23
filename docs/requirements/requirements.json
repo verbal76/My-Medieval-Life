@@ -17212,7 +17212,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -17241,15 +17241,21 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner answered: danger = shield and fetch help; the worker's numbers accepted (docs/directives/2026-10-23_owner_answers_family_danger.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; test_commit: fff48a4 -> b7f832e; commits + 3022fbf",
+     "why": "danger behaviour done in 3022fbf (shield, fight or flee through the decision engine, recorded factors); family_first_test 104/0"
     }
    ],
    "next_action": "X19 completion worker adds the danger behaviour, then Build 19 integration",
    "assigned_worker": "family worker (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
    "tests": "family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical",
-   "test_commit": "fff48a4",
+   "test_commit": "b7f832e",
    "commits": [
-    "fff48a4"
+    "fff48a4",
+    "3022fbf"
    ]
   },
   {
@@ -52394,7 +52400,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -52422,11 +52428,27 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner advisement 2026-10-23 (B19-EMERGE): integration is routine work; changed outcomes are expected; classify, do not rebalance; keep current resources"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; test_commit: None -> b7f832e; commits + b7f832e; next_action",
+     "why": "completion worker reported b7f832e (3022fbf, 7559ab0): every approved layer live, judgment on by default; judgment_test 217, judgment_live 144, bonds 98, personality 91, judgment_x19 101 (new), family_first 104, guard_save 20, relations 80, world 339, migration 92, save_transfer 21, run_tests 3595, outlaw_return 24, wiki_test pass; gate with --no-judgment identical to Build 18; judgment on: no leak, first divergence day 1 (near-best trade choice), same seed twice identical; perf 57 ms per simulated day for 100 villagers. Provisional agent values marked in judgment.json. One stuck-walk starvation (a guard, seed 1) traced to an existing walking defect, unfixed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker: X19 completion worker (subagent) -> lead; branch: wip/expansion19-preparation -> wip/build19; commits + b2f7dc2",
+     "why": "lead began the Build 19 integration: wip/build19 = wip/expansion19-preparation b7f832e + wip/recorder 2d5d49c, merge b2f7dc2 (three conflicts resolved keeping both sides; INT ids renumbered 407-413); targeted suites running"
     }
    ],
-   "next_action": "after FAM-SAC-01 lands: set the approved numbers, enable all layers, self-defence, lies and family stories live; integrate with identity, REC-F1/SIM-F9, recorder; gate; present Build 19",
-   "assigned_worker": "X19 completion worker (subagent)",
-   "branch": "wip/expansion19-preparation"
+   "next_action": "lead integrates with wip/recorder on wip/build19; combined tests; 30-day recorder run; baseline proposal",
+   "assigned_worker": "lead",
+   "branch": "wip/build19",
+   "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass",
+   "test_commit": "b7f832e",
+   "commits": [
+    "b7f832e",
+    "b2f7dc2"
+   ]
   },
   {
    "id": "X19-SPILL-REACH",

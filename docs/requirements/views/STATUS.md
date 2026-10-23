@@ -13,11 +13,11 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Design unknown | 15 | 19 | 9 | 5 | 3 | 1 | 0 | 1 | 4 |
 | Not started (incl. READY) | 2 | 11 | 8 | 2 | 2 | 0 | 0 | 1 | 4 |
 | In development (worker assigned) | 0 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Partially implemented | 1 | 5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Implemented on a task branch | 0 | 8 | 1 | 3 | 1 | 1 | 0 | 0 | 0 |
+| Partially implemented | 1 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Implemented on a task branch | 0 | 9 | 1 | 3 | 1 | 1 | 0 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Integrated | 80 of 83 (96%) | 1 of 28 (4%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
-| Automated tests passed (targeted or better) | 78 of 83 (94%) | 13 of 28 (46%) | 1 of 9 (11%) | 1 of 5 (20%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
+| Automated tests passed (targeted or better) | 78 of 83 (94%) | 14 of 28 (50%) | 1 of 9 (11%) | 1 of 5 (20%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
 | Integration verified (suite on the integrated build) | 58 of 83 (70%) | 0 of 28 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
 | Gameplay verified | 0 of 83 (0%) | 0 of 28 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
 | Owner playtested | 0 of 83 (0%) | 0 of 28 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
