@@ -142,6 +142,7 @@ var _tol_spread := 0             # personality.tolerance_spread_permille (Q03)
 var _tol_step := 0               # personality.tolerance_per_point (Q13 life events)
 var _w_step := 0                 # personality.weight_per_point
 var _shift_max := 0              # personality.max_shift_permille
+var bonds: JudgmentBonds             # X19-FOUND-BONDS/FAMREP: pair history, resentment, family reputation (judgment_bonds.gd)
 var life := {}                   # person -> [tolerance shift, disposition-weight shift] permille, from firsthand life events (saved)
 var _morality := 0               # interpret.morality_spread_permille (Q08)
 var _perm_refs := {}             # event id -> permanent memories of it: such facts never retire (Q11)
@@ -249,6 +250,7 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_shift_max = maxi(0, int(pc.get("max_shift_permille", 0)))
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
 	_b_thr = int(bc.confidence_threshold)
+	bonds = JudgmentBonds.new(self, cfg.get("bonds", {}))
 
 
 func _stat(k: String, v := 1) -> void:
@@ -493,6 +495,7 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 	_judge(observer, ev)
 	if fresh and SOURCES.find(src) < TOLD:
 		_live(observer, ev)
+		bonds.on_belief(observer, ev)               # X19-FOUND-BONDS: resentment and betrayal history
 	if fresh and _t_ev[t] != 0:
 		for a in actors:                            # reliability shown by the deed itself: a fair deal, a cheat, a false charge
 			if int(a[0]) != observer:
@@ -1328,6 +1331,7 @@ func begin_day(d: int) -> void:
 	_steps = d - day
 	day = d
 	told_today.clear()
+	bonds.dawn(d)                                # X19-FOUND-BONDS: softening through personality growth (inert as shipped)
 	var cutoff := d - int(c("memory").horizon_days)
 	var days := by_day.keys()
 	days.sort()
@@ -1614,6 +1618,8 @@ func to_dict() -> Dictionary:
 		for o in _sorted(life):
 			lf.append([int(o), int(life[o][0]), int(life[o][1])])
 		out.life = lf                            # SJD-Q13: the shifts life events have given (older sections have none)
+	if not bonds.is_empty():
+		out.bonds = bonds.to_dict()              # X19-FOUND-BONDS: optional key (older sections have none)
 	if not _sched.is_empty():
 		var sc := []
 		for mm in _sorted(_sched):
@@ -1649,6 +1655,7 @@ func load_dict(d: Dictionary) -> String:
 	_gver += 1
 	_sched.clear()
 	_snext = -1
+	bonds.load_dict({})
 	unread = {}
 	if d.is_empty():
 		return ""
@@ -1719,6 +1726,7 @@ func load_dict(d: Dictionary) -> String:
 		trust[int(r[0])][int(r[1])] = clampi(int(r[2]), 0, 100000)
 	for r in m.get("life", []):
 		life[int(r[0])] = [clampi(int(r[1]), -_shift_max, _shift_max), clampi(int(r[2]), -_shift_max, _shift_max)]
+	bonds.load_dict(m.get("bonds", {}))
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))

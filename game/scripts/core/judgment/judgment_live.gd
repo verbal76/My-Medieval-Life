@@ -69,6 +69,21 @@ class Social extends JudgmentSocial:
 			return true
 		return Life.kin(a, int(pa.mother), int(pa.father), b, int(pb.mother), int(pb.father))
 
+	## The family graph of Life: mother, father, children, partner (recorded on the person; the player is Life.PLAYER_ID).
+	func relatives(person: int) -> Array:
+		var p = Life.parent_of(w, person)
+		var out := []
+		if p == null:
+			return out
+		for pid in [int(p.mother), int(p.father)]:
+			if pid != -1:
+				out.append([pid, "parent"])
+		for cid in p.children:
+			out.append([int(cid), "child"])
+		if int(p.partner) != -1:
+			out.append([int(p.partner), "partner"])
+		return out
+
 	## Relations.friends and Relations.peek, read without building a blank tie on every call (peek's default argument is
 	## built even when the tie exists): a missing tie is not friends and regard 0, as the blank one says.
 	func friends(a: int, b: int) -> bool:
