@@ -2880,6 +2880,8 @@ func _reeve_succession() -> void:
 		if o.alive and o.role == "adult" and o.job == "reeve" and (rv == null or o.id != rv.id):
 			w.reeve_id = o.id
 			o.workplace = "manor"
+			if w.civic != null:
+				w.civic.on_reeve(o)               # P21-01: the tenure begins (observes only)
 			w.stat("reeve_successions")
 			w.note("%s %s is the new reeve: the manor's business goes on." % [o.name, o.family])
 			return
@@ -3908,6 +3910,8 @@ func _open_vacancy(n: NPC) -> void:
 ## An essential trade left for other work (seek_work) is handed on as after a death: its post opens when
 ## the trade falls below strength, so the forge or the woodland is not left empty for good (EQ-07).
 func _post_left(n: NPC, job: String, place: String) -> void:
+	if w.civic != null:
+		w.civic.on_post_left(n, job)                 # P21-01: observes only
 	if job == "" or not is_essential(job) or living_in(job) + open_posts(job) >= staff_target(job):
 		return
 	w.vacancies.append({"job": job, "workplace": place, "home": n.home, "household": n.household,
@@ -3988,6 +3992,8 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 		if place == "":
 			return
 	_change_job(n, str(v.job), why, place)
+	if w.civic != null:
+		w.civic.on_installed(n, str(v.job))          # P21-01: a guard's or the sage's tenure begins (observes only)
 	for tool in KEEPS.get(v.job, []):
 		if n.inv.has(tool) or GameData.item(tool).get("tool", "") == "":
 			continue

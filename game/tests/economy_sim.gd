@@ -8,6 +8,7 @@ extends SceneTree
 ## Diagnostics only: the only thing it changes in the world is the player's hunger, kept full so
 ## the inert player (left where it starts, as in households_sim) never starves.
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
+##       [--civic]   (P21-01: the civic records on; they only observe, so the fingerprint is identical to a run without)
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
@@ -62,6 +63,8 @@ func _init() -> void:
 	scenario_day = int(arg.call("--at", "20"))
 	watch_from = int(arg.call("--watch-from", "-1"))
 	GameData.ensure()
+	if "--civic" in args:                 # P21-01: run with the civic records on (they only observe; the fingerprint must not change)
+		CivicRecords.override = 1
 	for i in args.size():                 # comparison runs: --set key=value overrides a balance number
 		if args[i] == "--set" and i + 1 < args.size() and "=" in args[i + 1]:
 			var kv: PackedStringArray = args[i + 1].split("=", true, 1)
@@ -1140,6 +1143,8 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("deaths: %s" % JSON.stringify(death_log))
 	_print_faucets(s)
 	print("fingerprint %s" % _fingerprint())
+	if w.civic != null:
+		print("civic: %d tenures, %d legacy records, open %s, audit %s" % [w.civic.tenures.size(), w.civic.legacy.size(), str(w.civic._open.size()), str(w.civic.audit())])
 
 
 ## DVW-A4: what entered and left the village over the run, kept apart from trade inside it. Coins: the

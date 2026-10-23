@@ -150,6 +150,8 @@ static func _gone(w: World, s: OffMapSettlement, ms: Array, load_: Dictionary, p
 		o.inv = Inventory.new()
 		o.alive = false
 		o.away = s.id
+		if w.civic != null:
+			w.civic.on_departure(o, s.id)          # P21-01: the legacy record and the end of any tenure (observes only)
 		o.plan.clear()
 		o.target = -1
 	if pantry != null:

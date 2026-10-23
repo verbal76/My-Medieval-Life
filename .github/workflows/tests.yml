@@ -152,6 +152,8 @@ jobs:
           $godot --headless --path game --script res://tests/contract_sign_test.gd
           $godot --headless --path game --script res://tests/experience_test.gd
           $godot --headless --path game --script res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
+          # Expansion 21 prospective suite (P21-01, wip/expansion21-preparation only until integration)
+          $godot --headless --path game --script res://tests/civic_records_test.gd   # civic records: offices, tenures, legacy; disabled by default
 
       - name: Short economy simulation (FR-07)
         run: |

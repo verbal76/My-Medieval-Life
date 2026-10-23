@@ -100,6 +100,8 @@ var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP p
 var settlement_caps := {}     # SET-A/B: the village's maintained capability history (SettlementProfile; saved under SettlementSave.KEY, optional)
 var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
 var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
+var civic: CivicRecords = null  # P21-01 (Expansion 21): tenure history, succession and the legacy record; null while data/civic.json is disabled (nothing built, no save key). Observes, never changes (scripts/core/civic/)
+var civic_foreign := {}       # a saved "civic" section while the records are disabled: written back unchanged, never erased
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
@@ -220,6 +222,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	couriers = CourierService.create_live(self)     # REG-COURIER-01: a booth for each of the five settlements; the village's opens at the first dawn
 	couriers.daily()
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
+	civic = CivicRecords.attach(self)    # P21-01: null unless data/civic.json enables it; seeds the current holders, draws nothing
 	note("Day 1 begins in the village.")
 
 
@@ -2209,6 +2212,8 @@ func kill(n: NPC, cause: String) -> void:
 	var who := "%s %s" % [n.name, n.family] if n.family != "" else n.name
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
+	if civic != null:
+		civic.on_death(n, cause)             # P21-01: the legacy record and the end of any tenure (observes only)
 	Outlaws.on_death(self, n)              # BANDIT-RETURN: the last bandit's death starts the wait for newcomers
 	if n.household >= 0:
 		var hh: Dictionary = households[n.household]
@@ -4144,7 +4149,7 @@ func to_dict() -> Dictionary:
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged(_civic_section())   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func _settlement_section() -> Dictionary:
@@ -4410,7 +4415,17 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	# uninterrupted game would not (the facts can move during the day, e.g. a stonecutter buying a chisel)
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
+	var civic_saved: Dictionary = d.get(CivicRecords.KEY, {})
+	civic = CivicRecords.attach(self, civic_saved)     # P21-01: absent key or disabled: nothing built; a saved section is kept while disabled
+	civic_foreign = civic_saved if civic == null else {}
 	_unstick()
+
+
+## P21-01: the optional save key "civic", written only when there is something to write.
+func _civic_section() -> Dictionary:
+	if civic != null:
+		return {CivicRecords.KEY: civic.to_dict()} if not civic.is_empty() else {}
+	return {CivicRecords.KEY: civic_foreign} if not civic_foreign.is_empty() else {}
 
 
 ## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
