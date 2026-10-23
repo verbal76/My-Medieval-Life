@@ -16,7 +16,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Owner playtested | 0 of 28 (0%) |
 | Complete | 0 of 28 (0%) |
 | Open (release blockers) | 28 |
-| Open owner decisions (blocking) | 3 (0) |
+| Open owner decisions (blocking) | 4 (1) |
 
 ## In development (worker assigned) (3)
 
@@ -24,7 +24,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 |---|---|---|---|---|---|---|---|---|
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19 | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
-| X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | OWNER APPROVED | IN DEVELOPMENT | lead / wip/build19 | TARGETED TESTS PASSED | lead integrates with wip/recorder on wip/build19; combined tests; 30-day recorder run; baseline proposal | design: UNKNOWN | UNKNOWN |
+| X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | OWNER APPROVED | IN DEVELOPMENT | lead / wip/build19 | TARGETED TESTS PASSED | owner: B19-BASELINE and SIM-F4 rules; then wiki check and packaging for the owner's release authorization | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (1)
 
@@ -66,10 +66,11 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Open owner decisions (3)
+## Open owner decisions (4)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
+| B19-BASELINE | Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)? | OPEN | yes |  |
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | OPEN | no |  |

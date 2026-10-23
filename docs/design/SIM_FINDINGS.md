@@ -52,3 +52,11 @@ Classification (owner advisement B19-EMERGE):
 | — | Villagers: no starvation, all deaths old age | both seeds | emergent / expected | none |
 
 Re-measured after the fix on a7c84e9 (same run, once per seed, for the baseline proposal): see run 3 below.
+
+## Run 3: the same 30 days on a7c84e9 (after the blocked-chase fix), once per seed
+
+No leak, no FATAL; recorded and gate fingerprints equal. Seed 1: 5 elders (old age), bandits 2 slain by a villager and 2
+starved. Seed 2: 7 elders (old age), 17 bandits starved. The seed-2 bandits are no longer stuck: they lurk and poach at the
+camp (120-170 hourly samples each), go to market rarely, and most hold 5-14 coins (the market needs 15 and 60% health);
+one held 72 coins and never bought. Classified as a **design question** (SIM-F4): today's rules leave the band without
+enough food. Owner choices: the health condition on buying food, the 15-coin minimum, and whether bandits heal.

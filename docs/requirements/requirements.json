@@ -4798,6 +4798,28 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "B19-BASELINE",
+   "kind": "decision",
+   "title": "Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)?",
+   "description": "Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)?",
+   "source": "docs/design/BUILD19_BASELINE_PROPOSAL.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/design/BUILD19_BASELINE_PROPOSAL.md"
+    }
+   ]
+  },
+  {
    "id": "B19-EMERGE",
    "kind": "approved",
    "title": "Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences",
@@ -42443,9 +42465,14 @@
      "date": "2026-10-23",
      "change": "implementation_status: None -> PARTIALLY IMPLEMENTED; branch: None -> wip/build19; commits + a7c84e9; next_action",
      "why": "recorder run 2 (wip/build19 b2f7dc2, 30 days, seeds 1-2): every bandit starved (11 and 13), no villager did. Cause 1 (defect): a chase blocked by a wall never ended, the chaser stood with a target and no plan and never decided again; fixed a7c84e9 with a regression test. Cause 2 (design question): the market's 60% health condition kept a hurt bandit with coins from buying food; bandits do not heal. Evidence in docs/design/SIM_FINDINGS.md run 2"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "run 3 on a7c84e9: no longer stuck; seed 1 bandit starvation 11 -> 2 (2 slain by a villager), seed 2 still 17 starved from scarcity under the current rules (poach 25%, market needs 15 coins and 60% health, no healing); design question to the owner"
     }
    ],
-   "next_action": "owner decides the health condition on the bandits' food purchase and whether bandits heal; run 3 on a7c84e9 measures the effect of the chase fix",
+   "next_action": "owner: health condition on the bandits' food purchase, the 15-coin minimum, whether bandits heal",
    "implementation_status": "PARTIALLY IMPLEMENTED",
    "branch": "wip/build19",
    "commits": [
@@ -52453,16 +52480,22 @@
      "date": "2026-10-23",
      "change": "tests: judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass -> judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass; test_commit: b7f832e -> b2f7dc2",
      "why": "targeted suites on the Build 19 merge b2f7dc2: judgment_x19 101, judgment_live 144, judgment 217, bonds 98, personality 91, family_first 104, guard_save 20, recorder 160, identity 98, recf1 23, migration 93, save_transfer 21, aging 136, family 51, relations 80, conservation 8, world 339, all 0 failures, 0 script errors; wiki_test passed. Determinism (gate twice via the recorded runs) and the approved 30-day recorder run (seeds 1, 2) started"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "test_commit: b2f7dc2 -> a7c84e9; commits + a7c84e9; next_action",
+     "why": "a7c84e9: determinism twice confirmed, no leaks, 30-day recorder run analysed, blocked-chase defect fixed with a test; baseline proposed (B19-BASELINE); recorder off in every build (recorder.json enabled false)"
     }
    ],
-   "next_action": "lead integrates with wip/recorder on wip/build19; combined tests; 30-day recorder run; baseline proposal",
+   "next_action": "owner: B19-BASELINE and SIM-F4 rules; then wiki check and packaging for the owner's release authorization",
    "assigned_worker": "lead",
    "branch": "wip/build19",
    "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass",
-   "test_commit": "b2f7dc2",
+   "test_commit": "a7c84e9",
    "commits": [
     "b7f832e",
-    "b2f7dc2"
+    "b2f7dc2",
+    "a7c84e9"
    ]
   },
   {
