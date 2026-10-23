@@ -669,7 +669,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (182)
+## Owner decisions (183)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -855,4 +855,5 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-HARMED | Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)? | 19 | APPROVED |  |
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | 19 | APPROVED |  |
 | X19-REGARD | Relations regard is both trust (believing stories) and harm (a seen crime lowers it), so victims believe culprits less: accept this coupling or separate trust from regard? | 19 | APPROVED |  |
+| X19-RUNNERUP | Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value? | 19 | OPEN |  |
 

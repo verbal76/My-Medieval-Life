@@ -41550,7 +41550,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/expansion19-preparation",
    "commits": [],
    "parent": "EXP-C",
    "depends_on": [],
@@ -41558,7 +41558,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
+   "next_action": "payment up front for a mixed-feelings partner, when judgment is wired into trade decisions (Build 19 integration)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -41588,6 +41588,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> PARTIALLY IMPLEMENTED; branch:  -> wip/expansion19-preparation; next_action",
+     "why": "checked on 2456294: ambivalence is computed and a near-zero net stays willing and gossips; payment up front is not yet in live trade terms"
     }
    ],
    "target_build": "19",
@@ -41597,7 +41602,8 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "PARTIALLY IMPLEMENTED"
   },
   {
    "id": "SJD-Q05",
@@ -41611,10 +41617,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "2456294"
+   ],
    "parent": "EXP-C",
    "depends_on": [],
    "blockers": [],
@@ -41651,6 +41659,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical; test_commit: None -> 2456294; commits + 2456294",
+     "why": "implemented on the prospective branch (judgment off live)"
     }
    ],
    "target_build": "19",
@@ -41660,7 +41673,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "2456294"
   },
   {
    "id": "SJD-Q06",
@@ -41863,10 +41879,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "2456294"
+   ],
    "parent": "EXP-C",
    "depends_on": [],
    "blockers": [],
@@ -41903,6 +41921,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical; test_commit: None -> 2456294; commits + 2456294",
+     "why": "implemented on the prospective branch (judgment off live)"
     }
    ],
    "target_build": "19",
@@ -41912,7 +41935,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "2456294"
   },
   {
    "id": "SJD-Q10",
@@ -42052,10 +42078,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "2456294"
+   ],
    "parent": "EXP-C",
    "depends_on": [],
    "blockers": [],
@@ -42092,6 +42120,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical; test_commit: None -> 2456294; commits + 2456294",
+     "why": "checked on 2456294: the prototype already matches the answer"
     }
    ],
    "target_build": "19",
@@ -42101,7 +42134,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "2456294"
   },
   {
    "id": "SJD-Q13",
@@ -49616,10 +49652,12 @@
     "Owner decides"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "2456294"
+   ],
    "parent": "PROS-19",
    "depends_on": [],
    "blockers": [],
@@ -49656,6 +49694,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=19",
      "why": "a Build 19 judgment decision (parent PROS-19); the build is established by its parent"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical; test_commit: None -> 2456294; commits + 2456294",
+     "why": "implemented on the prospective branch (judgment off live)"
     }
    ],
    "target_build": "19",
@@ -49663,7 +49706,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "2456294"
   },
   {
    "id": "X19-CRT12",
@@ -49677,10 +49723,12 @@
     "Owner decides"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "2456294"
+   ],
    "parent": "PROS-19",
    "depends_on": [],
    "blockers": [],
@@ -49717,6 +49765,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=19",
      "why": "a Build 19 judgment decision (parent PROS-19); the build is established by its parent"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical; test_commit: None -> 2456294; commits + 2456294",
+     "why": "checked on 2456294: the prototype already matches the answer"
     }
    ],
    "target_build": "19",
@@ -49724,7 +49777,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "2456294"
   },
   {
    "id": "X19-DECAY",
@@ -49840,7 +49896,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/expansion19-preparation",
    "commits": [],
    "parent": "PROS-19",
    "depends_on": [],
@@ -49848,7 +49904,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "replace the friend's waiver with a reduction (agent proposal: halved like a nearby friend, at least 1 coin), update the wiki line; log the amount for owner review",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -49878,6 +49934,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=19",
      "why": "a Build 19 judgment decision (parent PROS-19); the build is established by its parent"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IN DEVELOPMENT; branch:  -> wip/expansion19-preparation; next_action",
+     "why": "the waiver is live code (World.guard_confront sets fine 0 for a friend; wiki.gd says let off with a warning); assigned to the X19 worker on the prospective branch"
     }
    ],
    "target_build": "19",
@@ -49885,7 +49946,8 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IN DEVELOPMENT"
   },
   {
    "id": "X19-HARMED",
@@ -49899,10 +49961,12 @@
     "Owner decides"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical",
    "playtest": [],
-   "branch": "",
-   "commits": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "2456294"
+   ],
    "parent": "PROS-19",
    "depends_on": [],
    "blockers": [],
@@ -49939,6 +50003,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=19",
      "why": "a Build 19 judgment decision (parent PROS-19); the build is established by its parent"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; branch:  -> wip/expansion19-preparation; tests:  -> judgment_test 189, judgment_live_test 53, judgment_decay_demo 24, relations_test 79; sim_gate identical; test_commit: None -> 2456294; commits + 2456294",
+     "why": "checked on 2456294: the prototype already matches the answer"
     }
    ],
    "target_build": "19",
@@ -49946,7 +50015,10 @@
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
-   "blocks_implementation": false
+   "blocks_implementation": false,
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "test_commit": "2456294"
   },
   {
    "id": "X19-Q-TIMING",
@@ -50080,6 +50152,28 @@
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
    "blocks_implementation": false
+  },
+  {
+   "id": "X19-RUNNERUP",
+   "kind": "decision",
+   "title": "Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value?",
+   "description": "Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value?",
+   "source": "docs/directives/2026-10-23_owner_answers_build19_sjd.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_owner_answers_build19_sjd.md"
+    }
+   ]
   }
  ]
 }
