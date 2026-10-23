@@ -70,7 +70,7 @@ static func register_member(w: World, id: int, sid: String, sex: int, born_day: 
 ## A player character is given an id and entered as the current player.
 static func register_player(w: World, p: PlayerState, mother := -1, father := -1) -> void:
 	if p.pid <= 0:
-		p.pid = w.new_person_id()
+		p.pid = w.new_band_id()
 	w.people[p.pid] = {"name": p.name, "family": p.family, "sex": p.sex, "born": p.born, "mother": mother, "father": father,
 		"where": PLAYER, "since": w.day()}
 
@@ -108,11 +108,13 @@ static func succeed(w: World, parent: PlayerState, heir: PlayerState, kid: NPC) 
 static func upgrade(w: World, from_version: int) -> String:
 	var seen := {}
 	var top := 0
+	w.next_band_id = World.BAND_START
 	for n: NPC in w.npcs:
 		if seen.has(n.id):
 			return "two villagers in the save share the id %d (%s %s and %s %s)" % [n.id, n.name, n.family, (seen[n.id] as NPC).name, (seen[n.id] as NPC).family]
 		seen[n.id] = n
-		top = maxi(top, n.id)
+		if n.id < World.BAND_START:
+			top = maxi(top, n.id)
 	w.next_person_id = top + 1
 	w.people = {}
 	for n: NPC in w.npcs:
@@ -198,12 +200,16 @@ static func _matches(n: NPC, m: Array) -> bool:
 ## The register's invariants: "" when they hold, else what is wrong.
 static func verify(w: World) -> String:
 	var used := {}
-	var top := 0
+	var top := 0                        # highest village-range id
+	var btop := World.BAND_START - 1    # highest band id
 	for n: NPC in w.npcs:
 		if not w.people.has(n.id):
 			return "villager %d (%s) has no register entry" % [n.id, n.name]
 		used[n.id] = "villager"
-		top = maxi(top, n.id)
+		if n.id >= World.BAND_START:
+			btop = maxi(btop, n.id)
+		else:
+			top = maxi(top, n.id)
 	if w.regions != null:
 		for s: OffMapSettlement in w.regions.list:
 			for h in s.hh:
@@ -216,14 +222,27 @@ static func verify(w: World) -> String:
 					if used.get(id, "") == "villager" and (w.by_id.get(id) as NPC) != null and (w.by_id.get(id) as NPC).alive:
 						return "id %d is a living villager and a member of %s" % [id, s.id]
 					used[id] = s.id
-					top = maxi(top, id)
+					if id >= World.BAND_START:
+						btop = maxi(btop, id)
+					elif not w.by_id.has(id):        # (a village-range id belongs to a person who lived in the village: their record is kept)
+						return "member %d of %s has a village-range id and no villager record" % [id, s.id]
 					if not w.people.has(id):
 						return "member %d of %s has no register entry" % [id, s.id]
 	if w.player.pid <= 0 or not w.people.has(w.player.pid):
 		return "the player has no register entry"
-	top = maxi(top, w.player.pid)
+	if w.player.pid < World.BAND_START and not w.by_id.has(w.player.pid):
+		return "the player's id %d is a village id of no villager record" % w.player.pid
 	for id in w.people:
-		top = maxi(top, int(id))
-	if w.next_person_id <= top:
-		return "the id counter (%d) is not above the highest id (%d)" % [w.next_person_id, top]
+		if int(id) >= World.BAND_START:
+			btop = maxi(btop, int(id))
+		else:
+			top = maxi(top, int(id))
+	if w.player.pid >= World.BAND_START:
+		btop = maxi(btop, w.player.pid)
+	elif w.player.pid > top:
+		top = w.player.pid
+	if w.next_person_id <= top or w.next_person_id >= World.BAND_START:
+		return "the village id counter (%d) is not above the highest village id (%d) or has reached the band" % [w.next_person_id, top]
+	if w.next_band_id <= btop:
+		return "the band id counter (%d) is not above the highest band id (%d)" % [w.next_band_id, btop]
 	return ""

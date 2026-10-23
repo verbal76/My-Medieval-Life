@@ -23,6 +23,7 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	GameData.ensure()
 	test_counter()
+	test_band()
 	test_register()
 	test_leave_and_return()
 	test_two_settlements_twice()
@@ -128,7 +129,7 @@ func test_counter() -> void:
 	var top := 0
 	for n: NPC in w.npcs:
 		top = maxi(top, n.id)
-	check(w.next_person_id > top, "the counter starts above every villager's id")
+	check(w.next_person_id > top and w.next_person_id < World.BAND_START, "the counter starts above every villager's id, in the village range")
 	var ids := []
 	for i in 60:
 		ids.append(w.brain._next_npc_id())
@@ -159,6 +160,45 @@ func test_counter() -> void:
 
 
 # ------------------------------------------------------------------ the register ----------------
+## ID-D2 option B: the two ranges, their counters and the guard.
+func test_band() -> void:
+	var w := _world()
+	var members := 0
+	var lowest := 1 << 60
+	var highest := 0
+	for s: OffMapSettlement in w.regions.list:
+		for h in s.hh:
+			for m in h.mem:
+				var id := OffMapSettlement.member_id(m)
+				members += 1
+				lowest = mini(lowest, id)
+				highest = maxi(highest, id)
+	check(lowest == World.BAND_START and highest < w.next_band_id, "a new world's members take ids from 1,000,000 upward (%d members, %d to %d)" % [members, lowest, highest])
+	check(w.player.pid > lowest and w.player.pid < w.next_band_id and w.player.pid >= World.BAND_START, "the founder's id is in the band; the band counter is above all")
+	var top := 0
+	for n: NPC in w.npcs:
+		top = maxi(top, n.id)
+	check(top < World.BAND_START and w.next_person_id == top + 1, "every villager is below the band, the village counter is highest plus one, as in Build 18")
+	var a := w.new_band_id()
+	var v := w.new_person_id()
+	var b := w.new_band_id()
+	check(a >= World.BAND_START and b == a + 1 and v < World.BAND_START and v == top + 1, "the counters are independent")
+	# a record holding a band id (a settlement-born arrival) lifts the band counter, never the village's
+	var h := NPC.new()
+	h.id = w.next_band_id + 40
+	w.npcs.append(h)
+	w.by_id[h.id] = h
+	check(w.new_band_id() > h.id and w.new_person_id() < World.BAND_START, "a band-id record lifts only the band counter")
+	# the village range never reaches the band: the last id is issued, the next is refused (-1) rather than colliding
+	w.next_person_id = World.BAND_START - 1
+	w.npcs.erase(h)
+	w.by_id.erase(h.id)
+	var last := w.new_person_id()
+	var refused := w.new_person_id()
+	check(last == World.BAND_START - 1 and refused == -1, "village ids stop at 999,999: the next request is refused, not issued from the band")
+	w.dispose()
+
+
 func test_register() -> void:
 	var w := _world()
 	var covered := true
@@ -310,10 +350,10 @@ func test_offmap_birth_then_arrival() -> void:
 	if born_id == 0:
 		return
 	var e: Dictionary = w.people[born_id]
-	check(str(e.where) == "higham" and born_id < w.next_person_id and not w.by_id.has(born_id), "the newborn has an id from the world's counter and a register entry in the settlement, no villager record")
+	check(str(e.where) == "higham" and born_id >= World.BAND_START and born_id < w.next_band_id and not w.by_id.has(born_id), "the newborn has an id from the settlement band and a register entry in the settlement, no villager record")
 	check(int(e.mother) > 0 and w.people.has(int(e.mother)), "and their mother's id")
-	var nid := w.new_person_id()
-	check(nid > born_id, "the counter moved past it, so no villager can take it")
+	var nid := w.new_band_id()
+	check(nid > born_id and w.new_person_id() < World.BAND_START, "the band counter moved past it, and the village's sequence is untouched")
 	# the household comes to the village: the child's first villager record is under the id they were born with
 	var h: Dictionary = s.hh[born_h]
 	var size: int = h.mem.size()
@@ -322,6 +362,7 @@ func test_offmap_birth_then_arrival() -> void:
 	check(arrived and w.alive_count() == alive0 + size, "the household arrives (%d people)" % size)
 	var n: NPC = w.npc(born_id)
 	check(n != null and n.alive and n.name != "" and str(w.people[born_id].where) == "village" and w.people[born_id].name == n.name, "the settlement-born child's first villager record has the id they were born with")
+	check(n != null and n.id == born_id and n.id >= World.BAND_START, "a settlement-born arrival keeps their band id")
 	check(_all_ids_unique(w) and w.regions.audit() == "", "ids stay unique")
 
 
@@ -341,7 +382,7 @@ func test_death_in_settlement() -> void:
 		if str(w.people[id].where) == "dead":
 			dead_id = id
 	check(_find_member(w, dead_id).is_empty() and w.people.has(dead_id), "and the dead are no longer members, but are never removed from the register")
-	check(w.new_person_id() > dead_id, "their id is not issued again")
+	check(w.new_band_id() > dead_id, "their id is not issued again")
 	# a person away who dies in the settlement stays one person
 	var who := _plain_adult(w)
 	_leave(w, s, who)
@@ -425,7 +466,7 @@ func test_succession_child() -> void:
 	var rec := w.npc(k2.id)
 	check(rec != null and not rec.alive and rec.became_player and rec.name == heir_name and not w.brain._members(k2.household).has(rec), "the child's record is kept, not alive and in no household's living members")
 	check(str(w.people[k2.id].where) == "player" and str(w.people[old_pid].where) == "ancestor" and old_pid != k2.id, "the register: the heir is the player, the predecessor an ancestor under their own id")
-	check(w.new_person_id() > k2.id, "the child's id is never issued again")
+	check(w.new_person_id() > k2.id and k2.id < World.BAND_START and heir.pid == k2.id, "the child's id is never issued again (a village id, kept by the heir)")
 	check(w.npc(k1.id) != null and w.npc(k1.id).alive, "the other child stays a villager")
 	check(float(w.relations.peek(Life.PLAYER_ID, villager.id).regard) == 37.0 and w.relations.friends(Life.PLAYER_ID, villager.id), "Build 18's baseline: the village's view of the player goes on to the heir (regard 37, friends)")
 	check(float(w.relations.peek(k2.id, villager.id).regard) == 5.0, "and the heir's own tie as a villager is still theirs (regard 5): the two opinions are separate records")
@@ -455,8 +496,8 @@ func test_succession_relative() -> void:
 	var count := w.npcs.size()
 	w.player.alive = false
 	w.continue_as_heir()
-	check(w.player.pid > 0 and w.player.pid != old_pid and str(w.people[w.player.pid].where) == "player" and str(w.people[old_pid].where) == "ancestor", "a relative heir gets a new id; the predecessor is an ancestor")
-	check(w.npcs.size() == count and w.next_person_id > w.player.pid, "no villager record was made or lost")
+	check(w.player.pid >= World.BAND_START and w.player.pid != old_pid and str(w.people[w.player.pid].where) == "player" and str(w.people[old_pid].where) == "ancestor", "a relative heir gets a new id; the predecessor is an ancestor")
+	check(w.npcs.size() == count and w.next_band_id > w.player.pid, "no villager record was made or lost")
 	w.player.alive = false
 	w.continue_as_heir()
 	check(str(w.people[old_pid].where) == "ancestor" and w.people.size() >= 3, "the next succession keeps every earlier ancestor")
@@ -517,7 +558,18 @@ func test_upgrade_fixture() -> void:
 		for h in s.hh:
 			members += h.mem.size()
 	check(covered and w.player.pid > 0 and w.people.size() == npcs + members + 1, "the register covers every villager, every member and the player (%d + %d + 1)" % [npcs, members])
-	check(w.next_person_id > top and _all_ids_unique(w), "the counter is above every id, and the ids are unique")
+	check(w.next_person_id > top and w.next_person_id < World.BAND_START and _all_ids_unique(w), "the village counter is above every villager id (and below the band), and the ids are unique")
+	var band_ok := w.player.pid >= World.BAND_START and w.next_band_id > w.player.pid
+	var prev := w.player.pid
+	var order_ok := true
+	for s: OffMapSettlement in w.regions.list:
+		for h in s.hh:
+			for m in h.mem:
+				var mid := OffMapSettlement.member_id(m)
+				band_ok = band_ok and mid >= World.BAND_START and mid < w.next_band_id and not w.by_id.has(mid)
+	var first_member := OffMapSettlement.member_id(w.regions.list[0].hh[0].mem[0])
+	check(band_ok and first_member == World.BAND_START, "every settlement member and the player have band ids, from 1,000,000 in settlement, household, member order")
+	check(w.player.pid == w.next_band_id - 1, "the player's id follows the members' in the band")
 	check(int(w.identity_report.from_version) == 17 and int(w.identity_report.counts.villagers) == npcs, "the report names the save's version and counts")
 	var ids_a := JSON.stringify(w._people_to_dict(), "", true, true)
 	var rep_a := JSON.stringify(w.identity_report, "", true, true)

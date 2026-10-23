@@ -40,6 +40,12 @@ var by_id := {}
 ## (Identity); `identity_report` is what the upgrade of an older save found (kept so it can be read later); `tie_history` holds, for
 ## each former player character (by person id), a read-only snapshot of the village's ties with them when they died.
 var next_person_id := 1
+## ID-D2 option B (owner, 2026-10-23): settlement residents (off-map members, including those born there) and player characters take their
+## ids from a separate band that starts at BAND_START, with its own counter (only raised). The village's own sequence (village-born
+## people, newcomers) stays below it, as in Build 18, so the id-seeded village rules do not move. An id keeps its value wherever its
+## person goes. See docs/design/IDENTITY.md for the headroom.
+const BAND_START := 1000000
+var next_band_id := BAND_START
 var people := {}
 var identity_report := {}
 var tie_history := {}
@@ -197,6 +203,9 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	for n: NPC in npcs:
 		Identity.register_npc(self, n)           # ID-01: the register learns the settlers
 	next_person_id = 1
+	for n: NPC in npcs:
+		next_person_id = maxi(next_person_id, n.id + 1)       # the village's sequence goes on above the settlers (as Build 18's highest-plus-one did)
+	next_band_id = BAND_START
 	regions = Regions.create(world_seed)
 	regions.assign_member_ids(self)              # ID-01: every settlement member has an id from the one counter (after the settlers' own)
 	regions.bind_world(self)
@@ -2202,21 +2211,39 @@ func npc(id: int) -> NPC:
 func new_person_id() -> int:
 	var top := next_person_id
 	for o: NPC in npcs:
-		top = maxi(top, o.id + 1)
-	top = maxi(top, player.pid + 1)
+		if o.id < BAND_START:
+			top = maxi(top, o.id + 1)
+	if player.pid < BAND_START:
+		top = maxi(top, player.pid + 1)
+	if top >= BAND_START:       # (returns -1, nothing issued) unreachable in play (docs/design/IDENTITY.md, headroom): refuse loudly rather than collide with the band
+		push_error("village person ids are exhausted (%d): refusing to issue one that would collide with the settlement band" % top)
+		return -1
 	next_person_id = top + 1
 	return top
 
 
-## The id of a person born or founded in a settlement. (One counter for the whole world; a separate band for the settlements would
-## keep the village's own ids as they were, and is the one-line alternative, if the village's id sequence must not move.)
+## ID-D2: a new id from the settlement band (a person born or founded in a settlement, a player character). Never lowered, never
+## reused; a record or player already holding a band id lifts the counter above it first. The band has no upper collision: nothing else
+## issues ids at or above BAND_START.
+func new_band_id() -> int:
+	var top := next_band_id
+	for o: NPC in npcs:
+		if o.id >= BAND_START:
+			top = maxi(top, o.id + 1)
+	if player.pid >= BAND_START:
+		top = maxi(top, player.pid + 1)
+	next_band_id = top + 1
+	return top
+
+
+## The id of a person born or founded in a settlement (the band).
 func new_offmap_person_id() -> int:
-	return new_person_id()
+	return new_band_id()
 
 
 ## The id taken a moment ago went to nobody (a move that was not made): it is given back, but only if nothing has been issued since.
 func release_person_id(id: int) -> void:
-	if id == next_person_id - 1 and not by_id.has(id):
+	if id < BAND_START and id == next_person_id - 1 and not by_id.has(id):
 		next_person_id = id
 		people.erase(id)
 
@@ -4194,7 +4221,7 @@ func to_dict() -> Dictionary:
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
-		"next_person_id": next_person_id, "people": _people_to_dict(),
+		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
 	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 
@@ -4204,6 +4231,7 @@ func to_dict() -> Dictionary:
 func _load_identity(d: Dictionary) -> bool:
 	if d.has("people"):
 		next_person_id = int(d.get("next_person_id", 1))
+		next_band_id = int(d.get("next_band_id", BAND_START))
 		for k in d.people:
 			var e: Dictionary = d.people[k]
 			people[int(k)] = {"name": str(e.get("name", "")), "family": str(e.get("family", "")), "sex": str(e.get("sex", "male")), "born": float(e.get("born", 0.0)),
