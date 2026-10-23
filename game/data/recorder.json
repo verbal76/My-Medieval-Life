@@ -1,0 +1,10 @@
+{
+  "format": "mml-recorder-config/1",
+  "note": "Flight recorder (REC-19, owner decisions REC-D1 to REC-D4, 2026-10-23). enabled is false: in a normal game no recorder object exists, nothing is written and nothing in the simulation reads this file except World.setup. A test or the headless harness switches it on (FlightRecorder.test_enabled, economy_sim.gd --record DIR). The recorder never draws from any random generator and never mutates game state.",
+  "enabled": false,
+  "root": "user://recorder",
+  "buffer_rows": 50000,
+  "storage_cap_bytes": 1073741824,
+  "hourly_samples": true,
+  "live_grace_seconds": 120
+}
