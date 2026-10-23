@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 471 (239 of them still open) |
-| **Open entries now** (rules excluded) | | **416** |
+| Entries added since | | 475 (243 of them still open) |
+| **Open entries now** (rules excluded) | | **420** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (471)
+## Added since the baseline (475)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -203,6 +203,8 @@ None.
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
+| FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 19 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
@@ -244,6 +246,7 @@ None.
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 15 |
+| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
@@ -420,6 +423,7 @@ None.
 | Q18-7 | Q18-7: migration both ways between the village and the other settlements, for reasons | decision | APPROVED |  |
 | Q18-8 | Q18-8: visiting other settlements in person stays at Build 20 or later (SET-E) | decision | APPROVED |  |
 | Q18-9 | Settlement capability levels affect pay scales and production output only; never a permission gate | decision | APPROVED | 18 |
+| RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | REG-BUY-01 | The village buys food and other goods from the five settlements (villagers, households, businesses and the treasury as buyers), paying the settlement's sellers, carried by the traders' visits | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REG-BUY-D1 | When the village buys food from a settlement, may the settlement's sellers sell food its own households will need (the market decides), or do they release only a surplus above their own households' needs? | decision | APPROVED | 18 |
 | REG-BUY-P1 | Settlement food-selling policy (REG-BUY-01), owner approved: (1) the traders also carry food bought from their settlement's farms, herds and cookshop; (2) a settlement releases only food above its local claim: its households' foreseeable need over reserve_days less their pantries and less the food its businesses expect to produce (World.necessity, NPCBrain._sale_stock: local buyers first); (3) a food-producing business with a demonstrated cash shortfall for essential operating expenses (wages, seeds, animal feed or other established necessities, from existing expense mechanisms) may sell into its necessity reserve, limited to that shortfall; (4) the settlement's own floating prices | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

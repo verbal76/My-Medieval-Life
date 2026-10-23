@@ -8,15 +8,22 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 19 |
-| Integrated | 0 of 19 (0%) |
-| Automated tests passed | 8 of 19 (42%) |
-| Integration verified | 0 of 19 (0%) |
-| Gameplay verified | 0 of 19 (0%) |
-| Owner playtested | 0 of 19 (0%) |
-| Complete | 0 of 19 (0%) |
-| Open (release blockers) | 19 |
+| Approved requirements in scope | 21 |
+| Integrated | 0 of 21 (0%) |
+| Automated tests passed | 8 of 21 (38%) |
+| Integration verified | 0 of 21 (0%) |
+| Gameplay verified | 0 of 21 (0%) |
+| Owner playtested | 0 of 21 (0%) |
+| Complete | 0 of 21 (0%) |
+| Open (release blockers) | 21 |
 | Open owner decisions (blocking) | 11 (0) |
+
+## In development (worker assigned) (2)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | OWNER APPROVED | IN DEVELOPMENT | repair workers (Sonnet subagents) / wip/expansion19-preparation, wip/expansion20-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | OWNER APPROVED | IN DEVELOPMENT | repair worker X19 (Sonnet subagent) / wip/expansion19-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 

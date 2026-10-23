@@ -18329,6 +18329,77 @@
    "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
   },
   {
+   "id": "FIX-D1D2",
+   "kind": "approved",
+   "title": "Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern",
+   "description": "Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern",
+   "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
+   "owner_wording": "A save file must never activate a disabled feature. Disabled features must preserve their saved data without processing, modifying, or deleting it.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Load with the feature off: nothing constructed, section kept byte-identical through repeated save cycles",
+    "Load with the feature on: section restored as before"
+   ],
+   "target_build": "19",
+   "parent": "XAUDIT-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> repair workers (Sonnet subagents); branch: None -> wip/expansion19-preparation, wip/expansion20-preparation",
+     "why": "assigned: D1 on the Expansion 19 branch, D2 on the Expansion 20 branch"
+    }
+   ],
+   "assigned_worker": "repair workers (Sonnet subagents)",
+   "branch": "wip/expansion19-preparation, wip/expansion20-preparation"
+  },
+  {
+   "id": "FIX-D3",
+   "kind": "approved",
+   "title": "Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on",
+   "description": "Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on",
+   "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
+   "owner_wording": "Move the friendly-guard fine adjustment behind the appropriate feature gate.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "A player-theft and guard-response test for both settings"
+   ],
+   "target_build": "19",
+   "parent": "XAUDIT-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> repair worker X19 (Sonnet subagent); branch: None -> wip/expansion19-preparation",
+     "why": "assigned with D1"
+    }
+   ],
+   "assigned_worker": "repair worker X19 (Sonnet subagent)",
+   "branch": "wip/expansion19-preparation"
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",
@@ -22053,6 +22124,42 @@
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN"
+  },
+  {
+   "id": "ID-01",
+   "kind": "approved",
+   "title": "One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history",
+   "description": "One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history",
+   "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
+   "owner_wording": "Design and implement one authoritative identity mechanism ... Do not create replacement people ... Do not reuse historical identities.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Design and save-migration plan approved by the owner before the schema change",
+    "Tests: migration, inheritance, persistence, historical continuity"
+   ],
+   "target_build": "unassigned",
+   "parent": "XAUDIT-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
+     "why": "lead drafts the identity and save-migration design for the owner's approval"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "staging/my-medieval-life"
   },
   {
    "id": "INFO-01",
@@ -38006,6 +38113,34 @@
    "verification_status": "INTEGRATION VERIFIED",
    "release_status": "RELEASED",
    "completion": "COMPLETE"
+  },
+  {
+   "id": "RECON-01",
+   "kind": "approved",
+   "title": "Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off",
+   "description": "Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off",
+   "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
+   "owner_wording": "There must be one authoritative calculation for each behavioral factor and one authoritative reservation mechanism for each inventory quantity.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "Audit and proposal first; no working system replaced merely for a newer alternative"
+   ],
+   "target_build": "unassigned",
+   "parent": "XAUDIT-01",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    }
+   ]
   },
   {
    "id": "REG-BUY-01",
