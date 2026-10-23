@@ -49588,6 +49588,11 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "next action reworded (the design document does not exist yet)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner added design details (fire spreading into towns from a nearby forest fire, campfires igniting in drought, heavy rain causing flash floods, creeks and rivers swelling to one and a half to twice their width, animals fleeing and stampeding, drought cutting yields and failing crops, drought illness in the elderly)"
     }
    ],
    "next_action": "write the Expansion 25 design specification and audit between Build 19 tasks; no code until approved"

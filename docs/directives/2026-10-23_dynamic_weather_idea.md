@@ -15,3 +15,8 @@ I was thinking about what else would actually help here. I think we need some dy
   years, sometimes deadly; damage real and lasting until rebuilt; no hidden rescue (WDR-022).
 - Washed away: **"Mixed fates (Recommended)"**: some drown; others are carried downstream, missing for a while (family
   grieves, village searches), and walk back days later as the same person with their permanent identity and memories.
+
+## Owner design details (same day, in the session; verbatim, spoken)
+
+Well hit me with the questions there boss
+Fires should be able to spread through towns if they come from a forest fire. That's too close campfires have the chance of starting fires if it's in a drought. When there's heavy rains, they can create a flash flood on their own. If there's already a crick or a river running through an area the banks will swell to. Maybe you know a half or twice their size and cause flooding along the banks. Animals will migrate away from fires and floods and stampede in different areas. Droughts cause obviously less production of grown goods possibly failed crops. It will also cause illness in the elderly
