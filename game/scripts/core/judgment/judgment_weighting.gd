@@ -77,9 +77,17 @@ static func choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile:
 		for s in scored:
 			if int(s[0]) >= best_u - int(dc.margin):
 				near.append(s[1])
-		if near.size() > 1:
-			var r := JudgmentMath.hash_ints([store.world_seed if store != null else 0, chooser] + key) % near.size()
+		var seed_ := store.world_seed if store != null else 0
+		if dc.has("runner_up_permille"):
+			# SJD-Q09 "sometimes near-best": usually the best; with the seeded chance runner_up_permille, one of the other
+			# options within the margin (chosen by a second seeded hash). Same inputs, same pick.
+			near.erase(best)
+			if not near.is_empty() and JudgmentMath.hash_ints([seed_, chooser, 7919] + key) % 1000 < int(dc.runner_up_permille):
+				best = near[JudgmentMath.hash_ints([seed_, chooser] + key) % near.size()]
+		elif near.size() > 1:
+			var r := JudgmentMath.hash_ints([seed_, chooser] + key) % near.size()
 			best = near[r]
+		if best != null:
 			for s in scored:
 				if s[1] == best:
 					best_u = int(s[0])

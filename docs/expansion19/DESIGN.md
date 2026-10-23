@@ -44,8 +44,8 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 3. **Interpretation** P in [-1, +1] (permille), hierarchical: the affected party (victim of a BAD event, beneficiary
    of a GOOD one) reads it at `affected`; an accomplice at `accomplice`; others by their tie to the affected party:
    kin, friend, else bystander, reversed to `rival` when they judge the affected party at or below `rival_net_at`;
-   loyalty to the actor (kin, friend) softens condemnation; on events marked ambiguous only, prior judgment of the
-   actor biases P, capped. The parts are kept for diagnostics (`last_trace`).
+   loyalty to the actor (kin, friend) softens condemnation; prior judgment of the actor never colours the reading
+   (SJD-Q05, "Not at all"). The parts are kept for diagnostics (`last_trace`).
 4. **Contribution** I = S x P x C (confidence policy), split by actor share; I >= 0 adds to the baseline's ledger,
    I < 0 to the other; contributions are never negative; one active contribution per observer, actor and event,
    replaced by difference, so repeats and corrections never double count (spec s.5.1).
@@ -122,17 +122,23 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 | SJD-Q11 permanent memories | Murder permanent; other significant events by configurable severity and personal significance; not the ordinary horizon; survive save, load and compaction; ordinary memory bounded | Permanent memory flag, outside capacity, never fades; facts of permanent memories never retire; saved and reloaded (`test_q11_permanent_memories`; perf: ordinary memory within 24 at every size) | `permanent_personal_severity` 2000 (being assaulted or rescued oneself) is a proposal |
 | SJD-Q14 universal integration | Judgment influences "every applicable NPC decision"; existing decision authority remains; "shared weighting and evaluation interfaces"; never override feasibility or conservation; staged; document unsupported domains | Six existing decision points through `JudgmentWeighting` (section 9), each behind the off switch, each tested both ways | Further domains (section 9.2); CON-01 on Build 17 |
 
-### 5.2 Still provisional (not separately approved)
+### 5.2 Answered 2026-10-23 (directives `2026-10-23_owner_answers_build19_sjd.md`, `..._x19_assault_crt12_decay.md`, `..._x19_guard_harmed_timing_regard.md`)
 
-| Question | Parameter(s) | Provisional value |
+| Question | Owner's answer | State in the prototype |
 |---|---|---|
-| SJD-Q03 thresholds | one ledger scale; `decision.trait_spread_permille` | one scale, spread 0 |
-| SJD-Q04 ambivalence | `ambivalence` factor weight | stored, weight 0 |
-| SJD-Q05 prior bias | `interpret.prior_bias_*` | ambiguous events only, 0.01 a point, cap 0.15, never the affected |
-| SJD-Q09 best or near-best | `decision.selection`, `margin` | argmax |
-| SJD-Q12 what is scored | catalog, `min_value` | the spec's seed severities; min_value 0 |
-| SJD-Q13 weights | `decision.profiles`, `trait_spread_permille` | data profiles; no run-time learning |
-| X19-Q-TIMING | `gossip.timing`, `gossip.closeness_floor_permille` | answered 2026-10-23: "scheduled" with closeness weighting (floor 500 is an agent-proposed number) |
+| SJD-Q03 thresholds | Own tolerance each: personality-based, seeded at birth | not yet wired: `decision.trait_spread_permille` is 0 (one scale); next task, no number chosen |
+| SJD-Q04 mixed feelings | Yes: wary but willing; payment up front, gossip, can swing either way | partly matches: large GOOD and BAD give `ambivalence` (stored, weight 0); net near zero reads as disposition 50, so the person is willing and still gossips (share_net_at is a NET test); "payment up front" is a live trade-terms change, not made (needs a gameplay choice, reported) |
+| SJD-Q05 prior opinion | "Not at all": every event judged on its own | **changed**: prior bias and the `ambiguous` flag removed from code and config (`test_prior_bias`) |
+| SJD-Q09 best or near-best | Usually the best, occasionally a close second, seeded and repeatable | **changed**: `selection` "margin" with `runner_up_permille` 150 (AGENT-PROPOSED): the best, except that seeded 15% of the time one of the others within `margin` (2 points) (`test_selection_policies`) |
+| SJD-Q12 which events count | Affects them, kin or property, plus witnessed crimes and kindnesses; trivia ignored | already matches: the catalog holds only significant deeds; observers are the affected (victim, property owner, beneficiary), witnesses, and those told (kin and friends by the tie rules); fair trade and meetings carry no moral score; `min_value` is a per-type threshold (0 now, so any theft counts) |
+| SJD-Q13 weights | Born with + shaped by life | not yet wired (profiles are data, no learning) |
+| X19-ASSAULT | Permanent | **changed**: `events.assault.permanent` true: memories never fade for anyone, judgments never decay (`test_x19_assault_permanent`) |
+| X19-GUARD | Reduce, never waive | the waiver is live Build 18 code (`World.guard_confront`), outside the judgment: not changed, reported to the lead (section 10.3) |
+| X19-HARMED | Keep instant | already matches: `Relations.harmed` unchanged |
+| X19-CRT12 | Keep fixed cut-offs | already matches: `Relations.refusal` and `marry_regard` unchanged |
+| X19-DECAY | Half-life 2 game years (16 days), on each deed's ledger contribution | not touched here (decay rate stays the proposed 3 permille a day until the lead sets it) |
+
+Old section 5.2 (still provisional) is superseded by this table.
 
 ### 5a. Reconciliation of every judgment.json setting and code path with the decisions
 
@@ -144,10 +150,12 @@ system to call the shared interface).
 | `neutral_events` (removed) | Q01 | code | NEUTRAL facts always recorded |
 | `events.*.personal` | Q01 | config | none set (no automatic moral meaning) |
 | `events.killing.permanent` | Q02, Q11 | config + code | murder: permanent memory and never-decaying judgment |
-| `events.*` severities, `min_value`, `ambiguous` | Q12, Q05 | config | provisional |
+| `events.*` severities, `min_value` | Q12 | config | answered; seed severities |
+| `events.assault.permanent` | X19-ASSAULT | config | true (like murder) |
 | `interpret.affected/kin/friend/bystander/rival/accomplice`, `kin_of_actor`, `friend_of_actor` | Q08 | config | proposals implementing the owner's rule |
 | `interpret.morality_spread_permille` | Q08 | code + config | new; 150 proposed |
-| `interpret.prior_bias_*` | Q05 | config | provisional |
+| `interpret.prior_bias_*`, `events.*.ambiguous` (removed) | Q05 | code + config | none: every event judged on its own |
+| `decision.selection`, `margin`, `runner_up_permille` | Q09 | code + config | margin; 150 agent-proposed |
 | `belief.credibility_stranger`, `credibility_permille_per_point`, `credibility_min` (replacing `credibility_base`) | Q06 | code + config | credibility from Relations regard |
 | `belief.hop_factor` | Q06 | config | 900 proposed (loss per retelling) |
 | `belief.confidence_policy`, `confidence_threshold` | Q06 | config | multiplier |
@@ -376,7 +384,7 @@ With judgment on for 10 village days (`economy_sim --judgment`, seed 1) there we
      still weigh heavily);
    - (c) keep the killer rule as an absolute refusal (owner's earlier rule) and weigh the rest.
    Recommendation: (c).
-3. **CRT-06 friendly guard vs Q08.** A guard who is the player's friend lets them off with a warning
+3. **CRT-06 friendly guard vs Q08 (ANSWERED 2026-10-23: X19-GUARD "Reduce, never waive"; the live waiver in `World.guard_confront` is not changed on this branch, reported to the lead).** A guard who is the player's friend lets them off with a warning
    (`World.guard_confront`), and a friend nearby halves the fine. Q08: "A guard can personally like someone while still
    enforcing the law." Options:
    - (a) keep CRT-06 as the owner's earlier, explicit rule;

@@ -73,6 +73,7 @@ func _init() -> void:
 	test_q07_no_hop_limit()
 	test_q08_morality()
 	test_q11_permanent_memories()
+	test_x19_assault_permanent()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -298,21 +299,23 @@ func test_misattribution() -> void:
 	check(j.bad(STRANGER, JOHN) == 0 and j.bad(STRANGER, THIEF) > 0, "learning the truth reverses the false blame")
 
 
+## SJD-Q05, owner 2026-10-23 "Not at all": prior opinion never colours how an event is read; each is judged on its own.
+## (Replaces the earlier prior-bias checks, which asserted the bias this answer removes.)
 func test_prior_bias() -> void:
 	var j := store()
 	j.trace = true                                      # developer diagnostics: keep each interpretation's parts
-	j.set_ledger(STRANGER, VERBAL, 0, 10000)                   # the stranger dislikes Verbal (-10)
-	var ev := j.publish("trade_fair", [VERBAL], [], [JOHN])
-	j.observe(ev, STRANGER)
-	check(int(j.last_trace.get("prior_bias", 0)) == -100 and j.good(STRANGER, VERBAL) == JudgmentMath.scale(200, 200), "an ambiguous deed by someone disliked reads worse (P 0.3 - 0.1)")
-	j.set_ledger(STRANGER, VERBAL, j.good(STRANGER, VERBAL), 900000)
-	var e2 := j.publish("trade_fair", [VERBAL], [], [JOHN])
-	j.observe(e2, STRANGER)
-	check(int(j.last_trace.prior_bias) == -150, "the bias is capped (prior_bias_cap 0.15), so dislike cannot snowball")
-	j.observe(j.publish("trade_fair", [VERBAL], [], [STRANGER]), STRANGER)
-	check(not j.last_trace.has("prior_bias"), "no bias for the one directly affected")
-	j.observe(j.publish("theft", [VERBAL], [JOHN]), STRANGER)
-	check(not j.last_trace.has("prior_bias"), "no bias on unambiguous events")
+	var liked := store()
+	liked.trace = true
+	j.set_ledger(STRANGER, VERBAL, 0, 900000)                  # the stranger loathes Verbal
+	liked.set_ledger(STRANGER, VERBAL, 900000, 0)              # ...or adores him
+	for t in ["trade_fair", "self_defence", "hoard_in_famine"]:
+		var e1 := j.publish(t, [VERBAL], [], [JOHN])
+		var e2 := liked.publish(t, [VERBAL], [], [JOHN])
+		j.observe(e1, STRANGER)
+		liked.observe(e2, STRANGER)
+		check(int(j.last_trace.p) == int(liked.last_trace.p) and not j.last_trace.has("prior_bias"), "%s reads the same whatever the observer thinks of the actor (Q05)" % t)
+	var cfg0 := cfg()
+	check(not (cfg0.interpret as Dictionary).has("prior_bias_cap") and not (cfg0.events.trade_fair as Dictionary).has("ambiguous"), "the prior-bias settings and the ambiguous flag are gone")
 
 
 ## Spec s.7.3: John needs 50 iron; Verbal is the only supplier; John judges Verbal at -6.59: 81.841, he buys.
@@ -383,8 +386,10 @@ func test_selection_policies() -> void:
 	var c := cfg()
 	var j := store(c)
 	var cands := [{"id": "a", "counterparty": 10, "factors": {"live_order": 50000}}, {"id": "b", "counterparty": 11, "factors": {"live_order": 50000}}]
+	c.decision.selection = "argmax"
 	check(str(JudgmentWeighting.choose(j, c, JOHN, "trade_sell", cands).chosen) == "a", "argmax: a tie keeps the live code's own order")
 	c.decision.selection = "margin"
+	c.decision.erase("runner_up_permille")               # the plain margin option: an even seeded pick among the near-equal
 	var picks := {}
 	for day in 20:
 		var r := JudgmentWeighting.choose(j, c, JOHN, "trade_sell", cands, [day])
@@ -394,6 +399,29 @@ func test_selection_policies() -> void:
 	check(picks.size() == 2, "margin (SJD-Q09 option): near-equal options are picked among by a seeded hash")
 	cands[1].factors.live_order = 10000
 	check(str(JudgmentWeighting.choose(j, c, JOHN, "trade_sell", cands, [3]).chosen) == "a", "...but never an option outside the margin")
+	# SJD-Q09 answered 2026-10-23 "Sometimes near-best": the shipped config is margin + runner_up_permille
+	var shipped := cfg()
+	check(str(shipped.decision.selection) == "margin" and int(shipped.decision.runner_up_permille) > 0 and int(shipped.decision.runner_up_permille) < 500, "the shipped selection is near-best: margin with a small runner-up chance")
+	cands[1].factors.live_order = 49000                  # b is a close second (within the 2-point margin)
+	var best_n := 0
+	var second_n := 0
+	var first_run := []
+	for day in 400:
+		var r := JudgmentWeighting.choose(j, shipped, JOHN, "trade_sell", cands, [day])
+		first_run.append(str(r.chosen))
+		if str(r.chosen) == "a":
+			best_n += 1
+		else:
+			second_n += 1
+	var again := true
+	for day in 400:
+		again = again and str(JudgmentWeighting.choose(j, shipped, JOHN, "trade_sell", cands, [day]).chosen) == first_run[day]
+	check(best_n > 300 and second_n > 0 and again, "usually the best (%d of 400), occasionally a close second (%d), repeatable (Q09)" % [best_n, second_n])
+	cands[1].factors.live_order = 10000                  # far behind: never chosen
+	var far := 0
+	for day in 400:
+		far += 1 if str(JudgmentWeighting.choose(j, shipped, JOHN, "trade_sell", cands, [day]).chosen) == "b" else 0
+	check(far == 0, "...and an option outside the margin is never chosen")
 
 
 func test_traits() -> void:
@@ -811,7 +839,7 @@ func test_q07_no_hop_limit() -> void:
 	var social := JudgmentSocial.new()
 	for i in 40:
 		social.set_regard(i, (i + 1) % 40, 80)
-	for type in ["killing", "assault"]:
+	for type in ["killing", "assault", "theft"]:
 		var j := JudgmentStore.new(cfg(), social, 7)
 		var ev := j.publish(type, [99], [0])
 		j.observe(ev, 0)
@@ -827,10 +855,10 @@ func test_q07_no_hop_limit() -> void:
 					far = maxi(far, int(b.hops))
 					if not day_reached.has(i):
 						day_reached[i] = d
-		if type == "killing":
-			check(far == 39 and int(day_reached.get(39, -1)) >= 30, "no hop limit: a murder went %d retellings down the line, one meeting a day (the far end on day %d)" % [far, int(day_reached.get(39, -1))])
+		if type == "killing" or type == "assault":                  # permanent (X19-ASSAULT: an assault is, like a murder, never forgotten)
+			check(far == 39 and int(day_reached.get(39, -1)) >= 30, "no hop limit: a %s went %d retellings down the line, one meeting a day (the far end on day %d)" % [type, far, int(day_reached.get(39, -1))])
 		else:
-			check(far > 3 and far < 39, "an ordinary assault went %d retellings, past the old limit of 3, until too faint to remember" % far)
+			check(far > 3 and far < 39, "an ordinary theft went %d retellings, past the old limit of 3, until too faint to remember" % far)
 		var once := true
 		for i in 40:
 			if j.ledger(i, 99)[2] > 1:
@@ -880,8 +908,8 @@ func test_q11_permanent_memories() -> void:
 	j.observe(k, STRANGER)
 	var a := j.publish("assault", [JOHN], [BOB])
 	j.observe_all(a, [STRANGER])
-	check(bool(j.belief(BOB, a).permanent) and not bool(j.belief(STRANGER, a).permanent),
-			"an assault is unforgettable to the one assaulted (personal significance) and ordinary to a bystander")
+	check(bool(j.belief(BOB, a).permanent) and bool(j.belief(STRANGER, a).permanent),
+			"an assault is unforgettable to everyone who knows of it, as a murder is (X19-ASSAULT 'Permanent', 2026-10-23; before, only to the one assaulted)")
 	for i in 10:
 		j.observe(j.publish("help_minor", [300 + i], [], [STRANGER]), STRANGER)
 	check(j.ordinary_count(STRANGER) == 3 and bool(j.belief(STRANGER, k).permanent), "ordinary memory stays bounded; the murder is not pushed out")
@@ -889,11 +917,30 @@ func test_q11_permanent_memories() -> void:
 		j.advance_day(d)
 	check(not j.belief(STRANGER, k).is_empty() and not j.belief(BOB, a).is_empty(), "120 days on, past the 30-day horizon: the murder and the personal assault are remembered")
 	check(j.has_fact(k) and j.has_fact(a), "...their facts never retire, so they can still be told (and judged once: the knowers stay)")
-	check(j.belief(STRANGER, a).is_empty(), "the bystander's ordinary memory of the assault faded away")
-	check(j.meet(STRANGER, 400) == 1 and not j.belief(400, k).is_empty(), "a murder can be told years later")
+	check(not j.belief(STRANGER, a).is_empty(), "the bystander's memory of the assault did not fade either (X19-ASSAULT)")
+	check(j.meet(STRANGER, 400) == 2 and not j.belief(400, k).is_empty() and not j.belief(400, a).is_empty(), "a murder and an assault can be told years later (both permanent, X19-ASSAULT)")
 	var j2 := store(c)
 	j2.load_dict(JSON.parse_string(JSON.stringify(j.to_dict())))
 	check(bool(j2.belief(STRANGER, k).permanent) and bool(j2.belief(BOB, a).permanent) and j2.has_fact(k), "a save and load keep permanent memories and their facts")
 	for d in range(121, 200):
 		j2.advance_day(d)
 	check(not j2.belief(STRANGER, k).is_empty(), "...and they stay after the load")
+
+
+## X19-ASSAULT (owner 2026-10-23, "Permanent"): being assaulted is never forgotten, like murder: the memory never fades
+## for anyone who knows of it, and the judgment from it never decays.
+func test_x19_assault_permanent() -> void:
+	var c := cfg()
+	c.decay.ordinary_permille_per_day = 3
+	var j := store(c)
+	var a := j.publish("assault", [THIEF], [BOB])
+	j.observe_all(a, [BOB, STRANGER])
+	var theft := j.publish("theft", [JOHN], [BOB])
+	j.observe(theft, BOB)
+	var before := j.ledger(BOB, THIEF)
+	var t_before := int(j.ledger(BOB, JOHN)[4])
+	for d in range(1, 400):
+		j.advance_day(d)
+	check(j.ledger(BOB, THIEF) == before and int(before[6]) > 0 and int(before[4]) == 0, "the judgment of an assailant is in the permanent part and does not decay in 400 days")
+	check(t_before > 0 and int(j.ledger(BOB, JOHN)[4]) < t_before, "...while an ordinary theft's judgment does")
+	check(not j.belief(BOB, a).is_empty() and not j.belief(STRANGER, a).is_empty() and bool(j.belief(STRANGER, a).permanent), "the memory of it stays with the victim and with a bystander")

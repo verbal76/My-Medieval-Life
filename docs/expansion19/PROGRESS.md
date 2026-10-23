@@ -130,6 +130,7 @@ gameplay: everything below is on the isolated branch, and all of it is off in th
 | Round 2: compact records (packed arrays) | `JudgmentStore` | memory at 500 people 10.7 -> 4.0 MB (live rate), 57.9 -> 16.1 MB (stress); every perf scenario's final state hash identical before and after |
 | Round 2: daily update sliced over the day's hours, catch-up on touch | `JudgmentStore.begin_day/dawn_hour/dawn_slice`, World hooks | `judgment_test.gd` (105 in all): sliced and whole updates agree on every telling, choice, opinion and the end state hash over twelve days with newcomers, also with retraction, a fading view and rumours on; largest update hour at 500 people live: 11.38 ms (one call) -> 0.55 ms median day |
 | Round 4: the owner's rules Q01, Q02, Q06, Q07, Q08, Q10, Q11 | `JudgmentStore`, `JudgmentSocial.regard`, `judgment.json` | `judgment_test.gd` 164 checks (one test per decision); `judgment_decay_demo.gd` 24 |
+| Round 5 (2026-10-23 owner answers): Q05 no prior bias, Q09 near-best, X19-ASSAULT permanent | `judgment_store.gd`, `judgment_weighting.gd`, `judgment.json` | `judgment_test.gd` 189 checks (rewritten: prior bias; changed: selection, q07 line test now theft, q11 assault; new: `test_x19_assault_permanent`) |
 | Round 4: Q14 integrations (buyer, timber seller, helper hire, taking work, befriending, courting) | `JudgmentLive`, one guarded line each in `NPCBrain`, `Construction`, `Business`, `Relations` | `judgment_live_test.gd` 53 checks: judgment changes the choice, need or closeness or attraction outweighs it, feasibility never overridden, neutral judgment = the live choice |
 | Round 3: word of mouth queued and told a few a tick; reads first tell the meetings they depend on | `JudgmentStore.meet_hourly/meet_later/gossip_tick/_flush_for` | `judgment_test.gd` (129 in all): same tellings, every read along the way, beliefs and end state as telling at once (also with retraction, a fading view and rumours), and the test fails if the flush is removed; perf: spread = told at once = round 2's end state at every size and rate; at 500 people live, frame p99 1.03 -> 0.87 ms and p99.9 5.66 -> 2.15 ms |
 | Round 3: cheaper telling (cached settings, no formatting, packed sort, "nothing new" shortcut) | `JudgmentStore.tell/interpret/evaluate/_post` | results unchanged (same state hashes as round 2 at every size and rate) |
@@ -221,7 +222,7 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 ## Outstanding owner decisions
 
 - **Answered 2026-10-21:** Q01, Q02, Q06, Q07, Q08, Q10, Q11, Q14 (see above).
-- **Still provisional:** Q03, Q04, Q05, Q09, Q12, Q13.
+- **Answered 2026-10-23 and applied (round 5):** Q05 (prior bias removed), Q09 (near-best, runner_up 150 proposed), X19-ASSAULT (assault permanent); Q04, Q12, X19-HARMED, X19-CRT12 already matched; X19-GUARD needs a live change in `World.guard_confront` (lead). Q03 and Q13 (own tolerance, shaped weights) not yet wired; X19-DECAY and X19-REGARD are the lead's next tasks.
 - **Answered 2026-10-23:** X19-Q-TIMING (spread by contact and closeness): "scheduled" timing with closeness weighting is
   implemented; the floor 500 is an agent-proposed number for owner review. Options record: `docs/expansion19/GOSSIP_TIMING_PROPOSAL.md`.
 - **Needed from the owner before live integration (Gate E):**

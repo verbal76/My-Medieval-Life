@@ -131,7 +131,6 @@ var _types: Array = []
 var _tix := {}
 var _sev := PackedInt64Array()
 var _pol := PackedInt64Array()   # 1 GOOD, -1 BAD, 0 NEUTRAL
-var _amb := PackedInt64Array()   # 1 ambiguous
 var _perm := PackedInt64Array()  # 1 a memory of it never fades (Q11: murder, or permanent_severity)
 var _jperm := PackedInt64Array() # 1 a judgment from it never decays (Q02: murder)
 var _famh := PackedInt64Array()  # the type's family, hashed (Q08 personal morality)
@@ -156,7 +155,7 @@ var _b_cred_pp := 10
 var _b_cred_min := 100
 var _g_pump := 8
 var _i := PackedInt64Array()             # interpret: affected, accomplice, kin, friend, bystander, rival, rival_net_at,
-                                         # kin_of_actor, friend_of_actor, prior_bias_permille_per_point, prior_bias_cap
+                                         # kin_of_actor, friend_of_actor
 var _b_policy := 0                       # confidence_policy: 0 multiplier, 1 threshold, 2 both
 var _b_thr := 300
 const SAL_ROOM := 1 << 20                # salience is far below this; tell sorts (SAL_ROOM - sal) << 40 | event id
@@ -200,7 +199,6 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 		_tix[_types[i]] = i
 		_sev.append(int(d.severity))
 		_pol.append(1 if str(d.polarity) == "GOOD" else (-1 if str(d.polarity) == "BAD" else 0))
-		_amb.append(1 if bool(d.get("ambiguous", false)) else 0)
 		_perm.append(1 if bool(d.get("permanent", false)) or int(d.severity) >= int(m.permanent_severity) else 0)
 		_jperm.append(1 if bool(d.get("permanent", false)) else 0)
 		_famh.append(str(d.get("family", "")).hash())
@@ -226,8 +224,7 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_b_cred_pp = int(bc.credibility_permille_per_point)
 	_b_cred_min = int(bc.credibility_min)
 	var ic: Dictionary = cfg.interpret
-	for k in ["affected", "accomplice", "kin", "friend", "bystander", "rival", "rival_net_at", "kin_of_actor", "friend_of_actor",
-			"prior_bias_permille_per_point", "prior_bias_cap"]:
+	for k in ["affected", "accomplice", "kin", "friend", "bystander", "rival", "rival_net_at", "kin_of_actor", "friend_of_actor"]:
 		_i.append(int(ic[k]))
 	_morality = int(ic.get("morality_spread_permille", 0))
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
@@ -539,8 +536,8 @@ func _forget(observer: int, ev: int) -> void:
 # ---------------------------------------------------------------- interpretation -----------------
 ## How `observer` reads what `actor` did in event `ev`, believing the actors `believed`: the signed interpretation P
 ## (permille, spec s.4) and its parts. Hierarchical: the affected party reads it fully; an accomplice approves; others
-## by their tie to the affected (kin, friend, a rival reverses it); loyalty to the actor softens condemnation; on
-## ambiguous events only, prior judgment of the actor may bias the reading, capped (SJD-Q05).
+## by their tie to the affected (kin, friend, a rival reverses it); loyalty to the actor softens condemnation;
+## prior judgment of the actor never colours the reading: every event is judged on its own (SJD-Q05, "Not at all").
 func interpret(observer: int, ev: int, actor: int, believed: Array) -> Dictionary:
 	var parts := {}
 	var p := _interpret_p(observer, ev, actor, believed, parts)
@@ -606,11 +603,6 @@ func _interpret_p(observer: int, ev: int, actor: int, believed: Array, parts = n
 			p = JudgmentMath.scale(p, _i[8])
 			if parts != null:
 				parts.loyalty = "friend of actor"
-	if _amb[f[F_TYPE]] == 1 and not is_aff:
-		var bias := JudgmentMath.clampi_(JudgmentMath.mul_div(net(observer, actor), _i[9], 1000), -_i[10], _i[10])
-		p += bias if good else -bias
-		if parts != null:
-			parts.prior_bias = bias if good else -bias
 	if _morality > 0 and not is_aff:
 		var mor := morality(observer, f[F_TYPE])
 		p = JudgmentMath.scale(p, mor)
