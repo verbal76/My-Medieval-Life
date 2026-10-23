@@ -129,6 +129,7 @@ jobs:
           $godot --headless --path game --script res://tests/farm_place_test.gd
           $godot --headless --path game --script res://tests/herd_test.gd
           $godot --headless --path game --script res://tests/contracts_test.gd
+          $godot --headless --path game --script res://tests/contract_50ore_test.gd
           $godot --headless --path game --script res://tests/decay_test.gd
           $godot --headless --path game --script res://tests/terrain_test.gd
           $godot --headless --path game --script res://tests/underground_test.gd
