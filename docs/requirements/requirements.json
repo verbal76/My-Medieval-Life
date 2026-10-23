@@ -8587,6 +8587,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner: no economic value change approved yet; finish the spending audit, separate defects from provisional-value consequences, fix verified defects only (docs/directives/2026-10-23_dp17_chapel_r2_longrun.md)"
     }
    ]
   },
@@ -43406,8 +43411,8 @@
    "description": "WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy?",
    "source": "docs/systems/MATERIAL_INTERDEPENDENCY.md (profession stonecutter: supplies nobody, open) on wip/build18 9932b1d",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option A: a documented, evidence-checked Rule 2 exception, as for the sage (docs/directives/2026-10-23_dp17_chapel_r2_longrun.md)",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "18",
    "related": [
@@ -43422,6 +43427,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/systems/MATERIAL_INTERDEPENDENCY.md (profession stonecutter: supplies nobody, open) on wip/build18 9932b1d"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered via B18-DP-17: option A"
     }
    ]
   },

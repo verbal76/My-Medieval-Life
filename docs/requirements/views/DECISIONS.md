@@ -6,8 +6,8 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 34 |
-| APPROVED | 142 |
+| OPEN | 33 |
+| APPROVED | 143 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
 | REOPENED | 0 |
@@ -19,7 +19,7 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | OPEN | no |  | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 
-## Build 18: combined release (tracks A, B, C): open, reopened or provisional (6)
+## Build 18: combined release (tracks A, B, C): open, reopened or provisional (5)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -28,7 +28,6 @@ The decision register is the `decision` records of the register. A recommendatio
 | CHAPEL-R4 | Does the chapel's placement change seeded hidden-ore locations in a way that violates the determinism or save-compatibility requirements? | OPEN | no |  | docs/directives/2026-10-23_staging_ff_chapel_review.md |
 | COMP-R1 | Hiring competition (WDR-012-C): is a raise of at most 3 coins over the manor day wage (6 to 9) acceptable as the ceiling, and should construction helpers and business attendants also raise wages when places go unfilled? Provisional working values; non-blocking review | OPEN | no |  | wip/build18 692eecc; docs/DECISIONS.md (WDR-012-C row) |
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
-| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | OPEN | yes |  | docs/systems/MATERIAL_INTERDEPENDENCY.md (profession stonecutter: supplies nobody, open) on wip/build18 9932b1d |
 
 ## Build 19: NPC Judgment System: open, reopened or provisional (1)
 

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 432 (209 of them still open) |
-| **Open entries now** (rules excluded) | | **386** |
+| Entries added since | | 432 (208 of them still open) |
+| **Open entries now** (rules excluded) | | **385** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -457,7 +457,7 @@ None.
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) | decision | APPROVED |  |
 | STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 | decision | APPROVED |  |
 | STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 | decision | APPROVED |  |
-| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | decision | OPEN | 18 |
+| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | decision | APPROVED | 18 |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 18 |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | TAILOR-Q | Where the tailor comes from | decision | APPROVED | owner decision |

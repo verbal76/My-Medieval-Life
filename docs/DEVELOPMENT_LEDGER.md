@@ -834,7 +834,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STONE-Q1 | STONE-Q part 1: materials match the actual construction or repair (raw stone, blocks, or both) |  | APPROVED |  |
 | STONE-Q2 | STONE-Q part 2: stone lost in dressing depends on the worker's skill (Option C), Expansion 18 |  | APPROVED |  |
 | STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 |  | APPROVED |  |
-| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | 18 | OPEN | yes |
+| STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | 18 | APPROVED | yes |
 | TAILOR-Q | Where the tailor comes from | owner decision | APPROVED |  |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) |  | APPROVED |  |
 | X18-D2 | Expansion 18 D2: what limits effective capability | 18 | APPROVED |  |
