@@ -17163,8 +17163,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -17182,11 +17182,26 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> family worker (Sonnet subagent); branch: None -> wip/expansion19-preparation",
      "why": "assigned: a worker slot is free"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical; test_commit: None -> fff48a4; commits + fff48a4; next_action",
+     "why": "family worker reported fff48a4 on wip/expansion19-preparation: head of household (father when both parents live, else Construction.responsible_adult), meal deferral by tier, head pays first, work before leisure via ManorWork.seek, caregiving already covered by Guardianship; factors traced for XEXPL-01; family_first_test 79, judgment 217, judgment_live 142, personality 73, bonds 97, family 51, relations 80, world 339 all 0 failures; sim_gate identical with judgment off. NOT done: protection in danger (no villager flee-or-defend decision exists): owner question"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner answered: danger = shield and fetch help; the worker's numbers accepted (docs/directives/2026-10-23_owner_answers_family_danger.md)"
     }
    ],
-   "next_action": "next Expansion 19 task when a worker slot frees (after FIX-RECF1 or the recorder D3): household food, spending, work and danger decisions through the existing household and judgment code; recorder factors",
+   "next_action": "X19 completion worker adds the danger behaviour, then Build 19 integration",
    "assigned_worker": "family worker (Sonnet subagent)",
-   "branch": "wip/expansion19-preparation"
+   "branch": "wip/expansion19-preparation",
+   "tests": "family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical",
+   "test_commit": "fff48a4",
+   "commits": [
+    "fff48a4"
+   ]
   },
   {
    "id": "FARM-01",
@@ -52159,7 +52174,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -52178,9 +52193,16 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner approved sections A, B, D as recommended and C with wider reach"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> X19 completion worker (subagent); branch: None -> wip/expansion19-preparation",
+     "why": "X19 completion worker started on wip/expansion19-preparation (fff48a4)"
     }
    ],
-   "next_action": "after FAM-SAC-01 lands: set the approved numbers, enable all layers, self-defence, lies and family stories live; integrate with identity, REC-F1/SIM-F9, recorder; gate; present Build 19"
+   "next_action": "after FAM-SAC-01 lands: set the approved numbers, enable all layers, self-defence, lies and family stories live; integrate with identity, REC-F1/SIM-F9, recorder; gate; present Build 19",
+   "assigned_worker": "X19 completion worker (subagent)",
+   "branch": "wip/expansion19-preparation"
   },
   {
    "id": "X19-SPILL-REACH",
