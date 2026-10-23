@@ -23,7 +23,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Owner playtested | 0 of 83 (0%) | 0 of 27 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Complete | 2 of 83 (2%) | 0 of 27 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 |
 | Release blockers (open in-scope requirements) | 81 | 27 | 9 | 5 | 3 | 1 | 0 |
-| Open owner decisions (of which blocking) | 1 (0) | 14 (0) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) |
+| Open owner decisions (of which blocking) | 1 (0) | 3 (0) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) |
 | Deferred with approval | 2 | 1 | 0 | 0 | 0 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 3 | 2 | 5 | 0 | 0 | 0 |
 | Integrated, awaiting gameplay or owner verification | 78 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -40,5 +40,5 @@ Build authority:
 - **Build 23 (Bandit Factions and Criminal Careers):** implementation authorized. owner 2026-10-23 (docs/directives/2026-10-23_expansions_22_23_kickoff.md): BAN-A audit and requirements reconciliation only; no criminal actions or faction behaviour
 - **Build 24 (Generational Legacy):** implementation **NOT AUTHORIZED**. OD-30 renumbered 2026-10-23: numbering only
 
-Future backlog and unassigned: 116 open records (`BACKLOG.md`). Open owner decisions: 50 (`DECISIONS.md`).
+Future backlog and unassigned: 115 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
 
