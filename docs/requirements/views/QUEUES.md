@@ -2,16 +2,17 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (22)
+## Workers and task branches (23)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
+| FAM-SAC-01 | 19 | IN DEVELOPMENT | family worker (Sonnet subagent) | wip/expansion19-preparation |
 | FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
-| FIX-RECF1 | 19 | IN DEVELOPMENT | REC-F1 worker (Sonnet subagent) | wip/fix-recf1 |
+| FIX-RECF1 | 19 | IMPLEMENTED ON TASK BRANCH | REC-F1 worker (Sonnet subagent) | wip/fix-recf1 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |

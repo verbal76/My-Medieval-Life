@@ -17157,7 +17157,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -17171,9 +17171,16 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner answered the four open points (same file): parents and guardians alike, Expansion 19 behind its switch, everyone in their care, rare recorded exceptions"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> family worker (Sonnet subagent); branch: None -> wip/expansion19-preparation",
+     "why": "assigned: a worker slot is free"
     }
    ],
-   "next_action": "next Expansion 19 task when a worker slot frees (after FIX-RECF1 or the recorder D3): household food, spending, work and danger decisions through the existing household and judgment code; recorder factors"
+   "next_action": "next Expansion 19 task when a worker slot frees (after FIX-RECF1 or the recorder D3): household food, spending, work and danger decisions through the existing household and judgment code; recorder factors",
+   "assigned_worker": "family worker (Sonnet subagent)",
+   "branch": "wip/expansion19-preparation"
   },
   {
    "id": "FARM-01",
@@ -18474,8 +18481,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -18488,10 +18495,21 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> REC-F1 worker (Sonnet subagent); branch: None -> wip/fix-recf1",
      "why": "assigned on an isolated branch from the Expansion 19 line"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); test_commit: None -> c27aaa2; commits + c27aaa2; next_action",
+     "why": "fixed (c27aaa2 on wip/fix-recf1): a plan starting with a work step never loaded its minutes, so the 30-minute 'holding unsold' wait (and the woodcutter's wait for trees) ended next tick and decide re-ran every minute; NPCBrain.wait loads the minutes; decides 51,149 to 21,816 (seed 1) and 55,922 to 21,219 (seed 2) over 10 days, work, trade and production equal or higher; recf1_test 9 checks; gate differs from day 10 (gameplay change, not re-baselined)"
     }
    ],
    "assigned_worker": "REC-F1 worker (Sonnet subagent)",
-   "branch": "wip/fix-recf1"
+   "branch": "wip/fix-recf1",
+   "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1)",
+   "test_commit": "c27aaa2",
+   "commits": [
+    "c27aaa2"
+   ],
+   "next_action": "owner: whether the same stale-wait pattern in eat, use_medicine and homeless bed plans should be fixed (SIM-F9); a new gate baseline with ID-D3"
   },
   {
    "id": "FR-01",
@@ -42173,6 +42191,28 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    }
+   ]
+  },
+  {
+   "id": "SIM-F9",
+   "kind": "decision",
+   "title": "The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans?",
+   "description": "The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans?",
+   "source": "docs/directives/2026-10-23_recf1_storage_decisions.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "19",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_recf1_storage_decisions.md"
     }
    ]
   },
