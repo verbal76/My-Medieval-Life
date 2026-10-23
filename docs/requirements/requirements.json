@@ -8592,6 +8592,11 @@
      "date": "2026-10-23",
      "change": "note",
      "why": "owner: no economic value change approved yet; finish the spending audit, separate defects from provisional-value consequences, fix verified defects only (docs/directives/2026-10-23_dp17_chapel_r2_longrun.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "audit done (docs/build18/CHAPEL_AUDIT.md on wip/build18 cb5eb9b): wages and relief work as designed, no defect; offerings ~290-410 coins per 10 days against 50 of wages, relief never needs to buy (the church store covers it), so the fund only grows (5,099-7,466 at day 365); offerings taken at 16:00 shrink the 17:00 tax, emptying the treasury (seed 1 day 150: 115 vs 1,741 without offerings; manor hands 0 vs 23). The owner's 'what is left goes as alms to the poorest households' has no coin path in the code. Owner decision needed; no value changed"
     }
    ]
   },
@@ -37645,8 +37650,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -37654,7 +37659,20 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_regional_economy_decisions.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> run 39874405723 seeds 1-4 via run 39893372350; test_commit: None -> 9a86f5c; commits + eb51e83; integrated_in + Build 18 wip/build18 eb51e83",
+     "why": "evaluated against the 2026-10-23 baseline from the 365-day runs (docs/build18/LONG_RUNS_365.md): the settlements' coin drain levelled off after day 100-150 and never reversed (46-69% of 9,249 at day 365); Netherton empties in every seed; 107-184 hunger migrants a seed; whether this is a genuine circulation failure is not decidable from the logs (REG-CIRC-D1 stays with the owner)"
     }
+   ],
+   "tests": "run 39874405723 seeds 1-4 via run 39893372350",
+   "test_commit": "9a86f5c",
+   "commits": [
+    "eb51e83"
+   ],
+   "integrated_in": [
+    "Build 18 wip/build18 eb51e83"
    ]
   },
   {
@@ -38146,17 +38164,21 @@
      "date": "2026-10-23",
      "change": "commits + ed6fd18",
      "why": "checkpoints recovered without re-simulation: long-sims recover_run mode (ed6fd18), run 39893372350 printed run 39874405723's artifacts in its log; analysis in progress"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "commits + cb5eb9b",
+     "why": "chapel audit found no mechanical defect (provisional values, CHAPEL-R2); runs stay valid, no re-run needed; firewood counter fixed (cb5eb9b, count only)"
     }
    ],
    "tests": "run 39874405723 seeds 1-4: 365 days, leak 0, errors 0; docs/build18/LONG_RUNS_365.md",
    "test_commit": "9a86f5c",
    "commits": [
     "95578d8",
-    "ed6fd18"
+    "ed6fd18",
+    "cb5eb9b"
    ],
-   "known_defects": [
-    "chapel fund holds 68-85% of all coins at day 365 (root-cause check in progress); no 100-day read yet"
-   ]
+   "known_defects": []
   },
   {
    "id": "REL18-OWNER",
@@ -45881,10 +45903,12 @@
     "Rule 004's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Scarcity and local-availability pricing, caravan imports after depletion; 100-day runs 2026-10-19",
-   "tests": "",
+   "tests": "run 39874405723 seeds 1-4, checkpoints recovered by run 39893372350",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "eb51e83"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -45918,21 +45942,29 @@
      "date": "2026-10-23",
      "change": "B18-DP-06 approved: verification by 100- and 365-day comparison and a scarcity-response audit; no new mechanic",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> run 39874405723 seeds 1-4, checkpoints recovered by run 39893372350; test_commit: None -> 9a86f5c; commits + eb51e83; integrated_in + Build 18 wip/build18 eb51e83",
+     "why": "scarcity audit done from the 365-day runs, day 100 vs 365 (docs/build18/LONG_RUNS_365.md): food never fails; metal ore exhausted by day 100 and imported; household money falls 91-96%; housing grows far slower than people"
     }
    ],
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 18 wip/build18 eb51e83"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "M",
-   "remaining_work": "Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06)"
+   "remaining_work": "Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06)",
+   "test_commit": "9a86f5c"
   },
   {
    "id": "WDR-005",
