@@ -41,6 +41,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c4b10e4 | merge the released Build 18 (wip/build18) into Expansion 19; the judgment stays switched off; then the owner's 2026-10-23 answers (gossip at each meeting first) |
 
 Expansions 20 and 21: implementation not authorized (register `builds` map: OD-30, OD-LE-01); no worker.
+Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).
 
 ### Running processes (never restart or cancel; SIM-02)
 
@@ -67,6 +68,9 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    239bdff): three packages downloaded back, checksums match, audio per platform checked, Linux binary launched.
 5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
    report was given in the session.
+6. Expansions directive (2026-10-23): X19 sync worker merging Build 18 into `wip/expansion19-preparation` (PROS-19); on its
+   report, review, then assign the gossip-at-each-meeting rework (X19-Q-TIMING) and the other 2026-10-23 answers.
+   Expansions 20 and 21: decision packet given to the owner; no work until answered.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner
