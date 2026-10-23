@@ -557,12 +557,10 @@ func to_dict() -> Dictionary:
 
 ## A save without discovery (Build 16, or Build 17 before MIN-D) loads with nothing dug and the levels computed from
 ## the world as it stands, with no history. Seams opened are in the save's deposits (with `found`): their cells are
-## solid again unless quarried away. Pits round a clue the generator no longer makes are dropped with it.
+## solid again unless quarried away. Pits round a clue the generator no longer makes are kept by its id, inert (never silently dropped).
 func load_dict(d: Dictionary) -> void:
 	dug = {}
 	for id in d.get("dug", {}):
-		if w.prospecting.clue(str(id)).is_empty():
-			continue
 		dug[str(id)] = (d.dug[id] as Array).map(func(t): return [int(t[0]), int(t[1]), str(t[2]), int(t[3])])
 	history = []
 	for h in d.get("history", []):

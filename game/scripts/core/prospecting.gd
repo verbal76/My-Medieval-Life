@@ -24,7 +24,7 @@ extends RefCounted
 ## Conservation: the sample's coins (the fee) move from the holder's purse to the assayer's; the sample and the fuel
 ## are used up and counted; nothing else is made or destroyed. Saved with the world ("prospecting"); absent: none.
 
-const GEN_VERSION := 2                  # 2 (Build 18, ORE-PLACE-01): nothing inside the settlement footprint
+const GEN_VERSION := 3                  # 3 (Build 18, DVW-B3-CHAPEL): the chapel and its plot are off the wild ground (154 of seeds 1-300 differ); 2 (ORE-PLACE-01): nothing inside the settlement footprint
 const ITEM := "ore_sample"
 const KIT := "prospecting_kit"
 const JOB := "prospector"
@@ -633,12 +633,11 @@ func to_dict() -> Dictionary:
 
 
 ## A save without prospecting (Build 16, or Build 17 before MIN-C) loads with nothing sampled, carried or known.
-## Cells sampled of a clue the generator no longer makes are dropped with it (a GEN_VERSION change); records keep.
+## Cells sampled of a clue the generator no longer makes (a GEN_VERSION change) are kept by its id, inert: the player's
+## work is never silently dropped (SAVE rule, CLAUDE.md section 7); records keep.
 func load_dict(d: Dictionary) -> void:
 	taken = {}
 	for id in d.get("taken", {}):
-		if clue(str(id)).is_empty():
-			continue
 		taken[str(id)] = (d.taken[id] as Array).map(func(t): return [int(t[0]), int(t[1]), str(t[2])])
 	samples = {}
 	for k in d.get("samples", {}):

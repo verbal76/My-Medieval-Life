@@ -34,6 +34,7 @@ func _init() -> void:
 	test_law_and_claims()
 	test_save()
 	test_old_save()
+	test_b17_save()
 	test_days()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -424,6 +425,61 @@ func test_old_save() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), d2)
 	check(not w3.chapel.present and not w3.buildings.has(w.chapel.bid) and int(w3.brain.job_market().preacher.open) == 0, "where something of the village's stands on the ground, there is no chapel and no places")
+
+
+## A real Build 17 save (seed 7, 900 minutes; relations left out), loaded on the map with the chapel and ROOMS-18's relaid plots:
+## plant ids no longer name the same cells, 16 of its wild plants have no cell on the map, and clues have moved.
+func test_b17_save() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b17_save_seed7.json"))
+	var saved := {}
+	for p in raw.plants:
+		saved[Vector2i(int(p.x), int(p.y))] = p
+	var picked := []
+	for p in raw.plants:               # give some plants a state the fresh map would not: picked, regrowing
+		if picked.size() < 40 and int(p.id.substr(2)) % 5 == 0:
+			p.state = "picked"
+			p.regrow = 99.0
+			picked.append(Vector2i(int(p.x), int(p.y)))
+	raw.prospecting = {"gen": 2, "taken": {"cGONE": [[3, 4, "player"]]}, "samples": {}, "bags": {}, "records": [], "next_sample": 1, "next_record": 1}
+	raw.discovery = {"gen": 2, "dug": {"cGONE": [[3, 4, "player", 5]]}, "levels": {}, "history": []}
+	# 1. the chapel cannot be placed (villagers' land is in the way): every saved plant stays, on its own cell, in its own state
+	var w := World.new()
+	w.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(raw)))
+	var cells := {}
+	for p in w.plants:
+		cells[Vector2i(int(p.x), int(p.y))] = p
+	var wrong := 0
+	for c: Vector2i in saved:
+		var p: Dictionary = cells.get(c, {})
+		if p.is_empty() or str(p.kind) != str(saved[c].kind) or str(p.state) != str(saved[c].state):
+			wrong += 1
+	check(not w.chapel.present and w.plants.size() == raw.plants.size() and wrong == 0, "a Build 17 save keeps every plant on its cell in its state (none by id, none lost) while the chapel cannot be placed")
+	check(picked.all(func(c): return cells[c].state == "picked" and float(cells[c].regrow) == 99.0), "the picked plants stay picked on the right cells")
+	check(w.prospecting.taken.has("cGONE") and w.discovery.dug.has("cGONE"), "sample marks and trial pits of a clue the generator no longer makes are kept, not dropped")
+	var again: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w1b := World.new()
+	w1b.load_dict(VillageMap.load_default(), again)
+	check(w1b.plants.size() == w.plants.size() and w1b.prospecting.taken.has("cGONE") and w1b.discovery.dug.has("cGONE"), "saved again and loaded, nothing changes")
+	# 2. the villagers' land cleared: the chapel is placed; only the plants on its ground and its plot go, and are counted
+	var d2: Dictionary = JSON.parse_string(JSON.stringify(raw))
+	d2.plots = []
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d2)
+	var on_ground := 0
+	for c: Vector2i in saved:
+		if w2.chapel.footprint_has(c):
+			on_ground += 1
+	check(w2.chapel.present and on_ground > 0 and w2.plants.size() == raw.plants.size() - on_ground and int(w2.stats.get("plants_lost_on_load", 0)) == on_ground,
+			"with the chapel placed, the %d plants on its ground go (counted) and every other flower stays" % on_ground)
+	check(w2.plants.all(func(p): return not w2.chapel.footprint_has(Vector2i(int(p.x), int(p.y)))), "no plant stands in the chapel or on its plot")
+	# 3. a plant someone grew (SEED-02) on the ground blocks the site
+	var d3: Dictionary = JSON.parse_string(JSON.stringify(raw))
+	d3.plots = []
+	var cell := Vector2i(int(w2.chapel.plot.x) + 1, int(w2.chapel.plot.y) + 1)
+	d3.plants.append({"id": "pz1", "x": cell.x, "y": cell.y, "kind": "flower", "tile": 2657, "state": "ripe", "regrow": 0.0, "planted": true})
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), d3)
+	check(not w3.chapel.present and w3.plants.size() == raw.plants.size() + 1, "a planted plant on the chapel's ground blocks the site, and nothing is lost")
 
 
 func test_days() -> void:

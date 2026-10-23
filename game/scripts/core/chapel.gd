@@ -113,7 +113,15 @@ func _ground_free(plot_rect: Rect2i) -> bool:
 		for t in w.trees:
 			if bool(t.get("planted", false)) and r.has_point(Vector2i(int(t.x), int(t.y))):
 				return false
+		for pl in w.plants:                 # SEED-02: a plant the player or a villager grew
+			if bool(pl.get("planted", false)) and r.has_point(Vector2i(int(pl.x), int(pl.y))):
+				return false
 	return true
+
+
+## Whether cell `c` lies on the chapel's building or its plot (false while the chapel is not placed).
+func footprint_has(c: Vector2i) -> bool:
+	return present and (plot_rect().has_point(c) or _chapel_rect().has_point(c))
 
 
 func plot_rect() -> Rect2i:

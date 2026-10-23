@@ -50,6 +50,7 @@ var vacancies: Array = []          # essential posts open after a death (B8-016,
 var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
 var boulders: Array = []           # the village's small grey boulders (B8-026): {x, y, ore: "stone", amount, boulder: true}, a few
                                    # pickaxe uses each, then gone (solid cleared). Found by deposit_at like a seam; the overworld's are Overworld.boulder_at
+var _kept_plants: Array = []       # load only: saved wild plants the map no longer holds, put back once the chapel is placed
 var plants: Array = []             # wild flowers and berry bushes (village generator v5): {id, x, y, kind, tile, state, regrow}.
                                    # state: ripe | picked (bare, ripe again on day `regrow`) | cleared (grubbed up for building).
                                    # The cell stays walkable; the tile is the plant's own, in layer below1.
@@ -4217,14 +4218,23 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			t.born = -1.0e7 if t.state == "grown" else Trees.born_of(t)
 	# a plant's place and tile are map data; its state is the save's (older saves: every plant ripe)
 	_make_plants(m)
-	var saved_plants := {}
-	for pl in d.get("plants", []):
-		saved_plants[str(pl.id)] = pl
+	# saved states go to the plant on the same cell and kind, not the same id: a relaid map (ROOMS-18, the chapel) renumbers ids
+	var by_cell := {}
 	for pl in plants:
-		var sp: Dictionary = saved_plants.get(str(pl.id), {})
-		if not sp.is_empty():
+		by_cell[Vector2i(int(pl.x), int(pl.y))] = pl
+	var orphans := []                  # saved wild plants whose cell the map no longer has one on
+	for sp in d.get("plants", []):
+		if sp.get("planted", false):
+			continue
+		var pl: Dictionary = by_cell.get(Vector2i(int(sp.x), int(sp.y)), {})
+		if pl.is_empty():
+			orphans.append(sp)
+		elif str(pl.kind) == str(sp.kind):
 			pl.state = str(sp.state)
 			pl.regrow = float(sp.regrow)
+		else:
+			stat("plants_lost_on_load")        # a different plant now stands on that cell: counted, not silent
+	_kept_plants = orphans
 	for sp in d.get("plants", []):     # SEED-02: plants grown from cuttings and seed are not map data: the save holds them
 		if sp.get("planted", false):
 			plants.append({"id": str(sp.id), "x": int(sp.x), "y": int(sp.y), "kind": str(sp.kind), "tile": int(sp.tile),
@@ -4338,6 +4348,14 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	feast.load_dict(d.get("feast", {}))          # DVW-B3-FEAST: a save from before feasts has none planned and no weddings owed
 	chapel = Chapel.new(self)
 	chapel.load_dict(d.get("chapel", {}))        # DVW-B3-CHAPEL: a save from before the chapel has it founded now, on free ground (after the farmland, which it must not cover)
+	for sp in _kept_plants:                      # wild plants the map no longer holds stay, unless the chapel now stands on them
+		var sc := Vector2i(int(sp.x), int(sp.y))
+		if chapel.footprint_has(sc):
+			stat("plants_lost_on_load")
+		else:
+			plants.append({"id": "kept_" + str(sp.id).trim_prefix("kept_"), "x": sc.x, "y": sc.y, "kind": str(sp.kind), "tile": int(sp.tile),
+					"state": str(sp.state), "regrow": float(sp.regrow)})
+	_kept_plants = []
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
