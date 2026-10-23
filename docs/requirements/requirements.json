@@ -33773,7 +33773,8 @@
     "e91d903",
     "05adc9d",
     "c4b10e4",
-    "e8d4122"
+    "e8d4122",
+    "577821d"
    ],
    "parent": "PROS-01",
    "depends_on": [],
@@ -33781,7 +33782,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "owner: X19-DECAY (16 game days?), X19-GOSSIP-FLOOR, X19-RUNNERUP, X19-TRUST-RATES, X19-PERSONALITY, X19-EVENT-Q and the hook numbers; then matched-seed 365-day calibration (judgment off vs on, one run per seed, 100-day read from checkpoints), device perf, wiki, INT entries at reconciliation",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -33856,6 +33857,11 @@
      "date": "2026-10-23",
      "change": "commits + e8d4122",
      "why": "live event feeds behind the judgment switch (e8d4122): gift, help, rescue, fair and cheating trade, robbery, killing, unseen pickpocket, marriage; judgment_live_test 98, world 339, contracts 154, credit 98, run_tests 3595; 30-day judgment run clean; gate identical. Next: the SJD-Q14 decision hooks"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; commits + 577821d; next_action",
+     "why": "SJD-Q14 decision hooks wired behind the switch (577821d): contract accept and seller choice, lending, barter, food seller, family help; judgment_live_test 133 and the touched suites pass, 30-day judgment run clean, gate identical. Remaining work waits on owner numbers (calibration runs would be redone after them, MSW-01)"
     }
    ],
    "target_build": "19",
@@ -33865,7 +33871,7 @@
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
