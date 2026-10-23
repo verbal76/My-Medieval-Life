@@ -17166,8 +17166,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_family_sacrifice_responsibility.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner answered the four open points (same file): parents and guardians alike, Expansion 19 behind its switch, everyone in their care, rare recorded exceptions"
     }
-   ]
+   ],
+   "next_action": "next Expansion 19 task when a worker slot frees (after FIX-RECF1 or the recorder D3): household food, spending, work and danger decisions through the existing household and judgment code; recorder factors"
   },
   {
    "id": "FARM-01",
