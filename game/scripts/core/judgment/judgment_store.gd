@@ -62,10 +62,17 @@ extends RefCounted
 ## such memory names s among its actors (nor among the actors X believed before, for an upgrade): a telling changes X's
 ## ledger only for the actors of the event told. Any change to X's records still tells them first. This is gossip.timing "hour" (the default): the hour's meetings count as told
 ## at the hour's start, as in rounds 1 and 2.
-## gossip.timing "scheduled" (an alternative, off by default; it changes results, so it is a design choice): each
-## meeting is told at its own minute of the hour (a seeded hash of the pair and the hour), when gossip_tick reaches that
-## minute; reads never need to tell anything first, so no frame carries more than that minute's meetings. Meetings not
-## yet told are saved with the section ("scheduled").
+## gossip.timing "scheduled" (the gossip model since the owner's answer to X19-Q-TIMING, 2026-10-23: "They should spread
+## organically by contact and closeness like a real rumor or gossip would"): each meeting is told at its own minute of
+## the hour (a seeded hash of the pair and the hour), when gossip_tick reaches that minute; nothing is told early and
+## reads never tell anything first, so no frame carries more than that minute's meetings. Meetings not yet told are
+## saved with the section ("scheduled") and, if the setting is "hour" when it loads, move into the hour queue in minute
+## order (load_dict), so none is lost or told twice. "hour" stays as the reference mode the identity tests and the
+## perf harness compare against; the live setting is "scheduled".
+## Closeness (gossip.closeness_floor_permille): how much of what a teller could pass on a meeting actually passes
+## depends on how close the pair are (the existing relationship number, regard 0..100): each story passes with a chance
+## from the floor (strangers) up to certain at regard 100, a seeded roll of the story, the pair and the meeting's minute.
+## A story that does not pass this time may pass in a later meeting. A floor of 1000 turns the weighting off.
 
 const FORMAT := "mml-judgment/1"
 const VERSION := 1
@@ -165,6 +172,8 @@ var _reach_ver := -1
 var _reach_cache := {}                   # person -> [_gver, the actors whose entries queued meetings could change, any change at all, the closure]
 var _g_sched := false                    # gossip.timing "scheduled"
 var _sched := {}                         # minute -> PackedInt64Array [a, b, ...] in the order queued (scheduled timing)
+var _stamp := 0                          # the meeting being told: its minute (scheduled) or 0, a part of the closeness roll
+var _g_floor := 1000                     # gossip.closeness_floor_permille
 var _snext := -1                         # the next minute whose meetings are still to tell (-1: none queued yet)
 
 
@@ -210,7 +219,8 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_g_share_at = int(g.share_net_at)
 	_g_mis = int(g.misattribute_permille)
 	_g_pump = maxi(1, int(g.get("pump_per_tick", 8)))
-	_g_sched = str(g.get("timing", "hour")) == "scheduled"
+	_g_sched = str(g.get("timing", "scheduled")) == "scheduled"
+	_g_floor = clampi(int(g.get("closeness_floor_permille", 1000)), 0, 1000)
 	_b_hop = int(bc.hop_factor)
 	_b_cred_stranger = int(bc.credibility_stranger)
 	_b_cred_pp = int(bc.credibility_permille_per_point)
@@ -1006,7 +1016,9 @@ func _tell_due(now: int) -> void:
 		var row: PackedInt64Array = _sched[mm]
 		_sched.erase(mm)
 		for i in range(0, row.size(), 2):
+			_stamp = int(mm)
 			_meet_now(row[i], row[i + 1])
+	_stamp = 0
 	if _sched.is_empty():
 		_snext = -1
 	timing.due_us = int(timing.get("due_us", 0)) + Time.get_ticks_usec() - t
@@ -1159,6 +1171,9 @@ func tell(teller: int, listener: int) -> int:
 			break
 		var ev := key & ((1 << 40) - 1)
 		var m: PackedInt64Array = mem[ev]
+		if _g_floor < 1000 and JudgmentMath.roll([world_seed, ev, teller, listener, _stamp, day]) >= close_chance(listener, teller):
+			_stat("withheld")                      # not passed on this time: the pair are not close enough (a later meeting may)
+			continue
 		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
 		var actors := _mem_actors(m)
 		if _g_mis > 0 and JudgmentMath.roll([world_seed, ev, teller, listener]) < _g_mis:
@@ -1172,6 +1187,14 @@ func tell(teller: int, listener: int) -> int:
 		_stat("tellings")
 		k += 1
 	return k
+
+
+## The chance, permille, that a story a teller could pass on does pass in a meeting: gossip.closeness_floor_permille
+## for people with no tie, rising to 1000 with the existing relationship number (regard 0..100). Gossip spreads by
+## contact and closeness (owner, X19-Q-TIMING).
+func close_chance(a: int, b: int) -> int:
+	var reg := clampi(social.regard(a, b), 0, 100)
+	return _g_floor + (JudgmentMath.ONE - _g_floor) * reg / 100
 
 
 ## How far `listener` believes what `teller` tells them, permille (Q06): credibility_stranger for someone they have no
@@ -1199,6 +1222,7 @@ func begin_day(d: int) -> void:
 	if d <= day:
 		return
 	flush_gossip()                               # the day's meetings belong to it
+	_tell_due(d * 1440 - 1)                      # ... scheduled ones too (all fall before dawn; a long skip may have left some)
 	finish_dawn()
 	_gver += 1
 	_reach_cache.clear()
@@ -1580,7 +1604,10 @@ func load_dict(d: Dictionary) -> String:
 	for r in m.told_today:
 		told_today[int(r[0])] = int(r[1])
 	for r in m.get("scheduled", []):
-		meet_at(int(r[1]), int(r[2]), int(r[0]))
+		if _g_sched:
+			meet_at(int(r[1]), int(r[2]), int(r[0]))
+		else:
+			meet_later(int(r[1]), int(r[2]))      # saved under "scheduled", loaded under "hour": queued in minute order, none lost
 	for d2 in [memories, contrib, ledgers]:
 		for o in d2:
 			_add_person(int(o))

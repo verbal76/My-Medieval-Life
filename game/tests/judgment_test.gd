@@ -32,6 +32,8 @@ func cfg() -> Dictionary:
 	var c := JudgmentStore.default_cfg().duplicate(true)
 	c.interpret.morality_spread_permille = 0
 	c.decay.ordinary_permille_per_day = 0
+	c.gossip.timing = "hour"                 # the reference mode: the identity tests below compare queued with immediate telling
+	c.gossip.closeness_floor_permille = 1000 # closeness weighting off here; test_closeness_gossip turns it on
 	return c
 
 
@@ -63,6 +65,8 @@ func _init() -> void:
 	test_sliced_day()
 	test_spread_gossip()
 	test_scheduled_gossip()
+	test_closeness_gossip()
+	test_scheduled_save_migration()
 	test_q01_facts_and_zero()
 	test_q02_decay_and_murder()
 	test_q06_trust()
@@ -641,6 +645,83 @@ func test_scheduled_gossip() -> void:
 		check(j.state_hash() == j2.state_hash(), "scheduled: saved and reloaded before the minute, the same result after it")
 		hashes.append(j.state_hash())
 	check(hashes[0] == hashes[1], "scheduled: the same seed gives the same minutes and the same result")
+
+
+## Owner answer X19-Q-TIMING (2026-10-23): gossip spreads by contact and closeness. Closeness is the pair's relationship
+## number (regard 0..100): each story passes with a seeded chance from closeness_floor_permille (strangers) to certain
+## (regard 100); a story that did not pass may pass in a later meeting; the same seed gives the same result.
+func test_closeness_gossip() -> void:
+	var shipped := JudgmentStore.default_cfg()
+	check(str(shipped.gossip.timing) == "scheduled" and int(shipped.gossip.closeness_floor_permille) == 500, "the shipped setting is scheduled timing with the proposed closeness floor")
+	var c := cfg()
+	c.gossip.timing = "scheduled"
+	c.gossip.closeness_floor_permille = 400
+	c.gossip.per_meeting = 50
+	c.gossip.daily_budget = 100000
+	var passed := {}
+	for reg in [0, 50, 100]:
+		var s := JudgmentSocial.new().set_regard(BOB, STRANGER, reg)
+		var j := JudgmentStore.new(c, s, 7)
+		for i in 20:
+			j.observe(j.publish("help_minor", [THIEF], [BOB + 100 + i]), BOB)
+		j.meet_at(BOB, STRANGER, 600)
+		j.gossip_tick(600)
+		var n := 0
+		for ev in j.memories.get(BOB, {}):
+			if not j.belief(STRANGER, ev).is_empty():
+				n += 1
+		passed[reg] = n
+	check(passed[0] >= 2 and passed[0] <= 14, "strangers pass on about the floor's share of 20 stories (%d, floor 40%%)" % passed[0])
+	check(passed[0] < passed[50] and passed[50] < passed[100] and passed[100] == 20, "the closer the pair, the more passes; at regard 100 everything does (%s)" % str(passed))
+	var s2 := JudgmentSocial.new().set_regard(BOB, STRANGER, 0)
+	var j2 := JudgmentStore.new(c, s2, 7)
+	var j3 := JudgmentStore.new(c, JudgmentSocial.new().set_regard(BOB, STRANGER, 0), 7)
+	for x in [j2, j3]:
+		for i in 20:
+			x.observe(x.publish("help_minor", [THIEF], [BOB + 100 + i]), BOB)
+		x.meet_at(BOB, STRANGER, 600)
+		x.gossip_tick(600)
+	check(j2.state_hash() == j3.state_hash(), "closeness weighting is deterministic: the same seed gives the same stories passed")
+	j2.meet_at(BOB, STRANGER, 700)
+	j2.gossip_tick(700)
+	check(int(j2.stats.get("withheld", 0)) > 0 and j2.state_hash() != j3.state_hash(), "a story withheld once can pass in a later meeting (the roll includes the meeting's minute)")
+	var off := cfg()
+	off.gossip.timing = "scheduled"
+	var j4 := JudgmentStore.new(off, JudgmentSocial.new(), 7)
+	j4.observe(j4.publish("theft", [THIEF], [BOB]), BOB)
+	j4.meet_at(BOB, STRANGER, 600)
+	j4.gossip_tick(600)
+	check(j4.stats.get("withheld", 0) == 0 and not j4.ledger(STRANGER, THIEF).is_empty() and j4.net(STRANGER, THIEF) < 0, "with the floor at 1000 nothing is withheld")
+
+
+## Save and load of meetings queued but not yet told (X19-Q-TIMING): none lost, none told twice, also when the setting
+## changes between save and load ("scheduled" save loaded under "hour").
+func test_scheduled_save_migration() -> void:
+	var c := cfg()
+	c.gossip.timing = "scheduled"
+	var j := store(c)
+	var ev := j.publish("theft", [THIEF], [BOB])
+	j.observe(ev, BOB)
+	j.meet_at(BOB, STRANGER, 610)
+	j.meet_at(STRANGER, COUSIN, 640)           # a chain: Bob -> stranger at 610, stranger -> cousin at 640
+	j.gossip_tick(620)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(j.to_dict()))
+	check((d.scheduled as Array).size() == 1 and int(d.scheduled[0][0]) == 640, "only the meeting still to come is saved (the told one is not)")
+	var j2 := store(c)
+	j2.load_dict(d)
+	check(j2.gossip_queued() == 1 and not j2.belief(STRANGER, ev).is_empty(), "loaded: one meeting pending, the told one kept")
+	j.gossip_tick(659)
+	j2.gossip_tick(659)
+	j2.gossip_tick(659)
+	check(j2.gossip_queued() == 0 and str(j2.belief(COUSIN, ev).src) == "rumour" and j.state_hash() == j2.state_hash(), "the pending meeting is told once on load: same end state as never saving, a second tick tells nothing more")
+	var h := cfg()                              # the setting changed to the "hour" reference mode between save and load
+	var j3 := store(h)
+	j3.load_dict(d)
+	check(j3.gossip_queued() == 1, "a scheduled save loaded under hour timing queues its pending meeting (not stranded)")
+	j3.flush_gossip()
+	check(j3.gossip_queued() == 0 and str(j3.belief(COUSIN, ev).src) == "rumour", "...and it is told")
+	var d2: Dictionary = j3.to_dict()
+	check(not d2.has("scheduled"), "an hour-timing save has nothing pending")
 
 
 # ---------------------------------------------------------------- owner decisions, 2026-10-21 --------

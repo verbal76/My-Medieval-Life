@@ -97,11 +97,13 @@ func run(n: int, days: int, rate: String, report: bool, gossip := "spread") -> D
 		for k in range(h, mini(n, h + 4)):
 			if k != i:
 				social.set_kin(i, k)
+				social.set_regard(i, k, 80)           # household: close
 		social.set_friends(i, (i + 4) % n)
 		social.set_friends(i, (i + 5) % n)
+		social.set_regard(i, (i + 4) % n, 60)         # friends: fairly close; everyone else is a stranger (regard 0)
+		social.set_regard(i, (i + 5) % n, 60)
 	var config := JudgmentStore.default_cfg()
-	if gossip == "scheduled":
-		config.gossip.timing = "scheduled"
+	config.gossip.timing = "scheduled" if gossip == "scheduled" else "hour"      # "spread" and "now" are the hour reference mode
 	var j := JudgmentStore.new(config, social, 11)
 	var cfg := j.cfg
 	var sliced := j.has_method("begin_day")
