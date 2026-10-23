@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (53)
+## Build 20 or later (backlog) (54)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -29,6 +29,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | FR-08 | Music and sound | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | FR-10 | Archery | approved | DEFERRED | NOT STARTED |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED | NOT STARTED |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | proposal | PROPOSED | NOT STARTED |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |

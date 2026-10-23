@@ -2,26 +2,27 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-> **Implementation of Build 20 is NOT AUTHORIZED.** OD-30, OD-LE-01: numbering and placement only; implementation not authorized Nothing below is implemented work.
+Authority: owner directive 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md): phase 1 only: LE-00 audit, registration, data contracts and isolated foundation components behind disabled hooks on wip/expansion20-preparation; no live economy, no merge to staging or main, no policy for open OD-LE decisions
 
-Readiness: **NOT AUTHORIZED for implementation**
+Readiness: **NOT STARTED**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 8 |
-| Integrated | 0 of 8 (0%) |
-| Automated tests passed | 0 of 8 (0%) |
-| Integration verified | 0 of 8 (0%) |
-| Gameplay verified | 0 of 8 (0%) |
-| Owner playtested | 0 of 8 (0%) |
-| Complete | 0 of 8 (0%) |
-| Open (release blockers) | 8 |
+| Approved requirements in scope | 9 |
+| Integrated | 0 of 9 (0%) |
+| Automated tests passed | 0 of 9 (0%) |
+| Integration verified | 0 of 9 (0%) |
+| Gameplay verified | 0 of 9 (0%) |
+| Owner playtested | 0 of 9 (0%) |
+| Complete | 0 of 9 (0%) |
+| Open (release blockers) | 9 |
 | Open owner decisions (blocking) | 14 (14) |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (8)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

@@ -41,8 +41,9 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | X19-FOUND-PERS | X19 Worker A personality (Sonnet subagent) | `wip/x19-personality` (worktree `.claude/worktrees/x19-personality`) | 577821d | directive 2026-10-23 sections 2-3: personality framework extending the temperament; formulas shipped inert (X19-PERS-FORMULA) |
 | X19-FOUND-BONDS, X19-FOUND-FAMREP | X19 Worker B bonds (Sonnet subagent) | `wip/x19-bonds` (worktree `.claude/worktrees/x19-bonds`) | 577821d | sections 4-5: relationship history, resentment, familiarity +10%, family reputation +5% (12% combined); spillover reach and transmission inert (X19-SPILL-REACH, X19-REP-TRANSMIT) |
 | X19-FOUND, PROS-19 | lead | `wip/expansion19-preparation` | 577821d | merges A and B, then gate, perf and the completion report (directive section 8) |
+| LE-00, E20-P1 | lead | `wip/expansion20-preparation` | d82f173 | Expansion 20 phase 1 (owner 2026-10-23): refresh LE-00 against Build 18, OD-LE packet, data contracts; foundation code only when an agent slot frees (two-agent limit) |
 
-Expansions 20 and 21: implementation not authorized (register `builds` map: OD-30, OD-LE-01); no worker.
+Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21 not authorized.
 Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).
 
 ### Running processes (never restart or cancel; SIM-02)

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (573)
+## Approved requirement (574)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -187,6 +187,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B7 | Life chronicle, titles, memorial | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | ECON-P3 | Household vs business money: a shop has its own till; the owner pays themselves from it and may choose to move money; World.spendable | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -302,7 +303,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | K-2 | Tavern child and sage on pallets; no lying frame |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | K-3 | Every provisional number awaits the owner's balance review |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | 20+ | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | UNKNOWN | OPEN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |

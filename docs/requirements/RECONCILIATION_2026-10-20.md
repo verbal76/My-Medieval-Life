@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 447 (219 of them still open) |
-| **Open entries now** (rules excluded) | | **396** |
+| Entries added since | | 448 (221 of them still open) |
+| **Open entries now** (rules excluded) | | **398** |
 | Open entries moved to another build | | 5 |
 
 ## Closed since the baseline (54)
@@ -87,7 +87,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (447)
+## Added since the baseline (448)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -158,6 +158,7 @@ None.
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
@@ -244,7 +245,7 @@ None.
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20+ |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20+ |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | NOT STARTED / NOT TESTED / OPEN | 20 |

@@ -34,9 +34,10 @@
   },
   "20": {
    "name": "Living Economy",
-   "implementation_authorized": false,
+   "implementation_authorized": true,
+   "integration_branch": "",
    "released": "",
-   "authority": "OD-30, OD-LE-01: numbering and placement only; implementation not authorized"
+   "authority": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md): phase 1 only: LE-00 audit, registration, data contracts and isolated foundation components behind disabled hooks on wip/expansion20-preparation; no live economy, no merge to staging or main, no policy for open OD-LE decisions"
   },
   "21": {
    "name": "Village Politics",
@@ -13684,6 +13685,38 @@
    "completion": "OPEN"
   },
   {
+   "id": "E20-P1",
+   "kind": "approved",
+   "title": "Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy)",
+   "description": "Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy)",
+   "source": "docs/directives/2026-10-23_expansion20_phase1_authorization.md",
+   "owner_wording": "Begin LE-00 now. Continue through requirements registration and any safe, isolated foundation work that does not depend on unresolved gameplay policy.",
+   "approval": "owner directive 2026-10-23",
+   "acceptance": [
+    "LE-00 Readiness Report (section 12) delivered",
+    "OD-LE-01..15 registered with status, current game behaviour, blocking or not, recommended default and consequences",
+    "Foundation components only where policy is settled, behind disabled hooks, each with a consumer; no second inventory, ledger or NPC brain",
+    "Focused checks: no duplicated or missing money or goods, no double-spent reservation, no impossible fulfilment, deterministic order, save/load, no change with hooks off, no unbounded queues",
+    "Work kept on wip/expansion20-preparation, pushed; recovery handoff current"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_expansion20_phase1_authorization.md"
+    }
+   ]
+  },
+  {
    "id": "EARTH-01",
    "title": "Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1)",
    "kind": "approved",
@@ -22564,7 +22597,7 @@
    "implementation": "wip/expansion20-preparation d82f173: the read-only LE-00 architecture audit (expansion20/LE00_ARCHITECTURE_AUDIT.md on that branch): today's economy by file and function, the five principles met/partly/not, integration and conflicts with Expansions 18 and 19, Build 17 findings as candidates, decision-to-stage map, proposed LE-01..07 sequence, risks",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/expansion20-preparation",
    "commits": [
     "d82f173"
    ],
@@ -22609,6 +22642,16 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> approval OWNER APPROVED; implementation INTEGRATED; verification INTEGRATION VERIFIED; release UNKNOWN; COMPLETE",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch:  -> wip/expansion20-preparation",
+     "why": "owner phase 1: refresh the Build 17 audit against the released Build 18 code"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "verification_status: INTEGRATION VERIFIED -> NOT TESTED; completion: COMPLETE -> OPEN",
+     "why": "the owner's phase-1 directive asks to complete LE-00: the Build 17 audit is refreshed against Build 18 before it closes again"
     }
    ],
    "target_build": "20+",
@@ -22618,10 +22661,11 @@
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "approval_status": "OWNER APPROVED",
    "legacy_evidence": "v1 status COMPLETE AND VERIFIED with its recorded evidence (implementation, tests or commits)",
-   "implementation_status": "INTEGRATED",
-   "verification_status": "INTEGRATION VERIFIED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
    "release_status": "UNKNOWN",
-   "completion": "COMPLETE"
+   "completion": "OPEN",
+   "assigned_worker": "lead"
   },
   {
    "id": "LE-01",
@@ -27894,6 +27938,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> disposition APPROVED",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "owner authorized Expansion 20 phase 1 (builds map: implementation_authorized, phase-1 limits); docs/directives/2026-10-23_expansion20_phase1_authorization.md"
     }
    ],
    "owner_answer": "Approved as the official long-term planning sequence (organization and sequencing only; unresolved design decisions, implementation and release dates not approved)",
