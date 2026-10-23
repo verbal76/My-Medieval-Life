@@ -14,7 +14,9 @@ save key. Spec sections 3, 6, 14, 16; refresh `LE00_BUILD18_REFRESH.md` section 
 
 `EconomyFoundation.attach(world, saved)` (`scripts/core/economy/economy_foundation.gd`) is the one attach point, called
 at the end of `World.setup` and in `World.load_dict`. Disabled: returns null, `World.economy == null`, `to_dict` has no
-`economy` key, a save that has the key loads and ignores it. Enabled: the optional save key `"economy"`
+`economy` key unless the save carried one: a saved `economy` section is then held untouched (`World.economy_foreign`, a deep
+copy, never parsed or processed) and written back unchanged, so switching the foundation off never erases saved data
+(CLAUDE.md s.7, audit D2; the Expansion 21 `civic_foreign` pattern). Enabled: the optional save key `"economy"`
 `{reservations?, events?}` is written only when a part is non-empty; an older save without it loads with empty records.
 No `SAVE_VERSION` change.
 

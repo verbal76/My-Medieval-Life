@@ -262,8 +262,29 @@ func test_save() -> void:
 	EconomyFoundation.set_override({})
 	var w4 := World.new()
 	w4.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
-	check(w4.economy == null and w4.total_coins() == w.total_coins(), "disabled: a save with the key loads, the key is ignored")
-	check(not w4.to_dict().has("economy"), "disabled: re-saved without the key")
+	check(w4.economy == null and w4.total_coins() == w.total_coins(), "disabled: a save with the key loads, nothing constructed")
+	check(w4.to_dict().has("economy"), "disabled: the section is kept (D2)")
+	# D2: kept untouched through three save/load cycles, never parsed or processed
+	var want := JSON.stringify(JSON.parse_string(JSON.stringify(d))["economy"])   # as a loaded file (JSON numbers are floats)
+	var cur: Dictionary = JSON.parse_string(JSON.stringify(d))
+	var ok := true
+	var wc: World = null
+	for i in 3:
+		wc = World.new()
+		wc.load_dict(VillageMap.load_default(), cur)
+		ok = ok and wc.economy == null and JSON.stringify(wc.to_dict().get("economy")) == want
+		cur = JSON.parse_string(JSON.stringify(wc.to_dict()))
+	check(ok and JSON.stringify(cur.get("economy")) == want, "disabled: economy section byte-identical through 3 save/load cycles")
+	check(wc.economy == null and wc.economy_foreign.has("reservations"), "disabled: kept section held raw, not processed (no live reservation)")
+	# enabled again: the kept section is restored as before
+	EconomyFoundation.set_override({"enabled": true, "reservations": {"keep_finished": 5}, "events": {"capacity": 8, "save": true}})
+	var w5 := World.new()
+	w5.load_dict(VillageMap.load_default(), cur)
+	check(w5.economy != null and JSON.stringify(w5.economy.to_dict()) == JSON.stringify(w.economy.to_dict()) and w5.economy_foreign.is_empty(), "enabled: the kept section is restored as before")
+	EconomyFoundation.set_override({})
+	var w6 := World.new()
+	w6.load_dict(VillageMap.load_default(), old)
+	check(w6.economy == null and not w6.to_dict().has("economy"), "disabled + no key: nothing written")
 
 
 func test_timing() -> void:
