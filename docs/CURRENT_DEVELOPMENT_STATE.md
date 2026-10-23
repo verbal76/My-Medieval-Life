@@ -36,7 +36,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 
 Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
-None in flight (VER-CON-50ORE reported and merged at 5181dc7). A read-only investigator is checking CHAPEL-R3/R4.
+One worker: the old-save fixes (CHAPEL-R3, CHAPEL-R4 and the ROOMS-18 plant ids; REL18-SAVE known defects) on `wip/b18-savefix` from `wip/build18` 5181dc7; load path and records only, new-world generation unchanged (the determinism gate must still pass).
 
 ### Running processes (never restart or cancel; SIM-02)
 

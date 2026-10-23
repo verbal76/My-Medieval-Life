@@ -8611,6 +8611,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "investigated: 12 wild flowers (not 22) and 4 boulders removed on every old save, 5 flowers outside the footprint; many old saves cannot place the chapel (villagers' land) yet still lose them; nothing owned is lost. Engineering fix in progress (keep the saved plants off the footprint, all of them when no chapel)"
     }
    ]
   },
@@ -8635,6 +8640,11 @@
      "date": "2026-10-22",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_staging_ff_chapel_review.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "note",
+     "why": "investigated (read-only, on 5181dc7): surface deposits and hidden ore unchanged on seeds 1-300; prospecting clues change on 154 of 300 seeds with no GEN_VERSION bump, and an old save silently drops sample marks and pits on vanished clues. A CLAUDE.md section 6/7 defect: fix in progress on wip/b18-savefix"
     }
    ]
   },
@@ -38138,6 +38148,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases); test_commit: None -> 0e1a88b; commits + b2f5c5d; remaining_work",
      "why": "a real Build 17 save (cd7439c, version 17) loads into Build 18, plays two days, round-trips as version 19"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "known_defects + old saves silently lose prospecting marks and pits on clues the chapel's map moved, and 12 wild flowers; ROOMS-18 relaid plant ids so Build 17 plant states may land on the wrong plants (to verify)",
+     "why": "chapel investigation found old-save losses; fix in progress on wip/b18-savefix"
     }
    ],
    "tests": "docs/build18/SAVE_MIGRATION.md; save_transfer_test 21, profile_test 12 (old-save and round-trip cases)",
@@ -38145,7 +38160,10 @@
    "commits": [
     "b2f5c5d"
    ],
-   "remaining_work": "on-device import from the Android build (owner playtest)"
+   "remaining_work": "on-device import from the Android build (owner playtest)",
+   "known_defects": [
+    "old saves silently lose prospecting marks and pits on clues the chapel's map moved, and 12 wild flowers; ROOMS-18 relaid plant ids so Build 17 plant states may land on the wrong plants (to verify)"
+   ]
   },
   {
    "id": "REL18-SUITES",
