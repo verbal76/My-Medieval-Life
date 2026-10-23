@@ -95,6 +95,7 @@ jobs:
           $godot --headless --path game --script res://tests/countryside_test.gd
           $godot --headless --path game --script res://tests/courier_live_test.gd
           $godot --headless --path game --script res://tests/credit_test.gd
+          $godot --headless --path game --script res://tests/economy_foundation_test.gd
           $godot --headless --path game --script res://tests/feast_test.gd
           $godot --headless --path game --script res://tests/horse_test.gd
           $godot --headless --path game --script res://tests/luxury_test.gd

@@ -139,6 +139,9 @@ or from `teams[<colour>]` for a faction. All rects are 16px-aligned, so a buildi
 
 ## Game data formats elsewhere
 
+`game/data/economy.json` (`mml-economy/1`, Expansion 20 foundation switch, shipped disabled) is described in
+`docs/expansion20/LE01_DATA_CONTRACTS.md`.
+
 The game's own data files are in `game/data/` with a `format` field each (`mml-items/1`,
 `mml-recipes/1`, `mml-balance/1`, `mml-village/1` and so on). One of them is a registry rather than
 balance data: `game/data/resources.json` (`mml-resources/1`) defines the harvestable resource nodes

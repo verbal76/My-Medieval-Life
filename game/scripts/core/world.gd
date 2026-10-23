@@ -100,6 +100,7 @@ var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP p
 var settlement_caps := {}     # SET-A/B: the village's maintained capability history (SettlementProfile; saved under SettlementSave.KEY, optional)
 var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
 var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
+var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
@@ -220,6 +221,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	couriers = CourierService.create_live(self)     # REG-COURIER-01: a booth for each of the five settlements; the village's opens at the first dawn
 	couriers.daily()
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
+	economy = EconomyFoundation.attach(self)     # EXPANSION 20 LE-01: null while disabled (nothing built, nothing saved)
 	note("Day 1 begins in the village.")
 
 
@@ -4144,7 +4146,7 @@ func to_dict() -> Dictionary:
 		"pits": pits.to_dict(),
 		"mine_works": mine_works.to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({EconomyFoundation.KEY: economy.to_dict()} if economy != null and not economy.to_dict().is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {})   # X18-CAPCOMP: once seeded (D1) or worked
 
 
 func _settlement_section() -> Dictionary:
@@ -4410,6 +4412,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	# uninterrupted game would not (the facts can move during the day, e.g. a stonecutter buying a chisel)
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
+	economy = EconomyFoundation.attach(self, d.get(EconomyFoundation.KEY, {}))   # EXPANSION 20 LE-01: absent or disabled: none
 	_unstick()
 
 
