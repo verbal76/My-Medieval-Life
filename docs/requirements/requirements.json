@@ -22142,7 +22142,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22156,10 +22156,38 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
      "why": "lead drafts the identity and save-migration design for the owner's approval"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
+     "why": "design and save-migration plan written for approval (docs/design/IDENTITY_AND_RECONCILIATION_PROPOSAL.md)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life"
+   "branch": "staging/my-medieval-life",
+   "next_action": "owner approves the design, the foundation branch and save version 20, and answers ID-D1"
+  },
+  {
+   "id": "ID-D1",
+   "kind": "decision",
+   "title": "Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager?",
+   "description": "Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager?",
+   "source": "docs/directives/2026-10-23_post_audit_foundation_repairs.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    }
+   ]
   },
   {
    "id": "INFO-01",
@@ -38139,8 +38167,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_post_audit_foundation_repairs.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "proposal written (same document, section 6)"
     }
-   ]
+   ],
+   "next_action": "owner approves the two reconciliations"
   },
   {
    "id": "REG-BUY-01",

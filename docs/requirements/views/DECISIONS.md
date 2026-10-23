@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 44 |
+| OPEN | 45 |
 | APPROVED | 152 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -88,10 +88,11 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | OPEN | no |  | docs/directives/2026-10-23_expansions_22_23_kickoff.md |
 
-## Approved, no build assigned: open, reopened or provisional (1)
+## Approved, no build assigned: open, reopened or provisional (2)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| ID-D1 | Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager? | OPEN | no |  | docs/directives/2026-10-23_post_audit_foundation_repairs.md |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | OPEN | no |  | docs/directives/2026-10-23_decision_explainability.md |
 
 ## Waiting on an owner decision for its build: open, reopened or provisional (5)

@@ -298,7 +298,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -691,7 +691,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (201)
+## Owner decisions (202)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -734,6 +734,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | 23 | OPEN |  |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? |  | APPROVED |  |
 | HORSE-Q | Plough horse: price and what it does | owner decision | APPROVED |  |
+| ID-D1 | Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager? | unassigned | OPEN |  |
 | INV-Q1 | INV-18 borderline item classifications | owner decision | APPROVED |  |
 | INV-Q2 | INV-18 upgrade acquisition and cost | owner decision | APPROVED |  |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | owner decision | APPROVED |  |
