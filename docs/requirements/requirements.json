@@ -22202,17 +22202,24 @@
      "date": "2026-10-23",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT; assigned_worker: identity worker (Sonnet subagent) -> identity worker 2 (Sonnet subagent)",
      "why": "owner chose ID-D2 option B; follow-up assigned: id ranges, verification, first-divergence analysis, candidate baseline"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "tests: identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined -> identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined; identity_test 98, migration_test 93, aging_test 136, family_test 51, succession_test 26, save_transfer_test 21, regions_test 118, settlement_life_test 54, conservation_test 8, world_test 339; sim_gate day 10 identical, day 30 differs (explained, docs/design/IDENTITY_GATE_ANALYSIS.md); test_commit: 0f2bb92 -> 84d1880; commits + 45d68d3; commits + 84d1880; next_action",
+     "why": "option B done (45d68d3, 84d1880): village range 1-999,999 (Build 18 sequence, hard stop below 1,000,000), band from 1,000,000 for settlement people and player characters; identity_test 98 and the touched suites pass; gate identical at day 10 on both seeds; day-30 divergences fully explained by arrivals keeping band ids (id-hashed piety and caravan taste); candidate baseline in docs/design/IDENTITY_GATE_CANDIDATE.json, real baseline untouched"
     }
    ],
    "assigned_worker": "identity worker 2 (Sonnet subagent)",
    "branch": "wip/foundation-identity",
-   "next_action": "owner answers ID-D2 (id numbering and the gate re-baseline)",
-   "tests": "identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined",
-   "test_commit": "0f2bb92",
+   "next_action": "owner approves the candidate baseline (and says whether id-hashed traits stay id-based); then merge into wip/recorder",
+   "tests": "identity_test 89; all 87 tests.yml suites exit 0 (family 51, succession 26, save_transfer 21, world 339, regions 118, settlement_life 54, relations 79, conservation 8, start 506 steps, wiki); unittest 115; sim_gate differs (ids shift), not re-baselined; identity_test 98, migration_test 93, aging_test 136, family_test 51, succession_test 26, save_transfer_test 21, regions_test 118, settlement_life_test 54, conservation_test 8, world_test 339; sim_gate day 10 identical, day 30 differs (explained, docs/design/IDENTITY_GATE_ANALYSIS.md)",
+   "test_commit": "84d1880",
    "commits": [
     "af6409f",
     "a67efd2",
-    "0f2bb92"
+    "0f2bb92",
+    "45d68d3",
+    "84d1880"
    ]
   },
   {
@@ -22266,6 +22273,28 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (docs/directives/2026-10-23_id_d2_succession_decisions.md)"
+    }
+   ]
+  },
+  {
+   "id": "ID-D3",
+   "kind": "decision",
+   "title": "Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change).",
+   "description": "Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change).",
+   "source": "docs/directives/2026-10-23_id_d2_succession_decisions.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_id_d2_succession_decisions.md"
     }
    ]
   },
