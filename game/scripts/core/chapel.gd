@@ -4,8 +4,8 @@ extends RefCounted
 ## with a clergy of two, a preacher and a church assistant, who are paid, low-wage villagers; offerings of coins and food; the
 ## church's own small farm plot; and food relief that comes from the church first.
 ##
-## Money: the offerings fund (`coins`) holds coins that left villagers' and the player's purses; it pays the clergy's wage
-## and buys relief food from sellers, and every coin goes to a named person. Nothing is made: when the fund is empty the
+## Money: the offerings fund (`coins`) holds coins that left villagers' and the player's purses; it pays the clergy's wage,
+## buys relief food from sellers and gives what is left as alms to the poorest (alms), and every coin goes to a named person. Nothing is made: when the fund is empty the
 ## clergy are owed (up to `owed_days` of wages) and relief is the food in the store only. Food: the store holds food offered
 ## and the crop of the church's plot (FarmPlots, the households' own field code, worked by volunteers or the clergy).
 ## Relief: a household short of food (NPCBrain.household_food_days below relief_trigger_days) sends a member to ask
@@ -423,7 +423,8 @@ func _buy_seed() -> void:
 			w.stat("chapel_seed_bought", qty)
 
 
-## 16:00, before the manor's evening business: on the service day the offerings, then the clergy's wages from the fund.
+## 16:00, before the manor's evening business: on the service day the offerings, then the clergy's wages from the fund, then
+## (service day) the alms from what is left (CHAPEL-R2).
 func evening() -> void:
 	if not present or evening_day == w.day():
 		return
@@ -449,6 +450,77 @@ func evening() -> void:
 		var o: NPC = w.npc(int(k))
 		if o == null or not o.alive:
 			owed.erase(k)
+	if is_service_day():
+		alms()
+
+
+## CHAPEL-R2 (owner, 2026-10-23, Priest + alms: "offerings keep the priest, and what is left goes as alms to the poorest
+## households"; docs/directives/2026-10-23_chapel_alms_build18_decisions.md, _build18_overnight_completion_release.md). On the
+## service day, after the offerings and the wages: the fund keeps what the clergy are owed and seven days of their wages (to
+## the next service); the rest goes to the households short of their necessity reserve (World.necessity, OD-19/PAR-02A: the
+## household's foreseeable need less the coins all its members hold), each up to that shortfall, the largest shortfall first,
+## until it runs out. A household's need is one need: it is paid once, to one adult (else an elder; the lowest id), never to
+## each member. What is left stays in the fund. Every coin goes to a named person; nothing is made, and the fund never goes
+## below what it keeps. Returns the coins given.
+func alms() -> int:
+	if not present:
+		return 0
+	var keep := 0
+	for o: NPC in w.npcs:
+		if is_clergy(o):
+			keep += wage_of(o.job) * int(cfg().offering_every_days)
+	for k in owed:
+		keep += int(owed[k])
+	var pot := coins - keep
+	if pot <= 0:
+		return 0
+	var rows := []                      # [shortfall, household, the member who receives it]
+	for h in w.households.size():
+		if w.households[h].get("ended", false):
+			continue
+		var members: Array = w.brain._members(h)
+		var payee: NPC = null
+		for role in ["adult", "elder"]:
+			for o: NPC in members:
+				if o.alive and o.role == role and (payee == null or o.id < payee.id):
+					payee = o
+			if payee != null:
+				break
+		if payee == null:
+			continue
+		var short := household_shortfall(h)
+		if short > 0:
+			rows.append([short, h, payee])
+	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
+	var given := 0
+	var helped := 0
+	for r in rows:
+		var give := mini(int(r[0]), pot)
+		if give <= 0:
+			break
+		(r[2] as NPC).coins += give
+		coins -= give
+		pot -= give
+		given += give
+		helped += 1
+	if given > 0:
+		w.stat("chapel_alms_coins", given)
+		w.stat("chapel_alms_households", helped)
+		w.note("The chapel gave %d coins in alms to %d of the village's poorest households." % [given, helped])
+	return given
+
+
+## The coins household `h` lacks for its foreseeable necessities: its need (World.necessity, the same for every member) less
+## what all its members hold. 0 when it has enough.
+func household_shortfall(h: int) -> int:
+	var members: Array = w.brain._members(h)
+	if members.is_empty():
+		return 0
+	var nec: Dictionary = w.necessity(members[0])
+	var held := 0
+	for o: NPC in members:
+		held += o.coins
+	return maxi(0, int(nec.need) - held)
 
 
 # ---------------------------------------------------------------- work on the plot ------------
