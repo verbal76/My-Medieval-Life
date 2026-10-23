@@ -20,8 +20,8 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | Production professions | 11 |
 | Recipes | 49 |
 | Threshold findings | 38 |
-| ... with a recorded exception | 19 |
-| ... open (no exception) | 19 |
+| ... with a recorded exception | 20 |
+| ... open (no exception) | 18 |
 | Orphaned recipes | 0 |
 | Broken references | 0 |
 | Stale or invalid exceptions | 0 |
@@ -77,7 +77,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | miner | `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `spoil`, `stone`, `topsoil` | laborer: stone (recipe dress_stone); smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron); stonecutter: stone (recipe dress_stone) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
 | sage | `healing_tonic`, `herbal_poultice`, `herbal_tonic`, `strong_healing_tonic` | nobody | `herbal_poultice` | supplies nobody: exception |
 | smith | `amulet`, `axe`, `cart_axle`, `cart_ironwork`, `chisel`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `lockpick`, `nails`, `padlock`, `pickaxe`, `shovel_blade` | carpenter: cart_axle (recipe build_handcart), cart_ironwork (recipe build_handcart), iron_bar (recipe craft_plough), shovel_blade (buys it); guard: iron_sword (keeps it for its work); laborer: chisel (keeps it for its work), pickaxe (keeps it for its work); miner: pickaxe (keeps it for its work); stonecutter: chisel (keeps it for its work); woodcutter: axe (keeps it for its work) | `amulet`, `axe`, `chisel`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `nails`, `pickaxe` | pass |
-| stonecutter | `building_block`, `rubble` | nobody | `building_block`, `rubble` | supplies nobody: **open** |
+| stonecutter | `building_block`, `rubble` | nobody | `building_block`, `rubble` | supplies nobody: exception |
 | tanner | `leather`, `leather_armor`, `leather_cap`, `linen_bandage`, `wool_cloth` | guard: leather_armor (keeps it for its work); sage: linen_bandage (buys it); smith: leather (recipe forge_iron_sword) | `leather`, `leather_armor`, `leather_cap`, `wool_cloth` | pass |
 | woodcutter | `apple_sapling`, `log`, `oak_sapling`, `pine_sapling` | carpenter: log (recipe make_mallet); cook: log (recipe roast_meat) | `log` | pass |
 
@@ -180,7 +180,7 @@ None.
 | material `wool_cloth` | few_professions | consumed by 1 professions (tanner), fewer than 2 | **none: open** |
 | material `wool_cloth` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice, herbal_tonic, strong_healing_tonic is needed by another profession | WDR-002: The sage's medicines are not a production input of another trade: they are bought by people of every profession when hurt (a guard hurt on duty, a miner, a hunter), from the sage with their own coins, to recover and keep working (NPCBrain._plan_heal). A functioning cross-profession relationship, not an isolated menu; no stockpile or artificial dependency is added. |
-| profession `stonecutter` | supplies_nobody | none of building_block, rubble is needed by another profession | **none: open** |
+| profession `stonecutter` | supplies_nobody | none of building_block, rubble is needed by another profession | WDR-002: The stonecutter's dressed blocks are construction material, not a production input of another trade: the raw-goods merchant buys them and households and the manor build them into the houses, workshops and repairs that people of every profession live and work in, and the rubble goes to the manor's mending (NPCBrain._blocks_wanted opens the trade only while building sites or the merchant need blocks). The game has no builder trade; none is created and no artificial purchase is added. |
 
 ## Broken references
 
