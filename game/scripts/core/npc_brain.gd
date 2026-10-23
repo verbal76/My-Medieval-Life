@@ -4026,11 +4026,9 @@ func _sorted_keys(d: Dictionary) -> Array:
 	return k
 
 
+## ID-01: a new person's id, from the world's one counter (never an id that was used, whether or not its record still exists).
 func _next_npc_id() -> int:
-	var top := 0
-	for o: NPC in w.npcs:
-		top = maxi(top, o.id)
-	return top + 1
+	return w.new_person_id()
 
 
 ## A newcomer takes the post, the workstation and a home: with the dead worker's household if it lives
@@ -4051,6 +4049,7 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	w.stat("newcomer_coins_in", n.coins)
 	w.npcs.append(n)
 	w.by_id[n.id] = n
+	Identity.register_npc(w, n)
 	var h := int(v.household)
 	if h >= 0 and h < w.households.size() and not w.households[h].get("ended", false) and not _members(h).is_empty() \
 			and w.buildings.has(str(w.households[h].home)):
@@ -4095,6 +4094,7 @@ func _lodge(n: NPC, h: int) -> void:
 	n.family = str(w.households[h].family)
 	n.home = str(w.households[h].home)
 	w.households[h].members.append(n.id)
+	Identity.sync_name(w, n)
 
 
 ## Day labour at the manor: an adult of a household short of food who has earned nothing today may

@@ -581,6 +581,7 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	hh.members.append(k.id)
 	w.npcs.append(k)
 	w.by_id[k.id] = k
+	Identity.register_npc(w, k)
 	w.stat("births")
 	var m_name: String = mother.name if mother != null else father.name
 	w.note("A %s, %s, is born to %s." % ["girl" if k.sex == "female" else "boy", k.name, m_name])
@@ -657,8 +658,15 @@ static func make_heir(w: World, heir: PlayerState, kid: NPC, parent: PlayerState
 		bag.add(id, kid.inv.count(id))
 	if bag.total() > 0 or kid.coins > 0:
 		w.loot.append({"pos": kid.pos, "inv": bag, "coins": kid.coins, "from": kid.name})
-	w.npcs.erase(kid)
-	w.by_id.erase(kid.id)
+	# ID-01: the child keeps their own permanent id and record (their history, ties and family links stay theirs, and the id is never
+	# issued again); the record is a person who became the player, not a villager and not a body: empty-handed (what they carried is
+	# in the loot above), not alive, drawn by nobody.
+	kid.inv = Inventory.new()
+	kid.coins = 0
+	kid.plan.clear()
+	kid.target = -1
+	kid.alive = false
+	kid.became_player = true
 	w.stat("child_heirs")
 
 
