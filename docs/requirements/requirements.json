@@ -51355,7 +51355,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -51369,10 +51369,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> staging/my-medieval-life",
      "why": "lead runs the audit with read-only research agents"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; next_action",
+     "why": "report written (docs/design/CROSS_EXPANSION_PRESERVATION_AUDIT.md); awaiting the owner's review; no assignments opened"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "staging/my-medieval-life"
+   "branch": "staging/my-medieval-life",
+   "next_action": "owner reviews the audit and decides on the preservation fixes (D1-D3), the identity foundation and the integration plan"
   },
   {
    "id": "XEXPL-01",
