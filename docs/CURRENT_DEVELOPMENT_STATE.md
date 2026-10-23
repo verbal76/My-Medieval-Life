@@ -27,7 +27,7 @@ Never reconstruct state from a conversation summary: these files are the record.
 | `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
 | `wip/build18` | `239bdff` (2026-10-23; Build 18 draft release from `61ec528`) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
 | `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
-| `wip/expansion19-preparation` | `c4b10e4` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 17 only |
+| `wip/expansion19-preparation` | `c2ece16` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 18 (SYNC-18, merge c2ece16: gate identical, judgment and shared suites pass) |
 | `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
 | `wip/multiplayer` | `d18d7d1` | MP-01, excluded from Build 18; never merge without the owner |
 | `main` | | changes only when the owner merges |
@@ -38,7 +38,7 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 
 | Record | Worker | Branch | Started from | Notes |
 |---|---|---|---|---|
-| PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c4b10e4 | merge the released Build 18 (wip/build18) into Expansion 19; the judgment stays switched off; then the owner's 2026-10-23 answers (gossip at each meeting first) |
+| PROS-19 | X19 sync worker (Sonnet subagent) | `wip/expansion19-preparation` (worktree `.claude/worktrees/agent-a6cffdef98c095994`) | c2ece16 | Build 18 merged (c2ece16). Now: X19-Q-TIMING, gossip told at the meeting itself weighted by closeness, with perf before and after; the other 2026-10-23 answers follow one at a time |
 
 Expansions 20 and 21: implementation not authorized (register `builds` map: OD-30, OD-LE-01); no worker.
 Decision packet for starting them: `docs/design/EXPANSIONS_20_21_DECISION_PACKET.md` (2026-10-23; awaiting the owner).
@@ -68,8 +68,8 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    239bdff): three packages downloaded back, checksums match, audio per platform checked, Linux binary launched.
 5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
    report was given in the session.
-6. Expansions directive (2026-10-23): X19 sync worker merging Build 18 into `wip/expansion19-preparation` (PROS-19); on its
-   report, review, then assign the gossip-at-each-meeting rework (X19-Q-TIMING) and the other 2026-10-23 answers.
+6. Expansions directive (2026-10-23): Build 18 merged into `wip/expansion19-preparation` (c2ece16, reviewed); the worker is on
+   X19-Q-TIMING; then SJD-Q05, X19-REGARD, X19-ASSAULT, X19-HARMED, X19-CRT12, X19-GUARD.
    Expansions 20 and 21: decision packet given to the owner; no work until answered.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
