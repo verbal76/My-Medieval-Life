@@ -6,8 +6,8 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 38 |
-| APPROVED | 171 |
+| OPEN | 37 |
+| APPROVED | 172 |
 | PROVISIONAL | 1 |
 | SUPERSEDED | 2 |
 | REOPENED | 0 |
@@ -25,11 +25,10 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B | docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md |
 
-## Build 19: NPC Judgment System: open, reopened or provisional (4)
+## Build 19: NPC Judgment System: open, reopened or provisional (3)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
-| B19-BASELINE | Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)? | OPEN | yes |  | docs/design/BUILD19_BASELINE_PROPOSAL.md |
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |

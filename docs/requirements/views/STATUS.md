@@ -23,7 +23,7 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Owner playtested | 0 of 83 (0%) | 0 of 28 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
 | Complete | 2 of 83 (2%) | 0 of 28 (0%) | 0 of 9 (0%) | 0 of 5 (0%) | 0 of 3 (0%) | 0 of 1 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 4 (0%) |
 | Release blockers (open in-scope requirements) | 81 | 28 | 9 | 5 | 3 | 1 | 0 | 1 | 4 |
-| Open owner decisions (of which blocking) | 1 (0) | 4 (1) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) | 0 (0) | 0 (0) |
+| Open owner decisions (of which blocking) | 1 (0) | 3 (0) | 14 (11) | 9 (7) | 3 (0) | 1 (0) | 0 (0) | 0 (0) | 0 (0) |
 | Deferred with approval | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 3 | 2 | 5 | 0 | 0 | 0 | 0 | 0 |
 | Integrated, awaiting gameplay or owner verification | 78 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -42,5 +42,5 @@ Build authority:
 - **Build 25 (Weather, Seasons and Disasters):** implementation **NOT AUTHORIZED**. WEATHER-01 (owner 2026-10-23): design only, no code
 - **Build 26 (Creatures and Heroes):** implementation **NOT AUTHORIZED**. PET-01, MON-01 (owner 2026-10-23): design only, no code
 
-Future backlog and unassigned: 113 open records (`BACKLOG.md`). Open owner decisions: 39 (`DECISIONS.md`).
+Future backlog and unassigned: 113 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
 

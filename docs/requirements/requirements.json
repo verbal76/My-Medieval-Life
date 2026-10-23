@@ -4804,8 +4804,8 @@
    "description": "Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)?",
    "source": "docs/design/BUILD19_BASELINE_PROPOSAL.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approve; update once more after the bandit rule change, before release",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "19",
    "related": [],
@@ -4816,6 +4816,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/design/BUILD19_BASELINE_PROPOSAL.md"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-24_owner_answers_baseline_bandits.md); to be written on the final commit after the SIM-F4 rule change is measured"
     }
    ]
   },
@@ -42470,9 +42475,14 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "run 3 on a7c84e9: no longer stuck; seed 1 bandit starvation 11 -> 2 (2 slain by a villager), seed 2 still 17 starved from scarcity under the current rules (poach 25%, market needs 15 coins and 60% health, no healing); design question to the owner"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "next_action",
+     "why": "owner answered: health no longer blocks a bandit's food purchase, and a bandit may buy as soon as they can afford one item of food; bandits heal by resting and sleeping at the camp like villagers"
     }
    ],
-   "next_action": "owner: health condition on the bandits' food purchase, the 15-coin minimum, whether bandits heal",
+   "next_action": "implement on wip/build19, test, measure once (30 days, seeds 1-2), update the baseline",
    "implementation_status": "PARTIALLY IMPLEMENTED",
    "branch": "wip/build19",
    "commits": [

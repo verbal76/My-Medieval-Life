@@ -16,7 +16,7 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | Owner playtested | 0 of 28 (0%) |
 | Complete | 0 of 28 (0%) |
 | Open (release blockers) | 28 |
-| Open owner decisions (blocking) | 4 (1) |
+| Open owner decisions (blocking) | 3 (0) |
 
 ## In development (worker assigned) (3)
 
@@ -66,11 +66,10 @@ Readiness: **PROTOTYPE ONLY (isolated branch; not integrated)**
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Open owner decisions (4)
+## Open owner decisions (3)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| B19-BASELINE | Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)? | OPEN | yes |  |
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | OPEN | no |  |
