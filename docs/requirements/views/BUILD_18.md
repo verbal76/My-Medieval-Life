@@ -8,14 +8,14 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 81 |
-| Integrated | 72 of 81 (89%) |
-| Automated tests passed | 70 of 81 (86%) |
-| Integration verified | 55 of 81 (68%) |
-| Gameplay verified | 0 of 81 (0%) |
-| Owner playtested | 0 of 81 (0%) |
-| Complete | 2 of 81 (2%) |
-| Open (release blockers) | 79 |
+| Approved requirements in scope | 82 |
+| Integrated | 72 of 82 (88%) |
+| Automated tests passed | 70 of 82 (85%) |
+| Integration verified | 55 of 82 (67%) |
+| Gameplay verified | 0 of 82 (0%) |
+| Owner playtested | 0 of 82 (0%) |
+| Complete | 2 of 82 (2%) |
+| Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 6 (1) |
 
 ## Integrated, awaiting gameplay or owner verification (70)
@@ -105,10 +105,11 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | OWNER APPROVED | PARTIALLY IMPLEMENTED | fc25af7 | NOT TESTED | Sage exception documented with checked evidence (B18-DP-15); 9 of 10 professions pass with real chains |  | M |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | Compare 100- and 365-day results (supply, shortages, prices, employment, production, trade, wealth, scarcity behaviour) and write the scarcity-response audit (B18-DP-06) |  | M |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (2)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REL18-PACKAGE | Build 18 packaging gate: no Build 18 test package until every punch-list item is closed or explicitly accepted as permanently blocked; no early or partial builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED | The only package allowed is the final candidate set for the owner's device playtest, after every implementation item is closed or accepted as permanently blocked (docs/directives/2026-10-23_rel18_device_and_decision_package.md) | design: UNKNOWN | UNKNOWN |
 

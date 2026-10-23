@@ -26049,6 +26049,36 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "MUSIC-18",
+   "kind": "approved",
+   "title": "Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working",
+   "description": "Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working",
+   "source": "docs/directives/2026-10-23_game_music.md",
+   "owner_wording": "We need to add them in as game music and we will need a volume slider in settings for music and sfx I will add those too",
+   "approval": "owner, 2026-10-23",
+   "acceptance": [
+    "the three songs play in the game, imported with provenance from the owner's releases",
+    "the Music slider controls the music and the Sound effects slider the SFX bus, saved in settings",
+    "credited on the credits page; wiki and settings text updated; works on Android, Windows and Linux"
+   ],
+   "target_build": "18",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-23",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-23_game_music.md"
+    }
+   ]
+  },
+  {
    "id": "OD-01",
    "title": "Owner decision: deposit sustainability (P1) and the mine wage (B7-006)",
    "kind": "decision",
