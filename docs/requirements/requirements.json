@@ -21768,8 +21768,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21797,11 +21797,21 @@
      "date": "2026-10-24",
      "change": "implementation_status: IMPLEMENTATION BLOCKED -> IN DEVELOPMENT; assigned_worker: primary development agent -> Build 21 integration agent",
      "why": "owner's final asset and instructions (docs/directives/2026-10-24_build21_campfire_asset.md): the SMStudios sprite sheet from the owner's 'Campfire' release, approved for Build 21; replace the stall-like placeholders so the camp reads as a bandit camp; credit SMStudios (CC BY 4.0, clickable where supported)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> campfire_test 14 checks 0 failures (lead rerun at 7fb8b12); G0 identical; test_commit: None -> 7fb8b12; commits + 7fb8b12",
+     "why": "owner's campfire implemented by the Build 21 agent (7fb8b12: animated, credits, generator v11, campfire_test 14/0, G0 identical); size reduction follows under the final execution directive"
     }
    ],
    "assigned_worker": "Build 21 integration agent",
    "branch": "wip/multiplayer-b19",
-   "next_action": "Choose campfire art (pack search or composed) and give the camp its own crate and barrel ids"
+   "next_action": "Choose campfire art (pack search or composed) and give the camp its own crate and barrel ids",
+   "tests": "campfire_test 14 checks 0 failures (lead rerun at 7fb8b12); G0 identical",
+   "test_commit": "7fb8b12",
+   "commits": [
+    "7fb8b12"
+   ]
   },
   {
    "id": "GP-BASELINE-POLICY",
@@ -21869,7 +21879,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21888,10 +21898,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -22123,7 +22138,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22142,10 +22157,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-GIFT-QUANTITY",
@@ -22163,7 +22183,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22182,9 +22202,14 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; next_action",
      "why": "not reproduced: real touch events (tap, 60-frame hold, touch plus emulated mouse, repeats) each give exactly one; picker not built; left out of Build 20"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker: primary development agent -> Build 21 agent",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": "Build 21 agent",
    "branch": "wip/multiplayer-b19",
    "next_action": "Build the picker (starts at 1) and keep looking for the repeat on a device"
   },
@@ -22256,7 +22281,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22275,9 +22300,16 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-INPUT-CONSIST",
@@ -22295,7 +22327,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22314,9 +22346,16 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-INTERIOR-WALLS",
@@ -22334,7 +22373,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTATION BLOCKED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22353,9 +22392,14 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTATION BLOCKED; next_action",
      "why": "cause found: the smithy stamp is one column narrow and drops the source art's east wall (x=83); the fix makes that column solid, moves the chapel lane one tile east and changes G0 widely (seed 1 day 10 alive 108 to 107); patch kept, needs the owner's acceptance of the walkability and G0 change; left out of Build 20"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTATION BLOCKED -> IN DEVELOPMENT; assigned_worker: primary development agent -> Build 21 agent",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": "Build 21 agent",
    "branch": "wip/multiplayer-b19",
    "next_action": "Owner: accept the walkability and baseline change of the smithy wall fix"
   },
@@ -22378,7 +22422,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22397,9 +22441,16 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-LOCKPICK",
@@ -22422,7 +22473,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22441,9 +22492,16 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-MARKET-SHELVES",
@@ -22461,7 +22519,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22470,8 +22528,15 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_build21_craftpix_market_stalls.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
-   ]
+   ],
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-PACK-DETAIL-FIT",
@@ -22539,7 +22604,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22558,10 +22623,18 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IMPLEMENTED ON TASK BRANCH; commits + 1a6fb4b",
+     "why": "compact pause menu implemented by the Build 21 agent (1a6fb4b, GameUI.compact); owner: do not redo"
     }
    ],
    "assigned_worker": "",
-   "branch": ""
+   "branch": "",
+   "commits": [
+    "1a6fb4b"
+   ]
   },
   {
    "id": "GP-PICKAXE-ANIM",
@@ -22671,7 +22744,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTATION BLOCKED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22690,6 +22763,11 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTATION BLOCKED",
+     "why": "blocked: the overhead labelled bar already draws on every platform and no small white centre-screen bar exists in the code; needs the owner's PC screenshot to identify what was seen"
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
@@ -22802,7 +22880,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22821,10 +22899,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-SMITHY-WORKBENCH",
@@ -22842,7 +22925,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22861,10 +22944,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-STALL-PRICE-ON-PUTUP",
@@ -22882,7 +22970,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22901,10 +22989,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-STALL-TABLE-10",
@@ -23013,7 +23106,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23032,10 +23125,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-TARGET-ART-MATCH",
@@ -23053,7 +23151,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23082,10 +23180,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-TRAIL-EDGES",
@@ -23148,7 +23251,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23167,10 +23270,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-WHEAT-PICKED",
@@ -23233,7 +23341,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23252,10 +23360,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
+     "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
     }
    ],
-   "assigned_worker": "",
-   "branch": ""
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "HEALTH-01",
