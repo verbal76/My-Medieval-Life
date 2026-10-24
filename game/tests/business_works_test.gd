@@ -239,7 +239,7 @@ func _display() -> void:
 	var g := Business.display_goods(s, 4)
 	check(g == ["plank", "iron_ore", "log"], "the counter shows the stall's real goods, the most plentiful first: " + str(g))
 	check(Business.display_goods(s, 2) == ["plank", "iron_ore"], "at most as many kinds as the counter has room for")
-	check(biz.displays().any(func(d): return int(d.x) == int(s.x) and int(d.y) == int(s.y) and d.goods == g), "the stall is among the counters to draw, at its own place")
+	check(biz.shelves().any(func(d): return int(d.x) == int(s.x) and int(d.y) == int(s.y) and d.goods == g), "the stall is among the shelves to draw, at its own place (GP-MARKET-SHELVES)")
 	w.minutes = 1440.0 + 9.0 * 60.0
 	w.npcs[0].coins = 100
 	check(biz.sell(s, w.npcs[0], "iron_ore", 5, 3), "the iron ore sells out")

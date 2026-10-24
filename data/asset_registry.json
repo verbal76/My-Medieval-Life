@@ -12936,15 +12936,52 @@
    "scan": [
     {
      "source": "private-assets/cozy-rpg-sfx.zip",
-     "present": false
+     "present": true,
+     "files": 50,
+     "by_ext": {
+      ".txt": 2,
+      ".wav": 48
+     },
+     "licence_files": [
+      "cozy-rpg-sfx/LICENSE.txt",
+      "cozy-rpg-sfx/README.txt"
+     ],
+     "image_count": 0,
+     "sizes": {},
+     "frame_grids": {},
+     "images": []
     },
     {
      "source": "private-assets/cozy-rpg-sfx-ambience-1.zip",
-     "present": false
+     "present": true,
+     "files": 3,
+     "by_ext": {
+      ".txt": 1,
+      ".wav": 2
+     },
+     "licence_files": [
+      "cozy-rpg-sfx/LICENSE.txt"
+     ],
+     "image_count": 0,
+     "sizes": {},
+     "frame_grids": {},
+     "images": []
     },
     {
      "source": "private-assets/cozy-rpg-sfx-ambience-2.zip",
-     "present": false
+     "present": true,
+     "files": 3,
+     "by_ext": {
+      ".txt": 1,
+      ".wav": 2
+     },
+     "licence_files": [
+      "cozy-rpg-sfx/LICENSE.txt"
+     ],
+     "image_count": 0,
+     "sizes": {},
+     "frame_grids": {},
+     "images": []
     }
    ],
    "imported": [
@@ -12997,7 +13034,16 @@
    "scan": [
     {
      "source": "private-assets/Minifantasy_Forgotten_Plains_SFX.zip",
-     "present": false
+     "present": true,
+     "files": 37,
+     "by_ext": {
+      ".wav": 37
+     },
+     "licence_files": [],
+     "image_count": 0,
+     "sizes": {},
+     "frame_grids": {},
+     "images": []
     }
    ],
    "imported": [
@@ -13048,7 +13094,20 @@
    "scan": [
     {
      "source": "private-assets/Minifantasy_ForgottenPlains_Music.zip",
-     "present": false
+     "present": true,
+     "files": 5,
+     "by_ext": {
+      ".txt": 2,
+      ".url": 1,
+      ".wav": 2
+     },
+     "licence_files": [
+      "Minifantasy_ForgottenPlains_Music/Patreon_Leohpaz.url"
+     ],
+     "image_count": 0,
+     "sizes": {},
+     "frame_grids": {},
+     "images": []
     }
    ],
    "imported": [
@@ -13151,6 +13210,377 @@
     }
    ],
    "imported": []
+  },
+  {
+   "id": "craftpix_dungeon_objects",
+   "name": "Free Pixel Art Dungeon Objects Asset Pack",
+   "creator": "Craftpix.net",
+   "sources": [
+    "private-assets/craftpix-net-218281-free-pixel-art-dungeon-objects-asset-pack.zip"
+   ],
+   "storage": "private",
+   "licence": "free",
+   "permissions": "Craftpix file licence (craftpix.net/file-licenses; the owner's licence screenshots, 2026-10-24): use and modify in commercial and non-commercial games, sell the game; no reselling or separate redistribution of the original or modified art (so private-assets: only the two cut-out shelves are committed); no use for training, fine-tuning, developing, testing, validating or improving AI systems. Attribution not required; credited (owner policy).",
+   "categories": [
+    "props",
+    "furniture",
+    "market"
+   ],
+   "status": "integrated",
+   "used_for": "GP-MARKET-SHELVES (Build 21): the empty light and dark two-shelf units (supplies_objects.png x 2..46, y 12..54 and y 76..118), widened by two plank repeats (tools/craftpix_shelves.py, 53 x 43), are every market stall (StallShelf: merchants' stalls and pitches light, built stalls dark), showing up to ten kinds of the goods on offer.",
+   "scale": "1:1 (the shelves are drawn at the world's density; 43 px tall, about 2.7 tiles)",
+   "decision": "Owner's choice of market stall art (directives 2026-10-24_build21_craftpix_market_stalls.md, 2026-10-24_build21_final_execution.md): exactly the two empty shelves; not the awning stalls of another pack, not the stocked shelves.",
+   "opportunities": [
+    "The stocked shelves as storeroom or tavern dressing",
+    "Bowls of red, green and yellow goods as food displays",
+    "Barrels, crates and sacks for yards and the mine",
+    "Weapon racks and shields for the guards' post or the smithy",
+    "Pedestals and traps (dungeon, not the village)"
+   ],
+   "scan": [
+    {
+     "source": "private-assets/craftpix-net-218281-free-pixel-art-dungeon-objects-asset-pack.zip",
+     "present": true,
+     "files": 26,
+     "by_ext": {
+      ".pdf": 1,
+      ".png": 15,
+      ".psd": 6,
+      ".tmx": 1,
+      ".txt": 2,
+      ".url": 1
+     },
+     "licence_files": [
+      "Free Assets Craftpix!.url",
+      "License.txt",
+      "readme.txt"
+     ],
+     "image_count": 15,
+     "sizes": {
+      "1008x128": 2,
+      "1840x2445": 2,
+      "1104x416": 1,
+      "112x240": 1,
+      "128x272": 1,
+      "208x592": 1,
+      "240x592": 1,
+      "352x112": 1,
+      "368x128": 1,
+      "384x256": 1,
+      "416x272": 1,
+      "560x128": 1
+     },
+     "frame_grids": {
+      "32x272": {
+       "sheets": 1,
+       "example": "Tiled_files/trap_plate.png"
+      }
+     },
+     "images": [
+      {
+       "member": "COUPON.png",
+       "sha": "3abc2b38a8d9922a",
+       "size": [
+        1840,
+        2445
+       ],
+       "content": [
+        2,
+        0,
+        1840,
+        2445
+       ],
+       "atlas": true
+      },
+      {
+       "member": "PNG/Other_objects.png",
+       "sha": "cc85ba73c3ba9096",
+       "size": [
+        352,
+        112
+       ],
+       "content": [
+        2,
+        5,
+        352,
+        103
+       ],
+       "frame": [
+        352,
+        112
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "PNG/fire_trap.png",
+       "sha": "531c4472d63a58e6",
+       "size": [
+        1008,
+        128
+       ],
+       "content": [
+        10,
+        0,
+        999,
+        123
+       ],
+       "frame": [
+        1008,
+        128
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "PNG/full.png",
+       "sha": "10b56a171e4d3bf7",
+       "size": [
+        1104,
+        416
+       ],
+       "content": [
+        2,
+        0,
+        1104,
+        416
+       ],
+       "atlas": true
+      },
+      {
+       "member": "PNG/pedestals.png",
+       "sha": "b653581a270870bf",
+       "size": [
+        560,
+        128
+       ],
+       "content": [
+        5,
+        0,
+        557,
+        128
+       ],
+       "frame": [
+        560,
+        128
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "PNG/supplies_objects.png",
+       "sha": "35f4dea4b986c870",
+       "size": [
+        208,
+        592
+       ],
+       "content": [
+        0,
+        10,
+        208,
+        585
+       ],
+       "frame": [
+        208,
+        592
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "PNG/trap_plate.png",
+       "sha": "6d4537361ce6feac",
+       "size": [
+        112,
+        240
+       ],
+       "content": [
+        0,
+        0,
+        105,
+        240
+       ],
+       "frame": [
+        112,
+        240
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "PNG/trap_saw.png",
+       "sha": "b78b2d65cd3c2268",
+       "size": [
+        384,
+        256
+       ],
+       "content": [
+        2,
+        2,
+        384,
+        254
+       ],
+       "frame": [
+        384,
+        256
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "PSD/COUPON.png",
+       "sha": "3abc2b38a8d9922a",
+       "size": [
+        1840,
+        2445
+       ],
+       "content": [
+        2,
+        0,
+        1840,
+        2445
+       ],
+       "atlas": true
+      },
+      {
+       "member": "Tiled_files/Other_objects.png",
+       "sha": "6d7c235e3306fea3",
+       "size": [
+        368,
+        128
+       ],
+       "content": [
+        18,
+        21,
+        368,
+        119
+       ],
+       "frame": [
+        368,
+        128
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Tiled_files/fire_trap.png",
+       "sha": "531c4472d63a58e6",
+       "size": [
+        1008,
+        128
+       ],
+       "content": [
+        10,
+        0,
+        999,
+        123
+       ],
+       "frame": [
+        1008,
+        128
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Tiled_files/pedestals.png",
+       "sha": "e375bda7454223e8",
+       "size": [
+        592,
+        160
+       ],
+       "content": [
+        21,
+        16,
+        573,
+        144
+       ],
+       "frame": [
+        592,
+        160
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Tiled_files/supplies_objects.png",
+       "sha": "6f84850ad35ae37c",
+       "size": [
+        240,
+        592
+       ],
+       "content": [
+        16,
+        10,
+        224,
+        585
+       ],
+       "frame": [
+        240,
+        592
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Tiled_files/trap_plate.png",
+       "sha": "198ebc5e5a2b3cf0",
+       "size": [
+        128,
+        272
+       ],
+       "content": [
+        16,
+        16,
+        121,
+        256
+       ],
+       "frame": [
+        32,
+        272
+       ],
+       "frames_per_row": [
+        4
+       ]
+      },
+      {
+       "member": "Tiled_files/trap_saw.png",
+       "sha": "11149b88cddad86e",
+       "size": [
+        416,
+        272
+       ],
+       "content": [
+        18,
+        18,
+        400,
+        270
+       ],
+       "frame": [
+        416,
+        272
+       ],
+       "frames_per_row": [
+        1
+       ]
+      }
+     ]
+    }
+   ],
+   "imported": [
+    "assets/props/market_shelf_dark.png",
+    "assets/props/market_shelf_light.png"
+   ]
   }
  ]
 }

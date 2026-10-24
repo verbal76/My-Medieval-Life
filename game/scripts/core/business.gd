@@ -414,14 +414,46 @@ static func display_goods(s: Dictionary, slots: int) -> Array:
 	return ids.slice(0, maxi(0, slots))
 
 
-## Every counter that shows goods: [{x, y, wide (tiles), goods}] for the player's premises, the built stalls and the
-## pitches let to anyone, in a fixed order; counters with nothing in stock show nothing.
+## GP-MARKET-SHELVES (owner, 2026-10-24): goods a market stall's shelf shows, at most ten kinds (five a board).
+const SHELF_SLOTS := 10
+
+
+## GP-MARKET-SHELVES: every market stall's shelf, in a fixed order: [{id, x, y, look, goods}]. A pitch or a built stall
+## (the player's or a villager household's) shows its own stall stock (display_goods); a merchant's stall shows what the
+## merchant at it offers (NPCBrain.for_sale, most held first) while the merchant stands at it, and nothing when they are
+## away. Empty stock, an empty shelf. Read only: it moves no goods and no coins; on a guest's machine it reads the
+## synchronized stalls and villagers.
+func shelves() -> Array:
+	var out := []
+	for id in sorted_ids():
+		var s: Dictionary = w.stalls[id]
+		if not s.has("x"):
+			continue
+		var goods := []
+		if stalls.is_merchant_stall(s):
+			if stalls.is_open(s):
+				goods = merchant_goods(w.party(w.tenant_of(s)), SHELF_SLOTS)
+		else:
+			goods = display_goods(s, SHELF_SLOTS)
+		out.append({"id": str(id), "x": int(s.x), "y": int(s.y), "look": "dark" if Stalls.is_built(s) else "light", "goods": goods})
+	return out
+
+
+## What a merchant offers, by kind, most held first (then by id), at most `slots` kinds.
+func merchant_goods(m, slots: int) -> Array:
+	if not (m is NPC):
+		return []
+	var ids: Array = w.brain.for_sale(m)
+	ids.sort_custom(func(a, b): return m.inv.count(a) > m.inv.count(b) or (m.inv.count(a) == m.inv.count(b) and str(a) < str(b)))
+	return ids.slice(0, slots)
+
+
+## Every counter that shows goods: [{x, y, wide (tiles), goods}] for the player's shops and storefronts, in a fixed order;
+## counters with nothing in stock show nothing. (Market stalls show theirs on their shelves since GP-MARKET-SHELVES: shelves.)
 func displays() -> Array:
 	var out := []
 	var seen := {}
 	var recs := []
-	for id in sorted_ids():
-		recs.append(w.stalls[id])
 	recs.append_array(every_shop())
 	for s: Dictionary in recs:
 		if seen.has(str(s.get("id", ""))) or not s.has("stock") or not s.has("x"):

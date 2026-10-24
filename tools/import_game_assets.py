@@ -21,6 +21,7 @@ records each file's source archive and path. This is that step. It writes:
                                                      drawn at run time from a recipe (CharacterLook), with
     game/data/character_style.json                   the draw order, palette ramps and choice lists they use
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
+    game/assets/props/market_shelf_*.png             private-assets/craftpix-net-218281-...zip (tools/craftpix_shelves.py)
     game/assets/fx/campfire.png                      Animated Pixel Campfire (SMStudios)/Sprite-sheet-campfire.png: 24 frames,
                                                      box-reduced by 10 to 64 x 64 (GP-BANDIT-CAMP-ART, CC BY 4.0)
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
@@ -65,6 +66,7 @@ import puny_chargen
 import puny_world_terrain as pwt
 import animal_farm  # noqa: E402
 import craftpix_plants  # noqa: E402
+import craftpix_shelves  # noqa: E402
 import living_forest
 import terrain_art  # noqa: E402
 import game_audio  # noqa: E402
@@ -833,6 +835,7 @@ def main():
         record(dest, PROMPT_ZIP, member, "copied unchanged")
     living_forest.import_into(prov, record)           # the trees: from the private package if it is there, else kept as they are
     craftpix_plants.import_into(prov, record)         # fruit trees (B14): from the private Craftpix zip, else kept as they are
+    craftpix_shelves.import_into(prov, record)        # GP-MARKET-SHELVES: the market shelves, from the private Craftpix zip, else kept
     animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
     terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
     game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs

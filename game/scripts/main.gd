@@ -220,6 +220,24 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"market":
+				# GP-MARKET-SHELVES: three pitches side by side: empty, partly stocked (three kinds), ten kinds (screenshots only)
+				var ten := ["wheat", "bread", "pottage", "apple", "cheese", "iron_ore", "plank", "pickaxe", "ale", "herbal_poultice"]
+				var pa: Dictionary = world.stalls["pitch0"]
+				var pb: Dictionary = world.stalls["pitch2"]
+				var pc: Dictionary = world.stalls["pitch1"]
+				pa["stock"] = {}
+				pb["stock"] = {"wheat": 70, "egg": 6, "milk": 3}
+				pc["stock"] = {}
+				for i in ten.size():
+					pc.stock[ten[i]] = 20 - i
+				for n: NPC in world.npcs:                     # the merchants away from their stalls (their shelves empty)
+					if n.job == "merchant":
+						n.pos = Vector2(10.5, 70.5)
+						n.plan = [world.brain.work(600, "", {}, "idle")]
+				world.player.pos = Vector2(int(pb.x), int(pb.y)) + Vector2(1.0, 1.7)
+				follow_at = _in_view(Vector2(int(pb.x) + 1, int(pb.y)) * T)
+				camera.zoom = Vector2(5, 5) * view_scale
 			"campfire":
 				# GP-BANDIT-CAMP-ART: the camp's fire with a bandit behind it and the player in front
 				var fc: Array = map.data.spawns.campfire
@@ -1301,7 +1319,7 @@ func _build_scene() -> void:
 	stall_display_view = StallDisplayView.new()  # B18-DP-01: goods on the counters, over the awning and counters, under the characters
 	view.add_child(stall_display_view)
 	view.move_child(stall_display_view, view.layer("below1").get_index() + 1)
-	stall_display_view.setup(world)
+	stall_display_view.setup(world, actors, view)     # GP-MARKET-SHELVES: the stalls' shelves among the characters
 	_draw_village_exits()
 	_clear_legacy_lanes()
 	tree_view.setup(world)

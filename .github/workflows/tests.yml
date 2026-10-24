@@ -122,6 +122,8 @@ jobs:
           $godot --headless --path game --script res://tests/polish_p2_test.gd
           # GP-BANDIT-CAMP-ART (Build 21): the camp's animated campfire, grounded and y-sorted; the camp's tiles; the credit
           $godot --headless --path game --script res://tests/campfire_test.gd
+          # GP-MARKET-SHELVES (Build 21): every market stall's shelf and the goods on offer
+          $godot --headless --path game --script res://tests/market_shelf_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd

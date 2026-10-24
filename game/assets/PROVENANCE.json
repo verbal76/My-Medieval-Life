@@ -3689,6 +3689,20 @@
    "member": "14_Wind_loop.wav",
    "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
    "sha256": "63069d9e3772ff7e99487037a998a7e11d55306461f083ccebd5314062ccec54"
+  },
+  {
+   "file": "assets/props/market_shelf_light.png",
+   "source": "craftpix-net-218281-free-pixel-art-dungeon-objects-asset-pack.zip",
+   "member": "PNG/supplies_objects.png",
+   "transform": "crop x 2..46, y 12..54 (the empty two-shelf unit); widened by 2 copies of columns 8..11 (one plank repeat) after column 11: 53 x 43, no scaling",
+   "sha256": "f543083c01794597bd19e30d0f26bcb9f94b5139e85ce2586ee6f108a8c2d5b1"
+  },
+  {
+   "file": "assets/props/market_shelf_dark.png",
+   "source": "craftpix-net-218281-free-pixel-art-dungeon-objects-asset-pack.zip",
+   "member": "PNG/supplies_objects.png",
+   "transform": "crop x 2..46, y 76..118 (the empty two-shelf unit); widened by 2 copies of columns 8..11 (one plank repeat) after column 11: 53 x 43, no scaling",
+   "sha256": "d0743ce5337dd901e86f53fc77c152f1a22aad359a326aee6b5e62d357a05071"
   }
  ]
 }
