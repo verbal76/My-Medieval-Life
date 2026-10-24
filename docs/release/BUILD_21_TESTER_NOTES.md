@@ -27,14 +27,32 @@ published from this branch for Build 21 at the time of writing; the lead fills i
 - **The bandit camp** has its campfire: your chosen animated campfire by SMStudios (credited, with a link), with a crate and a barrel
   round it instead of the market-stall pieces; you can walk behind and in front of the fire.
 
-**Single player** (unchanged from the earlier Build 21 notes):
+**Around the village (new in this round):**
+- **Market stalls have shelves** (Craftpix art, credited with a link): a stall's goods stand on its two shelves while it is open,
+  the stock of a built stall on darker wood; a closed stall's shelves show what it has put out.
+- **Gifts:** choose how many to give (a number picker, starting at 1); a gift of several counts as one gift for friendship.
+- **Putting up goods at a stall** asks the price in the same window.
+- **The smithy is walled indoors** (its east wall, and the lane beside it a step further east); its **workbench** is the table with
+  the hammer and tongs, and at the **grinding wheel** the smith, when there, sharpens a worn weapon for 1 coin paid to him (mended to
+  full; no extra damage). The Encyclopedia has a **Sharpening** page.
+- Containers are named as drawn: a woodpile, a plank pile, a counter, a stall crate.
+- **Smaller windows and text** throughout, and a pause menu in two columns.
+- **The Encyclopedia** reads as a parchment page, with links in the text.
+- **Moving by touch** (Settings, Interface): tap (as before) or a **thumbstick** in the lower-left corner; it walks exactly as keys
+  and a gamepad do.
+- **Harvesting** (Settings, Interface): manual (as before: Use once, Gather mode for more) or continuous (Use keeps gathering until
+  the resource runs out or you move); the same yield, time and tool wear either way.
+- The bandit campfire is smaller; villagers no longer repeat the same news line twice; bandits no longer appear inside walls.
+
+**Single player** (from the earlier Build 21 notes):
 - **Crime and the guards**: the guards keep a case on you; one who loses sight of you searches where you were last seen, and you stay
   wanted for a time that depends on the crime; a murder seen raises the **hue and cry**, which spreads from voice to voice; a second
   known killing rings the **bell**; a guard who may not kill you beats you down and takes you in (a fine, the stolen goods back), and
   you can **yield**. The families of those you killed treat you as a danger.
 - **What villagers say** comes from what they saw or were told, in their own voice, related events told as one, the gravest first.
 - **Parcels** with alike names are told apart by a second landmark.
-- The single-player village simulation is identical to Build 20's (checked against the accepted baseline).
+- The single-player village simulation changed in two explained ways only: bandits no longer start on solid cells, and the smithy's
+  new wall moves the lane beside it (evidence in `docs/release/SIM_BASELINE_CHANGES_B21.md`); otherwise it matches Build 20's.
 
 ## The first LAN test: Windows PC hosts, the phone joins
 
@@ -64,6 +82,7 @@ Report what you see; nothing about real devices is verified until you have tried
   or four may work but are untested.
 - A guest's pause menu has no Save: the host's game keeps the world and the guest's character.
 - Players who marry each other have no children (an open owner question).
-- From the earlier lists, still open: the smithy wall indoors (needs your decision), the gift number picker, and the other Build 20 items still on the list; the lead's reconciliation report lists each with its status.
-- The recorder's findings for this build (repeated news among a few villagers, and the rest) are in the lead's report.
+- Not in this build yet: the business desk, items on tables, farmers tending their fields, lockpicking and children for married
+  players; the lead's reconciliation report lists each with its status.
+- The thumbstick, the smaller windows and the shelves were checked in screenshots, not yet on a phone.
 - The simulation warning thresholds are still proposals awaiting the owner.
