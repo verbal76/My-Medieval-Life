@@ -370,7 +370,7 @@ func open_pit(owner: String, origin: Vector2i, for_clue := "") -> Dictionary:
 	for id in vol:
 		w.stat("pit_ground_" + str(id), float(vol[id]))
 	w.stat("pits_opened")
-	w.note(("You mark out an open pit %s." if owner == World.PLAYER else World.cap(w.ref_name(owner, true)) + " marks out an open pit %s.") % w.where(rect(p)))
+	w.note(("You mark out an open pit %s." if World.is_player_ref(owner) else World.cap(w.ref_name(owner, true)) + " marks out an open pit %s.") % w.where(rect(p)))
 	changed.emit()
 	return p
 
@@ -631,7 +631,9 @@ func fill_refusal(p: Dictionary, c: Vector2i, from: Inventory) -> String:
 
 ## A unit of the cell's last dug layer goes back from `from` into cell `c` (counted backfilled_<item>): the pool of the
 ## ground rises by it. A cell filled back up a whole layer is walkable again at the surface. Returns {result, why, item}.
-func backfill(p: Dictionary, c: Vector2i, from: Inventory) -> Dictionary:
+func backfill(p: Dictionary, c: Vector2i, from: Inventory, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, backfill.bind(p, c, from))
 	var why := fill_refusal(p, c, from)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -657,7 +659,9 @@ func heap_cap(p: Dictionary) -> int:
 
 ## Earth from `from` onto pit `p`'s spoil heaps (each up to heap_cap; `force` past it, for goods given back when a job
 ## ends). An empty heap's cell must be clear: it becomes solid while it holds anything. Returns {item: units moved}.
-func tip(p: Dictionary, from: Inventory, force := false) -> Dictionary:
+func tip(p: Dictionary, from: Inventory, force := false, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, tip.bind(p, from, force))
 	var moved := {}
 	var hcap := heap_cap(p)
 	for id in earth_items():
@@ -689,7 +693,9 @@ func heap_count(p: Dictionary, id: String) -> int:
 
 
 ## Up to `qty` of `id` from pit `p`'s heaps into `into` (as much as it takes). A heap emptied opens its cell again.
-func take(p: Dictionary, id: String, qty: int, into: Inventory) -> int:
+func take(p: Dictionary, id: String, qty: int, into: Inventory, actor: PlayerState = null) -> int:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, take.bind(p, id, qty, into))
 	var got := 0
 	for h in p.heaps:
 		var hv: Inventory = h.inv

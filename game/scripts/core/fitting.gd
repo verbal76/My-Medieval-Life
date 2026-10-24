@@ -200,7 +200,7 @@ func _is_use_cell(b: Dictionary, c: Vector2i) -> bool:
 func why_not(b: Dictionary, kind: String, cell: Vector2i) -> String:
 	if not KINDS.has(kind):
 		return "That cannot be placed."
-	if b.is_empty() or not World.is_built(b) or not w.holds(World.PLAYER, b) or not w.interiors.has(str(b.id)):
+	if b.is_empty() or not World.is_built(b) or not w.holds(w.acting_ref(), b) or not w.interiors.has(str(b.id)):
 		return "Only a room of your own can be fitted out."
 	var have := count(b, kind) + (1 if STATIONS.has(kind) and station_kinds(b).has(kind) and count(b, kind) == 0 else 0)
 	if have >= limit(kind):
@@ -230,7 +230,9 @@ func why_not(b: Dictionary, kind: String, cell: Vector2i) -> String:
 
 
 ## Place a piece. "" when done, else why not.
-func place(b: Dictionary, kind: String, cell: Vector2i) -> String:
+func place(b: Dictionary, kind: String, cell: Vector2i, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, place.bind(b, kind, cell))
 	var why := why_not(b, kind, cell)
 	if why != "":
 		return why
@@ -280,7 +282,9 @@ func restore_all() -> void:
 
 ## Take a piece up: the materials return to the pack. A counter takes its open shop with it (the goods and
 ## coins return to the player). "" when done, else why not.
-func remove(b: Dictionary, kind: String) -> String:
+func remove(b: Dictionary, kind: String, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, remove.bind(b, kind))
 	var e := entry(b, kind)
 	if e.is_empty():
 		return "There is none to take up."
@@ -317,6 +321,6 @@ func remove(b: Dictionary, kind: String) -> String:
 func fit_refusal(b: Dictionary) -> String:
 	if b.is_empty() or not World.is_built(b) or not w.interiors.has(str(b.id)):
 		return "That room cannot be fitted out."
-	if not w.holds(World.PLAYER, b):
+	if not w.holds(w.acting_ref(), b):
 		return "That is not your room."
 	return ""

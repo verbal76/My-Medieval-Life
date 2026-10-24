@@ -222,7 +222,7 @@ func _base_name(thing: Dictionary) -> String:
 	if b.is_empty():
 		var site: Dictionary = thing.get("site", {})
 		var by := str(site.get("owner", ""))
-		if not site.is_empty() and not site.get("done", false) and (by == World.PLAYER or by.begins_with("hh:")):
+		if not site.is_empty() and not site.get("done", false) and (World.is_player_ref(by) or by.begins_with("hh:")):
 			return "the %s family's building site for %s" % [_family(by), Construction.kind_name(str(site.get("kind", "house")), true)]
 		var what := "clearing" if w.map.data.plots.any(func(mp): return str(mp.id) == str(thing.id)) else ("farmland" if thing.has("farm") else "ground")
 		return "the %s %s" % [what, w.where(_rect(thing), "")]
@@ -242,7 +242,7 @@ func building_name(b: Dictionary) -> String:
 	if h >= 0:
 		return "the %s family's %s" % [w.households[h].family, kind]
 	var by: String = w.holder_of(b)
-	if by == World.PLAYER or (by.begins_with("hh:") and _anyone_alive(World.ref_id(by))):
+	if World.is_player_ref(by) or (by.begins_with("hh:") and _anyone_alive(World.ref_id(by))):
 		return "the %s family's %s" % [_family(by), kind]
 	for hh in w.households:
 		if str(hh.home) == str(b.id):
@@ -251,7 +251,7 @@ func building_name(b: Dictionary) -> String:
 
 
 func _family(ref: String) -> String:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.family
 	if ref.begins_with("hh:") and World.ref_id(ref) < w.households.size():
 		return str(w.households[World.ref_id(ref)].family)
@@ -261,7 +261,7 @@ func _family(ref: String) -> String:
 # ---------------------------------------------------------------- purses ---------------------
 ## Coins a party can pay with: the player's purse, a villager's, a household's members' together.
 func purse(ref: String) -> int:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.coins
 	var n := 0
 	for o: NPC in _payers(ref):
@@ -292,7 +292,7 @@ func _pay_manor(ref: String, amount: int) -> bool:
 		return true
 	if purse(ref) < amount:
 		return false
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		w.player.coins -= amount
 	else:
 		var left := amount
@@ -313,7 +313,7 @@ func _manor_pays(ref: String, amount: int) -> bool:
 	if w.treasury < amount:
 		return false
 	var to: NPC = null
-	if ref != World.PLAYER:
+	if not World.is_player_ref(ref):
 		to = w.party(ref)
 		if to == null:
 			return false
@@ -333,7 +333,7 @@ func buy(thing: Dictionary, ref: String) -> String:
 		return "The manor is not selling that."
 	var price := price_of(thing)
 	if not _pay_manor(ref, price):
-		return "You need %d coins." % price if ref == World.PLAYER else "They cannot pay %d coins." % price
+		return "You need %d coins." % price if World.is_player_ref(ref) else "They cannot pay %d coins." % price
 	for r in unit(thing):
 		w.set_owner(r, ref)
 	w.stat("gov_land_sales", float(price))
@@ -348,7 +348,7 @@ func lease(thing: Dictionary, ref: String) -> String:
 		return "The manor is not letting that."
 	var rent := rent_of(thing)
 	if not _pay_manor(ref, rent):
-		return "You need %d coins for the first week's rent." % rent if ref == World.PLAYER else "They cannot pay the rent."
+		return "You need %d coins for the first week's rent." % rent if World.is_player_ref(ref) else "They cannot pay the rent."
 	var u := unit(thing)
 	for r in u:
 		w.set_tenant(r, ref, rent if r == u[0] else 0)
@@ -405,9 +405,9 @@ func _release(u: Array, ref: String) -> void:
 			r.erase("arrears")
 		if w.owner_of(r) == ref and r != u[0]:
 			w.set_owner(r, World.MANOR)
-	if ref == World.PLAYER and w.business != null:
+	if World.is_player_ref(ref) and w.business != null:
 		for r in u:
-			if r.has("shop") and not w.holds(World.PLAYER, r):    # B18-DP-01: a shop in a house that is no longer the player's closes with the lease
+			if r.has("shop") and not w.holds(w.acting_ref(), r):    # B18-DP-01: a shop in a house that is no longer the player's closes with the lease
 				w.note(w.business.close(r.shop, "Your lease of the house ended."))
 
 
@@ -501,9 +501,9 @@ func _all_things() -> Array:
 ## house they hold (lowest id), or they are homeless (the family chest stays theirs, reached again
 ## from their next home; owner question answered by agent proposal). A first house becomes the home.
 func _settle(ref: String) -> void:
-	if ref != World.PLAYER:
+	if not World.is_player_ref(ref):
 		return
-	var homes := homes_of(World.PLAYER)
+	var homes := homes_of(w.acting_ref())
 	var p: PlayerState = w.player
 	if p.home != "" and homes.has(p.home):
 		return
@@ -514,8 +514,10 @@ func _settle(ref: String) -> void:
 
 
 ## Choose which held house is the player's home (respawn point, bed and chest); "" when done.
-func set_home(id: String) -> String:
-	if not homes_of(World.PLAYER).has(id):
+func set_home(id: String, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, set_home.bind(id))
+	if not homes_of(w.acting_ref()).has(id):
 		return "That is not your house."
 	w.player.home = id
 	return ""

@@ -33,7 +33,7 @@ static func where_of(n: NPC) -> String:
 
 ## A link in an NPC's or a member's record as a person id: the player (-2) is the current player's own id.
 static func link(w: World, v: int) -> int:
-	if v == Life.PLAYER_ID and w.player.pid > 0:
+	if Life.is_player_id(v) and w.player.pid > 0:
 		return w.player.pid
 	return v
 
@@ -97,8 +97,8 @@ static func succeed(w: World, parent: PlayerState, heir: PlayerState, kid: NPC) 
 	keys.sort()
 	for k in keys:
 		var parts: PackedStringArray = str(k).split(":")
-		if parts.size() == 2 and (int(parts[0]) == Life.PLAYER_ID or int(parts[1]) == Life.PLAYER_ID):
-			var other := int(parts[1]) if int(parts[0]) == Life.PLAYER_ID else int(parts[0])
+		if parts.size() == 2 and (Life.is_player_id(int(parts[0])) or Life.is_player_id(int(parts[1]))):
+			var other := int(parts[1]) if Life.is_player_id(int(parts[0])) else int(parts[0])
 			ties[str(other)] = (w.relations.ties[k] as Dictionary).duplicate(true)
 	w.tie_history[str(parent.pid)] = {"day": w.day(), "ties": ties}
 	move(w, parent.pid, ANCESTOR)

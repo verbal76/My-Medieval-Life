@@ -65,7 +65,7 @@ func info(u: Dictionary) -> Dictionary:
 		return _decor(u)
 	var b: Dictionary = w.buildings[bid]
 	var ref := w.holder_of(b)
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		if bid == p.home:
 			return {"access": "own", "store": p.chest, "owner": null, "whose": "your", "family": true, "business": false}
 		return {"access": "own", "store": _stash(u.id), "owner": null, "whose": "your", "family": false, "business": false}
@@ -88,7 +88,7 @@ func info(u: Dictionary) -> Dictionary:
 func _info_cart(u: Dictionary) -> Dictionary:
 	var c: Dictionary = u.cart
 	var owner := str(c.owner)
-	if owner == World.PLAYER:
+	if World.is_player_ref(owner):
 		return {"access": "own", "store": c.store, "owner": null, "whose": "your", "family": false, "business": false}
 	return {"access": "foreign", "store": c.store, "owner": w.party(owner), "whose": w.carts.whose(c), "family": false, "business": false}
 
@@ -99,7 +99,7 @@ func _decor(_u: Dictionary) -> Dictionary:
 
 func _info_container(u: Dictionary) -> Dictionary:
 	var c: Dictionary = u.c
-	if w.buildings.has(c.at) and w.holder_of(w.buildings[c.at]) == World.PLAYER:
+	if w.buildings.has(c.at) and World.is_player_ref(w.holder_of(w.buildings[c.at])):
 		return {"access": "own", "store": _stash(u.id), "owner": null, "whose": "your", "family": false, "business": false}
 	var store := w.container_store(c)
 	if store == null:
@@ -168,7 +168,9 @@ func cannot_open(u: Dictionary) -> String:
 
 
 ## Fit a padlock to your own chest (it uses one up) or turn the key. Returns "" or why not.
-func set_own_lock(u: Dictionary, shut: bool) -> String:
+func set_own_lock(u: Dictionary, shut: bool, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, set_own_lock.bind(u, shut))
 	var i := info(u)
 	if i.access != "own":
 		return "It is not your chest."
@@ -188,7 +190,9 @@ func set_own_lock(u: Dictionary, shut: bool) -> String:
 
 # ---------------------------------------------------------------- storing and taking ------------
 ## Put `qty` from the pack into a chest the player owns. Returns "" or why not.
-func store(u: Dictionary, id: String, qty: int) -> String:
+func store(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, store.bind(u, id, qty))
 	var i := info(u)
 	if i.access == "decor":
 		return cannot_open(u)
@@ -206,7 +210,9 @@ func store(u: Dictionary, id: String, qty: int) -> String:
 
 ## Take `qty` from a chest into the pack. In your own it is free; in anyone else's it is theft, seen by
 ## whoever is in the room (the same crime, witness and guard rules as before). Returns {ok, text, seen}.
-func take(u: Dictionary, id: String, qty: int) -> Dictionary:
+func take(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, take.bind(u, id, qty))
 	var i := info(u)
 	var p := w.player
 	if i.access == "decor":
@@ -259,7 +265,9 @@ func cannot_pick(u: Dictionary) -> String:
 ## those in the room see you (a quiet success is only seen within half the witness radius, a failure or
 ## a snapped pick is noisy and seen at the full radius), a guard among them fines you as for theft.
 ## Returns {result: open|fail|broke|cant, text, seen}.
-func attempt(u: Dictionary, roll := -1.0, break_roll := -1.0) -> Dictionary:
+func attempt(u: Dictionary, roll := -1.0, break_roll := -1.0, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, attempt.bind(u, roll, break_roll))
 	var why := cannot_pick(u)
 	if why != "":
 		return {"result": "cant", "text": why, "seen": 0}

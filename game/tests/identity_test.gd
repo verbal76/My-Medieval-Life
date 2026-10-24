@@ -313,7 +313,7 @@ func test_save_mid_journey() -> void:
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
-	check(w2.load_error == "" and w2.identity_report.is_empty(), "a version 20 save loads without any upgrade")
+	check(w2.load_error == "" and w2.identity_report.is_empty(), "a current-version save loads without any upgrade")
 	var at := _find_member(w2, id)
 	check(not at.is_empty() and str(w2.people[id].where) == "higham" and not w2.npc(id).alive and w2.npc(id).away == "higham", "saved while away: the id, the member and the register are as they were")
 	var back := _return(w2, id)
@@ -576,7 +576,7 @@ func test_upgrade_fixture() -> void:
 	var again := _load(d)
 	check(ids_a == JSON.stringify(again._people_to_dict(), "", true, true) and rep_a == JSON.stringify(again.identity_report, "", true, true) and again.next_person_id == w.next_person_id, "deterministic: two loads give identical ids, register and report")
 	var back := _load(w.to_dict())
-	check(back.load_error == "" and JSON.stringify(back._people_to_dict(), "", true, true) == ids_a, "the upgraded world saves as version 20 and reloads the same")
+	check(back.load_error == "" and JSON.stringify(back._people_to_dict(), "", true, true) == ids_a, "the upgraded world saves as the current version and reloads the same")
 	# existing ids unchanged
 	var same := true
 	for nd in d.npcs:
@@ -586,7 +586,7 @@ func test_upgrade_fixture() -> void:
 	again.dispose()
 	back.dispose()
 	var m := SaveTransfer.migrate(d, VillageMap.load_default())
-	check(m.ok and int(m.data.save_version) == 20 and m.data.has("people"), "an imported old save migrates to version 20 (%s)" % m.get("reason", ""))
+	check(m.ok and int(m.data.save_version) == World.SAVE_VERSION and m.data.has("people"), "an imported old save migrates to the current version (%s)" % m.get("reason", ""))
 
 
 func test_upgrade_away_member() -> void:

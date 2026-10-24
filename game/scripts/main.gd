@@ -565,7 +565,7 @@ func _ready() -> void:
 						await get_tree().process_frame
 						ui.body_scroll.scroll_vertical = 100000
 						await get_tree().process_frame
-						ui.show_contract(n, t, world.contracts.propose(World.PLAYER, n, "axe", 1, 45, 1))
+						ui.show_contract(n, t, world.contracts.propose(world.acting_ref(), n, "axe", 1, 45, 1))
 						break
 			"contract_item", "contract_qty", "contract_price", "contract_days", "contract_sum":
 				# CON-UX-01: each step of the contract form (the farmer; 10 axes)
@@ -706,7 +706,7 @@ func _ready() -> void:
 				for id in GameData.b("house_cost"):
 					world.player.inv.add(id, int(GameData.b("house_cost")[id]))
 				world.deliver(house, world.player.inv)
-				var spot := c.find_ground("smithy", Vector2i(72, 15), World.PLAYER)      # open ground near the north-east wood (the plots lie there too)
+				var spot := c.find_ground("smithy", Vector2i(72, 15), world.acting_ref())      # open ground near the north-east wood (the plots lie there too)
 				for t in world.trees:
 					if t.state == "grown" and (spot.grow(1).has_point(Vector2i(int(t.x), int(t.y))) or Vector2i(int(t.x), int(t.y)) == c.door_step("smithy", spot)):
 						world.fell(t, 0)
@@ -720,7 +720,7 @@ func _ready() -> void:
 					if shot_panel == "place_deal":
 						confirm_placement()
 				elif shot_panel == "hire":
-					c.place("smithy", spot, World.PLAYER)
+					c.place("smithy", spot, world.acting_ref())
 					for n: NPC in world.npcs:
 						if n.alive and n.role == "adult" and n.job in ["miner", "laborer", "woodcutter"]:
 							n.job = ""
@@ -731,11 +731,11 @@ func _ready() -> void:
 							_press(ui.panel_body, "Hire to carry building materials")
 							break
 				else:
-					var ws := c.place("smithy", spot, World.PLAYER)
+					var ws := c.place("smithy", spot, world.acting_ref())
 					var bag := Inventory.new()
 					for id in ws.site.need:
 						bag.add(id, int(ws.site.need[id]))
-					world.deliver(ws, bag, World.PLAYER)
+					world.deliver(ws, bag, world.acting_ref())
 					if shot_panel == "workshop_in":
 						world.player.pos = Vector2(world.station_use("ws_workshop_%s_anvil" % ws.id)) + Vector2(0.5, 0.5)
 						player_sprite.face(Vector2(-1, 0))
@@ -749,22 +749,22 @@ func _ready() -> void:
 				var pc: Construction = world.construction
 				var pl: Dictionary = world.plots[0]
 				world.player.coins = 2000
-				world.property.lease(pl, World.PLAYER)
-				world.start_site(pl, "house", World.PLAYER)
+				world.property.lease(pl, world.acting_ref())
+				world.start_site(pl, "house", world.acting_ref())
 				for id in pl.site.need.duplicate():
 					world.player.inv.add(id, int(pl.site.need[id]))
-				world.deliver(pl, world.player.inv, World.PLAYER)
+				world.deliver(pl, world.player.inv, world.acting_ref())
 				for t in world.trees:
 					if Rect2i(int(pl.x) - 22, int(pl.y) - 22, 53, 53).has_point(Vector2i(int(t.x), int(t.y))) and t.state == "grown":
 						world.fell(t, 0)
-				var slot := pc.find_module_slot("carpentry", pl, World.PLAYER)
+				var slot := pc.find_module_slot("carpentry", pl, world.acting_ref())
 				if shot_panel == "property_place":
 					begin_placement("carpentry", "plot0")
 				elif shot_panel != "property":
-					var mp := pc.place("carpentry", slot, World.PLAYER, false, pl)
+					var mp := pc.place("carpentry", slot, world.acting_ref(), false, pl)
 					for id in mp.site.need.duplicate():
 						world.player.inv.add(id, int(mp.site.need[id]))
-					world.deliver(mp, world.player.inv, World.PLAYER)
+					world.deliver(mp, world.player.inv, world.acting_ref())
 				world.player.pos = Vector2(int(pl.x) + 4, int(pl.y) + 12) + Vector2(0.5, 0.5)
 				if shot_panel == "property_in":
 					world.player.pos = Vector2(world.station_use("ws_workshop_%s_workbench" % pl.id.replace("plot0", "parcel0"))) + Vector2(0.5, 0.5)
@@ -822,7 +822,7 @@ func _ready() -> void:
 				world.player.inv.add("building_block", 20)
 				world.player.inv.add("log", 10)
 				world.deliver(pl, world.player.inv)
-				world.property.lease(world.plots[1], World.PLAYER)
+				world.property.lease(world.plots[1], world.acting_ref())
 				var reeve := world.npc(world.reeve_id)
 				reeve.pos = world.player.pos + Vector2(1.0, 0)
 				reeve.plan = [world.brain.work(600, "", {}, "idle")]
@@ -1956,7 +1956,7 @@ func _player_step(delta: float) -> void:
 	walking = v.length() > 0.1
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
-				* (world.carts.pull_speed_for(world.carts.pulled_by(World.PLAYER)) if not world.carts.pulled_by(World.PLAYER).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
+				* (world.carts.pull_speed_for(world.carts.pulled_by(world.acting_ref())) if not world.carts.pulled_by(world.acting_ref()).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
 		var before := p.pos
 		var moved_x := _try_move(Vector2(step.x, 0))
@@ -2320,7 +2320,7 @@ func _find_target() -> void:
 		var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
 		if r.has_point(p.pos) and cands.is_empty() and here.is_empty() and world.place_of(p.pos) == "":
 			var lab := "%s, for sale (%d coins, or %d a week)" % [World.cap(world.property.describe(pl)), world.property.price_of(pl), world.property.rent_of(pl)]
-			if world.holds(World.PLAYER, pl):
+			if world.holds(world.acting_ref(), pl):
 				var site: Dictionary = pl.site
 				lab = "Your ground: build here" if site.is_empty() else ("Your building site: %s, %d%% done" % [Construction.kind_name(str(site.get("kind", "house"))), roundi(world.site_progress(pl) * 100.0)] if not site.get("done", false) else World.cap(world.property.describe(pl)))
 			elif not world.property.for_sale(pl):
@@ -2346,8 +2346,8 @@ func _find_target() -> void:
 		var cb: Dictionary = world.couriers.booth_near(p.pos, 1.8)
 		if not cb.is_empty():
 			here.append({"kind": "courier_booth", "booth": str(cb.id), "label": "Courier booth: send goods by the regular route or a special delivery"})
-		elif world.couriers.booth_of_keeper(World.PLAYER).is_empty():                  # Q18-15: a business with a shop may open its own booth
-			for sst in world.business.stalls.built(World.PLAYER):
+		elif world.couriers.booth_of_keeper(world.acting_ref()).is_empty():                  # Q18-15: a business with a shop may open its own booth
+			for sst in world.business.stalls.built(world.acting_ref()):
 				if Vector2(float(sst.x) + 1.0, float(sst.y) + 0.5).distance_to(p.pos) < 2.5:
 					here.append({"kind": "courier_shop_booth", "label": "Open a courier booth at your stall"})
 					break
@@ -2367,7 +2367,7 @@ func _find_target() -> void:
 		var b: Dictionary = world.buildings[id]
 		if str(id) == p.home or not world.property.is_home(b) or (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= 1.3:
 			continue
-		var mine := world.holds(World.PLAYER, b)
+		var mine := world.holds(world.acting_ref(), b)
 		if mine or world.property.for_sale(b):
 			here.append({"kind": "property", "thing": b, "label": ("%s, yours: make it your home" % World.cap(world.property.describe(b))) if mine
 					else ("%s, empty, the manor's: buy (%d) or lease (%d a week)" % [World.cap(world.property.describe(b)), world.property.price_of(b), world.property.rent_of(b)])})
@@ -2376,7 +2376,7 @@ func _find_target() -> void:
 	var fronts: Array = []
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
-		if not world.holds(World.PLAYER, b) or not str(b.get("type", "")) in ["house", "player_house"]:
+		if not world.holds(world.acting_ref(), b) or not str(b.get("type", "")) in ["house", "player_house"]:
 			continue
 		if b.has("front"):
 			var f: Dictionary = b.front
@@ -2395,7 +2395,7 @@ func _find_target() -> void:
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
 		if str(b.type) == "workshop" and (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
-			here.append({"kind": "workshop", "thing": b, "label": World.cap(world.property.describe(b)) + (": who may use it" if world.holds(World.PLAYER, b) else "")})
+			here.append({"kind": "workshop", "thing": b, "label": World.cap(world.property.describe(b)) + (": who may use it" if world.holds(world.acting_ref(), b) else "")})
 	if p.home != "" and world.buildings.has(p.home):
 		var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 		if door.distance_to(p.pos) < 1.3:
@@ -2570,7 +2570,7 @@ func _shop_target(post: Dictionary) -> Dictionary:
 		if Stalls.is_built(s):
 			return _built_stall_target(s)
 		if Business.is_pitch(s):
-			var mine := world.tenant_of(s) == World.PLAYER
+			var mine := world.is_acting_ref(world.tenant_of(s))
 			if str(s.get("service", "")) != "":                  # the tailor's or the barber's pitch (never the player's to rent)
 				var pk := world.party(world.tenant_of(s))
 				return {"kind": "info", "label": "The %s's pitch" % str(s.service), "text": ("%s %s keeps this pitch: talk to them there." % [pk.name, pk.family]) if pk != null else "Nobody keeps this pitch now."}
@@ -2584,7 +2584,7 @@ func _shop_target(post: Dictionary) -> Dictionary:
 ## A market stall someone built (STALL-01): the player's own is managed (stock, OPEN / CLOSE, settlement); another's
 ## shows whose it is and what it holds.
 func _built_stall_target(s: Dictionary) -> Dictionary:
-	if world.holds(World.PLAYER, s):
+	if world.holds(world.acting_ref(), s):
 		return {"kind": "stall", "id": str(s.id), "label": "Manage your market stall (%s)" % ("open" if world.business.stalls.is_open(s) else "closed")}
 	return {"kind": "stall", "id": str(s.id), "label": "%s's market stall" % world.ref_name(world.holder_of(s), true)}
 
@@ -2596,7 +2596,7 @@ func _stall_build_target() -> Dictionary:
 	if not p.inv.has_all(Stalls.cost()) or world.place_of(p.pos) != "" or facing_vec().y > -0.5:
 		return {}                       # facing up: the awning goes in front, the player stands where buyers will
 	var c := Vector2i((p.pos + facing_vec() * 0.9).floor())
-	if world.business.stalls.site_refusal(c, World.PLAYER) != "":
+	if world.business.stalls.site_refusal(c, world.acting_ref()) != "":
 		return {}
 	var need := Stalls.cost()
 	return {"kind": "stall_build", "c": c, "label": "Build a market stall here (%s)" % ", ".join(need.keys().map(func(k): return "%d %s" % [int(need[k]), GameData.item_name(k).to_lower()]))}
@@ -2770,13 +2770,13 @@ func _use() -> void:
 			var why := world.business.build_storefront(world.buildings[str(target.id)])
 			ui.message(why if why != "" else "Your storefront stands by the door. List goods at its counter.")
 		"stall_build":
-			var why := world.construction.build_stall(World.PLAYER, target.c, p.inv)
+			var why := world.construction.build_stall(world.acting_ref(), target.c, p.inv)
 			ui.message(why if why != "" else "Your market stall stands. Put goods in it and open it; it sells while you are away.")
 		"front_open":
 			var why := world.business.open_front(world.buildings[str(target.id)])
 			ui.message(why if why != "" else "Your storefront is open.")
 		"cart_pull":
-			var why := world.carts.hitch(world.carts.by_id(int(target.id)), World.PLAYER)
+			var why := world.carts.hitch(world.carts.by_id(int(target.id)), world.acting_ref())
 			ui.message(why if why != "" else "You take hold of the cart. It follows you, slower going.")
 		"cart_park":
 			world.carts.park(world.carts.by_id(int(target.id)))
@@ -2985,7 +2985,7 @@ func _use() -> void:
 				_gain("+1 %s" % GameData.item_name(str(target.item)), str(target.item))
 				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
 		"courier_shop_booth":
-			var why_booth: String = world.couriers.open_shop_booth(World.PLAYER)
+			var why_booth: String = world.couriers.open_shop_booth(world.acting_ref())
 			ui.message(why_booth if why_booth != "" else "You set a courier booth at your stall: your deliveries can leave from it.")
 		"pen_buy":
 			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
@@ -3108,7 +3108,7 @@ func _pit_targets(cands: Array) -> Array:
 		if maxi(absi(cell.x - mine.x), absi(cell.y - mine.y)) > 1 or cell == mine:
 			continue
 		var hp := pp.heap_at(cell)
-		if not hp.is_empty() and str(hp.pit.owner) == World.PLAYER:
+		if not hp.is_empty() and world.is_acting_ref(str(hp.pit.owner)):
 			var earth := 0
 			for id in OpenPits.earth_items():
 				earth += p.inv.count(id)
@@ -3120,7 +3120,7 @@ func _pit_targets(cands: Array) -> Array:
 							"label": "Take %s from the spoil heap (%d there)" % [GameData.item_name(id).to_lower(), pp.heap_count(hp.pit, id)]})
 			break
 		var pit := pp.pit_at(cell)
-		if pit.is_empty() or str(pit.owner) != World.PLAYER:
+		if pit.is_empty() or not world.is_acting_ref(str(pit.owner)):
 			continue
 		var i := OpenPits.index(pit, cell)
 		var pick := OpenPits.held_tool(p, pp.tool_needed(pit, cell))      # MIN-E-Q4: a shovel for earth, a pickaxe for rock
@@ -3158,7 +3158,7 @@ func _pit_stake(origin: Vector2i) -> void:
 	if why != "":
 		ui.message(why)
 		return
-	world.pits.open_pit(World.PLAYER, origin)
+	world.pits.open_pit(world.acting_ref(), origin)
 	ui.message("You mark out an open pit. Dig its earth with a shovel and its rock with a pickaxe; tip the earth on its spoil heaps.")
 
 
@@ -3189,7 +3189,7 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 func _cart_targets(level: int) -> Array:
 	var out := []
 	var p := world.player
-	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
+	var pulling: Dictionary = world.carts.pulled_by(world.acting_ref())
 	if not pulling.is_empty():
 		var what := "minecart" if Carts.kind_of(pulling) == "minecart" else "cart"
 		out.append({"kind": "cart_park", "id": int(pulling.id), "label": "Let go of your %s" % what})
@@ -3198,7 +3198,7 @@ func _cart_targets(level: int) -> Array:
 	else:
 		var cart: Dictionary = world.carts.near(p.pos, 1.3, level)
 		if not cart.is_empty():
-			if world.carts.may_use(cart, World.PLAYER):
+			if world.carts.may_use(cart, world.acting_ref()):
 				out.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your %s (%s)" % ["minecart" if Carts.kind_of(cart) == "minecart" else "cart", world.carts.condition(cart)]})     # DVW-B4: its wear
 			out.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
 	return out
@@ -3482,7 +3482,7 @@ func set_down_cart(item := "handcart") -> void:
 	if item == "minecart":
 		var mine := Vector2i(p.pos.floor())
 		var cell := mine if world.mine_works.track_at(world.player_level, mine) else Vector2i((p.pos + facing_vec()).floor())
-		var r := world.mine_works.set_down_minecart(p, World.PLAYER, cell)
+		var r := world.mine_works.set_down_minecart(p, world.acting_ref(), cell)
 		ui.message(str(r.why) if r.result != "ok" else "You set the minecart down on its rails. Pull it along the track, or open it to load it.")
 		return
 	if not p.inv.has("handcart"):
@@ -3491,7 +3491,7 @@ func set_down_cart(item := "handcart") -> void:
 	if map.is_solid_world(Vector2i(floori(at.x), floori(at.y))):
 		at = p.pos
 	p.inv.remove("handcart", 1)
-	world.carts.place(World.PLAYER, at)
+	world.carts.place(world.acting_ref(), at)
 	ui.message("You set the handcart down. Use it to pull it, or open it to load it.")
 
 
@@ -3646,7 +3646,7 @@ func _in_fight() -> bool:
 		if n.alive and Combat.foe(n):
 			return true
 	for a: Animal in world.fauna.near(p.pos, 12.0):
-		if a.alive and a.anger == "player":
+		if a.alive and world.is_acting_ref(a.anger):
 			return true
 	return false
 
@@ -3929,7 +3929,7 @@ func begin_placement(kind: String, anchor := "") -> void:
 	var front := world.player.pos + facing_vec() * (size.y / 2.0 + 1.0)
 	placing = {"kind": kind, "at": Vector2i(floori(front.x) - size.x / 2, floori(front.y) - size.y / 2), "anchor": anchor}
 	if anchor != "":                 # a module goes against the property: start at the nearest legal place
-		var slot := world.construction.find_module_slot(kind, world.plot(anchor), World.PLAYER)
+		var slot := world.construction.find_module_slot(kind, world.plot(anchor), world.acting_ref())
 		if slot.size != Vector2i.ZERO:
 			placing.at = slot.position
 	paused = true
@@ -3965,7 +3965,7 @@ func _business_scene(mode: String) -> void:
 		if t.state == "grown" and near.has_point(Vector2i(int(t.x), int(t.y))):
 			world.fell(t, 0)
 	var c0: Construction = world.construction
-	var room: Dictionary = c0.place("storage", c0.find_module_slot("storage", house, World.PLAYER), World.PLAYER, false, house)
+	var room: Dictionary = c0.place("storage", c0.find_module_slot("storage", house, world.acting_ref()), world.acting_ref(), false, house)
 	for id in room.site.need.duplicate():
 		world.player.inv.add(id, int(room.site.need[id]))
 	world.deliver(room, world.player.inv)
@@ -4062,7 +4062,7 @@ func place_refusal() -> String:
 		return world.farm_plots.refusal(place_rect()) if placing.set else ""
 	if placing.has("fit"):
 		return world.fitting.why_not(world.buildings.get(str(placing.building), {}), str(placing.fit), placing.at)
-	return world.construction.can_place(placing.kind, place_rect(), World.PLAYER, world.plot(str(placing.get("anchor", ""))))
+	return world.construction.can_place(placing.kind, place_rect(), world.acting_ref(), world.plot(str(placing.get("anchor", ""))))
 
 
 func _update_ghost() -> void:
@@ -4258,7 +4258,7 @@ func _farm_plot_shot(mode: String) -> void:
 	world.player.pos = Vector2(r.position + Vector2i(2, -1)) + Vector2(0.5, 0.5)
 	follow_at = _in_view(world.player.pos * T)
 	if mode == "farm_fenced":
-		var p: Dictionary = world.farm_plots.claim(r, World.PLAYER, true)
+		var p: Dictionary = world.farm_plots.claim(r, world.acting_ref(), true)
 		for y in range(r.position.y, r.end.y):
 			for x in range(r.position.x, r.end.x):
 				var o: Dictionary = world.farm.obstacle(Vector2i(x, y))
@@ -4266,7 +4266,7 @@ func _farm_plot_shot(mode: String) -> void:
 					world.farm.clear_plant(o.ref)
 		world.player.inv.add("plank", 6)
 		world.player.inv.add("stone", 2)
-		world.farm_plots.build_fence(p, World.PLAYER, [world.player.inv])
+		world.farm_plots.build_fence(p, world.acting_ref(), [world.player.inv])
 		world.player.stamina = 1000.0
 		for x in range(r.position.x + 1, r.end.x - 1):
 			world.farm.till(Vector2i(x, r.position.y + 1), world.player)
@@ -5284,8 +5284,8 @@ func _plot_shot() -> void:
 func _horse_shot(at_caravan: bool) -> void:
 	var p := world.player
 	p.coins = 3000
-	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), World.PLAYER)
-	var pl: Dictionary = world.property.claim(rect, World.PLAYER, false)
+	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), world.acting_ref())
+	var pl: Dictionary = world.property.claim(rect, world.acting_ref(), false)
 	if pl.is_empty():
 		print("horse shot: no ground (%s)" % world.property.why)
 		return
@@ -5311,8 +5311,8 @@ func _horse_shot(at_caravan: bool) -> void:
 func _farm_shot(kind: String) -> void:
 	var p := world.player
 	p.coins = 3000
-	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), World.PLAYER)
-	var pl: Dictionary = world.property.claim(rect, World.PLAYER, false)
+	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), world.acting_ref())
+	var pl: Dictionary = world.property.claim(rect, world.acting_ref(), false)
 	if pl.is_empty():
 		print("farm shot: no ground (%s)" % world.property.why)
 		return
@@ -5338,7 +5338,7 @@ func _farm_shot(kind: String) -> void:
 	var last := pl
 	if kind == "farm_pen":
 		for k in ["chicken", "sheep"]:                    # each pen on a parcel of its own beside the field
-			var next: Dictionary = world.property.claim(world.construction.find_ground("house", Vector2i(int(last.x) + 4, int(last.y) + 5), World.PLAYER), World.PLAYER, false)
+			var next: Dictionary = world.property.claim(world.construction.find_ground("house", Vector2i(int(last.x) + 4, int(last.y) + 5), world.acting_ref()), world.acting_ref(), false)
 			if next.is_empty():
 				print("farm shot: no ground for the %s pen" % k)
 				continue

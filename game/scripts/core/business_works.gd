@@ -41,7 +41,7 @@ func stations() -> Array:
 	ids.sort()
 	for id in ids:
 		var b: Dictionary = w.buildings.get(str(w.stations[id].get("building", "")), {})
-		if not b.is_empty() and w.holds(World.PLAYER, b):
+		if not b.is_empty() and w.holds(w.acting_ref(), b):
 			out.append(id)
 	return out
 
@@ -131,7 +131,9 @@ func cancel_order(s: Dictionary, i: int) -> void:
 
 
 ## Set materials aside from the pack in the workroom. "" when done, else why not.
-func stock_work(s: Dictionary, id: String, qty: int) -> String:
+func stock_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, stock_work.bind(s, id, qty))
 	if not biz.is_mine(s):
 		return "That is not your stall."
 	if qty <= 0 or not GameData.items.has(id) or qty > biz.listable(id):
@@ -144,7 +146,9 @@ func stock_work(s: Dictionary, id: String, qty: int) -> String:
 
 
 ## Bring materials or goods from the workroom back to the pack.
-func fetch_work(s: Dictionary, id: String, qty: int) -> String:
+func fetch_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, fetch_work.bind(s, id, qty))
 	var have := int(work_of(s).get(id, 0))
 	if qty <= 0 or qty > have:
 		return "The workroom does not hold that many."

@@ -174,7 +174,7 @@ func gift_effect(giver: int, n: NPC, id: String) -> Dictionary:
 ## Give one `id` from `giver` (the player or a villager) to villager `n`. Returns what they say; the goods
 ## move from the giver's pack to the receiver's (refused when they have no room).
 func give(giver: int, n: NPC, id: String) -> String:
-	var from: Inventory = w.player.inv if giver == Life.PLAYER_ID else w.npc(giver).inv
+	var from: Inventory = w.player.inv if Life.is_player_id(giver) else w.npc(giver).inv
 	if not from.has(id):
 		return ""
 	if not n.inv.can_add(id):
@@ -182,7 +182,7 @@ func give(giver: int, n: NPC, id: String) -> String:
 	var e := gift_effect(giver, n, id)
 	from.remove(id)
 	n.inv.add(id)
-	if giver == Life.PLAYER_ID:
+	if Life.is_player_id(giver):
 		w.player.unmark(id, n.id, 1)
 	var t := tie(giver, n.id)
 	var first_today: bool = int(t.gift_day) != w.day()
@@ -340,7 +340,7 @@ func refusal(suitor: int, n: NPC) -> String:
 	if not willing(n):
 		return "I'm fond of you, but I don't mean to marry. Not now, maybe not ever."
 	var t := peek(suitor, n.id)
-	if suitor == Life.PLAYER_ID:
+	if Life.is_player_id(suitor):
 		if killings > 0:
 			return "Marry you? You have killed people of this village. No."
 		if notoriety() >= int(c.notoriety_refuse):
@@ -451,7 +451,7 @@ func can_court(a: int, b: int) -> bool:
 		return false
 	for pair in [[pa, b], [pb, a]]:
 		var p = pair[0]
-		if p.partner >= 0 or p.partner == Life.PLAYER_ID:
+		if p.partner >= 0 or Life.is_player_id(p.partner):
 			if int(p.partner) != int(pair[1]):
 				return false
 	return true
@@ -471,7 +471,7 @@ func ask_court(a: int, n: NPC) -> String:
 	var t := tie(a, n.id)
 	if not can_court(a, n.id):
 		return "That's not for us."
-	if a == Life.PLAYER_ID and (killings > 0 or notoriety() >= int(cfg().notoriety_refuse)):
+	if Life.is_player_id(a) and (killings > 0 or notoriety() >= int(cfg().notoriety_refuse)):
 		return "Walk out with you? After what you've done? No."
 	if float(t.attraction) < float(cfg().court_at) or int(t.days_known) < int(cfg().court_min_days):
 		_raise(t, 0.0, -float(cfg().too_soon_penalty) * 0.5, false)
@@ -503,7 +503,7 @@ func propose(a: int, n: NPC) -> String:
 		return "It's too soon. Ask me again when we know each other better."
 	t.stage = ""
 	w.stat("proposals_accepted")
-	if a == Life.PLAYER_ID:
+	if Life.is_player_id(a):
 		var pwhy := Life.partner_player(w, n)
 		if pwhy == "":
 			w.feast.on_partnered(a, n.id)            # DVW-B3-FEAST: the wedding feast is owed
@@ -592,7 +592,7 @@ func share(a: int, b: int, kind: String) -> void:
 
 
 func _befriend_if_close(a: int, b: int, t: Dictionary) -> void:
-	if a != Life.PLAYER_ID and not bool(t.friends) and float(t.regard) >= float(cfg().befriend_at):
+	if not Life.is_player_id(a) and not bool(t.friends) and float(t.regard) >= float(cfg().befriend_at):
 		if w.judgment != null and not JudgmentLive.befriend_ok(w, a, b, float(t.regard)):
 			return                                      # PROSPECTIVE (PROS-19, Q14): off unless judgment is attached
 		befriend(a, b)                                  # villagers befriend each other on their own
@@ -637,7 +637,7 @@ func _villagers_court() -> void:
 	var hi := float(Life.cfg().partner_max_age)
 	var singles: Array = []
 	for n: NPC in w.npcs:
-		if n.alive and n.role == "adult" and n.partner < 0 and n.partner != Life.PLAYER_ID:
+		if n.alive and n.role == "adult" and n.partner < 0 and not Life.is_player_id(n.partner):
 			var a := Life.npc_age(w, n)
 			if a >= lo and a <= hi:
 				singles.append(n)

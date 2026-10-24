@@ -1764,7 +1764,7 @@ func _bandit(n: NPC, h: float) -> void:
 	if night:
 		var prey = _prey_for(n)
 		if prey != null:
-			n.target = prey.id if prey is NPC else -2
+			n.target = prey.id if prey is NPC else Life.PLAYER_ID
 			n.doing = "stalking"
 			return
 	if not night and h >= WORK_START and h < WORK_END and _bandit_market(n):
@@ -2752,7 +2752,7 @@ func fight(n: NPC, dt: float) -> void:
 	var tpos: Vector2
 	var tdead := false
 	var tnpc: NPC = null
-	if n.target == -2:
+	if Life.is_player_id(n.target):
 		tpos = w.player.pos
 		tdead = not w.player.alive or w.player_level != n.depth        # MIN-A: rock between them
 	else:
@@ -2821,7 +2821,7 @@ func fight(n: NPC, dt: float) -> void:
 		return
 	var dmg := w.npc_blow(n)
 	Skills.gain(n, "combat", 4)                        # a blow at a person: the player's 4 xp (PAR-01)
-	if n.target == -2:
+	if Life.is_player_id(n.target):
 		# the death screen names who struck: "Wat the guard", "Rob the bandit", or just the name
 		var who := n.job if n.job != "" else ("bandit" if n.role == "bandit" else "")
 		w.damage_player(dmg, n.name + (" the " + who if who != "" else ""))

@@ -415,9 +415,9 @@ static func _session_section(ui: GameUI, w: World, s: Dictionary, id: String) ->
 			ui.message("You close the stall. " + st.settle_text(s, st.close(s)))
 			show(ui, id), true, row)
 	else:
-		var why := st.open_refusal(s, World.PLAYER)
+		var why := st.open_refusal(s, w.acting_ref())
 		ui._button("Open the stall", func():
-			var r := st.open(s, World.PLAYER)
+			var r := st.open(s, w.acting_ref())
 			ui.message(r if r != "" else "Your stall is open.")
 			show(ui, id), why == "", row)
 		if held > 0 or int(s.get("till", 0)) > 0:

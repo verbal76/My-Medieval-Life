@@ -112,7 +112,7 @@ static func target(w: World, from: Vector2, facing: Vector2, who: Object = null)
 
 ## A bandit, or anyone fighting the player.
 static func foe(n: NPC) -> bool:
-	return n.role == "bandit" or n.target == -2
+	return n.role == "bandit" or Life.is_player_id(n.target)
 
 
 ## Whether a blow from `from` facing `facing` reaches a body standing at `to`.

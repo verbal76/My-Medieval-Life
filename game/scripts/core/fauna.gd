@@ -323,7 +323,7 @@ func provoke(a: Animal, who: String) -> void:
 
 ## The position of whoever `who` names, or INF if they are gone.
 func _foe_pos(who: String) -> Vector2:
-	if who == "player":
+	if World.is_player_ref(who):
 		return w.player.pos if w.player.alive and w.player_level == 0 else Vector2.INF      # MIN-A: animals live on the surface
 	var n: NPC = w.npc(int(who.trim_prefix("npc:")))
 	return n.pos if n != null and n.alive and n.depth == 0 else Vector2.INF
@@ -348,7 +348,7 @@ func _hunt_people(a: Animal) -> void:
 		if alone:
 			a.anger = p[0]
 			a.anger_left = float(wl().anger_seconds)
-			w.stat("animal_went_for_" + ("player" if p[0] == "player" else "villager"))
+			w.stat("animal_went_for_" + ("player" if World.is_player_ref(p[0]) else "villager"))
 			return
 
 
@@ -360,7 +360,7 @@ func _bite(a: Animal, foe: Vector2) -> void:
 	a.act = "attack"
 	a.act_left = 0.5
 	var dmg := float(a.spec().get("bite", 0))
-	if a.anger == "player":
+	if World.is_player_ref(a.anger):
 		w.damage_player(dmg, "a " + a.label())
 	else:
 		var n: NPC = w.npc(int(a.anger.trim_prefix("npc:")))

@@ -337,7 +337,9 @@ func post_tunnels() -> void:
 ## MIN-F2 (Q5): the player orders floor cell `cell` of `level` backfilled with `units` units of spoil, paying the wage
 ## (backfill.order_rate a unit, at least 1) now: it is held in the order until a worker finishes it. The order's depot is
 ## the surface stand of the mouth that leads to that level, where the player leaves the spoil. "" or why not.
-func order_backfill(level: int, cell: Vector2i, units: int) -> String:
+func order_backfill(level: int, cell: Vector2i, units: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, order_backfill.bind(level, cell, units))
 	var why: String = w.mine_works.fill_ground_refusal(level, cell)
 	if why != "":
 		return why
@@ -352,7 +354,7 @@ func order_backfill(level: int, cell: Vector2i, units: int) -> String:
 	var leg := w.underground.next_leg(0, level)
 	if leg.is_empty():
 		return "There is no way down to that passage."
-	var j := {"kind": "backfill", "payer": World.PLAYER, "level": level, "site": [cell.x, cell.y], "qty": units, "placed": 0,
+	var j := {"kind": "backfill", "payer": w.acting_ref(), "level": level, "site": [cell.x, cell.y], "qty": units, "placed": 0,
 		"depot": [int(leg.from.stand.x), int(leg.from.stand.y)], "stock": Inventory.new(), "wage": wage}
 	_post(j)
 	j.reserved = wage
@@ -370,7 +372,9 @@ func backfill_order(level: int, cell: Vector2i) -> Dictionary:
 
 
 ## MIN-F2 (Q5): the player leaves `qty` spoil from `from` at an order's depot (standing there). Units moved.
-func stock_backfill(j: Dictionary, from: Inventory, qty: int) -> int:
+func stock_backfill(j: Dictionary, from: Inventory, qty: int, actor: PlayerState = null) -> int:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, stock_backfill.bind(j, from, qty))
 	var item := str(MineWorks.cfg().backfill.item)
 	var q := mini(qty, from.count(item))
 	if q > 0:
@@ -385,7 +389,10 @@ func backfill_needs(j: Dictionary) -> int:
 
 ## MIN-F2 (Q5): the player cancels an order: the wage held goes back to the player; a worker on it sets down what they
 ## carry where they stand; the spoil at the depot is left lying there; the fill placed stays in the passage.
-func cancel_backfill(j: Dictionary) -> void:
+func cancel_backfill(j: Dictionary, actor: PlayerState = null) -> void:
+	if actor != null and actor != w.player:
+		w.as_actor(actor, cancel_backfill.bind(j))
+		return
 	if j.taker != "":
 		var o = _who(str(j.taker))
 		if o != null and j.load.total() > 0:
@@ -410,7 +417,7 @@ func _drop(inv: Inventory, at: Vector2, level: int, from: String) -> void:
 
 
 func is_player_order(j: Dictionary) -> bool:
-	return str(j.get("payer", "")) == World.PLAYER
+	return World.is_player_ref(str(j.get("payer", "")))
 
 
 ## MIN-EQUIP, the reeve's evening (after the manor's purchases, MineSupply.procure): one shore job for each piece of shore
@@ -470,7 +477,7 @@ func survey_spot(j: Dictionary) -> Vector2i:
 
 ## The party a job's taker is: the player or a villager (null if gone).
 func _who(who: String):
-	if who == "player":
+	if World.is_player_ref(who):
 		return w.player
 	return w.npc(int(who.substr(4)))
 
@@ -556,7 +563,7 @@ func open_for(who: String) -> Array:
 			continue
 		if j.kind in ["quarry", "trial", "excavate", "tunnel"] and not can_dig(j, who):
 			continue
-		if j.kind in ["tunnel", "backfill", "shore"] and who == World.PLAYER:
+		if j.kind in ["tunnel", "backfill", "shore"] and World.is_player_ref(who):
 			continue                 # MIN-F2: the player tunnels and fills with their own hands (and orders the fill)
 		if j.kind == "backfill" and (is_staff(who) or (j.stock as Inventory).total() + j.load.total() == 0):
 			continue                 # a player's order pays its own workers, and waits for the player's spoil
@@ -697,7 +704,7 @@ func step(j: Dictionary) -> String:
 		"haul":
 			return "take" if j.load.total() == 0 else "put"
 		"quarry":
-			return "mine" if j.load.count("stone") < int(j.qty) and j.taker != "player" else "put"
+			return "mine" if j.load.count("stone") < int(j.qty) and not World.is_player_ref(j.taker) else "put"
 		"mend":
 			return "take" if j.load.total() == 0 else "mend"
 		"survey":
@@ -891,7 +898,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			if j.kind in ["excavate", "tunnel"]:
 				for id in j.load.ids():
 					w.transfer(j.load, yard, id, j.load.count(id))
-			elif who == "player":
+			elif World.is_player_ref(who):
 				if pack.count("stone") < int(j.qty):
 					return false
 				w.transfer(pack, yard, "stone", int(j.qty))
@@ -968,7 +975,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			var cell := excavate_cell(j)
 			if o == null or p.is_empty() or cell.x < 0:
 				last_refusal = "There is nothing in the pit that can be dug now."
-				if j.load.total() == 0 and who != "player":
+				if j.load.total() == 0 and not World.is_player_ref(who):
 					release(j)
 				return false
 			var tool := OpenPits.held_tool(o, w.pits.tool_needed(p, cell))     # MIN-E-Q4: a shovel for earth, a pickaxe for rock
@@ -987,7 +994,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			var face := Vector2i(int(j.site[0]), int(j.site[1]))
 			if o == null or w.mine_works.face_refusal(int(j.level), face) != "":
 				last_refusal = "The rock face cannot be cut now."
-				if j.load.total() == 0 and who != "player":
+				if j.load.total() == 0 and not World.is_player_ref(who):
 					release(j)
 				return false
 			var ctool := OpenPits.held_tool(o, w.mine_works.tool_kind(int(j.level), face))   # rock a pickaxe, rubble a shovel
@@ -1112,7 +1119,7 @@ func mine_into(j: Dictionary, n: NPC, dep: Dictionary) -> bool:
 func _finish(j: Dictionary, who: String) -> void:
 	var pay := int(j.reserved)
 	j.reserved = 0
-	if who == "player":
+	if World.is_player_ref(who):
 		w.player.coins += pay
 	else:
 		var n := w.npc(int(who.substr(4)))
@@ -1138,7 +1145,7 @@ func dawn() -> void:
 		if j.taker != "" and w.day() - int(j.day) >= int(cfg("days")):
 			var who: String = j.taker
 			release(j)
-			if who == "player":
+			if World.is_player_ref(who):
 				w.note("Your work for the manor lapsed: \"%s\" was not done in time." % describe(j))
 	refresh()
 

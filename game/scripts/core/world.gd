@@ -96,12 +96,19 @@ var last_payday := -1              # the day wages were last paid
 ## host alone and nothing differs from Build 19 (gate G0).
 var _host_player := PlayerState.new()
 var _guests := {}                   # pid -> PlayerState: the other players (empty in single player; Batch A2 adds them)
+var players_foreign := {}            # save 21: records of "players" that could not be made players (no usable pid): kept and written back, never dropped
 var _actor: PlayerState = null      # the player a verb is running for, null = the host
 var player: PlayerState:
 	get:
 		return _actor if _actor != null else _host_player
 	set(v):
-		_host_player = v
+		if _actor != null:          # a guest's character is replaced (an heir takes over a guest): the host stays
+			_guests.erase(_actor.pid)
+			_actor = v
+			if v.pid > 0:
+				_guests[v.pid] = v
+		else:
+			_host_player = v
 var coin_sources := 0              # coins that entered the village (caravan)
 var couriers: CourierService         # REG-COURIER-01 (Expansion 18): the five settlements' booths and the village's, regular routes and special deliveries; saved under "couriers" (optional key; absent: no deliveries on the road)
 var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-map settlements and their traders, who are the caravan (ECON-P1.3); saved under "regions" (optional key)
@@ -133,7 +140,11 @@ var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the se
 var prospecting: Prospecting  # MIN-C: clues, samples and assays (scripts/core/prospecting.gd); clues generated from the seed, the rest saved in "prospecting"
 var pits: OpenPits            # MIN-E: open pits on the surface, their depths dug and spoil heaps (scripts/core/open_pit.gd; saved in "pits")
 var underground: Underground  # MIN-A: the levels below the surface and their portals (generated from the seed, not saved)
-var player_level := 0         # MIN-A: the depth the player is on (0 the surface, -1 the mine gallery); saved in "underground"
+var player_level: int:        # MIN-A: the depth the acting player is on (0 the surface, -1 the mine gallery); stored per player (PlayerState.map_level); the host's is saved in "underground"
+	get:
+		return player.map_level
+	set(v):
+		player.map_level = v
 var villager_levels := [0, -1]   # MIN-A: the levels villagers can reach (the level router walks them through the portals); MIN-F: every level a portal reaches ([0, -1, -2] with the cave), set from Underground.reachable_levels
 var mine_works: MineWorks     # MIN-F: tunnels cut, timber supports, track (scripts/core/mine_works.gd; saved in "mine_works")
 var judgment_foreign := {}    # a saved "judgment" section while judgment is off: kept untouched, written back unchanged (never parsed, never switches judgment on)
@@ -787,7 +798,15 @@ func acting_ref() -> String:
 static func is_player_ref(x: Variant) -> bool:
 	if x is String:
 		return x == PLAYER or (x as String).begins_with("player:")
-	return x is int and int(x) == Life.PLAYER_ID
+	return x is int and Life.is_player_id(int(x))
+
+
+## True when `x` (a reference, or the legacy person id -2) names the acting player: the question "is this mine?" of the interface and of
+## the verbs. "player" is the host's, so while a guest acts it is not the acting player's.
+func is_acting_ref(x: Variant) -> bool:
+	if x is String:
+		return x == acting_ref()
+	return x is int and Life.is_player_id(int(x)) and player == _host_player
 
 
 ## The pid in "player:<pid>", 0 for anything else.
@@ -804,10 +823,18 @@ func player_of_ref(x: Variant) -> PlayerState:
 		if (x as String).begins_with("player:"):
 			return player_by_pid(pid_of_ref(x))
 		return null
-	return _host_player if x is int and int(x) == Life.PLAYER_ID else null
+	return _host_player if x is int and Life.is_player_id(int(x)) else null
 
 
 func _update_player(real_dt: float, gm: float) -> void:
+	if _guests.is_empty():
+		_update_one_player(real_dt, gm)               # single player: the host alone, as in Build 19
+		return
+	for pl: PlayerState in player_list():
+		as_actor(pl, _update_one_player.bind(real_dt, gm))
+
+
+func _update_one_player(real_dt: float, gm: float) -> void:
 	var p := player
 	if not p.alive:
 		return
@@ -820,7 +847,10 @@ func _update_player(real_dt: float, gm: float) -> void:
 	p.attack_cd = maxf(0.0, p.attack_cd - real_dt)
 
 
-func damage_player(amount: float, source: String) -> void:
+func damage_player(amount: float, source: String, actor: PlayerState = null) -> void:
+	if actor != null and actor != player:
+		as_actor(actor, damage_player.bind(amount, source))
+		return
 	var p := player
 	if not p.alive:
 		return
@@ -856,7 +886,10 @@ func give_start_kit(p: PlayerState) -> void:
 ## heir keeps the family's home, chest and everything the family owns or leases (all held as
 ## "player", the family: World "ownership"), starts every skill from nothing and carries only the
 ## starting kit (owner rule); its coins are new to the village, counted in coin_sources.
-func continue_as_heir() -> void:
+func continue_as_heir(actor: PlayerState = null) -> void:
+	if actor != null and actor != player:
+		as_actor(actor, continue_as_heir)
+		return
 	var p := player
 	credit.on_player_died(Credit.slain_cause(p.death_cause), Life.player_heir_child(self))     # TRADE-CREDIT: debts and claims pass to the heir (written off where a villager's would be)
 	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
@@ -897,12 +930,13 @@ func continue_as_heir() -> void:
 	else:
 		var sp = map.data.spawns.player
 		heir.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
+	heir.map_level = p.map_level            # the level the dead player lay on, so the move to the surface is announced as before
 	player = heir
 	_set_player_level(0)                   # MIN-A: the heir starts at home, on the surface
 	quests.start_story()                   # the heir must seek the sage again: spells are not inherited
 	# whoever was fighting the dead player has no quarrel with the heir
 	for n: NPC in npcs:
-		if n.target == -2:
+		if Life.is_player_id(n.target):
 			n.target = -1
 			n.plan.clear()
 	note("%s %s (generation %d) takes up the family's life." % [heir.name, heir.family, heir.generation])
@@ -946,7 +980,7 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 ## day, so a courier may address that trader afterwards (X18-Q12-POST). Nothing moves and no rule changes.
 func note_settlement_trade(actor: Object, settlement: Object) -> void:
 	if couriers != null and settlement != null:
-		couriers.note_settlement_trade(PLAYER if actor == player else "npc:%d" % (actor as NPC).id, str(settlement.id))
+		couriers.note_settlement_trade(player_ref(actor) if actor is PlayerState else "npc:%d" % (actor as NPC).id, str(settlement.id))
 
 
 ## Move items between two inventories without money (gifts, deposits, pantry).
@@ -1001,9 +1035,9 @@ func necessity(who) -> Dictionary:
 	var days := float(GameData.b("reserve_days"))
 	var people: Array = [who]
 	var stores: Array = [who.inv]
-	if not (who is NPC) and player.home != "" and buildings.has(player.home):
-		stores.append(player.chest)                  # FSE-18: the player's family chest, by the households' rule
-	var ref := PLAYER
+	if who is PlayerState and who.home != "" and buildings.has(who.home):
+		stores.append(who.chest)                  # FSE-18: the player's family chest, by the households' rule
+	var ref := player_ref(who) if who is PlayerState else PLAYER
 	if who is NPC:
 		ref = World.npc_ref(who.id)
 		if who.household >= 0 and not households[who.household].get("ended", false):
@@ -1051,7 +1085,7 @@ func necessity(who) -> Dictionary:
 
 ## The coins `who` keeps back for their foreseeable necessities (necessity().reserve; PAR-02A), cached for the game hour.
 func reserve_of(who) -> int:
-	var key := (World.npc_ref(who.id) if who is NPC else PLAYER) + "@" + str(int(minutes / 60.0))
+	var key := (World.npc_ref(who.id) if who is NPC else (player_ref(who) if who is PlayerState else PLAYER)) + "@" + str(int(minutes / 60.0))
 	if not _reserve_cache.has(key):
 		if _reserve_cache.size() > 4000:
 			_reserve_cache.clear()
@@ -1210,7 +1244,9 @@ static func buy_price_at(id: String, stock: int) -> int:
 ## at the stock each one leaves: buying runs the seller's stock down so each unit costs the same or more,
 ## selling fills the buyer up so each unit fetches the same or less (Build 13 economy rule 2: a bulk deal
 ## never pays the opening price for every unit). The player's Trading factor applies to each unit.
-func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
+func player_quote(n: NPC, id: String, qty: int, buying: bool, actor: PlayerState = null) -> Array:
+	if actor != null and actor != player:
+		return as_actor(actor, player_quote.bind(n, id, qty, buying))
 	var out := []
 	var stock := n.inv.count(id)
 	var f := deal_factor(player, n) if buying else deal_factor(n, player)     # both sides' Trading (PAR-01)
@@ -1225,7 +1261,9 @@ func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
 
 ## Buy `qty` of `id` from `vendor` at player_quote prices, all or nothing: the vendor must hold them, the
 ## pack must have room and the player's own coins must cover the whole bill. Returns {result, text, bought, paid}.
-func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
+func player_buy_many(vendor: NPC, id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_buy_many.bind(vendor, id, qty))
 	if recorder == null:
 		return _player_buy_many(vendor, id, qty)
 	var rec: Array = recorder.verb_begin("buy", "%s x%d from %d" % [id, qty, vendor.id], vendor)     # REC-19: the verb is the parent of what it triggers
@@ -1253,7 +1291,9 @@ func _player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 	return {"result": "bought", "text": "", "bought": qty, "paid": bill}
 
 
-func player_price_factor(buying: bool) -> float:
+func player_price_factor(buying: bool, actor: PlayerState = null) -> float:
+	if actor != null and actor != player:
+		return as_actor(actor, player_price_factor.bind(buying))
 	var f := Skills.value(player, "trading", "price_bonus")
 	return 1.0 - f if buying else 1.0 + f
 
@@ -1281,7 +1321,9 @@ func deal_xp(buyer, seller, coins: int) -> void:
 
 
 func total_coins() -> int:
-	var n := player.coins + treasury
+	var n := treasury
+	for pl: PlayerState in player_list():          # every player character's purse (one in single player)
+		n += pl.coins
 	if quests:
 		n += quests.reserved_total()
 	if manor_work:
@@ -1421,7 +1463,9 @@ func plant_at(c: Vector2i) -> Dictionary:
 
 ## Pick a ripe plant: returns what it gave (item id -> count, from its resources.json node), {} if it
 ## is not ripe. The plant is bare until plant_regrow_seasons (provisional; whole days) later, at dawn.
-func pick_plant(pl: Dictionary) -> Dictionary:
+func pick_plant(pl: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, pick_plant.bind(pl))
 	if pl.is_empty() or pl.state != "ripe":
 		return {}
 	var got := ResourceNodes.products(ResourceNodes.def_for("plant", str(pl.kind)))
@@ -1497,7 +1541,9 @@ func plant_bush_refusal(cell: Vector2i, item: String) -> String:
 ## SEED-02: plant a cutting or flower seed at `cell` (check plant_bush_refusal first): the item is used up (taken from
 ## `from` and counted used_), and a young wild plant of its kind stands there, belonging to no one like any wild plant; it
 ## bears propagation grow_seasons later (season_plants). Returns the plant, {} if refused.
-func plant_bush(cell: Vector2i, item: String, from: Inventory) -> Dictionary:
+func plant_bush(cell: Vector2i, item: String, from: Inventory, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, plant_bush.bind(cell, item, from))
 	if plant_bush_refusal(cell, item) != "" or not from.has(item):
 		return {}
 	var kind := propagates(item)
@@ -1689,7 +1735,9 @@ const STATION_REACH := 1.2       # a crafting station is offered (its window ope
 
 ## DVW-A12 R15: why the player cannot reach the point `at` (a pile, a container), "" if they can: a wall between
 ## (reaches), else farther than `reach` tiles.
-func player_reach_point(at: Vector2, reach: float) -> String:
+func player_reach_point(at: Vector2, reach: float, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, player_reach_point.bind(at, reach))
 	if not reaches(player.pos, at):
 		return "A wall is in the way."
 	if player.pos.distance_to(at) > reach:
@@ -1698,14 +1746,18 @@ func player_reach_point(at: Vector2, reach: float) -> String:
 
 
 ## DVW-A12 R15: why the player cannot reach container `c` (its cell's middle, within CONTAINER_REACH), "" if they can.
-func player_container_reach(c: Dictionary) -> String:
+func player_container_reach(c: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, player_container_reach.bind(c))
 	return player_reach_point(Vector2(int(c.x) + 0.5, int(c.y) + 0.5), CONTAINER_REACH)
 
 
 ## DVW-A12 R15: why the player cannot reach the cell `cell` (a seam, a tree, a plant), "" if they can: a wall between
 ## (reaches, to the cell's middle), else more than CELL_REACH cells off the player's cell on either axis. `tall`: a
 ## tree, which is also found by the cell above its trunk (tree_at), so that cell counts too.
-func player_reach_cell(cell: Vector2i, tall := false) -> String:
+func player_reach_cell(cell: Vector2i, tall := false, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, player_reach_cell.bind(cell, tall))
 	if not reaches(player.pos, Vector2(cell) + Vector2(0.5, 0.5)):
 		return "A wall is in the way."
 	var pc := Vector2i(floori(player.pos.x), floori(player.pos.y))
@@ -1717,7 +1769,9 @@ func player_reach_cell(cell: Vector2i, tall := false) -> String:
 
 ## DVW-A12 R15: why the player cannot reach field `f`, "" if they can: its nearest cell more than CELL_REACH cells off
 ## the player's cell on either axis. (No wall test: the interface never made one for a field.)
-func player_reach_field(f: Dictionary) -> String:
+func player_reach_field(f: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, player_reach_field.bind(f))
 	var px := floori(player.pos.x)
 	var py := floori(player.pos.y)
 	var nx := clampi(px, int(f.x), int(f.x) + int(f.w) - 1)
@@ -1731,7 +1785,9 @@ func player_reach_field(f: Dictionary) -> String:
 ## needed (the best one in the pack), and gold ore needs Mining level 3 (work_mine checks it again at the swing).
 ## The time: balance.json mine_minutes at the game's speed, by the pickaxe's speed and the Mining mine_time effect.
 ## Returns {ok: true, tool, secs} or {ok: false, why}.
-func player_mine_plan(d: Dictionary) -> Dictionary:
+func player_mine_plan(d: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_mine_plan.bind(d))
 	var p := player
 	var far := player_reach_cell(Vector2i(int(d.x), int(d.y)))       # R15
 	if far != "":
@@ -1748,7 +1804,9 @@ func player_mine_plan(d: Dictionary) -> Dictionary:
 ## DVW-A12 R1: the player's swing at seam `d` with pickaxe `tool`, when the swing's time is up: work_mine, as a miner's
 ## (PAR-01), into the pack (a full pack sets the ore down: `full`); a broken pickaxe leaves the hand empty.
 ## Returns work_mine's result plus `full` (the pack could not take the ore).
-func player_mine(d: Dictionary, tool: String) -> Dictionary:
+func player_mine(d: Dictionary, tool: String, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_mine.bind(d, tool))
 	var p := player
 	var full := not p.inv.can_add(str(d.get("ore", "stone")))
 	var r := work_mine(p, d, p.inv, tool)
@@ -1762,7 +1820,9 @@ func player_mine(d: Dictionary, tool: String) -> Dictionary:
 ## (the best one in the pack), and only a mature tree can be felled (Trees.refusal). The time: balance.json
 ## chop_minutes at the game's speed, by the axe's speed and the Woodcutting chop_time effect; the felling is
 ## Trees.cfg().chops blows of an equal share of it. Returns {ok: true, tool, secs} or {ok: false, why}.
-func player_fell_plan(t: Dictionary) -> Dictionary:
+func player_fell_plan(t: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_fell_plan.bind(t))
 	var p := player
 	var far := player_reach_cell(Vector2i(int(t.x), int(t.y)), true)       # R15
 	if far != "":
@@ -1783,7 +1843,9 @@ func player_fell_plan(t: Dictionary) -> Dictionary:
 ## (with the Woodcutting log_bonus) go to the pack through work_felled, as a woodcutter's (PAR-01), or are set down if
 ## the pack is full (`full`); the tree may drop saplings (sapling_drop, with the sapling_bonus), and `saplings` holds
 ## those the pack took whole; a broken axe leaves the hand. Returns {result, logs, full, saplings, broke, up}.
-func player_chop(t: Dictionary, side: int, tool: String) -> Dictionary:
+func player_chop(t: Dictionary, side: int, tool: String, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_chop.bind(t, side, tool))
 	var p := player
 	if t.state != "grown":
 		return {"result": "gone"}
@@ -1804,7 +1866,9 @@ func player_chop(t: Dictionary, side: int, tool: String) -> Dictionary:
 
 ## DVW-A12 R3: why the player cannot make `recipe` now, in the game's words ("" if they can): the recipe's skill level,
 ## then its materials in the pack. The station is checked apart (station_refusal).
-func player_craft_refusal(recipe: String) -> String:
+func player_craft_refusal(recipe: String, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, player_craft_refusal.bind(recipe))
 	var r: Dictionary = GameData.recipes[recipe]
 	if player.level(r.skill) < int(r.level):
 		return "Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)]
@@ -1820,7 +1884,9 @@ func player_craft_refusal(recipe: String) -> String:
 ## recipe's kind within 2 tiles of the player). Refused if the station is not theirs to use (station_refusal), then by
 ## player_craft_refusal. The time: the recipe's minutes at the game's speed, by the skill's craft_time effect; the
 ## station is held for the player meanwhile (reserve_for_player). Returns {ok: true, station, secs} or {ok: false, why}.
-func player_craft_begin(recipe: String, station := "") -> Dictionary:
+func player_craft_begin(recipe: String, station := "", actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_craft_begin.bind(recipe, station))
 	var r: Dictionary = GameData.recipes[recipe]
 	var p := player
 	if station != "" and stations.has(station) and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH:
@@ -1844,7 +1910,9 @@ func player_craft_begin(recipe: String, station := "") -> Dictionary:
 
 ## DVW-A12 R3: the player's work on `recipe` is done: work_craft from the pack into the pack, as a villager's (PAR-01,
 ## PAR-04). Returns work_craft's result.
-func player_craft(recipe: String) -> Dictionary:
+func player_craft(recipe: String, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_craft.bind(recipe))
 	if recorder == null:
 		return _player_craft(recipe)
 	var rec: Array = recorder.verb_begin("craft", recipe, null)     # REC-19: the verb is the parent of what it triggers
@@ -1869,7 +1937,9 @@ func harm_npc(n: NPC, dmg: float) -> float:
 
 ## DVW-A12 R7: the damage of one blow of the player's: their weapon's (PlayerState.damage), doubled by the Combat
 ## tier's crit_chance. Returns {dmg, crit}.
-func player_strike() -> Dictionary:
+func player_strike(actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_strike)
 	var d := player.damage()
 	if rng.randf() < Skills.value(player, "combat", "crit_chance"):
 		return {"dmg": d * 2.0, "crit": true}
@@ -1878,7 +1948,9 @@ func player_strike() -> Dictionary:
 
 ## DVW-A12 R7: the player's sword blow lands on villager `n`: player_strike, player_hit_npc, and 4 Combat xp a blow.
 ## Returns player_hit_npc's result plus {crit, up} (up: a new Combat level, or 0).
-func player_melee_npc(n: NPC) -> Dictionary:
+func player_melee_npc(n: NPC, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_melee_npc.bind(n))
 	var s := player_strike()
 	var h := player_hit_npc(n, float(s.dmg))
 	h["crit"] = s.crit
@@ -1890,7 +1962,9 @@ func player_melee_npc(n: NPC) -> Dictionary:
 ## damage_taken and armour, PAR-01); the blow wakes a sleeper and the noise wakes those near, who then see it (owner
 ## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
 ## slain by the player, and a bandit put down near villagers is a defence (CRT-10). Returns {dealt, killed}.
-func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
+func player_hit_npc(n: NPC, dmg: float, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_hit_npc.bind(n, dmg))
 	if recorder == null:
 		return _player_hit_npc(n, dmg)
 	var rec: Array = recorder.verb_begin("strike", "dmg=%.1f" % dmg, n)     # REC-19: the verb is the parent of what it triggers
@@ -1906,7 +1980,7 @@ func _player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 	if n.role != "bandit":
 		player_assault(n)
 	elif n.target == -1:
-		n.target = -2
+		n.target = Life.PLAYER_ID
 	var killed := false
 	if n.hp <= 0.0:
 		kill(n, "slain by %s %s" % [player.name, player.family])
@@ -1927,7 +2001,9 @@ const FIREBALL_HIT_RADIUS := 0.6
 ## DVW-A12 R11: the player casts Fireball: refused if it is not known (with the reason), or silently while it cools
 ## down or without the stamina (balance fireball_cooldown and fireball_stamina, by the Magic tier); a cast starts the
 ## cooldown, spends the stamina and earns 6 Magic xp. Returns {ok, why}.
-func player_cast_fireball() -> Dictionary:
+func player_cast_fireball(actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_cast_fireball)
 	var p := player
 	if not p.spells.get("fireball", false):
 		return {"ok": false, "why": "You do not know any spells. The Sage in the hut north of the tavern teaches them."}
@@ -1945,7 +2021,9 @@ func player_cast_fireball() -> Dictionary:
 ## animal: FIREBALL_DAMAGE by the Magic fireball_damage tier, as the player's blow (player_hit_npc, player_hit_animal),
 ## and a spell that lands earns 6 more Magic xp (`up`: a new level, shown by the caller after the hit). Returns {who:
 ## the one struck or null, before: their health before, dealt, guard: a guard's words, up}.
-func player_fireball_hit(pos: Vector2) -> Dictionary:
+func player_fireball_hit(pos: Vector2, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_fireball_hit.bind(pos))
 	var dmg := FIREBALL_DAMAGE * Skills.value(player, "magic", "fireball_damage", 1.0)
 	for n: NPC in present(pos, FIREBALL_HIT_RADIUS):
 		var before := n.hp
@@ -1963,7 +2041,9 @@ func player_fireball_hit(pos: Vector2) -> Dictionary:
 ## (hunted_ or slaughtered_, FSE-B10), its meat and hide left where it fell, a wolf or bear put down near people a
 ## defence (CRT-10); livestock is theft from its keeper, known the way a theft is (witness, PAR-05): the keeper
 ## remembers it, and one who saw it comes after the player. Returns {killed, guard: a guard's words, "" for none}.
-func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
+func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_hit_animal.bind(a, dmg))
 	a.hp -= dmg
 	if a.hp > 0.0:
 		fauna.provoke(a, "player")
@@ -1987,7 +2067,7 @@ func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
 		witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
 		keeper.remember(("%s killed my %s" % [player.name, what]) if saw else ("found my %s dead" % what))
 		if saw and keeper.role == "adult" and keeper.target == -1:
-			keeper.target = -2
+			keeper.target = Life.PLAYER_ID
 		guard = last_guard
 		note("%s %s killed one of %s %s's animals." % [player.name, player.family, keeper.name, keeper.family])
 	return {"killed": true, "guard": guard}
@@ -1996,18 +2076,21 @@ func player_hit_animal(a: Animal, dmg: float) -> Dictionary:
 ## DVW-A12 R9: attacking a villager is a crime: the victim remembers it and thinks worse of the player, an adult fights
 ## back, and those who see it (aware_of_attack, witness_radius, PAR-05) remember it; the guards among them answer, and
 ## the victim and the other witnesses carry word to a guard (raise_alarm, report_crime). Nobody else knows.
-func player_assault(victim: NPC) -> void:
+func player_assault(victim: NPC, actor: PlayerState = null) -> void:
+	if actor != null and actor != player:
+		as_actor(actor, player_assault.bind(victim))
+		return
 	var p := player
 	victim.remember("attacked by %s" % p.name)
 	relations.harmed(victim, float(Relations.cfg().victim_harm))
 	if victim.role == "adult":
-		victim.target = -2
+		victim.target = Life.PLAYER_ID
 	var aware := aware_of_attack(p.pos, victim)
 	for n: NPC in aware.seen:
 		if n.role != "bandit":
 			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
 			relations.harmed(n, float(Relations.cfg().witness_harm))
-	raise_alarm(aware, -2)
+	raise_alarm(aware, Life.PLAYER_ID)
 	stat("player_assault")
 	note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
@@ -2224,7 +2307,9 @@ func _exit_cells() -> Dictionary:
 
 ## Plant the sapling `item` at a cell (check plant_refusal first): a new tree, a sapling, saved with the
 ## world. Returns the tree record, {} if the cell is refused.
-func plant_tree(cell: Vector2i, item: String) -> Dictionary:
+func plant_tree(cell: Vector2i, item: String, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, plant_tree.bind(cell, item))
 	if plant_refusal(cell) != "":
 		return {}
 	var species := Trees.planted_species(item, cell)
@@ -2243,7 +2328,9 @@ func plant_tree(cell: Vector2i, item: String) -> Dictionary:
 
 ## DVW-A12 R6: the player earns `n` xp in `skill` (PlayerState.gain); a new level is announced by player_leveled.
 ## Returns the new level, or 0.
-func player_xp(skill: String, n: int) -> int:
+func player_xp(skill: String, n: int, actor: PlayerState = null) -> int:
+	if actor != null and actor != player:
+		return as_actor(actor, player_xp.bind(skill, n))
 	var up := player.gain(skill, n)
 	if up > 0:
 		player_leveled.emit(skill, up)
@@ -2252,7 +2339,9 @@ func player_xp(skill: String, n: int) -> int:
 
 ## DVW-A12 R6: the player tries the lock of chest unit `u` (Chests.attempt) and earns Stealth xp for it: 4 when it
 ## opens, 1 otherwise. Returns Chests.attempt's result.
-func player_pick_lock(u: Dictionary) -> Dictionary:
+func player_pick_lock(u: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_pick_lock.bind(u))
 	var r: Dictionary = chests.attempt(u)
 	player_xp("stealth", 4 if r.result == "open" else 1)
 	return r
@@ -2261,7 +2350,9 @@ func player_pick_lock(u: Dictionary) -> Dictionary:
 ## DVW-A12 R21: what a helper hired to carry to the player's building site on plot `p` may spend of the player's
 ## coins at the market: what the site still needs beyond the family chest, at today's estimate (Construction.estimate),
 ## but never more than the player holds after the day's wage (helper_wage).
-func player_helper_budget(p: Dictionary) -> int:
+func player_helper_budget(p: Dictionary, actor: PlayerState = null) -> int:
+	if actor != null and actor != player:
+		return as_actor(actor, player_helper_budget.bind(p))
 	var need: Dictionary = p.site.need.duplicate()
 	for id in need.keys():
 		need[id] = maxi(0, int(need[id]) - player.chest.count(id))
@@ -2271,7 +2362,9 @@ func player_helper_budget(p: Dictionary) -> int:
 ## DVW-A12 R20: move `qty` of `id` between the player's pack and the home chest (`from_chest`: out of the chest), all
 ## or nothing (transfer); that many stolen marks go with them (PlayerState.store_marks, take_marks), so the chest does
 ## not wash stolen goods clean. True if they moved.
-func player_home_move(id: String, from_chest: bool, qty: int) -> bool:
+func player_home_move(id: String, from_chest: bool, qty: int, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_home_move.bind(id, from_chest, qty))
 	var p := player
 	var src: Inventory = p.chest if from_chest else p.inv
 	var dst: Inventory = p.inv if from_chest else p.chest
@@ -2287,7 +2380,9 @@ func player_home_move(id: String, from_chest: bool, qty: int) -> bool:
 ## DVW-A12 R5: the player takes what lies in loot pile `i`: each kind of goods whole, as far as the pack takes it, and
 ## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
 ## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
-func player_loot(i: int) -> Dictionary:
+func player_loot(i: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_loot.bind(i))
 	if recorder == null:
 		return _player_loot(i)
 	var rec: Array = recorder.verb_begin("loot", "pile %d" % i, null)     # REC-19: the verb is the parent of what it triggers
@@ -2321,7 +2416,9 @@ func _player_loot(i: int) -> Dictionary:
 ## DVW-A12 R4: the player plants the sapling `item` from the pack at `cell`: refused ({}) without one in the pack or
 ## where plant_refusal says no; else the tree is planted (plant_tree) and the sapling is used up, counted for the
 ## ledger (used_, SEED-02). Returns the tree record, {} if refused.
-func player_plant_sapling(cell: Vector2i, item: String) -> Dictionary:
+func player_plant_sapling(cell: Vector2i, item: String, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_plant_sapling.bind(cell, item))
 	if not player.inv.has(item) or plant_refusal(cell) != "":
 		return {}
 	var t := plant_tree(cell, item)
@@ -2599,7 +2696,9 @@ func wake(n: NPC) -> bool:
 
 ## DVW-A12 R18: the player rests: at night until six in the morning, by day for balance rest.day_minutes; the world
 ## runs on meanwhile (update in half-second steps of the game's speed), then rest_recover. Returns {minutes, night}.
-func player_rest() -> Dictionary:
+func player_rest(actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_rest)
 	var h := hour()
 	var until := 6.0 if h < 6.0 else 30.0
 	var night := h >= 18.0 or h < 6.0
@@ -3015,7 +3114,7 @@ func _finish_site(p: Dictionary) -> void:
 		_finish_loft(p)
 		return
 	var by := str(p.site.get("owner", holder_of(p)))
-	var fam := player.family if by == PLAYER else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
+	var fam := player.family if is_player_ref(by) else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
 	var b := {"id": ("house_" if kind == "house" else "workshop_") + str(p.id), "type": "player_house" if kind == "house" else "workshop",
 			  "kind": kind, "stamp": Construction.stamp_name(kind), "x": p.x, "y": p.y, "w": p.w, "h": p.h,
 			  "door": p.door, "name": "%s family %s" % [fam, Construction.kind_name(kind)],
@@ -3152,7 +3251,9 @@ func site_goods() -> Dictionary:
 # ---------------------------------------------------------------- the player's actions -------
 ## Take crop from a ripe field: the player gathers a handful at a time, a farmer the rest. Returns
 ## the wheat taken. A field with nothing left is tilled again.
-func take_crop(f: Dictionary, most: int) -> int:
+func take_crop(f: Dictionary, most: int, actor: PlayerState = null) -> int:
+	if actor != null and actor != player:
+		return as_actor(actor, take_crop.bind(f, most))
 	if f.state != "ripe":
 		return 0
 	var n := mini(most, int(f.get("crop", GameData.b("field_yield"))))
@@ -3166,7 +3267,9 @@ func take_crop(f: Dictionary, most: int) -> int:
 ## The player harvests a handful from a field. A field is the manor's, and its crop the farmers' who
 ## work it (field_workers): taking from it without being one of them is theft, and anyone within sight remembers it, except what a farmer
 ## hired the player to cut there (Quests.hired_harvest).
-func player_harvest(f: Dictionary) -> int:
+func player_harvest(f: Dictionary, actor: PlayerState = null) -> int:
+	if actor != null and actor != player:
+		return as_actor(actor, player_harvest.bind(f))
 	var n := take_crop(f, int(GameData.b("harvest_handful")))
 	if n <= 0:
 		return 0
@@ -3297,7 +3400,7 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 			text += " \"Don't let me catch you at it again, friend.\" The fine is lowered for a friend, but a theft is still fined."
 		text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
 	if paid < fine:
-		g.target = -2
+		g.target = Life.PLAYER_ID
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
 	if recorder != null:
 		recorder.guard_end(rec_guard, g, owner, fine, paid, warned)
@@ -3359,7 +3462,7 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack") -> void
 
 ## Whether the offender of a report can still be pursued: alive (the player alive, or the villager).
 func offender_alive(offender: int) -> bool:
-	if offender == -2:
+	if Life.is_player_id(offender):
 		return player.alive
 	var o := npc(offender)
 	return o != null and o.alive
@@ -3378,7 +3481,7 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 	if crime == "theft":
 		g.remember("told by %s %s of a theft" % [n.name, n.family])
 		stat("theft_reports_delivered")
-		if off == -2 and g.target == -1 and near(player.pos, float(GameData.b("witness_radius"))).has(g):
+		if Life.is_player_id(off) and g.target == -1 and near(player.pos, float(GameData.b("witness_radius"))).has(g):
 			last_guard = guard_confront(g, {}, null, null)
 		return true
 	g.remember("told by %s %s of an attack" % [n.name, n.family])
@@ -3471,7 +3574,9 @@ func _is_tavern(at: String) -> bool:
 
 ## The goods a container holds (see `containers`), or null when nobody owns it now (an empty house,
 ## a stall without a merchant, a tavern without keepers).
-func container_store(c: Dictionary) -> Inventory:
+func container_store(c: Dictionary, actor: PlayerState = null) -> Inventory:
+	if actor != null and actor != player:
+		return as_actor(actor, container_store.bind(c))
 	if c.kind == "table":
 		return c.inv
 	var o := container_owner(c)
@@ -3533,7 +3638,9 @@ func container_goods(c: Dictionary) -> Array:
 
 
 ## The item one take takes: the one there is most of (the first by id on a tie).
-func container_pick(c: Dictionary) -> String:
+func container_pick(c: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, container_pick.bind(c))
 	var store := container_store(c)
 	var best := ""
 	for id in container_goods(c):
@@ -3546,7 +3653,9 @@ func container_pick(c: Dictionary) -> String:
 ## a field's wheat, and the item is marked as stolen from its owner. Returns the item taken, "" if
 ## there was nothing, "full" if the pack has no room, or "far" if it is out of the player's reach (DVW-A12 R15:
 ## player_container_reach says why).
-func player_take(c: Dictionary) -> String:
+func player_take(c: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != player:
+		return as_actor(actor, player_take.bind(c))
 	if recorder == null:
 		return _player_take(c)
 	var rec: Array = recorder.verb_begin("take", "%s" % container_place(c), null)     # REC-19: the verb is the parent of what it triggers
@@ -3767,9 +3876,9 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 		# no guard saw it: the victim and the others who saw it will tell one (PICK-01)
 		for o: NPC in near(player.pos, sight):
 			if o != n and o.role != "bandit" and o.job != "guard":
-				report_crime(o, -2, "saw", "theft")
+				report_crime(o, Life.PLAYER_ID, "saw", "theft")
 		if n.alive and n.job != "guard":
-			report_crime(n, -2, "victim", "theft")
+			report_crime(n, Life.PLAYER_ID, "victim", "theft")
 	if last_guard != "":
 		text += " " + last_guard
 	elif seen > 1:
@@ -3783,7 +3892,9 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 ## (the buyer cannot tell), but a guard within sight may question the seller (guard_question_chance):
 ## the piece goes back to its owner and the fine is paid. Marked goods are sold first.
 ## Returns {result: sold|recognised|questioned|failed, text}.
-func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
+func player_sell(buyer: NPC, id: String, price: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_sell.bind(buyer, id, price))
 	if recorder == null:
 		return _player_sell(buyer, id, price)
 	var rec: Array = recorder.verb_begin("sell", "%s for %d to %d" % [id, price, buyer.id], buyer)     # REC-19: the verb is the parent of what it triggers
@@ -3834,7 +3945,9 @@ func _player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 ## nothing is half-sold for those reasons. Each unit goes through player_sell (marked goods first,
 ## recognition, guard questions), so a stolen piece being recognised stops the sale at that unit; `sold`
 ## says how many went and `paid` what they fetched. Returns {result, text, sold, paid}.
-func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
+func player_sell_many(buyer: NPC, id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_sell_many.bind(buyer, id, qty))
 	if qty < 1 or not player.inv.has(id, qty):
 		return {"result": "failed", "text": "You do not carry that many.", "sold": 0, "paid": 0}
 	var no := sale_refusal(buyer, player, id, qty)       # TRADE-01: the villagers' rule (purchase_qty)
@@ -3858,7 +3971,9 @@ func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
 	return {"result": "sold", "text": "", "sold": sold, "paid": paid}
 
 
-func player_eat(id: String) -> bool:
+func player_eat(id: String, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_eat.bind(id))
 	var it: Dictionary = GameData.item(id)
 	if not it.has("food") or not player.inv.remove(id):
 		return false
@@ -3876,7 +3991,9 @@ func player_eat(id: String) -> bool:
 
 ## Use a medicine (items.json type "medicine": it heals `heal` health and feeds nobody). Consumed only
 ## when it heals: at full health nothing is used up. Never above the health cap (PL1-04).
-func player_use_medicine(id: String) -> bool:
+func player_use_medicine(id: String, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_use_medicine.bind(id))
 	var it: Dictionary = GameData.item(id)
 	if not it.has("heal") or it.has("food") or not player.alive or player.hp >= player.hp_cap() - 0.001:
 		return false
@@ -3902,7 +4019,9 @@ func pack_full_text(ids: Array) -> String:
 ## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there. INV-18: the worn
 ## unit leaves its backpack position; what it replaces goes back to its category, and the swap is refused,
 ## nothing moved, when that category is full (equip_refusal says why). The one store never gains or loses a unit.
-func player_equip(id: String) -> bool:
+func player_equip(id: String, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_equip.bind(id))
 	return equip_refusal(id) == ""
 
 
@@ -3921,7 +4040,9 @@ func equip_refusal(id: String) -> String:
 
 ## Take off what `slot` holds: it goes back to its category, or stays worn when that category is full
 ## (unequip_refusal says so). True when the slot is empty after.
-func player_unequip(slot: String) -> bool:
+func player_unequip(slot: String, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_unequip.bind(slot))
 	return unequip_refusal(slot) == ""
 
 
@@ -3935,7 +4056,9 @@ func unequip_refusal(slot: String) -> String:
 
 
 ## Drop items on the ground where the player stands: they can be picked up again by anyone looking.
-func player_drop(id: String, qty: int) -> bool:
+func player_drop(id: String, qty: int, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_drop.bind(id, qty))
 	if qty <= 0 or not player.inv.remove(id, qty):
 		return false
 	for slot in PlayerState.GEAR:
@@ -3952,7 +4075,9 @@ func player_drop(id: String, qty: int) -> bool:
 ## What the player's own work makes (mining, felling, crafting): counted for the goods ledger as `kind` + id
 ## (made_, mined_, felled_), as the villagers' work is, and put in the pack; what the pack cannot hold is set
 ## down where the player stands, never lost (DVW-A7). Returns how many went into the pack.
-func player_gain(id: String, n: int, kind := "made_") -> int:
+func player_gain(id: String, n: int, kind := "made_", actor: PlayerState = null) -> int:
+	if actor != null and actor != player:
+		return as_actor(actor, player_gain.bind(id, n, kind))
 	if n <= 0:
 		return 0
 	stat(kind + id, float(n))
@@ -3969,7 +4094,9 @@ func player_gain(id: String, n: int, kind := "made_") -> int:
 ## coins go from the player to the teacher, the spell is known, 100 Magic xp is earned, and a story quest to learn it is
 ## completed (Quests.on_learned). Refused if it is known already or the player cannot pay. `thanks`: the story's
 ## thanks line from the teacher, read before the quest is completed ("" for none). Returns {ok, why, thanks}.
-func player_learn_fireball(teacher: NPC) -> Dictionary:
+func player_learn_fireball(teacher: NPC, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_learn_fireball.bind(teacher))
 	var price := int(GameData.b("fireball_price"))
 	if player.spells.get("fireball", false):
 		return {"ok": false, "why": "You know Fireball."}
@@ -4024,7 +4151,9 @@ func pack_row_refusal(t: NPC) -> String:
 ## TAILOR-18: the player pays tailor `t` for the next pack row, all or nothing: the price goes from the player's purse to
 ## the tailor's own (theirs to spend by their usual rules; no coin made or lost) and pack_level rises by one, opening
 ## that row in all eight categories. Returns {ok, why, level, paid}.
-func player_buy_pack_row(t: NPC) -> Dictionary:
+func player_buy_pack_row(t: NPC, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_buy_pack_row.bind(t))
 	var why := pack_row_refusal(t)
 	if why != "":
 		return {"ok": false, "why": why, "level": player.pack_level, "paid": 0}
@@ -4088,7 +4217,9 @@ func barber_refusal(b: NPC, want: Dictionary) -> String:
 ## BARBER-18: the player pays barber `b` the visit and takes the new hair, beard and hair colour, all or nothing: the
 ## price goes from the player's purse to the barber's own (no coin made or lost), only those features of the saved
 ## recipe change (gear drawn over it is untouched). Returns {ok, why, paid}.
-func player_barber_visit(b: NPC, want: Dictionary) -> Dictionary:
+func player_barber_visit(b: NPC, want: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_barber_visit.bind(b, want))
 	var why := barber_refusal(b, want)
 	if why != "":
 		return {"ok": false, "why": why, "paid": 0}
@@ -4103,8 +4234,10 @@ func player_barber_visit(b: NPC, want: Dictionary) -> Dictionary:
 
 
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
-func buy_plot(p: Dictionary) -> bool:
-	return property.buy(p, PLAYER) == ""
+func buy_plot(p: Dictionary, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, buy_plot.bind(p))
+	return property.buy(p, acting_ref()) == ""
 
 
 # ---------------------------------------------------------------- ownership ------------------
@@ -4124,7 +4257,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 20          # 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 21          # 21: MP Batch A1 (multiplayer foundation): the optional World key "players" {host: the host's pid, by_pid: {pid: PlayerState dict}} lists every player character (the host's is also written, as always, in "player", which stays the host's authoritative record, so an older build reads the save and ignores the new key), and a PlayerState carries "map_level" when it is not on the surface (the host's level stays in "underground"); a 20 or older save has no "players" key and loads with its "player" as the only player (no migration of data, nothing dropped); 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -4249,7 +4382,7 @@ func home_family(id: String) -> String:
 	for hh in households:
 		if str(hh.home) == id and not hh.get("ended", false):
 			return str(hh.family)
-	if buildings.has(id) and holder_of(buildings[id]) == PLAYER:
+	if buildings.has(id) and is_player_ref(holder_of(buildings[id])):
 		return player.family
 	return ""
 
@@ -4268,7 +4401,7 @@ func _landmarks() -> Array:
 				if str(hh.home) == str(id):
 					fam = str(hh.family)
 					old = hh.get("ended", false)
-			if fam == "" and holder_of(b) == PLAYER:
+			if fam == "" and is_player_ref(holder_of(b)):
 				fam = player.family
 			name = ("the %s family's %shouse" % [fam, "old " if old else ""]) if fam != "" else ""
 		if name != "":
@@ -4390,9 +4523,9 @@ func station_refusal(id: String) -> String:
 		return Furniture.home_refusal(self, id)
 	var st: Dictionary = stations[id]
 	var b: Dictionary = buildings.get(str(st.get("building", "")), {})
-	if not may_use(PLAYER, st):
+	if not may_use(acting_ref(), st):
 		return "This %s is in %s; you need leave to use it." % [st.type, property.describe(b)]
-	if holds(PLAYER, b if not b.is_empty() else st):
+	if holds(acting_ref(), b if not b.is_empty() else st):
 		return ""
 	var busy := station_workers(id)
 	if busy.size() >= int(st.get("capacity", 1)):
@@ -4402,19 +4535,27 @@ func station_refusal(id: String) -> String:
 
 
 ## The player works at a station for `mins` game minutes: villagers count it as taken meanwhile.
-func reserve_for_player(id: String, mins: float) -> void:
+func reserve_for_player(id: String, mins: float, actor: PlayerState = null) -> void:
+	if actor != null and actor != player:
+		as_actor(actor, reserve_for_player.bind(id, mins))
+		return
 	if stations.has(id):
 		stations[id].player_until = minutes + mins
 
 
 ## The player's work at a station ended or was cut short: the place is free at once (Build 13).
-func release_player_station(id: String) -> void:
+func release_player_station(id: String, actor: PlayerState = null) -> void:
+	if actor != null and actor != player:
+		as_actor(actor, release_player_station.bind(id))
+		return
 	if stations.has(id):
 		stations[id].erase("player_until")
 
 
 ## Whether the player is working at station `id` now.
-func player_at_station(id: String) -> bool:
+func player_at_station(id: String, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, player_at_station.bind(id))
 	return stations.has(id) and float(stations[id].get("player_until", -1.0)) > minutes
 
 
@@ -4483,10 +4624,10 @@ func to_dict() -> Dictionary:
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"vacancies": vacancies, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
-		"player": player.to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
+		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
-		"underground": {"gen": Underground.GEN_VERSION, "player_level": player_level},
+		"underground": {"gen": Underground.GEN_VERSION, "player_level": _host_player.map_level},
 		"prospecting": prospecting.to_dict(),
 		"discovery": discovery.to_dict(),
 		"pits": pits.to_dict(),
@@ -4499,6 +4640,33 @@ func to_dict() -> Dictionary:
 	elif not judgment_foreign.is_empty():
 		out.judgment = judgment_foreign.duplicate(true)            # off: a saved section is carried unchanged
 	return out
+
+
+## MP Batch A1 (save 21): every player character by pid and the host's pid. The host's record is the same as "player".
+func _players_to_dict() -> Dictionary:
+	var by := {}
+	for pid in players:
+		by[str(pid)] = (players[pid] as PlayerState).to_dict()
+	for k in players_foreign:
+		by[k] = (players_foreign[k] as Dictionary).duplicate(true)
+	return {"host": _host_player.pid, "by_pid": by}
+
+
+## The guests of a save 21 "players" section (the host is "player"). A record with no usable pid, the host's pid or a repeat is
+## kept in `players_foreign` and written back, never dropped.
+func _load_guests(sec) -> void:
+	if not (sec is Dictionary) or not (sec.get("by_pid", {}) is Dictionary):
+		return
+	var by: Dictionary = sec.get("by_pid", {})
+	var ids := by.keys()
+	ids.sort()
+	for k in ids:
+		var pd: Dictionary = by[k]
+		var gp := PlayerState.from_dict(pd)
+		if gp.pid == _host_player.pid:
+			continue                                   # the host: "player" is its record
+		if not add_guest(gp):
+			players_foreign["x" + str(k)] = pd.duplicate(true)
 
 
 ## ID-01: the register of a version 20 save, or (a save from before it) the one-time upgrade, deterministic and reported. False when the
@@ -4730,6 +4898,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	_guests.clear()
+	players_foreign.clear()
+	_load_guests(d.get("players", {}))              # save 21 (absent: the "player" above is the only player)
 	if not _load_identity(d):
 		return
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
@@ -4892,7 +5063,7 @@ func _migrate_property(d: Dictionary) -> void:
 	for p in plots:
 		if not p.has("tenant"):
 			var was := str(p.get("owner", ""))
-			set_owner(p, PLAYER if was == PLAYER or mine.has(p.id) else MANOR)
+			set_owner(p, PLAYER if is_player_ref(was) or mine.has(p.id) else MANOR)
 			set_tenant(p, "")
 		if not p.has("building"):
 			p.building = "house_" + str(p.id) if buildings.has("house_" + str(p.id)) else ""
@@ -5074,14 +5245,18 @@ func _npc_through(n: NPC, leg: Dictionary, s: Dictionary) -> void:
 
 ## Collision for the player: on the surface the surface's own (VillageMap.is_solid_world, unchanged), below it the
 ## level's map (rock everywhere off it).
-func solid_for_player(c: Vector2i) -> bool:
+func solid_for_player(c: Vector2i, actor: PlayerState = null) -> bool:
+	if actor != null and actor != player:
+		return as_actor(actor, solid_for_player.bind(c))
 	if player_level == 0 or underground == null:
 		return map.is_solid_world(c)
 	return underground.is_solid(player_level, c)
 
 
 ## A walking route for the player on the level they are on (the surface's VillageMap.find_path_world, unchanged).
-func path_for_player(from: Vector2i, to: Vector2i) -> PackedVector2Array:
+func path_for_player(from: Vector2i, to: Vector2i, actor: PlayerState = null) -> PackedVector2Array:
+	if actor != null and actor != player:
+		return as_actor(actor, path_for_player.bind(from, to))
 	if player_level == 0 or underground == null:
 		return map.find_path_world(from, to)
 	return underground.find_path(player_level, from, to)
@@ -5091,13 +5266,15 @@ func path_for_player(from: Vector2i, to: Vector2i) -> PackedVector2Array:
 ## stand on the other end's stand, on its level. {} when there is no portal there; {refused: why} when they may not
 ## (a handcart is not taken through; MIN-F: a minecart goes through on its rails when track lies on both stands);
 ## else {level, pos, portal}.
-func player_through(dir: Vector2) -> Dictionary:
+func player_through(dir: Vector2, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_through.bind(dir))
 	if underground == null or not player.alive:
 		return {}
 	var hit := underground.portal_from(player_level, Vector2i(floori(player.pos.x), floori(player.pos.y)), dir)
 	if hit.is_empty():
 		return {}
-	var cart := carts.pulled_by(PLAYER)
+	var cart := carts.pulled_by(acting_ref())
 	if not cart.is_empty():
 		if Carts.kind_of(cart) != "minecart":
 			return {"refused": "Set the cart down first: it will not go through the adit."}
@@ -5116,7 +5293,8 @@ func _set_player_level(level: int) -> void:
 	if level == player_level:
 		return
 	player_level = level
-	player_level_changed.emit(level)
+	if player == _host_player:
+		player_level_changed.emit(level)
 
 
 ## Loot set down by the player below the surface lies on their level (the surface's lists and the guards skip it).
@@ -5128,15 +5306,23 @@ func _loot_on_player_level(l: Dictionary) -> void:
 ## The saved level of the player ("underground"; absent: the surface). A player saved on a level that is gone comes
 ## up at the first portal's surface stand; one saved on rock (a changed generator) stands on the nearest floor.
 func _load_underground(u: Dictionary) -> void:
-	player_level = int(u.get("player_level", 0))
-	if player_level == 0 or underground == null:
+	_host_player.map_level = int(u.get("player_level", 0))
+	_settle_level(_host_player)
+	for pid in _guests:
+		_settle_level(_guests[pid])
+
+
+## A player saved on a level that is gone comes up at the first portal's surface stand; one saved on rock stands on the
+## nearest floor (the host's and every guest's).
+func _settle_level(p: PlayerState) -> void:
+	if p.map_level == 0 or underground == null:
 		return
-	var c := Vector2i(floori(player.pos.x), floori(player.pos.y))
-	var lm := underground.map_at(player_level, c)
+	var c := Vector2i(floori(p.pos.x), floori(p.pos.y))
+	var lm := underground.map_at(p.map_level, c)
 	if lm == null:
-		player_level = 0
+		p.map_level = 0
 		if not underground.portals.is_empty():
-			player.pos = Vector2(underground.portals[0].ends[0].stand) + Vector2(0.5, 0.5)
+			p.pos = Vector2(underground.portals[0].ends[0].stand) + Vector2(0.5, 0.5)
 		return
 	if lm.is_solid(c):
-		player.pos = Vector2(lm.nearest_walkable(c)) + Vector2(0.5, 0.5)
+		p.pos = Vector2(lm.nearest_walkable(c)) + Vector2(0.5, 0.5)

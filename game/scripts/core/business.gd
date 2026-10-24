@@ -139,7 +139,7 @@ static func storefront_cost() -> Dictionary:
 
 
 func storefront_refusal(b: Dictionary) -> String:
-	if b.is_empty() or not str(b.get("type", "")) in ["house", "player_house"] or not w.holds(World.PLAYER, b):
+	if b.is_empty() or not str(b.get("type", "")) in ["house", "player_house"] or not w.holds(w.acting_ref(), b):
 		return "Only a house you hold can have a storefront."
 	if b.has("front"):
 		return "This house has its storefront already."
@@ -153,7 +153,9 @@ func storefront_refusal(b: Dictionary) -> String:
 
 
 ## Build the counter (the materials come from the pack), then open it as a shop. "" when done, else why not.
-func build_storefront(b: Dictionary) -> String:
+func build_storefront(b: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, build_storefront.bind(b))
 	var why := storefront_refusal(b)
 	if why != "":
 		return why
@@ -197,12 +199,14 @@ func build_npc_front(b: Dictionary, n: NPC) -> bool:
 
 
 ## Open the storefront's shop (no licence: the household's own ground).
-func open_front(b: Dictionary) -> String:
+func open_front(b: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, open_front.bind(b))
 	if not b.has("front"):
 		return "There is no storefront here."
 	if b.has("shop"):
 		return "The storefront is open already."
-	if not w.holds(World.PLAYER, b):
+	if not w.holds(w.acting_ref(), b):
 		return "It is not your house."
 	var f: Dictionary = b.front
 	b.shop = {"shop": true, "front": true, "id": str(b.id), "building": str(b.id), "x": int(f.x), "y": int(f.y), "use": [int(f.use[0]), int(f.use[1])],
@@ -219,7 +223,7 @@ static func is_pitch(s: Dictionary) -> bool:
 func mine() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == World.PLAYER:
+		if is_pitch(s) and not Stalls.is_built(s) and World.is_player_ref(w.tenant_of(s)):
 			return s
 	return {}
 
@@ -253,7 +257,7 @@ func premises() -> Array:
 	var m := mine()
 	if not m.is_empty():
 		out.append(m)
-	out.append_array(stalls.built(World.PLAYER))
+	out.append_array(stalls.built(w.acting_ref()))
 	out.append_array(shops())
 	return out
 
@@ -267,8 +271,8 @@ func is_mine(s: Dictionary) -> bool:
 	if s.is_empty():
 		return false
 	if is_shop(s):
-		return w.holds(World.PLAYER, building_of(s))
-	return w.tenant_of(s) == World.PLAYER
+		return w.holds(w.acting_ref(), building_of(s))
+	return World.is_player_ref(w.tenant_of(s))
 
 
 ## The day's rent of a stall (more for a larger one) or licence of a shop.
@@ -407,14 +411,16 @@ func rent_refusal() -> String:
 
 
 ## Rent the first free pitch: the first day is paid now. "" when done, else why not.
-func rent() -> String:
+func rent(actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, rent)
 	var why := rent_refusal()
 	if why != "":
 		return why
 	var s := free_pitch()
-	if not w.property._pay_manor(World.PLAYER, rent_day()):
+	if not w.property._pay_manor(w.acting_ref(), rent_day()):
 		return "You cannot pay the rent."
-	w.set_tenant(s, World.PLAYER)
+	w.set_tenant(s, w.acting_ref())
 	s.stock = {}
 	s.prices = {}
 	s.sales = []
@@ -440,7 +446,9 @@ func can_list(id: String) -> bool:
 
 
 ## Move `qty` of an item from the pack to the sale stock. "" when done, else why not.
-func list_item(s: Dictionary, id: String, qty: int) -> String:
+func list_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, list_item.bind(s, id, qty))
 	if not is_mine(s):
 		return "That is not your stall."
 	if not can_list(id) or qty <= 0:
@@ -457,7 +465,9 @@ func list_item(s: Dictionary, id: String, qty: int) -> String:
 
 
 ## Take `qty` back to the pack (all or nothing); the price is forgotten with the last of it.
-func unlist(s: Dictionary, id: String, qty: int) -> String:
+func unlist(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, unlist.bind(s, id, qty))
 	var have := int(s.stock.get(id, 0))
 	if qty <= 0 or qty > have:
 		return "The stall does not hold that many."
@@ -482,7 +492,9 @@ func set_price(s: Dictionary, id: String, price: int) -> String:
 
 ## Collect the till into the purse; the coins taken. A market stall's proceeds come only by closing it: its session is
 ## settled (5% to the manor) and the rest is the player's (Q13).
-func collect(s: Dictionary) -> int:
+func collect(s: Dictionary, actor: PlayerState = null) -> int:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, collect.bind(s))
 	if stalls.is_market(s):
 		return int(stalls.close(s, "closed to collect").net)
 	var t := int(s.get("till", 0))
@@ -493,7 +505,9 @@ func collect(s: Dictionary) -> int:
 
 ## ECON-P3: the owner's choice to move money between the purse and the till. "" when done, else why not. A market
 ## stall's open session proceeds are not taken out (Q13).
-func deposit(s: Dictionary, amount: int) -> String:
+func deposit(s: Dictionary, amount: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, deposit.bind(s, amount))
 	if amount <= 0 or w.player.coins < amount:
 		return "You do not have %d coins." % amount
 	w.player.coins -= amount
@@ -502,7 +516,9 @@ func deposit(s: Dictionary, amount: int) -> String:
 	return ""
 
 
-func withdraw(s: Dictionary, amount: int) -> String:
+func withdraw(s: Dictionary, amount: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, withdraw.bind(s, amount))
 	var avail := stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0))
 	if amount <= 0 or avail < amount:
 		return "The till holds %d coins%s." % [avail, " you can take now" if stalls.is_market(s) else ""]
@@ -515,7 +531,9 @@ func withdraw(s: Dictionary, amount: int) -> String:
 ## Give the pitch (or the shop's trade) back with nothing lost: the unsold goods, the back room's stock and
 ## the till return to the player; what does not fit the pack lies at the stall as loot. No refund of rent
 ## paid. A closed shop leaves its counter and shelves standing. Returns a summary line.
-func close(s: Dictionary, because := "You closed your stall.") -> String:
+func close(s: Dictionary, because := "You closed your stall.", actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, close.bind(s, because))
 	if Stalls.is_built(s):                # a built stall is the builder's: closing ends the session, the goods stay in it
 		return "%s %s" % [because, stalls.settle_text(s, stalls.close(s))]
 	var bag := Inventory.new()
@@ -567,7 +585,7 @@ func _rent_due(s: Dictionary) -> void:
 		return
 	var owed := rent_of(s) * (w.day() - int(s.paid_day))
 	if _charge(s, owed):
-		w.property._pay_manor(World.PLAYER, owed)
+		w.property._pay_manor(w.acting_ref(), owed)
 		_cost(s, "licence" if is_shop(s) else "rent", owed)
 		w.stat("stall_rent_paid", owed)
 		s.paid_day = w.day()
@@ -598,11 +616,13 @@ func _charge(s: Dictionary, amount: int) -> bool:
 
 
 ## Pay what is owed now (the window's button): "" when done, else why not.
-func pay_arrears(s: Dictionary) -> String:
+func pay_arrears(s: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, pay_arrears.bind(s))
 	var owed := rent_of(s) * maxi(1, w.day() - int(s.get("paid_day", 0)))
 	if w.player.coins < owed:
 		return "You need %d coins." % owed
-	w.property._pay_manor(World.PLAYER, owed)
+	w.property._pay_manor(w.acting_ref(), owed)
 	_cost(s, "licence" if is_shop(s) else "rent", owed)
 	w.stat("stall_rent_paid", owed)
 	s.paid_day = w.day()
@@ -625,11 +645,13 @@ func upgrade_refusal(s: Dictionary) -> String:
 
 
 ## Pay the manor for a bigger frontage: more kinds of goods, a display, a wider reach, higher daily rent.
-func upgrade(s: Dictionary) -> String:
+func upgrade(s: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, upgrade.bind(s))
 	var why := upgrade_refusal(s)
 	if why != "":
 		return why
-	w.property._pay_manor(World.PLAYER, int(GameData.b("stall_large_cost")))
+	w.property._pay_manor(w.acting_ref(), int(GameData.b("stall_large_cost")))
 	_cost(s, "upgrade", int(GameData.b("stall_large_cost")))
 	s.large = true
 	w.stat("stall_enlarged")
@@ -653,7 +675,7 @@ func set_display(s: Dictionary, id: String) -> String:
 # ---------------------------------------------------------------- a shop -------------------------
 ## Why the shop cannot be opened in this room now, or "".
 func open_refusal(b: Dictionary) -> String:
-	if b.is_empty() or not w.holds(World.PLAYER, b):
+	if b.is_empty() or not w.holds(w.acting_ref(), b):
 		return "It is not your room."
 	if w.fitting.count(b, "counter") == 0:
 		return "A shop needs a counter."
@@ -665,13 +687,15 @@ func open_refusal(b: Dictionary) -> String:
 
 
 ## Open the shop at the room's counter: the first day's licence goes to the manor. "" when done, else why not.
-func open_shop(b: Dictionary) -> String:
+func open_shop(b: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, open_shop.bind(b))
 	var why := open_refusal(b)
 	if why != "":
 		return why
 	var e := w.fitting.entry(b, "counter")
 	var licence := int(GameData.b("shop_licence_day"))
-	if not w.property._pay_manor(World.PLAYER, licence):
+	if not w.property._pay_manor(w.acting_ref(), licence):
 		return "You cannot pay the licence."
 	b.shop = {"shop": true, "id": str(b.id), "building": str(b.id), "x": int(e.at[0]), "y": int(e.at[1]), "use": [int(e.use[0]), int(e.use[1])],
 		"stock": {}, "prices": {}, "sales": [], "store": {}, "till": 0, "earned": 0, "paid_day": w.day(), "missed": 0,
@@ -693,7 +717,9 @@ func store_cap(s: Dictionary) -> int:
 
 
 ## Move goods from the pack into the back room (stock chests). "" when done, else why not.
-func store_item(s: Dictionary, id: String, qty: int) -> String:
+func store_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, store_item.bind(s, id, qty))
 	if not is_shop(s) or not is_mine(s):
 		return "There is no back room here."
 	if not can_list(id) or qty <= 0 or qty > listable(id):
@@ -706,7 +732,9 @@ func store_item(s: Dictionary, id: String, qty: int) -> String:
 
 
 ## Bring goods from the back room to the pack.
-func fetch(s: Dictionary, id: String, qty: int) -> String:
+func fetch(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, fetch.bind(s, id, qty))
 	var have := int(s.get("store", {}).get(id, 0))
 	if qty <= 0 or qty > have:
 		return "The back room does not hold that many."
@@ -778,7 +806,9 @@ func candidates() -> Array:
 
 
 ## Hire `n` to mind this stall or shop: today's wage is paid now (the till first, then the purse). "" when done.
-func hire(s: Dictionary, n: NPC) -> String:
+func hire(s: Dictionary, n: NPC, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, hire.bind(s, n))
 	if not is_mine(s):
 		return "That is not your stall."
 	if attendant_of(s) != null:

@@ -18,6 +18,15 @@ extends RefCounted
 ## The player is -2 wherever an NPC id is expected (PLAYER_ID), as in NPC.target.
 
 const PLAYER_ID := -2
+
+
+## True when a person id (NPC.target, a tie, a family link, a judgment id) names a player character. MP Batch A1: the one place
+## that decides it; today only the legacy -2 (the host's character, whoever holds that id), so single player is unchanged.
+## Batch C makes it true of every player's pid, and PLAYER_ID the acting player's view id.
+static func is_player_id(id: int) -> bool:
+	return id == PLAYER_ID
+
+
 const FORMER_PLAYER := -3              # the dead player of an earlier generation, in the links of their kin
 const FEMALE := ["Agnes", "Alice", "Amice", "Avice", "Beatrice", "Cecily", "Denise", "Edith", "Ellen", "Emma",
 	"Hawise", "Isabel", "Joan", "Juliana", "Katherine", "Lettice", "Mabel", "Margery", "Matilda", "Petronilla",
@@ -251,12 +260,12 @@ static func sex_of_name(name: String) -> String:
 
 
 static func parent_of(w: World, id: int) -> Object:
-	return w.player if id == PLAYER_ID else w.npc(id)
+	return w.player if is_player_id(id) else w.npc(id)
 
 
 ## Is this person's partner alive and recorded as theirs?
 static func has_partner(w: World, n: NPC) -> bool:
-	if n.partner == PLAYER_ID:
+	if is_player_id(n.partner):
 		return w.player.alive and w.player.partner == n.id
 	if n.partner >= 0:
 		var o := w.npc(n.partner)
@@ -398,6 +407,14 @@ static func _natural_deaths(w: World) -> void:
 
 
 static func _player_dawn(w: World) -> void:
+	if w.player_list().size() > 1:
+		for pl: PlayerState in w.player_list():
+			w.as_actor(pl, _player_dawn_one.bind(w))
+		return
+	_player_dawn_one(w)
+
+
+static func _player_dawn_one(w: World) -> void:
 	var p := w.player
 	if not p.alive:
 		return
@@ -543,13 +560,13 @@ static func births(w: World) -> void:
 	for n: NPC in w.npcs.duplicate():
 		if not n.alive or n.sex != "female" or n.role != "adult" or not has_partner(w, n):
 			continue
-		var father = w.player if n.partner == PLAYER_ID else w.npc(n.partner)
+		var father = w.player if is_player_id(n.partner) else w.npc(n.partner)
 		if father != null and father.sex != n.sex:          # couples of one sex have no children (CRT-07)
 			_try_birth(w, n, n.household, father, chance)
 	var p := w.player
 	if p.alive and p.sex == "female" and p.partner >= 0:
 		var o := w.npc(p.partner)
-		if o != null and o.alive and o.partner == PLAYER_ID and o.sex != p.sex:
+		if o != null and o.alive and is_player_id(o.partner) and o.sex != p.sex:
 			_try_birth(w, p, o.household, o, chance)
 
 

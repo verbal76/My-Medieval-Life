@@ -59,7 +59,7 @@ static func crop_of_seed(item: String) -> String:
 ## The parcel the player holds that this cell lies in ({} if none).
 func parcel_at(c: Vector2i) -> Dictionary:
 	for p in w.plots:
-		if Rect2i(int(p.x), int(p.y), int(p.w), int(p.h)).has_point(c) and w.holds(World.PLAYER, p):
+		if Rect2i(int(p.x), int(p.y), int(p.w), int(p.h)).has_point(c) and w.holds(w.acting_ref(), p):
 			return p
 	return {}
 
@@ -151,7 +151,9 @@ func clear_tree(t: Dictionary, p: PlayerState) -> String:
 	return ""
 
 
-func clear_plant(pl: Dictionary) -> String:
+func clear_plant(pl: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, clear_plant.bind(pl))
 	if parcel_at(Vector2i(int(pl.x), int(pl.y))).is_empty():
 		return "That is not your land."
 	pl.state = "cleared"
@@ -424,7 +426,7 @@ func build_pen(kind: String, rect: Rect2i, p: PlayerState) -> Dictionary:
 	w.stat("farm_pen_plank", float(pen_planks(rect)))
 	var gate := Vector2i(rect.position.x + rect.size.x / 2, rect.position.y)
 	var pen := {"id": "pen_player%d" % next_pen, "kind": kind, "x": rect.position.x, "y": rect.position.y, "w": rect.size.x, "h": rect.size.y,
-			"gate": [gate.x, gate.y], "feed_at": [gate.x, gate.y - 1], "trough": 0, "owner": World.PLAYER, "tenant": "", "player": true, "products": {}}
+			"gate": [gate.x, gate.y], "feed_at": [gate.x, gate.y - 1], "trough": 0, "owner": w.player_ref(p), "tenant": "", "player": true, "products": {}}
 	next_pen += 1
 	w.fauna.pens[pen.id] = pen
 	_fence_solid(pen)

@@ -30,8 +30,9 @@ static func holders(w: World) -> Dictionary:
 	add.call(g.granary, w.granary)
 	if w.chapel != null:
 		add.call(g.chapel, w.chapel.store)           # DVW-B3-CHAPEL: food offered and grown, and the plot's seed
-	add.call(g.player, w.player.inv)
-	add.call(g.player, w.player.chest)
+	for pl: PlayerState in w.player_list():        # every player character (one in single player)
+		add.call(g.player, pl.inv)
+		add.call(g.player, pl.chest)
 	for l in w.loot:
 		add.call(g.loot, l.inv)
 	var mg: Dictionary = w.manor_work.goods()      # the manor's lots, works yard and job loads
@@ -90,7 +91,10 @@ static func total(g: Dictionary) -> Dictionary:
 ## manor's treasury, quest rewards and manor work set aside, villagers (market roles apart), loot and the
 ## player's tills. The caravan's purse is outside the village and is not here.
 static func coins(w: World) -> Dictionary:
-	var c := {"player": w.player.coins, "treasury": w.treasury, "reserved": 0, "npcs": 0, "markets": 0, "loot": 0, "tills": 0, "chapel": w.chapel.coins if w.chapel != null else 0}
+	var pc := 0
+	for pl: PlayerState in w.player_list():
+		pc += pl.coins
+	var c := {"player": pc, "treasury": w.treasury, "reserved": 0, "npcs": 0, "markets": 0, "loot": 0, "tills": 0, "chapel": w.chapel.coins if w.chapel != null else 0}
 	if w.quests:
 		c.reserved += w.quests.reserved_total()
 	if w.manor_work:

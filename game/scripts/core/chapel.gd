@@ -207,7 +207,9 @@ func offerings() -> Dictionary:
 
 
 ## The player's offering of coins at the chapel: {ok, text}.
-func player_offer_coins(amount: int) -> Dictionary:
+func player_offer_coins(amount: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, player_offer_coins.bind(amount))
 	if not present:
 		return {"ok": false, "text": "There is no chapel."}
 	if amount < 1 or w.player.coins < amount:
@@ -219,7 +221,9 @@ func player_offer_coins(amount: int) -> Dictionary:
 
 
 ## The player's offering of goods (food and seed): {ok, text}.
-func player_offer_item(id: String, qty: int) -> Dictionary:
+func player_offer_item(id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, player_offer_item.bind(id, qty))
 	if not present:
 		return {"ok": false, "text": "There is no chapel."}
 	if not accepts(id):
@@ -237,7 +241,9 @@ static func accepts(id: String) -> bool:
 
 
 ## What the player may ask of the church, once a day, with few coins: some of its food. {ok, text}.
-func player_ask() -> Dictionary:
+func player_ask(actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, player_ask)
 	if not present:
 		return {"ok": false, "text": "There is no chapel."}
 	if player_asked_day == w.day():

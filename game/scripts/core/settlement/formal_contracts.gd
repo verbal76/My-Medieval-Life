@@ -55,7 +55,7 @@ func _day() -> float:
 
 
 func _pos(ref: String):
-	if ref == "player":
+	if World.is_player_ref(ref):
 		return w.player.pos
 	var n = couriers._npc(ref)
 	return n.pos if n != null else null

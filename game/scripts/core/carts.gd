@@ -89,12 +89,12 @@ func pulled_by(ref: String) -> Dictionary:
 ## hired attendants; for a household's, its members (owner rule: you, your family or your hired help).
 func may_use(c: Dictionary, ref: String) -> bool:
 	var owner := str(c.owner)
-	if ref == World.PLAYER:
-		return owner == World.PLAYER
+	if World.is_player_ref(ref):
+		return World.is_player_ref(owner)
 	var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
 	if n == null or not n.alive:
 		return false
-	if owner == World.PLAYER:
+	if World.is_player_ref(owner):
 		return w.business.is_attendant(n)
 	return owner.begins_with("hh:") and n.household == w.ref_id(owner)
 
@@ -112,14 +112,17 @@ func hitch(c: Dictionary, ref: String) -> String:
 
 
 ## Let go: the cart stays where it is.
-func park(c: Dictionary) -> void:
+func park(c: Dictionary, actor: PlayerState = null) -> void:
+	if actor != null and actor != w.player:
+		w.as_actor(actor, park.bind(c))
+		return
 	c.puller = ""
 
 
 ## "your", "the Reed household's".
 func whose(c: Dictionary) -> String:
 	var owner := str(c.owner)
-	if owner == World.PLAYER:
+	if World.is_player_ref(owner):
 		return "your"
 	if owner.begins_with("hh:"):
 		var h: int = w.ref_id(owner)
@@ -178,7 +181,7 @@ func update(_dt: float) -> void:
 		if ref == "":
 			continue
 		var at := Vector2.INF
-		if ref == World.PLAYER:
+		if World.is_player_ref(ref):
 			at = w.player.pos if w.player.alive else Vector2.INF
 		else:
 			var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
@@ -195,7 +198,7 @@ func update(_dt: float) -> void:
 				if d.length() > float(MineWorks.cfg().minecart.let_go):
 					c.puller = ""
 					w.stat("minecart_let_go")
-					if ref == World.PLAYER:
+					if World.is_player_ref(ref):
 						w.note("The minecart stays on its rails; you let go of it.")
 				continue
 			c.worn = float(c.get("worn", 0.0)) + (to - (c.pos as Vector2)).length()     # DVW-B4: wear by the tiles pulled
@@ -236,7 +239,7 @@ func hour() -> void:
 	var s: Dictionary = w.business.mine()
 	if s.is_empty() or w.business.attendant_of(s) == null:
 		return
-	for c in of(World.PLAYER):
+	for c in of(w.acting_ref()):
 		if str(c.puller) != "" or (c.store as Inventory).total() == 0:
 			continue
 		var stop := stop_at(c.pos)

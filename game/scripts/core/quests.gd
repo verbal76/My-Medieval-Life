@@ -113,7 +113,7 @@ func employer(n: NPC) -> bool:
 	for q in w.player.quests:
 		if int(q.giver) == n.id and not template(q.id).get("story", false):
 			return true
-	return n.id == w.reeve_id and not w.manor_work.job_of(World.PLAYER).is_empty()
+	return n.id == w.reeve_id and not w.manor_work.job_of(w.acting_ref()).is_empty()
 
 
 func diamond(n: NPC) -> bool:
@@ -298,7 +298,9 @@ func active_from(n: NPC) -> Dictionary:
 
 
 ## Take on this villager's offer, or (with `hire`, a template id) the work they offer when asked.
-func accept(n: NPC, hire := "") -> Dictionary:
+func accept(n: NPC, hire := "", actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, accept.bind(n, hire))
 	var t := offer_of(n) if hire == "" else template(hire)
 	last_refusal = ""
 	if hire != "" and (not t.get("hire", false) or not _wants(n, t) or not active_from(n).is_empty()):
@@ -358,7 +360,9 @@ var last_learned := ""
 ## promised coins set aside for it, exactly; a teacher raises the skill they teach.
 ## Returns the coins paid, -1 if the quest is not ready, -2 if the coins are not set aside and the
 ## giver cannot pay (only a quest from an older save, accepted before reserving).
-func complete(q: Dictionary) -> int:
+func complete(q: Dictionary, actor: PlayerState = null) -> int:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, complete.bind(q))
 	var n: NPC = w.npc(int(q.giver))
 	var t := template(q.id)
 	last_learned = ""

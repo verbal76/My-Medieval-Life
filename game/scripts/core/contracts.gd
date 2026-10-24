@@ -69,7 +69,7 @@ static func ref_of(who) -> String:
 
 ## The relations id of a party (Life.PLAYER_ID for the player), or -1 for the manor.
 static func rel_id(ref: String) -> int:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return Life.PLAYER_ID
 	return World.ref_id(ref) if ref.begins_with("npc:") else -1
 
@@ -79,14 +79,14 @@ func _npc_of(ref: String) -> NPC:
 
 
 func _alive(ref: String) -> bool:
-	if ref == World.PLAYER or ref == World.MANOR:
+	if World.is_player_ref(ref) or ref == World.MANOR:
 		return true
 	var n := _npc_of(ref)
 	return n != null and n.alive
 
 
 func _coins(ref: String) -> int:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.coins
 	if ref == World.MANOR:
 		return w.treasury
@@ -95,7 +95,7 @@ func _coins(ref: String) -> int:
 
 
 func _add_coins(ref: String, k: int) -> void:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		w.player.coins += k
 	elif ref == World.MANOR:
 		w.treasury += k
@@ -104,7 +104,7 @@ func _add_coins(ref: String, k: int) -> void:
 
 
 func _pack(ref: String) -> Inventory:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.inv
 	var n := _npc_of(ref)
 	return n.inv if n else null
@@ -119,7 +119,7 @@ static func formal(total: int) -> bool:
 ## The body that stands for a party when signing: the villager, the player, or for the manor its reeve (the manor's
 ## representative the game already uses). null when there is none.
 func _signer(ref: String):
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player if w.player.alive else null
 	if ref == World.MANOR:
 		var r := w.npc(w.reeve_id)
@@ -181,7 +181,7 @@ func with_player(n: NPC) -> Array:
 	var me := World.npc_ref(n.id)
 	var out := []
 	for c in list:
-		if str(c.state) in ["accepted", "offered"] and ((c.buyer == World.PLAYER and c.seller == me) or (c.seller == World.PLAYER and c.buyer == me)):
+		if str(c.state) in ["accepted", "offered"] and ((World.is_player_ref(c.buyer) and c.seller == me) or (World.is_player_ref(c.seller) and c.buyer == me)):
 			out.append(c)
 	return out
 
@@ -417,7 +417,7 @@ func price_terms(n: NPC, buyer_ref: String, id: String, m: Dictionary, svc := {}
 func close_to(n: NPC, rid: int) -> bool:
 	if w.relations.friends(rid, n.id) or n.partner == rid:
 		return true
-	if rid == Life.PLAYER_ID:
+	if Life.is_player_id(rid):
 		return w.player.partner == n.id or Life.kin(n.id, n.mother, n.father, rid, w.player.mother, w.player.father)
 	var o := w.npc(rid)
 	return o != null and Life.kin(n.id, n.mother, n.father, o.id, o.mother, o.father)
@@ -455,7 +455,7 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 			or qty <= 0 or price_each <= 0 or days <= 0:
 		r.say = site_why if site_why != "" else "That's no kind of offer."
 		return r
-	if buyer_ref == World.PLAYER and w.relations.notoriety() >= int(cfg().notoriety_refuse):
+	if World.is_player_ref(buyer_ref) and w.relations.notoriety() >= int(cfg().notoriety_refuse):
 		r.say = "I'll not deal with you. Folk say what you've done."
 		return r
 	var ob := obligations(n)
@@ -571,7 +571,7 @@ static func counted(qty: int, name: String) -> String:
 ## from what is left above its OD-19 reserve (a purchase for its trade, World.can_afford's rule); the manor from the
 ## treasury.
 func fund_refusal(buyer_ref: String, total: int) -> String:
-	if buyer_ref == World.PLAYER:
+	if World.is_player_ref(buyer_ref):
 		return "" if w.player.coins >= total else "You haven't %d coins to set aside for it." % total
 	if buyer_ref == World.MANOR:
 		return "" if w.treasury >= total else "The manor cannot set aside %d coins." % total
@@ -602,7 +602,7 @@ func _new_record(buyer_ref: String, seller_ref: String, id: String, qty: int, pr
 ## buyer's coins set aside. Returns the evaluation plus "contract" (the record) when one opened, or a refusal
 ## ("answer": "refused", "say") when the buyer cannot make the offer. `history` carries earlier rounds of the talk.
 func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, days: int, history := [], svc := {}) -> Dictionary:
-	if buyer_ref == World.PLAYER and open_of(World.PLAYER, "buyer").size() >= int(cfg().max_open_player):
+	if World.is_player_ref(buyer_ref) and open_of(w.acting_ref(), "buyer").size() >= int(cfg().max_open_player):
 		return {"answer": "refused", "say": "You have as many contracts open as you can keep track of (%d)." % int(cfg().max_open_player)}
 	var why := fund_refusal(buyer_ref, qty * price_each)
 	if why != "":
@@ -617,7 +617,7 @@ func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, d
 	var seller_ref := World.npc_ref(n.id)
 	if formal(qty * price_each) and not face_to_face(buyer_ref, seller_ref):
 		# Q18-13: no remote instant signing. Agreed in principle only; nothing is set aside until they meet.
-		if buyer_ref == World.PLAYER:
+		if World.is_player_ref(buyer_ref):
 			return {"answer": "meet", "say": "A contract worth %d coins is signed face to face. Come and see me." % (qty * price_each), "history": hist}
 		var p := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist, svc)
 		p.state = "signing"
@@ -672,7 +672,7 @@ func _open(c: Dictionary) -> bool:
 ## A villager's offer to the player (the player is the seller): kept as an "offered" record until the player accepts
 ## it (accept_offer), declines it, or it lapses after offer_days. Nothing is set aside until it is accepted.
 func offer_to_player(b: NPC, id: String, qty: int, price_each: int, days: int, svc := {}) -> Dictionary:
-	var c := _new_record(World.npc_ref(b.id), World.PLAYER, id, qty, price_each, days,
+	var c := _new_record(World.npc_ref(b.id), w.acting_ref(), id, qty, price_each, days,
 			[{"day": w.day(), "by": World.npc_ref(b.id), "what": "offer", "qty": qty, "price_each": price_each, "days": days}], svc)
 	list.append(c)
 	w.stat("contract_offers_to_player")
@@ -685,18 +685,20 @@ func offer_to_player(b: NPC, id: String, qty: int, price_each: int, days: int, s
 
 
 ## The player takes up a villager's standing offer: its coins are set aside now. "" or the reason it cannot open.
-func accept_offer(c: Dictionary) -> String:
-	if str(c.state) != "offered" or c.seller != World.PLAYER:
+func accept_offer(c: Dictionary, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, accept_offer.bind(c))
+	if str(c.state) != "offered" or not World.is_player_ref(c.seller):
 		return "That offer no longer stands."
-	if open_of(World.PLAYER, "seller").size() >= int(cfg().max_open_player):
+	if open_of(w.acting_ref(), "seller").size() >= int(cfg().max_open_player):
 		return "You have as many contracts open as you can keep track of (%d)." % int(cfg().max_open_player)
-	if formal(int(c.qty) * int(c.price_each)) and not face_to_face(c.buyer, World.PLAYER):
+	if formal(int(c.qty) * int(c.price_each)) and not face_to_face(c.buyer, w.acting_ref()):
 		return "A contract worth %d coins is signed face to face: go and see %s." % [int(c.qty) * int(c.price_each), w.ref_name(c.buyer)]
 	var why := fund_refusal(c.buyer, int(c.qty) * int(c.price_each))
 	if why != "" or not _open(c):
 		_end(c, "cancelled", "the buyer can no longer pay")
 		return why if why != "" else "They can no longer pay what they offered."
-	c.history.append({"day": w.day(), "by": World.PLAYER, "what": "accept", "qty": int(c.qty), "price_each": int(c.price_each), "days": int(c.days)})
+	c.history.append({"day": w.day(), "by": w.acting_ref(), "what": "accept", "qty": int(c.qty), "price_each": int(c.price_each), "days": int(c.days)})
 	return ""
 
 
@@ -704,13 +706,15 @@ func accept_offer(c: Dictionary) -> String:
 ## buyer_answer from the terms it first offered (the same rule villager buyers use on a seller's counter): if it agrees,
 ## the contract opens at the player's terms with its coins set aside ("contract" in the answer); a counter of its own
 ## becomes the standing offer's terms; a refusal leaves its offer standing as it was. Nothing is set aside before.
-func counter_offer(c: Dictionary, qty: int, price_each: int, days: int) -> Dictionary:
-	if str(c.get("state", "")) != "offered" or c.seller != World.PLAYER:
+func counter_offer(c: Dictionary, qty: int, price_each: int, days: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, counter_offer.bind(c, qty, price_each, days))
+	if str(c.get("state", "")) != "offered" or not World.is_player_ref(c.seller):
 		return {"answer": "refused", "say": "That offer no longer stands."}
 	var b := _npc_of(c.buyer)
 	var first: Dictionary = c.history[0] if not (c.history as Array).is_empty() else c
 	var unit := 1 if is_service(c) else mini(maxi(1, w.brain.batch_unit(b, c.item)) if b != null else 1, int(first.qty))
-	c.history.append({"day": w.day(), "by": World.PLAYER, "what": "counter", "qty": qty, "price_each": price_each, "days": days})
+	c.history.append({"day": w.day(), "by": w.acting_ref(), "what": "counter", "qty": qty, "price_each": price_each, "days": days})
 	var r := buyer_answer(b, c.item, int(first.qty), int(first.price_each), unit, qty, price_each, days)
 	c.history.append({"day": w.day(), "by": c.buyer, "what": str(r.answer), "qty": int(r.qty), "price_each": int(r.price_each), "days": int(r.days)})
 	match str(r.answer):
@@ -787,7 +791,9 @@ func decline_offer(c: Dictionary) -> void:
 ## Hand over up to `units` of the contract's item from the seller's pack to `into` (the buyer's pack, or the player's
 ## chest when delivered to their home), each unit paid from the coins set aside. One step: the goods move and the coins
 ## move, or nothing does. Returns the units delivered.
-func deliver(c: Dictionary, units: int, into: Inventory = null) -> int:
+func deliver(c: Dictionary, units: int, into: Inventory = null, actor: PlayerState = null) -> int:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, deliver.bind(c, units, into))
 	if not is_open(c) or not _alive(c.buyer) or not _alive(c.seller) or is_service(c):
 		return 0
 	var from := _pack(c.seller)
@@ -801,7 +807,7 @@ func deliver(c: Dictionary, units: int, into: Inventory = null) -> int:
 	if units <= 0 or pay > int(c.reserved) or not to.can_add(c.item):
 		return 0
 	from.remove(c.item, units)
-	if c.seller == World.PLAYER:
+	if World.is_player_ref(c.seller):
 		w.player.trim_stolen()
 	to.add(c.item, units)
 	_pay_units(c, units)
@@ -913,7 +919,7 @@ func npc_deliver(n: NPC, id: int) -> bool:
 	var c := get_contract(id)
 	if c.is_empty() or c.seller != World.npc_ref(n.id):
 		return false
-	if c.buyer == World.PLAYER:
+	if World.is_player_ref(c.buyer):
 		if w.player.home == "" or not w.buildings.has(w.player.home):
 			return false
 		return deliver(c, n.inv.count(c.item), w.player.chest) > 0
@@ -1001,7 +1007,7 @@ func on_death(n: NPC) -> void:
 ## rest: World.continue_as_heir), coins villagers set aside for the player's goods go back to them.
 func on_player_died() -> void:
 	for c in list:
-		if (is_open(c) or str(c.state) == "offered") and (c.buyer == World.PLAYER or c.seller == World.PLAYER):
+		if (is_open(c) or str(c.state) == "offered") and (World.is_player_ref(c.buyer) or World.is_player_ref(c.seller)):
 			_end(c, "cancelled", "the player died")
 
 
@@ -1030,10 +1036,10 @@ func plan(n: NPC) -> bool:
 		var owed := left(c)
 		var held := n.inv.count(c.item)
 		var lot := mini(owed, int(cfg().delivery_lot))
-		var home_ok: bool = c.buyer != World.PLAYER or (w.player.home != "" and w.buildings.has(w.player.home))
+		var home_ok: bool = not World.is_player_ref(c.buyer) or (w.player.home != "" and w.buildings.has(w.player.home))
 		if held >= lot and home_ok:
 			n.doing = "delivering %s to %s" % [GameData.item_name(c.item).to_lower(), w.ref_name(c.buyer)]
-			var at: Vector2i = w.building_door(w.player.home) if c.buyer == World.PLAYER else w.brain._workplace_cell(_npc_of(c.buyer))
+			var at: Vector2i = w.building_door(w.player.home) if World.is_player_ref(c.buyer) else w.brain._workplace_cell(_npc_of(c.buyer))
 			n.plan = [w.brain.go(at), w.brain.doit("contract_deliver", {"id": int(c.id)})]
 			return true
 		if held >= owed:

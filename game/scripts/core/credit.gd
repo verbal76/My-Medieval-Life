@@ -62,7 +62,7 @@ static func ref_of(who) -> String:
 
 
 func party(ref: String):
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player
 	return w.npc(World.ref_id(ref)) if ref.begins_with("npc:") else null
 
@@ -305,7 +305,9 @@ func can_repay(d: Dictionary) -> bool:
 
 
 ## The debtor pays the creditor in coins. False when they cannot (the player may always choose to pay what they hold).
-func repay(id: int, force := false) -> bool:
+func repay(id: int, force := false, actor: PlayerState = null) -> bool:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, repay.bind(id, force))
 	var d := _debt(id)
 	if d.is_empty() or not standing(d):
 		return false
@@ -330,7 +332,7 @@ func repay(id: int, force := false) -> bool:
 	w.relations._raise(t, reg, 0.0, true, Vector2i(_rid(str(d.creditor)), _rid(str(d.debtor))))
 	w.stat("credit_repaid_late" if late else "credit_repaid")
 	w.stat("credit_repaid_coins", float(d.value))
-	if str(d.debtor) == World.PLAYER or str(d.creditor) == World.PLAYER:
+	if World.is_player_ref(str(d.debtor)) or World.is_player_ref(str(d.creditor)):
 		w.note("%s repaid %d coins to %s%s." % [_name(str(d.debtor)), int(d.value), _name(str(d.creditor)), " (late)" if late else ""])
 	return true
 
@@ -340,7 +342,7 @@ func _default(d: Dictionary) -> void:
 	var amount := float(cfg().default_regard)
 	var cre := str(d.creditor)
 	var deb := str(d.debtor)
-	if deb == World.PLAYER:
+	if World.is_player_ref(deb):
 		var c = party(cre)
 		if c is NPC:
 			w.relations.harmed(c, amount)               # the creditor's regard falls, and their kin's and friends' (CRT-12)
@@ -354,7 +356,7 @@ func _default(d: Dictionary) -> void:
 		JudgmentLive.on_deal(w, "trade_cheat", _rid(deb), _rid(cre), int(d.value))      # PROSPECTIVE (PROS-19): a debt not repaid
 	w.stat("credit_defaulted")
 	w.stat("credit_default_coins", float(d.value))
-	if deb == World.PLAYER or cre == World.PLAYER:
+	if World.is_player_ref(deb) or World.is_player_ref(cre):
 		w.note("%s did not repay %d coins to %s by day %d: it is a default." % [_name(deb), int(d.value), _name(cre), int(d.due)])
 
 
@@ -528,7 +530,9 @@ func _ask_player(b: NPC, id: String, qty: int, bill: int) -> bool:
 
 ## The player answers a villager's ask. Returns {result: "bartered"|"credited"|"refused"|"failed", text}. An accepted ask is
 ## re-checked by the rules as they stand now; a refusal is remembered (refuse_days) and costs nothing.
-func answer_request(req_id: int, accept: bool) -> Dictionary:
+func answer_request(req_id: int, accept: bool, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, answer_request.bind(req_id, accept))
 	var r := {}
 	for x in requests:
 		if int(x.id) == req_id:
@@ -584,9 +588,9 @@ static func slain_cause(cause: String) -> bool:
 func on_player_died(slain := false, kid: NPC = null) -> void:
 	var kid_ref := ref_of(kid) if kid != null else ""
 	for x in debts:
-		if not standing(x) or not (x.debtor == World.PLAYER or x.creditor == World.PLAYER):
+		if not standing(x) or not (World.is_player_ref(x.debtor) or World.is_player_ref(x.creditor)):
 			continue
-		var other: String = x.creditor if x.debtor == World.PLAYER else x.debtor
+		var other: String = x.creditor if World.is_player_ref(x.debtor) else x.debtor
 		if slain or other == kid_ref:
 			_end(x, LOST)
 			w.stat("credit_lost")

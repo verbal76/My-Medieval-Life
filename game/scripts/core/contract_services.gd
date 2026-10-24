@@ -58,7 +58,7 @@ static func words(k, c: Dictionary) -> String:
 	match str(c.get("service", "")):
 		"dig":
 			var p := w.pits.pit(int(c.site.pit))
-			return "dig %d from %s open pit %s" % [int(c.qty), "the manor's" if str(c.buyer) == World.MANOR else ("your" if c.buyer == World.PLAYER else w.ref_name(c.buyer) + "'s"),
+			return "dig %d from %s open pit %s" % [int(c.qty), "the manor's" if str(c.buyer) == World.MANOR else ("your" if World.is_player_ref(c.buyer) else w.ref_name(c.buyer) + "'s"),
 					w.where(OpenPits.rect(p)) if not p.is_empty() else "(gone)"]
 		"survey":
 			var cl := w.prospecting.clue(str(c.site.clue))
@@ -180,7 +180,7 @@ static func _stone_to(k, c: Dictionary) -> Inventory:
 	var w: World = k.w
 	if c.buyer == World.MANOR:
 		return w.manor_work.yard
-	if c.buyer == World.PLAYER and w.player.home != "" and w.buildings.has(w.player.home):
+	if World.is_player_ref(c.buyer) and w.player.home != "" and w.buildings.has(w.player.home):
 		return w.player.chest
 	return null
 
@@ -282,7 +282,7 @@ static func _buyer_cell(k, c: Dictionary) -> Vector2i:
 	var w: World = k.w
 	if c.buyer == World.MANOR:
 		return w.building_door(w.brain._manor_id())
-	if c.buyer == World.PLAYER:
+	if World.is_player_ref(c.buyer):
 		return Vector2i(w.player.pos.floor())
 	var b: NPC = k._npc_of(c.buyer)
 	return b.cell() if b != null else Vector2i(-1, -1)
@@ -364,24 +364,28 @@ static func tell(k, c: Dictionary, recs: Array) -> int:
 
 ## The player as a survey seller: readings the player took for this contract (their samples of its clue, assayed
 ## since it was made) are told to the buyer in the contract window (face to face). Returns the readings told.
-static func player_report(k, c: Dictionary) -> int:
-	if not Contracts.is_open(c) or c.seller != World.PLAYER or str(c.get("service", "")) != "survey":
+static func player_report(k, c: Dictionary, actor: PlayerState = null) -> int:
+	if actor != null and actor != k.w.player:
+		return k.w.as_actor(actor, player_report.bind(k, c))
+	if not Contracts.is_open(c) or not World.is_player_ref(c.seller) or str(c.get("service", "")) != "survey":
 		return 0
-	if c.buyer != World.MANOR and not k.face_to_face(World.PLAYER, c.buyer):
+	if c.buyer != World.MANOR and not k.face_to_face(k.w.acting_ref(), c.buyer):
 		return 0
 	var pr: Prospecting = k.w.prospecting
-	var recs := pr.records.filter(func(r): return str(r.by) == World.PLAYER and str(r.clue) == str(c.site.clue) and int(r.day) >= int(c.made_day) \
+	var recs := pr.records.filter(func(r): return World.is_player_ref(str(r.by)) and str(r.clue) == str(c.site.clue) and int(r.day) >= int(c.made_day) \
 			and not pr.knows(str(c.buyer), r))
 	return tell(k, c, recs)
 
 
 ## The player collects stone dug for them that has nowhere to be brought (no home): from the seller's load, face to face.
-static func player_collect(k, c: Dictionary) -> int:
-	if c.buyer != World.PLAYER or str(c.get("service", "")) != "dig":
+static func player_collect(k, c: Dictionary, actor: PlayerState = null) -> int:
+	if actor != null and actor != k.w.player:
+		return k.w.as_actor(actor, player_collect.bind(k, c))
+	if not World.is_player_ref(c.buyer) or str(c.get("service", "")) != "dig":
 		return 0
 	var load := _load(c)
 	var n := load.count("stone")
-	if n <= 0 or not k.face_to_face(World.PLAYER, c.seller) or not k.w.player.inv.can_add("stone"):
+	if n <= 0 or not k.face_to_face(k.w.acting_ref(), c.seller) or not k.w.player.inv.can_add("stone"):
 		return 0
 	k.w.transfer(load, k.w.player.inv, "stone", n)
 	_store(c, load)
@@ -406,7 +410,8 @@ static func release(k, c: Dictionary) -> void:
 		w.pits.tip(p, load, true)
 	var to := _stone_to(k, c)
 	if to == null:
-		to = w.player.inv if c.buyer == World.PLAYER else (w.manor_work.yard as Inventory)
+		var bp := w.player_of_ref(c.buyer)
+		to = bp.inv if bp != null else (w.manor_work.yard as Inventory)
 	for id in load.ids():
 		w.transfer(load, to, id, load.count(id))
 	_store(c, load)

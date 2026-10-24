@@ -79,7 +79,7 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 		var p := w.npc(int(pid)) if int(pid) >= 0 else null
 		if p != null and p.alive and p.role != "bandit" and _eligible(w, p.household, k):
 			parents.append(p.household)
-		elif int(pid) == Life.PLAYER_ID and _player_eligible(w, k):
+		elif Life.is_player_id(int(pid)) and _player_eligible(w, k):
 			parents.append(player_household(w))
 	out.parent = _ranked(w, k, parents)
 	var grand := []
@@ -91,7 +91,7 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 			var g := w.npc(int(gid)) if int(gid) >= 0 else null
 			if g != null and g.alive and g.role != "bandit" and _eligible(w, g.household, k) and not grand.has(g.household):
 				grand.append(g.household)
-			if int(gid) == Life.PLAYER_ID and _player_eligible(w, k) and not grand.has(player_household(w)):
+			if Life.is_player_id(int(gid)) and _player_eligible(w, k) and not grand.has(player_household(w)):
 				grand.append(player_household(w))
 	out.grandparent = _ranked(w, k, grand)
 	var dist := kin_distances(w, k)
@@ -101,7 +101,7 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 	ids.sort()
 	for id in ids:
 		var hh := -1
-		if int(id) == Life.PLAYER_ID:
+		if Life.is_player_id(int(id)):
 			if not _player_eligible(w, k):
 				continue
 			hh = player_household(w)
@@ -134,13 +134,13 @@ static func kin_distances(w: World, k: NPC) -> Dictionary:
 	var queue := [k.id]
 	while not queue.is_empty():
 		var id: int = queue.pop_front()
-		var o = (w.player if w.player.alive else null) if id == Life.PLAYER_ID else w.npc(id)
+		var o = (w.player if w.player.alive else null) if Life.is_player_id(id) else w.npc(id)
 		if o == null:
 			continue
 		var next: Array = [o.mother, o.father] + o.children
 		for nid in next:
 			var n := int(nid)
-			if (n < 0 and n != Life.PLAYER_ID) or dist.has(n):
+			if (n < 0 and not Life.is_player_id(n)) or dist.has(n):
 				continue
 			dist[n] = int(dist[id]) + 1
 			queue.append(n)
@@ -285,7 +285,7 @@ static func player_household(w: World) -> int:
 	if not p.alive or p.partner < 0:
 		return -1
 	var o := w.npc(p.partner)
-	if o == null or not o.alive or o.partner != Life.PLAYER_ID:
+	if o == null or not o.alive or not Life.is_player_id(o.partner):
 		return -1
 	return o.household
 
@@ -327,7 +327,9 @@ static func player_adopt_refusal(w: World, k: NPC) -> String:
 
 ## The player takes child `k` into their household (REC-001): "" when done, else why not. The child becomes a
 ## dependant there as any taken-in child does (move); one from the bandits' camp leaves the clan.
-static func player_adopt(w: World, k: NPC) -> String:
+static func player_adopt(w: World, k: NPC, actor: PlayerState = null) -> String:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, player_adopt.bind(w, k))
 	var why := player_adopt_refusal(w, k)
 	if why != "":
 		return why

@@ -89,7 +89,7 @@ func built(ref := "") -> Array:
 
 ## Villagers' built stalls (the player's are among Business.premises()).
 func npc_built() -> Array:
-	return built().filter(func(s): return not w.holds(World.PLAYER, s))
+	return built().filter(func(s): return not (World.is_player_ref(w.owner_of(s)) or World.is_player_ref(w.tenant_of(s))))
 
 
 ## Who sells at the stall now: the player, a household, a merchant.
@@ -156,7 +156,7 @@ func after_trade(seller: Object, id: String, qty: int, total: int) -> void:
 
 ## The party a settlement pays: the seller, else (dead) their household's head; null when nobody is left.
 func _payee(ref: String) -> Object:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player
 	if ref.begins_with("npc:"):
 		var o := w.npc(World.ref_id(ref))
@@ -257,7 +257,7 @@ func after_sale(s: Dictionary) -> void:
 	if not s.get("stock", {}).is_empty() or not is_open(s):
 		return
 	var r := close(s, "sold out")
-	var whose := "Your" if w.holds(World.PLAYER, s) else "The %s" % w.ref_name(seller_ref(s), false).trim_prefix("the ")
+	var whose := "Your" if w.holds(w.acting_ref(), s) else "The %s" % w.ref_name(seller_ref(s), false).trim_prefix("the ")
 	w.note("%s market stall sold out and closed. %s" % [whose, settle_text(s, r)])
 
 
@@ -348,7 +348,7 @@ func build(ref: String, c: Vector2i, inv: Inventory) -> String:
 	w.stalls[id] = s
 	draw(w, w.map, s, true)
 	w.stat("stalls_built")
-	if ref != World.PLAYER:
+	if not World.is_player_ref(ref):
 		w.stat("stalls_built_villager")
 	w.note("%s built a market stall %s." % [w.ref_name(ref, true), w.where(Rect2i(c, Vector2i(2, 1)))])
 	return ""
@@ -383,7 +383,7 @@ func hour() -> void:
 func daily() -> void:
 	for s in built():
 		var ref := w.holder_of(s)
-		if ref == World.PLAYER or (ref != World.MANOR and ref != "" and w.party(ref) != null):
+		if World.is_player_ref(ref) or (ref != World.MANOR and ref != "" and w.party(ref) != null):
 			continue
 		if s.has("session") or int(s.get("till", 0)) > 0:
 			close(s, "its holder is gone")

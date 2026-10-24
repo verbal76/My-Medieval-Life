@@ -20,7 +20,7 @@ static func cfg() -> Dictionary:
 static func person(w: World, ref: String):
 	if w == null:
 		return null
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player
 	if ref.begins_with("npc:"):
 		return w.npc(int(ref.trim_prefix("npc:")))
@@ -33,7 +33,7 @@ static func award(w: World, ref: String, xp: int) -> int:
 	if who == null or xp <= 0:
 		return 0
 	var up := Skills.gain(who, "law", xp)
-	if up > 0 and ref == World.PLAYER:
+	if up > 0 and World.is_player_ref(ref):
 		w.player_leveled.emit("law", up)
 	return up
 

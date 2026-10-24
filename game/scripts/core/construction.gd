@@ -294,16 +294,16 @@ func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
 		why = "There is no building site of yours to carry to."
 	if why == "" and not own and w.judgment != null:                # PROSPECTIVE (PROS-19, Q14): off unless attached
 		var boss: NPC = responsible_adult(int(employer.trim_prefix("hh:"))) if employer.begins_with("hh:") else null
-		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID if employer == World.PLAYER else (boss.id if boss != null else -1),
-				0 if employer == World.PLAYER and w.relations.player_friend(n) else int(GameData.b("helper_wage")),
-				employer == World.PLAYER and w.relations.player_friend(n))
+		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID if World.is_player_ref(employer) else (boss.id if boss != null else -1),
+				0 if World.is_player_ref(employer) and w.relations.player_friend(n) else int(GameData.b("helper_wage")),
+				World.is_player_ref(employer) and w.relations.player_friend(n))
 	if why != "":
 		return why
 	# a friend of the player carries as a favour, for no wage (CRT-06)
-	var favour: bool = employer == World.PLAYER and w.relations.player_friend(n)
+	var favour: bool = World.is_player_ref(employer) and w.relations.player_friend(n)
 	var wage := 0 if own or favour else int(GameData.b("helper_wage"))
 	if not _pay(employer, n, wage):
-		why = "You need %d coins for the wage." % wage if employer == World.PLAYER else "They cannot pay the wage."
+		why = "You need %d coins for the wage." % wage if World.is_player_ref(employer) else "They cannot pay the wage."
 		return why
 	# the day's work: today's, or tomorrow's when hired after working hours
 	var day: int = w.day() + (1 if w.hour() >= NPCBrain.WORK_END else 0)
@@ -333,7 +333,7 @@ func _pay(employer: String, n: NPC, amount: int) -> bool:
 
 ## Take `amount` from a party's purse (it has been checked to hold it).
 func _take(ref: String, amount: int) -> void:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		w.player.coins -= amount
 		return
 	var left := amount
@@ -349,7 +349,7 @@ func _take(ref: String, amount: int) -> void:
 ## (its crates at home, or its corner of the house it lodges in). Null when it is out of reach (a
 ## homeless player).
 func store_of(ref: String) -> Inventory:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.chest if w.player.home != "" and w.buildings.has(w.player.home) else null
 	var h := World.ref_id(ref)
 	if ref.begins_with("hh:") and h >= 0 and h < w.households.size() and w.buildings.has(_home_of(ref)):
@@ -360,7 +360,7 @@ func store_of(ref: String) -> Inventory:
 ## The house where the employer's store is: the player's home, a household's home or the house it
 ## lodges in.
 func _home_of(ref: String) -> String:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.home
 	var home := str(w.households[World.ref_id(ref)].home)
 	if home == "" and w.party(ref) != null:
@@ -532,7 +532,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			store.remove(id, k)
 			load.add(id, k)
 			w.stat("helper_took_" + id, k)
-			if c.employer == World.PLAYER:
+			if World.is_player_ref(c.employer):
 				w.player.trim_stolen()
 			return true
 		"helper_buy":
@@ -603,7 +603,7 @@ func end_contract(c: Dictionary, reason := "") -> void:
 ## Goods carried back go to the employer's store, wherever it is (the family chest, the household's
 ## pantry); a household that has died out: the manor's stores (escheat, as Property.household_ended).
 func _return_store(ref: String) -> Inventory:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return w.player.chest
 	var h := World.ref_id(ref)
 	if ref.begins_with("hh:") and h >= 0 and h < w.households.size():

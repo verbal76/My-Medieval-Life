@@ -201,7 +201,7 @@ static func on_deal(w, type: String, owed_by: int, owed_to: int, value: int, lat
 ## `who` (PlayerState or NPC) dug the trapped `ref` ("player" or "npc:<id>") out of a cave-in; digging yourself out is no rescue.
 static func on_rescue(w, who, ref: String) -> void:
 	var rescuer: int = Life.PLAYER_ID if who is PlayerState else int(who.id)
-	var saved: int = Life.PLAYER_ID if ref == World.PLAYER else World.ref_id(ref)
+	var saved: int = Life.PLAYER_ID if World.is_player_ref(ref) else World.ref_id(ref)
 	if saved == rescuer:
 		return
 	_event(w, "rescue", [rescuer], [], [saved])
@@ -462,7 +462,7 @@ static func work_refusal(w, worker: NPC, employer: int, wage: int, favour := fal
 	if str(r.chosen) == "accept":
 		return ""
 	w.judgment._stat("work_refused")
-	return "%s would rather not work for %s." % [worker.name, "you" if employer == Life.PLAYER_ID else "them"]
+	return "%s would rather not work for %s." % [worker.name, "you" if Life.is_player_id(employer) else "them"]
 
 
 ## befriend (Relations._befriend_if_close): whether two villagers whose regard has reached befriend_at become friends:
@@ -506,7 +506,7 @@ static func pick_court(w, n: NPC, people: Array, attraction: Dictionary) -> NPC:
 ## The person id of a contract party: the player, a villager, or a household's responsible adult; -1 for the manor and
 ## anyone judgment has no opinion of (an institution has no personal judgment).
 static func person_of_ref(w, ref: String) -> int:
-	if ref == World.PLAYER:
+	if World.is_player_ref(ref):
 		return Life.PLAYER_ID
 	if ref.begins_with("npc:"):
 		return World.ref_id(ref)
@@ -546,7 +546,7 @@ static func contract_refusal(w, n: NPC, buyer_ref: String) -> String:
 	var who := person_of_ref(w, buyer_ref)
 	if willing(w, "contract_accept", n, who, [w.day(), who], coin_need(n)):
 		return ""
-	return "I'd rather not take work from you." if who == Life.PLAYER_ID else "I'd rather not deal with them."
+	return "I'd rather not take work from you." if Life.is_player_id(who) else "I'd rather not deal with them."
 
 
 ## contract_seller: of the sellers `people` (the live rule's order), the one villager buyer `b` asks first (the rest keep
@@ -569,7 +569,7 @@ static func lend_refusal(w, seller: NPC, buyer) -> String:
 	var who: int = buyer.id if buyer is NPC else Life.PLAYER_ID
 	if willing(w, "credit_lend", seller, who, [w.day(), who], coin_need(seller)):
 		return ""
-	return "%s would rather not lend to you." % seller.name if who == Life.PLAYER_ID else "%s would rather not lend to %s." % [seller.name, buyer.name]
+	return "%s would rather not lend to you." % seller.name if Life.is_player_id(who) else "%s would rather not lend to %s." % [seller.name, buyer.name]
 
 
 ## barter_accept (Credit.barter_quote): whether villager `seller` takes the swap with `buyer` that is otherwise sound.

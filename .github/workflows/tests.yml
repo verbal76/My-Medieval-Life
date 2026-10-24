@@ -100,6 +100,7 @@ jobs:
           $godot --headless --path game --script res://tests/luxury_test.gd
           $godot --headless --path game --script res://tests/migration_test.gd
           $godot --headless --path game --script res://tests/identity_test.gd
+          $godot --headless --path game --script res://tests/multiplayer_a1_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd

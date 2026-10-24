@@ -637,7 +637,7 @@ func caught(level: int, c: Vector2i, held: float) -> Array:
 	for who in people:
 		var pk := -1 if who is PlayerState else int((who as NPC).id)
 		var roll := Overworld.hash32(w.seed, 7301 + w.day(), (level + 16) * 65536 + c.y * 256 + c.x, pk + 2) % 1000
-		var ref := World.PLAYER if who is PlayerState else World.npc_ref(int(who.id))
+		var ref := w.player_ref(who) if who is PlayerState else World.npc_ref(int(who.id))
 		if roll >= survive:
 			w.stat("collapse_deaths")
 			if who is PlayerState:
@@ -676,7 +676,7 @@ static func _escape(lm: LevelMap, c: Vector2i) -> Vector2i:
 
 ## Whether `who` is trapped in a cave-in (MIN-COLLAPSE).
 func is_trapped(who) -> bool:
-	return trapped.has(World.PLAYER if who is PlayerState else World.npc_ref(int(who.id)))
+	return trapped.has(w.player_ref(who) if who is PlayerState else World.npc_ref(int(who.id)))
 
 
 ## A cave-in cell dug open again frees whoever was trapped in it.

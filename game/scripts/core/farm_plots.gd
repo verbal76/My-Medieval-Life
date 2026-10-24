@@ -165,7 +165,7 @@ func deal_refusal(rect: Rect2i, ref: String, lease: bool) -> String:
 	var t := terms(rect)
 	var cost := int(t.rent) if lease else int(t.price)
 	if w.property.purse(ref) < cost:
-		return ("you need %d coins" % cost) if ref == World.PLAYER else "they cannot pay %d coins" % cost
+		return ("you need %d coins" % cost) if World.is_player_ref(ref) else "they cannot pay %d coins" % cost
 	return ""
 
 
@@ -993,7 +993,7 @@ func _follow_holders() -> void:
 			continue                    # the church's plot has no holder: its cells stay its own
 		var holder: String = w.holder_of(p)
 		var r := rect_of(p)
-		if holder == World.PLAYER:
+		if World.is_player_ref(holder):
 			for c: Vector2i in cells.keys():
 				if str(cells[c].plot) == str(p.id):
 					w.farm.cells[c] = {"crop": cells[c].crop, "state": cells[c].state, "progress": cells[c].progress}

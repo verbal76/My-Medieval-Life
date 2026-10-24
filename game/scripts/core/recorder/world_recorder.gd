@@ -378,7 +378,7 @@ func _player_view_ties() -> int:
 	var n := 0
 	for k in w.relations.ties:
 		var parts: PackedStringArray = str(k).split(":")
-		if parts.size() == 2 and (int(parts[0]) == Life.PLAYER_ID or int(parts[1]) == Life.PLAYER_ID):
+		if parts.size() == 2 and (Life.is_player_id(int(parts[0])) or Life.is_player_id(int(parts[1]))):
 			n += 1
 	return n
 
@@ -634,7 +634,7 @@ func guard_end(t: Array, g: NPC, owner: NPC, fine: int, paid: int, warned: bool)
 
 ## World.raise_alarm: who saw an attack; the guards that took it on; the reports are its children.
 func alarm_begin(attacker: int, aware: Dictionary) -> int:
-	var who := ref_of(w.player) if attacker == Life.PLAYER_ID else _pref(attacker)
+	var who := ref_of(w.player) if Life.is_player_id(attacker) else _pref(attacker)
 	var ev := begin("crime", "alarm", "crime", "raise_alarm", who)
 	participant(ev, who, "attacker")
 	for s in aware.get("seen", []):
@@ -650,7 +650,7 @@ func alarm_end(ev: int, guards_answered: int) -> void:
 ## World.report_crime: `n` will carry word of an attack or a theft to a guard.
 func report(n: NPC, offender: int, how: String, crime: String) -> void:
 	var ref := ref_of(n)
-	var off := ref_of(w.player) if offender == Life.PLAYER_ID else _pref(offender)
+	var off := ref_of(w.player) if Life.is_player_id(offender) else _pref(offender)
 	occurrence("crime", "report", "crime", "report_crime", ref, [[ref, "reporter"], [off, "offender"]], [[ref, "report", "none", "%s %s" % [crime, off], "life"]], "ok", "", "how=%s" % how, _xy(n))
 
 

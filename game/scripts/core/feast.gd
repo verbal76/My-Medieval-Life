@@ -482,7 +482,9 @@ func player_choices() -> Array:
 
 
 ## The player pays for a feast: {ok, text}. Coins go to the keeper, the plates are eaten by those at the table.
-func player_feast(kind: String, size: int) -> Dictionary:
+func player_feast(kind: String, size: int, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, player_feast.bind(kind, size))
 	var s := _player_setup(kind, size)
 	if not s.ok:
 		return s

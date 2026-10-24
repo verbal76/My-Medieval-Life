@@ -126,7 +126,7 @@ static func home_refusal(w, id: String) -> String:
 	var b: Dictionary = w.buildings.get(str(d.building), {})
 	if b.is_empty():
 		return "That is not something to cook or prepare at."
-	if str(w.player.home) == str(d.building) or w.holds(World.PLAYER, b):
+	if str(w.player.home) == str(d.building) or w.holds(w.acting_ref(), b):
 		return ""
 	return "This is not your house; you need leave to use its %s." % ("hearth" if d.type == "oven" else "table")
 
@@ -144,7 +144,7 @@ static func options(w, place: String, probe: Vector2) -> Array:
 	if place == "" or not w.interiors.has(place):
 		return out
 	var b: Dictionary = w.buildings.get(place, {})
-	if str(w.player.home) != place and (b.is_empty() or not w.holds(World.PLAYER, b)):
+	if str(w.player.home) != place and (b.is_empty() or not w.holds(w.acting_ref(), b)):
 		return out
 	for sp in w.interiors[place].spots:
 		var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)

@@ -77,7 +77,7 @@ func after_trade(seller: Object, total: int) -> void:
 		w.stat("front_till_in", total)
 		return
 	b = counter_building(seller)                   # a trade counter's sale (B18-DP-01)
-	if b.is_empty() or w.holds(World.PLAYER, b):
+	if b.is_empty() or w.holds(w.acting_ref(), b):
 		return
 	var rec: Dictionary = b.get("counter", {})
 	seller.coins -= total
@@ -112,7 +112,7 @@ func daily() -> void:
 		if till_of(b) <= 0 and not (b.front.has("till") or b.front.has("earned")):
 			continue
 		var ref := w.holder_of(b)
-		if ref == World.PLAYER or ref == World.MANOR:
+		if World.is_player_ref(ref) or ref == World.MANOR:
 			continue                               # the player's storefront keeps its shop's till (Business); the manor's is not a household's
 		_settle(b.front, w.party(ref), "front_till")
 	for b in counter_buildings():
@@ -206,7 +206,7 @@ func counter_tills() -> int:
 ## Who is paid from a counter's till: the household that holds the building, else the keeper who last served at it.
 func _payee(b: Dictionary) -> Object:
 	var ref := w.holder_of(b)
-	if ref != World.MANOR and ref != World.PLAYER:
+	if ref != World.MANOR and not World.is_player_ref(ref):
 		var o: Object = w.party(ref)
 		if o != null:
 			return o

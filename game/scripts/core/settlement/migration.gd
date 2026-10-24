@@ -89,7 +89,7 @@ static func _barred(w: World, n: NPC) -> bool:
 		return true
 	if n.id == w.reeve_id or n.id == w.sage_id or OFFICES.has(n.job):
 		return true
-	if n.partner == Life.PLAYER_ID or n.mother == Life.PLAYER_ID or n.father == Life.PLAYER_ID:
+	if Life.is_player_id(n.partner) or Life.is_player_id(n.mother) or Life.is_player_id(n.father):
 		return true
 	return SettlementHoldings.MARKET_ROLES.has(w.brain.buy_role(n))
 

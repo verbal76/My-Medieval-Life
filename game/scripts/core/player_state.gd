@@ -54,6 +54,7 @@ var home := ""                # the house the family lives in, one of those it h
                               # leases is in the land registry under the owner reference "player" (World "ownership")
 var chest := Inventory.new()  # the family chest, kept in the home (it moves with the family; out of reach while homeless)
 var alive := true
+var map_level := 0           # MP Batch A1: the depth this player is on (0 the surface, -1 the mine gallery...); World.player_level reads the acting player's. The host's is saved in "underground", others' in their own record
 var deaths := 0
 var last_damage := ""        # the source of the last damage taken ("hunger", an attacker's name...)
 var death_cause := ""        # the source that took hp to 0 (the death screen says it)
@@ -309,7 +310,7 @@ func to_dict() -> Dictionary:
 		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 		"pack_level": pack_level,
-	}
+	}.merged({"map_level": map_level} if map_level != 0 else {})
 
 
 static func from_dict(d: Dictionary) -> PlayerState:
@@ -326,6 +327,7 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	# and the pack takes the category rule (pack_level 0 when absent). A category holding more kinds than its
 	# capacity keeps them all and takes no new kind until under it (nothing is dropped)
 	p.pack_level = int(d.get("pack_level", 0))
+	p.map_level = int(d.get("map_level", 0))          # save 21 (guests); the host's level is read from "underground" by World
 	p.inv = Inventory.from_dict(d.inv)
 	p.chest = Inventory.from_dict(d.chest)
 	for k in d.skills:

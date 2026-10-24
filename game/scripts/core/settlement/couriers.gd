@@ -93,7 +93,7 @@ func _npc(ref: String):
 ## The holder of `ref` as an Inventory-like store (count, has, add, remove, can_add): a pack, or an off-map party (SettlementParty:
 ## its goods move with `outside_*` flow lines, so the settlement's audit still balances).
 func inv_of(ref: String):
-	if ref == "player":
+	if World.is_player_ref(ref):
 		return w.player.inv
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
@@ -143,7 +143,7 @@ class _Edge:
 
 
 func coins_of(ref: String) -> int:
-	if ref == "player":
+	if World.is_player_ref(ref):
 		return w.player.coins
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
@@ -155,7 +155,7 @@ func coins_of(ref: String) -> int:
 
 
 func add_coins(ref: String, k: int) -> void:
-	if ref == "player":
+	if World.is_player_ref(ref):
 		w.player.coins += k
 	elif ref.begins_with("npc:"):
 		var n = _npc(ref)
@@ -176,7 +176,7 @@ func add_coins(ref: String, k: int) -> void:
 
 
 func alive(ref: String) -> bool:
-	if ref == "player":
+	if World.is_player_ref(ref):
 		return w.player.alive
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
@@ -185,7 +185,7 @@ func alive(ref: String) -> bool:
 
 
 func rel_id(ref: String) -> int:
-	return Life.PLAYER_ID if ref == "player" else (int(ref.trim_prefix("npc:")) if ref.begins_with("npc:") else -1)
+	return Life.PLAYER_ID if World.is_player_ref(ref) else (int(ref.trim_prefix("npc:")) if ref.begins_with("npc:") else -1)
 
 
 ## The settlement a party is in: "region:<settlement>/<holder>" is in <settlement> (a fixture "region:<id>" is its own place).
@@ -240,7 +240,7 @@ func open_region_booth(region) -> void:
 ## stall of their own). The booth stands at the shop (its market stall, else its workplace) and has a route to each settlement,
 ## carried by the village booth's keeper. "" when done, else why not.
 func open_shop_booth(owner: String) -> String:
-	if w == null or not alive(owner) or not (owner == "player" or owner.begins_with("npc:")):
+	if w == null or not alive(owner) or not (World.is_player_ref(owner) or owner.begins_with("npc:")):
 		return "There is nobody to keep a booth."
 	if booths.any(func(b): return b.keeper == owner):
 		return "A booth is kept already."
@@ -249,7 +249,7 @@ func open_shop_booth(owner: String) -> String:
 		return "The village has no courier to carry for a booth yet."
 	var at := Vector2i.ZERO
 	var stall := ""
-	if owner == "player":
+	if World.is_player_ref(owner):
 		var mine: Array = w.business.stalls.built("player")
 		if mine.is_empty():
 			return "You have no shop to put a booth in."
@@ -362,7 +362,7 @@ func known_recipients(sender: String) -> Array:
 				out.append(_entry(ref, "person", "knows them"))
 			if traded and is_business(ref):
 				out.append(_entry(ref, "business", "has traded there"))
-		if sender != "player" and w.player.alive:
+		if not World.is_player_ref(sender) and w.player.alive:
 			var tp: Dictionary = w.relations.peek(me, Life.PLAYER_ID)
 			if int(tp.days_known) >= 1:
 				out.append(_entry("player", "person", "knows them"))
@@ -406,7 +406,7 @@ func is_business(ref: String) -> bool:
 func _entry(ref: String, kind: String, why: String) -> Dictionary:
 	var loc := location(ref, kind)
 	var name := ""
-	if ref == "player":
+	if World.is_player_ref(ref):
 		name = w.player.name
 	elif ref.begins_with("npc:"):
 		var n = _npc(ref)
@@ -432,7 +432,7 @@ func location(ref: String, kind := "person") -> Dictionary:
 	if ref.begins_with("region:"):
 		var b := booth_of(place_of(ref))
 		return {"settlement": place_of(ref), "x": int(b.get("x", 0)), "y": int(b.get("y", 0)), "what": "the booth of " + place_name(place_of(ref))}
-	if ref == "player":
+	if World.is_player_ref(ref):
 		var at: Vector2 = w.player.pos
 		return {"settlement": SettlementFacts.VILLAGE, "x": int(at.x), "y": int(at.y), "what": "where you are"}
 	var n = _npc(ref)
@@ -456,7 +456,7 @@ func location(ref: String, kind := "person") -> Dictionary:
 ## off-map party's booth. The courier window offers these, never a typed address.
 func locations(ref: String) -> Array:
 	var out := []
-	if ref.begins_with("region:") or ref == "player":
+	if ref.begins_with("region:") or World.is_player_ref(ref):
 		return [location(ref)]
 	if is_business(ref):
 		var b := location(ref, "business")

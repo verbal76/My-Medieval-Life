@@ -615,7 +615,7 @@ func show_farm_deal(rect: Rect2i) -> void:
 		w.where(rect), rect.size.x * rect.size.y, w.player.coins], 17)
 	_label("Then clear it, put up the fence and gate (%d planks and %d stone), plough inside the fence and sow." % [int(fence.plank), int(fence.stone)], 16)
 	var deal := func(lease: bool) -> void:
-		var p: Dictionary = fp.claim(rect, World.PLAYER, lease)
+		var p: Dictionary = fp.claim(rect, w.acting_ref(), lease)
 		if p.is_empty():
 			message("You cannot have it: %s." % fp.why)
 			return
@@ -638,7 +638,7 @@ func _show_farm_plot(pl: Dictionary) -> void:
 	var w: World = main.world
 	var fp: FarmPlots = w.farm_plots
 	var r := FarmPlots.rect_of(pl)
-	_label("Farmland, %d x %d (%d cells)%s." % [r.size.x, r.size.y, r.size.x * r.size.y, ", bought" if w.owner_of(pl) == World.PLAYER else ""], 17)
+	_label("Farmland, %d x %d (%d cells)%s." % [r.size.x, r.size.y, r.size.x * r.size.y, ", bought" if w.is_acting_ref(w.owner_of(pl)) else ""], 17)
 	var left := 0
 	for y in range(r.position.y, r.end.y):
 		for x in range(r.position.x, r.end.x):
@@ -655,10 +655,10 @@ func _show_farm_plot(pl: Dictionary) -> void:
 			_side_of(pl), tilled, (r.size.x - 2) * (r.size.y - 2)], 16)
 		return
 	var cost := fp.fence_cost(pl)
-	var no := fp.fence_refusal(pl, World.PLAYER, [w.player.inv])
+	var no := fp.fence_refusal(pl, w.acting_ref(), [w.player.inv])
 	_label("The fence and gate take %d planks and %d stone from your pack%s." % [int(cost.plank), int(cost.stone), (": " + no.trim_suffix(".")) if no != "" else ""], 16)
 	_button("Put up the fence and gate", func():
-		var why: String = fp.build_fence(pl, World.PLAYER, [w.player.inv])
+		var why: String = fp.build_fence(pl, w.acting_ref(), [w.player.inv])
 		message(why if why != "" else "The fence and gate stand.")
 		show_build(pl), no == "")
 
@@ -2272,7 +2272,7 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 		_talk_choice(choices, "Any work for me?", func(): show_manor_jobs(n))
 	if Law.teaches(n):
 		_talk_choice(choices, "Teach me about the law", func():       # LAW-SKILL: the reeve's lesson (the clergy's, later)
-			var r := Law.teach(w, World.PLAYER, n)
+			var r := Law.teach(w, w.acting_ref(), n)
 			if r.ok:
 				message(r.text)
 			_talk_view(n, r.text))
@@ -2352,7 +2352,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 	var lines := []
 	var seen := {}
 	for j in open:
-		var key := "%s|%d" % [mw.describe(j), mw.wage_for(j, World.PLAYER)]
+		var key := "%s|%d" % [mw.describe(j), mw.wage_for(j, w.acting_ref())]
 		if seen.has(key):
 			seen[key].n += 1
 		else:
@@ -2362,7 +2362,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 		var j: Dictionary = line.job
 		var h := HBoxContainer.new()
 		var l := Label.new()
-		l.text = "%s  ·  %d coins%s" % [mw.describe(j), mw.wage_for(j, World.PLAYER), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
+		l.text = "%s  ·  %d coins%s" % [mw.describe(j), mw.wage_for(j, w.acting_ref()), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.add_theme_font_size_override("font_size", 18)
@@ -2482,7 +2482,7 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	_quest_choices(n, choices)
 	# hired help for the family's building site (owner rule: helpers are hired for coin and carry the
 	# owner's goods): anyone out of work or labouring
-	if w.construction.can_hire(n) == "" and not w.construction.sites_of(World.PLAYER).is_empty():
+	if w.construction.can_hire(n) == "" and not w.construction.sites_of(w.acting_ref()).is_empty():
 		_talk_choice(choices, "Hire to carry building materials", func():
 			_talk_view(n, "A day's carrying for %d coins? I'll fetch what's in your chest, or buy what's wanting at the market with your money, and bring it to your site." % int(GameData.b("helper_wage")), false, "", "", true))
 	var sale: Array = w.brain.for_sale(n)
@@ -2609,7 +2609,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			_button("Decline", func():
 				k.decline_offer(cc)
 				done.call(""), true, h)
-		elif cc.buyer == World.PLAYER:
+		elif w.is_acting_ref(cc.buyer):
 			l.text = "You buy %d %s at %d each: %d delivered, due by the end of day %d. %d coins set aside." % [int(cc.qty), item, int(cc.price_each),
 					int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
 			var held := mini(n.inv.count(cc.item), Contracts.left(cc))
@@ -2619,7 +2619,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 					held > 0 and p.inv.can_add(cc.item), h)
 			if held > 0 and not p.inv.can_add(cc.item):
 				l.text += "  " + p.inv.full_text(cc.item)         # INV-18: why Collect is off, the category named
-			_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+			_button("Cancel", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 		else:
 			l.text = "You supply %d %s at %d each: %d delivered, due by the end of day %d." % [int(cc.qty), item, int(cc.price_each),
 					int(cc.delivered), int(cc.deadline_day) + 1]
@@ -2628,7 +2628,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 				var gave := k.deliver(cc, have)
 				done.call(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(cc.price_each)]) if gave > 0 else "%s has no room for it." % n.name),
 					have > 0, h)
-			_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+			_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
 		_scroll_to_top()                  # TRADE-UI-02: the answer is drawn first; a window scrolled down to Propose would hide it
@@ -2638,7 +2638,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			ct.price = int(reply.price_each)
 			ct.days = int(reply.days)
 			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
-				var r2 := k.propose(World.PLAYER, n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
+				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
 				if r2.has("contract"):
 					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)])
 					show_contract(n, {}, r2)
@@ -2713,7 +2713,7 @@ func _contract_item_step(n: NPC, t: Dictionary) -> void:
 		nt.all = not all
 		show_contract(n, nt))
 	# CON-02: work instead of goods, from the services the game performs (ContractServices.options)
-	var opts := ContractServices.options(k, World.PLAYER)
+	var opts := ContractServices.options(k, w.acting_ref())
 	if not opts.is_empty():
 		_label("Or hire %s for work: paid for each unit of the work as it is done." % n.name, 16)
 		var sgrid := GridContainer.new()
@@ -2794,9 +2794,9 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 			next_btn = _button("Propose to %s" % n.name, func():
 				var r: Dictionary
 				if t.has("svc"):
-					r = k.propose(World.PLAYER, n, "", qty, price, days, [], t.svc)
+					r = k.propose(w.acting_ref(), n, "", qty, price, days, [], t.svc)
 				else:
-					r = k.propose(World.PLAYER, n, str(t.item), qty, price, days)
+					r = k.propose(w.acting_ref(), n, str(t.item), qty, price, days)
 				if r.has("contract"):
 					message(("Contract made with %s: %s." % [n.name, k.describe(r.contract)]) if t.has("svc") else
 							"Contract made: %d %s from %s." % [qty, what, n.name])
@@ -2875,7 +2875,7 @@ func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Call
 		_button("Decline", func():
 			k.decline_offer(cc)
 			done.call(""), true, h)
-	elif cc.buyer == World.PLAYER:
+	elif w.is_acting_ref(cc.buyer):
 		var stone := int(cc.get("load", {}).get("stone", 0))
 		l.text = "%s works for you, to %s at %d a unit: %d done, due by the end of day %d. %d coins set aside." % [n.name, what, int(cc.price_each),
 				int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
@@ -2883,7 +2883,7 @@ func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Call
 			_button("Collect %d stone" % stone, func():
 				var got := ContractServices.player_collect(k, cc)
 				done.call(("%s hands over %d stone." % [n.name, got]) if got > 0 else "You have no room for it."), true, h)
-		_button("Cancel", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+		_button("Cancel", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 	else:
 		l.text = "You work for %s, to %s at %d a unit: %d done, due by the end of day %d." % [n.name, what, int(cc.price_each),
 				int(cc.delivered), int(cc.deadline_day) + 1]
@@ -2892,7 +2892,7 @@ func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Call
 				var told := ContractServices.player_report(k, cc)
 				done.call(("You tell %s %d readings and are paid %d coins." % [n.name, told, told * int(cc.price_each)]) if told > 0 \
 						else "You have no new readings of that stain to tell (take samples there and have a smith assay them)."), true, h)
-		_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
+		_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 
 
 ## What the player can give: food, flowers, ale, clothes, jewellery, medicine and useful things in the pack
@@ -2950,11 +2950,11 @@ func _helper_choices(n: NPC, choices: GridContainer) -> void:
 	var w: World = main.world
 	var c: Construction = w.construction
 	var wage := int(GameData.b("helper_wage"))
-	for p in c.sites_of(World.PLAYER).slice(0, 2):
+	for p in c.sites_of(w.acting_ref()).slice(0, 2):
 		var pp: Dictionary = p
-		var where := "" if c.sites_of(World.PLAYER).size() == 1 else " to " + w.property.describe(p)
+		var where := "" if c.sites_of(w.acting_ref()).size() == 1 else " to " + w.property.describe(p)
 		var hire := func(budget: int) -> void:
-			var why := c.hire(World.PLAYER, n, pp, budget)
+			var why := c.hire(w.acting_ref(), n, pp, budget)
 			if why != "":
 				message(why)
 				_talk_view(n, Dialogue.opening(w, n))
@@ -3304,7 +3304,7 @@ func show_build_menu() -> void:
 	_label("Choose what to build, then a place for it: anywhere the ground is clear and nobody else's. The manor sells or leases you the ground on the spot. Then a wooden frame goes up; bring the materials (or hire a helper: ask a villager out of work) and it stands when the last load is in.", 16)
 	for kind in Construction.STANDALONE:
 		var cost := c.cost_of(kind)
-		var no := c.may_build(kind, World.PLAYER)
+		var no := c.may_build(kind, w.acting_ref())
 		var h := HBoxContainer.new()
 		h.add_theme_constant_override("separation", 8)
 		var l := Label.new()
@@ -3330,7 +3330,7 @@ func show_build_menu() -> void:
 	fh.add_child(fl)
 	_button("Mark out", func(): main.begin_farm_placement(), true, fh)
 	panel_body.add_child(fh)
-	var estates: Array = w.property.held_by(World.PLAYER).filter(func(r): return w.property.is_parcel(r) and not w.property.building_on(r).is_empty() and w.property.estate_id(r) == str(r.id))
+	var estates: Array = w.property.held_by(w.acting_ref()).filter(func(r): return w.property.is_parcel(r) and not w.property.building_on(r).is_empty() and w.property.estate_id(r) == str(r.id))
 	for r in estates:
 		var hh := HBoxContainer.new()
 		var ll := Label.new()
@@ -3342,7 +3342,7 @@ func show_build_menu() -> void:
 		var rr: Dictionary = r
 		_button("Open", func(): show_build(rr), true, hh)
 		panel_body.add_child(hh)
-	var sites: Array = c.sites_of(World.PLAYER)
+	var sites: Array = c.sites_of(w.acting_ref())
 	if not sites.is_empty():
 		_label("Your building sites:", 20, Color(1, 0.85, 0.5))
 		for p in sites:
@@ -3370,7 +3370,7 @@ func show_place_deal(kind: String, rect: Rect2i, anchor := "") -> void:
 	_label("Then the frame goes up. The %s needs %s: bring them, or hire a helper." % [
 		Construction.kind_name(kind), ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))], 16)
 	var mark := func(lease: bool) -> void:
-		var p: Dictionary = c.place(kind, rect, World.PLAYER, lease, w.plot(anchor))
+		var p: Dictionary = c.place(kind, rect, w.acting_ref(), lease, w.plot(anchor))
 		if p.is_empty():
 			message("You cannot build there: %s." % c.why)
 			return
@@ -3397,22 +3397,22 @@ func show_build(pl: Dictionary) -> void:
 	if w.property.for_sale(pl):
 		_label("The manor sells this ground for %d coins, or leases it for %d coins a week (the first week paid now). The coins go to the manor. Once it is yours, you can mark out a house (or, once you own a house, a workshop): a wooden frame appears, you bring the materials, and when the last load is in, it stands. A building on leased ground goes to the manor if the lease ends." % [price, rent])
 		_button("Buy for %d coins" % price, func():
-			var why: String = w.property.buy(pl, World.PLAYER)
+			var why: String = w.property.buy(pl, w.acting_ref())
 			if why != "":
 				message(why)
 				return
 			show_build(pl), p.coins >= price)
 		_button("Lease for %d coins a week" % rent, func():
-			var why: String = w.property.lease(pl, World.PLAYER)
+			var why: String = w.property.lease(pl, w.acting_ref())
 			if why != "":
 				message(why)
 				return
 			show_build(pl), p.coins >= rent)
 		return
-	if not w.holds(World.PLAYER, pl):
+	if not w.holds(w.acting_ref(), pl):
 		_label("This is %s's." % w.ref_name(w.holder_of(pl)))
 		return
-	if w.tenant_of(pl) == World.PLAYER:
+	if w.is_acting_ref(w.tenant_of(pl)):
 		_label("You lease this ground from the manor: %d coins a week, next due on day %d%s." % [int(pl.rent), int(pl.due_day) + 1,
 				(", %d owed" % int(pl.arrears)) if int(pl.get("arrears", 0)) > 0 else ""], 16)
 	if FarmPlots.is_farm(pl):
@@ -3422,7 +3422,7 @@ func show_build(pl: Dictionary) -> void:
 		_label("Mark out a building here (a house to start with; rooms and workshops can be added to it later, one beside the other):")
 		for kind in Construction.STANDALONE:
 			var cost := c.cost_of(kind)
-			var no := c.may_build(kind, World.PLAYER)
+			var no := c.may_build(kind, w.acting_ref())
 			if Vector2i(int(pl.w), int(pl.h)) != c.footprint(kind):
 				no = "the ground is the wrong size"
 			if no == "" and w.farm.building_refusal(pl) != "":
@@ -3430,7 +3430,7 @@ func show_build(pl: Dictionary) -> void:
 			var k: String = kind
 			_button("%s: %s" % [World.cap(Construction.kind_name(kind)), ", ".join(cost.keys().map(func(id): return "%d %s" % [int(cost[id]), GameData.item_name(id).to_lower()]))],
 				func():
-					w.start_site(pl, k, World.PLAYER)
+					w.start_site(pl, k, w.acting_ref())
 					show_build(pl), no == "")
 		_farm_options(pl)
 		return
@@ -3460,7 +3460,7 @@ func show_build(pl: Dictionary) -> void:
 	if helpers.is_empty():
 		_label("A helper can carry for you: talk to a villager out of work or labouring and hire them for the day (%d coins)." % int(GameData.b("helper_wage")), 15)
 	_button("Deliver what I carry", func():
-		if w.deliver(pl, p.inv, World.PLAYER):
+		if w.deliver(pl, p.inv, w.acting_ref()):
 			message("%s is finished!" % World.cap(w.property.describe(pl)))
 			hide_all()
 		else:
@@ -3497,13 +3497,13 @@ func _property_rooms(pl: Dictionary) -> void:
 	var w: World = main.world
 	var c: Construction = w.construction
 	var head: Dictionary = w.property.anchor_of(pl)
-	if not w.holds(World.PLAYER, head):
+	if not w.holds(w.acting_ref(), head):
 		return
 	var have: Array = w.property.estate_buildings(head)
 	_label("This property: " + ", ".join(have.map(func(b): return Construction.kind_name(str(b.get("kind", "house"))))) + ".", 16, Color(1, 0.85, 0.5))
 	_label("Add to it (each room is its own piece of ground beside what stands; nothing is pulled down; the ground and its rent are the manor's as for any building):", 15)
 	for kind in Construction.MODULES:
-		var no := c.may_build(kind, World.PLAYER, head)
+		var no := c.may_build(kind, w.acting_ref(), head)
 		var cost := c.cost_of(kind)
 		var k: String = kind
 		var hb := HBoxContainer.new()
@@ -3530,8 +3530,8 @@ func show_workshop(b: Dictionary) -> void:
 	_open("workshop", World.cap(w.property.describe(b)))
 	var st: Array = w.construction.stations_of_kind(str(b.get("kind", "")))
 	_label("Inside: %s." % " and ".join(st.map(func(s): return "a " + s)), 17)
-	if not w.holds(World.PLAYER, b):
-		var mine := w.may_use(World.PLAYER, {"building": b.id})
+	if not w.holds(w.acting_ref(), b):
+		var mine := w.may_use(w.acting_ref(), {"building": b.id})
 		_label("It is %s's. %s" % [w.ref_name(w.holder_of(b)), "They let you use it." if mine else "You need their leave to use it."], 17)
 		return
 	var open_all: bool = (b.get("allow", []) as Array).has("all")
@@ -3551,7 +3551,7 @@ func show_land(reeve: NPC = null) -> void:
 	_label("The manor's land office. You have %d coins; rent is taken from your purse each week. Selling or giving up your home moves you to another house you hold, or leaves you homeless (the family chest waits for your next house)." % w.player.coins, 16)
 	var again := func(): show_land(reeve)
 	_label("Yours:", 20, Color(1, 0.85, 0.5))
-	var mine: Array = w.property.held_by(World.PLAYER)
+	var mine: Array = w.property.held_by(w.acting_ref())
 	if mine.is_empty():
 		_label("Nothing yet.", 16)
 	for t in mine:
@@ -3591,9 +3591,9 @@ func _deal_row(t: Dictionary, again: Callable) -> void:
 	var act := func(result: String, done: String) -> void:
 		message(result if result != "" else done)
 		again.call()
-	if w.holds(World.PLAYER, t):
+	if w.holds(w.acting_ref(), t):
 		var head: Dictionary = pr.head(t)
-		if w.owner_of(head) == World.PLAYER:
+		if w.is_acting_ref(w.owner_of(head)):
 			text += ": yours"
 		else:
 			text += ": leased, %d coins a week, next due day %d" % [int(head.rent), int(head.due_day) + 1]
@@ -3605,17 +3605,17 @@ func _deal_row(t: Dictionary, again: Callable) -> void:
 			elif pr.is_home(r):
 				var id := str(r.id)
 				_button("Make it home", func(): act.call(pr.set_home(id), "This is your home now: rest and keep the family chest here."), true, h)
-		if w.owner_of(head) == World.PLAYER:
+		if w.is_acting_ref(w.owner_of(head)):
 			var value := pr.sale_value(t)
-			_button("Sell (%d)" % value, func(): act.call(pr.sell(t, World.PLAYER), "Sold to the manor for %d coins." % value), true, h)
+			_button("Sell (%d)" % value, func(): act.call(pr.sell(t, w.acting_ref()), "Sold to the manor for %d coins." % value), true, h)
 		else:
-			_button("End lease", func(): act.call(pr.end_lease(t, World.PLAYER), "The lease is ended."), true, h)
+			_button("End lease", func(): act.call(pr.end_lease(t, w.acting_ref()), "The lease is ended."), true, h)
 	else:
 		var price := pr.price_of(t)
 		var rent := pr.rent_of(t)
 		text += ": %d coins, or %d a week" % [price, rent]
-		_button("Buy (%d)" % price, func(): act.call(pr.buy(t, World.PLAYER), "Bought from the manor for %d coins." % price), p.coins >= price and pr.for_sale(t), h)
-		_button("Lease (%d a week)" % rent, func(): act.call(pr.lease(t, World.PLAYER), "Leased for %d coins a week; the first week is paid." % rent), p.coins >= rent and pr.for_sale(t), h)
+		_button("Buy (%d)" % price, func(): act.call(pr.buy(t, w.acting_ref()), "Bought from the manor for %d coins." % price), p.coins >= price and pr.for_sale(t), h)
+		_button("Lease (%d a week)" % rent, func(): act.call(pr.lease(t, w.acting_ref()), "Leased for %d coins a week; the first week is paid." % rent), p.coins >= rent and pr.for_sale(t), h)
 	l.text = text
 	panel_body.add_child(h)
 

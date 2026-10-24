@@ -123,14 +123,18 @@ static func dawn(w: World) -> void:
 ## A day's wear of the clothes and armour people wear: the player's body and head slots, and each living villager's own
 ## armour (the first armour item it holds, by id: the guards' leather).
 static func wear_clothes(w: World) -> void:
-	wear_player(w, 1)
+	for pl: PlayerState in w.player_list():
+		wear_player(w, 1, pl)
 	for n: NPC in w.npcs:
 		if n.alive:
 			wear_npc(w, n, 1)
 
 
 ## Wear what the player wears (body and head) by `amount`; a piece worn out is gone and its slot empties.
-static func wear_player(w: World, amount: int) -> void:
+static func wear_player(w: World, amount: int, actor: PlayerState = null) -> void:
+	if actor != null and actor != w.player:
+		w.as_actor(actor, wear_player.bind(w, amount))
+		return
 	var p := w.player
 	if not p.alive:
 		return
@@ -155,7 +159,10 @@ static func wear_npc(w: World, n: NPC, amount: int) -> void:
 
 ## A blow taken (World.damage_player, World.harm_npc): what is worn takes decay.blow_wear more wear. Hunger and spoiled
 ## food are not blows.
-static func blow_player(w: World, source: String) -> void:
+static func blow_player(w: World, source: String, actor: PlayerState = null) -> void:
+	if actor != null and actor != w.player:
+		w.as_actor(actor, blow_player.bind(w, source))
+		return
 	if source in ["hunger", "spoiled food"]:
 		return
 	wear_player(w, int(cfg().blow_wear))
