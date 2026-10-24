@@ -1709,6 +1709,17 @@ func _settings_saves() -> void:
 			st.save_file()
 			_settings_page.call_deferred())
 	_label("After reinstalling: open Settings, Saves, Import a save file, and choose your copy. The game checks it, keeps a backup, updates it to this build and continues your world. On Android you choose the file again after every reinstall: the system does not let a new install reach the old one's files on its own.", 14)
+	if main.recording_supported():                 # SIM-GATE-01 amendment: Windows and Linux only
+		_label("Recording (for testing): the game can keep a record of what the village does while you play, and export it as a spreadsheet with charts. It is off unless you switch it on; it never changes the game, and it stops by itself when it reaches its storage limit.", 14)
+		_button("Record gameplay: %s" % ("on" if st.record_gameplay else "off"), func():
+			main.set_recording(not st.record_gameplay)
+			_settings_page.call_deferred())
+		_button("Export the recording...", func():
+			message("Exporting the recording...", 3.0)
+			var r: Dictionary = main.export_recording()
+			message(("Exported to %s" % r.dir) if r.ok else ("Not exported: %s." % r.reason), 10.0)
+			if r.ok:
+				OS.shell_open(r.dir))
 
 
 ## The system's file picker (native where the platform has one): `cb` gets the chosen path or Android URI.

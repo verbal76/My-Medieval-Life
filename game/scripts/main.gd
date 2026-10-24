@@ -142,6 +142,7 @@ func _ready() -> void:
 	# the interface is laid out for the screen (larger on a phone) and the camera zoom makes up for it
 	settings.load_file()
 	settings.apply(get_tree())
+	FlightRecorder.live_enabled = settings.record_gameplay and recording_supported()     # SIM-GATE-01: desktop only, off by default
 	audio = GameAudio.new()
 	add_child(audio)
 	view_scale = settings.layout_height() / 720.0
@@ -4864,6 +4865,36 @@ func save_game(show := true) -> bool:
 		audio.play_sfx("save_crystal")
 		ui.message("Saved.")
 	return true
+
+
+## SIM-GATE-01 amendment: live gameplay recording and its export, Windows and Linux only. The export code is not in the
+## Android package (export_presets.cfg excludes scripts/recorder_export/), so it is loaded by path, never by name.
+const LIVE_EXPORT := "res://scripts/recorder_export/live_export.gd"
+
+
+static func recording_supported() -> bool:
+	return OS.has_feature("pc") and not OS.has_feature("mobile") and not OS.has_feature("android") and ResourceLoader.exists(LIVE_EXPORT)
+
+
+## Switch recording on or off now: the running world gets (or closes) its recorder at once; a new or loaded game follows the setting.
+func set_recording(on: bool) -> void:
+	settings.record_gameplay = on
+	settings.save_file()
+	FlightRecorder.live_enabled = on and recording_supported()
+	if world == null:
+		return
+	if FlightRecorder.live_enabled and world.recorder == null:
+		WorldRecorder.attach(world)
+	elif not on and world.recorder != null:
+		world.recorder.finish()
+		world.recorder = null
+
+
+## Export the recording (the running one, else the newest on disk) as a workbook, its analysis and the archive.
+func export_recording() -> Dictionary:
+	if not recording_supported():
+		return {"ok": false, "reason": "recording exports are made by the Windows and Linux game only"}
+	return load(LIVE_EXPORT).export_world(world, "")
 
 
 ## Export a copy of the save to `target` (a file the player chose; SAVE-05). A running game saves first.
