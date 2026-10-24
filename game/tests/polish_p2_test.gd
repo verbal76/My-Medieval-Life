@@ -39,6 +39,7 @@ func _run() -> void:
 	_wheat_picked()
 	_back_doors()
 	await _pack_fit()
+	_station_reach()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -300,3 +301,64 @@ func _pack_fit() -> void:
 			check(out.is_empty(), "stall window and its put-up dialog fit at %s %s" % [where, str(out.slice(0, 3))])
 			ui.hide_all()
 	_screen(Vector2i(1280, 720), false, saved_ui)
+
+
+## Whether the prompt offers station `id` with the player at `pos` facing `dir` (0 south, then anticlockwise in eighths).
+func _offers(id: String, pos: Vector2, dir: int) -> bool:
+	main.world.player.pos = pos
+	main.player_sprite.dir = dir
+	main._find_target()
+	return main.target_options.any(func(t): return str(t.get("kind", "")) == "station" and str(t.get("id", "")) == id)
+
+
+## The facing (0..7) from `from` toward `to`.
+func _dir_to(from: Vector2, to: Vector2) -> int:
+	var d := to - from
+	return posmod(roundi(atan2(d.x, d.y) / (TAU / 8.0)), 8)
+
+
+## GP-ANVIL reopened (owner: "that's too far away to spawn anvil instructions"): a station is offered only on its use cell
+## or beside its drawing and facing it; the tap path (station_tap_test.gd) is unchanged.
+func _station_reach() -> void:
+	var w: World = main.world
+	main.ui.hide_all()
+	var anvil: Dictionary = w.stations["s5"]
+	# the owner's place: about two tiles below the anvil, on the open floor, facing down or left
+	for dir in [0, 6, 7]:
+		check(not _offers("s5", Vector2(78.5, 45.5), dir), "anvil: not offered two tiles below it, facing %d" % dir)
+	check(_offers("s5", Vector2(int(anvil.use[0]) + 0.5, int(anvil.use[1]) + 0.5), 4), "anvil: offered on its use cell")
+	var ids: Array = w.stations.keys()
+	ids.sort()
+	var tested := 0
+	for id in ids:
+		var st: Dictionary = w.stations[id]
+		if not st.type in World.PLAYER_STATIONS:
+			continue
+		tested += 1
+		var use := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
+		var at := Vector2(int(st.at[0]) + 0.5, int(st.at[1]) + 0.5)
+		check(_offers(id, use, _dir_to(use, at)), "%s %s: offered on its use cell facing it" % [id, st.type])
+		var beside_ok := 0
+		var away_ok := 0
+		var beside_n := 0
+		for dx in [-1, 0, 1]:
+			for dy in [-1, 0, 1]:
+				var c := Vector2i(int(st.at[0]) + dx, int(st.at[1]) + dy)
+				if (dx == 0 and dy == 0) or w.map.is_solid(c) or c == Vector2i(int(st.use[0]), int(st.use[1])) or not w.reaches(Vector2(c) + Vector2(0.5, 0.5), use):
+					continue
+				var pos := Vector2(c) + Vector2(0.5, 0.5)
+				beside_n += 1
+				if _offers(id, pos, _dir_to(pos, at)):
+					beside_ok += 1
+				if not _offers(id, pos, posmod(_dir_to(pos, at) + 4, 8)):
+					away_ok += 1
+		check(beside_ok == beside_n and away_ok == beside_n, "%s %s: beside it, offered facing it and not facing away (%d of %d cells, %d)" % [id, st.type, beside_ok, beside_n, away_ok])
+		# two cells beyond the use cell, away from the drawing, facing anywhere: not offered
+		var far := use + (use - at).normalized() * 2.0
+		if not w.map.is_solid(Vector2i(floori(far.x), floori(far.y))):
+			var none := true
+			for dir in 8:
+				if _offers(id, far, dir):
+					none = false
+			check(none, "%s %s: not offered two tiles beyond its use cell" % [id, st.type])
+	check(tested >= 6, "stations: every player station checked (%d)" % tested)

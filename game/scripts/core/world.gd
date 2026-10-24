@@ -1750,6 +1750,24 @@ const TARGET_REACH := 1.5
 const CONTAINER_REACH := 2.2
 const CELL_REACH := 2
 const STATION_REACH := 1.2       # a crafting station is offered (its window opened) closer than this to where it is used
+const STATION_BESIDE := 1.6      # GP-ANVIL: ... or this close to where it is drawn (beside it, diagonals too), facing it
+
+
+## GP-ANVIL (owner: "that's too far away to spawn anvil instructions"): a crafting station is offered to someone standing
+## on its use cell (where its worker stands), or beside where it is drawn ("at", within STATION_BESIDE) and facing it (the
+## point `probe`, TARGET_PROBE ahead of them, on the drawn cell). Not merely near the use cell: that reached past the
+## anvil's table onto the open floor below it. `facing` ZERO: the facing is not known (only the cells count).
+static func station_in_reach(st: Dictionary, pos: Vector2, facing: Vector2) -> bool:
+	var use := Vector2i(int(st.use[0]), int(st.use[1]))
+	if Vector2i(floori(pos.x), floori(pos.y)) == use:
+		return true
+	var at := Vector2i(int(st.at[0]), int(st.at[1])) if st.has("at") else use
+	if (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) > STATION_BESIDE:
+		return false
+	if facing == Vector2.ZERO:
+		return true
+	var probe := pos + facing.normalized() * TARGET_PROBE
+	return Vector2i(floori(probe.x), floori(probe.y)) == at
 const PLAYER_STATIONS := ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]    # the village's stations a player works at (GP-ANVIL)
 
 
@@ -1909,7 +1927,8 @@ func player_craft_begin(recipe: String, station := "", actor: PlayerState = null
 		return as_actor(actor, player_craft_begin.bind(recipe, station))
 	var r: Dictionary = GameData.recipes[recipe]
 	var p := player
-	if station != "" and stations.has(station) and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH:
+	if station != "" and stations.has(station) and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH \
+			and not station_in_reach(stations[station], p.pos, Vector2.ZERO):
 		return {"ok": false, "why": "That is out of reach."}         # R15: the craft window opens only this close
 	if station == "":
 		for id in stations_of(str(r.station)):

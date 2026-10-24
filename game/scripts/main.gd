@@ -2488,8 +2488,7 @@ func _find_target() -> void:
 	here.append_array(_works_targets())                   # MIN-F: track in the mine's yard
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
-		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
-		if u.distance_to(p.pos) < World.STATION_REACH and st.type in World.PLAYER_STATIONS:
+		if st.type in World.PLAYER_STATIONS and World.station_in_reach(st, p.pos, facing_vec()):     # GP-ANVIL: on its use cell, or beside it facing it
 			here.append(_station_target(id))
 	for pl in world.plots:
 		var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
