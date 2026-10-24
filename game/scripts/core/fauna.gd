@@ -242,7 +242,7 @@ func _spare_prey(a: Animal) -> int:
 ## Near the player it is seen chasing the nearest prey (_move), which it may also catch sooner; the hourly
 ## chance still feeds it, so a quick runner cannot starve a hunter that is watched.
 func _predate(a: Animal, gm: float) -> void:
-	if a.pos.distance_to(w.player.pos) <= w.detail_radius and (by_id(a.hunt) == null or not can_take(a, by_id(a.hunt))):
+	if w.nearest_player_distance(a.pos) <= w.detail_radius and (by_id(a.hunt) == null or not can_take(a, by_id(a.hunt))):
 		a.hunt = -1
 		var bd := 1e9
 		for b: Animal in animals:
@@ -663,7 +663,7 @@ func update(dt: float) -> void:
 			a.anger_left -= dt
 			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
 				a.anger = ""
-		if a.pos.distance_to(w.player.pos) > w.detail_radius:
+		if w.nearest_player_distance(a.pos) > w.detail_radius:
 			a.moving = false
 			continue
 		_move(a, dt)

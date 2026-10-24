@@ -89,7 +89,19 @@ var treasury := 0                  # the manor's coins: kept by the reeve's offi
 var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
 var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
 var last_payday := -1              # the day wages were last paid
-var player := PlayerState.new()
+## MP Batch A1: the player characters. `player` is the ACTING player: the host's character (the local player of a
+## single-player game) unless a verb runs for someone else (`as_actor`, below), so every reader of `world.player`
+## (some 60 files) follows the actor without changing. `players` lists every player character by permanent pid
+## (PlayerState.pid, band ids from 1,000,000): the host's first, then the guests' by pid. With no guest it is the
+## host alone and nothing differs from Build 19 (gate G0).
+var _host_player := PlayerState.new()
+var _guests := {}                   # pid -> PlayerState: the other players (empty in single player; Batch A2 adds them)
+var _actor: PlayerState = null      # the player a verb is running for, null = the host
+var player: PlayerState:
+	get:
+		return _actor if _actor != null else _host_player
+	set(v):
+		_host_player = v
 var coin_sources := 0              # coins that entered the village (caravan)
 var couriers: CourierService         # REG-COURIER-01 (Expansion 18): the five settlements' booths and the village's, regular routes and special deliveries; saved under "couriers" (optional key; absent: no deliveries on the road)
 var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-map settlements and their traders, who are the caravan (ECON-P1.3); saved under "regions" (optional key)
@@ -339,7 +351,7 @@ func update(real_dt: float) -> void:
 	for n: NPC in npcs:
 		if not n.alive:
 			continue
-		var near := n.pos.distance_to(player.pos) < detail_radius
+		var near := nearest_player_distance(n.pos) < detail_radius
 		if near:
 			_update_npc(n, real_dt)
 		else:
@@ -677,6 +689,124 @@ func note_player_work(industry: String, secs: float) -> void:
 
 
 # ---------------------------------------------------------------- player ---------------------
+## ---- The players (MP Batch A1; docs/multiplayer/BATCH_A.md) ----
+## Every player character by permanent pid, the host's first, then the guests' in pid order. A fresh Dictionary on
+## each read (the host's pid can change when the heir takes over), so change membership with add_guest / remove_guest.
+var players: Dictionary:
+	get:
+		var d := {_host_player.pid: _host_player}
+		var ids := _guests.keys()
+		ids.sort()
+		for id in ids:
+			d[id] = _guests[id]
+		return d
+
+
+## The host's character: the local player of a single-player game. `player` is this unless a verb runs for a guest.
+func host_player() -> PlayerState:
+	return _host_player
+
+
+func is_host(p: PlayerState) -> bool:
+	return p == _host_player
+
+
+## The player character with this permanent pid, null for none.
+func player_by_pid(pid: int) -> PlayerState:
+	if pid == _host_player.pid:
+		return _host_player
+	return _guests.get(pid)
+
+
+## Every player character as an Array, the host first, then the guests by pid.
+func player_list() -> Array:
+	return players.values()
+
+
+## Where every player stands (the host first): the centres of the simulation's detail tier. One player: [that position].
+func player_positions() -> Array:
+	var out := [_host_player.pos]
+	var ids := _guests.keys()
+	ids.sort()
+	for id in ids:
+		if _guests[id].alive:
+			out.append(_guests[id].pos)
+	return out
+
+
+## The distance from `at` to the nearest player (of those in play).
+func nearest_player_distance(at: Vector2) -> float:
+	var best := at.distance_to(_host_player.pos)
+	for id in _guests:
+		if _guests[id].alive:
+			best = minf(best, at.distance_to(_guests[id].pos))
+	return best
+
+
+## Add a guest player character (its pid must be a permanent one, never the host's). Returns false when refused.
+func add_guest(p: PlayerState) -> bool:
+	if p == null or p.pid <= 0 or p.pid == _host_player.pid or _guests.has(p.pid):
+		return false
+	_guests[p.pid] = p
+	return true
+
+
+func remove_guest(pid: int) -> PlayerState:
+	var g: PlayerState = _guests.get(pid)
+	_guests.erase(pid)
+	return g
+
+
+## The player a verb is acting for right now (the host unless inside as_actor).
+func acting_player() -> PlayerState:
+	return player
+
+
+## Run `c` as player `p`: every reader of `player` inside it (this file and the modules) sees `p`. null keeps the
+## current actor; the host runs with no override. Restores the previous actor, also for nested calls.
+func as_actor(p: PlayerState, c: Callable) -> Variant:
+	var prev := _actor
+	if p != null:
+		_actor = null if p == _host_player else p
+	var r = c.call()
+	_actor = prev
+	return r
+
+
+## The owner / party reference of a player: "player" for the host (as every save and record has it), "player:<pid>" for a guest.
+func player_ref(p: PlayerState) -> String:
+	return PLAYER if p == null or p == _host_player else "player:%d" % p.pid
+
+
+## The reference of the acting player.
+func acting_ref() -> String:
+	return player_ref(player)
+
+
+## True for a player reference: "player" (the host, legacy), "player:<pid>", or the legacy person id Life.PLAYER_ID (-2).
+static func is_player_ref(x: Variant) -> bool:
+	if x is String:
+		return x == PLAYER or (x as String).begins_with("player:")
+	return x is int and int(x) == Life.PLAYER_ID
+
+
+## The pid in "player:<pid>", 0 for anything else.
+static func pid_of_ref(ref: String) -> int:
+	return int(ref.get_slice(":", 1)) if ref.begins_with("player:") else 0
+
+
+## The player character a reference (or the legacy person id -2) names: "player" and -2 are the host, "player:<pid>" that
+## player; null when it names no player in play.
+func player_of_ref(x: Variant) -> PlayerState:
+	if x is String:
+		if x == PLAYER:
+			return _host_player
+		if (x as String).begins_with("player:"):
+			return player_by_pid(pid_of_ref(x))
+		return null
+	return _host_player if x is int and int(x) == Life.PLAYER_ID else null
+
+
 func _update_player(real_dt: float, gm: float) -> void:
 	var p := player
 	if not p.alive:
@@ -4007,7 +4137,7 @@ static func npc_ref(id: int) -> String:
 
 ## The number in "hh:<id>" or "npc:<id>"; -1 for the manor, the player or nobody.
 static func ref_id(ref: String) -> int:
-	return int(ref.get_slice(":", 1)) if ref.contains(":") else -1
+	return int(ref.get_slice(":", 1)) if ref.contains(":") and not ref.begins_with("player:") else -1
 
 
 func owner_of(thing: Dictionary) -> String:
@@ -4072,8 +4202,9 @@ func party(ref: String) -> NPC:
 ## "the manor", "Wat Ashdown", "the Reed household", "Ellen Mercer" (for messages); `subject` for the
 ## start of a sentence.
 func ref_name(ref: String, subject := false) -> String:
-	if ref == PLAYER:
-		return "%s %s" % [player.name, player.family]
+	if is_player_ref(ref):
+		var pl := player_of_ref(ref)
+		return "%s %s" % [pl.name, pl.family] if pl != null else "nobody"
 	if ref == MANOR:
 		return "The manor" if subject else "the manor"
 	if ref.begins_with("hh:") and ref_id(ref) < households.size():

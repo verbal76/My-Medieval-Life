@@ -288,7 +288,7 @@ func update(dt: float) -> void:
 			a.dest = Vector2.INF
 			w.stat("settled_" + a.species)
 			continue
-		if a.pos.distance_to(w.player.pos) > w.detail_radius:
+		if w.nearest_player_distance(a.pos) > w.detail_radius:
 			var step := float(a.spec().speed) * float(cfg().disperse_speed) * dt
 			var d: Vector2 = a.dest - a.pos
 			a.pos = a.dest if d.length() <= step else a.pos + d / d.length() * step
