@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (49)
+## Workers and task branches (46)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -13,29 +13,26 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
 | GP-ACTIONBAR | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-ANVIL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-BACK-DOORS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-BANDIT-CAMP-ART | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-BASELINE-POLICY | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-ANVIL | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-BACK-DOORS | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-BUSINESS-DESK | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-DRAW-UNDER-HOUSE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-FARMER-TENDING | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-GIFT-QUANTITY | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-INTERIOR-WALLS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-PACK-DETAIL-FIT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-PACK-DETAIL-FIT | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-PAUSE-PANEL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PICKAXE-ANIM | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-SHARPEN | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-SMITHY-WORKBENCH | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-STALL-PRICE-ON-PUTUP | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-STALL-TABLE-10 | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-START-RUSTY-AXE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-START-RUSTY-AXE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-TABLE-ITEMS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-TARGET-ART-MATCH | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-TRAIL-EDGES | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-TRAIL-EDGES | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-UI-COMPACT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
-| GP-WHEAT-PICKED | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-WHEAT-PICKED | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-WIKI-LAYOUT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |

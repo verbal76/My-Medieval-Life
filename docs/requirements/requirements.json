@@ -21582,11 +21582,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at; test_commit: None -> bf27ff2; commits + bf27ff2",
      "why": "nine touch actions in two right-edge columns"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at -> start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: bf27ff2 -> 9feaf77",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
-   "tests": "start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at",
-   "test_commit": "bf27ff2",
+   "tests": "start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
    "commits": [
     "bf27ff2"
    ]
@@ -21611,7 +21616,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21645,13 +21650,19 @@
      "date": "2026-10-24",
      "change": "assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19",
      "why": "reopened work assigned to the polish batch agent"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; tests: station_tap_test 25 checks (real touch and mouse events); screenshots looked at -> station_tap_test 25 checks (real touch and mouse events); screenshots looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: cbf4000 -> 9feaf77; commits + 4812832",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
-   "tests": "station_tap_test 25 checks (real touch and mouse events); screenshots looked at",
-   "test_commit": "cbf4000",
+   "tests": "station_tap_test 25 checks (real touch and mouse events); screenshots looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
    "commits": [
-    "cbf4000"
+    "cbf4000",
+    "4812832"
    ],
    "assigned_worker": "primary development agent",
    "branch": "wip/multiplayer-b19"
@@ -21672,8 +21683,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21686,10 +21697,20 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch, with GP-TRAIL-EDGES and GP-INTERIOR-WALLS"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 7551616",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
+   "commits": [
+    "7551616"
+   ]
   },
   {
    "id": "GP-BANDIT-CAMP-ART",
@@ -21707,7 +21728,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTATION BLOCKED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21721,10 +21742,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTATION BLOCKED; next_action",
+     "why": "cause confirmed: CRATE and BARREL ids are shared with market-stall awnings and the mine yard, and no campfire tile exists in the imported tilesets; needs campfire art (or a composed one); left out of Build 20"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "next_action": "Choose campfire art (pack search or composed) and give the camp its own crate and barrel ids"
   },
   {
    "id": "GP-BASELINE-POLICY",
@@ -21742,8 +21769,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21756,10 +21783,25 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19",
      "why": "first case assigned: confirm the rusty axe is the sole item_ledger difference, then update"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 5ceffe5",
+     "why": "first update done (5ceffe5): only item_ledger rusty_axe rows changed at all four checkpoints (start 1, end 1); every other value identical, independently diffed by the lead; Build 19 baseline kept as sim_baseline_build19.json; G0 PASS"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: None -> sim_gate.py PASS against the new baseline at 9feaf77 (lead rerun); baseline diff checked by the lead; test_commit: None -> 9feaf77",
+     "why": "test evidence"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "commits": [
+    "5ceffe5"
+   ],
+   "tests": "sim_gate.py PASS against the new baseline at 9feaf77 (lead rerun); baseline diff checked by the lead",
+   "test_commit": "9feaf77"
   },
   {
    "id": "GP-BUSINESS-DESK",
@@ -21933,8 +21975,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21947,10 +21989,20 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + b83d3fc",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
+   "commits": [
+    "b83d3fc"
+   ]
   },
   {
    "id": "GP-FARMER-TENDING",
@@ -22003,7 +22055,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22017,10 +22069,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; next_action",
+     "why": "not reproduced: real touch events (tap, 60-frame hold, touch plus emulated mouse, repeats) each give exactly one; picker not built; left out of Build 20"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "next_action": "Build the picker (starts at 1) and keep looking for the repeat on a device"
   },
   {
    "id": "GP-GOSSIP-NATURAL",
@@ -22152,7 +22210,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTATION BLOCKED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22166,10 +22224,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTATION BLOCKED; next_action",
+     "why": "cause found: the smithy stamp is one column narrow and drops the source art's east wall (x=83); the fix makes that column solid, moves the chapel lane one tile east and changes G0 widely (seed 1 day 10 alive 108 to 107); patch kept, needs the owner's acceptance of the walkability and G0 change; left out of Build 20"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "next_action": "Owner: accept the walkability and baseline change of the smithy wall fix"
   },
   {
    "id": "GP-JOYSTICK",
@@ -22273,8 +22337,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22292,10 +22356,20 @@
      "date": "2026-10-24",
      "change": "source",
      "why": "owner reported it again with Ale x2 (a four-line description: food, restores, spoils, used for): the buttons are entirely off screen; screenshot added"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 4ef0e86",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
+   "commits": [
+    "4ef0e86"
+   ]
   },
   {
    "id": "GP-PAUSE-PANEL",
@@ -22374,11 +22448,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> start_test: swing in every working frame (0/120 and 0/215 frames without the fix); test_commit: None -> 70dfdff; commits + 70dfdff",
      "why": "idle branch no longer resets the work swing begun by Gather mode or a tap"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: start_test: swing in every working frame (0/120 and 0/215 frames without the fix) -> start_test: swing in every working frame (0/120 and 0/215 frames without the fix); full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: 70dfdff -> 9feaf77",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
-   "tests": "start_test: swing in every working frame (0/120 and 0/215 frames without the fix)",
-   "test_commit": "70dfdff",
+   "tests": "start_test: swing in every working frame (0/120 and 0/215 frames without the fix); full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
    "commits": [
     "70dfdff"
    ]
@@ -22653,8 +22732,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22667,10 +22746,20 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 83a4fc2",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
+   "commits": [
+    "83a4fc2"
+   ]
   },
   {
    "id": "GP-TABLE-ITEMS",
@@ -22768,8 +22857,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22782,10 +22871,20 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + fbc4160",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
+   "commits": [
+    "fbc4160"
+   ]
   },
   {
    "id": "GP-UI-COMPACT",
@@ -22838,8 +22937,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22852,10 +22951,20 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 67036d5",
+     "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
+   "test_commit": "9feaf77",
+   "commits": [
+    "67036d5"
+   ]
   },
   {
    "id": "GP-WIKI-LAYOUT",
