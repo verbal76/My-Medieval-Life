@@ -2882,7 +2882,8 @@ func _container_target(c: Dictionary) -> Dictionary:
 	var id := world.container_pick(c)
 	var whose := world.container_whose(c)
 	if id == "":
-		return {"kind": "info", "label": "Empty %s (%s)" % [c.kind, whose], "text": "There is nothing in the %s." % c.kind}
+		var look := str(c.get("look", c.kind))         # GP-TARGET-ART-MATCH: named as drawn
+		return {"kind": "info", "label": "Empty %s (%s)" % [look, whose], "text": "There is nothing in the %s." % look}
 	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose], "theft": world.container_is_theft(c)}
 
 
@@ -2891,7 +2892,7 @@ func _chest_target(u: Dictionary) -> Dictionary:
 	var i: Dictionary = world.chests.info(u)
 	if i.access == "decor":
 		return {"kind": "info", "label": "A chest for show", "text": world.chests.cannot_open(u)}
-	var what := "%s %s" % [i.whose, u.kind]
+	var what := "%s %s" % [i.whose, u.get("look", u.kind)]      # GP-TARGET-ART-MATCH: the woodpile, the counter, the crate
 	if i.access == "own":
 		return {"kind": "chest", "id": u.id, "label": "Open %s: store things" % what}
 	if world.chests.is_locked(u):

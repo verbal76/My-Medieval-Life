@@ -35,7 +35,8 @@ func units_in(bid: String) -> Array:
 
 ## A crate or barrel (a village.json container) as a unit; tables and stalls are not units.
 func unit_of_container(c: Dictionary) -> Dictionary:
-	return {"id": str(c.id), "kind": str(c.kind), "bid": str(c.at), "c": c, "at": Vector2(int(c.x), int(c.y)) + Vector2(0.5, 0.5)}
+	return {"id": str(c.id), "kind": str(c.kind), "bid": str(c.at), "c": c, "at": Vector2(int(c.x), int(c.y)) + Vector2(0.5, 0.5),
+		"look": str(c.get("look", c.kind))}       # GP-TARGET-ART-MATCH: what its art shows (a woodpile, a counter...)
 
 
 func unit(id: String) -> Dictionary:

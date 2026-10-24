@@ -94,6 +94,26 @@ class VillageTest(unittest.TestCase):
         self.assertEqual(smithy["w"], 17)
         self.assertTrue(all(D["solid"][y][83] == "1" for y in range(40, 49)))     # its east wall
 
+    def test_containers_named_as_drawn(self):
+        """GP-TARGET-ART-MATCH (generator v13): every container's prompt name (its `look`, else its kind) is what the art
+        at its cell shows: a crate only on a crate tile, a barrel on a barrel, a woodpile, a plank pile, a counter; tables
+        carry a dish drawn on them."""
+        W = D["w"]
+        layers = {l["name"]: l["data"] for l in D["layers"]}
+        wrong = []
+        for c in D["containers"]:
+            tiles = [layers["below%d" % i][c["y"] * W + c["x"]] % 100000 for i in range(6) if layers["below%d" % i][c["y"] * W + c["x"]] >= 0]
+            name = c.get("look", c["kind"])
+            if c["kind"] == "table":
+                if c.get("tile") is None or c["tile"] % 100000 not in tiles:
+                    wrong.append((c["id"], name, tiles))
+                continue
+            drawn = [build_village.CONTAINER_LOOKS[t] for t in tiles if t in build_village.CONTAINER_LOOKS]
+            if not drawn or drawn[0] != name:
+                wrong.append((c["id"], name, tiles))
+        self.assertEqual(wrong, [])
+        self.assertEqual(next(c for c in D["containers"] if c["id"] == "c21").get("look"), "counter")      # the tavern's (the owner's report)
+
     def test_built_rooms_have_floors(self):
         """Every interior floor cell of a stamp the player builds (house, workshops, rooms) has a floor
         tile, so a room built on grass never shows grass inside, under its beds either."""

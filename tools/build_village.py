@@ -34,6 +34,9 @@ drawn by the game as a sprite at spawns.campfire, so the camp's tile 5958 (trans
 entry go; the fire's cell stays solid (camp_fire). Its crates and barrels are Shade's whole crate (797) and barrel (358)
 instead of pieces of other objects (3500, 3502, still used by the stalls and the mine yard). Nothing walkable changes.
 
+Generator v13 (GP-TARGET-ART-MATCH): a container records what its art shows (`look`: woodpile, plank pile, counter, stall
+crate) where that is not its kind, so its prompt names what is drawn; nothing else changes.
+
 Generator v12 (GP-INTERIOR-WALLS, owner 2026-10-24: "why is the right wall missing"): the smithy's sample rect takes in its
 east wall column (x = 83, rows 40-48: wall, floor and roof only), so the room has all four walls; the chapel lane, which ran
 down that column, steps one cell east (x = 84). Trees, boulders, plants and every other cell are as in v11.
@@ -138,6 +141,10 @@ PLANKS = (1024, 1025)                        # piles of planks and logs (the smi
 # houses, in the tavern and at the stalls, and the dishes and mugs he drew on the tavern's tables
 CRATE_TILES = {CRATE, 794, 796, 797, 1024, 1025}
 BARREL_TILES = {BARREL, 358}
+# generator v13 (GP-TARGET-ART-MATCH, owner: "what crate, i'm near a roast"): what a container's art shows, for its prompt;
+# the kind (crate, barrel, table) and every rule stay as they were
+CONTAINER_LOOKS = {1025: "woodpile", 1024: "plank pile", 794: "counter", 796: "crate", 797: "crate", 3500: "stall crate",
+                   358: "barrel", 3502: "barrel"}
 DISH_TILES = {798: "pottage", 583: "pottage", 799: "pottage", 800: "pottage", 803: "roast_meat",
               2121: "ale", 2122: "ale"}
 # Cozy Farm tiles.png (54 columns): the wooden fence ring at columns 4-6, rows 29-31, and a closed gate
@@ -1159,6 +1166,9 @@ class Village:
                         dish = {"dish": DISH_TILES[below[i]], "tile": below[i], "layer": f"below{i}"}
                     if kind:
                         c = {"id": f"c{len(out)}", "kind": kind, "x": x, "y": y, "at": at}
+                        look = next((CONTAINER_LOOKS[v % 100000] for v in below[:3] + below[5:] if v >= 0 and v % 100000 in CONTAINER_LOOKS), "")
+                        if look and look != kind:
+                            c["look"] = look
                         if dish:
                             c.update(dish)      # what is served there, and the tile that shows it
                         out.append(c)

@@ -20,7 +20,7 @@ func show(uid: String, pick := {}, focus := {}) -> void:
 		return
 	var i: Dictionary = w.chests.info(u)
 	var own: bool = i.access == "own"
-	var title := "%s %s" % [String(i.whose).capitalize() if own else String(i.whose), u.kind]
+	var title := "%s %s" % [String(i.whose).capitalize() if own else String(i.whose), u.get("look", u.kind)]     # GP-TARGET-ART-MATCH
 	ui._open("chest", title)
 	if i.access == "decor":
 		ui._label(w.chests.cannot_open(u), 20)
