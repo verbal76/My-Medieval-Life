@@ -391,7 +391,10 @@ static func home(w: World, n: NPC) -> String:
 
 
 ## "Any news?": what they know happened to them (a theft they found), then the latest lines of
-## the village record that name them or their family, else the latest village news.
+## the village record that name them or their family, else the latest village news. S2 (REPAIR_AUDIT, a stopgap until
+## the event-perspective layer): told in the order it happened; an attack is left out when the record also tells the
+## victim's death by the same hand; and each line is said in the speaker's voice where the record's names allow it
+## (DialogueVoice.revoice: "you", "I", "our family"/"we"/"us", "Mum").
 static func news(w: World, n: NPC) -> String:
 	var lines: Array = []
 	var prefix := "found "
@@ -401,15 +404,17 @@ static func news(w: World, n: NPC) -> String:
 			lines.append("Someone took %s." % _plain_what(w, n, m.substr(prefix.length(), m.length() - prefix.length() - 8)).trim_suffix("."))
 			break
 	var ours := RegEx.create_from_string("\\b%s\\b" % n.family) if n.family != "" else null
+	var texts: Array = []
+	for line in w.log_lines:
+		texts.append(line.substr(line.find("] ") + 2) if line.begins_with("[") and line.find("] ") > 0 else line)
+	var deaths := DialogueVoice.death_keys(texts)
 	var about: Array = []
 	var other: Array = []
-	for i in range(w.log_lines.size() - 1, -1, -1):
-		var line: String = w.log_lines[i]
-		var text := line.substr(line.find("] ") + 2) if line.begins_with("[") and line.find("] ") > 0 else line
-		if not _repeatable(text):
+	for i in range(texts.size() - 1, -1, -1):
+		var text: String = texts[i]
+		if not _repeatable(text) or DialogueVoice.attack_told_by_death(text, deaths):
 			continue
-		text = sentence(text)
-		if about.has(text) or other.has(text) or lines.has(text):
+		if about.has(text) or other.has(text) or lines.has(sentence(text)):
 			continue
 		if ours and ours.search(text) and about.size() < 2:
 			about.append(text)
@@ -417,10 +422,14 @@ static func news(w: World, n: NPC) -> String:
 			other.append(text)
 		if about.size() >= 2 and other.size() >= 2:
 			break
+	about.reverse()                              # oldest first: the story in the order it happened
+	var ments := DialogueVoice.mentions(w, n)
+	var state := {}
+	var voiced := func(t: String) -> String: return sentence(DialogueVoice.revoice(w, n, t, ments, state))
 	if not about.is_empty():
-		lines.append(_pick(w, n, ["Have you heard?", "People are talking."], 4) + " " + " ".join(about))
+		lines.append(_pick(w, n, ["Have you heard?", "People are talking."], 4) + " " + " ".join(about.map(voiced)))
 	elif not other.is_empty():
-		lines.append(("Nothing about us. But they say: " if lines.is_empty() else "And they say: ") + other[0])
+		lines.append(("Nothing about us. But they say: " if lines.is_empty() else "And they say: ") + voiced.call(other[0]))
 	if w.relations.player_friend(n):             # a friend tells the player who is courting (CRT-06)
 		var gossip := _courting_gossip(w, n)
 		if gossip != "":

@@ -56,5 +56,32 @@
     "starvation": ["{Victim} starved to death."],
     "old_age": ["{Victim} died of old age."],
     "other": ["We lost {victim} ({cause})."]
+  },
+  "news": {
+    "_doc": "S2: the stopgap re-voicing of village-record lines in news(). died/attacked: the record's own two sentences for a killing (an attack is left out when the same victim's death by the same hand is also on the record). verbs: the words that may follow a person named as a sentence's subject, and their forms for I, you and we (one string: the same for all). A line whose subject would need a verb not listed here is left as it is.",
+    "died": "^(?<victim>.+?) the (?<role>[a-z_ ]+) has died \\((?<cause>.+)\\)\\.?$",
+    "died_kin": "{victim} has died ({cause}).",
+    "attacked": "^(?<attacker>.+?) attacked (?<victim>.+?)\\.?$",
+    "verbs": {
+      "has": {"i": "have", "you": "have", "we": "have"},
+      "is": {"i": "am", "you": "are", "we": "are"},
+      "was": {"i": "was", "you": "were", "we": "were"},
+      "takes": {"i": "take", "you": "take", "we": "take"},
+      "moves": {"i": "move", "you": "move", "we": "move"},
+      "leaves": {"i": "leave", "you": "leave", "we": "leave"},
+      "hires": {"i": "hire", "you": "hire", "we": "hire"},
+      "brings": {"i": "bring", "you": "bring", "we": "bring"},
+      "carries": {"i": "carry", "you": "carry", "we": "carry"},
+      "loses": {"i": "lose", "you": "lose", "we": "lose"},
+      "arrives": {"i": "arrive", "you": "arrive", "we": "arrive"},
+      "marks": {"i": "mark", "you": "mark", "we": "mark"},
+      "lodges": {"i": "lodge", "you": "lodge", "we": "lodge"},
+      "attacked": "attacked", "bought": "bought", "built": "built", "fenced": "fenced", "fitted": "fitted",
+      "finished": "finished", "agreed": "agreed", "hired": "hired", "kept": "kept", "killed": "killed",
+      "knew": "knew", "taught": "taught", "took": "took", "robbed": "robbed", "sold": "sold", "leased": "leased",
+      "gave": "gave", "paid": "paid", "found": "found", "made": "made", "moved": "moved", "rented": "rented",
+      "let": "let", "stopped": "stopped", "died": "died", "married": "married", "planted": "planted",
+      "harvested": "harvested", "cleared": "cleared", "lost": "lost"
+    }
   }
 }
