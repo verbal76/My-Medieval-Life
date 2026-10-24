@@ -22446,6 +22446,34 @@
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
   },
   {
+   "id": "GP-MARKET-SHELVES",
+   "kind": "approved",
+   "title": "Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten)",
+   "description": "Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten)",
+   "source": "docs/directives/2026-10-24_build21_craftpix_market_stalls.md",
+   "owner_wording": "The market should visibly reflect the economy. I want to see what people are selling, not just interact with anonymous counters.",
+   "approval": "owner, 2026-10-24 (directive received; the owner asked to hold before work starts)",
+   "acceptance": [
+    "The two empty shelf units (supplies_objects.png row 1 and row 2, far left; exact coordinates recorded from the PNG and PSD) become modular market stall furniture with middle sections extended by pixel construction, nearest filtering; every stall (player and NPC) shows its actual listings, up to ten distinct displays across both shelves, none floating, updated as listings change, empty stalls empty; trading rules unchanged; multiplayer clients render from the synchronized stalls; Craftpix credited; screenshots from the game camera of empty, partial and ten-listing stalls; no collision or path regression"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_build21_craftpix_market_stalls.md"
+    }
+   ]
+  },
+  {
    "id": "GP-PACK-DETAIL-FIT",
    "kind": "approved",
    "title": "Pack item detail panel: action buttons cut off the bottom of the screen",
@@ -22913,10 +22941,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
      "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "superseded in practice by the owner's market shelf directive (docs/directives/2026-10-24_build21_craftpix_market_stalls.md): the 'ten goods' question is answered (ten distinct listings shown)"
     }
    ],
    "assigned_worker": "",
-   "branch": ""
+   "branch": "",
+   "next_action": "Implemented by GP-MARKET-SHELVES"
   },
   {
    "id": "GP-START-RUSTY-AXE",
