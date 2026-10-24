@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 558 (292 of them still open) |
-| **Open entries now** (rules excluded) | | **469** |
+| Entries added since | | 559 (293 of them still open) |
+| **Open entries now** (rules excluded) | | **470** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (558)
+## Added since the baseline (559)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -126,6 +126,7 @@ None.
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
 | B19-BASELINE | Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)? | decision | APPROVED | 19 |
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | approved | NOT STARTED / NOT TESTED / OPEN | 19 |
+| B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | APPROVED | owner decision |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

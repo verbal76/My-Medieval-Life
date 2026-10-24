@@ -138,10 +138,11 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (44)
+## Multiplayer track (45)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
+| B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | OWNER APPROVED | IN DEVELOPMENT |
 | BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | OWNER APPROVED | NOT STARTED |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | OWNER APPROVED | NOT STARTED |
 | DGA-D3 | Connectivity with no server | proposal | PROPOSED | PARTIALLY IMPLEMENTED |

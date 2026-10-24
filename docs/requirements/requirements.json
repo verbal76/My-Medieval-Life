@@ -4873,6 +4873,41 @@
    ]
   },
   {
+   "id": "B21-LAN-PLAYTEST",
+   "kind": "approved",
+   "title": "Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build",
+   "description": "Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build",
+   "source": "docs/directives/2026-10-24_build21_final_integration.md",
+   "owner_wording": "Now finish the small remaining integration work, verify the gameplay changes with the recorder, document what still needs attention, and put a playable build in my hands.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Open to Friends in the pause menu (IP and port shown, optional password, status, close) and Join Game on the title (discovered games, manual IP, name, password, progress, refusal messages, leave), in the game's visual style on Windows and Android; Android INTERNET and network-state permissions present in the exported APK; animals synchronized host-to-guest through the existing snapshot and section sync; recorder checks for the playtest corrections and three recorder runs reported; owner punch list reconciled; Build 21 private draft from one commit with the permanent Android key (or a signing decision), checksums, tester notes and a two-device test procedure; then hold"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_build21_final_integration.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 integration agent; branch: None -> wip/multiplayer-b19",
+     "why": "authorized; one agent on wip/multiplayer-b19 for the code and recorder work; the lead reconciles the punch list and runs the build"
+    }
+   ],
+   "assigned_worker": "Build 21 integration agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
