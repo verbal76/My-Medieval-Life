@@ -138,11 +138,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (3)
+## Multiplayer track (4)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | OWNER APPROVED | NOT STARTED |
 | DGA-D3 | Connectivity with no server | proposal | PROPOSED | PARTIALLY IMPLEMENTED |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | OWNER APPROVED | NOT STARTED |
 

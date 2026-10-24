@@ -27018,7 +27018,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "reuse audit within MP-MASTER Batch A",
    "priority": "",
    "workstream": "multiplayer (isolated)",
    "superseded_by": null,
@@ -27043,6 +27043,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IMPLEMENTED ON TASK BRANCH",
      "why": "two-player LAN prototype on wip/multiplayer (d18d7d1); excluded from Build 18 by the owner; no worker"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "superseded in scope by MP-MASTER (owner 2026-10-24): the 2026-10-19 prototype (d18d7d1, wip/multiplayer, preserved) is input to it; its doc and the 2026-10-21 audit copied to docs/multiplayer/"
     }
    ],
    "acceptance_derived": true,
@@ -27059,6 +27064,80 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN"
+  },
+  {
+   "id": "MP-D1",
+   "kind": "decision",
+   "title": "Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first",
+   "description": "Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first",
+   "source": "docs/directives/2026-10-24_master_multiplayer_directive.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_master_multiplayer_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-MASTER",
+   "kind": "approved",
+   "title": "Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline",
+   "description": "Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline",
+   "source": "docs/directives/2026-10-24_master_multiplayer_directive.md",
+   "owner_wording": "I am not asking for multiplayer characters that can walk around the same map. I am asking for multiple people to live in the same medieval world. ... Build 19 first. Full multiplayer next. Expansion 20 afterward.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Android, Windows and Linux can each host and join supported sessions",
+    "Cross-platform combinations tested on real devices",
+    "Three to four players can inhabit one world",
+    "Guests participate in the existing gameplay systems with the same rules as the host",
+    "Character ownership and progression persist correctly",
+    "The host remains authoritative",
+    "Resources and currency cannot be duplicated through networking",
+    "NPCs and world state remain synchronized",
+    "Disconnects and reconnections are handled correctly",
+    "Host shutdown and restart preserve the world",
+    "Internet multiplayer works through a documented, usable connection method",
+    "Single-player gameplay remains intact",
+    "Performance remains acceptable on the supported hardware",
+    "No known critical save-corruption, synchronization or security defects remain"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_master_multiplayer_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "preparation authorized now (architecture assessment, dependency planning, documentation); implementation only after Build 19's owner acceptance and explicit authorization"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "next action reworded until the preparation report exists"
+    }
+   ],
+   "next_action": "multiplayer preparation report (in progress); then the owner's decisions and authorization"
   },
   {
    "id": "MSW-01",

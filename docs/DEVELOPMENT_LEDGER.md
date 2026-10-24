@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (605)
+## Approved requirement (606)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -352,6 +352,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MON-01 | Monsters, village defence, bounties and monster goods: skeletons underground and in the woods, lizards, a crab monster and boss monsters in forests and hills; rare attacks on the village where guards go first and villagers form a defensive line; the player can become a hero of the town; bounties to hunt monsters and bring back their pelts, building prestige; villagers may choose to become monster hunters; a market for specialty goods only monsters give; all of it moving villagers' emotions, their view of the player and their sense of safety | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | multiplayer | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
+| MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | OD01-QUEST | Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | OPS-01 | Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -707,7 +708,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (218)
+## Owner decisions (219)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -773,6 +774,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | owner decision | APPROVED |  |
 | MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | owner decision | APPROVED |  |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | owner decision | APPROVED |  |
+| MP-D1 | Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first | multiplayer | OPEN | yes |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
 | OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | OPEN |  |

@@ -102,6 +102,10 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
 10. **Roadmap reprioritization (owner 2026-10-24, ROAD-03, planning only):** order 20, 21, 23, 22, 24, 25, 26, 27 (to verify);
    review `docs/design/ROADMAP_20_27_PRIORITY.md`; questions ROAD-Q1..Q5. No expansion implementation until separately
    authorized. Build 19 frozen pending the owner's playtest.
+11. **Multiplayer next (owner 2026-10-24, MP-MASTER, `docs/directives/2026-10-24_master_multiplayer_directive.md`):** sequence
+   Build 19 acceptance → full multiplayer → Expansion 20. Preparation only now (assessment, plan, decisions; MP-D1 open);
+   implementation after Build 19's owner acceptance and explicit authorization. Prototype `wip/multiplayer` d18d7d1 preserved;
+   its notes and the 2026-10-21 audit in `docs/multiplayer/`.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner
