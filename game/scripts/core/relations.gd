@@ -46,7 +46,8 @@ var trades := {}         # X18 (Expansion 18, X18-Q12-POST): "a:b" -> {n, last}:
                          # `last`. A commercial contact: a courier may deliver to a business one has traded with. Saved
                          # (absent in older saves: none). Nothing in the game reads it yet.
 const NO_PAIR := Vector2i(-99999, -99999)   # _raise without the pair's ids: no judgment bonus, no history (judgment off ignores `who`)
-var killings := 0       # villagers the player has slain (CRT-12: no one marries a killer lightly)
+var killings := 0       # villagers the host player (the family line "player") has slain (CRT-12: no one marries a killer lightly)
+var guest_killings := {} # A8 (GP-CRIME-PURSUIT): a guest's own count, by player reference ("player:<pid>"); saved only when set, so a guest's killing is never the host's
 
 
 func _init(world) -> void:
@@ -294,18 +295,26 @@ func harmed(n: NPC, amount: float, spread := true) -> void:
 
 ## The player slew a villager (World.kill): their family and friends turn hard against the player
 ## (kill_harm through harmed), and it is never forgotten (killings).
-func slain_by_player(n: NPC) -> void:
+func slain_by_player(n: NPC, ref := "player") -> void:
 	if n.role == "bandit":
 		return
-	killings += 1
+	if ref == "player" or ref == "":
+		killings += 1
+	else:
+		guest_killings[ref] = int(guest_killings.get(ref, 0)) + 1     # A8: the guest's, not the host's
 	harmed(n, float(cfg().kill_harm))
+
+
+## A8: the villagers player `ref` has slain (the host's line: "player").
+func killings_of(ref: String) -> int:
+	return killings if ref == "player" or ref == "" else int(guest_killings.get(ref, 0))
 
 
 ## How the village sees the player (CRT-12): crimes seen in the last notoriety_days, and every villager slain
 ## counts killing_weight.
 func notoriety() -> int:
 	var c := cfg()
-	var n := killings * int(c.killing_weight)
+	var n := killings_of(w.acting_ref()) * int(c.killing_weight)       # A8: the acting player's own
 	for cr in w.player.crimes:
 		if Justice.is_violent(str(cr.get("kind", ""))):
 			continue                 # GP-CRIME-PURSUIT A1: blows and killings are on the record too; killings count above, as before
@@ -343,7 +352,7 @@ func refusal(suitor: int, n: NPC) -> String:
 		return "I'm fond of you, but I don't mean to marry. Not now, maybe not ever."
 	var t := peek(suitor, n.id)
 	if Life.is_player_id(suitor):
-		if killings > 0:
+		if killings_of(w.acting_ref()) > 0:
 			return "Marry you? You have killed people of this village. No."
 		if notoriety() >= int(c.notoriety_refuse):
 			return "Everyone knows what you've been doing. I won't marry a thief."
@@ -473,7 +482,7 @@ func ask_court(a: int, n: NPC) -> String:
 	var t := tie(a, n.id)
 	if not can_court(a, n.id):
 		return "That's not for us."
-	if Life.is_player_id(a) and (killings > 0 or notoriety() >= int(cfg().notoriety_refuse)):
+	if Life.is_player_id(a) and (killings_of(w.acting_ref()) > 0 or notoriety() >= int(cfg().notoriety_refuse)):
 		return "Walk out with you? After what you've done? No."
 	if float(t.attraction) < float(cfg().court_at) or int(t.days_known) < int(cfg().court_min_days):
 		_raise(t, 0.0, -float(cfg().too_soon_penalty) * 0.5, false)
@@ -717,7 +726,10 @@ func to_dict() -> Dictionary:
 	tk.sort()
 	for k in tk:
 		tr[k] = {"n": int(trades[k].n), "last": int(trades[k].last)}
-	return {"ties": out, "interests": ins, "killings": killings, "trades": tr}
+	var out_d := {"ties": out, "interests": ins, "killings": killings, "trades": tr}
+	if not guest_killings.is_empty():
+		out_d.guest_killings = guest_killings.duplicate()      # A8: optional key
+	return out_d
 
 
 ## X18-Q12-POST: a trade between two parties (ids; the player is Life.PLAYER_ID) makes them commercial contacts.
@@ -763,6 +775,9 @@ func load_dict(d: Dictionary) -> void:
 	for k in ts:
 		ties[str(k)] = tie_from(ts[k])
 	killings = int(d.get("killings", 0))
+	guest_killings.clear()
+	for k in d.get("guest_killings", {}):                      # A8: older saves have none
+		guest_killings[str(k)] = int(d.guest_killings[k])
 	trades.clear()
 	var trd: Dictionary = d.get("trades", {})             # X18-Q12-POST; saves before it have none
 	for k in trd:

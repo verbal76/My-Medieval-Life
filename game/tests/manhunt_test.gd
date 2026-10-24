@@ -14,7 +14,10 @@ extends SceneTree
 ##   - A7: a head of household who knows the player for a killer meets them as a threat to the family (shield, fight or
 ##     flee, the family-danger decision), one who does not carries on; the existing refusals apply to a killer (contracts and
 ##     courtship by notoriety, CRT-12); credit, barter and sales follow the villager's own ledger as the owner's numbers
-##     weigh it (one murder seen does not, alone, make a witness refuse credit; shop sales never refuse: trade_sell forgo 0).
+##     weigh it (one murder seen does not, alone, make a witness refuse credit; shop sales never refuse: trade_sell forgo 0);
+##   - A8: two players in one world (World.players, World.as_actor): a guest's killing is the guest's: their record, their
+##     case, the guard's chase and blows, their killings count, the talk ("Gwen Fairlight killed ..." to the host, "you"
+##     to the guest); never the host's. A villager who shares the player's first name is not taken for the player.
 ## Run headless:
 ##   godot --headless --path game --script res://tests/manhunt_test.gd
 
@@ -41,6 +44,8 @@ func _init() -> void:
 	test_bounded()
 	test_family_fears_killer()
 	test_trade_refused()
+	test_two_players()
+	test_name_collision()
 	print("manhunt_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -472,4 +477,80 @@ func test_trade_refused() -> void:
 	print("     a contract asked before and after the killing: %s | %s" % [str(c0.get("say", "")), str(c1.get("say", ""))])
 	check(str(c1.get("say", "")).contains("not deal with you"), "after a killing villagers refuse the killer contracts (Relations notoriety, CRT-12)")
 	check(w.relations.ask_court(Life.PLAYER_ID, seller).contains("After what you've done"), "and courtship")
+	w.dispose()
+
+
+func _guest(w: World) -> PlayerState:
+	var g := PlayerState.new()
+	g.name = "Gwen"
+	g.family = "Fairlight"
+	g.born = Life.born_for_age(25.0, w.minutes)     # a grown woman, as a new player is
+	g.sex = "female"
+	Identity.register_player(w, g)
+	w.give_start_kit(g)
+	w.add_guest(g)
+	return g
+
+
+func test_two_players() -> void:
+	var w := _world()
+	var host := w.player
+	var gu := _guest(w)
+	var g: NPC = _guards(w)[0]
+	var ad := _adults(w, 2)
+	var v: NPC = ad[0]
+	var wit: NPC = ad[1]
+	var at := _stage(w, [g, v, wit])
+	gu.pos = at
+	gu.max_hp = 9999.0
+	gu.hp = 9999.0
+	host.pos = _at(w, at, 14.0)
+	host.max_hp = 9999.0
+	host.hp = 9999.0
+	g.pos = at + Vector2(5, 0)
+	_sturdy(g)
+	wit.pos = at + Vector2(-2, 0)
+	v.pos = at + Vector2(0.6, 0)
+	v.hp = 1.0
+	w.player_hit_npc(v, 500.0, gu)
+	var ref := w.player_ref(gu)
+	check(not v.alive and gu.crimes.any(func(c): return c.kind == "killing") and host.crimes.is_empty(), "the guest's killing is on the guest's record, not the host's")
+	check(not w.justice.case_of(ref).is_empty() and w.justice.case_of("player").is_empty(), "the case is the guest's (%s); the host has none" % ref)
+	check(str(g.pursuit.get("ref", "")) == ref, "the guard is on the guest's case")
+	check(w.relations.killings_of(ref) == 1 and w.relations.killings == 0, "the killing counts against the guest, not the host's family line")
+	var single: NPC = w.npcs.filter(func(o: NPC) -> bool: return o.alive and o != v and w.relations.can_court(Life.PLAYER_ID, o.id))[0]
+	var reply: String = w.as_actor(gu, func(): return w.relations.ask_court(Life.PLAYER_ID, single))
+	check(reply.contains("After what"), "a villager will not walk out with the guest (%s)" % reply)
+	check(not w.relations.ask_court(Life.PLAYER_ID, single).contains("After what"), "but holds nothing against the host")
+	# the chase and the blows go to the guest
+	var hp_h := host.hp
+	var hp_g := gu.hp
+	g.pos = gu.pos + Vector2(3, 0)
+	g.attack_cd = 0.0
+	for i in 60:
+		w.brain.fight(g, 0.05)
+		g.attack_cd = 0.0
+	check(g.pos.distance_to(gu.pos) < 1.5 and gu.hp < hp_g and host.hp == hp_h, "the guard runs down and strikes the guest, never the host")
+	# the talk: the witness accuses the guest to her face, names her to the host
+	var to_guest: String = w.as_actor(gu, func(): return Dialogue.news(w, wit))
+	var to_host := Dialogue.news(w, wit)
+	print("     witness's news to the guest: %s | to the host: %s" % [to_guest, to_host])
+	check(to_guest.contains("you killed"), "to the guest: \"you killed\"")
+	check(to_host.contains("Gwen Fairlight killed") and not to_host.contains("you killed"), "to the host: \"Gwen Fairlight killed\", never \"you\"")
+	var tagged := false
+	for ev in w.judgment.facts:
+		var f: Dictionary = w.judgment.fact(int(ev))
+		if str(f.type) == "killing" and (f.tags as Array).has("by:" + ref):
+			tagged = true
+	check(tagged, "the judgment fact names the guest by reference (Batch C keys players as -2)")
+	w.dispose()
+
+
+func test_name_collision() -> void:
+	var w := _world()
+	var bandit: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "bandit")[0]
+	var v: NPC = _adults(w, 1)[0]
+	bandit.name = w.player.name                     # a bandit with the player's first name
+	w.kill(v, "slain by %s" % bandit.name)
+	check(w.relations.killings == 0 and w.justice.cases.is_empty() and w.player.crimes.is_empty(), "a bandit sharing the player's first name: the killing is not the player's")
 	w.dispose()

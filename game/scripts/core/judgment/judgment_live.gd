@@ -124,7 +124,7 @@ static func _ids(people: Array) -> Array:
 ## A theft seen (World.witness): the thief is the player (World.witness is the player's channel today).
 static func on_theft(w, kind: String, victim: NPC, seen: Array, value: int) -> void:
 	var type := "pickpocket" if kind == "pickpocket" else "theft"
-	var ev: int = w.judgment.publish(type, [Life.PLAYER_ID], [victim.id] if victim != null else [], [], value)
+	var ev: int = w.judgment.publish(type, [Life.PLAYER_ID], [victim.id] if victim != null else [], [], value, by_tag(w, Life.PLAYER_ID))
 	if ev > 0:
 		w.judgment.observe_all(ev, _ids(seen))
 
@@ -135,9 +135,15 @@ static func on_attack(w, attacker: int, aware: Dictionary) -> void:
 	if v != null and w.judgment.note_blow(attacker, v.id):
 		w.judgment._stat("self_defence_blows")       # X19-EVENT-Q (4): an attack answered within the same fight is not judged as an attack
 		return
-	var ev: int = w.judgment.publish("assault", [attacker], [v.id] if v != null else [])
+	var ev: int = w.judgment.publish("assault", [attacker], [v.id] if v != null else [], [], 0, by_tag(w, attacker))
 	if ev > 0:
 		w.judgment.observe_all(ev, _ids(aware.seen))
+
+
+## A8: the tag that names which player a fact's Life.PLAYER_ID is (the acting player: the verb runs as them), [] for a villager.
+## Judgment keys every player as -2 until MP Batch C; the tag lets the talk tell a guest's deed from the host's now.
+static func by_tag(w, actor: int) -> Array:
+	return ["by:" + w.acting_ref()] if Life.is_player_id(actor) else []
 
 
 ## A villager slain by the player (World.kill): those who see the body fall.
@@ -149,7 +155,7 @@ static func on_killing(w, n: NPC, killer: int) -> void:
 	if w.judgment.struck_first(n.id, killer):
 		w.judgment._stat("self_defence_killings")    # X19-EVENT-Q (4): the dead struck first in this same fight
 		return
-	var ev: int = w.judgment.publish("killing", [killer], [n.id])
+	var ev: int = w.judgment.publish("killing", [killer], [n.id], [], 0, by_tag(w, killer))
 	if ev > 0:
 		var seen: Array = w.near(n.pos, float(GameData.b("witness_radius")))
 		seen.erase(n)
@@ -225,7 +231,7 @@ static func on_defence(w, at: Vector2) -> void:
 ## A pocket picked and nobody saw: a fact, but the victim only knows something is missing (not by whom) and nobody saw,
 ## so nobody learns it.
 static func on_unseen_pickpocket(w, victim: NPC, value: int) -> void:
-	w.judgment.publish("pickpocket", [Life.PLAYER_ID], [victim.id], [], value)
+	w.judgment.publish("pickpocket", [Life.PLAYER_ID], [victim.id], [], value, by_tag(w, Life.PLAYER_ID))
 
 
 ## A bandit's robbery of a villager: a theft by an NPC, seen as the attack is (the same `aware`).

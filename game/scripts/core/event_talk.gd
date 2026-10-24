@@ -10,8 +10,9 @@ extends RefCounted
 ##   - the speaker's memory (NPC.memory), keyed by the listener's name: "saw <listener> attack <victim>" (a witness,
 ##     World.player_assault), "<victim> died (slain by <listener>)" (the household, World.kill);
 ##   - the judgment store (when attached), whose beliefs carry how they were learned (witnessed, told, rumour). Its
-##     records name every player as Life.PLAYER_ID until multiplayer Batch C, so they are read only while the listener
-##     is the one player in play (a guest's deed is never pinned on the host, nor the host's on a guest).
+##     records name every player as Life.PLAYER_ID until multiplayer Batch C; A8: a player's fact carries the tag
+##     "by:<player ref>", so it names the right player (a guest's deed is never pinned on the host, nor the host's on a
+##     guest); an untagged fact (an older save) names the player only while one is in play.
 ## Nobody knows what they did not see or learn: a villager with none of these records says nothing of it.
 
 const CLOSE := ["parent", "child", "partner", "sibling", "grandchild", "grandparent"]
@@ -114,7 +115,7 @@ static func violence(w: World, n: NPC) -> Dictionary:
 			_know(known, _person(w, n, s.substr(kill_prefix.length())), "killing", "saw", n)
 		elif s.ends_with(slain):
 			_know(known, dead_named(w, n, s.substr(0, s.length() - slain.length())), "killing", "heard", n)
-	if w.judgment != null and player_id_is_listener(w):
+	if w.judgment != null:
 		var mem: Dictionary = w.judgment.memories.get(n.id, {})
 		var evs := mem.keys()
 		evs.sort()
@@ -122,14 +123,15 @@ static func violence(w: World, n: NPC) -> Dictionary:
 			var b: Dictionary = w.judgment.belief(n.id, int(ev))
 			if b.is_empty() or not str(b.type) in ["killing", "assault"]:
 				continue
-			var named := false
-			for a in b.actors:
-				named = named or Life.is_player_id(int(a[0]))
-			if not named:
-				continue                         # the speaker believes someone else did it
 			var f: Dictionary = w.judgment.fact(int(ev))
 			if f.is_empty() or (f.victims as Array).is_empty():
 				continue
+			var tags := _tags(f.tags)
+			var named := false
+			for a in b.actors:
+				named = named or (Life.is_player_id(int(a[0])) and person_of_id(w, int(a[0]), tags) == w.player)
+			if not named:
+				continue                         # A8: the speaker believes someone else did it (another player, by its tag)
 			var how := "saw" if str(b.src) in ["witnessed", "participant"] else "heard"
 			_know(known, w.npc(int(f.victims[0])), str(b.type), how, n)
 	var best := {}
@@ -161,13 +163,13 @@ static func _know(known: Dictionary, o: NPC, crime: String, how: String, n: NPC)
 static func _killed_by_listener(w: World, n: NPC, o: NPC) -> bool:
 	if n.memory.has("%s died (slain by %s)" % [o.name, listener_name(w)]):
 		return true
-	if w.judgment == null or not player_id_is_listener(w):
+	if w.judgment == null:
 		return false
 	for ev in w.judgment.memories.get(n.id, {}):
 		var b: Dictionary = w.judgment.belief(n.id, int(ev))
 		if not b.is_empty() and str(b.type) == "killing":
 			var f: Dictionary = w.judgment.fact(int(ev))
-			if not f.is_empty() and (f.victims as Array).has(o.id):
+			if not f.is_empty() and (f.victims as Array).has(o.id) and (b.actors as Array).any(func(a): return person_of_id(w, int(a[0]), _tags(f.tags)) == w.player):
 				return true
 	return false
 

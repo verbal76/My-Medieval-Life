@@ -933,6 +933,8 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 		as_actor(actor, continue_as_heir)
 		return
 	var p := player
+	var dead_ref := acting_ref()               # A8: whose foes and case these were (the heir takes the same reference)
+	var dead_host := is_host(p)
 	credit.on_player_died(Credit.slain_cause(p.death_cause), Life.player_heir_child(self))     # TRADE-CREDIT: debts and claims pass to the heir (written off where a villager's would be)
 	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
 	var bag := Inventory.new()
@@ -978,10 +980,11 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	quests.start_story()                   # the heir must seek the sage again: spells are not inherited
 	# whoever was fighting the dead player has no quarrel with the heir
 	for n: NPC in npcs:
-		if Life.is_player_id(n.target):
-			n.target = -1
+		if Life.is_player_id(n.target) and ((n.target_ref == "" and n.pursuit.is_empty() and dead_host) or n.target_ref == dead_ref or str(n.pursuit.get("ref", "")) == dead_ref):
+			n.target = -1                      # A8: only those fighting the dead player, never a guest's or the host's other foes
+			n.target_ref = ""
 			n.plan.clear()
-		if not n.pursuit.is_empty() and player_of_ref(str(n.pursuit.ref)) == p:
+		if not n.pursuit.is_empty() and str(n.pursuit.ref) == dead_ref:
 			n.pursuit = {}                     # A2: the case closed with the offender (Justice.on_death)
 			n.plan.clear()
 	note("%s %s (generation %d) takes up the family's life." % [heir.name, heir.family, heir.generation])
@@ -2046,6 +2049,7 @@ func _player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 		player_assault(n)
 	elif n.target == -1:
 		n.target = Life.PLAYER_ID
+		n.target_ref = acting_ref()             # A8
 	var killed := false
 	if n.hp <= 0.0:
 		kill(n, "slain by %s %s" % [player.name, player.family], acting_ref() if n.role != "bandit" else "")
@@ -2133,6 +2137,7 @@ func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dict
 		keeper.remember(("%s killed my %s" % [player.name, what]) if saw else ("found my %s dead" % what))
 		if saw and keeper.role == "adult" and keeper.target == -1:
 			keeper.target = Life.PLAYER_ID
+			keeper.target_ref = acting_ref()    # A8
 		guard = last_guard
 		note("%s %s killed one of %s %s's animals." % [player.name, player.family, keeper.name, keeper.family])
 	return {"killed": true, "guard": guard}
@@ -2150,6 +2155,7 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 	relations.harmed(victim, float(Relations.cfg().victim_harm))
 	if victim.role == "adult":
 		victim.target = Life.PLAYER_ID
+		victim.target_ref = acting_ref()        # A8: they fight the player who struck them, a guest or the host
 	var aware := aware_of_attack(p.pos, victim)
 	var seen := 0
 	for n: NPC in aware.seen:
@@ -2670,12 +2676,16 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	if cause.begins_with("slain"):
 		bled.emit(n.pos)
 	n.target = -1
-	if cause.begins_with("slain by %s" % player.name) and n.role != "bandit":
-		relations.slain_by_player(n)       # family and friends never forget it (CRT-12)
+	# A8: a player's killing is known by the reference of the hand that did it (by_ref). A caller that passes none is read by
+	# the player's full name exactly ("slain by Wat Ashdown"); a villager's killing names only a first name ("slain by Wat"),
+	# and one sharing the player's first name was taken for the player before (begins_with)
+	if by_ref == "" and cause == "slain by %s %s" % [player.name, player.family]:
+		by_ref = acting_ref()
+	if by_ref != "" and n.role != "bandit":
+		relations.slain_by_player(n, by_ref)       # family and friends never forget it (CRT-12)
 		if judgment != null:
 			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
-		if by_ref != "":
-			_player_killing(n, by_ref)
+		_player_killing(n, by_ref)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
 	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
