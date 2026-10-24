@@ -123,7 +123,7 @@ static func dawn(w: World) -> void:
 ## A day's wear of the clothes and armour people wear: the player's body and head slots, and each living villager's own
 ## armour (the first armour item it holds, by id: the guards' leather).
 static func wear_clothes(w: World) -> void:
-	for pl: PlayerState in w.player_list():
+	for pl: PlayerState in w.active_players():          # a guest away (MP-D1) wears nothing out
 		wear_player(w, 1, pl)
 	for n: NPC in w.npcs:
 		if n.alive:

@@ -27,6 +27,7 @@ func _init() -> void:
 	test_ticks()
 	test_save_21()
 	test_save_20_fixture()
+	test_away_a2()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -268,5 +269,38 @@ func test_save_20_fixture() -> void:
 	check(untouched, "every section of the old save is still written")
 	var m := SaveTransfer.migrate(JSON.parse_string(text), VillageMap.load_default())
 	check(m.ok and int(m.data.save_version) == 21 and m.data.has("players"), "importing the old save migrates it to 21 (%s)" % m.get("reason", ""))
+	w2.dispose()
+	w.dispose()
+
+
+# ------------------------------------------------------------------ Batch A2 ---------
+## MP-D1 (Batch A2): a guest away is out of active play (no needs, not a detail centre) and still a player of the world
+## (counted in the census, saved with its identity hash and its away mark); a guest machine's own player view.
+func test_away_a2() -> void:
+	var w := _world()
+	var g := _guest(w)
+	w.add_guest(g)
+	g.net_key = "ab".repeat(32)
+	g.away = true
+	check(w.active_players() == [w.host_player()] and w.player_list().size() == 2, "a guest away is not in active play but stays a player")
+	check(w.player_positions() == [w.host_player().pos] and is_equal_approx(w.nearest_player_distance(g.pos), g.pos.distance_to(w.host_player().pos)), "nor a centre of the detail tier")
+	var g0 := g.hunger
+	for i in 30:
+		w.update(0.5)
+	check(g.hunger == g0, "it neither hungers nor heals while away (%.2f)" % g.hunger)
+	var coins := w.total_coins()
+	g.coins += 7
+	check(w.total_coins() == coins + 7, "its purse still counts in the census")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var g2 := w2.player_by_pid(g.pid)
+	check(g2 != null and g2.away and g2.net_key == g.net_key and not w2.host_player().to_dict().has("net_key") and not w2.host_player().to_dict().has("away"),
+		"save 21 keeps its away mark and identity hash (optional keys; the host's record has neither)")
+	g.away = false
+	check(w.active_players().size() == 2, "back in play when it returns")
+	w.set_local_player(g)
+	check(w.player == g and w.acting_ref() == "player:%d" % g.pid, "a guest machine shows the world from its own character")
+	w.set_local_player(null)
+	check(w.player == w.host_player(), "and back to the host")
 	w2.dispose()
 	w.dispose()

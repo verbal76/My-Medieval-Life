@@ -734,13 +734,25 @@ func player_list() -> Array:
 	return players.values()
 
 
+## The players in active play (the host first, then the guests by pid): a disconnected guest (PlayerState.away, MP-D1) is
+## not among them; it stays in `players` (saved, counted in the census) with every record. One player: [the host].
+func active_players() -> Array:
+	var out := [_host_player]
+	var ids := _guests.keys()
+	ids.sort()
+	for id in ids:
+		if not _guests[id].away:
+			out.append(_guests[id])
+	return out
+
+
 ## Where every player stands (the host first): the centres of the simulation's detail tier. One player: [that position].
 func player_positions() -> Array:
 	var out := [_host_player.pos]
 	var ids := _guests.keys()
 	ids.sort()
 	for id in ids:
-		if _guests[id].alive:
+		if _guests[id].alive and not _guests[id].away:
 			out.append(_guests[id].pos)
 	return out
 
@@ -749,7 +761,7 @@ func player_positions() -> Array:
 func nearest_player_distance(at: Vector2) -> float:
 	var best := at.distance_to(_host_player.pos)
 	for id in _guests:
-		if _guests[id].alive:
+		if _guests[id].alive and not _guests[id].away:
 			best = minf(best, at.distance_to(_guests[id].pos))
 	return best
 
@@ -771,6 +783,13 @@ func remove_guest(pid: int) -> PlayerState:
 ## The player a verb is acting for right now (the host unless inside as_actor).
 func acting_player() -> PlayerState:
 	return player
+
+
+## MP Batch A2: a guest's machine shows the host's world from its own character's side: `p` (one of `players`) becomes
+## `player` for everything on that machine (its interface, its walking) outside any as_actor. Its copy is never simulated
+## (Main.guest_world); the host applies its actions. null or the host's character: back to the host.
+func set_local_player(p: PlayerState) -> void:
+	_actor = null if p == null or p == _host_player else p
 
 
 ## Run `c` as player `p`: every reader of `player` inside it (this file and the modules) sees `p`. null keeps the
@@ -830,7 +849,7 @@ func _update_player(real_dt: float, gm: float) -> void:
 	if _guests.is_empty():
 		_update_one_player(real_dt, gm)               # single player: the host alone, as in Build 19
 		return
-	for pl: PlayerState in player_list():
+	for pl: PlayerState in active_players():         # a guest away (MP-D1) neither hungers nor heals
 		as_actor(pl, _update_one_player.bind(real_dt, gm))
 
 

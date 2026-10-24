@@ -408,7 +408,7 @@ static func _natural_deaths(w: World) -> void:
 
 static func _player_dawn(w: World) -> void:
 	if w.player_list().size() > 1:
-		for pl: PlayerState in w.player_list():
+		for pl: PlayerState in w.active_players():       # a guest away (MP-D1) is out of play
 			w.as_actor(pl, _player_dawn_one.bind(w))
 		return
 	_player_dawn_one(w)
