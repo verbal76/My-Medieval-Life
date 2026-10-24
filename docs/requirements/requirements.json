@@ -21925,8 +21925,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21944,7 +21944,17 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner answers (docs/directives/2026-10-24_owner_answers_crime_repair.md): a hue and cry / bell spreads a murder alarm within earshot (a new, approved sensing mechanic, superseding PAR-05's no-unsupported-sensing limit for this case); a beaten player may yield and be fined heavily with stolen goods returned, a multiple murderer who keeps fighting can still be killed; a case ends with the offender's death and family reputation carries the stain"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; test_commit: None -> 31d81a3; commits + 64afa57",
+     "why": "step S3 (64afa57): a guard chasing a player paths round walls (the owner's corner case caught in 3.8 s), a late report sends the guard to the reported place; bandits keep the SIM-F4 give-up; remaining A1-A3, A7-A8: cases and wanted status, search, coordination, hue and cry, yielding, multiplayer attribution"
     }
+   ],
+   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged",
+   "test_commit": "31d81a3",
+   "commits": [
+    "64afa57"
    ]
   },
   {
@@ -21963,8 +21973,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21977,7 +21987,17 @@
      "date": "2026-10-24",
      "change": "parent",
      "why": "child of the owner's master repair directive"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; test_commit: None -> 31d81a3; commits + 31d81a3",
+     "why": "step S1 and part of S2 on wip/multiplayer-b19 (770a8b1, 1ea050f, 31d81a3): openings, brush-offs and home lines read the existing witness and judgment records (you, I saw, I heard; afraid or confronting by relation and opinion); news re-voiced (you, I, we, Mum, my daughter); wording in game/data/dialogue_events.json; remaining: A4-A6 knowledge-based news, household death knowledge, multiplayer attribution"
     }
+   ],
+   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged",
+   "test_commit": "31d81a3",
+   "commits": [
+    "31d81a3"
    ]
   },
   {
@@ -22122,8 +22142,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22136,7 +22156,17 @@
      "date": "2026-10-24",
      "change": "parent",
      "why": "child of the owner's master repair directive"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; test_commit: None -> 31d81a3; commits + 1ea050f",
+     "why": "stopgap S2 (1ea050f): oldest first, an attack dropped when the same death is reported, self and listener re-voiced; related-event merging and knowledge-based news remain (A4-A6)"
     }
+   ],
+   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged",
+   "test_commit": "31d81a3",
+   "commits": [
+    "1ea050f"
    ]
   },
   {
@@ -22567,6 +22597,39 @@
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-PROPERTY-NAME-DOUBLE",
+   "kind": "approved",
+   "title": "Village log doubles a property's location ('beside the smithy beside the smithy')",
+   "description": "Village log doubles a property's location ('beside the smithy beside the smithy')",
+   "source": "found by the repair agent, 2026-10-24 (GP-REPAIR-SOCIAL S2 transcripts)",
+   "owner_wording": "Avoid unnecessary repetition of names, households, locations, and actions.",
+   "approval": "owner, 2026-10-24 (defect under the master repair directive's gossip item)",
+   "acceptance": [
+    "Property.describe (game/scripts/core/property.gd) names a plot's location once even when two plots share a name; a test covers two same-named plots"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-GOSSIP-NATURAL",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "found by the repair agent, 2026-10-24 (GP-REPAIR-SOCIAL S2 transcripts)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of the gossip repair"
+    }
+   ]
   },
   {
    "id": "GP-REPAIR-SOCIAL",
