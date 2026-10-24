@@ -22015,6 +22015,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-STALL-TABLE-10",
+   "kind": "approved",
+   "title": "Market stall table shows ten goods comfortably",
+   "description": "Market stall table shows ten goods comfortably",
+   "source": "docs/gameplay_polish/reference/stall_table_small_2026-10-24.png",
+   "owner_wording": "the table needs to hold 10 items confortably",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "A player-built market stall's table is drawn large enough to show ten different goods at once without overlap or crowding (the goods on display drawn on it, up to ten kinds); the larger stall shows at least as many; footprint, collision and site rules updated to match and the stall stays reachable from the buyer's side; art through the asset pipeline with provenance; saves with existing stalls load; verified by a screenshot with ten goods up and a test"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/stall_table_small_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-START-RUSTY-AXE",
    "kind": "approved",
    "title": "The player starts with a rusty axe",
