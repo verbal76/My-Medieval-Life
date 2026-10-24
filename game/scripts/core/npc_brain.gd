@@ -2749,6 +2749,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 
 # ---------------------------------------------------------------- fighting -------------------
 func fight(n: NPC, dt: float) -> void:
+	if w.recorder != null:
+		w.recorder.chase_tick(n)      # SIM-GATE-01: a chase opens when the target is new (reads only)
 	var tpos: Vector2
 	var tdead := false
 	var tnpc: NPC = null
@@ -2764,6 +2766,8 @@ func fight(n: NPC, dt: float) -> void:
 		else:
 			tpos = tnpc.pos
 	if tdead or (n.role == "bandit" and n.hp < n.max_hp * 0.3):
+		if w.recorder != null:
+			w.recorder.chase_end(n, "target_gone" if tdead else "bandit_low_hp")      # SIM-GATE-01
 		n.target = -1
 		n.plan.clear()
 		if n.role == "bandit":
@@ -2771,6 +2775,8 @@ func fight(n: NPC, dt: float) -> void:
 		return
 	var d := tpos - n.pos
 	if d.length() > 25.0 or (n.job == "guard" and tpos.distance_to(Vector2(w.bandit_camp)) < 12.0):
+		if w.recorder != null:
+			w.recorder.chase_end(n, "out_of_range" if d.length() > 25.0 else "near_bandit_camp")      # SIM-GATE-01
 		n.target = -1
 		n.plan.clear()
 		return
@@ -2783,6 +2789,8 @@ func fight(n: NPC, dt: float) -> void:
 			# SIM-F4 (recorder run 2): the chase walks straight at the target, so a wall or fence between them held the
 			# chaser on the spot for good, never deciding again (bandits starved stalking). A blocked chase is given up as
 			# one whose target is gone.
+			if w.recorder != null:
+				w.recorder.chase_end(n, "blocked")      # SIM-GATE-01: the corner case (GP-CRIME-PURSUIT)
 			n.target = -1
 			n.plan.clear()
 			if n.role == "bandit":
@@ -2791,6 +2799,8 @@ func fight(n: NPC, dt: float) -> void:
 	if n.attack_cd > 0.0:
 		return
 	n.attack_cd = 1.0 * Skills.value(n, "combat", "attack_time", 1.0)     # the player's Combat rule (PAR-01)
+	if w.recorder != null:
+		w.recorder.chase_strike(n)      # SIM-GATE-01
 	n.anim = "sword"
 	n.plan = []
 	if w.judgment != null:
@@ -2816,6 +2826,8 @@ func fight(n: NPC, dt: float) -> void:
 		w.raise_alarm(aware, n.id)       # who sees it; the victim reports it (PAR-05)
 		w.note("%s robbed %s %s of %d coins%s." % [n.name, tnpc.name, tnpc.family, take,
 			(" and a " + GameData.item_name(stolen).to_lower()) if stolen != "" else ""])
+		if w.recorder != null:
+			w.recorder.chase_end(n, "robbed")      # SIM-GATE-01
 		n.target = -1
 		n.plan = [go(w.bandit_camp, 1.2)]
 		return
@@ -2836,6 +2848,8 @@ func fight(n: NPC, dt: float) -> void:
 			w.kill(tnpc, "slain by %s" % n.name)
 			if w.judgment != null and tnpc.role != "bandit":
 				JudgmentLive.on_killing(w, tnpc, n.id)         # PROSPECTIVE (PROS-19): a villager's killing
+			if w.recorder != null:
+				w.recorder.chase_end(n, "target_slain")      # SIM-GATE-01
 			n.target = -1
 
 

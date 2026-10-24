@@ -28,6 +28,13 @@ var _inv_hour := -1
 var _chain: Array = []                  # the decision chain's branch ids, in order
 var _chain_factors := {}                # branch id -> factor names it reads
 var samples_on := true
+# SIM-GATE-01: what the hourly snapshot counts (read only; nothing here is read by the game)
+var _hour_n := {}                       # counter -> events of that kind ended since the last snapshot
+var _births := 0                        # life births and deaths recorded since the session began
+var _deaths := 0
+var _stats_seen := {}                   # w.stats at the last snapshot (only the keys that changed are written)
+var _snap_us := 0                       # Time.get_ticks_usec at the last snapshot
+var _chases := {}                       # fighter id -> {target, t0 (game minutes), d0, strikes, x, y}: a chase begun and not yet ended
 
 
 ## Create the recorder for `world` and attach it (World.recorder). `config` overrides recorder.json keys.
@@ -241,6 +248,7 @@ func trade_end(t: Array, buyer: Object, seller: Object, id: String) -> void:
 	state_change(ev, s, "coins", t[2], int(seller.coins), "world.trade")
 	state_change(ev, b, "item:" + id, t[3], buyer.inv.count(id), "world.trade")
 	state_change(ev, s, "item:" + id, t[4], seller.inv.count(id), "world.trade")
+	_hour_n["trade_coins"] = int(_hour_n.get("trade_coins", 0)) + maxi(0, int(t[1]) - int(buyer.coins))
 	end(ev, "ok")
 
 
@@ -285,19 +293,208 @@ func transfer_refused(from: Inventory, to: Inventory, id: String, qty: int) -> v
 	end(ev, "refused", "from_lacks_item" if not from.has(id, qty) else "to_cannot_take")
 
 
+## Every event that ends is tallied for the next hourly snapshot (SIM-GATE-01); the row itself is written by the base class.
+func end(id: int, outcome := "ok", reason := "", detail := "") -> void:
+	var row = _open.get(id)
+	super.end(id, outcome, reason, detail)
+	if row == null:
+		return
+	var cat := str(row[12])
+	var sub := str(row[13])
+	_hour_n["events"] = int(_hour_n.get("events", 0)) + 1
+	var key := ""
+	match cat:
+		"transaction":
+			key = "trades" if sub == "trade" else "transfers"
+		"action":
+			key = "actions"
+			if outcome != "ok":
+				_hour_n["actions_failed"] = int(_hour_n.get("actions_failed", 0)) + 1
+		"interruption":
+			key = "walk_lost" if sub == "walk_lost" else ""
+		"crime":
+			key = "crimes"
+		"combat":
+			key = "chases"
+		"life":
+			if sub == "birth":
+				_births += 1
+			elif sub == "death":
+				_deaths += 1
+	if key != "":
+		_hour_n[key] = int(_hour_n.get(key, 0)) + 1
+
+
+func alert(severity: String, rule: String, entities: String, values: String, ev := -1) -> int:
+	_hour_n["alerts"] = int(_hour_n.get("alerts", 0)) + 1
+	return super.alert(severity, rule, entities, values, ev)
+
+
 # ---------------------------------------------------------------- the hour ------------------
-## Called at each game-hour boundary (World._on_hour): write the buffer, audit the coins, take the hourly samples.
+## Called at each game-hour boundary (World._on_hour): write the buffer, audit the coins, take the hourly samples and the
+## village snapshot.
 func hour() -> void:
 	flush()
 	if stopped or finished:
 		return
 	_audit_coins()
+	_close_stale_chases()
 	if samples_on:
 		for n: NPC in w.npcs:
 			if n.alive:
 				var c := n.cell()
 				sample("p:%d" % n.id, snappedf(n.hunger, 0.1), snappedf(n.hp, 0.1), c.x, c.y, n.doing, n.coins)
 		sample(ref_of(w.player), snappedf(w.player.hunger, 0.1), snappedf(w.player.hp, 0.1), int(w.player.pos.x), int(w.player.pos.y), "", w.player.coins)
+	snapshot_row()
+
+
+## SIM-GATE-01: the village in one row (FlightRecorder.COLUMNS.snapshot). Reads only: no random draw, no call that changes
+## state (judgment's counts() flushes its gossip, so its facts are counted directly).
+func snapshot_row() -> void:
+	var alive := 0
+	var adults := 0
+	var employed := 0
+	var children := 0
+	var elders := 0
+	var bandits := 0
+	var hunger_sum := 0.0
+	var hunger_min := 100.0
+	var starving := 0
+	var hp_sum := 0.0
+	var idle := 0
+	var lost := 0
+	var fighting := 0
+	var guards := 0
+	var engaged := 0
+	var vcoins := 0
+	for n: NPC in w.npcs:
+		if not n.alive:
+			continue
+		if n.role == "bandit":
+			bandits += 1
+			continue
+		alive += 1
+		vcoins += n.coins
+		hunger_sum += n.hunger
+		hunger_min = minf(hunger_min, n.hunger)
+		hp_sum += n.hp / maxf(1.0, n.max_hp)
+		if n.hunger <= 0.0:
+			starving += 1
+		match n.role:
+			"adult":
+				adults += 1
+				if n.job != "":
+					employed += 1
+			"child":
+				children += 1
+			"elder":
+				elders += 1
+		if n.doing == "idle":
+			idle += 1
+		elif n.doing == "lost":
+			lost += 1
+		if n.target != -1:
+			fighting += 1
+		if n.job == "guard":
+			guards += 1
+			if n.target != -1:
+				engaged += 1
+	var purses := []
+	for h in w.households.size():
+		if not w.brain._members(h).is_empty():
+			purses.append(w.property.purse(World.hh_ref(h)))
+	purses.sort()
+	var ties := 0
+	var friends := 0
+	var courting := 0
+	if w.relations != null:
+		for k in w.relations.ties:
+			var t: Dictionary = w.relations.ties[k]
+			ties += 1
+			if bool(t.get("friends", false)):
+				friends += 1
+			if str(t.get("stage", "")) != "":
+				courting += 1
+	var delta := {}
+	for k in w.stats:
+		var v = w.stats[k]
+		var was = _stats_seen.get(k, 0)
+		if typeof(v) in [TYPE_INT, TYPE_FLOAT] and v != was:
+			delta[k] = snappedf(float(v) - float(was), 0.01)
+			_stats_seen[k] = v
+	var now_us := Time.get_ticks_usec()
+	var wall_ms = snappedf((now_us - _snap_us) / 1000.0, 0.1) if _snap_us > 0 else NOT_EVALUATED
+	_snap_us = now_us
+	var nf := float(maxi(1, alive))
+	snapshot([int(_now()[0]), int(float(_now()[1]) / 60.0), alive, purses.size(), adults,
+		employed, children, elders, bandits, snappedf(hunger_sum / nf, 0.1), snappedf(hunger_min if alive > 0 else 0.0, 0.1), starving,
+		snappedf(hp_sum / nf, 0.001), idle, lost, fighting, guards, engaged, int(w.total_coins()), vcoins, int(w.treasury), int(w.coin_sources),
+		int(purses[0]) if not purses.is_empty() else 0, int(purses[purses.size() / 2]) if not purses.is_empty() else 0,
+		int(purses[-1]) if not purses.is_empty() else 0, snappedf(float(w.food_days), 0.01), w.granary.count("wheat"), _births, _deaths,
+		ties, friends, courting, (w.judgment.facts.size() if w.judgment != null else NOT_EVALUATED), w.player.crimes.size(),
+		int(_hour_n.get("events", 0)), int(_hour_n.get("trades", 0)), int(_hour_n.get("trade_coins", 0)), int(_hour_n.get("transfers", 0)),
+		int(_hour_n.get("actions", 0)), int(_hour_n.get("actions_failed", 0)), int(_hour_n.get("walk_lost", 0)), int(_hour_n.get("crimes", 0)),
+		int(_hour_n.get("chases", 0)), int(_hour_n.get("alerts", 0)), delta, wall_ms, OS.get_static_memory_usage()])
+	_hour_n.clear()
+
+
+# ---------------------------------------------------------------- chases --------------------
+## SIM-GATE-01: NPCBrain.fight, every tick a fighter has a target. A chase opens when the fighter's target is new to the
+## recorder (the code that set NPC.target is not named: raise_alarm, deliver_report, a blow answered ...) and ends at the
+## line of fight() that clears the target, with that line's reason; one cleared elsewhere (the player's death, a kill by
+## someone else) is closed at the next hour as cleared_elsewhere. Reads positions only.
+func chase_tick(n: NPC) -> void:
+	var c = _chases.get(n.id)
+	if c != null and int(c.target) == n.target:
+		return
+	if c != null:
+		_chase_close(n, "retargeted")
+	var cell := n.cell()
+	_chases[n.id] = {"target": n.target, "t0": w.minutes, "day0": w.day(), "d0": _chase_dist(n), "strikes": 0, "x": cell.x, "y": cell.y}
+
+
+func chase_strike(n: NPC) -> void:
+	if _chases.has(n.id):
+		_chases[n.id].strikes = int(_chases[n.id].strikes) + 1
+
+
+## The line of fight() that clears the target: `reason` is its reason code (recorder_codes.json "reasons").
+func chase_end(n: NPC, reason: String) -> void:
+	if _chases.has(n.id):
+		_chase_close(n, reason)
+
+
+func _chase_dist(n: NPC) -> float:
+	if Life.is_player_id(n.target):
+		return snappedf(n.pos.distance_to(w.player.pos), 0.01)
+	var t: NPC = w.npc(n.target)
+	return snappedf(n.pos.distance_to(t.pos), 0.01) if t != null else -1.0
+
+
+func _chase_close(n: NPC, reason: String) -> void:
+	var c: Dictionary = _chases[n.id]
+	_chases.erase(n.id)
+	var who := "guard" if n.job == "guard" else ("bandit" if n.role == "bandit" else "villager")
+	var tref := ref_of(w.player) if Life.is_player_id(int(c.target)) else _pref(int(c.target))
+	var mins := float(w.minutes) - float(c.t0)
+	var outcome := "ok" if reason in ["target_slain", "robbed"] else ("abandoned" if reason in ["out_of_range", "near_bandit_camp", "blocked", "bandit_low_hp"] else "interrupted")
+	var ev := begin("combat", "chase", "combat", "chase_" + who, ref_of(n), {"parent": -1, "x": int(c.x), "y": int(c.y)})
+	participant(ev, ref_of(n), who)
+	participant(ev, tref, "target:player" if Life.is_player_id(int(c.target)) else "target")
+	end(ev, outcome, reason, "start_day=%d start_minute=%.2f minutes=%.2f seconds=%.2f d0=%.2f d_end=%.2f strikes=%d" % [int(c.day0),
+		fmod(float(c.t0), World.DAY), mins, mins / maxf(0.001, float(GameData.b("game_minutes_per_second"))), float(c.d0), _chase_dist(n), int(c.strikes)])
+
+
+func _close_stale_chases() -> void:
+	var ids := _chases.keys()
+	ids.sort()
+	for id in ids:
+		var n: NPC = w.npc(int(id))
+		if n == null or not n.alive or n.target != int(_chases[id].target):
+			if n == null:
+				_chases.erase(id)
+				continue
+			_chase_close(n, "cleared_elsewhere")
 
 
 ## REC-D4: balance auditing, not a rewrite of the coin sites. A holder's purse is compared with its last audited balance

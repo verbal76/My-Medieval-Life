@@ -39,6 +39,7 @@ func _init() -> void:
 	test_employment_events()
 	test_government_events()
 	test_crime_events()
+	test_chase_events()
 	test_player_verbs()
 	test_scripted_equivalence()
 	test_person_refs()
@@ -132,7 +133,7 @@ func test_core_archive() -> void:
 		seqs_ok = seqs_ok and int(evs[i].seq) > int(evs[i - 1].seq)
 	check(evs.size() == 152 and seqs_ok, "events read back in sequence order")
 	var first := RecorderArchive.read_chunk(dir + "/" + RecorderArchive.chunk_files(dir)[0])
-	check(first.header.schema == "mml-recorder/1" and first.header.session == r.session and first.footer.rows == first.rows.size() and int(first.header.first_seq) == int(first.rows[0][0]), "a chunk's header names schema and session, its footer counts its rows")
+	check(first.header.schema == FlightRecorder.SCHEMA and first.header.session == r.session and first.footer.rows == first.rows.size() and int(first.header.first_seq) == int(first.rows[0][0]), "a chunk's header names schema and session, its footer counts its rows")
 	var sess = RecorderArchive.read_json(dir + "/session.json")
 	check(sess.ended and sess.completeness == "complete" and sess.seed == 7 and sess.counts.event == 152, "session.json: ended, complete, with the caller's metadata and counts")
 	check(r.unknown_codes.is_empty(), "every code used is in recorder_codes.json (unknown: %s)" % str(r.unknown_codes))
@@ -312,6 +313,25 @@ func test_live_world() -> void:
 	for s in d.sample:
 		hours["%d|%d" % [s.day, s.hour]] = true
 	check(hours.size() >= 47 and d.sample.size() >= 47 * (alive - 5), "live: hourly samples of the living villagers (%d rows over %d hours)" % [d.sample.size(), hours.size()])
+	# SIM-GATE-01: one village snapshot an hour, every column filled, counts that agree with the event rows of the same hours
+	var snaps: Array = d.snapshot
+	var snap_hours := {}
+	for sn in snaps:
+		snap_hours["%d|%d" % [sn.day, sn.hour]] = true
+	check(snaps.size() >= 47 and snap_hours.size() == snaps.size(), "live: one snapshot row an hour (%d rows)" % snaps.size())
+	var full := true
+	for f in DirAccess.get_files_at(session_dir(rec) + "/d0001"):
+		if f.begins_with("snapshot."):
+			for r in RecorderArchive.read_chunk(session_dir(rec) + "/d0001/" + f).rows:
+				full = full and (r as Array).size() == FlightRecorder.COLUMNS.snapshot.size()
+	check(full, "live: each snapshot row has every column of the schema (%d)" % FlightRecorder.COLUMNS.snapshot.size())
+	var trades_h := 0
+	for sn in snaps:
+		trades_h += int(sn.trades_h)
+	var trades_all: Array = d.event.filter(func(e): return e.subtype == "trade")
+	var last: Dictionary = snaps[-1]
+	check(trades_h <= trades_all.size() and trades_h >= trades_all.size() - 200 and int(last.alive) > 0 and int(last.total_coins) > 0 and last.stats_delta is Dictionary,
+		"live: the snapshots' hourly trade counts add up to the trade events before the last hour (%d of %d); alive %d, coins %d" % [trades_h, trades_all.size(), int(last.alive), int(last.total_coins)])
 	var total_alerts: Array = d.alert.filter(func(a): return a.rule == "coin.unattributed_total")
 	check(total_alerts.is_empty(), "live: no coin was created or lost outside the books in two days (World.coin_sources accounts every crossing)")
 	for a in d.alert:
@@ -814,6 +834,36 @@ func test_crime_events() -> void:
 	check(rows(rec, "event").size() > n_before, "events recorded")
 	check(rec.unknown_codes.is_empty(), "crime: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
 	cast = null
+	w.dispose()
+
+
+## SIM-GATE-01: a fighter's chase is one event from the tick its target is new to the line of fight() that clears it.
+func test_chase_events() -> void:
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("chase")})
+	w.minutes = float(World.DAY) * 2.0 + 11.0 * 60.0
+	var g: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.job == "guard")[0]
+	w.player.pos = g.pos + Vector2(3, 0)
+	w.player_level = g.depth
+	g.target = Life.PLAYER_ID
+	w.brain.fight(g, 0.1)
+	check(rec._chases.has(g.id), "chase: a guard given the player as target opens a chase")
+	w.player.pos = g.pos + Vector2(40, 0)          # beyond the 25 tiles fight() follows
+	w.brain.fight(g, 0.1)
+	var ce := evs(rec, "chase_guard")
+	check(g.target == -1 and ce.size() == 1 and ce[0].category == "combat" and ce[0].outcome == "abandoned" and ce[0].reason == "out_of_range",
+		"chase: the guard's chase ends as abandoned, out_of_range, at the line that drops it (%s)" % (str(ce[0]) if not ce.is_empty() else "none"))
+	var cp := parts_of(rec, int(ce[0].id)) if not ce.is_empty() else []
+	check(cp.any(func(x): return x.role == "guard" and x.ref == "p:%d" % g.id) and cp.any(func(x): return x.role == "target:player" and x.ref == "p:%d" % w.player.pid),
+		"chase: participants the guard and the player (role marker), on permanent references")
+	check(not ce.is_empty() and str(ce[0].detail).contains("d0=3.00") and str(ce[0].detail).contains("strikes=0"), "chase: the detail has the start distance and the strikes (%s)" % (str(ce[0].detail) if not ce.is_empty() else ""))
+	w.player.pos = g.pos + Vector2(2, 0)
+	g.target = Life.PLAYER_ID                       # cleared by other code: closed at the next hour
+	w.brain.fight(g, 0.0)
+	g.target = -1
+	rec.hour()
+	check(evs(rec, "chase_guard").any(func(e): return e.reason == "cleared_elsewhere"), "chase: a target cleared outside fight() is closed at the hour as cleared_elsewhere")
+	check(rec.unknown_codes.is_empty(), "chase: no code outside recorder_codes.json (%s)" % str(rec.unknown_codes))
 	w.dispose()
 
 
