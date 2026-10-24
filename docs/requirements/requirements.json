@@ -8484,6 +8484,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner 2026-10-24: one-time exception, Build 20 (Checkpoint 1) is signed with a disposable key (allow_temporary_key); the stable-key rule holds for every later build (docs/directives/2026-10-24_build20_signing_exception.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "Build 20: all three platforms from 56c24cb with build number 20 in one private draft (422532601), checksums verified by the lead"
     }
    ]
   },
@@ -21854,8 +21859,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21883,10 +21888,21 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner overnight directive (docs/directives/2026-10-24_overnight_build20_delivery.md): finish and release Build 20 tonight under the existing verification, disposable key, disclosed as predating SIM-GATE-01"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml 102 scripts 10,745 checks 0 failures; unittest 117; validators 0; G0 PASS; release run_tests and start_test passed in CI; test_commit: None -> 9feaf77; commits + 56c24cb; release_location",
+     "why": "Build 20 built and uploaded: release run 40065271734 (success) from wip/multiplayer-b19 56c24cb, private draft release 422532601 'My Medieval Life Build 20' with the APK (disposable key), Windows ZIP, Linux ZIP and SHA256SUMS; the lead downloaded all three and the checksums match; predates SIM-GATE-01 as disclosed"
     }
    ],
    "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "full tests.yml 102 scripts 10,745 checks 0 failures; unittest 117; validators 0; G0 PASS; release run_tests and start_test passed in CI",
+   "test_commit": "9feaf77",
+   "commits": [
+    "56c24cb"
+   ],
+   "release_location": "GitHub draft release 422532601 (build-20), run 40065271734"
   },
   {
    "id": "GP-CRIME-PURSUIT",
