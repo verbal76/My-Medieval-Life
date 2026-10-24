@@ -707,7 +707,7 @@ func _run() -> void:
 	main.move_to = Vector2.INF
 	# the village map: the Map button opens and closes it
 	var map_btn: Button = null
-	for b in ui.touch_bar.get_children():
+	for b in ui.touch_buttons():
 		if b.text == "Map":
 			map_btn = b
 	check(map_btn != null and ui.touch_bar.visible, "a Map button on the touch bar")
@@ -1286,7 +1286,7 @@ func _gather_tests() -> void:
 	main.gather_button()
 	check(main.gather_mode and ui.gather_btn.text == "Gather ON", "Gather turns gather mode on (the button shows it)")
 	main.attack_button()
-	check(main.attack_mode and not main.gather_mode and ui.gather_btn.text == "Gather", "Attack turns Gather off")
+	check(main.attack_mode and not main.gather_mode and ui.gather_btn.text == "Gather OFF", "Attack turns Gather off (the button says OFF)")
 	main.gather_button()
 	check(main.gather_mode and not main.attack_mode, "and Gather turns Attack off")
 	# a seam: tap it, the player walks there and mines it cycle after cycle until it runs out
@@ -2393,7 +2393,7 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	ui.set_scheme("touch")
 	await process_frame
 	var run_btn: Button = ui.sprint_btn
-	check(run_btn != null and ui.touch_bar.visible and run_btn.get_parent() == ui.touch_bar and run_btn.text == "Run", "the touch bar has a Run button")
+	check(run_btn != null and ui.touch_bar.visible and ui.touch_buttons().has(run_btn) and run_btn.text == "Run", "the touch bar has a Run button")
 	main.sprinting = false
 	main.sprint_latched = false
 	p.stamina = 100.0
@@ -2434,9 +2434,45 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 			if c.visible and c.get_global_rect().intersects(bar):
 				clash.append(c.name)
 		check(view.encloses(bar) and clash.is_empty() and run_btn.get_global_rect().size.x >= 64.0, "at %s the touch bar with Run is on screen and clear of the HUD (%s, clash %s)" % [sz, bar, clash])
+		await _touch_columns_check(str(sz), view)
 	get_root().content_scale_size = size0
 	ui.fit_safe_area()
 	ui.set_scheme("kbm")
+
+
+## GP-ACTIONBAR (owner directive 2026-10-24, section 4): the nine touch actions in two columns at the right edge, the
+## left column Run, Gather, Fire, Skills, Menu and the right one Use, Attack, Pack, Map; each on screen, none overlapping
+## another, comfortable to touch, its caption at a readable size, clear of the status box, the messages, the prompt and
+## Recenter, and the middle of the screen left free.
+func _touch_columns_check(where: String, view: Rect2) -> void:
+	var ui = main.ui
+	var cols: Array = ui.touch_columns
+	var names := cols.map(func(c): return c.get_children().map(func(b): return str(b.text).trim_suffix(" ON").trim_suffix(" OFF")))
+	check(names == [["Run", "Gather", "Fire", "Skills", "Menu"], ["Use", "Attack", "Pack", "Map"]], "%s: two columns, %s" % [where, str(names)])
+	var all: Array = ui.touch_buttons()
+	var rects := all.map(func(b): return (b as Control).get_global_rect())
+	var overlap := 0
+	var small := 0
+	for i in rects.size():
+		if not view.encloses(rects[i]) or rects[i].size.y < GameUI.TOUCH_BUTTON_MIN_H or rects[i].size.x < 80.0 or all[i].get_theme_font_size("font_size") < 17:
+			small += 1
+		for j in range(i + 1, rects.size()):
+			if (rects[i] as Rect2).grow(-0.5).intersects(rects[j]):
+				overlap += 1
+	check(all.size() == 9 and overlap == 0 and small == 0, "%s: all 9 actions on screen, none overlapping, each at least 80 x %d with a %d-point caption" % [where, int(GameUI.TOUCH_BUTTON_MIN_H), GameUI.TOUCH_FONT])
+	var left: Rect2 = cols[0].get_global_rect()
+	var right: Rect2 = cols[1].get_global_rect()
+	check(left.end.x <= right.position.x and right.end.x > view.end.x - 40.0 and left.position.x > view.size.x * 0.6, "%s: the columns stand side by side at the right edge, the middle of the screen free (%s, %s)" % [where, left, right])
+	var bar: Rect2 = ui.touch_bar.get_global_rect()
+	ui.message("A message to read beside the buttons.")
+	ui.prompt("Use the anvil")
+	await process_frame
+	var clash := []
+	for c in [ui.status_box, ui.log_box, ui.prompt_box, ui.recenter_btn]:
+		if c.visible and c.get_global_rect().intersects(bar):
+			clash.append(c.name)
+	check(clash.is_empty(), "%s: the status box, messages, prompt and Recenter stay clear of the columns %s" % [where, clash])
+	ui.prompt("")
 
 
 ## Six free cells in a row to the east, for the sprint measurements: the first one's centre.

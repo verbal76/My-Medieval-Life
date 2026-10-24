@@ -43,7 +43,8 @@ var panel_body: VBoxContainer
 var title_label: Label
 var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
 var close_btn: Button
-var touch_bar: HBoxContainer
+var touch_bar: HBoxContainer          # GP-ACTIONBAR: two columns of action buttons along the right edge (touch_columns)
+var touch_columns: Array = []         # the two VBoxContainers in touch_bar, left then right
 var sprint_btn: Button          # the touch bar's Run toggle (Build 13)
 var attack_btn: Button
 var gather_btn: Button
@@ -101,7 +102,8 @@ const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "to
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
 const CONTROLS := {
 	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it"],
-		[["touch_finger_one"], "Gather turns gather mode on; then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
+		[["touch_finger_one"], "The action buttons stand in two columns at the right edge: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map"],
+		[["touch_finger_one"], "Gather turns gather mode on (the button reads Gather ON, lit gold; Gather OFF when off); then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack swings at a foe within sword reach; with none near, it turns attack mode on: tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
 		[["xbox_button_a"], "Connect a Bluetooth or wired controller and the game switches to its controls and hides these buttons"],
@@ -226,6 +228,7 @@ func _fit_hud() -> void:
 	log_box.offset_top = m
 	touch_bar.offset_right = -m
 	touch_bar.offset_bottom = -m
+	_fit_touch_bar(view.y - inset[1] - inset[3] - 2.0 * m, m)
 	# then step off any cutout an element would overlap (once laid out)
 	_avoid_cutouts.call_deferred(cutouts, m)
 
@@ -319,6 +322,81 @@ func _style(color: Color, border := SLATE) -> StyleBoxFlat:
 	s.set_border_width_all(2)
 	s.set_content_margin_all(10)
 	return s
+
+
+## GP-ACTIONBAR: the touch actions, column by column (left, then the right edge): [caption, action, icon]. Every action of
+## the former bottom row (Run, Use, Gather, Attack, Fire, Pack, Skills, Map, Menu), none removed.
+const TOUCH_COLUMNS := [
+	[["Run", "sprint", "stamina"], ["Gather", "gather", "gather"], ["Fire", "fireball", "fire"], ["Skills", "skills", "skills"], ["Menu", "pause", "menu"]],
+	[["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Pack", "inventory", "pack"], ["Map", "map", "map"]],
+]
+const TOUCH_GAP := 6                   # between buttons (interface units): they never touch or overlap
+const TOUCH_BUTTON_W := 96.0
+const TOUCH_BUTTON_H := (72.0)         # the most a button is tall; shorter screens fit five rows (touch_button_height)
+const TOUCH_BUTTON_MIN_H := 52.0
+const TOUCH_FONT := 17
+const TOUCH_ON := Color8(240, 196, 84)  # a mode that is on (Gather, Run, Attack): gold border and caption
+
+
+## Every touch action button, in column order.
+func touch_buttons() -> Array:
+	var out := []
+	for col: Control in touch_columns:
+		out.append_array(col.get_children())
+	return out
+
+
+## A touch action: its icon over a readable caption, on its own dark tile (it reads on bright grass and sand).
+func _touch_button(icon: String, caption: String) -> Button:
+	var b := Button.new()
+	b.icon = load(UI % icon)
+	b.expand_icon = true
+	b.text = caption
+	b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.focus_mode = Control.FOCUS_NONE
+	b.add_theme_font_size_override("font_size", TOUCH_FONT)
+	b.add_theme_color_override("font_outline_color", Color.BLACK)
+	b.add_theme_constant_override("outline_size", 4)
+	b.clip_text = false
+	_touch_style(b, false)
+	b.custom_minimum_size = Vector2(TOUCH_BUTTON_W, TOUCH_BUTTON_H)
+	return b
+
+
+## The tile behind a touch button; `on` marks a mode that is on (gold border, brighter tile).
+func _touch_style(b: Button, on: bool) -> void:
+	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var st := StyleBoxFlat.new()
+		st.bg_color = Color(WINDOW, 0.86 if state != "pressed" else 0.97)
+		if on:
+			st.bg_color = Color(0.36, 0.26, 0.08, 0.92)
+		st.border_color = TOUCH_ON if on else Color(SLATE, 0.95)
+		st.set_border_width_all(3 if on else 2)
+		st.set_corner_radius_all(8)
+		st.content_margin_left = 4
+		st.content_margin_right = 4
+		st.content_margin_top = 5
+		st.content_margin_bottom = 3
+		b.add_theme_stylebox_override(state, st)
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		b.add_theme_color_override(c, TOUCH_ON if on else PALE)
+
+
+## The height of a touch button that lets five rows fit in `avail` interface units of height (never above
+## TOUCH_BUTTON_H; never below TOUCH_BUTTON_MIN_H, a comfortable thumb).
+static func touch_button_height(avail: float) -> float:
+	var rows := 0
+	for col in TOUCH_COLUMNS:
+		rows = maxi(rows, (col as Array).size())
+	return clampf(floorf((avail - TOUCH_GAP * (rows - 1)) / float(rows)), TOUCH_BUTTON_MIN_H, TOUCH_BUTTON_H)
+
+
+## The width the touch columns take from the right edge (with the margin beside them), 0 when hidden.
+func touch_bar_width() -> float:
+	if touch_bar == null or not touch_bar.visible:
+		return 0.0
+	return touch_bar.get_combined_minimum_size().x + float(HUD_MARGIN["phone" if main.settings.phone else "desktop"])
 
 
 ## A button showing one of the UI pack's icon tiles (the tile is the button), with a caption under it.
@@ -473,25 +551,34 @@ func _build_hud() -> void:
 	action_bar.add_child(action_label)
 	hud.add_child(action_bar)
 
+	# GP-ACTIONBAR (owner directive 2026-10-24, section 4): every action of the old bottom row, in two columns along the
+	# right edge, anchored to the bottom-right corner of the usable screen; readable captions on a dark tile each
 	touch_bar = HBoxContainer.new()
 	touch_bar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	touch_bar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	touch_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	touch_bar.add_theme_constant_override("separation", 8)
+	touch_bar.add_theme_constant_override("separation", TOUCH_GAP)
+	touch_bar.alignment = BoxContainer.ALIGNMENT_END
 	hud.add_child(touch_bar)
-	for b in [["Run", "sprint", "stamina"], ["Use", "interact", "use"], ["Gather", "gather", "gather"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
-			["Skills", "skills", "skills"], ["Map", "map", "map"], ["Menu", "pause", "menu"]]:
-		var btn := _tile_button(b[2], b[0], 72)
-		btn.focus_mode = Control.FOCUS_NONE
-		var act: String = b[1]
-		btn.pressed.connect(func(): _touch_action(act))
-		touch_bar.add_child(btn)
-		if act == "attack":
-			attack_btn = btn
-		if act == "gather":
-			gather_btn = btn
-		if act == "sprint":
-			sprint_btn = btn
+	touch_columns = []
+	for column in TOUCH_COLUMNS:
+		var col := VBoxContainer.new()
+		col.add_theme_constant_override("separation", TOUCH_GAP)
+		col.alignment = BoxContainer.ALIGNMENT_END
+		touch_bar.add_child(col)
+		touch_columns.append(col)
+		for b in column:
+			var btn := _touch_button(b[2], b[0])
+			var act: String = b[1]
+			btn.pressed.connect(func(): _touch_action(act))
+			col.add_child(btn)
+			if act == "attack":
+				attack_btn = btn
+			if act == "gather":
+				gather_btn = btn
+			if act == "sprint":
+				sprint_btn = btn
+	set_gather_mode(false)
 	# Recenter sits above the touch bar's right end, in every control scheme, while looking around
 	recenter_btn = _tile_button("recenter", "Recenter", 72)
 	recenter_btn.focus_mode = Control.FOCUS_NONE
@@ -669,6 +756,20 @@ func _side_of(pl: Dictionary) -> String:
 	return "north" if g.y == r.position.y else ("south" if g.y == r.end.y - 1 else ("west" if g.x == r.position.x else "east"))
 
 
+## GP-ACTIONBAR: size the buttons so five rows fit the usable height, and keep the messages (top right) and Recenter
+## (bottom right) beside the columns instead of under them.
+func _fit_touch_bar(avail: float, m: float) -> void:
+	var bh := touch_button_height(avail)
+	for b: Button in touch_buttons():
+		b.custom_minimum_size = Vector2(TOUCH_BUTTON_W, bh)
+	touch_bar.reset_size()
+	var w := touch_bar_width() if touch_bar.visible else 0.0
+	log_box.offset_right = -m - w
+	if recenter_btn != null:
+		recenter_btn.offset_right = -10.0 - w
+		recenter_btn.offset_bottom = -10.0
+
+
 ## The controls in use changed: touch buttons only for touch (unless set otherwise), and prompts
 ## name the key or pad button. With keys or a pad, panels get keyboard focus.
 func set_scheme(s: String) -> void:
@@ -677,7 +778,7 @@ func set_scheme(s: String) -> void:
 	touch_bar.visible = (mode == "always" or (mode == "auto" and s == "touch")) and not place_bar.visible
 	if place_bar.visible:
 		show_placing(true)                  # its hint follows the scheme
-	recenter_btn.offset_bottom = -10.0 - (104.0 if touch_bar.visible else 0.0)
+	_fit_hud()                              # the messages and Recenter step beside the touch columns, or back
 	prompt(prompt_text)
 	if is_open("title"):
 		show_title(main.can_continue())       # its controls list follows the scheme
@@ -691,17 +792,18 @@ func set_sprint_mode(on: bool) -> void:
 		return
 	var txt := "Run ON" if on else "Run"
 	if sprint_btn.text != txt:
-		sprint_btn.self_modulate = Color(0.55, 0.95, 0.55) if on else Color.WHITE
+		_touch_style(sprint_btn, on)
 		sprint_btn.text = txt
 
 
+## GP-ACTIONBAR: Gather says its state in words and colour, on or off, never only by a tint.
 func set_gather_mode(on: bool) -> void:
-	gather_btn.self_modulate = Color(1.0, 0.85, 0.4) if on else Color.WHITE
-	gather_btn.text = "Gather ON" if on else "Gather"
+	gather_btn.text = "Gather ON" if on else "Gather OFF"
+	_touch_style(gather_btn, on)
 
 
 func set_attack_mode(on: bool) -> void:
-	attack_btn.self_modulate = Color(1.0, 0.45, 0.4) if on else Color.WHITE
+	_touch_style(attack_btn, on)
 	attack_btn.text = "Attack ON" if on else "Attack"
 
 
@@ -866,9 +968,7 @@ func _meter_text(key: String, words: String, fraction: float) -> void:
 ## Where the prompt's bottom edge sits: just above the screen edge, or above the action buttons
 ## when the touch bar is showing (they fill the bottom of a phone).
 func _prompt_bottom() -> float:
-	if touch_bar != null and touch_bar.visible:
-		return -(touch_bar.get_combined_minimum_size().y + 12.0 + 8.0)
-	return -64.0
+	return -64.0                            # GP-ACTIONBAR: the touch columns are at the right edge, not along the bottom
 
 
 ## Centre a bottom-anchored control on its own (re-measured) size, its bottom edge at `bottom`. A
@@ -876,8 +976,9 @@ func _prompt_bottom() -> float:
 ## wrapping label measured while it had no width is thousands of pixels tall.
 func _place_bottom(c: Control, bottom: float) -> void:
 	var m := c.get_combined_minimum_size()
-	c.offset_left = -m.x / 2.0
-	c.offset_right = m.x / 2.0
+	var shift := -touch_bar_width() / 2.0     # centred in the room left of the touch columns
+	c.offset_left = -m.x / 2.0 + shift
+	c.offset_right = m.x / 2.0 + shift
 	c.offset_top = bottom - m.y
 	c.offset_bottom = bottom
 
@@ -1025,7 +1126,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_bar.get_children() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar]:
+	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
