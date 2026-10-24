@@ -21853,7 +21853,7 @@
    "kind": "approved",
    "title": "Pack item detail panel: action buttons cut off the bottom of the screen",
    "description": "Pack item detail panel: action buttons cut off the bottom of the screen",
-   "source": "docs/gameplay_polish/reference/pack_buttons_offscreen_2026-10-24.webp",
+   "source": "docs/gameplay_polish/reference/pack_buttons_offscreen_2026-10-24.webp; docs/gameplay_polish/reference/pack_buttons_offscreen_ale_2026-10-24.webp",
    "owner_wording": "bottom options are off the screen",
    "approval": "owner, 2026-10-24 (reported defect)",
    "acceptance": [
@@ -21878,6 +21878,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "source",
+     "why": "owner reported it again with Ale x2 (a four-line description: food, restores, spoils, used for): the buttons are entirely off screen; screenshot added"
     }
    ],
    "assigned_worker": "primary development agent",
