@@ -1871,7 +1871,9 @@ func _dvw_a12_reach() -> void:
 							"container":
 								why = w.player_container_reach(t.c)
 							"station":
-								why = "" if (Vector2(w.station_use(str(t.id))) + Vector2(0.5, 0.5)).distance_to(p.pos) < World.STATION_REACH else "far"
+								# core's reach for a craft (World.player_craft_begin): near the use cell, or beside the drawing (GP-ANVIL)
+								why = "" if (Vector2(w.station_use(str(t.id))) + Vector2(0.5, 0.5)).distance_to(p.pos) < World.STATION_REACH \
+										or World.station_in_reach(w.stations[str(t.id)], p.pos, Vector2.ZERO) else "far"
 							_:
 								continue
 						offered += 1
