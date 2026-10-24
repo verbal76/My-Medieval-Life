@@ -338,6 +338,7 @@ func buy(thing: Dictionary, ref: String) -> String:
 		w.set_owner(r, ref)
 	w.stat("gov_land_sales", float(price))
 	w.note("%s bought %s from the manor for %d coins." % [w.ref_name(ref, true), describe(thing), price])
+	JudgmentLive.on_news(w, "land_bought", ref, ["place:" + str(thing.get("id", "")), "price:%d" % price], JudgmentLive.at_of(w, ref))   # A5: news by knowledge
 	_settle(ref)
 	return ""
 
@@ -354,6 +355,7 @@ func lease(thing: Dictionary, ref: String) -> String:
 		w.set_tenant(r, ref, rent if r == u[0] else 0)
 	w.stat("gov_rent", float(rent))
 	w.note("%s leased %s from the manor for %d coins a week." % [w.ref_name(ref, true), describe(thing), rent])
+	JudgmentLive.on_news(w, "land_leased", ref, ["place:" + str(thing.get("id", "")), "rent:%d" % rent], JudgmentLive.at_of(w, ref))   # A5
 	_settle(ref)
 	return ""
 

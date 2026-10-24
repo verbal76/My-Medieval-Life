@@ -2698,12 +2698,16 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
 	Outlaws.on_death(self, n)              # BANDIT-RETURN: the last bandit's death starts the wait for newcomers
+	# A5 (REPAIR_AUDIT D2): the household learns of the death, not who did it (that is the killing's own fact, seen or told)
+	var known_cause := "slain" if cause.begins_with("slain") else cause
 	if n.household >= 0:
 		var hh: Dictionary = households[n.household]
 		for m in hh.members:
 			var o := npc(m)
 			if o and o.alive:
-				o.remember("%s died (%s)" % [n.name, cause])
+				o.remember("%s died (%s)" % [n.name, known_cause])
+	if judgment != null:
+		JudgmentLive.on_death(self, n, EventTalk._cause_kind(cause))
 	brain.on_death(n)
 	if n.household >= 0 and not property._anyone_alive(n.household):
 		property.household_ended(n.household)
@@ -2717,6 +2721,7 @@ func _player_killing(n: NPC, ref: String) -> void:
 	var seen := near(n.pos, float(GameData.b("witness_radius"))).filter(func(o: NPC) -> bool: return o.role != "bandit" and o != n)
 	var ci := crime_record({"day": day(), "kind": "killing", "what": "%s %s" % [n.name, n.family], "victim": n.id, "witnesses": seen.size()}, n)
 	for o: NPC in seen:
+		o.remember("saw %s %s kill %s %s" % [player.name, player.family, n.name, n.family])     # A5: the witness's own record of the killing
 		if o.job == "guard":
 			justice.learn(o, ref, [ci], player.pos)
 		else:

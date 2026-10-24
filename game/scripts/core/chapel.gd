@@ -303,6 +303,8 @@ func ask(n: NPC) -> bool:
 	var got := relieve(n.household)
 	if got > 0.0:
 		w.stat("chapel_relieved")
+		if not w.brain.noted.has("chapel_%d_%d" % [n.household, w.day()]):
+			JudgmentLive.on_news(w, "relief", "hhid:%d" % n.household, ["giver:chapel"], n.pos)     # A5: the household knows; those at the chapel saw
 		w.brain.once("chapel_%d_%d" % [n.household, w.day()], "The chapel gave the %s household food." % w.households[n.household].family)
 	return got > 0.0
 

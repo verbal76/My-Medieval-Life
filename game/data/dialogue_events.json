@@ -176,7 +176,7 @@
     ]
   },
   "home_death": {
-    "_doc": "S1: home()'s line for a household death the speaker remembers. listener: slain by the listener; slain: by someone else ({killer}); starvation; old_age; other ({cause}).",
+    "_doc": "S1: home()'s line for a household death the speaker remembers. listener: slain by the listener; slain: by someone else ({killer}); starvation; old_age; other ({cause}). slain_unknown: killed, and the speaker does not know by whom (A5: a household learns of the death, not the killer).",
     "listener": [
       "We lost {victim}. You know why: you killed {them}.",
       "We lost {victim}, and it was your hand that did it."
@@ -193,10 +193,14 @@
     ],
     "other": [
       "We lost {victim} ({cause})."
+    ],
+    "slain_unknown": [
+      "We lost {victim}. Someone killed {them}.",
+      "We lost {victim}: {they} was killed."
     ]
   },
   "talk": {
-    "_doc": "A4 (the perspective renderer, REPAIR_AUDIT D4): how a villager tells an event they know, from their own place in it. A clause per event type; {A} the actor as the subject, {A2} a second actor, {V} the victim, {B} the beneficiaries, {Vs} and {Bs} their possessives, {As} the actor's; each is said from the speaker's side: the listener 'you'/'your', the speaker 'I'/'me'/'my', their household 'we'/'us'/'our' (a household is named 'our family' the first time), a relative as family name them ('Mum', 'my daughter Rose'), anyone else by name, an unknown person 'someone'. A type may give clauses by the subject's person (i, we, you; 'default' for anyone else) where the verb changes. frames: how the clause is framed by how the speaker knows it: saw (witnessed), part (took part: the victim, the beneficiary, their household), told ({T}: who told them), rumour (further along). A list is chosen from by Dialogue._pick (by villager and day; no random numbers). Presentation only.",
+    "_doc": "A4 (the perspective renderer, REPAIR_AUDIT D4): how a villager tells an event they know, from their own place in it. A clause per event type; {A} the actor as the subject, {A2} a second actor, {V} the victim, {B} the beneficiaries, {Vs} and {Bs} their possessives, {As} the actor's; each is said from the speaker's side: the listener 'you'/'your', the speaker 'I'/'me'/'my', their household 'we'/'us'/'our' (a household is named 'our family' the first time), a relative as family name them ('Mum', 'my daughter Rose'), anyone else by name, an unknown person 'someone'. A type may give clauses by the subject's person (i, we, you; 'default' for anyone else) where the verb changes. frames: how the clause is framed by how the speaker knows it: saw (witnessed), part (took part: the victim, the beneficiary, their household), told ({T}: who told them), rumour (further along). A list is chosen from by Dialogue._pick (by villager and day; no random numbers). Presentation only. A5 news types: {place} the parcel or building as the village names it, {price}/{rent} coins, {thing} the item's name, {G} who gave (household_word aside, 'givers'); a type in household_types is said with the household as its subject ('our family', 'we', 'the Lamberts'); death is worded by its kind (slain, starvation, old_age; never by whom).",
     "frames": {
       "saw": [
         "I saw it myself: {c}.",
@@ -258,6 +262,29 @@
       },
       "marriage": {
         "default": "{A} and {A2} were married"
+      },
+      "land_bought": {
+        "default": "{A} bought {place} from the manor for {price} coins"
+      },
+      "land_leased": {
+        "default": "{A} took {place} on lease from the manor, at {rent} coins a week"
+      },
+      "fenced": {
+        "default": "{A} fenced {place}"
+      },
+      "relief": {
+        "default": "{G} gave {B} food"
+      },
+      "no_tool": {
+        "default": "{A} has no {thing} and cannot get one",
+        "i": "I have no {thing} and cannot get one",
+        "you": "you have no {thing} and cannot get one"
+      },
+      "death": {
+        "default": "{V} died",
+        "slain": "{V} was killed",
+        "starvation": "{V} starved to death",
+        "old_age": "{V} died of old age"
       }
     },
     "household_word": {
@@ -278,6 +305,16 @@
       "default": [
         "Nothing much has happened."
       ]
+    },
+    "household_types": [
+      "land_bought",
+      "land_leased",
+      "fenced",
+      "relief"
+    ],
+    "givers": {
+      "manor": "the manor",
+      "chapel": "the church"
     }
   }
 }

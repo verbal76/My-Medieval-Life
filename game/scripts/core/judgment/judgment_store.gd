@@ -100,6 +100,9 @@ var social: JudgmentSocial
 var world_seed := 0
 var day := 0
 var next_event := 1
+const NEWS_BASE := 1 << 36               # A5 (GP-DIALOGUE): news facts (family "news") take ids from here, so the moral events' ids (and every seeded roll on them) stay as they were
+var next_news := NEWS_BASE
+var news_told_today := {}  # A5: teller -> news tellings today (gossip.news_daily_budget), apart from the moral budget
 var facts := {}          # event id -> PackedInt64Array (F_*)
 var fact_tags := {}      # event id -> tags, only for events that have any
 var fact_orig := {}      # event id -> the original actors, only for revised events
@@ -142,6 +145,10 @@ var _pol := PackedInt64Array()   # 1 GOOD, -1 BAD, 0 NEUTRAL
 var _perm := PackedInt64Array()  # 1 a memory of it never fades (Q11: murder, or permanent_severity)
 var _jperm := PackedInt64Array() # 1 a judgment from it never decays (Q02: murder)
 var _famh := PackedInt64Array()  # the type's family, hashed (Q08 personal morality)
+var _news := PackedInt64Array()  # A5: 1 for a news type (family "news", NEUTRAL): known and told, never judged, apart from the moral memory and gossip
+var _news_cap := 12              # memory.news_capacity: news memories a person holds at most (apart from memory.capacity)
+var _g_news_per := 1             # gossip.news_per_meeting
+var _g_news_budget := 4          # gossip.news_daily_budget
 var _personal := []              # per type: the NEUTRAL "personal" rule (Q01) or {}
 var _perm_personal := 3000       # memory.permanent_personal_severity: permanent for the one affected (Q11)
 var _decay := 0                  # decay.ordinary_permille_per_day (Q02)
@@ -230,8 +237,12 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 		_jperm.append(1 if bool(d.get("permanent", false)) else 0)
 		_t_ev.append(int((d.get("trust", 0))))
 		_famh.append(str(d.get("family", "")).hash())
+		_news.append(1 if str(d.get("family", "")) == "news" and str(d.polarity) == "NEUTRAL" else 0)
 		_personal.append((d.get("personal", {}) as Dictionary).duplicate())
 	_cap = int(m.capacity)
+	_news_cap = int(m.get("news_capacity", 12))
+	_g_news_per = int((cfg.get("gossip", {}) as Dictionary).get("news_per_meeting", 1))
+	_g_news_budget = int((cfg.get("gossip", {}) as Dictionary).get("news_daily_budget", 4))
 	_fade = int(m.salience_fade_permille)
 	_below = int(m.forget_below)
 	_perm_personal = int(m.get("permanent_personal_severity", 3000))
@@ -302,7 +313,11 @@ func publish(type: String, actors: Array, victims: Array = [], beneficiaries: Ar
 		_stat("refused_insignificant")
 		return -1
 	var id := next_event
-	next_event += 1
+	if _news[int(_tix[type])] == 1:
+		id = next_news                          # A5: news has its own ids
+		next_news += 1
+	else:
+		next_event += 1
 	facts[id] = _pack_fact(int(_tix[type]), day, 0, value, _shares(actors), victims, beneficiaries)
 	if not tags.is_empty():
 		fact_tags[id] = tags.duplicate()
@@ -436,7 +451,7 @@ func ordinary_count(observer: int) -> int:
 	var n := 0
 	var mem: Dictionary = memories.get(observer, {})
 	for ev in mem:
-		if (mem[ev][M_FLAGS] & 1) == 0:
+		if (mem[ev][M_FLAGS] & 1) == 0 and _news[mem[ev][M_TYPE]] == 0:
 			n += 1
 	return n
 
@@ -514,6 +529,13 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		if prev[M_SRC] >= TOLD:                     # a told account meets first-hand knowledge: the teller was right or wrong (X19-REGARD)
 			_vouch(observer, prev[M_BY], _same_actors(_mem_actors(prev), actors))
 	var sal := JudgmentMath.scale(_sev[t], conf) if _pol[t] != 0 else int(c("memory").get("neutral_salience", 500))
+	if _news[t] == 1:
+		# A5: news (a purchase, a fence, relief, a death, a missing tool) is known and told, never judged: no ledger, trust,
+		# personality or bond moves, and it is held apart from the moral memories (memory.news_capacity)
+		mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 0)
+		_stat("news_beliefs")
+		_bound_news(observer)
+		return true
 	var perm := _mem_permanent(observer, f)
 	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 1 if perm else 0)
 	_gver += 1
@@ -574,7 +596,7 @@ func _bound(observer: int) -> void:
 		var w_sal := 0
 		for ev in mem:
 			var m: PackedInt64Array = mem[ev]
-			if (m[M_FLAGS] & 1) == 1:
+			if (m[M_FLAGS] & 1) == 1 or _news[m[M_TYPE]] == 1:
 				continue
 			ordinary += 1
 			var sal := m[M_SAL]
@@ -586,6 +608,21 @@ func _bound(observer: int) -> void:
 		_forget(observer, worst)
 		if ordinary - 1 <= _cap:
 			return                                 # what a second pass would find: one ordinary memory fewer
+
+
+## A5: keep `observer`'s news memories within memory.news_capacity: the oldest event goes first.
+func _bound_news(observer: int) -> void:
+	var mem: Dictionary = memories[observer]
+	var news := []
+	for ev in mem:
+		if _news[(mem[ev] as PackedInt64Array)[M_TYPE]] == 1:
+			news.append(int(ev))
+	if news.size() <= _news_cap:
+		return
+	news.sort()
+	for i in news.size() - _news_cap:
+		mem.erase(news[i])
+		_stat("news_forgotten")
 
 
 ## Forget a memory. Its points stay in the ledger (unless retract_on_forget); its contribution record goes too, since
@@ -1314,7 +1351,10 @@ func tell(teller: int, listener: int) -> int:
 	var mem: Dictionary = memories[teller]
 	if mem.is_empty():
 		return 0
-	if int(told_today.get(teller, 0)) >= _g_budget or net(teller, listener) <= threshold(teller, _g_share_at):
+	if net(teller, listener) <= threshold(teller, _g_share_at):
+		return 0
+	if int(told_today.get(teller, 0)) >= _g_budget:
+		_tell_news(teller, listener, mem, memories.get(listener, {}))     # A5: the moral budget spent, news may still pass
 		return 0
 	var cred := -1                                 # the listener's trust in the teller, found when first needed
 	var heard: Dictionary = memories.get(listener, {})
@@ -1323,7 +1363,7 @@ func tell(teller: int, listener: int) -> int:
 	var about := {}                                # whom the stories told in this meeting were about
 	for ev in mem:
 		var m: PackedInt64Array = mem[ev]
-		if not facts.has(ev) or _mem_names(m, listener):
+		if not facts.has(ev) or _mem_names(m, listener) or _news[m[M_TYPE]] == 1:
 			continue
 		if cred < 0:
 			cred = credibility(listener, teller)
@@ -1342,6 +1382,7 @@ func tell(teller: int, listener: int) -> int:
 				continue                           # judged before and since forgotten
 		keys.append(((SAL_ROOM - m[M_SAL]) << 40) | int(ev))
 	if keys.is_empty():
+		_tell_news(teller, listener, mem, heard)
 		return 0
 	keys.sort()
 	var k := 0
@@ -1374,6 +1415,42 @@ func tell(teller: int, listener: int) -> int:
 			about[int(a[0])] = true
 	if k > 0 and _lie_chance > 0:
 		k += _maybe_lie(teller, listener, about)
+	_tell_news(teller, listener, mem, heard)
+	return k
+
+
+## A5: in the same meeting, the teller passes on news (purchases, fences, relief, deaths, missing tools) the listener
+## lacks, newest first, at most gossip.news_per_meeting, within its own daily budget (gossip.news_daily_budget), at the
+## gossip's closeness chance (its own seeded roll). News never takes the place of a moral story, and is not counted in
+## the moral budget or the lies' motive; it moves no judgment. Returns how many were told.
+func _tell_news(teller: int, listener: int, mem: Dictionary, heard: Dictionary) -> int:
+	if _g_news_per <= 0 or int(news_told_today.get(teller, 0)) >= _g_news_budget:
+		return 0
+	var cand := []
+	for ev in mem:
+		var m: PackedInt64Array = mem[ev]
+		if _news[m[M_TYPE]] == 0 or not facts.has(ev) or heard.has(ev) or _mem_names(m, listener):
+			continue
+		cand.append(int(ev))
+	if cand.is_empty():
+		return 0
+	cand.sort()
+	cand.reverse()                                # the newest first (news ids rise with time)
+	var cred := credibility(listener, teller)
+	var k := 0
+	for ev in cand:
+		if k >= _g_news_per or int(news_told_today.get(teller, 0)) >= _g_news_budget:
+			break
+		if _g_floor < 1000 and JudgmentMath.roll([world_seed, ev, teller, listener, _stamp, day, 7177]) >= close_chance(listener, teller):
+			continue
+		var m: PackedInt64Array = mem[ev]
+		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
+		if conf <= 0:
+			continue
+		learn(listener, ev, "told" if m[M_HOPS] == 0 else "rumour", teller, m[M_HOPS] + 1, conf, _mem_actors(m))
+		news_told_today[teller] = int(news_told_today.get(teller, 0)) + 1
+		_stat("news_tellings")
+		k += 1
 	return k
 
 
@@ -1658,6 +1735,7 @@ func begin_day(d: int) -> void:
 	day = d
 	clock_abs = maxi(clock_abs, d * 1440)
 	told_today.clear()
+	news_told_today.clear()
 	_end_old_fights()
 	bonds.dawn(d)                                # X19-FOUND-BONDS: softening through personality growth (inert as shipped)
 	var cutoff := d - int(c("memory").horizon_days)
@@ -1791,7 +1869,7 @@ func _learnable(o: int, who: Dictionary, actors: Dictionary) -> bool:
 		var mem: Dictionary = memories[p]
 		for ev in mem:
 			var m: PackedInt64Array = mem[ev]
-			if not facts.has(ev) or _mem_names(m, o):
+			if not facts.has(ev) or _mem_names(m, o) or _news[m[M_TYPE]] == 1:
 				continue
 			if held.has(ev):
 				var h: PackedInt64Array = held[ev]
@@ -1935,6 +2013,13 @@ func to_dict() -> Dictionary:
 		tt.append([int(t), int(told_today[t])])
 	var out := {"format": FORMAT, "version": VERSION, "day": day, "next_event": next_event, "facts": fs, "memories": ms,
 		"contrib": cs, "ledgers": ls, "told_today": tt}
+	if next_news != NEWS_BASE:
+		out.next_news = next_news                # A5: news ids (optional: a section without news has none)
+	if not news_told_today.is_empty():
+		var nt := []
+		for t in _sorted(news_told_today):
+			nt.append([int(t), int(news_told_today[t])])
+		out.news_told_today = nt
 	if not trust.is_empty():
 		var tr := []
 		for o in _sorted(trust):
@@ -1994,7 +2079,7 @@ static func _sorted(d: Dictionary) -> Array:
 ## unknown format, a newer version, or naming an event type this catalog lacks is refused with a message and kept
 ## unread, written back unchanged, never dropped (CLAUDE.md section 7). Returns "" or the reason it was not read.
 func load_dict(d: Dictionary) -> String:
-	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, life, _early, _retiring, lied, story_pending, last_choice, fights]:
+	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, news_told_today, life, _early, _retiring, lied, story_pending, last_choice, fights]:
 		(x as Dictionary).clear()
 	pers.clear()
 	_people = PackedInt64Array()
@@ -2035,6 +2120,9 @@ func load_dict(d: Dictionary) -> String:
 		return str(m.error)
 	day = int(m.day)
 	next_event = int(m.next_event)
+	next_news = int(m.get("next_news", NEWS_BASE))           # A5: an older section has no news
+	for r in m.get("news_told_today", []):
+		news_told_today[int(r[0])] = int(r[1])
 	for r in m.facts:
 		var id := int(r[0])
 		facts[id] = _pack_fact(int(_tix[str(r[1])]), int(r[2]), int(r[8]), int(r[6]), _ints2(r[3]), (r[4] as Array).map(func(x): return int(x)),

@@ -104,11 +104,14 @@ static func violence(w: World, n: NPC) -> Dictionary:
 	var you := listener_name(w)
 	var known := {}                              # victim id -> {crime, how, victim}
 	var saw_prefix := "saw %s attack " % you
+	var kill_prefix := "saw %s kill " % you
 	var slain := " died (slain by %s)" % you
 	for m in n.memory:
 		var s := str(m)
 		if s.begins_with(saw_prefix):
 			_know(known, _person(w, n, s.substr(saw_prefix.length())), "assault", "saw", n)
+		elif s.begins_with(kill_prefix):
+			_know(known, _person(w, n, s.substr(kill_prefix.length())), "killing", "saw", n)
 		elif s.ends_with(slain):
 			_know(known, dead_named(w, n, s.substr(0, s.length() - slain.length())), "killing", "heard", n)
 	if w.judgment != null and player_id_is_listener(w):
@@ -231,9 +234,22 @@ static func events(w: World, n: NPC) -> Array:
 				"victims": (f.victims as Array).map(func(v): return person_of_id(w, int(v), tags)),
 				"benef": (f.beneficiaries as Array).map(func(v): return person_of_id(w, int(v), tags)),
 				"hh": int(tags.get("hh", -1)), "sev": int(w.judgment.definition(str(b.type)).get("severity", 0)), "perm": bool(b.permanent)}
+			if tags.has("place"):
+				it.place = place_words(w, str(tags.place))
 			out.append(it)
-		return out
-	return _from_memory(w, n)
+	# the villager's own memory strings are knowledge too (the hue and cry, a killing seen): kept when no judgment
+	# memory tells the same event (the same kind, of the same victim), the surer way of knowing winning
+	for it in _from_memory(w, n):
+		var dup := -1
+		for i in out.size():
+			if str(out[i].type) == str(it.type) and _same(out[i].victims, it.victims):
+				dup = i
+				break
+		if dup < 0:
+			out.append(it)
+		elif HOW.find(str(it.how)) < HOW.find(str(out[dup].how)):
+			out[dup].how = it.how
+	return out
 
 
 ## A fact's tags as a dictionary: "place:<id>", "price:<n>", "hh:<index>", "item:<id>", "cause:<kind>", "by:<player ref>".
@@ -263,7 +279,12 @@ static func _from_memory(w: World, n: NPC) -> Array:
 	for i in n.memory.size():
 		var s := str(n.memory[i])
 		var it := {}
-		if s.begins_with("saw ") and s.contains(" attack "):
+		if s.begins_with("saw ") and s.contains(" kill ") and not s.contains(" killed "):
+			var who = _named(w, s.substr(4, s.find(" kill ") - 4))
+			var vic := _person_named(w, n, s.substr(s.find(" kill ") + 6))
+			if who != null and vic != null:
+				it = {"type": "killing", "how": "saw", "actors": [who], "victims": [vic], "benef": []}
+		elif s.begins_with("saw ") and s.contains(" attack "):
 			var who = _named(w, s.substr(4, s.find(" attack ") - 4))
 			var vic := _person_named(w, n, s.substr(s.find(" attack ") + 8))
 			if who != null and vic != null:
@@ -378,7 +399,7 @@ static func news_items(w: World, n: NPC, k: int) -> Array:
 	for it in all:
 		if str(it.type) in ["meeting"]:
 			continue
-		var kl := _killed_too(all, it) if str(it.type) == "assault" else {}
+		var kl := _killed_too(all, it) if str(it.type) in ["assault", "death"] else {}
 		if not kl.is_empty():
 			if HOW.find(str(it.how)) < HOW.find(str(kl.how)):
 				kl.how = it.how                    # the attack seen tells how the speaker knows the killing it led to
@@ -401,10 +422,10 @@ static func news_items(w: World, n: NPC, k: int) -> Array:
 const HOW := ["saw", "part", "told", "rumour"]     # how surely one knows, surest first
 
 
-## The killing in `all` by the same hand of the same victim as attack `a`, or {}.
+## The killing in `all` of the same victim as attack `a` (by the same hand) or death `a`, or {}: the killing tells it.
 static func _killed_too(all: Array, a: Dictionary) -> Dictionary:
 	for it in all:
-		if str(it.type) == "killing" and _same(it.get("victims", []), a.get("victims", [])) and (_same(it.get("actors", []), a.get("actors", [])) or (it.get("actors", []) as Array).is_empty()):
+		if str(it.type) == "killing" and _same(it.get("victims", []), a.get("victims", [])) and (str(a.type) == "death" or _same(it.get("actors", []), a.get("actors", [])) or (it.get("actors", []) as Array).is_empty()):
 			return it
 	return {}
 
@@ -416,3 +437,20 @@ static func _same(a: Array, b: Array) -> bool:
 		if a[i] != b[i]:
 			return false
 	return true
+
+
+## A parcel or building as the village names it today ("the farmland south-west of the market"), by its id.
+static func place_words(w: World, id: String) -> String:
+	var thing: Dictionary = w.plot(id)
+	if thing.is_empty():
+		thing = w.buildings.get(id, {})
+	return w.property.describe(thing) if not thing.is_empty() else "some land"
+
+
+## Who the speaker believes killed `victim` (a killing they know of: seen, told, rumoured), or null when they do not know.
+static func killer_of(w: World, n: NPC, victim: NPC) -> Variant:
+	for it in events(w, n):
+		var seen_fall: bool = str(it.type) == "assault" and str(it.how) == "saw" and not victim.alive
+		if (str(it.type) == "killing" or seen_fall) and (it.victims as Array).has(victim) and not (it.actors as Array).is_empty():
+			return it.actors[0]
+	return null

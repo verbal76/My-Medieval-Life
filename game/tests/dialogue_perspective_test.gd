@@ -7,6 +7,9 @@ extends SceneTree
 ##   A4: news is what the speaker knows (seen, taken part in, told, rumoured), never the village record: the killing
 ##   told to the killer as "you", framed by how the speaker knows it ("I saw it myself", "<teller> told me", "they say");
 ##   a villager who learned nothing has no news; with judgment off, the villager's own memories only.
+##   A5: village news as facts that travel by knowledge: the Lambert purchase (bought through Property.buy) told by a
+##   member as "our family" and unknown to a stranger until told; the Oakley child's chapel food and Mum's missing axe;
+##   the household learns of a death but not the killer; news is never judged and keeps out of the moral memory.
 ## Run headless:
 ##   godot --headless --path game --script res://tests/dialogue_perspective_test.gd
 
@@ -28,6 +31,9 @@ func _init() -> void:
 	test_stance()
 	test_news_from_knowledge(true)
 	test_news_from_knowledge(false)
+	test_lambert_facts()
+	test_oakley_facts()
+	test_news_not_judged()
 	print("dialogue_perspective_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -105,7 +111,11 @@ func test_witness(judgment: bool) -> void:
 		if o.alive and o.role == "adult" and o.household != child.household and o.family != child.family and o.job != "guard":
 			stranger = o
 			break
-	_kill_before(w, child, elder)
+	if away != null:
+		away.pos = Vector2(5.5, 5.5)             # out of sight and out of earshot of the hue and cry
+	if stranger != null:
+		stranger.pos = Vector2(8.5, 5.5)
+	_kill_before(w, child, elder, [away, stranger])
 	var you := "%s %s" % [w.player.name, w.player.family]
 	var open := Dialogue.opening(w, elder)
 	print("     %s witness %s (%s) to the killer: %s" % [tag, Dialogue.full_name(elder), elder.role, open])
@@ -124,8 +134,20 @@ func test_witness(judgment: bool) -> void:
 	if away != null:
 		away.pos = elder.pos + Vector2(60, 0)
 		var heard := Dialogue.opening(w, away)
-		print("     %s household member who was not there: %s" % [tag, heard])
-		check(not heard.contains("I saw") and (heard.contains("heard") or heard.contains("say")), "%s: a relative who was not there says they heard, not saw" % tag)
+		var away_home := Dialogue.home(w, away)
+		print("     %s household member who was not there: %s | home: %s" % [tag, heard, away_home])
+		# A5 (REPAIR_AUDIT D2): the household learns of the death, not who did it, until told or seeing it
+		check(not heard.contains("kill") and not heard.contains("murder"), "%s: a relative who was not there does not know who killed her" % tag)
+		check(away_home.contains(child.name) and not away_home.contains("you"), "%s: but knows she died, and does not blame the listener" % tag)
+		if judgment:
+			var ev := -1
+			for e in w.judgment.memories.get(elder.id, {}):
+				if str(w.judgment.belief(elder.id, int(e)).type) == "killing":
+					ev = int(e)
+			w.judgment.learn(away.id, ev, "told", elder.id, 1, 900, w.judgment.belief(elder.id, ev).actors)
+			heard = Dialogue.opening(w, away)
+			print("     %s told by the witness: %s" % [tag, heard])
+			check(not heard.contains("I saw") and (heard.contains("heard") or heard.contains("say")), "%s: told by the witness, a relative who was not there says they heard, not saw" % tag)
 	if stranger != null:
 		var none := _all(w, stranger)
 		check(not none.contains(child.name) and not none.contains("kill"), "%s: a villager who saw and learned nothing says nothing of it" % tag)
@@ -244,3 +266,129 @@ func test_news_from_knowledge(judgment: bool) -> void:
 	w.dispose()
 
 
+
+
+# ---------------------------------------------------------------- A5: the Lambert purchase, as a fact
+## A household whose surname no other household has, with an adult and another member; and an adult of another household.
+func _household(w: World) -> Array:
+	for i in w.households.size():
+		var fam: String = w.households[i].family
+		if w.households.filter(func(o): return o.family == fam).size() != 1:
+			continue
+		var adult: NPC = null
+		var other: NPC = null
+		for m in w.households[i].members:
+			var o := w.npc(m)
+			if o == null or not o.alive:
+				continue
+			if adult == null and o.role == "adult" and o.job != "guard":
+				adult = o
+			elif other == null and o.role != "child":
+				other = o
+		if adult != null and other != null:
+			return [i, adult, other]
+	return []
+
+
+func test_lambert_facts() -> void:
+	var w := _world(true)
+	var hs := _household(w)
+	var h: int = hs[0]
+	var adult: NPC = hs[1]
+	var member: NPC = hs[2]
+	var fam: String = w.households[h].family
+	var outsider: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household != h and o.job != "guard":
+			outsider = o
+			break
+	outsider.pos = Vector2(5.5, 5.5)
+	var parcel: Dictionary = {}
+	for r in w.property.market():
+		if w.property.is_parcel(r) and w.property.building_on(r).is_empty():
+			parcel = r
+			break
+	check(not parcel.is_empty(), "a parcel the manor sells")
+	adult.coins += w.property.price_of(parcel) + 5
+	var price := w.property.price_of(parcel)
+	var why := w.property.buy(parcel, "hh:%d" % h)
+	check(why == "", "the household buys it through the land office (%s)" % why)
+	JudgmentLive.on_news(w, "fenced", "hh:%d" % h, ["place:" + str(parcel.id)], JudgmentLive.at_of(w, "hh:%d" % h))
+	var said := Dialogue.news(w, member)
+	print("     %s, a member: %s" % [Dialogue.full_name(member), said])
+	check(said.contains("Our family bought") or said.contains("We bought"), "a member says \"our family\" or \"we\" bought it")
+	check(not said.contains("%s household" % fam) and not said.contains("the %ss" % fam), "never their own household as a third party")
+	check(said.contains("%d coins" % price) and said.contains(w.property.describe(parcel)), "the price and the place are kept")
+	var none := Dialogue.news(w, outsider)
+	check(not none.contains("bought"), "an outsider who saw nothing and was told nothing does not know of it (%s)" % none)
+	var ev := -1
+	for e in w.judgment.memories.get(member.id, {}):
+		if str(w.judgment.belief(member.id, int(e)).type) == "land_bought":
+			ev = int(e)
+	w.judgment.learn(outsider.id, ev, "told", member.id, 1, 900, w.judgment.belief(member.id, ev).actors)
+	var told := Dialogue.news(w, outsider)
+	print("     %s, an outsider told of it: %s" % [Dialogue.full_name(outsider), told])
+	check(told.contains("the %ss bought" % fam) or told.contains("The %ss bought" % fam), "told of it, an outsider names the household: \"the %ss\"" % fam)
+	w.dispose()
+
+
+# ---------------------------------------------------------------- A5: the Oakley child, as facts
+func test_oakley_facts() -> void:
+	var w := _world(true)
+	var kid: NPC = null
+	var mum: NPC = null
+	for c: NPC in w.npcs:
+		if c.alive and c.role == "child" and c.mother >= 0:
+			var m := w.npc(c.mother)
+			if m != null and m.alive and m.household == c.household:
+				kid = c
+				mum = m
+				break
+	check(kid != null, "a child living with their mother")
+	JudgmentLive.on_news(w, "relief", "hhid:%d" % kid.household, ["giver:chapel"], null)
+	JudgmentLive.on_news(w, "no_tool", "npc:%d" % mum.id, ["item:axe"], null)
+	var said := Dialogue.news(w, kid)
+	print("     %s (child): %s" % [Dialogue.full_name(kid), said])
+	check(said.contains("church gave us food"), "the child says the church gave \"us\" food")
+	check(said.contains("Mum has no axe"), "and calls their mother \"Mum\"")
+	check(not said.contains("%s %s" % [mum.name, mum.family]) and not said.contains("household"), "never their own family as strangers")
+	var stranger: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household != kid.household:
+			stranger = o
+			break
+	check(not Dialogue.news(w, stranger).contains("axe"), "a villager of another household was not told: they do not know")
+	w.dispose()
+
+
+# ---------------------------------------------------------------- A5: news is known and told, never judged
+func test_news_not_judged() -> void:
+	var w := _world(true)
+	var hs := _household(w)
+	var h: int = hs[0]
+	var member: NPC = hs[2]
+	var j: JudgmentStore = w.judgment
+	var ledger0 := JSON.stringify(j.to_dict().ledgers)
+	var ord0 := j.ordinary_count(member.id)
+	var next0 := j.next_event
+	for k in 20:
+		JudgmentLive.on_news(w, "relief", "hhid:%d" % h, ["giver:manor"], null)
+	check(JSON.stringify(j.to_dict().ledgers) == ledger0, "news moves no ledger (Q01: NEUTRAL)")
+	check(j.ordinary_count(member.id) == ord0, "and takes no room among the moral memories")
+	check(j.next_event == next0 and j.next_news > JudgmentStore.NEWS_BASE, "news has ids of its own: the moral events' ids are untouched")
+	var news := (j.memories.get(member.id, {}) as Dictionary).keys().filter(func(e): return int(e) >= JudgmentStore.NEWS_BASE).size()
+	check(news <= int(j.c("memory").news_capacity), "a person holds at most news_capacity news (%d)" % news)
+	# a death: the household knows, a stranger far off does not
+	var victim: NPC = w.npc(int(w.households[h].members[0]))
+	var far: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.household != h and o.role == "adult" and EventTalk.relation(w, o, victim) == "":
+			far = o
+			break
+	far.pos = victim.pos + Vector2(80, 0)
+	w.kill(victim, "starvation")
+	var knows_death := func(o: NPC) -> bool:
+		return EventTalk.events(w, o).any(func(it): return str(it.type) == "death" and (it.victims as Array).has(victim))
+	check(knows_death.call(member), "the household learns of the death")
+	check(not knows_death.call(far), "a villager far off, of another household, does not")
+	w.dispose()

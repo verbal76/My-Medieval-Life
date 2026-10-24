@@ -72,11 +72,13 @@ static func witness_brush(w: World, n: NPC, k: Dictionary) -> String:
 	return Dialogue._pick(w, n, data().witness_brush[EventTalk.stance(w, n, k)], 6)
 
 
-## home()'s line for a household death the speaker remembers ("<first> died (<cause>)").
+## home()'s line for a household death the speaker remembers ("<first> died (<cause>)"). A5: the memory says only that
+## they were slain; who did it is what the speaker knows of the killing (EventTalk.killer_of: seen or told), else nobody.
+## (An older save's memory may still name the killer: "slain by <name>".)
 static func home_death(w: World, n: NPC, first: String, cause: String) -> String:
 	var o := EventTalk.dead_named(w, n, first)
 	var t: Dictionary = data().home_death
-	var extra := {"victim": first, "cause": cause}
+	var extra := {"victim": first, "cause": cause, "they": "she" if o != null and o.sex == "female" else "he"}
 	var kind := "other"
 	if cause == "starvation":
 		kind = "starvation"
@@ -86,6 +88,15 @@ static func home_death(w: World, n: NPC, first: String, cause: String) -> String
 		var killer := cause.substr(9)
 		kind = "listener" if killer == EventTalk.listener_name(w) else "slain"
 		extra.killer = killer
+	elif cause == "slain":
+		var k = EventTalk.killer_of(w, n, o) if o != null else null
+		if k == null:
+			kind = "slain_unknown"
+		elif k is PlayerState and k == w.player:
+			kind = "listener"
+		else:
+			kind = "slain"
+			extra.killer = person(w, n, k, "subj", {})
 	return _fill(Dialogue._pick(w, n, t[kind], 9), w, n, o, extra)
 
 
@@ -159,18 +170,21 @@ static func clause(w: World, n: NPC, it: Dictionary, said: Dictionary) -> String
 	var a0 = actors[0] if not actors.is_empty() else null
 	var key := person_class(w, n, a0)
 	var hh := int(it.get("hh", -1))
-	if hh >= 0 and (actors.is_empty() or (a0 is NPC and a0.household == hh)):
+	var by_household: bool = hh >= 0 and (talk().household_types as Array).has(str(it.type)) and (actors.is_empty() or (a0 is NPC and a0.household == hh))
+	if by_household:
 		key = "we" if hh == n.household else "default"
 	var tags: Dictionary = it.get("tags", {})
 	var line := ""
-	if (it.get("victims", []) as Array).is_empty() and t.has("novictim"):
+	if str(it.type) == "death":
+		line = str(t.get(str(tags.get("cause", "")), t.default))
+	elif (it.get("victims", []) as Array).is_empty() and t.has("novictim"):
 		line = str(t.novictim)
 	elif str(it.type) == "gift" and not tags.has("item") and t.has("noitem"):
 		line = str(t.noitem)
 	else:
 		line = str(t.get(key, t.get("default", "")))
 	var subj := ""
-	if hh >= 0 and (actors.is_empty() or (a0 is NPC and a0.household == hh)):
+	if by_household:
 		subj = household(w, n, hh, said)
 	else:
 		subj = person(w, n, a0, "subj", said)
@@ -179,7 +193,9 @@ static func clause(w: World, n: NPC, it: Dictionary, said: Dictionary) -> String
 		"V": group(w, n, it.get("victims", []), "obj", -1, said), "Vs": group(w, n, it.get("victims", []), "poss", -1, said),
 		"B": group(w, n, it.get("benef", []), "obj", hh, said), "Bs": group(w, n, it.get("benef", []), "poss", hh, said),
 		"item": _item_words(str(tags.get("item", ""))), "price": str(tags.get("price", "")), "rent": str(tags.get("rent", "")),
-		"place": str(tags.get("place_words", "")), "cause": str(tags.get("cause", ""))}
+		"place": str(it.get("place", "somewhere")), "cause": str(tags.get("cause", "")),
+		"thing": GameData.item_name(str(tags.get("item", ""))).to_lower() if tags.has("item") else "",
+		"G": str((talk().givers as Dictionary).get(str(tags.get("giver", "")), "someone"))}
 	return line.format(f)
 
 

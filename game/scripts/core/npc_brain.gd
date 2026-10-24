@@ -2196,6 +2196,8 @@ func local_tool_need() -> Dictionary:
 func _get_tool(n: NPC, tool: String) -> bool:
 	if _buy_tool(n, tool):
 		return true
+	if not noted.has("no_tool_%d_%d" % [n.id, w.day()]):
+		JudgmentLive.on_news(w, "no_tool", "npc:%d" % n.id, ["item:" + tool], n.pos)       # A5: they and their household know
 	once("no_tool_%d_%d" % [n.id, w.day()], "%s %s has no %s and cannot get one." % [n.name, n.family, tool])
 	n.doing = "out of work: needs a %s" % tool
 	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
@@ -3546,6 +3548,8 @@ func _relief_seller() -> NPC:
 func _note_relief(h: int) -> void:
 	var hh: Dictionary = w.households[h]
 	var days: Array = hh.get("relief_days", [])
+	if not days.has(w.day()):
+		JudgmentLive.on_news(w, "relief", "hhid:%d" % h, ["giver:manor"])     # A5: the household knows the manor fed it (once a day)
 	days.append(w.day())
 	days = days.filter(func(d) -> bool: return int(d) > w.day() - 7)
 	hh.relief_days = days

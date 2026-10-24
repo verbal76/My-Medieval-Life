@@ -246,6 +246,7 @@ func build_fence(p: Dictionary, ref: String, stores: Array) -> String:
 	_fence_solid(p)
 	_show_fence(p)
 	w.note("%s fenced %s." % [w.ref_name(ref, true), w.property.describe(p)])
+	JudgmentLive.on_news(w, "fenced", ref, ["place:" + str(p.get("id", ""))], JudgmentLive.at_of(w, ref))     # A5: news by knowledge
 	return ""
 
 

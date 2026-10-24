@@ -298,6 +298,99 @@ static func tell_family_tick(w) -> void:
 			rec[1] = mask
 
 
+## GP-DIALOGUE A5 (REPAIR_AUDIT D2): village news as a NEUTRAL fact (judgment.json family "news": known and told, never
+## judged), published where the village already records it. `ref` is the party that did it ("hh:<i>" a household, its
+## first adult as the actor; "npc:<id>" a villager; a player reference; "" none: the manor or the chapel). Who knows:
+## the actor, and for a household's affair (HOUSEHOLD_NEWS, or a villager's own) its members, as participants; anyone
+## awake near `at` (World.near, witness_radius) as witnesses; everyone else only by word of mouth. Tags carry what the
+## telling needs: "hh:<i>", "by:<player ref>", "place:<id>", "price:<n>", "rent:<n>", "item:<id>", "giver:<manor|chapel>".
+const HOUSEHOLD_NEWS := ["land_bought", "land_leased", "fenced", "relief"]
+
+
+static func on_news(w, type: String, ref: String, tags: Array, at = null) -> int:
+	if w == null or w.judgment == null:
+		return -1
+	var actors := []
+	var t := tags.duplicate()
+	var hh := -1
+	if World.is_player_ref(ref):
+		actors = [Life.PLAYER_ID]
+		t.append("by:" + ref)
+	elif ref.begins_with("hh:"):
+		hh = World.ref_id(ref)
+		var a: NPC = w.party(ref)
+		if a != null:
+			actors = [a.id]
+	elif ref.begins_with("npc:"):
+		var o: NPC = w.npc(World.ref_id(ref))
+		if o != null:
+			actors = [o.id]
+			hh = o.household
+	elif ref.begins_with("hhid:"):
+		hh = int(ref.get_slice(":", 1))
+	if hh >= 0:
+		t.append("hh:%d" % hh)
+	var members := []
+	if hh >= 0 and hh < w.households.size():
+		for m in w.households[hh].members:
+			var o: NPC = w.npc(int(m))
+			if o != null and o.alive:
+				members.append(o.id)
+	var benef: Array = members if type in HOUSEHOLD_NEWS else []
+	var ev: int = w.judgment.publish(type, actors, [], benef, 0, t)
+	if ev > 0:
+		var seen := _ids(w.near(at, float(GameData.b("witness_radius")))) if at != null else []
+		for a in actors:
+			if int(a) >= 0:
+				w.judgment.observe(ev, int(a), "participant")
+		for m in members:
+			w.judgment.observe(ev, int(m), "participant")
+		seen.sort()
+		for o in seen:
+			w.judgment.observe(ev, int(o), "witnessed")
+	return ev
+
+
+## Where party `ref` stands (a villager, a household's first adult, a player), for who sees what they do; null for none.
+static func at_of(w, ref: String):
+	if World.is_player_ref(ref):
+		var p: PlayerState = w.player_of_ref(ref)
+		return p.pos if p != null else null
+	var o: NPC = w.party(ref)
+	return o.pos if o != null else null
+
+
+## A5 (REPAIR_AUDIT D2): a death, as news. Its household and close family (Life's graph: parents, partner, children) know
+## of it as participants, those near the body as witnesses. It names the kind of death ("cause:slain", "starvation",
+## "old_age", "other"), never who did it: a killer is known only from the killing itself, seen or told.
+static func on_death(w, n: NPC, kind: String) -> int:
+	if w == null or w.judgment == null or n.role == "bandit":
+		return -1
+	var t := ["cause:" + kind]
+	if n.household >= 0:
+		t.append("hh:%d" % n.household)
+	var ev: int = w.judgment.publish("death", [], [n.id], [], 0, t)
+	if ev <= 0:
+		return ev
+	var know := {}
+	if n.household >= 0:
+		for m in w.households[n.household].members:
+			know[int(m)] = "participant"
+	for pid in [n.mother, n.father, n.partner] + n.children:
+		if int(pid) >= 0:
+			know[int(pid)] = "participant"
+	for o in _ids(w.near(n.pos, float(GameData.b("witness_radius")))):
+		if not know.has(o):
+			know[o] = "witnessed"
+	var ids := know.keys()
+	ids.sort()
+	for id in ids:
+		var o: NPC = w.npc(int(id))
+		if o != null and o.alive and o != n:
+			w.judgment.observe(ev, int(id), str(know[id]))
+	return ev
+
+
 ## A partnership made (Relations.propose accepted, the player's included): a neutral fact for the two of them.
 static func on_marriage(w, a: int, b: int) -> void:
 	var ev: int = w.judgment.publish("marriage", [a, b])
