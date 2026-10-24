@@ -152,6 +152,9 @@ func clear_tree(t: Dictionary, p: PlayerState) -> String:
 
 
 func clear_plant(pl: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.clear_plant", clear_plant.bind(pl), [pl])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, clear_plant.bind(pl))
 	if parcel_at(Vector2i(int(pl.x), int(pl.y))).is_empty():
@@ -193,6 +196,9 @@ func till_refusal(c: Vector2i, p: PlayerState) -> String:
 
 ## Till a cell: it joins the player's field. Takes the stamina, wears the plough. "" when done.
 func till(c: Vector2i, p: PlayerState) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.till", till.bind(c, p), [c, p])
 	var why := till_refusal(c, p)
 	if why != "":
 		return why
@@ -230,6 +236,9 @@ func sow_refusal(c: Vector2i, crop: String, p: PlayerState) -> String:
 
 
 func sow(c: Vector2i, crop: String, p: PlayerState) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.sow", sow.bind(c, crop, p), [c, crop, p])
 	var why := sow_refusal(c, crop, p)
 	if why != "":
 		return why
@@ -418,6 +427,9 @@ func pen_refusal(kind: String, rect: Rect2i, p: PlayerState) -> String:
 ## Fence a pen: the planks are used up, the fence is solid but for the gate, and the pen exists (empty).
 ## Returns the pen, or {} with `pen_why` set.
 func build_pen(kind: String, rect: Rect2i, p: PlayerState) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.build_pen", build_pen.bind(kind, rect, p), [kind, rect, p])
 	pen_why = pen_refusal(kind, rect, p)
 	if pen_why != "":
 		return {}
@@ -506,6 +518,9 @@ func buy_horse_refusal(p: PlayerState) -> String:
 ## SET-C-FIVE, ECON-P1.3): the settlement's herd is one less, and the coins go to the dealer's till and leave the village
 ## (coin_sources falls, as for any coin the village pays the caravan). "" when done.
 func buy_horse(p: PlayerState) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.buy_horse", buy_horse.bind(p), [p])
 	var no := buy_horse_refusal(p)
 	if no != "":
 		return no
@@ -558,6 +573,9 @@ func buy_refusal(src: Dictionary, sex: String, p: PlayerState) -> String:
 ## Buy one animal from the keeper of a manor pen into your own pen of that kind. The coins go to the keeper (the
 ## manor's treasury if the pen has none); the animal is the keeper's real stock. "" when done.
 func buy_animal(src: Dictionary, sex: String, p: PlayerState) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.buy_animal", buy_animal.bind(src, sex, p), [src, sex, p])
 	var no := buy_refusal(src, sex, p)
 	if no != "":
 		return no
@@ -626,6 +644,9 @@ func products_in(pen: Dictionary) -> Dictionary:
 
 ## Take what waits in a player's pen into the pack, as much as fits. Returns {item: n} taken.
 func collect(pen: Dictionary, p: PlayerState) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.collect", collect.bind(pen, p), [pen, p])
 	var got := {}
 	if not pen.get("player", false):
 		return got                       # a keeper's pen: its eggs, milk and wool are the keeper's (Build 13)
@@ -873,6 +894,9 @@ func seed_item_price(item: String, buyer) -> int:
 
 ## Buy `qty` seeds of a crop from a villager's own stock; the coins are the villager's. "" when done.
 func buy_seed(n: NPC, crop: String, qty: int, p: PlayerState) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.buy_seed", buy_seed.bind(n, crop, qty, p), [n, crop, qty, p])
 	if not seed_offers(n).has(crop) or qty < 1:
 		return "They have no seed of that."
 	return buy_seed_item(n, str(crops()[crop].seed), qty, p)
@@ -881,6 +905,9 @@ func buy_seed(n: NPC, crop: String, qty: int, p: PlayerState) -> String:
 ## MERCH-01: `buyer` (the player or a villager: the same rule) buys `qty` of a seed seller's seed, cuttings or flower
 ## seed from the seller's own stock, at seed_item_price; the coins go to the seller (World.trade). "" when done.
 func buy_seed_item(n: NPC, item: String, qty: int, buyer) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm.buy_seed_item", buy_seed_item.bind(n, item, qty, buyer), [n, item, qty, buyer])
 	if not sells_seed(n) or qty < 1 or not (is_seed(item) or propagule_items().has(item)):
 		return "They have no seed of that."
 	if not n.inv.has(item, qty):

@@ -116,28 +116,40 @@ func _at(w: World, at: Vector2, d: float, k0 := 0) -> Vector2:
 func test_hue_and_cry() -> void:
 	var w := _world()
 	var gs := _guards(w)
-	var ad := _adults(w, 4)
+	var ad := _adults(w, 5)
 	var near_g: NPC = gs[0]
 	var far_g: NPC = gs[1]
 	var sleep_g: NPC = gs[2] if gs.size() > 2 else null
+	var lone_g: NPC = gs[3] if gs.size() > 3 else null
 	var victim: NPC = ad[0]
 	var wit: NPC = ad[1]
 	var hearer: NPC = ad[2]
-	var keep := [near_g, far_g, victim, wit, hearer] + ([sleep_g] if sleep_g else [])
+	var relay: NPC = ad[3]
+	var keep := [near_g, far_g, victim, wit, hearer, relay] + ([sleep_g] if sleep_g else []) + ([lone_g] if lone_g else [])
 	var at := _stage(w, keep)
 	var ear := float(Justice.cfg().hue_and_cry_tiles)
-	near_g.pos = _at(w, at, 20.0)                          # out of sight, within earshot
-	far_g.pos = _at(w, at, ear + 15.0, 4)                  # beyond earshot
+	var voice := float(GameData.b("witness_radius"))
+	# MP C (owner decision 2026-10-24: the cry spreads from hearer to hearer): the witness cries out, a villager within its earshot
+	# takes the cry up, and the guard and the second villager out of sight of the killing hear it from that villager
 	wit.pos = at + Vector2(-2, 0)
-	hearer.pos = _at(w, at, 22.0, 8)
+	relay.pos = _at(w, at, voice - 1.0)
+	near_g.pos = _at(w, relay.pos, voice - 1.0)
+	if near_g.pos.distance_to(at) <= voice + 0.5:
+		near_g.pos = _at(w, relay.pos, voice - 1.0, 8)
+	hearer.pos = _at(w, relay.pos, voice - 2.0, 4)
+	far_g.pos = _at(w, at, ear + 15.0, 4)                  # beyond the cry's reach
+	if lone_g:
+		lone_g.pos = _at(w, at, ear - 4.0, 12)            # within the cry's reach, out of earshot of every voice
 	if sleep_g:
-		sleep_g.pos = _at(w, at, 15.0, 12)
+		sleep_g.pos = _at(w, relay.pos, 3.0, 2)
 		sleep_g.anim = "sleep"
 	_kill(w, victim)
 	check(not victim.alive, "a killing, seen by a witness")
 	check(w.justice.knows(near_g, "player") and w.justice.tier_for(near_g, "player") == "murder", "a guard within earshot, out of sight, hears the hue and cry: knows of the murder")
 	check(str(near_g.pursuit.get("state", "")) == "responding" and Vector2(near_g.plan[0].to).distance_to(at) < 2.0, "and comes to the place")
 	check(not w.justice.knows(far_g, "player") and far_g.pursuit.is_empty(), "a guard beyond earshot knows nothing")
+	if lone_g and lone_g.pos.distance_to(relay.pos) > voice and lone_g.pos.distance_to(wit.pos) > voice and lone_g.pos.distance_to(hearer.pos) > voice and lone_g.pos.distance_to(near_g.pos) > voice:
+		check(not w.justice.knows(lone_g, "player"), "a guard within the cry's reach but out of earshot of every voice does not hear it (owner 2026-10-24: no instant radius)")
 	if sleep_g:
 		check(not w.justice.knows(sleep_g, "player"), "a sleeping guard does not hear it")
 	check(w.justice.case_of("player").aware.has(str(hearer.id)) and hearer.memory.any(func(m): return str(m).begins_with("heard the hue and cry: ")), "a villager within earshot learns who is cried after")
@@ -231,8 +243,14 @@ func test_guard_struck() -> void:
 	var other: NPC = gs[1]
 	var at := _stage(w, [g, other])
 	_sturdy(g)
+	var by: NPC = _adults(w, 1)[0]                        # MP C: a bystander takes up the guard's call (the cry spreads by voices)
+	var voice := float(GameData.b("witness_radius"))
 	g.pos = at + Vector2(0.6, 0)
-	other.pos = _at(w, at, 20.0)
+	by.plan.clear()
+	by.anim = "idle"
+	by.depth = 0
+	by.pos = _at(w, at, voice - 1.0)
+	other.pos = _at(w, by.pos, voice - 1.0)
 	w.player.hp = 9999.0
 	w.player_hit_npc(g, 1.0)
 	check(w.player.crimes[-1].kind == "guard_assault" and g.target == Life.PLAYER_ID, "a guard struck takes the player on")
@@ -518,8 +536,8 @@ func test_two_players() -> void:
 	check(not w.justice.case_of(ref).is_empty() and w.justice.case_of("player").is_empty(), "the case is the guest's (%s); the host has none" % ref)
 	check(str(g.pursuit.get("ref", "")) == ref, "the guard is on the guest's case")
 	check(w.relations.killings_of(ref) == 1 and w.relations.killings == 0, "the killing counts against the guest, not the host's family line")
-	var single: NPC = w.npcs.filter(func(o: NPC) -> bool: return o.alive and o != v and w.relations.can_court(Life.PLAYER_ID, o.id))[0]
-	var reply: String = w.as_actor(gu, func(): return w.relations.ask_court(Life.PLAYER_ID, single))
+	var single: NPC = w.npcs.filter(func(o: NPC) -> bool: return o.alive and o != v and w.relations.can_court(w.person_id(gu), o.id))[0]
+	var reply: String = w.as_actor(gu, func(): return w.relations.ask_court(w.person_id(gu), single))     # MP C: the guest courts as itself
 	check(reply.contains("After what"), "a villager will not walk out with the guest (%s)" % reply)
 	check(not w.relations.ask_court(Life.PLAYER_ID, single).contains("After what"), "but holds nothing against the host")
 	# the chase and the blows go to the guest

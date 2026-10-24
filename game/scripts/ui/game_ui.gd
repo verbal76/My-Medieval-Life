@@ -1821,6 +1821,50 @@ func _choice(text: String, values: Array, current: String, set_value: Callable) 
 
 ## The journal: the village record written into a book, two parchment pages at a time, under a
 ## heading for each day. `spread` is the pair of pages shown; -1 opens at the latest.
+## MP-D8 (owner, 2026-10-24): what one player may ask of another beside them, and their answer: both must agree. The other players
+## standing with the local player, an offer of a gift from the pack or to be partners (World.player_offer), and the offers made to
+## the local player today, to accept or decline (World.player_answer). In a guest's world each goes to the host like every verb.
+func show_players() -> void:
+	var w: World = main.world
+	var me := w.player
+	_open("players", "Other players", false)
+	var near := w.active_players().filter(func(q): return q != me and q.alive and q.map_level == me.map_level and q.pos.distance_to(me.pos) <= World.OFFER_REACH)
+	for o in w.offers_to(me):
+		var from: PlayerState = w.player_of_ref(str(o["from"]))
+		var who := from.name if from != null else "Someone"
+		var what := "to be partners" if str(o.kind) == "partner" else "%d %s" % [int(o.qty), GameData.item_name(str(o.item)).to_lower()]
+		_label("%s offers you %s." % [who, what], 18, Color(1, 0.85, 0.5))
+		var oid := int(o.id)
+		_button("Accept", func():
+			var why := w.player_answer(oid, true)
+			message(why if why != "" else "Done.")
+			show_players())
+		_button("Decline", func():
+			w.player_answer(oid, false)
+			show_players())
+	if near.is_empty():
+		_label("Stand beside another player to offer them something.", 16)
+	for q: PlayerState in near:
+		var pid := q.pid
+		_label("%s %s" % [q.name, q.family], 20)
+		if w.players_partner_refusal(me, q) == "":
+			_button("Ask %s to be your partner" % q.name, func():
+				var why := w.player_offer("partner", pid)
+				message(why if why != "" else "You ask %s. They must agree." % q.name)
+				show_players())
+		var ids: Array = me.inv.ids()
+		ids.sort()
+		for id in ids.slice(0, 8):
+			if PlayerState.GEAR.any(func(sl): return me.get(sl) == id):
+				continue
+			var iid: String = id
+			_button("Offer 1 %s" % GameData.item_name(iid).to_lower(), func():
+				var why := w.player_offer("gift", pid, iid, 1)
+				message(why if why != "" else "You offer it to %s." % q.name)
+				show_players())
+	_button("Close", hide_all)
+
+
 func show_journal(spread: int, quests_page := false) -> void:
 	var items := _quest_items() if quests_page else _journal_items()
 	var pages := maxi(1, ceili(float(items.size()) / JOURNAL_PER_PAGE))
@@ -2683,10 +2727,10 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 		_talk_choice(choices, "Give a gift", func(): show_gifts(n))
 	if r.can_befriend(n):
 		_talk_choice(choices, "Befriend", func():
-			r.befriend(Life.PLAYER_ID, n.id)
+			r.befriend(w.acting_id(), n.id)
 			message("You and %s are friends." % n.name)
 			_talk_view(n, "Friends, then. Come to me if you need anything."))
-	var me := Life.PLAYER_ID
+	var me := w.acting_id()
 	if r.can_court(me, n.id) and Life.partner_refusal(w, n) == "":
 		var st := r.stage(me, n.id)
 		if st == "":
@@ -3056,7 +3100,7 @@ func show_gifts(n: NPC) -> void:
 	var favs := r.favourites(n)
 	var ids := _giftable()
 	ids.sort_custom(func(a, b): return (favs.has(a) and not favs.has(b)) or (favs.has(a) == favs.has(b) and a < b))
-	var t := r.peek(Life.PLAYER_ID, n.id)
+	var t := r.peek(w.acting_id(), n.id)
 	var mood := Dialogue.regard_words(w, n)
 	var known := int(t.days_known)
 	_label("%s %s%s. Food, flowers, ale, clothes and jewellery are always welcome; a gift that suits them counts double." % [n.name, mood,
@@ -3071,7 +3115,7 @@ func show_gifts(n: NPC) -> void:
 	for id in ids.slice(0, 12):
 		var why := (" ★ " + r.favourite_reason(n, id)) if favs.has(id) else ""
 		var b := _button("%s (%d)%s" % [GameData.item_name(id), w.player.inv.count(id), why], func():
-			var said := r.give(Life.PLAYER_ID, n, id)
+			var said := r.give(w.acting_id(), n, id)
 			_talk_view(n, said if said != "" else Dialogue.opening(w, n)), true, grid)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))

@@ -66,6 +66,14 @@ var npc_target := {}                # npc id -> the last position the host sent 
 var refusal := ""                   # the last refusal's code
 var replies := {}                   # request id -> the host's answer
 var _next_request := 1
+var predicted := {}                 # MP C: request id -> what this machine's own run of the verb gave (World.mirror), to tell when the host differs
+var syncs := 0                      # MP C: world sections taken from the host (tests)
+
+# host, MP C: each guest's copy of the shared world (NetSync)
+var synced := {}                    # peer id -> {section: hash} last sent to it
+var sync_due := {}                  # peer id -> true: send its changed sections this frame (it had a request applied)
+var _t_sync := 0.0
+var sync_bytes := 0                 # bytes of sections sent (the measurements)
 
 var _t_players := 0.0
 var _t_npcs := 0.0
@@ -140,6 +148,9 @@ func stop() -> void:
 	by_peer.clear()
 	moves.clear()
 	queue.clear()
+	synced.clear()
+	sync_due.clear()
+	predicted.clear()
 	avatars.clear()
 	npc_target.clear()
 	DisplayServer.screen_set_keep_on(false)
@@ -157,6 +168,8 @@ func _on_peer_disconnected(id: int) -> void:
 	var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 	by_peer.erase(id)
 	moves.erase(id)
+	synced.erase(id)
+	sync_due.erase(id)
 	queue = queue.filter(func(q): return int(q.peer) != id)        # a request from someone gone is not applied
 	discovery.info = _answer()
 	if g != null:
@@ -216,6 +229,7 @@ func guest_state(kh: String, who: String) -> PlayerState:
 		w.stat("imported_" + str(id), float(p.inv.count(str(id))))
 	Identity.register_player(w, p)
 	w.add_guest(p)
+	w.as_actor(p, w.quests.start_story)           # MP C: a newcomer seeks the sage, as every new character does
 	w.stat("player_newcomers")
 	w.note("%s arrives in the village, a newcomer." % p.name)
 	return p
@@ -261,6 +275,7 @@ func world_for(pid: int) -> PackedByteArray:
 		by[str(p.pid)] = p.to_dict() if p.pid == pid else public_player(p)
 	d["players"] = {"host": w.host_player().pid, "by_pid": by}
 	d["net_pid"] = pid
+	_welcome_digest = NetSync.digest(d)            # what this guest's copy holds from now (NetSync.changed sends the rest)
 	var raw := JSON.stringify(d).to_utf8_buffer()
 	return raw.compress(FileAccess.COMPRESSION_GZIP)
 
@@ -332,6 +347,7 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	moves[id] = {"t": Time.get_ticks_msec(), "dir": Vector2.DOWN, "anim": "idle"}
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
+	synced[id] = _welcome_digest
 	changed.emit("%s joined the world." % p.name)
 	main.save_game(false)
 	players_changed.emit()
@@ -388,7 +404,7 @@ func move_ok(p: PlayerState, to: Vector2, most: float) -> bool:
 		return false
 	if p.pos.distance_to(to) < 0.01:
 		return true
-	return not main.world.solid_for_player(Vector2i(floori(to.x), floori(to.y)), p)
+	return main.world.step_ok(p, to)                 # MP C1: the core's walking rule, the host's own (World.step_ok)
 
 
 @rpc("authority", "call_remote", "reliable")
@@ -440,7 +456,25 @@ func s_npcs(minutes: float, list: Array) -> void:
 		n.alive = bool(e[6])
 
 
+var _welcome_digest := {}
+
+
 # ---------------------------------------------------------------- RPCs: actions --------------
+## Guest (MP C, World.remote): send verb `path` with its arguments, named as both machines name them (NetActions.enc). The id of
+## the request; the host's answer comes as s_reply, the world sections it changed as s_sync.
+func send_verb(path: String, args: Array) -> int:
+	var a := []
+	for v in args:
+		a.append(NetActions.enc(main.world, v))
+	return request("verb", {"path": path, "a": a})
+
+
+## Guest: what this machine's own run of a sent verb gave (World.remote_done).
+func note_prediction(rid, r) -> void:
+	if rid is int:
+		predicted[rid] = NetActions.enc(main.world, r)
+
+
 ## Guest: ask the host to do something; the answer lands in `replies[id]` (and the guest's character is updated from it).
 func request(kind: String, args: Dictionary) -> int:
 	var rid := _next_request
@@ -478,6 +512,8 @@ func apply_requests() -> void:
 			main.save_game(false)
 		if peer != null and by_peer.has(int(q.peer)):
 			rpc_id(int(q.peer), "s_reply", int(q.rid), r)
+			sync_due[int(q.peer)] = true                # MP C: its copy takes the sections this changed, at once (send_syncs)
+	send_syncs(false)
 
 
 @rpc("authority", "call_remote", "reliable")
@@ -492,8 +528,50 @@ func s_reply(rid: int, r: Dictionary) -> void:
 			main.adopt_own_state(mine)            # the host's record of this player is the truth
 		for patch in r.get("patches", []):
 			NetActions.apply_patch(main.world, patch)
+	if r.has("path"):
+		# MP C, a verb: this machine already showed its own result; the host's is told only when it differs (someone was first,
+		# the host's world had moved on), and the sections that follow (s_sync) put the copy right
+		var mine_r = predicted.get(rid)
+		predicted.erase(rid)
+		if (not bool(r.get("ok", false)) or JSON.stringify(mine_r) != JSON.stringify(r.get("result"))) and str(r.get("text", "")) != "":
+			changed.emit(str(r.text))
+		return
 	if str(r.get("text", "")) != "":
 		changed.emit(str(r.text))
+
+
+## Host (MP C): each guest due one (or all, `all`) gets the sections of the shared world that changed since it was last sent them.
+## One World.to_dict for all of them; nothing is sent to a guest whose copy is current.
+func send_syncs(all: bool) -> void:
+	if peer == null or by_peer.is_empty():
+		return
+	var due := []
+	for id in by_peer:
+		if all or sync_due.has(id):
+			due.append(id)
+	if due.is_empty():
+		return
+	var d: Dictionary = main.world.to_dict()
+	for id in due:
+		sync_due.erase(id)
+		if not synced.has(id):
+			synced[id] = {}
+		var ch := NetSync.changed(d, synced[id])
+		if ch.is_empty():
+			continue
+		var blob := JSON.stringify(ch).to_utf8_buffer().compress(FileAccess.COMPRESSION_GZIP)
+		sync_bytes += blob.size()
+		rpc_id(id, "s_sync", blob)
+
+
+@rpc("authority", "call_remote", "reliable")
+func s_sync(blob: PackedByteArray) -> void:
+	if main.world == null or not main.guest_world:
+		return
+	var d = JSON.parse_string(blob.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP).get_string_from_utf8())
+	if d is Dictionary:
+		NetSync.adopt(main.world, d)
+		syncs += 1
 
 
 # ---------------------------------------------------------------- every frame ----------------
@@ -516,6 +594,10 @@ func _host_step(dt: float) -> void:
 	if _t_players >= 1.0 / NetProtocol.PLAYERS_HZ:
 		_t_players = 0.0
 		rpc("s_players", players_list())
+	_t_sync += dt
+	if _t_sync >= NetSync.SYNC_SECONDS:
+		_t_sync = 0.0
+		send_syncs(true)                           # MP C: the shared world as it went on (villagers' work, other players)
 	_t_self += dt
 	if _t_self >= 1.0 / NetProtocol.SELF_HZ:
 		_t_self = 0.0

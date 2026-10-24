@@ -52,8 +52,9 @@ func refresh() -> void:
 		if n == null or not n.alive or not _wants(n, template(offers[id])):
 			offers.erase(id)
 	var busy := {}
-	for q in w.player.quests:
-		busy[int(q.giver)] = true
+	for pl: PlayerState in w.player_list():         # MP C3: a giver busy with any player's quest offers no other
+		for q in pl.quests:
+			busy[int(q.giver)] = true
 	for t in templates():
 		if t.get("story", false) or t.get("hire", false):
 			continue
@@ -299,6 +300,9 @@ func active_from(n: NPC) -> Dictionary:
 
 ## Take on this villager's offer, or (with `hire`, a template id) the work they offer when asked.
 func accept(n: NPC, hire := "", actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("quests.accept", accept.bind(n, hire), [n, hire])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, accept.bind(n, hire))
 	var t := offer_of(n) if hire == "" else template(hire)
@@ -361,6 +365,9 @@ var last_learned := ""
 ## Returns the coins paid, -1 if the quest is not ready, -2 if the coins are not set aside and the
 ## giver cannot pay (only a quest from an older save, accepted before reserving).
 func complete(q: Dictionary, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("quests.complete", complete.bind(q), [q])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, complete.bind(q))
 	var n: NPC = w.npc(int(q.giver))
@@ -393,9 +400,9 @@ func complete(q: Dictionary, actor: PlayerState = null) -> int:
 			w.note("%s %s taught %s %s: %s" % [n.name, n.family, w.player.name, w.player.family, last_learned])
 			w.stat("quests_taught")
 	n.remember(("hired %s" if hired else "helped by %s") % w.player.name)
-	w.relations.helped(Life.PLAYER_ID, n, float(Relations.cfg().help_regard) * (0.5 if hired else 1.0))   # help earns regard (CRT-02)
+	w.relations.helped(w.acting_id(), n, float(Relations.cfg().help_regard) * (0.5 if hired else 1.0))   # help earns regard (CRT-02)
 	if w.judgment != null and not hired:
-		JudgmentLive.on_help(w, Life.PLAYER_ID, n, "help_minor", pay)       # PROSPECTIVE (PROS-19): paid hire is work, not a kindness
+		JudgmentLive.on_help(w, w.acting_id(), n, "help_minor", pay)       # PROSPECTIVE (PROS-19): paid hire is work, not a kindness
 	if hired:
 		w.stat("hired_jobs_done")
 		w.stat("hired_wages", pay)

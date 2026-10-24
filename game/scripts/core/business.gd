@@ -154,6 +154,9 @@ func storefront_refusal(b: Dictionary) -> String:
 
 ## Build the counter (the materials come from the pack), then open it as a shop. "" when done, else why not.
 func build_storefront(b: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.build_storefront", build_storefront.bind(b), [b])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, build_storefront.bind(b))
 	var why := storefront_refusal(b)
@@ -200,6 +203,9 @@ func build_npc_front(b: Dictionary, n: NPC) -> bool:
 
 ## Open the storefront's shop (no licence: the household's own ground).
 func open_front(b: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.open_front", open_front.bind(b), [b])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, open_front.bind(b))
 	if not b.has("front"):
@@ -212,6 +218,8 @@ func open_front(b: Dictionary, actor: PlayerState = null) -> String:
 	b.shop = {"shop": true, "front": true, "id": str(b.id), "building": str(b.id), "x": int(f.x), "y": int(f.y), "use": [int(f.use[0]), int(f.use[1])],
 		"stock": {}, "prices": {}, "sales": [], "store": {}, "till": 0, "earned": 0, "paid_day": w.day(), "missed": 0,
 		"costs": {}, "attendant": -1, "wage_day": -1}
+	if not w.is_host(w.player):
+		b.shop.by = w.acting_ref()        # MP C4: a guest's shop (absent: the host's, as every save has it)
 	w.stat("shop_opened")
 	return ""
 
@@ -223,7 +231,7 @@ static func is_pitch(s: Dictionary) -> bool:
 func mine() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and not Stalls.is_built(s) and World.is_player_ref(w.tenant_of(s)):
+		if is_pitch(s) and not Stalls.is_built(s) and w.is_acting_ref(w.tenant_of(s)):     # MP C4: the acting player's own pitch
 			return s
 	return {}
 
@@ -246,8 +254,31 @@ func shops() -> Array:
 	ids.sort()
 	for id in ids:
 		var b: Dictionary = w.buildings[id]
-		if b.has("shop"):
+		if b.has("shop") and str(b.shop.get("by", World.PLAYER)) == w.acting_ref():     # MP C4: the player who opened it ("by"; absent: the host's)
 			out.append(b.shop)
+	return out
+
+
+## MP C4: every player's premises (the world's own daily and hourly work, its census and decay), each once, the host's first.
+func all_premises() -> Array:
+	if w.player_list().size() == 1:
+		return premises()
+	var out := []
+	for p: PlayerState in w.player_list():
+		for s in w.as_actor(p, premises):
+			if not out.has(s):
+				out.append(s)
+	return out
+
+
+## MP C4: every shop of every player (tills are counted for the world).
+func every_shop() -> Array:
+	var out := []
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		if w.buildings[id].has("shop"):
+			out.append(w.buildings[id].shop)
 	return out
 
 
@@ -272,7 +303,19 @@ func is_mine(s: Dictionary) -> bool:
 		return false
 	if is_shop(s):
 		return w.holds(w.acting_ref(), building_of(s))
-	return World.is_player_ref(w.tenant_of(s))
+	return w.is_acting_ref(w.tenant_of(s))            # MP C4: the acting player's (a guest's stall is not the host's)
+
+
+func _daily_premises() -> void:
+	for s in premises():
+		if is_shop(s) and not is_mine(s):
+			w.note(close(s, "You no longer hold the shop's room."))
+			continue
+		if Stalls.is_built(s):
+			continue                      # no rent: the 5% sales lease (Stalls)
+		_rent_due(s)
+		if s.has("stock"):
+			_wage_due(s)
 
 
 ## The day's rent of a stall (more for a larger one) or licence of a shop.
@@ -379,7 +422,7 @@ func displays() -> Array:
 	var recs := []
 	for id in sorted_ids():
 		recs.append(w.stalls[id])
-	recs.append_array(shops())
+	recs.append_array(every_shop())
 	for s: Dictionary in recs:
 		if seen.has(str(s.get("id", ""))) or not s.has("stock") or not s.has("x"):
 			continue
@@ -412,6 +455,9 @@ func rent_refusal() -> String:
 
 ## Rent the first free pitch: the first day is paid now. "" when done, else why not.
 func rent(actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.rent", rent.bind(), [])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, rent)
 	var why := rent_refusal()
@@ -482,6 +528,9 @@ func unlist(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> S
 
 
 func set_price(s: Dictionary, id: String, price: int) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.set_price", set_price.bind(s, id, price), [s, id, price])
 	if not s.stock.has(id):
 		return "That is not for sale at your stall."
 	if price < 1 or price > GameData.value(id) * PRICE_CAP:
@@ -568,15 +617,8 @@ func close(s: Dictionary, because := "You closed your stall.", actor: PlayerStat
 ## after stall_evict_days unpaid mornings the pitch is taken back (close()). Then the attendant's wage.
 func daily() -> void:
 	money.daily()                     # the villagers' storefront tills: necessity, the owner's pay, the float (ECON-P3)
-	for s in premises():
-		if is_shop(s) and not is_mine(s):
-			w.note(close(s, "You no longer hold the shop's room."))
-			continue
-		if Stalls.is_built(s):
-			continue                      # no rent: the 5% sales lease (Stalls)
-		_rent_due(s)
-		if s.has("stock"):
-			_wage_due(s)
+	for p: PlayerState in w.player_list():       # MP C4: each player's own premises, their rent and wages from their own purse
+		w.as_actor(p, _daily_premises)
 	stalls.daily()
 
 
@@ -646,6 +688,9 @@ func upgrade_refusal(s: Dictionary) -> String:
 
 ## Pay the manor for a bigger frontage: more kinds of goods, a display, a wider reach, higher daily rent.
 func upgrade(s: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.upgrade", upgrade.bind(s), [s])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, upgrade.bind(s))
 	var why := upgrade_refusal(s)
@@ -661,6 +706,9 @@ func upgrade(s: Dictionary, actor: PlayerState = null) -> String:
 
 ## The goods shown on the larger stall's display ("" none): it draws buyers from further off.
 func set_display(s: Dictionary, id: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.set_display", set_display.bind(s, id), [s, id])
 	if not bool(s.get("large", false)):
 		return "Only a larger stall has a display."
 	if id != "" and not s.stock.has(id):
@@ -688,6 +736,9 @@ func open_refusal(b: Dictionary) -> String:
 
 ## Open the shop at the room's counter: the first day's licence goes to the manor. "" when done, else why not.
 func open_shop(b: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.open_shop", open_shop.bind(b), [b])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, open_shop.bind(b))
 	var why := open_refusal(b)
@@ -700,6 +751,8 @@ func open_shop(b: Dictionary, actor: PlayerState = null) -> String:
 	b.shop = {"shop": true, "id": str(b.id), "building": str(b.id), "x": int(e.at[0]), "y": int(e.at[1]), "use": [int(e.use[0]), int(e.use[1])],
 		"stock": {}, "prices": {}, "sales": [], "store": {}, "till": 0, "earned": 0, "paid_day": w.day(), "missed": 0,
 		"costs": {"licence": licence}, "attendant": -1, "wage_day": -1}
+	if not w.is_host(w.player):
+		b.shop.by = w.acting_ref()        # MP C4: a guest's shop (absent: the host's)
 	w.stat("shop_opened")
 	w.note("%s %s opened a shop in %s." % [w.player.name, w.player.family, w.property.describe(b)])
 	return ""
@@ -718,6 +771,9 @@ func store_cap(s: Dictionary) -> int:
 
 ## Move goods from the pack into the back room (stock chests). "" when done, else why not.
 func store_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.store_item", store_item.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, store_item.bind(s, id, qty))
 	if not is_shop(s) or not is_mine(s):
@@ -807,6 +863,9 @@ func candidates() -> Array:
 
 ## Hire `n` to mind this stall or shop: today's wage is paid now (the till first, then the purse). "" when done.
 func hire(s: Dictionary, n: NPC, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.hire", hire.bind(s, n), [s, n])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, hire.bind(s, n))
 	if not is_mine(s):
@@ -815,7 +874,7 @@ func hire(s: Dictionary, n: NPC, actor: PlayerState = null) -> String:
 		return "You have an attendant already."
 	var why := hire_refusal(n)
 	if why == "" and w.judgment != null:
-		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID, wage())   # PROSPECTIVE (PROS-19, Q14): off unless attached
+		why = JudgmentLive.work_refusal(w, n, w.acting_id(), wage())   # PROSPECTIVE (PROS-19, Q14): off unless attached
 	if why != "":
 		return why
 	if not _charge(s, wage()):
@@ -878,7 +937,7 @@ func attendant_present(s: Dictionary) -> bool:
 ## The attendant's day (NPCBrain.decide, in working hours): to the counter, and
 ## minding it (inside a shop they stand at its counter). False when this villager is nobody's attendant.
 func plan_attendant(n: NPC) -> bool:
-	for s in premises():
+	for s in all_premises():
 		if int(s.get("attendant", -1)) != n.id:
 			continue
 		if works.plan_work(s, n):         # orders to make at the player's own stations (B18-DP-01)
@@ -994,7 +1053,7 @@ func hour() -> void:
 	for id in heading.keys():
 		if h - int(heading[id]) >= 2:
 			heading.erase(id)
-	for s in premises():
+	for s in all_premises():
 		_send_buyers(s, h)
 	for s in stalls.npc_built():          # villagers' built stalls sell unattended to the same buyers (STALL-06)
 		_send_buyers(s, h)
@@ -1044,6 +1103,9 @@ func arrive(n: NPC, a: Dictionary) -> bool:
 ## One sale at the counter: coins from the buyer to the till, goods from the stock to the buyer (or the
 ## household's pantry). All or nothing. A sold-out shelf is filled from the back room.
 func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := false) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("business.sell", sell.bind(s, n, id, qty, price, pantry), [s, n, id, qty, price, pantry])
 	var total := qty * price
 	var dest: Inventory = (w.households[n.household].pantry as Inventory) if pantry else n.inv
 	if qty <= 0 or int(s.stock.get(id, 0)) < qty or n.coins < total or not dest.can_add(id):
@@ -1087,6 +1149,6 @@ func tills() -> int:
 	var t := 0
 	for id in w.stalls:
 		t += int(w.stalls[id].get("till", 0))
-	for s in shops():
+	for s in every_shop():
 		t += int(s.get("till", 0))
 	return t + money.front_tills() + money.counter_tills()

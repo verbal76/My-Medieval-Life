@@ -288,13 +288,16 @@ func contract_of(n: NPC) -> Dictionary:
 ## A member of the employer's own household may carry for it whatever their work (no wage; a day
 ## away from it): a founder building their own house.
 func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("construction.hire", hire.bind(employer, n, p, budget), [employer, n, p, budget])
 	var own := n != null and n.household >= 0 and employer == World.hh_ref(n.household)
 	why = can_hire(n) if not own else ("" if n.alive and contract_of(n).is_empty() else "They cannot carry today.")
 	if why == "" and (p.site.is_empty() or p.site.get("done", false) or str(p.site.get("owner", "")) != employer):
 		why = "There is no building site of yours to carry to."
 	if why == "" and not own and w.judgment != null:                # PROSPECTIVE (PROS-19, Q14): off unless attached
 		var boss: NPC = responsible_adult(int(employer.trim_prefix("hh:"))) if employer.begins_with("hh:") else null
-		why = JudgmentLive.work_refusal(w, n, Life.PLAYER_ID if World.is_player_ref(employer) else (boss.id if boss != null else -1),
+		why = JudgmentLive.work_refusal(w, n, World.id_of_ref(employer) if World.is_player_ref(employer) else (boss.id if boss != null else -1),
 				0 if World.is_player_ref(employer) and w.relations.player_friend(n) else int(GameData.b("helper_wage")),
 				World.is_player_ref(employer) and w.relations.player_friend(n))
 	if why != "":
@@ -334,7 +337,7 @@ func _pay(employer: String, n: NPC, amount: int) -> bool:
 ## Take `amount` from a party's purse (it has been checked to hold it).
 func _take(ref: String, amount: int) -> void:
 	if World.is_player_ref(ref):
-		w.player.coins -= amount
+		w.player_for(ref).coins -= amount           # MP C: that player's own purse
 		return
 	var left := amount
 	for o: NPC in w.property._payers(ref):
@@ -350,7 +353,8 @@ func _take(ref: String, amount: int) -> void:
 ## homeless player).
 func store_of(ref: String) -> Inventory:
 	if World.is_player_ref(ref):
-		return w.player.chest if w.player.home != "" and w.buildings.has(w.player.home) else null
+		var pl: PlayerState = w.player_for(ref)
+		return pl.chest if pl.home != "" and w.buildings.has(pl.home) else null
 	var h := World.ref_id(ref)
 	if ref.begins_with("hh:") and h >= 0 and h < w.households.size() and w.buildings.has(_home_of(ref)):
 		return w.households[h].pantry
@@ -361,7 +365,7 @@ func store_of(ref: String) -> Inventory:
 ## lodges in.
 func _home_of(ref: String) -> String:
 	if World.is_player_ref(ref):
-		return w.player.home
+		return w.player_for(ref).home
 	var home := str(w.households[World.ref_id(ref)].home)
 	if home == "" and w.party(ref) != null:
 		home = w.party(ref).home
@@ -533,7 +537,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			load.add(id, k)
 			w.stat("helper_took_" + id, k)
 			if World.is_player_ref(c.employer):
-				w.player.trim_stolen()
+				w.player_for(c.employer).trim_stolen()
 			return true
 		"helper_buy":
 			var seller := w.npc(int(a.seller))
@@ -604,7 +608,7 @@ func end_contract(c: Dictionary, reason := "") -> void:
 ## pantry); a household that has died out: the manor's stores (escheat, as Property.household_ended).
 func _return_store(ref: String) -> Inventory:
 	if World.is_player_ref(ref):
-		return w.player.chest
+		return w.player_for(ref).chest
 	var h := World.ref_id(ref)
 	if ref.begins_with("hh:") and h >= 0 and h < w.households.size():
 		return w.granary if w.households[h].get("ended", false) else w.households[h].pantry
@@ -1421,4 +1425,7 @@ func load_dict(d: Dictionary) -> void:
 ## player or a household), from `inv`, the builder's own pack: the planks are consumed and counted as used in building.
 ## The same call for the player and villagers; the rules are in Stalls (site, record, settlement). "" when built.
 func build_stall(ref: String, cell: Vector2i, inv: Inventory) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("construction.build_stall", build_stall.bind(ref, cell, inv), [ref, cell, inv])
 	return w.business.stalls.build(ref, cell, inv)

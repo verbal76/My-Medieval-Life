@@ -91,8 +91,10 @@ static func dawn(w: World) -> void:
 	for h in w.households.size():
 		lost += spoil_inv(w, w.households[h].pantry, "hh:%d" % h)
 	lost += spoil_inv(w, w.granary, "granary")
-	lost += spoil_inv(w, w.player.inv, "player")
-	lost += spoil_inv(w, w.player.chest, "chest")
+	for pl: PlayerState in w.player_list():         # MP C2: every player's pack and chest (the host's keys as before)
+		var host: bool = w.is_host(pl)
+		lost += spoil_inv(w, pl.inv, "player" if host else w.player_ref(pl))
+		lost += spoil_inv(w, pl.chest, "chest" if host else w.player_ref(pl) + ":chest")
 	for c in w.containers:
 		if c.kind == "table" and c.has("inv"):
 			lost += spoil_inv(w, c.inv, "table:" + str(c.id))
@@ -108,7 +110,7 @@ static func dawn(w: World) -> void:
 	for j in mw.jobs:
 		lost += spoil_inv(w, j.load, "job:" + str(j.id))
 	var shops: Array = []
-	for s in w.business.premises() + w.business.stalls.npc_built():
+	for s in w.business.all_premises() + w.business.stalls.npc_built():
 		if not shops.has(s):
 			shops.append(s)
 	for s: Dictionary in shops:

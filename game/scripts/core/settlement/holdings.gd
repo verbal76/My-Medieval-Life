@@ -44,7 +44,7 @@ static func holders(w: World) -> Dictionary:
 	g["carts"] = {}
 	for c in w.carts.carts:                        # goods riding in carts (B14)
 		add.call(g.carts, c.store)
-	for s in w.business.premises():                # the player's stall and shops: sale stock and back store
+	for s in w.business.all_premises():                # the player's stall and shops: sale stock and back store
 		for src in [s.get("stock", {}), s.get("store", {}), s.get("work", {})]:
 			for id in src:
 				g.player[id] = int(g.player.get(id, 0)) + int(src[id])

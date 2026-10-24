@@ -63,7 +63,7 @@ static func ref_of(who) -> String:
 
 func party(ref: String):
 	if World.is_player_ref(ref):
-		return w.player
+		return w.player_for(ref)
 	return w.npc(World.ref_id(ref)) if ref.begins_with("npc:") else null
 
 
@@ -238,7 +238,7 @@ func barter(seller: Object, buyer: Object, want: String, qty: int, give: String)
 
 
 func _note_deal(seller: Object, buyer: Object) -> void:
-	w.relations.note_trade(seller.id if seller is NPC else Life.PLAYER_ID, buyer.id if buyer is NPC else Life.PLAYER_ID, w.day())
+	w.relations.note_trade(w.id_of_party(seller), w.id_of_party(buyer), w.day())     # MP C3: each player their own
 
 
 # ---------------------------------------------------------------- credit ---------------------
@@ -306,6 +306,9 @@ func can_repay(d: Dictionary) -> bool:
 
 ## The debtor pays the creditor in coins. False when they cannot (the player may always choose to pay what they hold).
 func repay(id: int, force := false, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("credit.repay", repay.bind(id, force), [id, force])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, repay.bind(id, force))
 	var d := _debt(id)
@@ -531,6 +534,9 @@ func _ask_player(b: NPC, id: String, qty: int, bill: int) -> bool:
 ## The player answers a villager's ask. Returns {result: "bartered"|"credited"|"refused"|"failed", text}. An accepted ask is
 ## re-checked by the rules as they stand now; a refusal is remembered (refuse_days) and costs nothing.
 func answer_request(req_id: int, accept: bool, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("credit.answer_request", answer_request.bind(req_id, accept), [req_id, accept])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, answer_request.bind(req_id, accept))
 	var r := {}

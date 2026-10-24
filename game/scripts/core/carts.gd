@@ -41,6 +41,9 @@ func by_id(id: int) -> Dictionary:
 
 ## Set a handcart (or, MIN-F, a minecart on `level`) down at `at` for `owner`: the item becomes a cart in the world.
 func place(owner: String, at: Vector2, kind := "handcart", level := 0) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("carts.place", place.bind(owner, at, kind, level), [owner, at, kind, level])
 	var inv := Inventory.new()
 	inv.max_stacks = stacks_of(kind)
 	var c := {"id": next_id, "owner": owner, "pos": at, "store": inv, "puller": "", "facing": Vector2.DOWN, "worn": 0.0}
@@ -101,6 +104,9 @@ func may_use(c: Dictionary, ref: String) -> bool:
 
 ## Take hold of a parked cart. "" when done, else why not.
 func hitch(c: Dictionary, ref: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("carts.hitch", hitch.bind(c, ref), [c, ref])
 	if not may_use(c, ref):
 		return "It is %s cart: only they, their family or their hired help may take it." % whose(c)
 	if str(c.puller) != "" and str(c.puller) != ref:
@@ -113,6 +119,10 @@ func hitch(c: Dictionary, ref: String) -> String:
 
 ## Let go: the cart stays where it is.
 func park(c: Dictionary, actor: PlayerState = null) -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		w.mirror("carts.park", park.bind(c), [c])
+		return
 	if actor != null and actor != w.player:
 		w.as_actor(actor, park.bind(c))
 		return
@@ -182,7 +192,8 @@ func update(_dt: float) -> void:
 			continue
 		var at := Vector2.INF
 		if World.is_player_ref(ref):
-			at = w.player.pos if w.player.alive else Vector2.INF
+			var pl: PlayerState = w.player_for(ref)
+			at = pl.pos if pl.alive else Vector2.INF
 		else:
 			var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
 			if n != null and n.alive:
@@ -236,6 +247,11 @@ func fall_apart(c: Dictionary) -> void:
 ## The attendant of the player's stall unloads a cart of the player's parked at a cart stop near it into the
 ## stall's store, hourly (the delivery service: the owner's hired help).
 func hour() -> void:
+	for p: PlayerState in w.player_list():        # MP C4: each player's own stall and carts (single player: the one)
+		w.as_actor(p, _hour_one)
+
+
+func _hour_one() -> void:
 	var s: Dictionary = w.business.mine()
 	if s.is_empty() or w.business.attendant_of(s) == null:
 		return

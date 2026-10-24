@@ -60,6 +60,12 @@ func _now() -> Array:
 ## kind of reference as anyone's and stable across succession (an heir who was the player's child keeps their own id); that the
 ## person is the player at the time is a role marker (`part`: the participant role gets the suffix `:player`), never a separate
 ## identity. `p:player` is only the fallback for a player without a pid (a bare test world).
+## MP C: the player a person id names (World.player_of_id; the acting player when it names none here).
+func _player_of(id: int) -> PlayerState:
+	var p: PlayerState = w.player_of_id(id)
+	return p if p != null else w.player
+
+
 static func ref_of(o) -> String:
 	if o is NPC:
 		return "p:%d" % o.id
@@ -484,7 +490,7 @@ func chase_end(n: NPC, reason: String) -> void:
 
 func _chase_dist(n: NPC) -> float:
 	if Life.is_player_id(n.target):
-		return snappedf(n.pos.distance_to(w.player.pos), 0.01)
+		return snappedf(n.pos.distance_to(_player_of(n.target).pos), 0.01)
 	var t: NPC = w.npc(n.target)
 	return snappedf(n.pos.distance_to(t.pos), 0.01) if t != null else -1.0
 
@@ -493,7 +499,7 @@ func _chase_close(n: NPC, reason: String) -> void:
 	var c: Dictionary = _chases[n.id]
 	_chases.erase(n.id)
 	var who := "guard" if n.job == "guard" else ("bandit" if n.role == "bandit" else "villager")
-	var tref := ref_of(w.player) if Life.is_player_id(int(c.target)) else _pref(int(c.target))
+	var tref := ref_of(_player_of(int(c.target))) if Life.is_player_id(int(c.target)) else _pref(int(c.target))
 	var mins := float(w.minutes) - float(c.t0)
 	var outcome := "ok" if reason in ["target_slain", "robbed"] else ("abandoned" if reason in ["out_of_range", "near_bandit_camp", "blocked", "bandit_low_hp"] else "interrupted")
 	var ev := begin("combat", "chase", "combat", "chase_" + who, ref_of(n), {"parent": -1, "x": int(c.x), "y": int(c.y)})
@@ -849,7 +855,7 @@ func guard_end(t: Array, g: NPC, owner: NPC, fine: int, paid: int, warned: bool)
 
 ## World.raise_alarm: who saw an attack; the guards that took it on; the reports are its children.
 func alarm_begin(attacker: int, aware: Dictionary) -> int:
-	var who := ref_of(w.player) if Life.is_player_id(attacker) else _pref(attacker)
+	var who := ref_of(_player_of(attacker)) if Life.is_player_id(attacker) else _pref(attacker)
 	var ev := begin("crime", "alarm", "crime", "raise_alarm", who)
 	participant(ev, who, "attacker")
 	for s in aware.get("seen", []):
@@ -865,7 +871,7 @@ func alarm_end(ev: int, guards_answered: int) -> void:
 ## World.report_crime: `n` will carry word of an attack or a theft to a guard.
 func report(n: NPC, offender: int, how: String, crime: String) -> void:
 	var ref := ref_of(n)
-	var off := ref_of(w.player) if Life.is_player_id(offender) else _pref(offender)
+	var off := ref_of(_player_of(offender)) if Life.is_player_id(offender) else _pref(offender)
 	occurrence("crime", "report", "crime", "report_crime", ref, [[ref, "reporter"], [off, "offender"]], [[ref, "report", "none", "%s %s" % [crime, off], "life"]], "ok", "", "how=%s" % how, _xy(n))
 
 

@@ -155,7 +155,7 @@ static func describe(w: World, n: NPC) -> String:
 
 ## How the player stands with a villager, for the talk window: partner, courting, friend, or "".
 static func bond_words(w: World, n: NPC) -> String:
-	var st := w.relations.stage(Life.PLAYER_ID, n.id)
+	var st := w.relations.stage(w.acting_id(), n.id)
 	if st == "partners":
 		return "your partner"
 	if st == "courting":
@@ -165,7 +165,7 @@ static func bond_words(w: World, n: NPC) -> String:
 
 ## How a villager feels about the player, in words (the gift window): from their regard and attraction.
 static func regard_words(w: World, n: NPC) -> String:
-	var t: Dictionary = w.relations.peek(Life.PLAYER_ID, n.id)
+	var t: Dictionary = w.relations.peek(w.acting_id(), n.id)
 	var a := float(t.attraction)
 	var g := float(t.regard)
 	var c := Relations.cfg()

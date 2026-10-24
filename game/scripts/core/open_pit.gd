@@ -356,6 +356,9 @@ func _heap_cells(origin: Vector2i) -> Array:
 ## Stake a pit at `origin` for `owner` (World.PLAYER or World.MANOR; `for_clue`: the find it is dug for). The ground
 ## inside enters the books (pit_ground_<item>, a finite pool). Returns the pit, or {} if the site is refused.
 func open_pit(owner: String, origin: Vector2i, for_clue := "") -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("pits.open_pit", open_pit.bind(owner, origin, for_clue), [owner, origin, for_clue])
 	if site_refusal(origin) != "":
 		return {}
 	var s := size()
@@ -544,6 +547,9 @@ func _connected_without(p: Dictionary, skip: int) -> bool:
 ## rock (not the ramp) opens a prospecting body within reach as a seam. Returns {result: "ok" | "refused", why, item,
 ## n, broke, up, exposed (the seam opened, or {})}.
 func dig(who, p: Dictionary, c: Vector2i, into: Inventory, tool := "pickaxe") -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("pits.dig", dig.bind(who, p, c, into, tool), [who, p, c, into, tool])
 	var why := dig_refusal(who, p, c, tool)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -632,6 +638,9 @@ func fill_refusal(p: Dictionary, c: Vector2i, from: Inventory) -> String:
 ## A unit of the cell's last dug layer goes back from `from` into cell `c` (counted backfilled_<item>): the pool of the
 ## ground rises by it. A cell filled back up a whole layer is walkable again at the surface. Returns {result, why, item}.
 func backfill(p: Dictionary, c: Vector2i, from: Inventory, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("pits.backfill", backfill.bind(p, c, from), [p, c, from])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, backfill.bind(p, c, from))
 	var why := fill_refusal(p, c, from)
@@ -660,6 +669,9 @@ func heap_cap(p: Dictionary) -> int:
 ## Earth from `from` onto pit `p`'s spoil heaps (each up to heap_cap; `force` past it, for goods given back when a job
 ## ends). An empty heap's cell must be clear: it becomes solid while it holds anything. Returns {item: units moved}.
 func tip(p: Dictionary, from: Inventory, force := false, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("pits.tip", tip.bind(p, from, force), [p, from, force])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, tip.bind(p, from, force))
 	var moved := {}
@@ -694,6 +706,9 @@ func heap_count(p: Dictionary, id: String) -> int:
 
 ## Up to `qty` of `id` from pit `p`'s heaps into `into` (as much as it takes). A heap emptied opens its cell again.
 func take(p: Dictionary, id: String, qty: int, into: Inventory, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("pits.take", take.bind(p, id, qty, into), [p, id, qty, into])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, take.bind(p, id, qty, into))
 	var got := 0

@@ -1769,8 +1769,8 @@ func _bandit(n: NPC, h: float) -> void:
 	if night:
 		var prey = _prey_for(n)
 		if prey != null:
-			n.target = prey.id if prey is NPC else Life.PLAYER_ID
-			n.target_ref = ""
+			n.target = prey.id if prey is NPC else w.person_id(prey)     # MP C6: the player it stalks, by their own id
+			n.target_ref = ""                          # (foe_player reads the player from the id)
 			n.doing = "stalking"
 			return
 	if not night and h >= WORK_START and h < WORK_END and _bandit_market(n):
@@ -1852,8 +1852,9 @@ func _clan_child(n: NPC, h: float) -> void:
 
 
 func _prey_for(n: NPC):
-	if w.player.alive and w.player.pos.distance_to(n.pos) < 18.0 and w.player_level == n.depth:
-		return w.player
+	for pl: PlayerState in w.active_players():       # MP C6: any player in play, by the same rule (the host first; single player: the one)
+		if pl.alive and pl.pos.distance_to(n.pos) < 18.0 and pl.map_level == n.depth:
+			return pl
 	var best = null
 	var bd := 40.0
 	for o: NPC in w.npcs:
@@ -2254,7 +2255,7 @@ func _station_for(n: NPC, kind: String) -> String:
 			if float(users[u]) < w.minutes or o == null or not o.alive or o.target != -1 \
 					or not o.plan.any(func(s): return str(s.get("args", {}).get("station", "")) == id):
 				users.erase(u)             # lapsed, dead, fighting or moved on to another task (PL2-001)
-		var player_there := 1 if float(st.get("player_until", -1.0)) > w.minutes else 0
+		var player_there: int = w.players_at(st)        # MP C2: every player at it (single player: 0 or 1)
 		if users.has(n.id) or users.size() + player_there < int(st.get("capacity", 1)):
 			return id
 	return ""
@@ -2368,8 +2369,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"respond":                            # S3: a guard sent by a report to where the offender was seen takes them on if still there
 			var off := int(a.offender)
-			if n.target == -1 and Life.is_player_id(off) and w.offender_alive(off) and w.player_level == n.depth \
-					and w.near(w.player.pos, float(GameData.b("witness_radius"))).has(n):
+			var op: PlayerState = w.player_of_id(off) if Life.is_player_id(off) else null     # MP C6: that offender, whoever is acting
+			if n.target == -1 and op != null and w.offender_alive(off) and op.map_level == n.depth \
+					and w.near(op.pos, float(GameData.b("witness_radius"))).has(n):
 				n.target = off
 			return true
 		"report":                             # PAR-05: at the guard (if they are still within sight)
@@ -2927,6 +2929,8 @@ func foe_player(n: NPC) -> PlayerState:
 		return w.player_of_ref(str(n.pursuit.ref))
 	if n.target_ref != "":
 		return w.player_of_ref(n.target_ref)       # A7, A8: the player this fighter took on (a guest's victim fights the guest)
+	if Life.is_player_id(n.target):
+		return w.player_of_id(n.target)            # MP C6: the target names the player (-2 the host)
 	return w.player
 
 
@@ -4429,7 +4433,8 @@ func dawn(record := true) -> void:
 			evaluate_household(h, true)
 		succession_dawn()
 		seek_work()
-		w.quests.drop_failed()
+		for pl: PlayerState in w.player_list():      # MP C3: each player's own quests (single player: the one)
+			w.as_actor(pl, w.quests.drop_failed)
 		w.quests.refresh()
 		w.contracts.dawn()                           # CON-01: lapses, withdrawn offers, businesses' orders
 		w.credit.dawn()                              # TRADE-CREDIT: debts fall due, are repaid or default; households short of food barter or borrow

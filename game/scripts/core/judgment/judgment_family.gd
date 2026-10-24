@@ -228,7 +228,7 @@ static func _threats(w) -> Array:
 	for ref in refs:
 		var p: PlayerState = w.player_of_ref(str(ref))
 		if p != null and p.alive and not p.away and (w.justice.case_of(str(ref)).crimes as Array).any(func(cr): return str(cr.kind) == "killing" and str(cr.settled) != "lapsed"):
-			out.append({"kind": "killer", "id": Life.PLAYER_ID, "pos": p.pos, "depth": p.map_level, "ref": str(ref), "player": p})
+			out.append({"kind": "killer", "id": w.person_id(p), "pos": p.pos, "depth": p.map_level, "ref": str(ref), "player": p})
 	j.threat_cache = {"m": mnt, "list": out}
 	return out
 
@@ -342,7 +342,7 @@ static func _shield(w, n: NPC, near: Array, t: Dictionary) -> void:
 		w.judgment._stat("family_danger_reports")
 	elif str(t.kind) == "killer" and n.report.is_empty():
 		var c: Dictionary = w.justice.case_of(str(t.ref))
-		w.report_crime(n, Life.PLAYER_ID, "sighting", "attack", str(t.ref), [int(c.aware.get(str(n.id), c.crimes.size() - 1))])     # A7: and tells a guard where
+		w.report_crime(n, int(t.id), "sighting", "attack", str(t.ref), [int(c.aware.get(str(n.id), c.crimes.size() - 1))])     # A7: and tells a guard where
 		w.judgment._stat("family_danger_reports")
 
 
@@ -353,7 +353,7 @@ static func _fight(w, n: NPC, t: Dictionary) -> void:
 		n.target = int(t.id)
 		return
 	if str(t.kind) == "killer":
-		n.target = Life.PLAYER_ID                            # A7: the head stands against the killer, as against a bandit
+		n.target = int(t.id)                                 # A7: the head stands against the killer, as against a bandit (MP C6: that player's own id)
 		n.target_ref = str(t.ref)
 		return
 	var a: Animal = t.animal

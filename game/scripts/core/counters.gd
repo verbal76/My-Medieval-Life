@@ -93,6 +93,9 @@ func serving_at(n: NPC) -> String:
 
 ## The player rings at counter `id`: the first available keeper comes. {ok, npc, text}.
 func summon(id: String) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("counters.summon", summon.bind(id), [id])
 	var name := counter_name(id)
 	var s := server(id)
 	if s != null:

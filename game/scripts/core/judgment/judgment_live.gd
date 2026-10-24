@@ -78,7 +78,7 @@ class Social extends JudgmentSocial:
 			return true
 		return Life.kin(a, int(pa.mother), int(pa.father), b, int(pb.mother), int(pb.father))
 
-	## The family graph of Life: mother, father, children, partner (recorded on the person; the player is Life.PLAYER_ID).
+	## The family graph of Life: mother, father, children, partner (recorded on the person; a player is their person id).
 	func relatives(person: int) -> Array:
 		var p = Life.parent_of(w, person)
 		var out := []
@@ -124,7 +124,7 @@ static func _ids(people: Array) -> Array:
 ## A theft seen (World.witness): the thief is the player (World.witness is the player's channel today).
 static func on_theft(w, kind: String, victim: NPC, seen: Array, value: int) -> void:
 	var type := "pickpocket" if kind == "pickpocket" else "theft"
-	var ev: int = w.judgment.publish(type, [Life.PLAYER_ID], [victim.id] if victim != null else [], [], value, by_tag(w, Life.PLAYER_ID))
+	var ev: int = w.judgment.publish(type, [w.acting_id()], [victim.id] if victim != null else [], [], value, by_tag(w, w.acting_id()))
 	if ev > 0:
 		w.judgment.observe_all(ev, _ids(seen))
 
@@ -140,10 +140,10 @@ static func on_attack(w, attacker: int, aware: Dictionary) -> void:
 		w.judgment.observe_all(ev, _ids(aware.seen))
 
 
-## A8: the tag that names which player a fact's Life.PLAYER_ID is (the acting player: the verb runs as them), [] for a villager.
-## Judgment keys every player as -2 until MP Batch C; the tag lets the talk tell a guest's deed from the host's now.
+## A8: the tag that names which player a fact's player id is, [] for a villager. MP Batch C (save 22): each player is judged under
+## their own person id (World.person_id), and the tag stays, naming the same player (the talk reads either).
 static func by_tag(w, actor: int) -> Array:
-	return ["by:" + w.acting_ref()] if Life.is_player_id(actor) else []
+	return ["by:" + World.ref_of_id(actor)] if Life.is_player_id(actor) else []
 
 
 ## A villager slain by the player (World.kill): those who see the body fall.
@@ -183,7 +183,7 @@ static func _event(w, type: String, actors: Array, victims: Array, beneficiaries
 static func on_gift(w, giver: int, n: NPC, id: String) -> void:
 	if GameData.value(id) < 1:
 		return                                  # worth nothing: trivia (SJD-Q12)
-	_event(w, "gift", [giver], [], [n.id], GameData.value(id), n.pos, ["item:" + id] + (["by:" + w.acting_ref()] if Life.is_player_id(giver) else []))   # A6: what was given, and by which player
+	_event(w, "gift", [giver], [], [n.id], GameData.value(id), n.pos, ["item:" + id] + (["by:" + World.ref_of_id(giver)] if Life.is_player_id(giver) else []))   # A6: what was given, and by which player
 
 
 ## Help given: a quest done (help_minor), a relative's money toward a home (help_build). `helper` a person id.
@@ -206,8 +206,8 @@ static func on_deal(w, type: String, owed_by: int, owed_to: int, value: int, lat
 
 ## `who` (PlayerState or NPC) dug the trapped `ref` ("player" or "npc:<id>") out of a cave-in; digging yourself out is no rescue.
 static func on_rescue(w, who, ref: String) -> void:
-	var rescuer: int = Life.PLAYER_ID if who is PlayerState else int(who.id)
-	var saved: int = Life.PLAYER_ID if World.is_player_ref(ref) else World.ref_id(ref)
+	var rescuer: int = w.person_id(who) if who is PlayerState else int(who.id)              # MP C6: that player's own id
+	var saved: int = World.id_of_ref(ref) if World.is_player_ref(ref) else World.ref_id(ref)
 	if saved == rescuer:
 		return
 	_event(w, "rescue", [rescuer], [], [saved])
@@ -223,7 +223,7 @@ static func on_defence(w, at: Vector2) -> void:
 	if saved.is_empty():
 		return
 	saved.sort()
-	var ev: int = w.judgment.publish("rescue", [Life.PLAYER_ID], [], saved)
+	var ev: int = w.judgment.publish("rescue", [w.acting_id()], [], saved)     # MP C6: the player who defended them
 	if ev > 0:
 		w.judgment.observe_all(ev, saved)
 
@@ -231,7 +231,7 @@ static func on_defence(w, at: Vector2) -> void:
 ## A pocket picked and nobody saw: a fact, but the victim only knows something is missing (not by whom) and nobody saw,
 ## so nobody learns it.
 static func on_unseen_pickpocket(w, victim: NPC, value: int) -> void:
-	w.judgment.publish("pickpocket", [Life.PLAYER_ID], [victim.id], [], value, by_tag(w, Life.PLAYER_ID))
+	w.judgment.publish("pickpocket", [w.acting_id()], [victim.id], [], value, by_tag(w, w.acting_id()))
 
 
 ## A bandit's robbery of a villager: a theft by an NPC, seen as the attack is (the same `aware`).
@@ -320,7 +320,7 @@ static func on_news(w, type: String, ref: String, tags: Array, at = null) -> int
 	var t := tags.duplicate()
 	var hh := -1
 	if World.is_player_ref(ref):
-		actors = [Life.PLAYER_ID]
+		actors = [World.id_of_ref(ref) if World.id_of_ref(ref) != -1 else Life.PLAYER_ID]     # MP C6: that player's own id
 		t.append("by:" + ref)
 	elif ref.begins_with("hh:"):
 		hh = World.ref_id(ref)
@@ -606,7 +606,7 @@ static func pick_court(w, n: NPC, people: Array, attraction: Dictionary) -> NPC:
 ## anyone judgment has no opinion of (an institution has no personal judgment).
 static func person_of_ref(w, ref: String) -> int:
 	if World.is_player_ref(ref):
-		return Life.PLAYER_ID
+		return World.id_of_ref(ref) if World.id_of_ref(ref) != -1 else Life.PLAYER_ID      # MP C3: each player their own
 	if ref.begins_with("npc:"):
 		return World.ref_id(ref)
 	if ref.begins_with("hh:"):
@@ -665,7 +665,7 @@ static func seller_order(w, b: NPC, people: Array, key: Array) -> Array:
 
 ## credit_lend (Credit.credit_refusal): why villager `seller` will not sell `buyer` on credit although the rule allows it.
 static func lend_refusal(w, seller: NPC, buyer) -> String:
-	var who: int = buyer.id if buyer is NPC else Life.PLAYER_ID
+	var who: int = w.id_of_party(buyer)
 	if willing(w, "credit_lend", seller, who, [w.day(), who], coin_need(seller)):
 		return ""
 	return "%s would rather not lend to you." % seller.name if Life.is_player_id(who) else "%s would rather not lend to %s." % [seller.name, buyer.name]
@@ -673,7 +673,7 @@ static func lend_refusal(w, seller: NPC, buyer) -> String:
 
 ## barter_accept (Credit.barter_quote): whether villager `seller` takes the swap with `buyer` that is otherwise sound.
 static func barter_ok(w, seller: NPC, buyer) -> bool:
-	var who: int = buyer.id if buyer is NPC else Life.PLAYER_ID
+	var who: int = w.id_of_party(buyer)
 	return willing(w, "barter_accept", seller, who, [w.day(), who], coin_need(seller))
 
 
@@ -684,7 +684,7 @@ static func pick_food_seller(w, buyer: NPC, cands: Array) -> Dictionary:
 	var cs := []
 	for i in cands.size():
 		var s = cands[i].seller
-		cs.append({"id": i, "counterparty": s.id if s is NPC else Life.PLAYER_ID, "factors": {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i)}})
+		cs.append({"id": i, "counterparty": w.id_of_party(s), "factors": {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i)}})
 	var j: JudgmentStore = w.judgment
 	var r := JudgmentWeighting.choose(j, j.cfg, buyer.id, "food_seller", cs, [w.day(), buyer.household])
 	j._stat("food_seller_choices")

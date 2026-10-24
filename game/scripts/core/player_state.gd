@@ -9,6 +9,10 @@ var generation := 1
 var pid := 0                  # ID-01: this character's permanent person id (World.people); 0 until World gives one (an older save: on load)
 var away := false             # MP Batch A2 (MP-D1): a guest not connected: out of active play (not on the map, no needs, not a detail centre), every record kept
 var net_key := ""             # MP Batch A2: a guest's identity as the host knows it, the SHA-256 hash of its device key (never the key); "" for the host
+var party := ""               # MP Batch C: a guest's party reference ("player:<line>", World.player_ref), set by World when it joins `players` (not saved; "" = the host's "player"), so static helpers that only have the character (Contracts.ref_of) name the right player
+var rest_until := -1.0        # MP-D2: a rest in real time in a session ends at this game minute (-1: not resting); not saved (a loaded guest is away)
+var rest_since := -1.0
+var rest_night := false
 var line := 0                 # MP Batch B (MP-D4): a guest heir's family line, the pid of the line's first guest character, so the line keeps one reference ("player:<line>") across generations as the host's line keeps "player"; 0 = the line is this character's own pid (every first guest character, and the host)
 var sprite := "res://assets/characters/player_00.png"
 var heir_sprite := "res://assets/characters/player_01.png"

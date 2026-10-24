@@ -20,7 +20,7 @@ extends RefCounted
 ## calls the feast off and nothing is paid. Saved in the World's optional key "feast"; a save without it starts empty.
 
 const KEY := "feast"
-const PLAYER := Life.PLAYER_ID        # -2; compared through Life.is_player_id
+const PLAYER := Life.PLAYER_ID        # -2, the host's line; a player in a wedding or plan is their person id (World.person_id), compared through Life.is_player_id
 
 var w: World
 var weddings: Array = []              # {a, b, day, done}: partnerships awaiting their feast (a may be the player, PLAYER)
@@ -178,7 +178,8 @@ func _plan_wedding(i: int, keeper: NPC, hosts_today: Dictionary) -> void:
 	var other: NPC = nb if Life.is_player_id(a) else na
 	if Life.is_player_id(a) or Life.is_player_id(b):
 		other = nb if Life.is_player_id(a) else na
-		if other == null or not other.alive or w.player.partner != other.id:
+		var pl: PlayerState = w.player_of_id(a if Life.is_player_id(a) else b)       # MP C5: that player's wedding, whoever is acting
+		if other == null or not other.alive or pl == null or pl.partner != other.id:
 			wd.done = true
 			return
 		var guests := [other.id]
@@ -187,7 +188,7 @@ func _plan_wedding(i: int, keeper: NPC, hosts_today: Dictionary) -> void:
 				guests.append(id)
 		for id in _friends_of(other.id, int(c.wedding_friends), guests):
 			guests.append(id)
-		plans.append({"kind": "wedding", "host": PLAYER, "invited": guests, "wedding": i})
+		plans.append({"kind": "wedding", "host": a if Life.is_player_id(a) else b, "invited": guests, "wedding": i})
 		return
 	if na == null or nb == null or not na.alive or not nb.alive or na.partner != nb.id:
 		wd.done = true                                    # a death or a parting before the feast: none is held
@@ -423,7 +424,7 @@ func _player_wedding_plan() -> Dictionary:
 	if planned_day != w.day():
 		return {}
 	for p in plans:
-		if Life.is_player_id(int(p.host)):
+		if int(p.host) == w.acting_id():                # MP C5: the acting player's own wedding feast
 			return p
 	return {}
 
@@ -483,6 +484,9 @@ func player_choices() -> Array:
 
 ## The player pays for a feast: {ok, text}. Coins go to the keeper, the plates are eaten by those at the table.
 func player_feast(kind: String, size: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("feast.player_feast", player_feast.bind(kind, size), [kind, size])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, player_feast.bind(kind, size))
 	var s := _player_setup(kind, size)
@@ -494,7 +498,7 @@ func player_feast(kind: String, size: int, actor: PlayerState = null) -> Diction
 	var reg := float(cfg().player_regard)
 	for g in s.order:
 		if g is NPC:
-			w.relations._raise(w.relations.tie(PLAYER, g.id), reg, 0.0, true, Vector2i(PLAYER, g.id))
+			w.relations._raise(w.relations.tie(w.acting_id(), g.id), reg, 0.0, true, Vector2i(w.acting_id(), g.id))
 	w.stat("feast_player")
 	if kind == "wedding":
 		var p := _player_wedding_plan()

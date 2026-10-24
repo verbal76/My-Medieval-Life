@@ -20,11 +20,13 @@ extends RefCounted
 const PLAYER_ID := -2
 
 
-## True when a person id (NPC.target, a tie, a family link, a judgment id) names a player character. MP Batch A1: the one place
-## that decides it; today only the legacy -2 (the host's character, whoever holds that id), so single player is unchanged.
-## Batch C makes it true of every player's pid, and PLAYER_ID the acting player's view id.
+## True when a person id (NPC.target, a tie, a family link, a judgment id) names a player character's family line. MP Batch A1:
+## the one place that decides it. MP Batch C: the host's line is the legacy -2 (ID-D1, every save); a guest's line is the negative of
+## its line's pid (World.person_id: -(line), at or below -World.BAND_START), so a guest has ties, family links, judgment and foes of
+## its own, recognized without a world at hand (no NPC, -1 "none" or -3 FORMER_PLAYER is ever that low). World.player_of_id finds the
+## living character. Single player has only -2: unchanged.
 static func is_player_id(id: int) -> bool:
-	return id == PLAYER_ID
+	return id == PLAYER_ID or id <= -World.BAND_START
 
 
 const FORMER_PLAYER := -3              # the dead player of an earlier generation, in the links of their kin
@@ -260,13 +262,14 @@ static func sex_of_name(name: String) -> String:
 
 
 static func parent_of(w: World, id: int) -> Object:
-	return w.player if is_player_id(id) else w.npc(id)
+	return w.player_of_id(id) if is_player_id(id) else w.npc(id)          # MP C5: that player's line, whoever is acting
 
 
 ## Is this person's partner alive and recorded as theirs?
 static func has_partner(w: World, n: NPC) -> bool:
 	if is_player_id(n.partner):
-		return w.player.alive and w.player.partner == n.id
+		var pp := w.player_of_id(n.partner)                       # MP C5: the player whose partner they are
+		return pp != null and pp.alive and pp.partner == n.id
 	if n.partner >= 0:
 		var o := w.npc(n.partner)
 		return o != null and o.alive and o.partner == n.id
@@ -285,12 +288,12 @@ static func _link_partners(a: NPC, b: NPC) -> void:
 	kin_version += 1
 
 
-static func _link_child(c: NPC, mother, father) -> void:
+static func _link_child(c: NPC, mother, father, w: World = null) -> void:
 	if mother != null:
-		c.mother = PLAYER_ID if mother is PlayerState else (mother as NPC).id
+		c.mother = (w.person_id(mother) if w != null else PLAYER_ID) if mother is PlayerState else (mother as NPC).id     # MP C5: a guest parent's own id
 		mother.children.append(c.id)
 	if father != null:
-		c.father = PLAYER_ID if father is PlayerState else (father as NPC).id
+		c.father = (w.person_id(father) if w != null else PLAYER_ID) if father is PlayerState else (father as NPC).id
 		father.children.append(c.id)
 	kin_version += 1
 
@@ -520,7 +523,7 @@ static func _may_move(w: World, n: NPC) -> bool:
 static func partner_refusal(w: World, n: NPC) -> String:
 	var p := w.player
 	var lo := float(cfg().partner_min_age)
-	if not p.alive or p.partner >= 0:
+	if not p.alive or p.partner >= 0 or is_player_id(p.partner):
 		return "You already have a partner."
 	if age_years(p.born, w.minutes) < lo:
 		return "You are too young."
@@ -528,7 +531,7 @@ static func partner_refusal(w: World, n: NPC) -> String:
 		return "%s does not want that." % n.name
 	if has_partner(w, n):
 		return "%s is already spoken for." % n.name
-	if kin(PLAYER_ID, p.mother, p.father, n.id, n.mother, n.father):
+	if kin(w.acting_id(), p.mother, p.father, n.id, n.mother, n.father):
 		return "%s is your kin." % n.name
 	return ""
 
@@ -540,7 +543,7 @@ static func partner_player(w: World, n: NPC) -> String:
 	if why != "":
 		return why
 	w.player.partner = n.id
-	n.partner = PLAYER_ID
+	n.partner = w.acting_id()                  # MP C5: a guest's partner names that guest's line
 	kin_version += 1
 	w.stat("partnerships")
 	if w.recorder != null:
@@ -560,14 +563,14 @@ static func births(w: World) -> void:
 	for n: NPC in w.npcs.duplicate():
 		if not n.alive or n.sex != "female" or n.role != "adult" or not has_partner(w, n):
 			continue
-		var father = w.player if is_player_id(n.partner) else w.npc(n.partner)
+		var father = w.player_of_id(n.partner) if is_player_id(n.partner) else w.npc(n.partner)
 		if father != null and father.sex != n.sex:          # couples of one sex have no children (CRT-07)
 			_try_birth(w, n, n.household, father, chance)
-	var p := w.player
-	if p.alive and p.sex == "female" and p.partner >= 0:
-		var o := w.npc(p.partner)
-		if o != null and o.alive and is_player_id(o.partner) and o.sex != p.sex:
-			_try_birth(w, p, o.household, o, chance)
+	for p: PlayerState in w.active_players():              # MP C5: every player in play (single player: the one)
+		if p.alive and p.sex == "female" and p.partner >= 0:
+			var o := w.npc(p.partner)
+			if o != null and o.alive and o.partner == w.person_id(p) and o.sex != p.sex:
+				_try_birth(w, p, o.household, o, chance)
 
 
 static func _try_birth(w: World, mother, h: int, father, chance: float) -> bool:
@@ -611,7 +614,7 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	k.hunger = 100.0
 	k.pos = Vector2(w.building_door(k.home)) + Vector2(0.5, 0.5) if w.buildings.has(k.home) else (mother.pos if mother != null else w.player.pos)
 	k.sprite = "res://assets/characters/villager_%02d.png" % (k.id % 48)
-	_link_child(k, mother, father)
+	_link_child(k, mother, father, w)
 	hh.members.append(k.id)
 	w.npcs.append(k)
 	w.by_id[k.id] = k
@@ -709,8 +712,15 @@ static func make_heir(w: World, heir: PlayerState, kid: NPC, parent: PlayerState
 
 ## The player is about to be replaced by an heir: every link to "the player" (-2) now names an ancestor
 ## who is gone (-3), so the new player's own links never mix with their siblings'.
-static func retire_player_id(w: World) -> void:
+static func retire_player_id(w: World, dead: PlayerState = null) -> void:
+	var line := w.person_id(dead) if dead != null else PLAYER_ID
+	# MP C5: a guest's line retires to the dead character's own permanent id (ID-01: a person, now an ancestor, never a player again);
+	# the host's line keeps the Build 18 rule (-3), so single player is unchanged
+	var former := FORMER_PLAYER if line == PLAYER_ID else dead.pid
 	for n: NPC in w.npcs:
 		for k in ["mother", "father", "partner"]:
-			if int(n.get(k)) == PLAYER_ID:
-				n.set(k, FORMER_PLAYER)
+			if int(n.get(k)) == line:
+				n.set(k, former)
+	for q: PlayerState in w.player_list():         # MP-D8: a player partnered with the dead (two players' marriage)
+		if q != dead and q.partner == line:
+			q.partner = former

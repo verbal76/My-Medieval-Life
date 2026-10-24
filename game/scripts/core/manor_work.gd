@@ -338,6 +338,9 @@ func post_tunnels() -> void:
 ## (backfill.order_rate a unit, at least 1) now: it is held in the order until a worker finishes it. The order's depot is
 ## the surface stand of the mouth that leads to that level, where the player leaves the spoil. "" or why not.
 func order_backfill(level: int, cell: Vector2i, units: int, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("manor_work.order_backfill", order_backfill.bind(level, cell, units), [level, cell, units])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, order_backfill.bind(level, cell, units))
 	var why: String = w.mine_works.fill_ground_refusal(level, cell)
@@ -373,6 +376,9 @@ func backfill_order(level: int, cell: Vector2i) -> Dictionary:
 
 ## MIN-F2 (Q5): the player leaves `qty` spoil from `from` at an order's depot (standing there). Units moved.
 func stock_backfill(j: Dictionary, from: Inventory, qty: int, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("manor_work.stock_backfill", stock_backfill.bind(j, from, qty), [j, from, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, stock_backfill.bind(j, from, qty))
 	var item := str(MineWorks.cfg().backfill.item)
@@ -390,6 +396,10 @@ func backfill_needs(j: Dictionary) -> int:
 ## MIN-F2 (Q5): the player cancels an order: the wage held goes back to the player; a worker on it sets down what they
 ## carry where they stand; the spoil at the depot is left lying there; the fill placed stays in the passage.
 func cancel_backfill(j: Dictionary, actor: PlayerState = null) -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		w.mirror("manor_work.cancel_backfill", cancel_backfill.bind(j), [j])
+		return
 	if actor != null and actor != w.player:
 		w.as_actor(actor, cancel_backfill.bind(j))
 		return
@@ -478,7 +488,7 @@ func survey_spot(j: Dictionary) -> Vector2i:
 ## The party a job's taker is: the player or a villager (null if gone).
 func _who(who: String):
 	if World.is_player_ref(who):
-		return w.player
+		return w.player_for(who)
 	return w.npc(int(who.substr(4)))
 
 
@@ -633,6 +643,9 @@ func shovel_would_open(who: String) -> bool:
 
 ## Take a job: its wage is set aside from the treasury. False (with last_refusal) if it cannot be.
 func take(j: Dictionary, who: String) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("manor_work.take", take.bind(j, who), [j, who])
 	last_refusal = ""
 	if not job_of(who).is_empty():
 		last_refusal = "You are already doing work for the manor."
@@ -1120,7 +1133,7 @@ func _finish(j: Dictionary, who: String) -> void:
 	var pay := int(j.reserved)
 	j.reserved = 0
 	if World.is_player_ref(who):
-		w.player.coins += pay
+		w.player_for(who).coins += pay
 	else:
 		var n := w.npc(int(who.substr(4)))
 		if n:

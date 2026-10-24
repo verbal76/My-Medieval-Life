@@ -64,13 +64,15 @@ static func cfg() -> Dictionary:
 static func ref_of(who) -> String:
 	if who is NPC:
 		return World.npc_ref(who.id)
+	if who is PlayerState and (who as PlayerState).party != "":
+		return (who as PlayerState).party            # MP C3: a guest is its own party ("player:<line>")
 	return World.PLAYER
 
 
-## The relations id of a party (Life.PLAYER_ID for the player), or -1 for the manor.
+## The relations id of a party (a player's person id: -2 the host's line), or -1 for the manor.
 static func rel_id(ref: String) -> int:
 	if World.is_player_ref(ref):
-		return Life.PLAYER_ID
+		return World.id_of_ref(ref) if World.id_of_ref(ref) != -1 else Life.PLAYER_ID
 	return World.ref_id(ref) if ref.begins_with("npc:") else -1
 
 
@@ -87,7 +89,7 @@ func _alive(ref: String) -> bool:
 
 func _coins(ref: String) -> int:
 	if World.is_player_ref(ref):
-		return w.player.coins
+		return w.player_for(ref).coins
 	if ref == World.MANOR:
 		return w.treasury
 	var n := _npc_of(ref)
@@ -96,7 +98,7 @@ func _coins(ref: String) -> int:
 
 func _add_coins(ref: String, k: int) -> void:
 	if World.is_player_ref(ref):
-		w.player.coins += k
+		w.player_for(ref).coins += k
 	elif ref == World.MANOR:
 		w.treasury += k
 	else:
@@ -105,7 +107,7 @@ func _add_coins(ref: String, k: int) -> void:
 
 func _pack(ref: String) -> Inventory:
 	if World.is_player_ref(ref):
-		return w.player.inv
+		return w.player_for(ref).inv
 	var n := _npc_of(ref)
 	return n.inv if n else null
 
@@ -120,7 +122,7 @@ static func formal(total: int) -> bool:
 ## representative the game already uses). null when there is none.
 func _signer(ref: String):
 	if World.is_player_ref(ref):
-		return w.player if w.player.alive else null
+		return w.player_for(ref) if w.player_for(ref).alive else null
 	if ref == World.MANOR:
 		var r := w.npc(w.reeve_id)
 		return r if r != null and r.alive else null
@@ -418,7 +420,8 @@ func close_to(n: NPC, rid: int) -> bool:
 	if w.relations.friends(rid, n.id) or n.partner == rid:
 		return true
 	if Life.is_player_id(rid):
-		return w.player.partner == n.id or Life.kin(n.id, n.mother, n.father, rid, w.player.mother, w.player.father)
+		var pl: PlayerState = w.player_of_id(rid)             # MP C3: that player, whoever is acting
+		return pl != null and (pl.partner == n.id or Life.kin(n.id, n.mother, n.father, rid, pl.mother, pl.father))
 	var o := w.npc(rid)
 	return o != null and Life.kin(n.id, n.mother, n.father, o.id, o.mother, o.father)
 
@@ -572,7 +575,7 @@ static func counted(qty: int, name: String) -> String:
 ## treasury.
 func fund_refusal(buyer_ref: String, total: int) -> String:
 	if World.is_player_ref(buyer_ref):
-		return "" if w.player.coins >= total else "You haven't %d coins to set aside for it." % total
+		return "" if w.player_for(buyer_ref).coins >= total else "You haven't %d coins to set aside for it." % total
 	if buyer_ref == World.MANOR:
 		return "" if w.treasury >= total else "The manor cannot set aside %d coins." % total
 	var b := _npc_of(buyer_ref)
@@ -602,6 +605,9 @@ func _new_record(buyer_ref: String, seller_ref: String, id: String, qty: int, pr
 ## buyer's coins set aside. Returns the evaluation plus "contract" (the record) when one opened, or a refusal
 ## ("answer": "refused", "say") when the buyer cannot make the offer. `history` carries earlier rounds of the talk.
 func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, days: int, history := [], svc := {}) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("contracts.propose", propose.bind(buyer_ref, n, id, qty, price_each, days, history, svc), [buyer_ref, n, id, qty, price_each, days, history, svc])
 	if World.is_player_ref(buyer_ref) and open_of(w.acting_ref(), "buyer").size() >= int(cfg().max_open_player):
 		return {"answer": "refused", "say": "You have as many contracts open as you can keep track of (%d)." % int(cfg().max_open_player)}
 	var why := fund_refusal(buyer_ref, qty * price_each)
@@ -686,6 +692,9 @@ func offer_to_player(b: NPC, id: String, qty: int, price_each: int, days: int, s
 
 ## The player takes up a villager's standing offer: its coins are set aside now. "" or the reason it cannot open.
 func accept_offer(c: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("contracts.accept_offer", accept_offer.bind(c), [c])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, accept_offer.bind(c))
 	if str(c.state) != "offered" or not World.is_player_ref(c.seller):
@@ -707,6 +716,9 @@ func accept_offer(c: Dictionary, actor: PlayerState = null) -> String:
 ## the contract opens at the player's terms with its coins set aside ("contract" in the answer); a counter of its own
 ## becomes the standing offer's terms; a refusal leaves its offer standing as it was. Nothing is set aside before.
 func counter_offer(c: Dictionary, qty: int, price_each: int, days: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("contracts.counter_offer", counter_offer.bind(c, qty, price_each, days), [c, qty, price_each, days])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, counter_offer.bind(c, qty, price_each, days))
 	if str(c.get("state", "")) != "offered" or not World.is_player_ref(c.seller):
@@ -782,6 +794,10 @@ func buyer_answer(b: NPC, id: String, own_qty: int, own_price: int, unit: int, q
 
 
 func decline_offer(c: Dictionary) -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		w.mirror("contracts.decline_offer", decline_offer.bind(c), [c])
+		return
 	if str(c.state) == "offered":
 		c.history.append({"day": w.day(), "by": c.seller, "what": "decline", "qty": int(c.qty), "price_each": int(c.price_each), "days": int(c.days)})
 		_end(c, "cancelled", "declined")
@@ -792,6 +808,9 @@ func decline_offer(c: Dictionary) -> void:
 ## chest when delivered to their home), each unit paid from the coins set aside. One step: the goods move and the coins
 ## move, or nothing does. Returns the units delivered.
 func deliver(c: Dictionary, units: int, into: Inventory = null, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("contracts.deliver", deliver.bind(c, units, into), [c, units, into])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, deliver.bind(c, units, into))
 	if not is_open(c) or not _alive(c.buyer) or not _alive(c.seller) or is_service(c):
@@ -808,7 +827,7 @@ func deliver(c: Dictionary, units: int, into: Inventory = null, actor: PlayerSta
 		return 0
 	from.remove(c.item, units)
 	if World.is_player_ref(c.seller):
-		w.player.trim_stolen()
+		w.player_for(c.seller).trim_stolen()
 	to.add(c.item, units)
 	_pay_units(c, units)
 	return units
@@ -920,9 +939,10 @@ func npc_deliver(n: NPC, id: int) -> bool:
 	if c.is_empty() or c.seller != World.npc_ref(n.id):
 		return false
 	if World.is_player_ref(c.buyer):
-		if w.player.home == "" or not w.buildings.has(w.player.home):
+		var bp: PlayerState = w.player_for(c.buyer)              # MP C3: the buyer's own chest, whoever is acting (a villager delivers)
+		if bp.home == "" or not w.buildings.has(bp.home):
 			return false
-		return deliver(c, n.inv.count(c.item), w.player.chest) > 0
+		return deliver(c, n.inv.count(c.item), bp.chest) > 0
 	return deliver(c, n.inv.count(c.item)) > 0
 
 
@@ -944,6 +964,9 @@ func _end(c: Dictionary, state: String, why: String) -> void:
 ## Either party ends an open contract: what was delivered has been paid; the rest of the set-aside coins go back to
 ## the buyer. No fee (OD-29). "" or the reason it cannot.
 func cancel(c: Dictionary, by_ref: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("contracts.cancel", cancel.bind(c, by_ref), [c, by_ref])
 	if not is_open(c):
 		return "That contract is not open."
 	if by_ref != c.buyer and by_ref != c.seller:

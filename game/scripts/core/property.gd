@@ -258,7 +258,7 @@ func building_name(b: Dictionary) -> String:
 
 func _family(ref: String) -> String:
 	if World.is_player_ref(ref):
-		return w.player.family
+		return w.player_for(ref).family
 	if ref.begins_with("hh:") and World.ref_id(ref) < w.households.size():
 		return str(w.households[World.ref_id(ref)].family)
 	return "manor's"
@@ -268,7 +268,7 @@ func _family(ref: String) -> String:
 ## Coins a party can pay with: the player's purse, a villager's, a household's members' together.
 func purse(ref: String) -> int:
 	if World.is_player_ref(ref):
-		return w.player.coins
+		return w.player_for(ref).coins
 	var n := 0
 	for o: NPC in _payers(ref):
 		n += o.coins
@@ -299,7 +299,7 @@ func _pay_manor(ref: String, amount: int) -> bool:
 	if purse(ref) < amount:
 		return false
 	if World.is_player_ref(ref):
-		w.player.coins -= amount
+		w.player_for(ref).coins -= amount
 	else:
 		var left := amount
 		for o: NPC in _payers(ref):
@@ -335,6 +335,9 @@ func _manor_pays(ref: String, amount: int) -> bool:
 # ---------------------------------------------------------------- deals ----------------------
 ## Buy from the manor; "" when done, else why not. The price goes to the treasury.
 func buy(thing: Dictionary, ref: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("property.buy", buy.bind(thing, ref), [thing, ref])
 	if not for_sale(thing):
 		return "The manor is not selling that."
 	var price := price_of(thing)
@@ -351,6 +354,9 @@ func buy(thing: Dictionary, ref: String) -> String:
 
 ## Lease from the manor; "" when done. The first week's rent is paid at once, then weekly.
 func lease(thing: Dictionary, ref: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("property.lease", lease.bind(thing, ref), [thing, ref])
 	if not for_sale(thing):
 		return "The manor is not letting that."
 	var rent := rent_of(thing)
@@ -368,6 +374,9 @@ func lease(thing: Dictionary, ref: String) -> String:
 
 ## Sell what a party owns back to the manor (the treasury pays sale_value); "" when done.
 func sell(thing: Dictionary, ref: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("property.sell", sell.bind(thing, ref), [thing, ref])
 	var u := unit(thing)
 	if w.owner_of(u[0]) != ref:
 		return "That is not yours to sell."
@@ -391,6 +400,9 @@ func sell(thing: Dictionary, ref: String) -> String:
 
 ## Give up a lease. Rent owed is paid as far as the purse allows; the rest is let go.
 func end_lease(thing: Dictionary, ref: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("property.end_lease", end_lease.bind(thing, ref), [thing, ref])
 	var u := unit(thing)
 	if w.tenant_of(u[0]) != ref:
 		return "You do not lease that."
@@ -523,6 +535,9 @@ func _settle(ref: String) -> void:
 
 ## Choose which held house is the player's home (respawn point, bed and chest); "" when done.
 func set_home(id: String, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("property.set_home", set_home.bind(id), [id])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, set_home.bind(id))
 	if not homes_of(w.acting_ref()).has(id):
@@ -640,6 +655,9 @@ func survey_under(b: Dictionary) -> Dictionary:
 ## farming actions (Farming, FarmPlots), as the owner's farmland rules ask. `extra` is merged into the parcel
 ## before the deal (FarmPlots marks its farmland so).
 func claim(rect: Rect2i, ref: String, lease_it := false, grub := true, extra := {}) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("property.claim", claim.bind(rect, ref, lease_it, grub, extra), [rect, ref, lease_it, grub, extra])
 	why = can_claim(rect)
 	if why != "":
 		return {}

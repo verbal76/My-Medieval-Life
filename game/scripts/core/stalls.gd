@@ -157,7 +157,7 @@ func after_trade(seller: Object, id: String, qty: int, total: int) -> void:
 ## The party a settlement pays: the seller, else (dead) their household's head; null when nobody is left.
 func _payee(ref: String) -> Object:
 	if World.is_player_ref(ref):
-		return w.player
+		return w.player_for(ref)                      # MP C4: the stall's player, whoever is acting
 	if ref.begins_with("npc:"):
 		var o := w.npc(World.ref_id(ref))
 		if o != null and o.alive:
