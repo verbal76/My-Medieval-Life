@@ -52518,6 +52518,11 @@
      "date": "2026-10-24",
      "change": "commits + 2685a26; next_action",
      "why": "Build 19 candidate wip/build19 2685a26: all Expansion 19 layers on, identity, REC-F1/SIM-F9, recorder (off in every build), blocked-chase fix and the owner's bandit rules; targeted suites pass; determinism three runs identical; no leaks; no starvation in 30 days; baseline written"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner authorized a private draft release of Build 19 from 2685a26 after 30-day runs on seeds 3 and 4 (docs/directives/2026-10-24_owner_build19_release_authorization.md)"
     }
    ],
    "next_action": "present Build 19 to the owner for release authorization (release.yml run needs the owner)",
