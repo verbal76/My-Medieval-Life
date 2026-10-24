@@ -44620,7 +44620,7 @@
    "owner_wording": "Every My Medieval Life build must automatically run comprehensive village simulations, capture the results through the black-box flight recorder, analyze those results in an Excel analysis workbook, and pass the established quality gates before generating Android, Windows, or Linux release artifacts.",
    "approval": "owner, 2026-10-24 (standing; permanent)",
    "acceptance": [
-    "Audit of the existing recorder, simulations, exports and CI with each component classified; missing parts built on the existing recorder (no second recorder); every release run executes the scenario suite (equilibrium, shortages, population, production, relationships, crime, navigation, performance incl. 500 people) on the exact packaged commit with recording on, exports structured data, generates a validated XLSX workbook with the required sheets and charts and historical comparison against versioned baselines, and blocks packaging on the listed integrity failures (not on legitimate hardship); recorder off by default, RNG- and outcome-neutral, bounded storage, incomplete recording fails the gate; workbook, summary and evidence attached to the private draft with run id and recorder schema version; proof: a full run recorded, exports matching truth, workbook validated, a deliberately failing gate blocking packaging, a passing gate packaging all three platforms, recorder determinism-neutral"
+    "As before for the pre-build gate on all three platforms, except: the XLSX workbook is a CI artifact (no routine owner-facing attachment) and each build carries a concise simulation summary; Windows and Linux offer optional live gameplay recording through the existing recorder with export of recorded data and an XLSX analysis (charts and event records) to the local computer, off by default, bounded memory, incremental disk writes, RNG- and outcome-neutral; the APK contains no workbook export code or desktop export dependencies and its size and memory are protected; one event schema; simulation logic separate from recorder storage and spreadsheet generation; no duplicated simulation systems"
    ],
    "target_build": "multiplayer",
    "parent": null,
@@ -44641,6 +44641,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> simulation gate agent; branch: None -> wip/sim-gate; next_action",
      "why": "Build 20 is in its final test run under the current process and is not held (directive section 10); the gate is built on its own branch and must be active before the next release after Build 20"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "acceptance",
+     "why": "owner amendment (docs/directives/2026-10-24_sim_gate_amendment_platform_exports.md), permanent: workbooks are internal CI artifacts, not routine release attachments; each build carries a concise simulation summary; Windows and Linux gain optional live gameplay recording with local XLSX export (off by default, bounded memory, incremental writes); Android ships no Excel or desktop export code; one event schema, simulation separate from storage and export"
     }
    ],
    "assigned_worker": "simulation gate agent",
