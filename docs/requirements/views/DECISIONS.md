@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 38 |
+| OPEN | 45 |
 | APPROVED | 177 |
 | PROVISIONAL | 1 |
 | SUPERSEDED | 2 |
@@ -86,11 +86,18 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | OPEN | no |  | docs/directives/2026-10-23_id_d2_succession_decisions.md |
 
-## Multiplayer track (isolated branch): open, reopened or provisional (1)
+## Multiplayer track (isolated branch): open, reopened or provisional (8)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | MP-D1 | Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first | OPEN | yes |  | docs/directives/2026-10-24_master_multiplayer_directive.md |
+| MP-D2 | Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
+| MP-D3 | Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
+| MP-D4 | Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
+| MP-D5 | Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
+| MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
+| MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
+| MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | OPEN | yes |  | docs/multiplayer/MULTIPLAYER_PREPARATION.md |
 
 ## Waiting on an owner decision for its build: open, reopened or provisional (5)
 

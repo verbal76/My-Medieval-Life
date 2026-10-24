@@ -1,0 +1,162 @@
+# Multiplayer preparation: compatibility assessment, architecture, batch plan and decisions (2026-10-24)
+
+Owner directive `docs/directives/2026-10-24_master_multiplayer_directive.md` (register MP-MASTER). **Preparation only: nothing
+is implemented, merged or activated.** Implementation starts after Build 19's owner acceptance and an explicit authorization.
+Sequence: Build 19 acceptance → full multiplayer → Expansion 20.
+
+Sources: a read-only audit of `wip/build19` (2026-10-24); the prototype `wip/multiplayer` `d18d7d1` and its notes
+(`PROTOTYPE_MULTIPLAYER_2026-10-19.md`); the 2026-10-21 branch audit (`MULTIPLAYER_BRANCH_AUDIT_2026-10-21.md`), both copied here
+unchanged.
+
+## 1. Status (directive section 15)
+
+| Stage | State |
+|---|---|
+| Designed | Yes: owner design 2026-10-17 (DECISIONS), directives 2026-10-19 and 2026-10-24 |
+| Implemented on an isolated branch | Partly: the two-player LAN prototype `d18d7d1` (movement, identity, one shared action) |
+| Integrated | **No**: in no build; Build 19 has no networking code |
+| Tested locally | Prototype only: 36 checks, two processes on one machine, 2026-10-19, never re-run |
+| Tested on real devices | **No** |
+| Accepted by the owner | No |
+| Released | No |
+
+## 2. Build 19 compatibility assessment
+
+**Scale.** 69 script files (about 1,100 lines) and 85 test files refer to the single player. The prototype's list of single-player
+systems (about 20 files in October) has grown with credit, contracts, couriers, feasts, guardianship, mine works, open pits, the
+chapel, judgment, law, identity, holdings, services and the recorder.
+
+**What already helps.** Permanent identity (Build 19) gives every player character a permanent `pid` (band ids from 1,000,000) that
+never collides with a villager; `rest_recover`, crime records (`player.crimes`, `stolen`) and much of the trade code already work on
+"whoever is acting" (`who is PlayerState`); Expansion 19's judgment keys pack ids generically; overworld streaming follows each
+machine's camera; touch and gamepad input are per machine.
+
+**The ten highest-risk assumptions** (everything else depends on them):
+
+| # | Assumption | Where |
+|---|---|---|
+| 1 | One `World.player` read by every player verb | `world.gd` (about 400 refs), 60+ other files; `main.gd` 291 refs |
+| 2 | `Life.PLAYER_ID = -2` as the one person id in ties, family links, `NPC.target`, judgment, feasts (two duplicate constants) | `life.gd:20-21`, `feast.gd:23`, `settlement/experience.gd:37` |
+| 3 | `World.PLAYER = "player"` as the one owner and party ref; `party()` returns null for it | property, business, stalls, carts, contracts, credit, couriers, manor work, pens |
+| 4 | Relationship ties keyed with -2; one global `killings` and notoriety; all inherited by the heir | `relations.gd` |
+| 5 | NPC combat targets: `target == -2`, bandits' `_prey_for` choosing the player, animals' `anger == "player"` | `npc_brain.gd:1767,1849,2755,2824`, `combat.gd:115`, `fauna.gd:315-364` |
+| 6 | Simulation detail centred on one player (`detail_radius`) | `world.gd:342`, `fauna.gd`, `refuges.gd` |
+| 7 | One global `player_level` (underground) for collision, paths, portals, loot | `world.gd:124,4946-5011`, mine works, open pit, discovery |
+| 8 | One world random stream shared by player and NPC rolls | crits, work and craft rolls, pickpocket, saplings |
+| 9 | Movement, action timers and projectiles in the client `main.gd`, not in `World` | `main.gd:1908,3897` |
+| 10 | Succession for one player: `continue_as_heir`, `Identity.succeed`, one global former-player id -3, quest release | `world.gd:729`, `identity.gd:91`, `life.gd`, `quests.gd` |
+
+**Shared-clock conflicts** (single player can stop or skip time; several players cannot all do so):
+- **Resting** (`player_rest`, `world.gd:2472`) runs the shared world up to 12 game hours forward in a loop.
+- **Menus and placement mode pause the world** (`game_ui.gd:1079`, `main.gd:3935,4025,4197`).
+- **A player's death freezes the world** (`main.gd:1443`).
+- Station holds, rent days, quest and contract deadlines, full-health-only-to-morning rest and hourly autosave all assume one
+  person's clock.
+
+**Saves.** One `"player"` section and one `player_level`; `SAVE_VERSION` 20. Multiplayer needs a `"players"` section and version
+21, with a migration from 20 (the existing player becomes the host's character) and fixture tests.
+
+## 3. The prototype: what to reuse, adapt or replace
+
+| Component (`d18d7d1`) | Verdict | Why |
+|---|---|---|
+| `net_discovery.gd` (UDP LAN discovery, manual-address fallback) | **Reuse** | independent of game code; works as designed |
+| `net_protocol.gd` (version string, salted password hash) | **Reuse, update** | version string must carry save version 21 and a protocol version |
+| Identity: per-device 128-bit key, host stores only its SHA-256 hash, duplicate refused | **Reuse, bind to `pid`** | meets "no impersonation by name" and "no secrets to other guests"; the key will map to a permanent `pid` |
+| `net_actions.gd` request, validate, apply once, reply pattern | **Reuse, generalize** | the right pattern; becomes the one path by which any player (host included) acts |
+| `net_session.gd` ENet transport, join handshake, refusals | **Adapt** | keep the transport and handshake; replace its world model |
+| Guests as a side list `World.guests`, guest needs frozen, guests limited to walking and fruit picking | **Replace** | contradicts full parity; guests become first-class players in `World.players` |
+| Guest receives the whole save on joining, then position overwrites | **Adapt** | keep a join snapshot (without secrets), then interest-managed updates; the guest renders, never simulates |
+| Multiplayer menus, plain-language refusals, keyboard closing | **Reuse, adapt** | to today's UI (`game_ui.gd` has changed by +323 lines since) |
+| Android permissions in the export preset | **Reuse** | INTERNET, network state, Wi-Fi state, multicast, wake lock |
+| `net_test.gd` multi-process harness | **Reuse, extend** | real separate processes; extend to four, to host restart, to every shared system |
+
+The branch stays as it is (preserved); work starts on a new branch from accepted Build 19, carrying these files forward one by one.
+
+## 4. Recommended architecture
+
+1. **One simulation, several players.** `World.players`: the player characters by `pid`, each a full `PlayerState` with needs,
+   health, skills, inventory, coins, crimes, home, family and level. The host's own character is one of them; single player is
+   the case of one. No guest-only code paths.
+2. **Every action is an intent applied by the host.** Input on any machine becomes an intent (move, buy, craft, strike, court…).
+   On the host it calls the World verb directly; on a guest it is sent and the host calls **the same World verb with that player as
+   the actor**. Every `_player_*` verb gains an actor parameter instead of reading `World.player`. Guests never create coins, items,
+   NPCs, buildings or events.
+3. **Ids and refs per player.** The person id in ties, family links, judgment, targets and records becomes the player's `pid`
+   (no longer -2); the owner ref becomes `player:<pid>`, resolved by `party()`/`ref_id` like any household. Succession becomes per
+   family line. The save migration (20 to 21) maps today's -2 and `"player"` to the host's `pid` exactly, keeping Build 18/19
+   continuity (ID-D1).
+4. **NPCs and animals react to whichever player is involved**: targets name a `pid`; bandits and animals choose among nearby players
+   by the same rules; witnessing, alarms and guards name the offender.
+5. **Detail and levels per player**: NPCs and animals are detailed near any player; each player carries their own level.
+6. **Movement in the core**: walking and collision move from `main.gd` into a shared step the host validates (the prototype's speed
+   and open-ground check), with prediction and correction on the guest.
+7. **Replication**: a join snapshot, then the state each guest needs (its own character in full; nearby villagers, animals,
+   buildings, stalls and containers; the clock), at bounded rates. The guest's world copy only renders.
+8. **Determinism**: requests are applied at fixed points of the host's tick in a fixed order (time of arrival recorded, then `pid`),
+   so a recorded session can be replayed; single player (no guests) keeps the Build 19 baseline exactly, which stays a release gate.
+9. **Conservation**: every player's coins and goods count in `World.total_coins` and the census; networking adds no holder.
+10. **Saves**: one world file on the host with all characters; guests never save.
+
+## 5. Owner decisions needed before implementation
+
+| Id | Question | Options (consequences) | Recommendation |
+|---|---|---|---|
+| **MP-D1** (directive s.8) | A guest's character while disconnected | (a) **leaves the world**: removed from the map, needs paused, property and coins stay theirs, nobody can rob or kill them; fair and simple, but villagers see them vanish. (b) **stays, asleep at home**: present, ages and grows hungry, can be robbed or attacked, can starve if away long; most "living", but punishes players who leave. (c) **stays and works its job**: an AI runs the character; richest, but an AI makes choices the player did not | (a), with the character returning where it left; property, contracts and debts keep running on the shared clock (rent falls due, contracts can lapse) |
+| MP-D2 | Resting and sleeping that skip time | (a) time skips only when every connected player is resting or asleep (as Minecraft); (b) no skipping while guests are present; (c) each rest skips only for that player (not possible on a shared clock) | (a) |
+| MP-D3 | Menus and placement mode that pause the world | (a) never pause while guests are connected; (b) only the host's menus pause | (a) |
+| MP-D4 | A player dies while others play | (a) that player continues as their heir at once, as today, while the world runs; (b) a short wait screen, then the heir | (a), with the world not frozen for anyone |
+| MP-D5 | Internet connection method (section 8) | see section 8 | LAN + manual address + automatic router port mapping first (free); a relay decided before Batch D |
+| MP-D6 | Android hosting in the background | (a) the world pauses for everyone when the Android host leaves the app (as the host quitting); (b) an Android foreground service keeps hosting (needs a native Android plugin, battery cost) | (a) first; (b) as a later improvement |
+| MP-D7 | New guest characters | (a) a new guest creates a character (name, appearance) and arrives as a newcomer to the village; (b) arrives as a member of an existing household | (a) |
+| MP-D8 | Player-to-player relationships (CRT-03 approved: the other player may decline) | marriage, children and inheritance between two players: confirm they follow the same rules as with villagers | same rules; children of two players are villagers until one becomes an heir |
+
+## 6. Batch plan (directive section 12)
+
+| Batch | Content | Checkpoint |
+|---|---|---|
+| **A Foundation** | new branch from accepted Build 19; `World.players` with the host as one player; ids and refs per player and the 20-to-21 save migration; actor-parameterized verbs (no behaviour change); then the prototype's transport, identity, discovery and handshake carried forward | single player unchanged: all suites and the Build 19 baseline identical; two processes connect and hold the same world state |
+| **B Persistence** | guest characters in the host's save; reconnect to the same character; MP-D1 policy; duplicate refusal | host restart and guest reconnect tests; coin and item census before and after |
+| **C Full gameplay** (sub-batches) | C1 movement in the core, needs, health, death and heirs (MP-D2, D3, D4); C2 gathering, inventory, equipment, crafting, stations; C3 economy: trade, negotiation, credit, contracts, employment, manor work, couriers; C4 property: land, rent, construction, farms, pens, chests, carts, businesses; C5 society: conversation, ties, judgment, gossip, courtship, marriage, families, guardianship, feasts; C6 crime and combat: theft, witnesses, guards, bandits, animals, family protection; C7 underground levels | each sub-batch: focused two-player tests on the same rules as the host; conservation; single-player baseline unchanged |
+| **D Cross-platform** | Android, Windows and Linux hosting and joining; mixed platforms; LAN and the chosen internet method; Android lifecycle (background, sleep, network change); Steam Deck controls | the nine-cell host-guest matrix on real devices (owner's devices; results recorded) |
+| **E Three to four players** | simultaneous actions, conflicting purchases, shared construction, combat, several players with one NPC, disconnects, host restart, performance with normal load | sessions with four players; measured host frame time, bandwidth, memory on the Pixel 10 Pro XL |
+| **F Final integration** | full regression, determinism, conservation, save integrity, security review, performance, packaging | release-readiness review for the owner; no publication without authorization |
+
+One primary development agent throughout; focused tests while building, full suites at batch boundaries.
+
+## 7. Effort and risk (estimates, not measurements)
+
+| Batch | Estimated size | Main risk |
+|---|---|---|
+| A | large (touches most of the 69 files mechanically) | regressions in single player from the refactor; caught by the unchanged baseline |
+| B | small to medium | save migration correctness |
+| C | **largest**: about half the total | breadth; each system has its own one-player shortcuts; time rules (MP-D2-D4) |
+| D | medium in code, large in testing | real devices, routers, NAT, Android lifecycle; depends on the owner's device time |
+| E | medium | performance on Android hosting with 3-4 players and about 110 villagers |
+| F | small to medium | |
+
+Rough total: two to four weeks of development at the pace of Builds 17-19, plus the owner's device testing for Batch D. The biggest
+uncertainties: Android hosting performance, and internet connectivity across mobile networks.
+
+## 8. Networking services and costs (MP-D5)
+
+| Method | Works for | Cost and dependencies | Notes |
+|---|---|---|---|
+| LAN discovery + ENet (prototype) | same network | free | routers with client isolation or guest Wi-Fi hide games: manual address fallback |
+| Manual address over the internet + port forwarding | home broadband with a public address | free; the host configures the router | fails behind carrier-grade NAT (most cellular, some broadband) |
+| Automatic port mapping (UPnP, built into Godot) | many home routers | free | often disabled on routers; never on cellular |
+| A virtual LAN the players install (e.g. Tailscale, ZeroTier) | almost any network | free personal tiers today; each player needs that service's account | no code from us; a third-party dependency and privacy consideration for the players |
+| Hole punching with a small introduction server | most home networks | a small hosted server (recurring hosting cost) | still fails for symmetric NAT (common on cellular) |
+| A relay | every network, including cellular hosting | self-hosted relay: recurring server and bandwidth cost; platform relays (e.g. Steam's) are platform-locked (Steam does not cover Android) and have fees; free cross-platform relays need a developer account, an SDK and player accounts | the only method that covers cellular reliably |
+
+**Recommendation:** Batch D starts with the free methods (LAN, manual address, automatic port mapping) and documents a
+virtual-LAN fallback for players. Cellular hosting and "always connects" need a relay; before any relay work, a separate decision
+with current prices, privacy terms and alternatives (prices to be checked at that time, not assumed here). No paid service is
+introduced without the owner's approval.
+
+## 9. Interactions with the roadmap
+
+Multiplayer goes before Expansion 20 (MP-MASTER). ROAD-Q5's Batch 0 (bringing the Expansion 20 and 21 preparation branches onto
+Build 19) therefore waits until multiplayer's Batch A has settled the player refs, so those branches are brought forward once,
+onto the multiplayer-ready code; both are small (7 and 4 commits) and conflict only in `world.gd`. Expansions 20-27 then build on
+`World.players` from the start.

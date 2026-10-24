@@ -708,7 +708,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (219)
+## Owner decisions (226)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -775,6 +775,13 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | owner decision | APPROVED |  |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | owner decision | APPROVED |  |
 | MP-D1 | Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first | multiplayer | OPEN | yes |
+| MP-D2 | Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)? | multiplayer | OPEN | yes |
+| MP-D3 | Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)? | multiplayer | OPEN | yes |
+| MP-D4 | Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)? | multiplayer | OPEN | yes |
+| MP-D5 | Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs? | multiplayer | OPEN | yes |
+| MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | multiplayer | OPEN | yes |
+| MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | multiplayer | OPEN | yes |
+| MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | multiplayer | OPEN | yes |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
 | OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | OPEN |  |

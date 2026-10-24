@@ -27084,6 +27084,165 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_master_multiplayer_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "options and consequences in docs/multiplayer/MULTIPLAYER_PREPARATION.md s.5; recommendation (a) leaves the world while disconnected"
+    }
+   ]
+  },
+  {
+   "id": "MP-D2",
+   "kind": "decision",
+   "title": "Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)?",
+   "description": "Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-D3",
+   "kind": "decision",
+   "title": "Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)?",
+   "description": "Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-D4",
+   "kind": "decision",
+   "title": "Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)?",
+   "description": "Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-D5",
+   "kind": "decision",
+   "title": "Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs?",
+   "description": "Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-D6",
+   "kind": "decision",
+   "title": "Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)?",
+   "description": "Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-D7",
+   "kind": "decision",
+   "title": "Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)?",
+   "description": "Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    }
+   ]
+  },
+  {
+   "id": "MP-D8",
+   "kind": "decision",
+   "title": "Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)?",
+   "description": "Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)?",
+   "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
     }
    ]
   },
@@ -27135,9 +27294,14 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "next action reworded until the preparation report exists"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "preparation report written (compatibility assessment, reuse map, architecture, batch plan, decisions MP-D1..D8, effort, connection methods and costs)"
     }
    ],
-   "next_action": "multiplayer preparation report (in progress); then the owner's decisions and authorization"
+   "next_action": "owner: MP-D1..D8 and, after Build 19's acceptance, authorization of Batch A (docs/multiplayer/MULTIPLAYER_PREPARATION.md)"
   },
   {
    "id": "MSW-01",
@@ -40834,6 +40998,11 @@
      "date": "2026-10-24",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner approved with conditions (docs/directives/2026-10-24_owner_roadmap_question_decisions.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "MP-MASTER puts multiplayer before Expansion 20: Batch 0 waits for multiplayer Batch A so the 20 and 21 branches are brought forward once onto multiplayer-ready code (docs/multiplayer/MULTIPLAYER_PREPARATION.md s.9)"
     }
    ]
   },

@@ -1,7 +1,7 @@
 # Expansions 20-27: revised roadmap and dependency review (2026-10-24)
 
 **Status: accepted by the owner, with ROAD-Q1..Q5 answered** (`docs/directives/2026-10-24_owner_roadmap_question_decisions.md`).
-Approved order: **20 → 21 → 23 → 22 → 24 → 25 → 26 → 27**; numbers fixed; multiplayer a separate parallel track. The answers
+Approved order: **20 → 21 → 23 → 22 → 24 → 25 → 26 → 27**; numbers fixed; multiplayer a separate parallel track. **Superseded in sequence by MP-MASTER (2026-10-24): full multiplayer comes after Build 19's acceptance and before Expansion 20** (`docs/multiplayer/MULTIPLAYER_PREPARATION.md`). The answers
 are folded in below (sections 1, 3, 8, 10, 11, 12); the text as first proposed is kept in git history.
 
 Owner directive: `docs/directives/2026-10-24_expansion_roadmap_reprioritization.md` (register ROAD-03). **Planning only: no
