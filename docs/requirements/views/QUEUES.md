@@ -2,63 +2,26 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (54)
+## Workers and task branches (17)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| B21-LAN-PLAYTEST | multiplayer | IN DEVELOPMENT | Build 21 integration agent | wip/multiplayer-b19 |
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
-| FAM-SAC-01 | 19 | IMPLEMENTED ON TASK BRANCH | family worker (Sonnet subagent) | wip/expansion19-preparation |
-| FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
-| FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
-| GP-ACTIONBAR | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-ANVIL | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-BACK-DOORS | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-BANDIT-CAMP-ART | multiplayer | IMPLEMENTED ON TASK BRANCH | Build 21 integration agent | wip/multiplayer-b19 |
+| FIX-D1D2 | 20 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-CRIME-PURSUIT | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-DIALOGUE-PERSPECTIVE | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-DRAW-UNDER-HOUSE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-GIFT-QUANTITY | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-GOSSIP-NATURAL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-HARVEST-CONT | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-INPUT-CONSIST | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-INTERIOR-WALLS | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-JOYSTICK | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-MARKET-SHELVES | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-PACK-DETAIL-FIT | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-PAUSE-PANEL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-PICKAXE-ANIM | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-PROPERTY-NAME-DOUBLE | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-REPAIR-SOCIAL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-SHARPEN | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-SMITHY-WORKBENCH | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-STALL-PRICE-ON-PUTUP | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-START-RUSTY-AXE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-TARGET-ART-MATCH | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-TRAIL-EDGES | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-UI-COMPACT | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-WHEAT-PICKED | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-WIKI-LAYOUT | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| REC-19 | 19 | IN DEVELOPMENT | recorder worker (Sonnet subagent) | wip/recorder |
-| REC-DIAG | 19 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
+| REC-19 | 20 | IN DEVELOPMENT | recorder worker (Sonnet subagent) | wip/recorder |
+| REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | RECON-01 | unassigned | IMPLEMENTED ON TASK BRANCH | reconciliation worker (Sonnet subagent) | wip/expansion19-preparation, wip/expansion20-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
-| X19-FOUND-BONDS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
-| X19-FOUND-FAMREP | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker B bonds (Sonnet subagent) | wip/expansion19-preparation |
-| X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/expansion19-preparation |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (49)
@@ -75,14 +38,14 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DVW-A13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | DVW-A14 | 15 | INTEGRATED |  |
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
-| DVW-B1 | 19 | PARTIALLY IMPLEMENTED |  |
+| DVW-B1 | 20 | PARTIALLY IMPLEMENTED |  |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH |  |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH |  |
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
-| GP-BUSINESS-DESK | 22 | PARTIALLY IMPLEMENTED |  |
-| GP-PAUSE-PANEL | multiplayer | IMPLEMENTED ON TASK BRANCH |  |
+| GP-BUSINESS-COURIER | 20 | PARTIALLY IMPLEMENTED |  |
+| GP-BUSINESS-DESK | 20 | PARTIALLY IMPLEMENTED | finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21) |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH |  |
 | MIN-G | 17 | INTEGRATED |  |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH |  |
@@ -104,7 +67,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
-| WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |
+| WDR-009-C | 20 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-015-C | 20+ | PARTIALLY IMPLEMENTED |  |
@@ -115,7 +78,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (51)
+## Awaiting owner playtest or device check (80)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
@@ -126,6 +89,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B14-06 | 15 | TARGETED TESTS PASSED | phone |
 | B14-11 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | B14-13 | 15 | TARGETED TESTS PASSED | phone, controller |
+| B21-LAN-PLAYTEST | multiplayer | INTEGRATION VERIFIED | L, A, N,  , p, l, a, y,  , o, n,  , r, e, a, l,  , d, e, v, i, c, e, s,  , (, P, C,  , h, o, s, t, ,,  , A, n, d, r, o, i, d,  , g, u, e, s, t, ;,  , W, i, n, d, o, w, s,  , F, i, r, e, w, a, l, l,  , U, D, P,  , 4, 7, 8, 1, 0, /, 4, 7, 8, 1, 1, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | B7-001 | 15 | TARGETED TESTS PASSED | phone |
 | B7-005 | 15 | TARGETED TESTS PASSED | phone |
 | B7-010 | 15 | TARGETED TESTS PASSED | phone |
@@ -143,6 +107,34 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FARM-CROP-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | FARM-CROP-SEED | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | FR-04 | 15 | TARGETED TESTS PASSED | a controller: D-pad up opens the Journal, left stick press opens Build |
+| GP-ACTIONBAR | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-ANVIL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-BACK-DOORS | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-BANDIT-CAMP-ART | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-CRIME-PURSUIT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-DIALOGUE-PERSPECTIVE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-DRAW-UNDER-HOUSE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-GIFT-QUANTITY | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-GOSSIP-NATURAL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-HARVEST-CONT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-INPUT-CONSIST | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-INTERIOR-WALLS | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-JOYSTICK | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-MARKET-SHELVES | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-PACK-DETAIL-FIT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-PAUSE-PANEL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-PICKAXE-ANIM | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-PROPERTY-NAME-DOUBLE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-REPAIR-SOCIAL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-SHARPEN | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-SMITHY-WORKBENCH | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-STALL-PRICE-ON-PUTUP | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-START-RUSTY-AXE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-TARGET-ART-MATCH | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-TRAIL-EDGES | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-UI-COMPACT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-WHEAT-PICKED | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-WIKI-LAYOUT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | INV-18 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | MAP-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | ORE-PLACE-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |

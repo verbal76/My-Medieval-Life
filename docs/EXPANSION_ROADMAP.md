@@ -8,7 +8,7 @@ development order. Planning only: no expansion is authorized for implementation 
 | Priority | Expansion | Status |
 |---|---|---|
 | 0 | **Multiplayer (separate track, next milestone)** | after Build 19's owner acceptance, before Expansion 20 (MP-MASTER, `docs/directives/2026-10-24_master_multiplayer_directive.md`); preparation done (`docs/multiplayer/MULTIPLAYER_PREPARATION.md`); implementation not authorized |
-| 1 | 20 Living Economy | phase 1 foundation done (off); LE-01 onward awaits authorization |
+| 1 | 20 Living Economy | phase 1 foundation done (off); LE-01 onward awaits authorization. Since 2026-10-24 also the umbrella for the outstanding gameplay polish, Android usability and interaction items and the unfinished Build 19 items (`X20-OPEN-ITEMS`, `docs/expansion20/X20_OPEN_ITEMS.md`); recorded only, nothing started |
 | 2 | 21 Politics | phase 1 done (off); elections await P21-STRUCTURE, P21-RESIDENCY and authorization |
 | 3 | 23 Bandit Factions and Criminal Careers | BAN-A audit done; BAN-B awaits E23-OD-01 and authorization |
 | 4 | 22 Settlement Advancement Phase 2 | audit done; architecture awaits authorization |

@@ -9,6 +9,10 @@ After a context compaction, or in a fresh session, do not rebuild state from the
 3. Read `docs/requirements/views/STATUS.md`, `BUILD_18.md`, `DECISIONS.md` and `QUEUES.md`. These are generated from the
    one register, `docs/requirements/requirements.json`.
 4. Before restarting anything, check whether it is still running (workers, GitHub Actions runs).
+5. **Expansion 20 (owner, 2026-10-24):** the consolidated scope is the umbrella record `X20-OPEN-ITEMS`, its planning snapshot
+   `docs/expansion20/X20_OPEN_ITEMS.md` and the live view `docs/requirements/views/BUILD_20.md`
+   (directive `docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`). Recorded only: start nothing until the owner
+   authorizes it. Release numbers (Builds 20, 21 and the Build 22 mini-build) are not expansion numbers (the register's `builds` map).
 
 ## Before a compaction
 

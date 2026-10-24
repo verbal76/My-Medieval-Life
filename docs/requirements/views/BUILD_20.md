@@ -8,22 +8,85 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 9 |
-| Integrated | 0 of 9 (0%) |
-| Automated tests passed | 1 of 9 (11%) |
-| Integration verified | 0 of 9 (0%) |
-| Gameplay verified | 0 of 9 (0%) |
-| Owner playtested | 0 of 9 (0%) |
-| Complete | 0 of 9 (0%) |
-| Open (release blockers) | 9 |
+| Approved requirements in scope | 67 |
+| Integrated | 28 of 67 (42%) |
+| Automated tests passed | 33 of 67 (49%) |
+| Integration verified | 28 of 67 (42%) |
+| Gameplay verified | 0 of 67 (0%) |
+| Owner playtested | 0 of 67 (0%) |
+| Complete | 0 of 67 (0%) |
+| Open (release blockers) | 67 |
 | Open owner decisions (blocking) | 14 (11) |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19 | design: UNKNOWN | UNKNOWN |
+| REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
+
+## Integrated, awaiting gameplay or owner verification (28)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| GP-ACTIONBAR | Android action controls redesigned into two readable right-side columns (proposed: Run, Gather, Fire, Skills, Menu / Use, Attack, Pack, Map), every action kept, comfortable non-overlapping targets, centre and upper-left HUD clear, insets respected, stable positions, Gather on/off state unmistakable; baseline the owner's screenshot docs/gameplay_polish/reference/android_mining_hud_2026-10-24.png | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19 |  | verification only |
+| GP-ANVIL | Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19 |  | verification only |
+| GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | Choose campfire art (pack search or composed) and give the camp its own crate and barrel ids |  | verification only |
+| GP-CRIME-PURSUIT | Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-DIALOGUE-PERSPECTIVE | NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | Build the picker (starts at 1) and keep looking for the repeat on a device |  | verification only |
+| GP-GOSSIP-NATURAL | Gossip combines related events naturally without repeating names, households and places | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-HARVEST-CONT | Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19 |  | verification only |
+| GP-INPUT-CONSIST | Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19 |  | verification only |
+| GP-INTERIOR-WALLS | Building interiors: side walls missing when inside | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | Owner: accept the walkability and baseline change of the smithy wall fix |  | verification only |
+| GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19 |  | verification only |
+| GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19 |  | verification only |
+| GP-PROPERTY-NAME-DOUBLE | Village log doubles a property's location ('beside the smithy beside the smithy') | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-REPAIR-SOCIAL | Master gameplay repair: dialogue, social awareness, crime response and guard AI | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | Owner: approve earshot distances; decide on trade refusal for known killers; device playtest in the next build |  | verification only |
+| GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-START-RUSTY-AXE | The player starts with a rusty axe | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+
+## Ready to proceed now (approved, specified, nothing open blocks it) (9)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
+| GP-ANDROID-ACTION-BUTTONS | Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
+| GP-ANDROID-HUD-SCALE | Android health and status panel about 15% smaller, with every value kept legible | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | XS |
+| GP-ANDROID-RECENTER | Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
+| GP-ANDROID-USE-TALK-TARGETING | Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
+| GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/build22-business-desk | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | UNKNOWN |
+| GP-INTERACTABLE-OUTLINES | Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
+| GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
+| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) |  | L |
+
+## Blocked (open owner decision, unfinished dependency or unsettled design) (28)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) / wip/expansion20-preparation | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 | design: UNKNOWN | UNKNOWN |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
+| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) / wip/expansion19-preparation, wip/expansion20-preparation | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | DVW-B1, design: UNKNOWN | L |
+| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/build22-business-desk | NOT TESTED | finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21) | design: UNKNOWN | UNKNOWN |
+| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | OWNER APPROVED | NOT STARTED | wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | OWNER APPROVED | NOT STARTED | wip/multiplayer-b19 | NOT TESTED | P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19 | design: UNKNOWN | UNKNOWN |
+| GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
+| GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | OWNER APPROVED | NOT STARTED | wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
@@ -31,6 +94,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | NOT STARTED | wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-E | XL |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-F | L |
+| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-G | XS |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model | design: DESIGN WORK REQUIRED | L |
+| X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead (merges Workers A and B) / wip/expansion19-preparation | TARGETED TESTS PASSED | owner: X19-PERS-FORMULA, X19-TRAIT-DIST, X19-SPILL-REACH, X19-REP-TRANSMIT, X19-BOND-LIMITS; what counts as a costly mistake and a reminder; the decision effect of stubbornness | design: UNKNOWN | UNKNOWN |
+| X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (14)
 
@@ -51,11 +124,13 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
 
-## Not counted: umbrellas, proposals, ideas, deferred (3)
+## Not counted: umbrellas, proposals, ideas, deferred (5)
 
 | ID | Item | Kind | Approval |
 |---|---|---|---|
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | PROPOSED |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | PROPOSED |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | umbrella | OWNER APPROVED |
+| PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | umbrella | OWNER APPROVED |
+| X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | umbrella | OWNER APPROVED |
 

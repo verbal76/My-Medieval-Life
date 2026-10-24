@@ -8,7 +8,17 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-23 (Build 18 delivered as a private draft; Expansions 19-21 progress directive: docs/directives/2026-10-23_expansions_19_20_21_progress.md).
+**Updated:** 2026-10-24 (Build 21 private draft delivered; Expansion 20 open-items reconciliation recorded, nothing started).
+
+## Expansion 20 open-items reconciliation (owner, 2026-10-24, record only)
+
+`docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`. Expansion 20 is the umbrella for the outstanding gameplay
+polish, Android usability, interaction and visual work and the unfinished Build 19 items, beside the Living Economy foundations
+(kept disabled on `wip/expansion20-preparation`). Umbrella record `X20-OPEN-ITEMS`; planning snapshot `docs/expansion20/X20_OPEN_ITEMS.md`;
+live status in `docs/requirements/views/BUILD_20.md`. The five Build 22 mini-build areas keep that delivery (business desk and courier
+work on `wip/build22-business-desk` `e25eec9`). **Nothing is authorized to start:** no Expansion 20 implementation, Living Economy
+activation, Android interface work, agents, simulations, builds or publication until the owner says so. Next action: wait for the
+owner's authorization.
 
 ## Build 21 scope freeze (owner, 2026-10-24, `docs/directives/2026-10-24_build21_scope_freeze.md`)
 

@@ -4172,6 +4172,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval PROPOSED; implementation NOT STARTED; verification NOT TESTED; release NOT APPLICABLE; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (listed only: deferred, owner decision required, idea or proposal; not counted as approved work)"
     }
    ],
    "target_build": "19",
@@ -4181,7 +4186,10 @@
    "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT APPLICABLE",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "B17F-SIMREPORT",
@@ -4907,7 +4915,7 @@
    "acceptance": [
     "Build 19 verification report classifies every significant change as emergent, defect or design question with recorder evidence"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -4921,7 +4929,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_build19_owner_advisement_emergence.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -4940,8 +4961,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -4954,10 +4975,21 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 integration agent; branch: None -> wip/multiplayer-b19",
      "why": "authorized; one agent on wip/multiplayer-b19 for the code and recorder work; the lead reconciles the punch list and runs the build"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 integration agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; tests: None -> net_g1 44/0, net_c 35/0, net_batch_b 44/0, net_fauna 13/0, net_ui 61/0 (fa7ae59); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> LAN play on real devices (PC host, Android guest; Windows Firewall UDP 47810/47811) not yet done",
+     "why": "Build 21 built and released as a private draft (422895130, 6567c04); stale IN DEVELOPMENT corrected; the device LAN test remains"
     }
    ],
-   "assigned_worker": "Build 21 integration agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "tests": "net_g1 44/0, net_c 35/0, net_batch_b 44/0, net_fauna 13/0, net_ui 61/0 (fa7ae59); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "LAN play on real devices (PC host, Android guest; Windows Firewall UDP 47810/47811) not yet done"
   },
   {
    "id": "B7-001",
@@ -5553,6 +5585,11 @@
      "date": "2026-10-23",
      "change": "schema v2: AUTOMATED TESTS PASSED — PLAYTEST REQUIRED -> approval OWNER APPROVED; implementation INTEGRATED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "acceptance_derived": true,
@@ -5566,7 +5603,10 @@
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "B7-011",
@@ -6909,6 +6949,11 @@
      "date": "2026-10-23",
      "change": "schema v2: AUTOMATED TESTS PASSED — PLAYTEST REQUIRED -> approval OWNER APPROVED; implementation INTEGRATED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "acceptance_derived": true,
@@ -6922,7 +6967,10 @@
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "B8-019",
@@ -10999,6 +11047,11 @@
      "date": "2026-10-23",
      "change": "schema v2: AUTOMATED TESTS PASSED — PLAYTEST REQUIRED -> approval OWNER APPROVED; implementation INTEGRATED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "target_build": "16",
@@ -11016,7 +11069,10 @@
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "CTR-03",
@@ -12893,10 +12949,20 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "memory of favours and harms, crimes and their stain are judgment inputs (EXP-C)",
    "integrated_in": [],
@@ -12907,7 +12973,10 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "PARTIAL",
-   "effort": "M"
+   "effort": "M",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "DVW-B10",
@@ -13175,10 +13244,20 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "memory of favours and harms, crimes and their stain are judgment inputs (EXP-C)",
    "integrated_in": [],
@@ -13189,7 +13268,10 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
-   "effort": "L"
+   "effort": "L",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "DVW-B3",
@@ -14044,7 +14126,15 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansion20_phase1_authorization.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (listed only: deferred, owner decision required, idea or proposal; not counted as approved work)"
     }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -17511,7 +17601,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -17545,6 +17635,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; test_commit: fff48a4 -> b7f832e; commits + 3022fbf",
      "why": "danger behaviour done in 3022fbf (shield, fight or flee through the decision engine, recorded factors); family_first_test 104/0"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3; commits: 3022fbf, fff48a4",
+     "why": "reconciled: commits 3022fbf are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "next_action": "X19 completion worker adds the danger behaviour, then Build 19 integration",
@@ -17553,8 +17653,14 @@
    "tests": "family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical",
    "test_commit": "b7f832e",
    "commits": [
-    "fff48a4",
-    "3022fbf"
+    "3022fbf",
+    "fff48a4"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -18758,7 +18864,7 @@
     "Load with the feature off: nothing constructed, section kept byte-identical through repeated save cycles",
     "Load with the feature on: section restored as before"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": "XAUDIT-01",
    "depends_on": [],
    "decisions": [],
@@ -18782,6 +18888,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_guard_save_test 18, judgment_live_test 142 (fd99591); economy_foundation_test 70, world_test 339, migration_test 92, save_transfer_test 21, conservation_test 8 (af62948); sim_gate identical on both; test_commit: None -> af62948; commits + fd99591; commits + af62948",
      "why": "fixed: D1 fd99591 (Expansion 19, judgment_foreign), D2 af62948 (Expansion 20, economy_foreign); sections kept byte-identical through three save cycles, nothing activated; gate identical on both branches"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "assigned_worker": "repair workers (Sonnet subagents)",
@@ -18791,6 +18907,9 @@
    "commits": [
     "fd99591",
     "af62948"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -18809,7 +18928,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -18828,6 +18947,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_guard_save_test 18, relations_test 80, judgment_live_test 142, judgment_test 217, judgment_personality_test 65, judgment_bonds_test 97, migration_test 92, save_transfer_test 21, wiki_test; sim_gate identical; test_commit: None -> 3ec38d2; commits + 3ec38d2",
      "why": "fixed (3ec38d2): Build 18 behaviour with judgment off, halve-never-waive with judgment on; judgment_guard_save_test 18, relations_test 80, wiki_test, gate identical"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits 3ec38d2 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "assigned_worker": "repair worker X19 (Sonnet subagent)",
@@ -18836,6 +18965,12 @@
    "test_commit": "3ec38d2",
    "commits": [
     "3ec38d2"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -18900,6 +19035,16 @@
      "date": "2026-10-23",
      "change": "tests: recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0 -> recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0; recf1_test 23/0; recorder_test 160/0; world_test 339/0; sim_gate 2d5d49c: no leaks, differs from day 10 (expected class, unattributed)",
      "why": "sim_gate on 2d5d49c (identity + REC-F1 + SIM-F9, recorder off, no --write): 0 currency and 0 item leaks at all four checkpoints; differs from the identity candidate from day 10 on both seeds, as REC-F1 was known to (seed 1 day 10 alive 109 -> 106, seed 2 111 -> 110; day 30 seed 2 118 -> 120); the differences are not yet attributed; the first-divergence verification and the one proposed baseline are done on the Build 19 integration commit, where judgment-on changes the gate again"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "integrated_in: Build 19 wip/build19 2f72ec3, wip/recorder 2d5d49c",
+     "why": "reconciled: 2d5d49c is in the Build 19 private draft (2f72ec3)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only"
     }
    ],
    "assigned_worker": "lead",
@@ -18912,7 +19057,11 @@
    ],
    "next_action": "merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline",
    "integrated_in": [
+    "Build 19 wip/build19 2f72ec3",
     "wip/recorder 2d5d49c"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -19157,6 +19306,11 @@
      "date": "2026-10-23",
      "change": "schema v2: AUTOMATED TESTS PASSED — PLAYTEST REQUIRED -> approval OWNER APPROVED; implementation INTEGRATED; verification TARGETED TESTS PASSED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "acceptance_derived": true,
@@ -19170,7 +19324,10 @@
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "FR-05",
@@ -19461,6 +19618,11 @@
      "date": "2026-10-23",
      "change": "schema v2: DEFERRED -> approval DEFERRED; implementation NOT STARTED; verification NOT TESTED; release NOT APPLICABLE; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (listed only: deferred, owner decision required, idea or proposal; not counted as approved work)"
     }
    ],
    "acceptance_derived": true,
@@ -19473,7 +19635,10 @@
    "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT APPLICABLE",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "FR-10",
@@ -19573,6 +19738,11 @@
      "date": "2026-10-23",
      "change": "schema v2: UNKNOWN — INVESTIGATION REQUIRED -> approval OWNER DECISION REQUIRED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (listed only: deferred, owner decision required, idea or proposal; not counted as approved work)"
     }
    ],
    "acceptance_derived": true,
@@ -19585,7 +19755,10 @@
    "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "FSE-00",
@@ -21626,10 +21799,20 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "fit to confirm",
    "roadmap_reason": "generational memory is the judgment system's event and belief record; not named in any build, closest fit",
    "integrated_in": [],
@@ -21640,7 +21823,10 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
-   "effort": "L"
+   "effort": "L",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-ACTIONBAR",
@@ -21655,13 +21841,13 @@
     "Gather state unambiguous",
     "HUD, dialogue and prompts not obscured"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21689,13 +21875,35 @@
      "date": "2026-10-24",
      "change": "tests: start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at -> start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: bf27ff2 -> 9feaf77",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits bf27ff2 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
    "tests": "start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "bf27ff2"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -21713,13 +21921,13 @@
     "Other workstations audited for graphic and target mismatches",
     "Android touch and PC mouse validated separately"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21757,17 +21965,39 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; tests: station_tap_test 25 checks (real touch and mouse events); screenshots looked at -> station_tap_test 25 checks (real touch and mouse events); screenshots looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: cbf4000 -> 9feaf77; commits + 4812832",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; commits: 4812832, cbf4000; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits cbf4000, 4812832 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
    "tests": "station_tap_test 25 checks (real touch and mouse events); screenshots looked at; full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
-    "cbf4000",
-    "4812832"
+    "4812832",
+    "cbf4000"
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-BACK-DOORS",
@@ -21780,13 +22010,13 @@
    "acceptance": [
     "A door on a building's back (roof-covered) side is not drawn over the roof from outside; it still works and shows from inside; every door of every building, front, back and side, visible or not, has a trail that reaches it and joins the trail network; no other roof artefacts (e.g. trail lines showing through the roof); village regenerated with the tool; walkability and G0 unchanged or any change reported; verified by screenshots and a check that every door has a connected trail"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21804,14 +22034,36 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 7551616",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 7551616 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "7551616"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -21825,13 +22077,13 @@
    "acceptance": [
     "The bandit camp shows what tools/build_village.py camp() intends: a burning campfire in the middle with two crates and two barrels round it, each drawn whole from the right tiles (no cut-off halves, no blank campfire); the tile ids are checked against the art by a test (every named tile constant in the village builder renders non-empty and is the object it names); other uses of the same constants (CRATE_TILES, BARREL_TILES) checked; village regenerated with the tool; walkability and G0 unchanged or any change reported; verified by a screenshot"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21864,15 +22116,38 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> campfire_test 14 checks 0 failures (lead rerun at 7fb8b12); G0 identical; test_commit: None -> 7fb8b12; commits + 7fb8b12",
      "why": "owner's campfire implemented by the Build 21 agent (7fb8b12: animated, credits, generator v11, campfire_test 14/0, G0 identical); size reduction follows under the final execution directive"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: Build 21 integration agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 7fb8b12 -> 6567c04; commits: 7fb8b12, f86a32d; tests: campfire_test 14 checks 0 failures (lead rerun at 7fb8b12); G0 identical -> campfire_test 15/0 (smaller 32 px campfire); bandit spawn off solid cells, baseline change documented; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 7fb8b12, f86a32d are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 integration agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "next_action": "Choose campfire art (pack search or composed) and give the camp its own crate and barrel ids",
-   "tests": "campfire_test 14 checks 0 failures (lead rerun at 7fb8b12); G0 identical",
-   "test_commit": "7fb8b12",
+   "tests": "campfire_test 15/0 (smaller 32 px campfire); bandit spawn off solid cells, baseline change documented; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "test_commit": "6567c04",
    "commits": [
-    "7fb8b12"
+    "7fb8b12",
+    "f86a32d"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -21936,7 +22211,7 @@
    "acceptance": [
     "Each business (smithy, tavern, shops, workshops, the player's own shop) has one business desk on a drawn desk or counter in its premises (the smithy's is the table with the open ledger); using it (E, tap, click, gamepad) opens a short menu: trade with the keeper (buy, sell), and, where the business keeps a courier booth (Q18-15), the courier; when the keeper is away it says so and offers what the existing counter rules allow (ring for service, or the courier if staffed); business courier booths stand at the desk, never on a station; the desk is offered only beside it and facing it; works for every player (actor-aware); existing saves load; wiki and manifest updated; verified by screenshots of several businesses and a test"
    ],
-   "target_build": "22",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
@@ -21975,13 +22250,34 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; branch: wip/multiplayer-b19 -> wip/build22-business-desk; commits + e25eec9",
      "why": "unfinished work preserved on wip/build22-business-desk e25eec9"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 22 -> 20; assigned_worker: Build 21 agent -> None",
+     "why": "scheduling correction: target '22' was set on 2026-10-24 to mean the Build 22 mini-build release, but the register's builds map '22' is Expansion 22 (Settlement Advancement). Owner 2026-10-24: Expansion 20 is the umbrella milestone for outstanding gameplay polish; the established delivery through the Build 22 mini-build release (docs/backlog/BUILD22_MINI_BUILD.md) is kept (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "remaining_work: None -> finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21); implementation: None -> unfinished, untested snapshot on wip/build22-business-desk e25eec9 (on top of c33d7c2): new game/scripts/core/business_desks.gd; changes to counters.gd, settlement/couriers.gd, wiki.gd, world.gd, main.gd, ui/game_ui.gd, game/data/village.json, tools/build_village.py",
+     "why": "owner clarification 2026-10-24: the desk work is preserved unfinished and untested on wip/build22-business-desk e25eec9; never discard, overwrite, restart or mark it complete"
     }
    ],
-   "assigned_worker": "Build 21 agent",
+   "assigned_worker": null,
    "branch": "wip/build22-business-desk",
    "commits": [
     "e25eec9"
-   ]
+   ],
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ],
+   "remaining_work": "finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21)",
+   "implementation": "unfinished, untested snapshot on wip/build22-business-desk e25eec9 (on top of c33d7c2): a new business-desks script (core/business_desks.gd on that branch); changes to counters.gd, settlement/couriers.gd, wiki.gd, world.gd, main.gd, ui/game_ui.gd, game/data/village.json, tools/build_village.py"
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -22055,13 +22351,13 @@
    "acceptance": [
     "Crime severity reconciled with the existing justice system; guard state machine (patrol, alerted, responding, pursuing, searching, coordinating, confronting, resolved) with last-known-position search and reacquisition; event-driven coordination of existing guards (no spawning); persistent wanted status through areas and save/load without omniscient tracking; proportionate force including lethal force for violent multiple murderers; villager responses through the existing morality ledgers; actual cause of the corner disengagement found; performance bounded; deterministic; tests per the directive"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-REPAIR-SOCIAL",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22094,13 +22390,35 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner (docs/directives/2026-10-24_multiplayer_batch_c_g2.md section 5): the hue and cry propagates locally through witnesses and existing communication; the village bell carries farther but never informs every NPC regardless of distance; no automatic universal refusal of trade with known killers (existing judgment, reputation, necessity, risk, scarcity and incentives decide)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: d6d4aab -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 64afa57, d6d4aab are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
-   "test_commit": "d6d4aab",
+   "test_commit": "6567c04",
    "commits": [
     "64afa57",
     "d6d4aab"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22114,13 +22432,13 @@
    "acceptance": [
     "Every event line evaluates speaker, listener, participants, victims, beneficiaries, witnesses, household and family ties, involvement, actual knowledge and its source, prior conversations, opinion, fear and trust; phrasing follows perspective (I/we/my mother/you/I saw/I heard); personally significant events outrank ordinary gossip without looping; the Dale witness record is checked and the right layer repaired; household membership grants no automatic knowledge; multiplayer listeners are the individual player; tests for each case in the directive"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-REPAIR-SOCIAL",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22143,13 +22461,35 @@
      "date": "2026-10-24",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: 31d81a3 -> d6d4aab; commits + d6d4aab",
      "why": "A4, A5, A8 (8da404d, 4fe2fd3, 74a6da4): news is what the speaker knows (saw, took part, told by whom, rumour) in their own voice from a data table; the log-based news removed; a household learns of a death but not the killer unless told; per-player attribution"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: d6d4aab -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 31d81a3, d6d4aab are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
-   "test_commit": "d6d4aab",
+   "test_commit": "6567c04",
    "commits": [
     "31d81a3",
     "d6d4aab"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22163,13 +22503,13 @@
    "acceptance": [
     "A character standing on the walkable cell in front of a house wall is drawn in front of the wall, never cut off by it; checked by a screenshot and a test at the Marsh house and the other house fronts"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22187,14 +22527,36 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + b83d3fc",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits b83d3fc are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "b83d3fc"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22208,7 +22570,7 @@
    "acceptance": [
     "A villager (or player helper) sowing, tending or harvesting a field moves between cells of that field during the work, stops now and then and plays a work animation with a hand tool (a shovel or hoe from the art packs, else the pickaxe), instead of standing still beside it; the same for the player's own farm helpers; field work amounts, timing and yields unchanged; deterministic; any G0 change (positions) reported and explained; verified by a screenshot sequence and a test that a tending farmer occupies several field cells and plays the tool animation"
    ],
-   "target_build": "22",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
@@ -22242,10 +22604,24 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
      "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 22 -> 20; assigned_worker: Build 21 agent -> None",
+     "why": "scheduling correction: target '22' was set on 2026-10-24 to mean the Build 22 mini-build release, but the register's builds map '22' is Expansion 22 (Settlement Advancement). Owner 2026-10-24: Expansion 20 is the umbrella milestone for outstanding gameplay polish; the established delivery through the Build 22 mini-build release (docs/backlog/BUILD22_MINI_BUILD.md) is kept (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-GIFT-QUANTITY",
@@ -22258,13 +22634,13 @@
    "acceptance": [
     "Choosing an item to give opens a quantity picker that starts at 1 (-, +, Max; touch, gamepad, mouse), and only the chosen number moves; a quick single tap or press gives exactly one; the path by which the owner's 35 herbal poultices were given is found and reproduced in a test (the gift code moves one per call in Build 19 and on wip/multiplayer-b19, so another path or repeated input is suspected) and fixed so no single action moves a whole stack unintentionally; regard and judgment effects stay per gift as now (no farming regard by count); actor-aware; wiki updated; tested"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22287,11 +22663,38 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker: primary development agent -> Build 21 agent",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: 51a39f4; tests: None -> gift_quantity_test 7/0, mp_c 340/0 (the 35-poultice repeat was not reproduced); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 51a39f4 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
-   "next_action": "Build the picker (starts at 1) and keep looking for the repeat on a device"
+   "next_action": "Build the picker (starts at 1) and keep looking for the repeat on a device",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "51a39f4"
+   ],
+   "tests": "gift_quantity_test 7/0, mp_c 340/0 (the 35-poultice repeat was not reproduced); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-GOSSIP-NATURAL",
@@ -22304,13 +22707,13 @@
    "acceptance": [
     "The gossip pipeline is audited; related event records about the same subject are consolidated into one natural report; names, households, locations and actions are not repeated needlessly; facts (owner, price, place, participants, outcome) kept; deterministic variation; all gossip categories covered; tests reproduce the Lambert case before and pass after"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-REPAIR-SOCIAL",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22333,13 +22736,41 @@
      "date": "2026-10-24",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: 31d81a3 -> d6d4aab; commits + d6d4aab",
      "why": "A5, A6 (4fe2fd3, 991ac68): six neutral news events travel by knowledge; related events merged by data rules (Lambert, Oakley), priority tiers, an 'already said' history saved per villager, thanks for a gift"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: d6d4aab -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 1ea050f, d6d4aab are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "commits: 1ea050f, d6d4aab, f86a32d",
+     "why": "Build 21 small fix f86a32d: a piece of news is said once (dialogue_perspective 84/0; playtest probe 0/60 repeats)"
     }
    ],
    "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
-   "test_commit": "d6d4aab",
+   "test_commit": "6567c04",
    "commits": [
     "1ea050f",
-    "d6d4aab"
+    "d6d4aab",
+    "f86a32d"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22356,13 +22787,13 @@
     "Output, timing, wear, stamina, skill and depletion unchanged (measured)",
     "Interruptions end work; no duplication or idle exploits"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22385,11 +22816,38 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: e5f3de0; tests: None -> harvest_setting_test 8/0; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits e5f3de0 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "e5f3de0"
+   ],
+   "tests": "harvest_setting_test 8/0; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-INPUT-CONSIST",
@@ -22402,13 +22860,13 @@
    "acceptance": [
     "Each GP item verified per platform; one action path per gameplay action"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22431,11 +22889,38 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: f29d756; tests: None -> joystick_test 14/0 (input consistency changes with the thumbstick); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits f29d756 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "f29d756"
+   ],
+   "tests": "joystick_test 14/0 (input consistency changes with the thumbstick); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-INTERIOR-WALLS",
@@ -22448,13 +22933,13 @@
    "acceptance": [
     "When a character is inside a building, every side of the room shows its wall (top, bottom, left and right), so the floor never runs straight into the grass; checked for every building and workshop interior; walkability unchanged; verified by screenshots of the reported building and an audit over every interior"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22477,11 +22962,39 @@
      "date": "2026-10-24",
      "change": "implementation_status: IMPLEMENTATION BLOCKED -> IN DEVELOPMENT; assigned_worker: primary development agent -> Build 21 agent",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: 1b57766, 98a7817; tests: None -> test_every_interior_is_walled; village generator v12; baseline change documented (SIM_BASELINE_CHANGES_B21.md); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 1b57766, 98a7817 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
-   "next_action": "Owner: accept the walkability and baseline change of the smithy wall fix"
+   "next_action": "Owner: accept the walkability and baseline change of the smithy wall fix",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "1b57766",
+    "98a7817"
+   ],
+   "tests": "test_every_interior_is_walled; village generator v12; baseline change documented (SIM_BASELINE_CHANGES_B21.md); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-JOYSTICK",
@@ -22497,13 +23010,13 @@
     "No interference with menus, dialogue, inventory or minigames; safe areas respected",
     "Setting persists"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22526,11 +23039,38 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: f29d756; tests: None -> joystick_test 14/0; screenshot joystick_phone looked at by the lead; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits f29d756 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "f29d756"
+   ],
+   "tests": "joystick_test 14/0; screenshot joystick_phone looked at by the lead; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-LOCKPICK",
@@ -22548,7 +23088,7 @@
     "Cancelled or interrupted attempts never succeed; rewards cannot be duplicated, also with two players on one lock",
     "Existing skill, tool, lock difficulty, crime, ownership and reputation rules unchanged"
    ],
-   "target_build": "22",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
@@ -22582,11 +23122,25 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
      "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 22 -> 20; assigned_worker: Build 21 agent -> None",
+     "why": "scheduling correction: target '22' was set on 2026-10-24 to mean the Build 22 mini-build release, but the register's builds map '22' is Expansion 22 (Settlement Advancement). Owner 2026-10-24: Expansion 20 is the umbrella milestone for outstanding gameplay polish; the established delivery through the Build 22 mini-build release (docs/backlog/BUILD22_MINI_BUILD.md) is kept (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-MARKET-SHELVES",
@@ -22599,13 +23153,13 @@
    "acceptance": [
     "The two empty shelf units (supplies_objects.png row 1 and row 2, far left; exact coordinates recorded from the PNG and PSD) become modular market stall furniture with middle sections extended by pixel construction, nearest filtering; every stall (player and NPC) shows its actual listings, up to ten distinct displays across both shelves, none floating, updated as listings change, empty stalls empty; trading rules unchanged; multiplayer clients render from the synchronized stalls; Craftpix credited; screenshots from the game camera of empty, partial and ten-listing stalls; no collision or path regression"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22618,10 +23172,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: f2be0b2; tests: None -> market_shelf_test 15/0, business_works 61/0, stalls_test 104/0, wiki_test; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits f2be0b2 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "f2be0b2"
+   ],
+   "tests": "market_shelf_test 15/0, business_works 61/0, stalls_test 104/0, wiki_test; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-PACK-DETAIL-FIT",
@@ -22634,13 +23215,13 @@
    "acceptance": [
     "The Pack's item detail panel and its action buttons (Eat, Drop, Drop all, Equip and the rest) are fully on screen and reachable by touch, gamepad and mouse at every supported resolution and aspect ratio, phones in landscape included, and with the longest descriptions; verified by screenshots at the phone, 16:9 and Steam Deck sizes and a layout test"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22663,14 +23244,36 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 4ef0e86",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 4ef0e86 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "4ef0e86"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22684,13 +23287,13 @@
    "acceptance": [
     "The pause menu is a compact framed panel around its buttons, in the game's wooden UI style, over the paused game shown slightly dimmed; every button and the close control stay reachable by touch, gamepad and mouse at every supported size; other full-screen menus reached from it are checked for the same treatment; verified by screenshots at the phone, 16:9 and Steam Deck sizes"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22713,12 +23316,36 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IMPLEMENTED ON TASK BRANCH; commits + 1a6fb4b",
      "why": "compact pause menu implemented by the Build 21 agent (1a6fb4b, GameUI.compact); owner: do not redo"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker:  -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; tests: None -> net_ui 61/0; screenshot looked at; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 1a6fb4b are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "",
+   "assigned_worker": null,
    "branch": "",
    "commits": [
     "1a6fb4b"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "tests": "net_ui 61/0; screenshot looked at; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22734,13 +23361,13 @@
     "Animation stops when mining stops",
     "Other long-duration work animations verified"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22768,13 +23395,35 @@
      "date": "2026-10-24",
      "change": "tests: start_test: swing in every working frame (0/120 and 0/215 frames without the fix) -> start_test: swing in every working frame (0/120 and 0/215 frames without the fix); full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: 70dfdff -> 9feaf77",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 70dfdff are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
    "tests": "start_test: swing in every working frame (0/120 and 0/215 frames without the fix); full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "70dfdff"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22788,7 +23437,7 @@
    "acceptance": [
     "Every child item meets its acceptance criteria; automated and device verification reported separately"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -22807,9 +23456,22 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "registered with eight children; P1 after A1, P2 after Batch A; before Expansion 20"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (umbrella of the polish batch)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "next_action": "P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md)"
+   "next_action": "P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md)",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-PROGRESS-BAR",
@@ -22882,13 +23544,13 @@
    "acceptance": [
     "Property.describe (game/scripts/core/property.gd) names a plot's location once even when two plots share a name; a test covers two same-named plots"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-GOSSIP-NATURAL",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22906,12 +23568,34 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> property_test 123 checks 0 failures (lead rerun); test_commit: None -> d6d4aab; commits + 8e6ace2",
      "why": "fixed in 8e6ace2 with a test"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: d6d4aab -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 8e6ace2 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "tests": "property_test 123 checks 0 failures (lead rerun)",
-   "test_commit": "d6d4aab",
+   "test_commit": "6567c04",
    "commits": [
     "8e6ace2"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22925,13 +23609,13 @@
    "acceptance": [
     "Children GP-GOSSIP-NATURAL, GP-DIALOGUE-PERSPECTIVE and GP-CRIME-PURSUIT complete against their criteria; root-cause audit and repair plan recorded; no hardcoded families; deterministic, table-driven, no runtime LLM; saves compatible; morality ledgers authoritative; multiplayer attribution correct; Build 20 not held"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22954,13 +23638,35 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: None -> d6d4aab; commits + d6d4aab; next_action",
      "why": "S1-S3 and A1-A9 implemented on wip/multiplayer-b19 d6d4aab, verified by the lead; owner questions: earshot distances (proposed 30 and 80 tiles) and whether a known killer should be refused trade (the current morality weights never refuse a shop sale)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: d6d4aab -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits d6d4aab are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "next_action": "Owner: approve earshot distances; decide on trade refusal for known killers; device playtest in the next build",
    "tests": "justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
-   "test_commit": "d6d4aab",
+   "test_commit": "6567c04",
    "commits": [
     "d6d4aab"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -22974,13 +23680,13 @@
    "acceptance": [
     "At the grinding wheel the smith, when present, sharpens a weapon for 1 coin paid to the smith: the weapon's durability is restored to full (repair of wear only, no damage bonus); offered for each worn weapon carried or worn; refused with a reason when the smith is away, the weapon is unworn or the payer lacks a coin; villagers, guards and bandits who carry weapons can pay for it too through the same verb; the coin is a real transaction (ledger conserved); actor-aware; wiki and manifest updated; tested; G0 change reported"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23003,10 +23709,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: f2586e1; tests: None -> sharpen_test 11/0; INT-434; wiki page sys:sharpening; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits f2586e1 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "f2586e1"
+   ],
+   "tests": "sharpen_test 11/0; INT-434; wiki page sys:sharpening; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-SMITHY-WORKBENCH",
@@ -23019,13 +23752,13 @@
    "acceptance": [
     "The smithy's workbench station moves from the grinding wheel to one of the smithy's tables, cleared of its jars and sacks and drawn with a hammer or two on it (art through the asset pipeline); its prompt and window name it the workbench; the grinding wheel is no longer a workbench; the same check done for every workshop's stations (prompt matches the art); villagers' use of the workbench follows it (G0 change reported); verified by screenshots and the audit test"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23048,10 +23781,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: f2586e1; tests: None -> sharpen_test 11/0; village generator v14; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits f2586e1 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "f2586e1"
+   ],
+   "tests": "sharpen_test 11/0; village generator v14; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-STALL-PRICE-ON-PUTUP",
@@ -23064,13 +23824,13 @@
    "acceptance": [
     "The stall's Put up dialog sets the price with the quantity: it starts at the current suggested price, can be raised and lowered (buttons, gamepad and touch), and the goods go up at the chosen price; changing a price later still works; the same applies to the player's shop and any other put-up dialog; the stall window fits the screen (no control cut off at the edges) at every supported size; wiki updated; verified by screenshots and a test"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23093,10 +23853,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: 35aec1c; tests: None -> stall_putup_test 11/0, polish_p2 104/0; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 35aec1c are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "35aec1c"
+   ],
+   "tests": "stall_putup_test 11/0, polish_p2 104/0; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-STALL-TABLE-10",
@@ -23113,11 +23900,11 @@
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "READY",
-   "verification_status": "NOT TESTED",
+   "approval_status": "SUPERSEDED",
+   "implementation_status": "NOT APPLICABLE",
+   "verification_status": "NOT APPLICABLE",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "CLOSED",
    "history": [
     {
      "date": "2026-10-24",
@@ -23138,11 +23925,17 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "superseded in practice by the owner's market shelf directive (docs/directives/2026-10-24_build21_craftpix_market_stalls.md): the 'ten goods' question is answered (ten distinct listings shown)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "approval_status: OWNER APPROVED -> SUPERSEDED; superseded_by: None -> GP-MARKET-SHELVES; completion: OPEN -> CLOSED; implementation_status: READY -> NOT APPLICABLE; verification_status: NOT TESTED -> NOT APPLICABLE",
+     "why": "duplicate resolved: the owner's Craftpix market shelf directive (docs/directives/2026-10-24_build21_craftpix_market_stalls.md) replaced the table with shelves of up to ten listings, built as GP-MARKET-SHELVES (f2be0b2)"
     }
    ],
    "assigned_worker": "",
    "branch": "",
-   "next_action": "Implemented by GP-MARKET-SHELVES"
+   "next_action": "Implemented by GP-MARKET-SHELVES",
+   "superseded_by": "GP-MARKET-SHELVES"
   },
   {
    "id": "GP-START-RUSTY-AXE",
@@ -23155,13 +23948,13 @@
    "acceptance": [
     "A new rusty_axe item (an axe tool like rusty_pickaxe: slower, wears out, start kit only) is in player_start_items for every new player, multiplayer guests included; it fells trees; its icon is imported with provenance; the opening text, wiki, resources.json and its manifests are updated; existing saves are unchanged"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23179,28 +23972,52 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 83a4fc2",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 83a4fc2 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "83a4fc2"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
    "id": "GP-TABLE-ITEMS",
    "kind": "approved",
-   "title": "Anything drawn on a table is a real item that can be taken",
-   "description": "Anything drawn on a table is a real item that can be taken",
+   "title": "Merchandise previews on tables: a visual preview of what the business offers (no pickup)",
+   "description": "Merchandise displayed on tables: a visual preview of what the business offers (owner clarification 2026-10-24); not item pickup",
    "source": "docs/gameplay_polish/reference/table_item_not_takeable_2026-10-24.png",
    "owner_wording": "the game says the table is empty, it is not, if it is on a table it can be taken",
    "approval": "owner, 2026-10-24 (answers: Owner's, theft; Owner restocks it)",
    "acceptance": [
-    "Every item drawn on a table (village, tavern, interiors) is a real item of the matching kind held by the table's owner; the prompt names it ('Take the tavern's ale (theft)'), taking it moves it into the taker's pack, counts as theft when the table is not the taker's (free on one's own table or an ownerless one) and removes its drawing; the table is drawn bare until its owner puts a new one out from their own stock (no item created from nothing; the ledger conserves); 'empty' is said only of a table with nothing on it; works for every player (actor-aware); saved and loaded; manifest INT entry; verified by screenshots, a test of take, theft, restock and conservation, and G0 checked (report any simulation change)"
+    "Tables show a visual preview of the merchandise a business offers, so the player sees what is sold without starting a transaction",
+    "Tables are not item-pickup containers: no table-item pickup mechanic",
+    "The preview follows the business's real listings and updates when they change"
    ],
-   "target_build": "22",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
@@ -23239,10 +24056,34 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner clarification 2026-10-24: tables show a visual preview of the business's merchandise, no pickup or transaction"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 22 -> 20; assigned_worker: Build 21 agent -> None",
+     "why": "scheduling correction: target '22' was set on 2026-10-24 to mean the Build 22 mini-build release, but the register's builds map '22' is Expansion 22 (Settlement Advancement). Owner 2026-10-24: Expansion 20 is the umbrella milestone for outstanding gameplay polish; the established delivery through the Build 22 mini-build release (docs/backlog/BUILD22_MINI_BUILD.md) is kept (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "acceptance: Tables show a visual preview of the merchandise a business offers, so the player sees what is sold without starting a transaction, Tables are not item-pickup containers: no table-item pickup mechanic, The preview follows the business's real listings and updates when they change; description: Anything drawn on a table is a real item that can be taken -> Merchandise displayed on tables: a visual preview of what the business offers (owner clarification 2026-10-24); not item pickup",
+     "why": "owner clarification 2026-10-24 (docs/directives/2026-10-24_build21_scope_freeze.md): tables give a visual preview of merchandise, never a pickup mechanic; the previous acceptance ([\"Every item drawn on a table (village, tavern, interiors) is a real item of the matching kind held by the table's owner; the prompt names it ('Take the tavern's ale (theft)'), taking it moves it into the taker's pack, counts as theft when the table is not the taker's (free on one's own table or an ownerless one) and removes its drawing; the table is drawn bare until its owner puts a new one out f) is superseded"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "title: Anything drawn on a table is a real item that can be taken -> Merchandise previews on tables: a visual preview of what the business offers (no pickup)",
+     "why": "owner clarification 2026-10-24 (docs/directives/2026-10-24_build21_scope_freeze.md): preview only, not item pickup"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-TARGET-ART-MATCH",
@@ -23255,13 +24096,13 @@
    "acceptance": [
     "Every container, station, counter and fixture the player can use is offered only where its art is drawn, and its prompt names what is drawn there; the tavern's roast is not offered as a crate (it is a roast, or nothing); an audit over every interaction point in the village and the building interiors finds no mismatch between the data and the art; verified by screenshots of the tavern and the audited fixes and a test"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23294,10 +24135,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: f401d75; tests: None -> test_containers_named_as_drawn; village generator v13; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits f401d75 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "f401d75"
+   ],
+   "tests": "test_containers_named_as_drawn; village generator v13; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-TRAIL-EDGES",
@@ -23310,13 +24178,13 @@
    "acceptance": [
     "No trail tile draws a grass edge against bare dirt (yards, the village square, the overworld); trails keep their grass edges where they meet grass; walkability and the simulation are unchanged; the village map is regenerated with the tool, never hand-edited; verified by a screenshot of the reported spot and a check over every trail cell"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23334,14 +24202,36 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + fbc4160",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits fbc4160 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "fbc4160"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -23355,13 +24245,13 @@
    "acceptance": [
     "At the normal interface size the menus (Encyclopedia, Pack, stall, pause, settings and the other windows) use a somewhat smaller font and tighter padding and button heights, so visibly more fits on screen (the Encyclopedia shows more topics and more 'How do I' entries at once); text stays legible on a phone and touch targets stay comfortably tappable; the Interface size setting (small, normal, large) still scales it all; hover tooltips never draw over other buttons' text (in the owner's screenshot the Weapons and armour tooltip covers 'Earn money' and 'Get a pickaxe'); verified by before and after screenshots at phone landscape, 16:9 and Steam Deck sizes and layout tests"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23384,10 +24274,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: 5ce6f31; tests: None -> screenshot pause_compact_phone looked at; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 5ce6f31 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "5ce6f31"
+   ],
+   "tests": "screenshot pause_compact_phone looked at; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "GP-WHEAT-PICKED",
@@ -23400,13 +24317,13 @@
    "acceptance": [
     "As a ripe field (the manor's or the player's) is harvested, by the player or a villager, the harvested cells change to a picked or stubble tile at once, in proportion to the crop taken, nearest the harvester first; the field returns to tilled when empty as now; the art comes through the asset pipeline with provenance; the drawn state survives save and load; verified by a screenshot and a test"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23424,14 +24341,36 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77); test_commit: None -> 9feaf77; commits + 67036d5",
      "why": "in Build 20 (56c24cb); lead verified the full suite and G0 on 9feaf77"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; assigned_worker: primary development agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: 9feaf77 -> 6567c04; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 67036d5 are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "primary development agent",
+   "assigned_worker": null,
    "branch": "wip/multiplayer-b19",
    "tests": "full tests.yml inventory 102 scripts 10,745 checks 0 failures; unittest 117 OK; validators 0 problems; G0 PASS (lead rerun at 9feaf77)",
-   "test_commit": "9feaf77",
+   "test_commit": "6567c04",
    "commits": [
     "67036d5"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -23445,13 +24384,13 @@
    "acceptance": [
     "The in-game Encyclopedia uses a classic wiki layout: a narrow sidebar of plain text links, a search box, a page title and short intro, and sections with headings whose entries are rows of inline underlined links separated by dashes (no large button tiles); article pages read as continuous text with inline links; drawn as dark ink on a light parchment page in the game's style; every link works by touch, gamepad (focus moves link to link) and mouse; text sized per GP-UI-COMPACT and legible on a phone; wiki_test still passes; verified by screenshots of the contents page and an article at phone landscape, 16:9 and Steam Deck sizes"
    ],
-   "target_build": "multiplayer",
+   "target_build": "20",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23474,10 +24413,37 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; assigned_worker: Build 21 agent -> None; integrated_in: Build 21 wip/multiplayer-b19 6567c04; test_commit: None -> 6567c04; commits: 0cb8c2b; tests: None -> wiki_test; screenshots wiki_* looked at; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; playtest: None -> device check (Android phone; PC where it applies) not yet done",
+     "why": "reconciled from the Build 21 evidence: commits 0cb8c2b are in the Build 21 private draft (6567c04); Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed; device check outstanding"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: multiplayer -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (implemented and integrated; remaining work is device verification)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
+   ],
+   "test_commit": "6567c04",
+   "commits": [
+    "0cb8c2b"
+   ],
+   "tests": "wiki_test; screenshots wiki_* looked at; Build 21 release run 40117759608 on 6567c04: run_tests and start_test passed in the build job, SIM-GATE suite passed",
+   "playtest": "device check (Android phone; PC where it applies) not yet done",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "HEALTH-01",
@@ -29437,9 +30403,13 @@
    "owner_wording": "Both player spouses must be recognized as parents.",
    "approval": "owner, 2026-10-24 (final decision)",
    "acceptance": [
-    "Life.births lets a female player whose partner is a male player (in play or away) have children under the existing rules (ages, chances, interval), both recorded as parents; same-sex player couples never get births; player adoption (Guardianship.player_adopt) records both spouses as parents and joins the child to the couple's household, for any player couple; children persist and keep both parent links through save, load, host restart and reconnect; host-authoritative and deterministic; G0 unchanged; tests for each case"
+    "Life.births lets a female player whose partner is a male player (in play or away) have children under the existing rules (ages, chances, interval), both recorded as parents; same-sex player couples never get births; player adoption (Guardianship.player_adopt) records both spouses as parents and joins the child to the couple's household, for any player couple; children persist and keep both parent links through save, load, host restart and reconnect; host-authoritative and deterministic; G0 unchanged; tests for each case",
+    "Male and female player couples may also adopt; adoption is an active action, never automatic",
+    "Biological birth creates a new person; adoption moves an existing child into the family without increasing the population",
+    "Both spouses are recognized as parents of every child, biological or adopted",
+    "Player marriage and couple-household records, adoptive-parent links and a save migration from save version 22 (the data-model change that deferred it)"
    ],
-   "target_build": "22",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -29468,10 +30438,30 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
      "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 22 -> 20; assigned_worker: Build 21 agent -> None",
+     "why": "scheduling correction: target '22' was set on 2026-10-24 to mean the Build 22 mini-build release, but the register's builds map '22' is Expansion 22 (Settlement Advancement). Owner 2026-10-24: Expansion 20 is the umbrella milestone for outstanding gameplay polish; the established delivery through the Build 22 mini-build release (docs/backlog/BUILD22_MINI_BUILD.md) is kept (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "acceptance: Life.births lets a female player whose partner is a male player (in play or away) have children under the existing rules (ages, chances, interval), both recorded as parents; same-sex player couples never get births; player adoption (Guardianship.player_adopt) records both spouses as parents and joins the child to the couple's household, for any player couple; children persist and keep both parent links through save, load, host restart and reconnect; host-authoritative and deterministic; G0 unchanged; tests for each case, Male and female player couples may also adopt; adoption is an active action, never automatic, Biological birth creates a new person; adoption moves an existing child into the family without increasing the population, Both spouses are recognized as parents of every child, biological or adopted, Player marriage and couple-household records, adoptive-parent links and a save migration from save version 22 (the data-model change that deferred it); related: MP-ADOPTION-AGENCY, X20-OPEN-ITEMS",
+     "why": "owner rules restated in the Expansion 20 reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md); no new family system; the adoption agency is separate (MP-ADOPTION-AGENCY)"
     }
    ],
-   "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": null,
+   "branch": "wip/multiplayer-b19",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "MP-ADOPTION-AGENCY",
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "MP-Q-PLAYER-CHILDREN",
@@ -37701,9 +38691,19 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; commits + c756211",
      "why": "foundations round merged (c756211)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "integrated_in": [],
    "task_branches": [
     "Expansion 19 prototype wip/expansion19-preparation"
@@ -37717,7 +38717,10 @@
    "umbrella": true,
    "assigned_worker": "X19 sync worker (Sonnet subagent)",
    "remaining_work": "rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c)",
-   "test_commit": "c4b10e4"
+   "test_commit": "c4b10e4",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "PVG-01",
@@ -41200,7 +42203,7 @@
     "The fifteen acceptance criteria of section 11",
     "No change to gameplay, RNG, determinism, identities or authoritative state; no duplicate ledger; no silent sampling or dropped records"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -41249,6 +42252,16 @@
      "date": "2026-10-23",
      "change": "tests: recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical -> recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0; test_commit: 94b1304 -> 2d5d49c; commits + 2d5d49c; next_action",
      "why": "recorder worker: identity foundation merged (801d24b), refs on permanent ids, D3 instrumentation (life, employment, government, crime, player verbs, save/load) at 824e32c; recorder_test 160, identity 98, migration 93, aging 136, family 51, world 339, conservation 8, save_transfer 21, all 0 failures; recorded vs unrecorded identical fingerprints; gate equals the identity candidate; overhead +28%. Lead merged FIX-RECF1/SIM-F9 at 2d5d49c (recf1_test 23, recorder_test 160, world_test 339, 0 failures)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "assigned_worker": "recorder worker (Sonnet subagent)",
@@ -41259,6 +42272,9 @@
    "commits": [
     "94b1304",
     "2d5d49c"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -41381,7 +42397,7 @@
     "Findings report per run: systems, evidence, cause, defect or emergent, recommendation",
     "Short runs first; longer only when results justify it"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": "REC-19",
    "depends_on": [],
    "decisions": [],
@@ -41410,11 +42426,24 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner bounded the workstream (docs/directives/2026-10-23_bounded_parallel_simulation.md): fixed commits, set durations and stop conditions, unattended runs, one analysis per run, no campaigns without approval"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/recorder (read-only runs)",
-   "next_action": "run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap"
+   "next_action": "run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "REC-F1",
@@ -41449,9 +42478,17 @@
      "date": "2026-10-23",
      "change": "approval_status: OWNER APPROVED -> PROPOSED; next_action",
      "why": "the owner's approval is carried by FIX-RECF1; the finding stays a recorded proposal"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (listed only: deferred, owner decision required, idea or proposal; not counted as approved work)"
     }
    ],
-   "next_action": "addressed by FIX-RECF1"
+   "next_action": "addressed by FIX-RECF1",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "REC-STORE",
@@ -41464,7 +42501,7 @@
    "acceptance": [
     "Archive keeps every alternative and factor row"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": "REC-19",
    "depends_on": [],
    "decisions": [],
@@ -41478,7 +42515,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_recf1_storage_decisions.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -43266,6 +44316,11 @@
      "date": "2026-10-22",
      "change": "known_defects + no doorway on a house's east wall (furniture) or between rooms stacked north-south; known_defects + the old-world (legacy plots) view is untested by screenshot; remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "target_build": "18",
@@ -43284,7 +44339,10 @@
     "no doorway on a house's east wall (furniture) or between rooms stacked north-south",
     "the old-world (legacy plots) view is untested by screenshot"
    ],
-   "remaining_work": "owner playtest on a device; Build 18 release gate"
+   "remaining_work": "owner playtest on a device; Build 18 release gate",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SAVE-00",
@@ -45494,15 +46552,27 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IMPLEMENTED ON TASK BRANCH; branch=wip/expansion19-preparation; task_branches=…; verification_status=TARGETED TESTS PASSED; tests=judgment_test 168, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 9 checks, 0 failures (expansion19/PROGRESS.md on wip/expansion19-preparation, c4b10e4); test_commit=c4b10e4; commits=…",
      "why": "done in prototype form on wip/expansion19-preparation (c4b10e4): expansion19 DESIGN.md (audit), judgment_store (prototype), judgment_weighting (decision prototype); switched off, not integrated"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits c4b10e4 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -45511,7 +46581,10 @@
    ],
    "test_commit": "c4b10e4",
    "design": "SPECIFIED",
-   "effort": "XS"
+   "effort": "XS",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SJD-C",
@@ -45573,15 +46646,27 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IMPLEMENTED ON TASK BRANCH; branch=wip/expansion19-preparation; task_branches=…; verification_status=TARGETED TESTS PASSED; tests=judgment_test 168, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 9 checks, 0 failures (expansion19/PROGRESS.md on wip/expansion19-preparation, c4b10e4); test_commit=c4b10e4; commits=…",
      "why": "done in prototype form on wip/expansion19-preparation (c4b10e4): expansion19 DESIGN.md (audit), judgment_store (prototype), judgment_weighting (decision prototype); switched off, not integrated"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits c4b10e4 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -45590,7 +46675,10 @@
    ],
    "test_commit": "c4b10e4",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SJD-D",
@@ -45652,15 +46740,27 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=IMPLEMENTED ON TASK BRANCH; branch=wip/expansion19-preparation; task_branches=…; verification_status=TARGETED TESTS PASSED; tests=judgment_test 168, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 9 checks, 0 failures (expansion19/PROGRESS.md on wip/expansion19-preparation, c4b10e4); test_commit=c4b10e4; commits=…",
      "why": "done in prototype form on wip/expansion19-preparation (c4b10e4): expansion19 DESIGN.md (audit), judgment_store (prototype), judgment_weighting (decision prototype); switched off, not integrated"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits c4b10e4 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -45669,7 +46769,10 @@
    ],
    "test_commit": "c4b10e4",
    "design": "SPECIFIED",
-   "effort": "M"
+   "effort": "M",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SJD-E",
@@ -45731,9 +46834,19 @@
      "date": "2026-10-23",
      "change": "reconciliation: implementation_status=PARTIALLY IMPLEMENTED; branch=wip/expansion19-preparation; task_branches=…; commits=…; verification_status=TARGETED TESTS PASSED; tests=judgment_test 168, judgment_live_test 53, judgment_decay_demo 24, judgment_perf 9 checks, 0 failures (expansion19/PROGRESS.md on wip/expansion19-preparation, c4b10e4); test_commit=c4b10e4; remaining_work=rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c)",
      "why": "live adapter (judgment_live) exists on wip/expansion19-preparation, switched off; no domain integrated; needs the rework for the owner's 2026-10-23 answers"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [],
@@ -45749,7 +46862,10 @@
    "test_commit": "c4b10e4",
    "remaining_work": "rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c)",
    "design": "SPECIFIED",
-   "effort": "L"
+   "effort": "L",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SJD-F",
@@ -45804,9 +46920,19 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [],
@@ -45817,7 +46943,10 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "XL"
+   "effort": "XL",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SJD-G",
@@ -45872,9 +47001,19 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [],
@@ -45888,6 +47027,9 @@
    "effort": "L",
    "decisions": [
     "X19-DECAY"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -45943,9 +47085,19 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [],
@@ -45956,7 +47108,10 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
-   "effort": "XS"
+   "effort": "XS",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "SJD-Q01",
@@ -49270,6 +50425,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "target_build": "18",
@@ -49284,7 +50444,10 @@
    "completion": "OPEN",
    "test_commit": "83d3afc",
    "design": "SPECIFIED",
-   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "UI-HUNGER-01",
@@ -49434,6 +50597,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "target_build": "18",
@@ -49448,7 +50616,10 @@
    "completion": "OPEN",
    "test_commit": "83d3afc",
    "design": "SPECIFIED",
-   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "UI-WIKI-01",
@@ -49516,6 +50687,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "target_build": "18",
@@ -49530,7 +50706,10 @@
    "completion": "OPEN",
    "test_commit": "83d3afc",
    "design": "SPECIFIED",
-   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "VER-CON-50ORE",
@@ -49888,6 +51067,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for device verification only (implemented earlier; target build kept)"
     }
    ],
    "target_build": "18",
@@ -49902,7 +51086,10 @@
    "completion": "OPEN",
    "test_commit": "83d3afc",
    "design": "SPECIFIED",
-   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
+   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "VIS-STEPS-01",
@@ -51336,9 +52523,19 @@
      "date": "2026-10-23",
      "change": "schema v2: PARTIALLY IMPLEMENTED -> approval OWNER APPROVED; implementation PARTIALLY IMPLEMENTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "emergent gameplay is the judgment system's purpose",
    "integrated_in": [],
@@ -51347,7 +52544,10 @@
    "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "WDR-010",
@@ -51571,9 +52771,19 @@
      "date": "2026-10-23",
      "change": "target_build 18 -> 19 (owner-approved deferral B18-DP-07); acceptance unchanged",
      "why": "Owner decision package answers (docs/directives/2026-10-23_build18_decision_package_answers.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
-   "target_build": "19",
+   "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules",
    "integrated_in": [],
@@ -51585,7 +52795,10 @@
    "completion": "OPEN",
    "design": "DESIGN WORK REQUIRED",
    "effort": "L",
-   "remaining_work": "Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model"
+   "remaining_work": "Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "WDR-012",
@@ -54644,7 +55857,7 @@
     "Performance and memory measured, larger villages included",
     "Completion report per section 8"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": "PROS-19",
    "depends_on": [],
    "decisions": [],
@@ -54668,6 +55881,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: None -> c756211; commits + c756211; next_action",
      "why": "round complete: A and B merged (c756211), suites and gate pass; deferred items need owner formulas and choices"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
    ],
    "assigned_worker": "lead (merges Workers A and B)",
@@ -54677,7 +55900,10 @@
    "commits": [
     "c756211"
    ],
-   "next_action": "owner: X19-PERS-FORMULA, X19-TRAIT-DIST, X19-SPILL-REACH, X19-REP-TRANSMIT, X19-BOND-LIMITS; what counts as a costly mistake and a reminder; the decision effect of stubbornness"
+   "next_action": "owner: X19-PERS-FORMULA, X19-TRAIT-DIST, X19-SPILL-REACH, X19-REP-TRANSMIT, X19-BOND-LIMITS; what counts as a costly mistake and a reminder; the decision effect of stubbornness",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "X19-FOUND-BONDS",
@@ -54696,7 +55922,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54715,6 +55941,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x19-bonds -> wip/expansion19-preparation; tests: None -> merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: None -> c756211; commits + c756211",
      "why": "merged into wip/expansion19-preparation (c756211) and verified there"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits c756211 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
@@ -54723,6 +55959,12 @@
    "test_commit": "c756211",
    "commits": [
     "c756211"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -54742,7 +55984,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54761,6 +56003,16 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x19-bonds -> wip/expansion19-preparation; tests: None -> merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: None -> c756211; commits + c756211",
      "why": "merged into wip/expansion19-preparation (c756211) and verified there"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits c756211 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
@@ -54769,6 +56021,12 @@
    "test_commit": "c756211",
    "commits": [
     "c756211"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -54789,7 +56047,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54813,6 +56071,16 @@
      "date": "2026-10-23",
      "change": "branch: wip/x19-personality -> wip/expansion19-preparation; tests: judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical -> judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB; test_commit: a3aa237 -> c756211; commits + c756211",
      "why": "merged into wip/expansion19-preparation (c756211) and verified there"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in: Build 19 wip/build19 2f72ec3",
+     "why": "reconciled: commits a3aa237, c756211 are in the Build 19 private draft (2f72ec3), accepted as the development baseline; verification status unchanged (not promoted)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
     }
    ],
    "assigned_worker": "X19 Worker A personality (Sonnet subagent)",
@@ -54822,6 +56090,12 @@
    "commits": [
     "a3aa237",
     "c756211"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 2f72ec3"
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -55009,7 +56283,7 @@
    "acceptance": [
     "No global omniscient reputation; information travels a plausible path"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": "PROS-19",
    "depends_on": [],
    "decisions": [],
@@ -55023,7 +56297,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -55456,7 +56743,7 @@
     "Stories reach observers only along a plausible path (memory, gossip); no global reputation score",
     "Important stories can outlive the generation that saw them; minor ones fade when not retold; positive conduct can restore a family's reputation in an observer's eyes"
    ],
-   "target_build": "19",
+   "target_build": "20",
    "parent": "PROS-19",
    "depends_on": [],
    "decisions": [],
@@ -55475,7 +56762,20 @@
      "date": "2026-10-23",
      "change": "acceptance criteria added",
      "why": "from the owner's wording, consolidated directive s.2.3"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "target_build: 19 -> 20",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope (Build 19 carry-forward: unfinished, not part of the accepted Build 19 work; status, history and acceptance unchanged)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "related + X20-OPEN-ITEMS",
+     "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
     }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
    ]
   },
   {
@@ -55644,6 +56944,351 @@
      "why": "owner answered 2026-10-23 (docs/directives/2026-10-23_owner_answers_x19_release_decisions.md)"
     }
    ]
+  },
+  {
+   "id": "X20-OPEN-ITEMS",
+   "kind": "approved",
+   "title": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
+   "description": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Expansion 20 is the next major development milestone. I want every outstanding gameplay, Android usability, interaction, visual, and previously deferred Build 19 item reconciled into the Expansion 20 planning scope.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Every carried item is listed with its existing id, status, remaining acceptance and target in docs/expansion20/X20_OPEN_ITEMS.md (a snapshot of this register); implementation waits for the owner's explicit authorization"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT APPLICABLE",
+   "verification_status": "NOT APPLICABLE",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "umbrella": true,
+   "next_action": "awaiting the owner's explicit authorization to begin Expansion 20 implementation (record only, 2026-10-24)"
+  },
+  {
+   "id": "GP-ANDROID-RECENTER",
+   "kind": "approved",
+   "title": "Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel",
+   "description": "Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "The Recenter control currently positions the player incorrectly relative to the visible gameplay area.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Recenter places the character at the visual centre of the usable gameplay area, accounting for the screen area of persistent HUD elements",
+    "The character is never placed underneath the health panel",
+    "Consistent at every zoom level and Android display size",
+    "Existing camera controls and movement behaviour unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "UI-HUD-01",
+    "B7-010"
+   ],
+   "effort": "S",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone (two display sizes)"
+  },
+  {
+   "id": "GP-ANDROID-HUD-SCALE",
+   "kind": "approved",
+   "title": "Android health and status panel about 15% smaller, with every value kept legible",
+   "description": "Android health and status panel about 15% smaller, with every value kept legible",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Reduce the health and status panel by approximately 15%.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Panel about 15% smaller",
+    "Health and other status information and their numbers kept and legible",
+    "Wasted space reduced rather than useful information removed",
+    "Gameplay functionality unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "UI-HUD-01",
+    "B7-010",
+    "GP-ANDROID-RECENTER"
+   ],
+   "effort": "XS",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone"
+  },
+  {
+   "id": "GP-ANDROID-ACTION-BUTTONS",
+   "kind": "approved",
+   "title": "Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept",
+   "description": "Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Replace oversized rectangular button backgrounds with compact circular backgrounds. Do not remove labels as a space-saving shortcut.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Existing glyph artwork and glyph size kept",
+    "Every visible label kept",
+    "Button functions and ordering unchanged",
+    "Compact circular backgrounds sized to the glyph and label",
+    "Controls closer to the right edge, respecting device safe areas",
+    "Comfortable touch hit targets; gameplay space reclaimed"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ACTIONBAR"
+   ],
+   "effort": "S",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone",
+   "notes": "Refines GP-ACTIONBAR (two right-side columns, implemented in Builds 20/21); it does not replace or reopen it."
+  },
+  {
+   "id": "GP-ANDROID-USE-TALK-TARGETING",
+   "kind": "approved",
+   "title": "Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable",
+   "description": "Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "The existing Use button sometimes selects a nearby villager when the player intends to interact with a station or other usable object. The game already has a Use button. Do not add a redundant Use Nearby button.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Use prioritises the appropriate usable station or object; Talk prioritises nearby characters",
+    "The current target is understandable to the player",
+    "With several eligible targets there is a practical way to choose the intended one",
+    "Interaction distance, permissions, ownership and access rules unchanged",
+    "No maximum zoom or pixel-perfect tapping needed",
+    "No new Use Nearby button: corrections to the existing targeting and interaction system"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ANVIL",
+    "GP-TARGET-ART-MATCH",
+    "GP-INTERACTABLE-OUTLINES"
+   ],
+   "effort": "M",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone, gamepad, keyboard and mouse"
+  },
+  {
+   "id": "GP-INTERACTABLE-OUTLINES",
+   "kind": "approved",
+   "title": "Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one",
+   "description": "Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Players need to recognize which objects can be used without tapping everything. This is a usability feature, not authorization for a new interaction framework.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Nearby usable objects show a subtle glowing outline; the selected target a brighter outline",
+    "The outline follows the object's sprite silhouette, not its tile",
+    "Covers ovens, workbenches, market stalls, anvils, storage and other eligible objects",
+    "Respects interaction range and access restrictions",
+    "No clutter or excessive rendering cost",
+    "Consistent across supported platforms where appropriate",
+    "No new interaction framework"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ANDROID-USE-TALK-TARGETING"
+   ],
+   "effort": "M",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone and PC"
+  },
+  {
+   "id": "GP-INTERACTION-PROMPT-LIFECYCLE",
+   "kind": "approved",
+   "title": "Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes",
+   "description": "Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Contextual prompts such as \"Use the workbench\" currently remain visible during or after interactions until the player moves away. Do not confuse persistent proximity with an active interaction target.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Prompt shown when a valid target is selected",
+    "Prompt cleared or suppressed while its interaction is active",
+    "Stale prompts cleared when the interaction closes, the target changes or becomes invalid",
+    "The prompt returns when the object is selected again",
+    "Activity feedback such as 'Crafting' kept"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ANDROID-USE-TALK-TARGETING",
+    "CTR-02"
+   ],
+   "effort": "S",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone and PC"
+  },
+  {
+   "id": "GP-BUSINESS-COURIER",
+   "kind": "approved",
+   "title": "Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK)",
+   "description": "Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK)",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Business desk and courier work: Existing unfinished and untested implementation is preserved on \"wip/build22-business-desk\" at commit \"e25eec9\".",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Couriers collect from and deliver to a business through its desk",
+    "Existing courier deliveries and shopkeeper trade unchanged where not extended",
+    "Tests, wiki and INT entry updated"
+   ],
+   "target_build": "20",
+   "parent": "GP-BUSINESS-DESK",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "branch": "wip/build22-business-desk",
+   "commits": [
+    "e25eec9"
+   ],
+   "implementation": "unfinished, untested changes to game/scripts/core/settlement/couriers.gd in the e25eec9 snapshot",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ],
+   "design": "PARTIAL",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)"
+  },
+  {
+   "id": "MP-ADOPTION-AGENCY",
+   "kind": "approved",
+   "title": "Adoption agency concept (future, separate design item)",
+   "description": "Adoption agency concept (future, separate design item)",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "The future adoption-agency concept is a separate, deferred design item. Do not implement it or create a new family system.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "DEFERRED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "design": "DESIGN WORK REQUIRED",
+   "related": [
+    "MP-PLAYER-FAMILY"
+   ],
+   "next_action": "none until the owner takes it up"
   }
  ]
 }

@@ -4,11 +4,17 @@ Owner directive 2026-10-24 (Build 21 scope freeze, `docs/directives/2026-10-24_b
 was frozen at `c33d7c2` (plus the signing merge) and these items moved to a focused Build 22 mini-build, to finish before the
 next expansion. **Build 22 is not started.** Requirement ids are those of the register (`docs/requirements/requirements.json`).
 
+**Reconciled 2026-10-24** (`docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`): these items are planned under the
+Expansion 20 umbrella (register target `20`, record `X20-OPEN-ITEMS`, `docs/expansion20/X20_OPEN_ITEMS.md`); their delivery through
+this Build 22 mini-build release is kept. "Build 22" here is a release number, not Expansion 22 (Settlement Advancement). The courier
+part of the desk work is tracked separately as `GP-BUSINESS-COURIER`; the adoption agency is a separate deferred design item
+(`MP-ADOPTION-AGENCY`).
+
 ## 1. Deferred feature development
 
 | Item | Register id | State when frozen | Recovery | Remaining work |
 |---|---|---|---|---|
-| Business desk and courier integration | GP-BUSINESS-DESK | Started, unfinished, untested: a new `game/scripts/core/business_desks.gd`, changes to `counters.gd`, `settlement/couriers.gd`, `wiki.gd`, `world.gd`, `main.gd`, `ui/game_ui.gd`, `game/data/village.json`, `tools/build_village.py` (133 lines added, 18 removed) | branch `wip/build22-business-desk`, commit `e25eec9` (on top of `c33d7c2`) | finish the desk and courier hand-off, write the desk test, regenerate the village, check G0 (generator change). Existing shopkeepers' buying and selling must keep working (it does in Build 21) |
+| Business desk and courier integration | GP-BUSINESS-DESK, GP-BUSINESS-COURIER | Started, unfinished, untested: a new `game/scripts/core/business_desks.gd`, changes to `counters.gd`, `settlement/couriers.gd`, `wiki.gd`, `world.gd`, `main.gd`, `ui/game_ui.gd`, `game/data/village.json`, `tools/build_village.py` (133 lines added, 18 removed) | branch `wip/build22-business-desk`, commit `e25eec9` (on top of `c33d7c2`) | finish the desk and courier hand-off, write the desk test, regenerate the village, check G0 (generator change). Existing shopkeepers' buying and selling must keep working (it does in Build 21) |
 | Merchandise previews on tables | GP-TABLE-ITEMS | Not started | none | **Owner clarification 2026-10-24:** tables are not item-pickup containers; they show a visual preview of what the business offers, with no transaction. Do not build a pickup mechanic |
 | Farmers tending their fields | GP-FARMER-TENDING | Not started | none | a visual animation of farmers working through their fields; likely changes G0, so follow the baseline policy (evidence first, keep the old baseline) |
 | Lockpicking minigame | GP-LOCKPICK | Not started | none | the approved minigame and its tests |

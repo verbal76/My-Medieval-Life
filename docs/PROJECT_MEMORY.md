@@ -100,6 +100,13 @@ Never answer an open decision on the owner's behalf, and never treat a proposal 
 
 A few early register entries cite chat messages or uploads that were never committed (for example REC-002, REC-007 and REC-013). Their wording is copied into the entry itself, under `owner_wording`. Treat that copy as the record, and ask the owner only if it is not enough to act on.
 
+## Expansion 20 consolidated scope (owner, 2026-10-24)
+
+Expansion 20 holds the Living Economy foundations and, as an umbrella, every outstanding gameplay polish, Android usability,
+interaction and visual item and the unfinished Build 19 items: record `X20-OPEN-ITEMS`, snapshot `docs/expansion20/X20_OPEN_ITEMS.md`,
+live view `docs/requirements/views/BUILD_20.md`. The Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`) is a release under
+that umbrella, not Expansion 22. Implementation waits for the owner's explicit authorization.
+
 ## How to find the next approved task
 
 1. `docs/CURRENT_DEVELOPMENT_STATE.md`, "Next actions", and `docs/requirements/views/BUILD_18.md`: the priority order.
