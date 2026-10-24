@@ -1,7 +1,7 @@
 extends SceneTree
 ## Multiplayer A2 test host (carried forward from the MP-01 prototype): the real game (main.gd) hosting its world in its own
-## Godot process, driven by game/tests/net_g1_test.gd through a command file and reporting through a status file (both in
-## the given directory). Args after "--": port discovery_port mode(new|continue) dir.
+## Godot process, driven by game/tests/net_g1_test.gd (and net_batch_b_test.gd) through a command file and reporting through a
+## status file (both in the given directory). Args after "--": port discovery_port mode(new|continue) dir [max_players, default 2].
 
 var main
 var dir := "user://test_net/"
@@ -14,6 +14,10 @@ var started := false
 var walk := 0.0
 var coins0 := 0
 var stats0 := {}
+var max_players := 2
+var census := {}          # MP Batch B: {coins, goods} taken on demand, at load and after the last save
+var storm := 0.0          # MP Batch B: seconds left of saving every frame (a guest joining mid-save)
+var saves := 0
 
 
 func _init() -> void:
@@ -22,6 +26,8 @@ func _init() -> void:
 	dport = int(a[1])
 	mode = str(a[2])
 	dir = str(a[3])
+	if a.size() > 4:
+		max_players = int(a[4])
 	DirAccess.make_dir_recursive_absolute(dir)
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
@@ -35,7 +41,8 @@ func _start() -> void:
 	else:
 		main.new_game()
 	main.ui.hide_all()
-	var why: String = main.host_game({"port": port, "discovery_port": dport, "max_players": 2, "password": "oak",
+	census = {"at": "load", "coins": main.world.total_coins(), "goods": _goods(), "away": _aways()}
+	var why: String = main.host_game({"port": port, "discovery_port": dport, "max_players": max_players, "password": "oak",
 		"host_name": "Hosta", "world_name": "Test Vale"})
 	started = why == ""
 	if not started:
@@ -53,6 +60,10 @@ func _process(delta: float) -> bool:
 		var step := minf(walk, 3.0 * delta)
 		main.world.host_player().pos.x += step
 		walk -= step
+	if storm > 0.0:
+		storm -= delta
+		if main.save_game(false):
+			saves += 1
 	t_status += delta
 	if t_status >= 0.1:
 		t_status = 0.0
@@ -91,16 +102,49 @@ func _commands() -> void:
 			main.save_game(false)
 			main.net.stop()
 			main.save_game(false)
+			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
 			_status()
 			quit(0)
+		"crash":                                     # MP Batch B: the host is killed after an hourly save made while the guest played
+			main.save_game(false)
+			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
+			_status()
+			main.net.peer.close()
+			quit(0)
+		"endow":                                     # MP Batch B: per-player records for the guest, made by the host's rules, as the guest
+			for id in main.net.by_peer:
+				var g: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
+				var v: NPC = null
+				for n: NPC in w.npcs:
+					if n.alive and n.role == "adult" and n.job != "guard":
+						v = n
+						break
+				w.host_player().coins -= 5               # coins move, never made
+				g.coins += 5
+				g.skills["mining"] = 900
+				w.as_actor(g, func(): w.crime_record({"day": w.day(), "kind": "theft", "what": "bread", "victim": v.id, "witnesses": 1}, v))
+				w.relations.guest_killings[w.player_ref(g)] = int(w.relations.guest_killings.get(w.player_ref(g), 0)) + 1
+				if w.judgment != null:
+					w.as_actor(g, func(): JudgmentLive.on_gift(w, Life.PLAYER_ID, v, "bread"))
+				main.net.rpc_id(id, "s_self", g.to_dict())
+		"census":
+			census = {"at": "now", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
+		"save_storm":
+			storm = float(c.secs)
+		"kill_guest":
+			for id in main.net.by_peer:
+				w.damage_player(99999.0, "a test", w.player_by_pid(int(main.net.by_peer[id])))
 
 
 func _status() -> void:
 	var w: World = main.world
 	var players := {}
 	for p: PlayerState in w.player_list():
+		var ref := w.player_ref(p)
 		players[str(p.pid)] = {"name": p.name, "pos": [p.pos.x, p.pos.y], "inv": p.inv.items.duplicate(), "coins": p.coins, "hunger": p.hunger,
-			"away": p.away, "host": w.is_host(p), "ref": w.player_ref(p), "key": p.net_key}
+			"away": p.away, "host": w.is_host(p), "ref": ref, "key": p.net_key,
+			"alive": p.alive, "line": p.line, "skills": p.skills.duplicate(), "crimes": p.crimes.size(), "case": (w.justice.case_of(ref).get("crimes", []) as Array).size(),
+			"killings": w.relations.killings_of(ref), "jtag": _tagged(w, ref)}
 	var connected := []
 	for id in main.net.by_peer:
 		connected.append(int(main.net.by_peer[id]))
@@ -111,9 +155,38 @@ func _status() -> void:
 		- int(w.stats.get("caravan_coins_out", 0)) + int(stats0.get("caravan_coins_out", 0)) + int(w.stats.get("scenario_coins_in", 0)) - int(stats0.get("scenario_coins_in", 0))
 	var d := {"hosting": main.net.is_host(), "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
-		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in}
+		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
+		"census": census, "saves": saves, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
 	f.close()
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(dir + "status.json"))
+
+
+## Every good in the world, over every holder (the census of the economy simulation's ledger; every player's pack and chest).
+func _goods() -> Dictionary:
+	var g := SettlementHoldings.goods(main.world)
+	var out := {}
+	var ks := g.keys()
+	ks.sort()
+	for k in ks:
+		out[str(k)] = g[k]
+	return out
+
+
+func _aways() -> Dictionary:
+	var out := {}
+	for p: PlayerState in main.world.player_list():
+		out[str(p.pid)] = p.away
+	return out
+
+
+## Whether a judgment fact names this player by its reference (the "by:" tag).
+static func _tagged(w: World, ref: String) -> bool:
+	if w.judgment == null:
+		return false
+	for ev in w.judgment.facts:
+		if (w.judgment.fact(int(ev)).tags as Array).has("by:" + ref):
+			return true
+	return false

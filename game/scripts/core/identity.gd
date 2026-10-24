@@ -93,7 +93,7 @@ static func succeed(w: World, parent: PlayerState, heir: PlayerState, kid: NPC) 
 	if parent.pid <= 0:
 		register_player(w, parent)
 	var ties := {}
-	var keys: Array = w.relations.ties.keys()
+	var keys: Array = w.relations.ties.keys() if w.is_host(parent) else []     # MP Batch B: the ties under -2 are the host's line's (a guest's are Batch C)
 	keys.sort()
 	for k in keys:
 		var parts: PackedStringArray = str(k).split(":")

@@ -9,11 +9,13 @@ extends RefCounted
 ## now has it (`player`, a PlayerState dict) and the world records the action changed (`patches`, apply_patch).
 ## Unknown kinds and malformed requests are refused. New kinds are added here one by one (Batch C: every verb).
 
-const KINDS := ["eat", "pick_plant"]
+const KINDS := ["eat", "pick_plant", "heir"]
 
 
-## Apply request `kind` for player `p` in world `w`. Returns {ok, text, player, patches}.
+## Apply request `kind` for player `p` in world `w`. Returns {ok, text, player, patches} (and `heir_pid` after "heir").
 static func apply(w: World, p: PlayerState, kind: String, args: Dictionary) -> Dictionary:
+	if kind == "heir" and p != null:
+		return _heir(w, p)
 	if p == null or not p.alive:
 		return _answer(w, p, false, "You cannot do that now.")
 	match kind:
@@ -59,6 +61,26 @@ static func _pick_plant(w: World, p: PlayerState, args: Dictionary) -> Dictionar
 		p.inv.add(id, int(got[id]))
 	return _answer(w, p, true, "You pick " + ", ".join(got.keys().map(func(k): return "%d %s" % [int(got[k]), GameData.item_name(k).to_lower()])) + ".",
 			[{"plant": [c.x, c.y], "state": str(pl.state), "regrow": float(pl.regrow)}])
+
+
+## MP Batch B (MP-D4): a guest whose character died chose to go on as the heir: the established succession
+## (World.continue_as_heir, as that guest), the same rules as the host's own line; never automatic, and the world never
+## waited for the choice. The heir keeps the identity and the line's reference; its new pid comes back as `heir_pid`.
+static func _heir(w: World, p: PlayerState) -> Dictionary:
+	if p.alive:
+		return _answer(w, p, false, "You are alive.")
+	var key := p.net_key
+	w.continue_as_heir(p)
+	var h: PlayerState = null
+	for q: PlayerState in w.player_list():
+		if not w.is_host(q) and q.net_key == key and q.alive:
+			h = q
+			break
+	if h == null:
+		return _answer(w, p, false, "No heir could take up the family's life.")
+	var r := _answer(w, h, true, "%s %s takes up the family's life." % [h.name, h.family])
+	r["heir_pid"] = h.pid
+	return r
 
 
 ## A guest applies a change the host made to the shared world (its copy only shows the host's world).

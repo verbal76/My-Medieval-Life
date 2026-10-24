@@ -9,6 +9,7 @@ var generation := 1
 var pid := 0                  # ID-01: this character's permanent person id (World.people); 0 until World gives one (an older save: on load)
 var away := false             # MP Batch A2 (MP-D1): a guest not connected: out of active play (not on the map, no needs, not a detail centre), every record kept
 var net_key := ""             # MP Batch A2: a guest's identity as the host knows it, the SHA-256 hash of its device key (never the key); "" for the host
+var line := 0                 # MP Batch B (MP-D4): a guest heir's family line, the pid of the line's first guest character, so the line keeps one reference ("player:<line>") across generations as the host's line keeps "player"; 0 = the line is this character's own pid (every first guest character, and the host)
 var sprite := "res://assets/characters/player_00.png"
 var heir_sprite := "res://assets/characters/player_01.png"
 var pos := Vector2.ZERO
@@ -312,7 +313,7 @@ func to_dict() -> Dictionary:
 		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 		"pack_level": pack_level,
-	}.merged({"map_level": map_level} if map_level != 0 else {}).merged({"net_key": net_key} if net_key != "" else {}).merged({"away": true} if away else {})
+	}.merged({"map_level": map_level} if map_level != 0 else {}).merged({"net_key": net_key} if net_key != "" else {}).merged({"away": true} if away else {}).merged({"line": line} if line > 0 else {})
 
 
 static func from_dict(d: Dictionary) -> PlayerState:
@@ -332,6 +333,7 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.map_level = int(d.get("map_level", 0))          # save 21 (guests); the host's level is read from "underground" by World
 	p.net_key = str(d.get("net_key", ""))             # MP A2 (save 21, optional): a guest's identity hash
 	p.away = bool(d.get("away", false))               # MP A2 (MP-D1): a guest out of play when saved
+	p.line = int(d.get("line", 0))                    # MP B (MP-D4, optional): a guest heir's family line
 	p.inv = Inventory.from_dict(d.inv)
 	p.chest = Inventory.from_dict(d.chest)
 	for k in d.skills:

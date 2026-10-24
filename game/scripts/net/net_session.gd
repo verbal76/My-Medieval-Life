@@ -166,7 +166,9 @@ func _on_peer_disconnected(id: int) -> void:
 	players_changed.emit()
 
 
-## The guest character with this identity hash, null for none (a guest of an earlier visit, here or in the save).
+## The guest character with this identity hash, null for none (a guest of an earlier visit, here or in the save). The line's
+## living character is the one (after a death and the heir, MP-D4, the heir carries the identity); should a damaged save hold
+## two characters under one identity, the lowest pid (player_list order), so the same one every time.
 func guest_by_key(kh: String) -> PlayerState:
 	for p: PlayerState in main.world.player_list():
 		if p.net_key == kh and not main.world.is_host(p):
@@ -214,6 +216,8 @@ func guest_state(kh: String, who: String) -> PlayerState:
 		w.stat("imported_" + str(id), float(p.inv.count(str(id))))
 	Identity.register_player(w, p)
 	w.add_guest(p)
+	w.stat("player_newcomers")
+	w.note("%s arrives in the village, a newcomer." % p.name)
 	return p
 
 
@@ -468,6 +472,10 @@ func apply_requests() -> void:
 		var p: PlayerState = main.world.player_by_pid(int(q.pid))
 		var r := NetActions.apply(main.world, p, str(q.kind), q.args if q.args is Dictionary else {})
 		applied += 1
+		if r.has("heir_pid") and by_peer.has(int(q.peer)):
+			by_peer[int(q.peer)] = int(r.heir_pid)     # MP-D4: the connection now plays the heir
+			players_changed.emit()
+			main.save_game(false)
 		if peer != null and by_peer.has(int(q.peer)):
 			rpc_id(int(q.peer), "s_reply", int(q.rid), r)
 
@@ -475,7 +483,10 @@ func apply_requests() -> void:
 @rpc("authority", "call_remote", "reliable")
 func s_reply(rid: int, r: Dictionary) -> void:
 	replies[rid] = r
-	if main.world != null and main.guest_world:
+	if main.world != null and main.guest_world and r.has("heir_pid"):
+		my_pid = int(r.heir_pid)
+		main.adopt_heir(r.get("player", {}))          # MP-D4: the heir the host made is this player's character now
+	elif main.world != null and main.guest_world:
 		var mine: Dictionary = r.get("player", {})
 		if not mine.is_empty() and int(mine.get("pid", 0)) == my_pid:
 			main.adopt_own_state(mine)            # the host's record of this player is the truth

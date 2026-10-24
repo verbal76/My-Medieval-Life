@@ -971,6 +971,18 @@ func adopt_own_state(d: Dictionary) -> void:
 		mine.set(k, fresh.get(k))
 
 
+## Guest (MP-D4): the host made the heir this player chose: it replaces the dead character on this machine.
+func adopt_heir(d: Dictionary) -> void:
+	if d.is_empty():
+		return
+	var heir := PlayerState.from_dict(d)
+	world.player = heir                       # the local player (World.set_local_player) is replaced, as the host replaced it
+	player_sprite.setup_texture(CharacterLook.player_sheet(heir))
+	player_worn = _worn_key()
+	player_sprite.play("idle")
+	ui.hide_all()
+
+
 ## Guest: back to the title (the host left, the connection was lost, or the player chose to leave).
 func leave_guest_world(text := "") -> void:
 	if net.is_guest():
@@ -1079,6 +1091,7 @@ func _load_save(d: Dictionary) -> String:
 		world.dispose()
 		world = null
 		return why
+	world.suspend_guests()                    # MP Batch B (MP-D1): nobody is connected yet; guests come back into play as they rejoin
 	save_extra = {}
 	var known := world.to_dict()
 	for k in d:
@@ -4994,6 +5007,9 @@ func _notification(what: int) -> void:
 
 
 func continue_as_heir() -> void:
+	if guest_world:
+		net.request("heir", {})                 # MP-D4: the host applies the succession; its answer brings the heir (adopt_heir)
+		return
 	world.continue_as_heir()
 	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
 	player_worn = _worn_key()

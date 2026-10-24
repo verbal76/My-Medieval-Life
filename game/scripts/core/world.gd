@@ -787,6 +787,14 @@ func remove_guest(pid: int) -> PlayerState:
 	return g
 
 
+## MP Batch B (MP-D1): when the host loads its world nobody is connected yet, so every guest character is out of active play
+## (PlayerState.away) until its player rejoins (NetSession.guest_state), whatever the save says (a save written while a guest
+## was connected: an hourly save, or a host that was killed). Every record stays. Single player: nothing to do.
+func suspend_guests() -> void:
+	for id in _guests:
+		(_guests[id] as PlayerState).away = true
+
+
 ## The player a verb is acting for right now (the host unless inside as_actor).
 func acting_player() -> PlayerState:
 	return player
@@ -812,7 +820,7 @@ func as_actor(p: PlayerState, c: Callable) -> Variant:
 
 ## The owner / party reference of a player: "player" for the host (as every save and record has it), "player:<pid>" for a guest.
 func player_ref(p: PlayerState) -> String:
-	return PLAYER if p == null or p == _host_player else "player:%d" % p.pid
+	return PLAYER if p == null or p == _host_player else "player:%d" % (p.line if p.line > 0 else p.pid)
 
 
 ## The reference of the acting player.
@@ -847,7 +855,11 @@ func player_of_ref(x: Variant) -> PlayerState:
 		if x == PLAYER:
 			return _host_player
 		if (x as String).begins_with("player:"):
-			return player_by_pid(pid_of_ref(x))
+			var n := pid_of_ref(x)
+			for id in _guests:                         # MP Batch B: a guest heir answers to its family line's reference
+				if (_guests[id] as PlayerState).line == n:
+					return _guests[id]
+			return player_by_pid(n)
 		return null
 	return _host_player if x is int and Life.is_player_id(int(x)) else null
 
@@ -954,7 +966,8 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	heir.appearance = p.heir_appearance.duplicate(true)      # CC-01: the looks are recipes now
 	heir.heir_appearance = p.appearance.duplicate(true)
 	var kid := Life.player_heir_child(self)        # B8-029: the player's own eldest child of 16+, if there is one
-	Life.retire_player_id(self)
+	if dead_host:
+		Life.retire_player_id(self)                # the family links under -2 are the host's line's (a guest's line has none yet: Batch C)
 	if kid != null:
 		Life.make_heir(self, heir, kid, p)
 	else:
@@ -964,6 +977,10 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	heir.chest = p.chest
 	heir.chest_stolen = p.chest_stolen
 	heir.deaths = p.deaths
+	if not dead_host:
+		heir.net_key = p.net_key               # MP Batch B (MP-D4): the same player goes on as the heir: the same identity finds the heir,
+		heir.away = p.away                     # and the line keeps its reference ("player:<line>"), so what the family holds stays the family's
+		heir.line = p.line if p.line > 0 else p.pid
 	Identity.succeed(self, p, heir, kid)       # ID-01: the predecessor is an ancestor under their own id; the heir keeps their own
 	give_start_kit(heir)
 	coin_sources += heir.coins

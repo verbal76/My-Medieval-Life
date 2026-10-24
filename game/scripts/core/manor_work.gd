@@ -1158,7 +1158,7 @@ func on_death(n: NPC) -> void:
 
 ## The player died: their job goes back.
 func release_player() -> void:
-	var j := job_of("player")
+	var j := job_of(w.acting_ref())          # MP Batch B: the dying player's own job ("player" in single player)
 	if not j.is_empty():
 		release(j)
 

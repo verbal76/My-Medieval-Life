@@ -2778,7 +2778,7 @@ func fight(n: NPC, dt: float) -> void:
 			return
 	var tplayer: PlayerState = foe_player(n) if Life.is_player_id(n.target) else null
 	if Life.is_player_id(n.target):
-		tdead = tplayer == null or not tplayer.alive or tplayer.map_level != n.depth        # MIN-A: rock between them
+		tdead = tplayer == null or not tplayer.alive or tplayer.away or tplayer.map_level != n.depth        # MIN-A: rock between them; MP-D1: a player away is not targetable
 		if tplayer != null:
 			tpos = tplayer.pos
 	else:

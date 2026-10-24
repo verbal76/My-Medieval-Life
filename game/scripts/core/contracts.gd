@@ -1007,7 +1007,7 @@ func on_death(n: NPC) -> void:
 ## rest: World.continue_as_heir), coins villagers set aside for the player's goods go back to them.
 func on_player_died() -> void:
 	for c in list:
-		if (is_open(c) or str(c.state) == "offered") and (World.is_player_ref(c.buyer) or World.is_player_ref(c.seller)):
+		if (is_open(c) or str(c.state) == "offered") and (w.is_acting_ref(c.buyer) or w.is_acting_ref(c.seller)):     # MP Batch B: the dying player's own
 			_end(c, "cancelled", "the player died")
 
 

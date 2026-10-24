@@ -588,9 +588,9 @@ static func slain_cause(cause: String) -> bool:
 func on_player_died(slain := false, kid: NPC = null) -> void:
 	var kid_ref := ref_of(kid) if kid != null else ""
 	for x in debts:
-		if not standing(x) or not (World.is_player_ref(x.debtor) or World.is_player_ref(x.creditor)):
-			continue
-		var other: String = x.creditor if World.is_player_ref(x.debtor) else x.debtor
+		if not standing(x) or not (w.is_acting_ref(x.debtor) or w.is_acting_ref(x.creditor)):
+			continue                           # MP Batch B: only the dying player's own debts and claims (one player: every player's)
+		var other: String = x.creditor if w.is_acting_ref(x.debtor) else x.debtor
 		if slain or other == kid_ref:
 			_end(x, LOST)
 			w.stat("credit_lost")

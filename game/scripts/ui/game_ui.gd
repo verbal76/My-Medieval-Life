@@ -2335,6 +2335,8 @@ func show_death() -> void:
 	_label(death_text(p.death_cause), 24, Color(1.0, 0.55, 0.45)).name = "DeathCause"
 	_label("Death is permanent, but the village and your family go on. What %s carried lies where they fell, for anyone to take. Your heir keeps the family house and the chest, but starts with only what a wanderer carries and must learn everything anew." % p.name)
 	_button("Continue as the heir", func(): main.continue_as_heir())
+	if main.guest_world:                       # MP-D4: in a friend's world the choice can wait: the world goes on, and so does the family's place in it
+		_button("Leave the world for now", func(): main.leave_guest_world("%s's family waits in that world. Join it again to choose." % p.family if p.family != "" else "Join that world again to choose."))
 
 
 ## The death screen's words for what took the last of the player's health (B8-020).

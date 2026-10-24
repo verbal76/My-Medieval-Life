@@ -103,6 +103,10 @@ jobs:
           $godot --headless --path game --script res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)
           $godot --headless --path game --script res://tests/net_g1_test.gd
+          # MP Batch B: guest characters kept in the host's world (load out of play, not targetable away, a guest's heir by its own choice)
+          $godot --headless --path game --script res://tests/multiplayer_b_test.gd
+          # MP Batch B, gate G1 persistence: per-player records across a host restart and a killed host, reconnect, mid-action and mid-save, death and heir, a newcomer
+          $godot --headless --path game --script res://tests/net_batch_b_test.gd
           # GP-POLISH P1 (owner directive 2026-10-24): stations opened by a tap on them; the mining swing on touch; the touch action columns
           $godot --headless --path game --script res://tests/station_tap_test.gd
           # (GP-ACTIONBAR and GP-PICKAXE-ANIM are checked in start_test.gd)
