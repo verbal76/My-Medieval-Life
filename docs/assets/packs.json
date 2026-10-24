@@ -519,6 +519,7 @@
    "name": "Animated Pixel Campfire",
    "creator": "SMStudios",
    "sources": [
+    "Animated Pixel Campfire (SMStudios)/Sprite-sheet-campfire.png",
     "Animated Pixel Campfire (SMStudios)/Campfire2D.gif"
    ],
    "storage": "public",
@@ -531,8 +532,8 @@
    ],
    "status": "planned",
    "used_for": "",
-   "scale": "10x preview of a 64 x 64 native frame: reduce by 10 to the native size (fire about 23 x 44 px, about 1.5 x 2.75 tiles); white background to key out",
-   "decision": "Owner supplied the preview GIF on 2026-10-24 for the bandit camp (GP-BANDIT-CAMP-ART); the sprite sheet comes separately (the owner will publish it as a release named campfire) with the owner's instructions. Absorbed only: not imported or used until then.",
+   "scale": "reduce by 10 (box) to 64 x 64 native frames; the fire is about 23 x 44 native px (about 1.5 x 2.75 tiles)",
+   "decision": "Owner's final campfire choice (2026-10-24, docs/directives/2026-10-24_build21_campfire_asset.md): use this exact art for the bandit camp in Build 21; the sprite sheet (24 frames of 640 x 640, 10x of 64 x 64, transparent) is the production art, the GIF a preview. Asset page: https://simon-develop.itch.io/ ; licence https://creativecommons.org/licenses/by/4.0/ ; credit SMStudios.",
    "opportunities": [
     "Bandit camp campfire (GP-BANDIT-CAMP-ART)",
     "Player campfires (the Fire action) and countryside camps"

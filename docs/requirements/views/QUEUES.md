@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (40)
+## Workers and task branches (41)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -16,6 +16,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-ACTIONBAR | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-ANVIL | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-BACK-DOORS | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-BANDIT-CAMP-ART | multiplayer | IN DEVELOPMENT | Build 21 integration agent | wip/multiplayer-b19 |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CRIME-PURSUIT | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
