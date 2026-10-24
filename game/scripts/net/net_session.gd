@@ -73,6 +73,7 @@ var syncs := 0                      # MP C: world sections taken from the host (
 var synced := {}                    # peer id -> {section: hash} last sent to it
 var sync_due := {}                  # peer id -> true: send its changed sections this frame (it had a request applied)
 var _t_sync := 0.0
+var _n_sync := 0
 var sync_bytes := 0                 # bytes of sections sent (the measurements)
 
 var _t_players := 0.0
@@ -542,10 +543,11 @@ func s_reply(rid: int, r: Dictionary) -> void:
 
 ## Host (MP C): each guest due one (or all, `all`) gets the sections of the shared world that changed since it was last sent them.
 ## One World.to_dict for all of them; nothing is sent to a guest whose copy is current.
-func send_syncs(all: bool) -> void:
+func send_syncs(all: bool, skip: Array = []) -> void:
 	if peer == null or by_peer.is_empty():
 		return
 	var due := []
+	var sync_due_was := sync_due.duplicate()       # a guest with a request applied gets every changed section
 	for id in by_peer:
 		if all or sync_due.has(id):
 			due.append(id)
@@ -556,7 +558,7 @@ func send_syncs(all: bool) -> void:
 		sync_due.erase(id)
 		if not synced.has(id):
 			synced[id] = {}
-		var ch := NetSync.changed(d, synced[id])
+		var ch := NetSync.changed(d, synced[id], skip if not sync_due_was.has(id) else [])
 		if ch.is_empty():
 			continue
 		var blob := JSON.stringify(ch).to_utf8_buffer().compress(FileAccess.COMPRESSION_GZIP)
@@ -597,7 +599,8 @@ func _host_step(dt: float) -> void:
 	_t_sync += dt
 	if _t_sync >= NetSync.SYNC_SECONDS:
 		_t_sync = 0.0
-		send_syncs(true)                           # MP C: the shared world as it went on (villagers' work, other players)
+		_n_sync += 1
+		send_syncs(true, [] if _n_sync % NetSync.NPCS_EVERY == 0 else ["npcs"])     # MP C: the shared world as it went on (the villagers' records less often)
 	_t_self += dt
 	if _t_self >= 1.0 / NetProtocol.SELF_HZ:
 		_t_self = 0.0

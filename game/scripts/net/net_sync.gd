@@ -10,6 +10,9 @@ extends RefCounted
 ## (NetSession.s_self, Main.adopt_own_state).
 
 const SYNC_SECONDS := 3.0
+## The villagers' records change every moment (hunger, plans) and are the largest section: on the timer they go every NPCS_EVERY-th
+## time only; after a guest's own request they go at once (a trade, a gift, a blow changes a villager it then shows).
+const NPCS_EVERY := 5
 ## The sections a guest's copy takes from the host. Not here: the map and its generator data (the same seed on both), the
 ## other players' private records, the overworld, fauna (animals arrive as they are seen, not yet synchronized: Batch E), the
 ## settlements and couriers' books, the judgment store (read by villagers only, on the host), identity and the clock (s_npcs).
@@ -30,10 +33,12 @@ static func digest(d: Dictionary) -> Dictionary:
 
 
 ## Host: the sections of `d` whose hash differs from `sent` (updated to the new hashes). {} when nothing changed.
-static func changed(d: Dictionary, sent: Dictionary) -> Dictionary:
+static func changed(d: Dictionary, sent: Dictionary, skip: Array = []) -> Dictionary:
 	var now := digest(d)
 	var out := {}
 	for k in now:
+		if skip.has(k):
+			continue
 		if int(sent.get(k, 0)) != int(now[k]):
 			out[k] = d[k]
 			sent[k] = now[k]

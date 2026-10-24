@@ -94,11 +94,34 @@ older build reads as villagers' ids; an older build refuses a save 22 (`SaveStor
 | `net_g1_test.gd` (the guest walks) | read the host's record of the guest 0.6 s after walking | the same, then wait up to 3 s for it to match (`until`) | under load the host's status lagged the guest's last steps (it now also sends world sections); the assertion (< 0.3 tiles) is unchanged |
 | `manhunt_test.gd::test_hue_and_cry`, `test_guard_struck` | a guard 20 tiles off hears the cry directly | the cry reaches the guard through a villager who takes it up; a new check: a guard within the cry's reach but out of earshot of every voice hears nothing | the owner's decision changes how the cry spreads; every earlier assertion still holds |
 
-## 6. Evidence
+## 6. Evidence (2026-10-24)
 
-See the completion report (section 7 is filled in at the end of the batch).
+On the checkpoint `3d988d0` (an exact copy of the commit, nothing edited during the runs):
+- **G0** (`python3 tools/sim_gate.py`, baseline untouched): **PASS, identical** (seed 1 day 30 `60742ce2...`, seed 2 day 30 `573d6000...`),
+  currency and item leaks 0.
+- **SIM-GATE-01** (`tools/sim_suite.py --jobs 4`): **PASS**, 0 blocking findings, accepted baseline identical, determinism and recorder
+  neutrality identical (744 s).
+- **Full `tests.yml` Godot inventory** (111 scripts, 4 in parallel, each its own data dir, `$RUNNER_TEMP` set): 110 exit 0, 0 script
+  errors, 11,354 checks, 1 failure: `net_g1_test` "traffic stays small" (20.1 KB/s down against its 20 KB/s, the section sync's
+  villagers' records every 3 s). Fixed in the next commit (the villagers' records go on the timer every fifth time, at once after a
+  request): `net_g1_test` 44/0 (15.0 KB/s down), `net_batch_b_test` 44/0, `net_c_test` 35/0 on it. The fix touches only
+  `scripts/net/` (no simulation code), so G0 and SIM-GATE stand.
+- `multiplayer_c_test` 241 checks, `net_c_test` 35, `manhunt_test` 60, `run_tests` 3,598, `start_test` 523: 0 failures.
+- `python3 -m unittest discover -s tests`: 140 OK (in the repository; in a plain copy without git two register tests cannot run).
+- `check_interactions` 303, 0 problems; `check_requirements` 0 problems.
+- An earlier run (before `3d988d0`) had `world_test` fail with one failing check and 87,984 script errors: one root cause, `main.BODY`
+  gone when walking moved into the core (the test reads it each frame); `const BODY := World.PLAYER_BODY` in `main.gd` restored it.
 
-## 7. Left for Batch D and later
+## 7. Incomplete in Batch C (no dedicated passing test yet)
+
+- Employment (villagers hired by a player), manor work, couriers' bookings, farms and pens, construction sites and fittings,
+  guardianship (adoption by a guest), feasts: their verbs are in the network catalog and sent and applied as the guest by the same
+  mechanism the passing rows test, and their code reads the player by id or reference, but no scenario runs them for a guest.
+- The other players' private records are not sent to a guest (public looks only), so a guest's copy cannot show another player's
+  stall stock or partner; the shared sections (stalls, contracts...) do show what is in the world.
+- Fauna (animals' places and pens) is not synchronized to guests.
+
+## 8. Left for Batch D and later
 
 - Menus to host and join; Android permissions; real devices and networks (G3-G8). Taking over a stale connection (MP-D6).
 - Three and four players, performance of section synchronization with many villagers (Batch E: the sync sends whole sections).
