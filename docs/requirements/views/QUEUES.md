@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (35)
+## Workers and task branches (34)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -33,7 +33,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-DIAG | 19 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | RECON-01 | unassigned | IMPLEMENTED ON TASK BRANCH | reconciliation worker (Sonnet subagent) | wip/expansion19-preparation, wip/expansion20-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| SIM-GATE-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/sim-gate |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |

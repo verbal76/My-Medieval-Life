@@ -44875,8 +44875,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -44904,15 +44904,24 @@
      "date": "2026-10-24",
      "change": "tests: sim_suite local PASS twice (identical fixed-seed results), tests/test_sim_gate.py, failure injections exit 1 -> sim_suite local PASS twice (identical fixed-seed results), tests/test_sim_gate.py, failure injections exit 1; on wip/sim-gate e63a6ab: sim_suite local PASS twice (identical fixed-seed results), the branch's sim-gate unit tests, failure injections exit 1",
      "why": "test evidence reworded (files live on wip/sim-gate)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/sim-gate -> wip/multiplayer-b19; test_commit: e63a6ab -> 95249b7; commits + 95249b7; integrated_in + wip/multiplayer-b19 95249b7; next_action",
+     "why": "merged into wip/multiplayer-b19 (95249b7) and verified there by the lead; the release workflow on that branch now runs the gate before packaging"
     }
    ],
    "assigned_worker": "",
-   "branch": "wip/sim-gate",
-   "next_action": "Merge wip/sim-gate into wip/multiplayer-b19 after S1-S3, run the gate there; owner to approve or adjust the proposed (non-blocking) thresholds",
-   "tests": "on wip/sim-gate e63a6ab: sim_suite local PASS twice (identical fixed-seed results), the branch's sim-gate unit tests, failure injections exit 1",
-   "test_commit": "e63a6ab",
+   "branch": "wip/multiplayer-b19",
+   "next_action": "First GitHub release run measures the gate on a runner; owner to decide the proposed review thresholds",
+   "tests": "on wip/multiplayer-b19 95249b7 (merged): the simulation suite PASS, 12 runs, 275 simulated days, seeds 1-5 plus two rotating, 0 blocking findings, accepted baseline identical (36 values), recorder neutral, corner-pursuit probe meets GP-CRIME-PURSUIT; full tests.yml 105 scripts 10,832 checks 0 failures; unittest 140 OK; G0 PASS",
+   "test_commit": "95249b7",
    "commits": [
-    "e63a6ab"
+    "e63a6ab",
+    "95249b7"
+   ],
+   "integrated_in": [
+    "wip/multiplayer-b19 95249b7"
    ]
   },
   {
