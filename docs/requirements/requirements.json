@@ -21764,6 +21764,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-FARMER-TENDING",
+   "kind": "approved",
+   "title": "Farmers tending a field walk through it working the ground with a tool",
+   "description": "Farmers tending a field walk through it working the ground with a tool",
+   "source": "docs/gameplay_polish/reference/farmers_stand_beside_field_2026-10-24.webp",
+   "owner_wording": "all these people keep saying they're tending their field, or all they do is just stand beside it. They should be walking through their field maybe with a shovel poking the ground every now and then. Or with the pickaxe every now and then.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "A villager (or player helper) sowing, tending or harvesting a field moves between cells of that field during the work, stops now and then and plays a work animation with a hand tool (a shovel or hoe from the art packs, else the pickaxe), instead of standing still beside it; the same for the player's own farm helpers; field work amounts, timing and yields unchanged; deterministic; any G0 change (positions) reported and explained; verified by a screenshot sequence and a test that a tending farmer occupies several field cells and plays the tool animation"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/farmers_stand_beside_field_2026-10-24.webp"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-HARVEST-CONT",
    "kind": "approved",
    "title": "Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer",

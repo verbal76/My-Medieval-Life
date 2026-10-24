@@ -138,7 +138,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (33)
+## Multiplayer track (34)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -150,6 +150,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-HARVEST-CONT | Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer | approved | OWNER APPROVED | NOT STARTED |
 | GP-INPUT-CONSIST | Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method | approved | OWNER APPROVED | NOT STARTED |
 | GP-INTERIOR-WALLS | Building interiors: side walls missing when inside | approved | OWNER APPROVED | IN DEVELOPMENT |

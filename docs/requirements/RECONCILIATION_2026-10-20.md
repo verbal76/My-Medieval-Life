@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 546 (280 of them still open) |
-| **Open entries now** (rules excluded) | | **457** |
+| Entries added since | | 547 (281 of them still open) |
+| **Open entries now** (rules excluded) | | **458** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (546)
+## Added since the baseline (547)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -248,6 +248,7 @@ None.
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-HARVEST-CONT | Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-INPUT-CONSIST | Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-INTERIOR-WALLS | Building interiors: side walls missing when inside | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
