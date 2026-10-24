@@ -21842,6 +21842,72 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-CRIME-PURSUIT",
+   "kind": "approved",
+   "title": "Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status",
+   "description": "Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status",
+   "source": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md",
+   "owner_wording": "a player who murders three children should not escape justice because one guard lost sight of them around a corner.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Crime severity reconciled with the existing justice system; guard state machine (patrol, alerted, responding, pursuing, searching, coordinating, confronting, resolved) with last-known-position search and reacquisition; event-driven coordination of existing guards (no spawning); persistent wanted status through areas and save/load without omniscient tracking; proportionate force including lethal force for violent multiple murderers; villager responses through the existing morality ledgers; actual cause of the corner disengagement found; performance bounded; deterministic; tests per the directive"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-REPAIR-SOCIAL",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of the owner's master repair directive"
+    }
+   ]
+  },
+  {
+   "id": "GP-DIALOGUE-PERSPECTIVE",
+   "kind": "approved",
+   "title": "NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance",
+   "description": "NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance",
+   "source": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md",
+   "owner_wording": "Responses must depend on actual knowledge, relationships, personality, fear, and existing opinions. ... Do not compensate for missing information by making NPCs omniscient.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Every event line evaluates speaker, listener, participants, victims, beneficiaries, witnesses, household and family ties, involvement, actual knowledge and its source, prior conversations, opinion, fear and trust; phrasing follows perspective (I/we/my mother/you/I saw/I heard); personally significant events outrank ordinary gossip without looping; the Dale witness record is checked and the right layer repaired; household membership grants no automatic knowledge; multiplayer listeners are the individual player; tests for each case in the directive"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-REPAIR-SOCIAL",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of the owner's master repair directive"
+    }
+   ]
+  },
+  {
    "id": "GP-DRAW-UNDER-HOUSE",
    "kind": "approved",
    "title": "Player drawn half under a house wall (Marsh house front)",
@@ -21945,6 +22011,39 @@
    ],
    "assigned_worker": "primary development agent",
    "branch": "wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-GOSSIP-NATURAL",
+   "kind": "approved",
+   "title": "Gossip combines related events naturally without repeating names, households and places",
+   "description": "Gossip combines related events naturally without repeating names, households and places",
+   "source": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md",
+   "owner_wording": "Dialogue should combine related information naturally while preserving the underlying facts. ... Apply the correction across all gossip categories, not just property transactions. Do not solve this by changing one Lambert dialogue string.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "The gossip pipeline is audited; related event records about the same subject are consolidated into one natural report; names, households, locations and actions are not repeated needlessly; facts (owner, price, place, participants, outcome) kept; deterministic variation; all gossip categories covered; tests reproduce the Lambert case before and pass after"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-REPAIR-SOCIAL",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of the owner's master repair directive"
+    }
+   ]
   },
   {
    "id": "GP-HARVEST-CONT",
@@ -22348,6 +22447,34 @@
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-REPAIR-SOCIAL",
+   "kind": "approved",
+   "title": "Master gameplay repair: dialogue, social awareness, crime response and guard AI",
+   "description": "Master gameplay repair: dialogue, social awareness, crime response and guard AI",
+   "source": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md",
+   "owner_wording": "The village must remember, react, coordinate, and respond according to its existing social and simulation rules.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Children GP-GOSSIP-NATURAL, GP-DIALOGUE-PERSPECTIVE and GP-CRIME-PURSUIT complete against their criteria; root-cause audit and repair plan recorded; no hardcoded families; deterministic, table-driven, no runtime LLM; saves compatible; morality ledgers authoritative; multiplayer attribution correct; Build 20 not held"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md"
+    }
+   ]
   },
   {
    "id": "GP-SHARPEN",
