@@ -21824,7 +21824,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21838,10 +21838,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with GP-TARGET-ART-MATCH on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -22036,7 +22041,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22050,10 +22055,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-GIFT-QUANTITY",
@@ -22403,7 +22413,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22417,10 +22427,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-PICKAXE-ANIM",
@@ -22608,7 +22623,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22622,10 +22637,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-SMITHY-WORKBENCH",
@@ -22643,7 +22663,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22657,10 +22677,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with GP-TARGET-ART-MATCH on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-STALL-PRICE-ON-PUTUP",
@@ -22678,7 +22703,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22692,10 +22717,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-STALL-TABLE-10",
@@ -22713,7 +22743,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22727,10 +22757,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-START-RUSTY-AXE",
@@ -22793,7 +22828,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22807,10 +22842,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch, with GP-TARGET-ART-MATCH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-TARGET-ART-MATCH",
@@ -22828,7 +22868,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22852,10 +22892,15 @@
      "date": "2026-10-24",
      "change": "source",
      "why": "owner's third report: the courier booth prompt also appears at the smithy's forge. Cause found: Q18-15 lets a business with a shop open its own courier booth; with no market stall it stands at its workplace (couriers.gd open_shop_booth uses location(owner, 'business'), the smith's station cell), with no art, and booth_near(1.8) covers the forge and anvil"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-TRAIL-EDGES",
@@ -22918,7 +22963,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22932,10 +22977,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "GP-WHEAT-PICKED",
@@ -22998,7 +23048,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "READY",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23012,10 +23062,15 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with the polish batch on the multiplayer branch"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> READY; assigned_worker: primary development agent -> ; branch: wip/multiplayer-b19 -> ",
+     "why": "not started: left out of Build 20 by the owner's Checkpoint 1 priorities; approved backlog for a later checkpoint"
     }
    ],
-   "assigned_worker": "primary development agent",
-   "branch": "wip/multiplayer-b19"
+   "assigned_worker": "",
+   "branch": ""
   },
   {
    "id": "HEALTH-01",

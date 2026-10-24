@@ -150,12 +150,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | OWNER APPROVED | READY |
+| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-CRIME-PURSUIT | Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status | approved | OWNER APPROVED | NOT STARTED |
 | GP-DIALOGUE-PERSPECTIVE | NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance | approved | OWNER APPROVED | NOT STARTED |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | OWNER APPROVED | READY |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | approved | OWNER APPROVED | READY |
 | GP-GOSSIP-NATURAL | Gossip combines related events naturally without repeating names, households and places | approved | OWNER APPROVED | NOT STARTED |
 | GP-HARVEST-CONT | Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer | approved | OWNER APPROVED | NOT STARTED |
@@ -164,22 +164,22 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | approved | OWNER APPROVED | NOT STARTED |
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | OWNER APPROVED | NOT STARTED |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | OWNER APPROVED | READY |
 | GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | approved | OWNER APPROVED | NOT STARTED |
 | GP-PROGRESS-BAR | One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players | approved | OWNER APPROVED | NOT STARTED |
 | GP-REPAIR-SOCIAL | Master gameplay repair: dialogue, social awareness, crime response and guard AI | approved | OWNER APPROVED | NOT STARTED |
-| GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | OWNER APPROVED | READY |
+| GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | OWNER APPROVED | READY |
+| GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | OWNER APPROVED | READY |
+| GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | OWNER APPROVED | READY |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | approved | OWNER APPROVED | READY |
+| GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | OWNER APPROVED | READY |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | OWNER APPROVED | READY |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | OWNER APPROVED | READY |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | OWNER APPROVED | NOT STARTED |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | OWNER APPROVED | NOT STARTED |
