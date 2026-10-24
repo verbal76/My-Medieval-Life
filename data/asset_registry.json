@@ -12807,6 +12807,70 @@
     }
    ],
    "imported": []
+  },
+  {
+   "id": "smstudios_campfire",
+   "name": "Animated Pixel Campfire",
+   "creator": "SMStudios",
+   "sources": [
+    "Animated Pixel Campfire (SMStudios)/Campfire2D.gif"
+   ],
+   "storage": "public",
+   "licence": "CC BY 4.0",
+   "permissions": "CC BY 4.0 (itch.io page); the author says no mention is needed; credited anyway.",
+   "categories": [
+    "props",
+    "animation",
+    "effects"
+   ],
+   "status": "planned",
+   "used_for": "",
+   "scale": "10x preview of a 64 x 64 native frame: reduce by 10 to the native size (fire about 23 x 44 px, about 1.5 x 2.75 tiles); white background to key out",
+   "decision": "Owner supplied the preview GIF on 2026-10-24 for the bandit camp (GP-BANDIT-CAMP-ART); the sprite sheet comes separately (the owner will publish it as a release named campfire) with the owner's instructions. Absorbed only: not imported or used until then.",
+   "opportunities": [
+    "Bandit camp campfire (GP-BANDIT-CAMP-ART)",
+    "Player campfires (the Fire action) and countryside camps"
+   ],
+   "scan": [
+    {
+     "source": "Animated Pixel Campfire (SMStudios)/Campfire2D.gif",
+     "present": true,
+     "files": 1,
+     "by_ext": {
+      ".gif": 1
+     },
+     "licence_files": [],
+     "image_count": 1,
+     "sizes": {
+      "640x640": 1
+     },
+     "frame_grids": {},
+     "images": [
+      {
+       "member": "Campfire2D.gif",
+       "sha": "d6199b994eb7e3b6",
+       "size": [
+        640,
+        640
+       ],
+       "content": [
+        210,
+        50,
+        440,
+        490
+       ],
+       "frame": [
+        640,
+        640
+       ],
+       "frames_per_row": [
+        1
+       ]
+      }
+     ]
+    }
+   ],
+   "imported": []
   }
  ]
 }

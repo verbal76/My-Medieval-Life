@@ -21787,6 +21787,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTATION BLOCKED; next_action",
      "why": "cause confirmed: CRATE and BARREL ids are shared with market-stall awnings and the mine yard, and no campfire tile exists in the imported tilesets; needs campfire art (or a composed one); left out of Build 20"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner supplied campfire art on 2026-10-24: SMStudios 'Animated pixel campfire (FREE)', CC BY 4.0 (Campfire2D.gif stored unchanged and registered); the sprite sheet and the owner's instructions follow; nothing integrated until then"
     }
    ],
    "assigned_worker": "primary development agent",
