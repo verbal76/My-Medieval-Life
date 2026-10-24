@@ -21592,6 +21592,41 @@
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
   },
   {
+   "id": "GP-DRAW-UNDER-HOUSE",
+   "kind": "approved",
+   "title": "Player drawn half under a house wall (Marsh house front)",
+   "description": "Player drawn half under a house wall (Marsh house front)",
+   "source": "docs/gameplay_polish/reference/player_under_house_2026-10-24.png",
+   "owner_wording": "the character is half under the house",
+   "approval": "owner, 2026-10-24 (reported defect)",
+   "acceptance": [
+    "A character standing on the walkable cell in front of a house wall is drawn in front of the wall, never cut off by it; checked by a screenshot and a test at the Marsh house and the other house fronts"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/player_under_house_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-HARVEST-CONT",
    "kind": "approved",
    "title": "Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer",
