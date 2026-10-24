@@ -21945,6 +21945,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-TRAIL-EDGES",
+   "kind": "approved",
+   "title": "Trails crossing bare dirt show stray grass edges",
+   "description": "Trails crossing bare dirt show stray grass edges",
+   "source": "docs/gameplay_polish/reference/trail_grass_edges_2026-10-24.webp",
+   "owner_wording": "why do the trails have weird grass edges?",
+   "approval": "owner, 2026-10-24 (reported defect)",
+   "acceptance": [
+    "No trail tile draws a grass edge against bare dirt (yards, the village square, the overworld); trails keep their grass edges where they meet grass; walkability and the simulation are unchanged; the village map is regenerated with the tool, never hand-edited; verified by a screenshot of the reported spot and a check over every trail cell"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/trail_grass_edges_2026-10-24.webp"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-WHEAT-PICKED",
    "kind": "approved",
    "title": "Harvested wheat shows as picked, cell by cell",
