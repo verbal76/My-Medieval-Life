@@ -220,6 +220,10 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"joystick":
+				settings.touch_move = "joystick"         # GP-JOYSTICK (screenshots only; not saved)
+				ui.stick.push = Vector2(0.6, -0.4)
+				ui.update_hud()
 			"putup":
 				# GP-STALL-PRICE-ON-PUTUP: the stall's Put up dialog with its price row (screenshots only)
 				world.player.coins = 100
@@ -4867,7 +4871,8 @@ func _tap(screen_pos: Vector2) -> void:
 			return
 		chase = null                  # open ground: walk there, still in attack mode
 		strike_pending = false
-		move_to = wpos
+		if settings.touch_move != "joystick" or scheme != "touch":
+			move_to = wpos
 		return
 	chase = null
 	talk_to = null
@@ -4905,6 +4910,8 @@ func _tap(screen_pos: Vector2) -> void:
 		if not target.is_empty() and str(target.kind) != "station":
 			interact()
 			return
+	if settings.touch_move == "joystick" and scheme == "touch":
+		return                           # GP-JOYSTICK: the thumbstick walks; a tap on open ground does not
 	move_to = wpos
 
 

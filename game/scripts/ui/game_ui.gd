@@ -12,6 +12,7 @@ const BAR_COLOURS := {"hp": Color8(173, 34, 19), "hunger": Color8(122, 176, 58),
 
 var main
 var root: Control
+var stick: VirtualStick           # GP-JOYSTICK: the optional on-screen thumbstick (lower left), touch only
 var compact_width := 0.0         # Build 21: > 0 while the open window is sized to its content (compact), centred
 var compact_top := false         # ... and placed at the top (a phone's keyboard covers the lower half)
 var hud: Control
@@ -103,7 +104,7 @@ const PROMPT := "res://assets/prompts/%s.png"
 const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "touch_tap"}
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
 const CONTROLS := {
-	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it"],
+	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it. Or choose a thumbstick (Settings, Interface, Moving by touch): drag it in the lower left to walk"],
 		[["touch_finger_one"], "The action buttons stand in two columns at the right edge: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map"],
 		[["touch_finger_one"], "Gather turns gather mode on (the button reads Gather ON, lit gold; Gather OFF when off); then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack swings at a foe within sword reach; with none near, it turns attack mode on: tap who to attack, and tap them again to strike"],
@@ -583,6 +584,16 @@ func _build_hud() -> void:
 			if act == "sprint":
 				sprint_btn = btn
 	set_gather_mode(false)
+	# GP-JOYSTICK: the thumbstick in the lower-left corner of the usable screen, shown only when chosen and touch is in use
+	stick = VirtualStick.new()
+	stick.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	stick.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	stick.offset_left = 16
+	stick.offset_bottom = -16
+	stick.offset_top = -16 - stick.custom_minimum_size.y
+	stick.offset_right = 16 + stick.custom_minimum_size.x
+	stick.visible = false
+	hud.add_child(stick)
 	# Recenter sits above the touch bar's right end, in every control scheme, while looking around
 	recenter_btn = _tile_button("recenter", "Recenter", 72)
 	recenter_btn.focus_mode = Control.FOCUS_NONE
@@ -780,6 +791,7 @@ func set_scheme(s: String) -> void:
 	scheme = s
 	var mode: String = main.settings.touch_buttons
 	touch_bar.visible = (mode == "always" or (mode == "auto" and s == "touch")) and not place_bar.visible
+	_show_stick()
 	if place_bar.visible:
 		show_placing(true)                  # its hint follows the scheme
 	_fit_hud()                              # the messages and Recenter step beside the touch columns, or back
@@ -916,8 +928,20 @@ func _build_panel() -> void:
 
 
 # ---------------------------------------------------------------- hud ------------------------
+## GP-JOYSTICK: the thumbstick shows in play when it is chosen and touch is in use; any window (menus, talk, the pack, a
+## minigame) or the placing bar hides it, and hiding lets go of the move actions.
+func _show_stick() -> void:
+	if stick == null:
+		return
+	var want: bool = main.settings.touch_move == "joystick" and scheme == "touch" and not panel.visible and not place_bar.visible \
+			and main.world != null and main.running
+	if stick.visible != want:
+		stick.visible = want
+
+
 func update_hud() -> void:
 	var w: World = main.world
+	_show_stick()
 	if w == null:
 		return
 	var p := w.player
@@ -1138,7 +1162,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar]:
+	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
@@ -1850,6 +1874,8 @@ func _settings_interface() -> void:
 	var st: GameSettings = main.settings
 	_choice("Interface size", ["small", "normal", "large"], st.ui_size, func(v): st.ui_size = v)
 	_choice("On-screen buttons", ["auto", "always", "never"], st.touch_buttons, func(v): st.touch_buttons = v)
+	if st.phone or scheme == "touch":            # GP-JOYSTICK: walking by touch, a tap on the ground (default) or a thumbstick
+		_choice("Moving by touch", ["tap", "joystick"], st.touch_move, func(v): st.touch_move = v)
 
 
 func _setting_row(text: String, control: Control) -> void:
