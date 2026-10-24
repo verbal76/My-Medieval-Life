@@ -34,6 +34,10 @@ drawn by the game as a sprite at spawns.campfire, so the camp's tile 5958 (trans
 entry go; the fire's cell stays solid (camp_fire). Its crates and barrels are Shade's whole crate (797) and barrel (358)
 instead of pieces of other objects (3500, 3502, still used by the stalls and the mine yard). Nothing walkable changes.
 
+Generator v12 (GP-INTERIOR-WALLS, owner 2026-10-24: "why is the right wall missing"): the smithy's sample rect takes in its
+east wall column (x = 83, rows 40-48: wall, floor and roof only), so the room has all four walls; the chapel lane, which ran
+down that column, steps one cell east (x = 84). Trees, boulders, plants and every other cell are as in v11.
+
 Tall objects (the tops of tables, benches, racks and armour stands that Shade drew in his "Object Top"
 layers) are put in "below" layers over their base (below3, below4): the player is drawn over them and
 can never stand under half an object. A cell holding only the top of a taller object is solid.
@@ -183,7 +187,7 @@ HOUSE_RECT = (2, 10, 9, 10)                 # Shade's small house, village-1: 9 
 MANOR_RECT = (14, 6, 15, 18)                # the manor and its fenced garden, village-1
 TAVERN_RECT = (4, 8, 23, 18)                # the tavern, its terrace and the well, village-3
 HUT_RECT = (9, 1, 4, 3)                     # the sage's hut and its barrels, village-3
-SMITHY_RECT = (7, 10, 16, 14)               # the smithy and the armory, village-2
+SMITHY_RECT = (7, 10, 17, 14)               # the smithy and the armory, village-2 (generator v12: with its east wall, GP-INTERIOR-WALLS)
 
 # --- workshop stamps (property phase 2, agent proposal) -------------------------------------------
 # A workshop is Shade's small house (the house stamp: walls, roof, door, chest and tables) with its beds
@@ -613,7 +617,17 @@ class Village:
         self.building("tavern", 34, 38, 23, 14, (38, 52), name="The Well House")                      # b2
         self.civic("village-3", HUT_RECT, hidden_roof=True)
         self.building("hut", 39, 31, 3, 3, (40, 34), name="Sage's hut")                               # b3
+        # generator v12 (GP-INTERIOR-WALLS): the smithy's rect takes in the sample's east wall column (x = 83); of that
+        # column only the wall, its floor and its roof (rows 40-48) are kept, not the flowers and crates Shade drew below
+        keep_col = {k: [v[y * W + 83] for y in range(49, 54)] for k, v in self.layers.items()}
         self.civic("village-2", SMITHY_RECT, hidden_roof=True)
+        for k, v in self.layers.items():
+            for j, y in enumerate(range(49, 54)):
+                v[y * W + 83] = keep_col[k][j] if k in keep_col else -1
+        self.roof -= {(83, y) for y in range(49, 54)}
+        self.walls -= {(83, y) for y in range(49, 54)}
+        self.walkable_override -= {(83, y) for y in range(49, 54)}
+        # the building is v11's 16 wide while trees, boulders and plants are laid out (so none moves), 17 once they are
         self.building("smithy", 67, 40, 16, 14, (71, 54), name="Smithy and Armory")                   # b4
 
         # --- houses: 20 more of Shade's small house along the lanes (b5-b24) ----------------------
@@ -666,6 +680,7 @@ class Village:
         # the plants keep the ids they had before the chapel took ground (a save matches its plants by id)
         self.plant_ids = {(x, y): f"pl{i}" for i, (x, y, t) in enumerate(self.plant_cells())}
         self.add_chapel()
+        next(b for b in E["buildings"] if b["id"] == "b4")["w"] = 17     # generator v12: the smithy's east wall (above)
         self.containers()
         self.interiors()
         self.draw_roads()            # after the interiors (no RNG drawn between): the doors are known (door_trails)
@@ -943,9 +958,11 @@ class Village:
         E = self.ents
         ox, oy = CHAPEL_AT
         px, py, pw, ph = CHURCH_PLOT
-        lane = road_cells((ox + 4, oy + 9), (ox + 4, 43), (88, 43))
+        # generator v12 (GP-INTERIOR-WALLS): the smithy's east wall stands on x = 83, so the lane steps one east of it
+        lane = road_cells((ox + 4, oy + 9), (ox + 4, oy + 10), (ox + 5, oy + 10), (ox + 5, 43), (88, 43))
         room = self.rect_cells(ox, oy, 9, 10, 1) | self.rect_cells(px, py, pw, ph, 1)
-        for c in lane:
+        # the ground cleared round the lane is v11's (its lane straight down x = 83), so no tree, boulder or plant changes
+        for c in road_cells((ox + 4, oy + 9), (ox + 4, 43), (88, 43)):
             room |= self.rect_cells(c[0], c[1], 1, 1, 1)
         E["trees"] = [t for t in E["trees"] if (t["x"], t["y"]) not in room]
         for (x, y) in sorted(room):

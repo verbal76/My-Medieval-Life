@@ -71,6 +71,29 @@ class VillageTest(unittest.TestCase):
         self.assertIn(("b2", (38, 38), (38, 37)), doors)          # the tavern's back door (the owner's screenshot)
         self.assertIn(("b4", (81, 40), (81, 39)), doors)          # the smithy's back door
 
+    def test_every_interior_is_walled(self):
+        """GP-INTERIOR-WALLS (generator v12, owner: "why is the right wall missing"): round every building's interior the
+        ring of cells just outside it is wall (solid) or one of its doors, on every side, so with the roof lifted the floor
+        never runs into the grass. Before v12 the smithy's east side (x = 83) was open ground: the lane."""
+        open_sides = {}
+        for b in D["buildings"]:
+            it = b.get("interior")
+            if not it:
+                continue
+            area = {tuple(c) for c in it["area"]}
+            doors = {tuple(c) for c in it.get("doors", [])}
+            for (x, y) in area:
+                if (x, y) in doors:
+                    continue
+                for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if n not in area and n not in doors and D["solid"][n[1]][n[0]] == "0":
+                        open_sides.setdefault(b["id"], set()).add(n)
+        self.assertGreaterEqual(sum(1 for b in D["buildings"] if b.get("interior")), 25)
+        self.assertEqual(open_sides, {})
+        smithy = next(b for b in D["buildings"] if b["id"] == "b4")
+        self.assertEqual(smithy["w"], 17)
+        self.assertTrue(all(D["solid"][y][83] == "1" for y in range(40, 49)))     # its east wall
+
     def test_built_rooms_have_floors(self):
         """Every interior floor cell of a stamp the player builds (house, workshops, rooms) has a floor
         tile, so a room built on grass never shows grass inside, under its beds either."""
