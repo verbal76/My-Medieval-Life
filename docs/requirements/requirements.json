@@ -8479,6 +8479,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_mandatory_three_platform_build_policy.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner 2026-10-24: one-time exception, Build 20 (Checkpoint 1) is signed with a disposable key (allow_temporary_key); the stable-key rule holds for every later build (docs/directives/2026-10-24_build20_signing_exception.md)"
     }
    ]
   },
@@ -21826,6 +21831,11 @@
      "date": "2026-10-24",
      "change": "title",
      "why": "owner 2026-10-24: Checkpoint 1 is a three-platform private playtest release (BUILD-3PLATFORM), stably signed, no temporary key"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner 2026-10-24: Checkpoint 1 ships as Build 20, three platforms, private draft, disposable Android key by one-time exception (docs/directives/2026-10-24_build20_signing_exception.md); out tonight if otherwise ready"
     }
    ],
    "assigned_worker": "primary development agent",

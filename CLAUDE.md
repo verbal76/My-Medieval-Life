@@ -311,6 +311,8 @@ corresponding documentation.** Every agent and worker, on every task:
     release: one commit, one version and build number, checksums and the source commit, one private draft release. A build
     with one or two platforms is not complete: repair the failing one. Sign Android with the established test key from the
     secrets only; never tick `allow_temporary_key` (no throwaway keys).
+    One exception: Build 20 (Checkpoint 1) only, signed with a throwaway key (owner, 2026-10-24,
+    `docs/directives/2026-10-24_build20_signing_exception.md`); every later build needs the stable key.
   - **Build 17 exception (owner, 2026-10-21, B17-DIR, `docs/directives/2026-10-21_build17_combined_integration_direction.md`):**
     do not publish a new APK, Windows or Linux distributable without the owner's explicit approval; when Build 17's gate
     passes, report its readiness and wait.
