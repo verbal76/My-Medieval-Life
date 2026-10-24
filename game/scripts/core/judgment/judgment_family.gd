@@ -206,7 +206,9 @@ static func prefers_work(w, n: NPC) -> bool:
 
 
 # ---------------------------------------------------------------- danger ("shield and fetch help") ------
-## Threats this tick: every bandit, and every wolf or bear that is fighting someone. Kept for the tick on the store (keyed by
+## Threats this tick: every bandit, every wolf or bear that is fighting someone, and (A7, GP-CRIME-PURSUIT) every player
+## with a killing in their case (Justice) who is out; a head treats a killer as a threat only if they know who it is
+## (danger: knows_killer: they saw it, heard the hue and cry, or believe a killing of that player). Kept for the tick on the store (keyed by
 ## the world clock, which moves every tick, so a save and load between ticks finds the same answer as a run that did not stop).
 static func _threats(w) -> Array:
 	var j: JudgmentStore = w.judgment
@@ -221,6 +223,12 @@ static func _threats(w) -> Array:
 		for a in w.fauna.animals:
 			if a.alive and a.anger != "" and bool(a.spec().get("people", false)):
 				out.append({"kind": "beast", "id": -1, "pos": a.pos, "depth": 0, "animal": a})
+	var refs: Array = w.justice.cases.keys() if w.justice != null else []
+	refs.sort()
+	for ref in refs:
+		var p: PlayerState = w.player_of_ref(str(ref))
+		if p != null and p.alive and not p.away and (w.justice.case_of(str(ref)).crimes as Array).any(func(cr): return str(cr.kind) == "killing" and str(cr.settled) != "lapsed"):
+			out.append({"kind": "killer", "id": Life.PLAYER_ID, "pos": p.pos, "depth": p.map_level, "ref": str(ref), "player": p})
 	j.threat_cache = {"m": mnt, "list": out}
 	return out
 
@@ -230,7 +238,7 @@ static func _threats(w) -> Array:
 static func danger(w, n: NPC) -> bool:
 	if n.household < 0 or n.role == "child" or n.job == "guard" or n.depth != 0:
 		return false
-	var th := _threats(w)
+	var th := _threats(w).filter(func(t): return str(t.kind) != "killer" or knows_killer(w, n, str(t.ref)))
 	if th.is_empty():
 		return false
 	var c: Dictionary = cfg(w).get("danger", {})
@@ -267,7 +275,7 @@ static func danger(w, n: NPC) -> bool:
 		var key := "family_danger_child" if tt == TIER_CHILD else ("family_danger_spouse" if tt == TIER_SPOUSE else "family_danger_parent")
 		f[key] = 100000
 	var guard := false
-	if worst.kind == "bandit":
+	if worst.kind == "bandit" or worst.kind == "killer":
 		var rng_ := float(GameData.b("report").range)
 		for g: NPC in w.npcs:
 			if g.alive and g.job == "guard" and g != n and not w.asleep(g) and g.pos.distance_to(n.pos) <= rng_:
@@ -296,6 +304,21 @@ static func danger(w, n: NPC) -> bool:
 	return true
 
 
+## A7: whether `n` knows player `ref` for a killer: they saw or heard of it as the case records it (Justice aware: the
+## witnesses and the hue and cry's hearers), or they believe a killing of that player (a judgment memory, told or seen).
+static func knows_killer(w, n: NPC, ref: String) -> bool:
+	var c: Dictionary = w.justice.case_of(ref)
+	if c.is_empty():
+		return false
+	if c.aware.has(str(n.id)) and str(c.crimes[int(c.aware[str(n.id)])].kind) == "killing":
+		return true
+	var p: PlayerState = w.player_of_ref(ref)
+	for it in EventTalk.events(w, n):
+		if str(it.type) == "killing" and (it.actors as Array).has(p):
+			return true
+	return false
+
+
 static func _merge(a: Dictionary, b: Dictionary) -> Dictionary:
 	var out := a.duplicate()
 	for k in b:
@@ -317,6 +340,10 @@ static func _shield(w, n: NPC, near: Array, t: Dictionary) -> void:
 	if str(t.kind) == "bandit" and n.report.is_empty():
 		w.report_crime(n, int(t.id), "saw")                  # PAR-05: the next decision goes to the nearest guard (NPCBrain._report)
 		w.judgment._stat("family_danger_reports")
+	elif str(t.kind) == "killer" and n.report.is_empty():
+		var c: Dictionary = w.justice.case_of(str(t.ref))
+		w.report_crime(n, Life.PLAYER_ID, "sighting", "attack", str(t.ref), [int(c.aware.get(str(n.id), c.crimes.size() - 1))])     # A7: and tells a guard where
+		w.judgment._stat("family_danger_reports")
 
 
 ## A bandit: the head takes it on (the ordinary fight). A beast: the head strikes it when within reach, else closes in.
@@ -324,6 +351,10 @@ static func _fight(w, n: NPC, t: Dictionary) -> void:
 	n.doing = "defending the family"
 	if str(t.kind) == "bandit":
 		n.target = int(t.id)
+		return
+	if str(t.kind) == "killer":
+		n.target = Life.PLAYER_ID                            # A7: the head stands against the killer, as against a bandit
+		n.target_ref = str(t.ref)
 		return
 	var a: Animal = t.animal
 	if n.pos.distance_to(a.pos) > 1.6:

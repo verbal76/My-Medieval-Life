@@ -10,7 +10,11 @@ extends SceneTree
 ##     back), never killing; a beaten player may yield; murder after resistance and multiple murder: lethal;
 ##   - a guard who knows of a murder does not settle a theft with a fine; who kills again after being taken in for a
 ##     murder is a multiple murderer (the bell rings);
-##   - the fine goes through the treasury (coins conserved); coordination is bounded (a look round a minute per guard).
+##   - the fine goes through the treasury (coins conserved); coordination is bounded (a look round a minute per guard);
+##   - A7: a head of household who knows the player for a killer meets them as a threat to the family (shield, fight or
+##     flee, the family-danger decision), one who does not carries on; the existing refusals apply to a killer (contracts and
+##     courtship by notoriety, CRT-12); credit, barter and sales follow the villager's own ledger as the owner's numbers
+##     weigh it (one murder seen does not, alone, make a witness refuse credit; shop sales never refuse: trade_sell forgo 0).
 ## Run headless:
 ##   godot --headless --path game --script res://tests/manhunt_test.gd
 
@@ -35,6 +39,8 @@ func _init() -> void:
 	test_repeat_murderer()
 	test_no_fine_for_a_murderer()
 	test_bounded()
+	test_family_fears_killer()
+	test_trade_refused()
 	print("manhunt_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -387,4 +393,83 @@ func test_repeat_murderer() -> void:
 	ad[1].pos = w.player.pos + Vector2(0.6, 0)
 	_kill(w, ad[1])
 	check(w.justice.tier_for(g, "player") == "multiple_murder" and int(w.stats.get("justice_bell", 0)) == 1, "killing again after answering for a murder: a multiple murderer, the bell rings")
+	w.dispose()
+
+
+## A head of household with a dependant outdoors (JudgmentFamily.head), for the danger tests.
+func _head_and_child(w: World) -> Array:
+	for c: NPC in w.npcs:
+		if not c.alive or c.role != "child" or c.household < 0:
+			continue
+		var hd: NPC = JudgmentFamily.head(w, c.household)
+		if hd != null and hd != c and hd.job != "guard" and JudgmentFamily.tier(w, hd, c) <= JudgmentFamily.TIER_PARENT:
+			return [hd, c]
+	return []
+
+
+func test_family_fears_killer() -> void:
+	var w := _world()
+	var hc := _head_and_child(w)
+	check(not hc.is_empty(), "a head of household with a child")
+	var hd: NPC = hc[0]
+	var kid: NPC = hc[1]
+	var v: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.household != hd.household and n.job != "guard")[0]
+	var at := _stage(w, [hd, kid, v])
+	for b: NPC in w.npcs:
+		if b.alive and b.role == "bandit":
+			b.pos = Vector2(w.bandit_camp) + Vector2(0.5, 0.5)     # the bandits at their camp, not by the family
+	# the killing: the head sees it from 6 tiles
+	hd.pos = _at(w, at, 6.0)
+	_kill(w, v)
+	check(JudgmentFamily.knows_killer(w, hd, "player"), "the head saw the killing: knows the player for a killer")
+	# later: the killer near the child, the head within reach
+	w.minutes += 120.0
+	kid.pos = _at(w, at, 2.0, 4)
+	kid.plan.clear()
+	hd.plan.clear()
+	hd.report = {}
+	var acted := JudgmentFamily.danger(w, hd)
+	print("     the head, the killer by the child: %s, doing '%s'" % [str(acted), hd.doing])
+	check(acted and hd.doing in ["shielding the family", "defending the family", "running from danger"], "meets the killer as a threat to the family (%s)" % hd.doing)
+	# a head who knows nothing of it carries on
+	var w2 := _world()
+	var hc2 := _head_and_child(w2)
+	var hd2: NPC = hc2[0]
+	var kid2: NPC = hc2[1]
+	var v2: NPC = w2.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.household != hd2.household and n.job != "guard")[0]
+	var at2 := _stage(w2, [hd2, kid2, v2])
+	for b: NPC in w2.npcs:
+		if b.alive and b.role == "bandit":
+			b.pos = Vector2(w2.bandit_camp) + Vector2(0.5, 0.5)
+	hd2.pos = Vector2(5.5, 5.5)
+	var wit: NPC = w2.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n != v2 and n.household != hd2.household and n.job != "guard")[0]
+	wit.pos = at2 + Vector2(-2, 0)
+	wit.anim = "idle"
+	_kill(w2, v2)
+	w2.minutes += 120.0
+	hd2.pos = _at(w2, at2, 6.0)
+	kid2.pos = _at(w2, at2, 2.0, 4)
+	hd2.plan.clear()
+	check(not JudgmentFamily.knows_killer(w2, hd2, "player") and not JudgmentFamily.danger(w2, hd2), "a head who does not know of the killing sees no threat in the player")
+	hd2.memory.append("heard the hue and cry: %s %s killed %s %s" % [w2.player.name, w2.player.family, v2.name, v2.family])
+	check(JudgmentFamily.knows_killer(w2, hd2, "player") and JudgmentFamily.danger(w2, hd2), "the same head, once they have heard who did it, does")
+	w.dispose()
+	w2.dispose()
+
+
+func test_trade_refused() -> void:
+	var w := _world()
+	var ad := _adults(w, 3)
+	var v: NPC = ad[0]
+	var wit: NPC = ad[1]
+	var seller: NPC = ad[2]
+	var at := _stage(w, [v, wit])
+	wit.pos = at + Vector2(-2, 0)
+	var c0: Dictionary = w.contracts.evaluate(seller, "player", "log", 2, 5, 3)
+	_kill(w, v)
+	check(w.judgment.bad(wit.id, Life.PLAYER_ID) > 0, "the witness's own ledger holds the killing against the player (the morality stays authoritative)")
+	var c1: Dictionary = w.contracts.evaluate(seller, "player", "log", 2, 5, 3)
+	print("     a contract asked before and after the killing: %s | %s" % [str(c0.get("say", "")), str(c1.get("say", ""))])
+	check(str(c1.get("say", "")).contains("not deal with you"), "after a killing villagers refuse the killer contracts (Relations notoriety, CRT-12)")
+	check(w.relations.ask_court(Life.PLAYER_ID, seller).contains("After what you've done"), "and courtship")
 	w.dispose()

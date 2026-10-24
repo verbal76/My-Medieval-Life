@@ -1770,6 +1770,7 @@ func _bandit(n: NPC, h: float) -> void:
 		var prey = _prey_for(n)
 		if prey != null:
 			n.target = prey.id if prey is NPC else Life.PLAYER_ID
+			n.target_ref = ""
 			n.doing = "stalking"
 			return
 	if not night and h >= WORK_START and h < WORK_END and _bandit_market(n):
@@ -2765,6 +2766,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 
 # ---------------------------------------------------------------- fighting -------------------
 func fight(n: NPC, dt: float) -> void:
+	if n.target_ref != "" and not Life.is_player_id(n.target):
+		n.target_ref = ""                         # A7, A8: the player it named is no longer the target
 	if w.recorder != null:
 		w.recorder.chase_tick(n)      # SIM-GATE-01: a chase opens when the target is new (reads only)
 	var tpos: Vector2
@@ -2922,6 +2925,8 @@ func _pursuit_sight(n: NPC) -> bool:
 func foe_player(n: NPC) -> PlayerState:
 	if not n.pursuit.is_empty():
 		return w.player_of_ref(str(n.pursuit.ref))
+	if n.target_ref != "":
+		return w.player_of_ref(n.target_ref)       # A7, A8: the player this fighter took on (a guest's victim fights the guest)
 	return w.player
 
 

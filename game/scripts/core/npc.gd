@@ -43,6 +43,7 @@ var anim := "idle"           # "sleep": lying in bed (World.asleep); indoors is 
 var facing := Vector2.DOWN
 var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
+var target_ref := ""         # A7, A8: with target -2, which player ("player", "player:<pid>"; "" the acting player, as before). Not saved, as target is not
 var pursuit := {}            # A2 (GP-CRIME-PURSUIT): a guard on a player's case: {ref, state: pursuing | responding | searching, at: [x, y] last-known, t, until, cells: [[x, y]], i, share}; {} none. Saved (optional key): the wanted hunt survives save and load (Justice)
 var chase_route := false     # S3: a guard chasing a player is following `path` round what stands between them (NPCBrain.fight; not saved, as `target` is not)
 var memory: Array = []       # notable events this NPC knows about
