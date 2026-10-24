@@ -32,6 +32,7 @@ func _init() -> void:
 	test_verbs_catalog()
 	test_refusals()
 	test_parity()
+	test_seven_by_the_host_route()
 	test_one_villager_two_players()
 	test_crime_one_innocent_other()
 	test_quests_apart()
@@ -427,6 +428,270 @@ func test_parity() -> void:
 			return {"skip": "no adit"},
 		func(w: World, p: PlayerState, c): return w.player_through(c.dir),
 		func(a, b, _m): return b.level == -1 and a.level == 0)
+
+
+# ------------------------------------------------------------------ the seven, by the host route --------
+## As parity(), but the guest's turn goes the way a guest's machine sends it: each argument named for the network (NetActions.enc)
+## and the verb applied by the host's entry, NetActions.apply_verb (decoding, its checks of whose things they are and of reach, then
+## the verb as the guest). The host's own turn calls the same verb directly. `steps(w, p, ctx)` gives [[path, args], ...] in order;
+## `owner(w, p, ctx)` says whose the result is ("" when it is the actor's).
+func route(name: String, prep: Callable, steps: Callable, effect: Callable, owner: Callable, seed_ := 1) -> void:
+	var sums := []
+	for k in 2:
+		var w := _world(seed_)
+		var g := _guest(w)
+		var actor: PlayerState = w.host_player() if k == 0 else g
+		var other: PlayerState = g if k == 0 else w.host_player()
+		var ctx: Dictionary = w.as_actor(actor, func(): return prep.call(w, actor))
+		if ctx.has("skip"):
+			check(false, "%s: the scenario could not be set up (%s)" % [name, str(ctx.skip)])
+			w.dispose()
+			return
+		other.pos = actor.pos + Vector2(60, 0)
+		ctx["other_ref"] = w.player_ref(other)
+		var other0 := JSON.stringify(other.to_dict(), "", true)
+		var c0 := _census(w)
+		var s0 := _summary(w, actor)
+		var refused := ""
+		for st in w.as_actor(actor, func(): return steps.call(w, actor, ctx)):
+			var path: String = st[0]
+			var args: Array = st[1]
+			if k == 0:
+				var c := NetActions.target(w, path)
+				if path == "Guardianship:player_adopt":
+					Guardianship.player_adopt(w, args[0])
+				else:
+					c.callv(args)
+			else:
+				var enc := []
+				for a in args:
+					enc.append(NetActions.enc(w, a))
+				var r := NetActions.apply_verb(w, actor, path, enc)
+				if not bool(r.ok):
+					refused += "%s: %s; " % [path, str(r.text)]
+		var s1 := _summary(w, actor)
+		var who := "host" if k == 0 else "guest"
+		check(refused == "", "%s (%s acting): every step was applied by the host route%s" % [name, who, "" if refused == "" else " (" + refused + ")"])
+		var other1 := JSON.stringify(other.to_dict(), "", true)
+		check(other1 == other0, "%s (%s acting): the other player is untouched" % [name, who])
+		check(_census(w).coins == c0.coins, "%s (%s acting): coins conserved" % [name, who])
+		check(effect.call(w, actor, ctx, s0, s1), "%s (%s acting): it happened (%s)" % [name, who, _diff(s0, s1)])
+		var ow: String = owner.call(w, actor, ctx)
+		check(ow == "", "%s (%s acting): and it is the actor's own%s" % [name, who, "" if ow == "" else " (" + ow + ")"])
+		sums.append(s1)
+		w.dispose()
+	check(JSON.stringify(sums[0], "", true) == JSON.stringify(sums[1], "", true), "%s: the guest gets exactly what the host gets%s" % [name,
+		"" if JSON.stringify(sums[0], "", true) == JSON.stringify(sums[1], "", true) else " " + _diff(sums[0], sums[1])])
+
+
+func _clear_trees(w: World) -> void:
+	for t in w.trees:
+		t.state = "cleared"
+		w.map.set_solid(Vector2i(int(t.x), int(t.y)), false)
+
+
+func test_seven_by_the_host_route() -> void:
+	# employment: the player hires an attendant for the pitch they rent
+	route("employment (an attendant)", func(w: World, p: PlayerState):
+			p.coins = 400
+			w.business.rent()
+			var s := w.business.mine()
+			if s.is_empty():
+				return {"skip": "no pitch rented"}
+			var cands := w.business.candidates()
+			if cands.is_empty():
+				return {"skip": "nobody to hire"}
+			p.pos = w.business.use_cell(s) + Vector2(0, 1)
+			(cands[0] as NPC).pos = p.pos + Vector2(1, 0)
+			return {"s": str(s.id), "n": (cands[0] as NPC).id},
+		func(w: World, p: PlayerState, c): return [["business.hire", [w.stalls[c.s], w.npc(c.n)]]],
+		func(w: World, p: PlayerState, c, a, b): return int(w.stalls[c.s].get("attendant", -1)) == c.n,
+		func(w: World, p: PlayerState, c): return "" if w.as_actor(p, func(): return w.business.is_mine(w.stalls[c.s]) and w.business.is_attendant(w.npc(c.n))) else "not the actor's stall or attendant")
+	# manor work: the player takes a job the reeve posted
+	route("manor work (a job taken)", func(w: World, p: PlayerState):
+			w.brain.reeve_day()
+			for j in w.manor_work.jobs:
+				if str(j.taker) == "" and not w.manor_work.is_player_order(j) and w.manor_work.can_fund(j, w.acting_ref()):
+					p.pos = Vector2(float(j.site[0]) + 0.5, float(j.site[1]) + 1.5) if j.has("site") else p.pos
+					return {"j": int(j.id)}
+			return {"skip": "no manor job posted"},
+		func(w: World, p: PlayerState, c):
+			for j in w.manor_work.jobs:
+				if int(j.id) == c.j:
+					return [["manor_work.take", [j, w.player_ref(p)]]]
+			return [],
+		func(w: World, p: PlayerState, c, a, b): return w.manor_work.jobs.any(func(j): return int(j.id) == c.j and str(j.taker) == w.player_ref(p)),
+		func(w: World, p: PlayerState, c): return "" if not w.manor_work.job_of(w.player_ref(p)).is_empty() and w.manor_work.job_of(str(c.other_ref)).is_empty() else "the job is not the actor's alone")
+	# a courier booking: goods sent on a regular route, paid from the actor's purse
+	route("courier booking (a regular route)", func(w: World, p: PlayerState):
+			var cs := w.couriers
+			var vb := cs.booth_of("village")
+			var rt := {}
+			for r in cs.routes:
+				if str(r.from) == str(vb.id) and str(cs.booth(str(r.to)).settlement) == "wulstead":
+					rt = r
+			if rt.is_empty():
+				return {"skip": "no route to Wulstead"}
+			w.note_settlement_trade(p, w.regions.by_id["wulstead"])
+			p.coins = 100
+			p.inv.add("copper_ring", 6)
+			p.pos = Vector2(float(vb.get("x", p.pos.x)) + 0.5, float(vb.get("y", p.pos.y)) + 1.5)
+			return {"route": rt.id},
+		func(w: World, p: PlayerState, c): return [["couriers.book_route", [{"sender": w.player_ref(p), "recipient": "region:wulstead/trader", "recipient_kind": "business",
+			"settlement": "wulstead", "items": {"copper_ring": 6}, "route": c.route, "collect": {"kind": "coins", "amount": 9}, "proceeds": "deposit"}]]],
+		func(w: World, p: PlayerState, c, a, b): return b.coins < a.coins and int(b.inv.get("copper_ring", 0)) == 0,
+		func(w: World, p: PlayerState, c): return "" if JSON.stringify(w.couriers.to_dict()).contains("\"%s\"" % w.player_ref(p)) and not JSON.stringify(w.couriers.to_dict()).contains("\"%s\"" % str(c.other_ref)) else "the booking does not name the actor alone")
+	# farms and pens: the player claims ground, ploughs a cell and fences a pen
+	route("farm and pen", func(w: World, p: PlayerState):
+			_clear_trees(w)
+			p.coins = 3000
+			var rect := w.construction.find_ground("house", Vector2i(30, 30), w.player_ref(p))
+			var pl: Dictionary = w.property.claim(rect, w.player_ref(p), false)
+			if pl.is_empty():
+				return {"skip": "no ground (%s)" % w.property.why}
+			p.pos = Vector2(float(pl.x) + 4.5, float(pl.y) + 8.5)
+			p.inv.add("plank", 20)
+			return {"pl": str(pl.id), "cell": Vector2i(int(pl.x) + 1, int(pl.y) + 1), "pen": w.farm.pen_rect_ahead("chicken", p.pos, Vector2.UP)},
+		func(w: World, p: PlayerState, c): return [["farm.till", [c.cell, p]], ["farm.build_pen", ["chicken", c.pen, p]]],
+		func(w: World, p: PlayerState, c, a, b): return w.farm.cells.has(c.cell) and w.fauna.pens.values().any(func(pen): return str(pen.get("owner", "")) == w.player_ref(p)),
+		func(w: World, p: PlayerState, c):
+			for pen in w.fauna.pens.values():
+				if pen.get("player", false) and str(pen.get("owner", "")) != w.player_ref(p):
+					return "a pen of another player"
+			return "")
+	# construction and fittings: a leased plot, the house built there, a storeroom added, a counter fitted in it
+	route("construction and a fitting", func(w: World, p: PlayerState):
+			_clear_trees(w)
+			p.coins = 3000
+			var pl: Dictionary = w.plots[0]
+			p.pos = Vector2(float(pl.door[0]) + 0.5, float(pl.door[1]) + 1.5)
+			return {"pl": str(pl.id)},
+		func(w: World, p: PlayerState, c):
+			var pl: Dictionary = {}
+			for x in w.plots:
+				if str(x.id) == c.pl:
+					pl = x
+			return [["property.lease", [pl, w.player_ref(p)]], ["start_site", [pl, "house", w.player_ref(p)]]],
+		func(w: World, p: PlayerState, c, a, b):
+			for x in w.plots:
+				if str(x.id) == c.pl:
+					return not x.site.is_empty() and str(x.site.get("owner", w.player_ref(p))) == w.player_ref(p) and w.holds(w.player_ref(p), x)
+			return false,
+		func(w: World, p: PlayerState, c):
+			for x in w.plots:
+				if str(x.id) == c.pl:
+					return "" if w.holds(w.player_ref(p), x) and not w.holds(str(c.other_ref), x) else "held by someone else"
+			return "no plot")
+	route("a new building marked out (construction.place)", func(w: World, p: PlayerState):
+			_clear_trees(w)
+			p.coins = 3000
+			var rect := w.construction.find_ground("house", Vector2i(30, 30), w.player_ref(p))
+			p.pos = Vector2(rect.position) + Vector2(0.5, -1.5)
+			return {"rect": rect, "plots": w.plots.size()},
+		func(w: World, p: PlayerState, c): return [["construction.place", ["house", c.rect, w.player_ref(p), false, {}]]],
+		func(w: World, p: PlayerState, c, a, b): return w.plots.size() == int(c.plots) + 1 and b.coins < a.coins,
+		func(w: World, p: PlayerState, c): return "" if w.holds(w.player_ref(p), w.plots[w.plots.size() - 1]) and not w.plots[w.plots.size() - 1].site.is_empty() else "the new site is not the actor's")
+	_fitting_route()
+	# guardianship: an orphan taken into the household of the player's partner
+	route("guardianship (adoption)", func(w: World, p: PlayerState):
+			var f := _family(w)
+			if f.is_empty():
+				return {"skip": "no family with a child"}
+			var kid: NPC = f[3]
+			for o: NPC in w.brain._members(int(f[0])).duplicate():
+				if o.alive and o.role != "child":
+					w.kill(o, "fever")
+			Guardianship.place(w, kid)
+			var mate: NPC = null
+			for o: NPC in w.npcs:
+				if o.alive and o.role == "adult" and o.household >= 3 and o.household != kid.household and w.buildings.has(str(w.households[o.household].home)) \
+						and w.construction.responsible_adult(o.household) != null and Life.has_room(w, o.household, kid) and not Life.has_partner(w, o):
+					mate = o
+					break
+			if mate == null:
+				return {"skip": "no partner with room"}
+			p.born = Life.born_for_age(30.0, w.minutes)
+			p.partner = mate.id
+			mate.partner = w.person_id(p)
+			p.pos = kid.pos + Vector2(1, 0)
+			return {"kid": kid.id, "mate": mate.id},
+		func(w: World, p: PlayerState, c): return [["Guardianship:player_adopt", [w.npc(c.kid)]]],
+		func(w: World, p: PlayerState, c, a, b): return w.npc(c.kid).household == w.npc(c.mate).household,
+		func(w: World, p: PlayerState, c): return "" if Guardianship.player_household(w, p) == w.npc(c.kid).household else "not the actor's household")
+	# a feast: the player stands the room a feast at the tavern in the evening
+	route("a feast", func(w: World, p: PlayerState):
+			var kp: NPC = w.tavern_keeper()
+			if kp == null:
+				return {"skip": "no tavern keeper"}
+			kp.inv.items.clear()
+			for id in ["pottage", "roast_meat", "bread", "cheese", "ale"]:
+				kp.inv.add(id, 40)
+			w.minutes = 1.0 * 1440 + 19.0 * 60.0
+			var k := 0
+			for n: NPC in w.npcs:
+				if n.alive and n.role == "adult" and n.job != "guard" and n.job != "tavernkeeper" and n.household >= 3 and k < 6:
+					n.pos = Vector2(w.feast.venue())
+					n.anim = "idle"
+					n.hunger = 20.0
+					k += 1
+			p.coins = 500
+			p.pos = Vector2(w.feast.venue()) + Vector2(1, 0)
+			return {"keeper": kp.id, "k0": kp.coins},
+		func(w: World, p: PlayerState, c): return [["feast.player_feast", ["seasonal", 4]]],
+		func(w: World, p: PlayerState, c, a, b): return b.coins < a.coins and w.npc(c.keeper).coins - int(c.k0) == a.coins - b.coins,
+		func(w: World, p: PlayerState, c): return "" if int(w.stats.get("feast_player", 0)) == 1 else "no feast of the player's recorded")
+
+
+## Fittings need a finished house and a storeroom (the business test's _own_house), so the house is built and the room added by
+## the same verbs as in play, and the counter fitted through the route.
+func _fitting_route() -> void:
+	route("a fitting in the player's room", func(w: World, p: PlayerState):
+			_clear_trees(w)
+			p.coins = 3000
+			var ref := w.player_ref(p)
+			var pl: Dictionary = w.plots[0]
+			w.property.lease(pl, ref)
+			w.start_site(pl, "house", ref)
+			for id in pl.site.need.duplicate():
+				p.inv.add(id, int(pl.site.need[id]))
+			w.deliver(pl, p.inv, ref)
+			var c: Construction = w.construction
+			var m: Dictionary = c.place("storage", c.find_module_slot("storage", pl, ref), ref, false, pl)
+			if m.is_empty():
+				return {"skip": "no storeroom (%s)" % c.why}
+			for id in m.site.need.duplicate():
+				p.inv.add(id, int(m.site.need[id]))
+			w.deliver(m, p.inv, ref)
+			var h: Dictionary = w.property.building_on(m)
+			var cells: Array = w.fitting.floor_set(h).keys()
+			cells.sort_custom(func(a: Vector2i, b: Vector2i): return a.y < b.y or (a.y == b.y and a.x < b.x))
+			var cost := Fitting.cost("counter")
+			for id in cost:
+				p.inv.add(id, int(cost[id]))
+			for cell: Vector2i in cells:
+				if w.fitting.why_not(h, "counter", cell) == "":
+					p.pos = Vector2(cell) + Vector2(0.5, 1.5)
+					return {"h": str(h.id), "cell": cell}
+			return {"skip": "no free floor cell"},
+		func(w: World, p: PlayerState, c): return [["fitting.place", [w.buildings[c.h], "counter", c.cell]]],
+		func(w: World, p: PlayerState, c, a, b): return w.fitting.list(w.buildings[c.h]).any(func(e): return str(e.kind) == "counter"),
+		func(w: World, p: PlayerState, c): return "" if w.holds(w.player_ref(p), w.buildings[c.h]) and not w.holds(str(c.other_ref), w.buildings[c.h]) else "the room is not the actor's alone")
+
+
+func _family(w: World) -> Array:
+	for hh in w.households:
+		var h := int(hh.id)
+		var ms: Array = w.brain._members(h)
+		var ad: Array = ms.filter(func(o: NPC) -> bool: return o.role == "adult")
+		var kids: Array = ms.filter(func(o: NPC) -> bool: return o.role == "child")
+		if h < 3 or ad.size() != 2 or ad[0].partner != ad[1].id or kids.is_empty():
+			continue
+		var mom: NPC = ad[0] if ad[0].sex == "female" else ad[1]
+		var kid: NPC = kids[0]
+		kid.mother = mom.id
+		kid.father = mom.partner
+		return [h, mom, w.npc(mom.partner), kid]
+	return []
 
 
 # ------------------------------------------------------------------ the G2 matrix --------------------

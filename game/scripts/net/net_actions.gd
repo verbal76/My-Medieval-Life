@@ -40,7 +40,7 @@ const VERBS := {
 	# C4: property, construction, farms, pens, chests, carts, businesses
 	"buy_plot": "C4", "start_site": "C4", "deliver": "C4", "cancel_site": "C4", "player_helper_budget": "C4",
 	"property.buy": "C4", "property.lease": "C4", "property.claim": "C4", "property.set_home": "C4", "property.sell": "C4",
-	"property.end_lease": "C4", "construction.build_stall": "C4", "farm.till": "C4", "farm.sow": "C4", "farm.build_pen": "C4",
+	"property.end_lease": "C4", "construction.build_stall": "C4", "construction.place": "C4", "farm.till": "C4", "farm.sow": "C4", "farm.build_pen": "C4",
 	"farm.collect": "C4", "farm.clear_plant": "C4", "farm_plots.claim": "C4", "farm_plots.build_fence": "C4", "fauna.feed": "C4",
 	"carts.place": "C4", "carts.park": "C4", "carts.hitch": "C4", "business.build_storefront": "C4", "business.open_front": "C4",
 	"business.open_shop": "C4", "business.rent": "C4", "business.set_display": "C4", "business.store_item": "C4",

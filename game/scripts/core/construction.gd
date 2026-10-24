@@ -145,6 +145,9 @@ func ground_terms(rect: Rect2i) -> Dictionary:
 ## The whole flow in one (owner rule): survey the ground, buy or lease it from the manor on the spot,
 ## and mark out the site. Returns the parcel, or {} with the reason in `why`.
 func place(kind: String, rect: Rect2i, ref: String, lease := false, anchor := {}) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("construction.place", place.bind(kind, rect, ref, lease, anchor), [kind, rect, ref, lease, anchor])
 	why = can_place(kind, rect, ref, anchor)
 	if why != "":
 		return {}

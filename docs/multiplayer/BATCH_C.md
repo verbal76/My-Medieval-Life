@@ -39,15 +39,19 @@ host, both machines' records of the guest agreeing and every synchronized sectio
 | C3 | trade | buy; sell; a shared transaction without duplication; the trade contact is the buyer's own | buy from a villager | PASS |
 | C3 | contracts, credit | propose a contract; a villager's ask put to the guest, answered (or refused) by the guest only | (one-process) | PASS |
 | C3 | quests | the guest's quest on its own list, the offer taken once, its lapse the guest's only | (one-process) | PASS |
-| C3 | employment, manor work, couriers | verbs in the catalog, each sent and applied as the guest | (catalog check) | catalog only |
+| C3 | employment | the guest hires an attendant for its pitch by the host route; the stall and attendant its own (`route`) | (host route in one process) | PASS |
+| C3 | manor work | the guest takes a job the reeve posted by the host route; the job its own, the wage reserved once | (host route) | PASS |
+| C3 | couriers | the guest books goods on a regular route by the host route; paid from its purse, the booking naming it alone | (host route) | PASS |
 | C4 | property, plots | buy a plot | (one-process) | PASS |
 | C4 | stalls, shops | rent a pitch; premises per player (`shop.by`), daily rent from each player's purse | (one-process) | PASS |
 | C4 | carts | set a cart down | set a cart down, the cart the guest's | PASS |
-| C4 | farms, pens, construction, fittings | verbs in the catalog | (catalog check) | catalog only |
+| C4 | farms and pens | the guest claims ground, ploughs a cell and fences a pen by the host route; the pen its own | (host route) | PASS |
+| C4 | construction and fittings | the guest leases a plot and starts a house there; marks out a new building (`construction.place`, added to the catalog: the test found it missing); fits a counter in its room; each held by the guest alone | (host route) | PASS |
 | C5 | conversation, gifts, ties | talk and give; one villager, two players: each tie its own; closeness its own; a newcomer from nothing (MP-D7) | talk and give: the tie the guest's on both machines | PASS |
 | C5 | courtship, marriage, families | two families: each player partners a villager; the guest's child; the guest's heir | (one-process) | PASS |
 | C5 | marriage and gifts between players (MP-D8) | offer, accept, decline, lapse, save; marks travel with goods | (one-process; the verbs are in the catalog) | PASS |
-| C5 | guardianship, feasts | by person id (code); verbs in the catalog | | code only |
+| C5 | guardianship | the guest takes an orphan into its partner's household by the host route | (host route) | PASS |
+| C5 | feasts | the guest stands the room a feast by the host route; the keeper paid once, the feast recorded as the player's | (host route) | PASS |
 | C6 | crime and justice | strike a villager; pick a pocket; one guilty, one innocent (record, case, Bad ledger, ties, reports, the guard told) | strike: the guest's record and case, the host innocent | PASS |
 | C6 | animals, bandits, family protection | a beast struck by the guest fights and bites the guest; a bandit stalks the player near it; A7 threats by player id | | PASS |
 | C6 | the hue and cry (owner decision) | voice to voice; a guard out of earshot of every voice hears nothing (`manhunt_test`) | | PASS |
@@ -57,8 +61,12 @@ host, both machines' records of the guest agreeing and every synchronized sectio
 | all | disconnect mid-transaction, reconnect | | `net_batch_b_test` (B, unchanged) | PASS |
 | all | save 22, migration | round trip; the Build 20 save; a save 21 with a guest; idempotent; SaveTransfer | | PASS |
 
-"catalog only" and "code only": the verb is sent and applied as the guest by the same mechanism the passing rows test, and the code
-reads the player by id or reference; no dedicated scenario yet.
+"Host route" (`multiplayer_c_test.gd::route`): the guest's turn goes the way its machine sends it, each argument named for the network
+(`NetActions.enc`) and applied by the host's entry (`NetActions.apply_verb`: decoding, whose things they are, reach, then the verb as the
+guest); the host's own turn calls the verb directly; the guest gets exactly what the host gets, the other player is untouched, coins
+are conserved, and the result is the actor's alone. 11 checks a scenario.
+
+**G2: complete** (2026-10-24, on the final commit below): every row passes.
 
 ## 3. Save format 22
 
@@ -112,14 +120,15 @@ On the checkpoint `3d988d0` (an exact copy of the commit, nothing edited during 
 - An earlier run (before `3d988d0`) had `world_test` fail with one failing check and 87,984 script errors: one root cause, `main.BODY`
   gone when walking moved into the core (the test reads it each frame); `const BODY := World.PLAYER_BODY` in `main.gd` restored it.
 
-## 7. Incomplete in Batch C (no dedicated passing test yet)
+## 7. Open owner decision and known limits
 
-- Employment (villagers hired by a player), manor work, couriers' bookings, farms and pens, construction sites and fittings,
-  guardianship (adoption by a guest), feasts: their verbs are in the network catalog and sent and applied as the guest by the same
-  mechanism the passing rows test, and their code reads the player by id or reference, but no scenario runs them for a guest.
+- **MP-Q-PLAYER-CHILDREN (open owner decision):** should a marriage between two players have children? Today births need a villager
+  parent (`Life.births`), so two players who are partners have none. Kept as it is; no mechanic added.
 - The other players' private records are not sent to a guest (public looks only), so a guest's copy cannot show another player's
-  stall stock or partner; the shared sections (stalls, contracts...) do show what is in the world.
-- Fauna (animals' places and pens) is not synchronized to guests.
+  pack or partner; the shared sections (stalls, contracts...) show what is in the world.
+- Fauna (animals' places and pens' animals) is not synchronized to guests.
+- The section sync sends whole sections by hash (about 25 ms of the host's time a sync on this machine; the villagers' records every
+  fifth timer tick): three and four players and phones are Batch E's measurements.
 
 ## 8. Left for Batch D and later
 
