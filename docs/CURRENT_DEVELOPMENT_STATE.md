@@ -109,6 +109,9 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    its notes and the 2026-10-21 audit in `docs/multiplayer/`.
    Architecture approved in principle; MP-D1..D8 decided 2026-10-24 (MP-ARCH, MP-INET); plan with gates G0-G10 in
    `docs/multiplayer/MULTIPLAYER_PREPARATION.md`. Report multiplayer's stage in every status report until owner acceptance.
+12. **Gameplay and Controls Polish (owner 2026-10-24, GP-POLISH and eight children):** P1 (anvil, Android pickaxe animation,
+   Android action layout) right after multiplayer Batch A1; P2 (overhead progress bar, joystick, continuous harvesting,
+   lockpicking minigame, input consistency) after Batch A; before Expansion 20 (`docs/gameplay_polish/SCHEDULE.md`).
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner

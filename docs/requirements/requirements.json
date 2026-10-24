@@ -21508,6 +21508,373 @@
    "effort": "L"
   },
   {
+   "id": "GP-ACTIONBAR",
+   "kind": "approved",
+   "title": "Android action controls redesigned into two readable right-side columns (proposed: Run, Gather, Fire, Skills, Menu / Use, Attack, Pack, Map), every action kept, comfortable non-overlapping targets, centre and upper-left HUD clear, insets respected, stable positions, Gather on/off state unmistakable; baseline the owner's screenshot docs/gameplay_polish/reference/android_mining_hud_2026-10-24.png",
+   "description": "Android action controls redesigned into two readable right-side columns (proposed: Run, Gather, Fire, Skills, Menu / Use, Attack, Pack, Map), every action kept, comfortable non-overlapping targets, centre and upper-left HUD clear, insets respected, stable positions, Gather on/off state unmistakable; baseline the owner's screenshot docs/gameplay_polish/reference/android_mining_hud_2026-10-24.png",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Redesign the action controls into two vertical columns along the right side. ... Do not merely move the existing tiny labels into a different arrangement.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "All nine actions reachable; none overlap; text readable on the Pixel 10 Pro XL and smaller screens",
+    "Gather state unambiguous",
+    "HUD, dialogue and prompts not obscured"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P1 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-ANVIL",
+   "kind": "approved",
+   "title": "Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch",
+   "description": "Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Center the anvil's touch interaction target on the actual visible anvil. ... Do not solve this by moving the anvil artwork to the woodpile.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Tapping the visible anvil activates the anvil",
+    "Tapping the woodpile does not",
+    "Navigation reaches a valid position beside the anvil",
+    "Other workstations audited for graphic and target mismatches",
+    "Android touch and PC mouse validated separately"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P1 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-HARVEST-CONT",
+   "kind": "approved",
+   "title": "Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer",
+   "description": "Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Preserve the Android behavior and make continuous harvesting available across all platforms. Add a gameplay setting with two options: Continuous harvesting ... Manual harvesting ...",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Continuous harvesting works on Android, Windows, Linux and Steam Deck",
+    "Manual harvesting remains available",
+    "Output, timing, wear, stamina, skill and depletion unchanged (measured)",
+    "Interruptions end work; no duplication or idle exploits"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-INPUT-CONSIST",
+   "kind": "approved",
+   "title": "Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method",
+   "description": "Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Do not duplicate core simulation logic for different input methods. Separate input handling and presentation from authoritative gameplay actions wherever practical.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Each GP item verified per platform; one action path per gameplay action"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-JOYSTICK",
+   "kind": "approved",
+   "title": "Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player",
+   "description": "Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Add an Android settings option allowing the player to select either: Tap-to-move ... Virtual joystick ...",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Tap-to-move unchanged and the default",
+    "Joystick moves correctly with existing collision and speed",
+    "No interference with menus, dialogue, inventory or minigames; safe areas respected",
+    "Setting persists"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-LOCKPICK",
+   "kind": "approved",
+   "title": "Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards",
+   "description": "Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Replace the current passive lockpicking progress meter with a playable minigame. ... The host remains authoritative over lock state, success, contents, ownership, and consequences.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Easy locks open with roughly six to eight successful taps",
+    "Every tumbler has its own input; one touch never triggers two",
+    "Gamepad mapping and prompts work; rapid alternating presses neither dropped nor doubled",
+    "Difficulty scales without shrinking touch targets",
+    "Cancelled or interrupted attempts never succeed; rewards cannot be duplicated, also with two players on one lock",
+    "Existing skill, tool, lock difficulty, crime, ownership and reputation rules unchanged"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-PICKAXE-ANIM",
+   "kind": "approved",
+   "title": "Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged",
+   "description": "Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "On Android, the character successfully mines ore but does not visibly swing the pickaxe. ... Fix the Android animation.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Pickaxe swing plays during continuous mining on Android without repeated tapping",
+    "Animation stops when mining stops",
+    "Other long-duration work animations verified"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P1 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-POLISH",
+   "kind": "approved",
+   "title": "Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20",
+   "description": "Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Schedule this work as a dedicated Gameplay and Controls Polish batch at the earliest safe integration point after the multiplayer player-action architecture is stable, and before beginning Expansion 20.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Every child item meets its acceptance criteria; automated and device verification reported separately"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "registered with eight children; P1 after A1, P2 after Batch A; before Expansion 20"
+    }
+   ],
+   "next_action": "P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md)"
+  },
+  {
+   "id": "GP-PROGRESS-BAR",
+   "kind": "approved",
+   "title": "One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players",
+   "description": "One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players",
+   "source": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md",
+   "owner_wording": "Replace the PC presentation with the Android-style overhead activity indicator. Use this design consistently across Android, Windows, and Linux.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Overhead bars correct on Android, Windows and Linux",
+    "Labels name the actual activity; continuous work resets each cycle; bars vanish when work ends",
+    "Each multiplayer player has their own bar from host progress"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_gameplay_controls_interaction_directive.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "parent",
+     "why": "child of GP-POLISH"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "placed in polish slot P2 (docs/gameplay_polish/SCHEDULE.md)"
+    }
+   ],
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+  },
+  {
    "id": "HEALTH-01",
    "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
    "kind": "approved",
