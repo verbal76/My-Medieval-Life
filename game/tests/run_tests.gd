@@ -3670,13 +3670,18 @@ func test_door_view() -> void:
 	dv.setup(w, view, null)
 	check(dv.doors.size() >= 20, "the wooden doorways are found (%d)" % dv.doors.size())
 	var left := []
+	var roofed := []                   # GP-BACK-DOORS: a back door under a roof keeps the roof over it (no door is drawn there)
 	for d in dv.doors:
 		for layer in view.above_layers:
-			if view.tile_value(layer, d.cell) >= 0:
+			var v := view.tile_value(layer, d.cell)
+			if v >= 0 and DoorView.DOOR_COPY.has(v % 100000):
 				left.append(d.cell)
+			elif v >= 0:
+				roofed.append(d.cell)
 		check(not w.map.is_solid(d.step) and not w.map.is_solid(d.cell) and w.place_of(Vector2(d.step) + Vector2(0.5, 0.5)) != d.building,
 			"%s's doorway %s opens onto %s, outside and walkable" % [d.building, d.cell, d.step])
 	check(left.is_empty(), "no door is drawn over the people in its doorway (%s)" % [left])
+	check(roofed.has(Vector2i(38, 38)) and roofed.has(Vector2i(81, 40)), "the tavern's and the smithy's back doors stay under their roofs (%s)" % [roofed])
 	var d: Dictionary = dv.doors[0]
 	var outer: Vector2 = Vector2(d.step) + Vector2(0.5, 0.5) + (d.out as Vector2) * 0.5
 	var at := func(depth: float) -> Vector2: return outer - (d.out as Vector2) * depth
