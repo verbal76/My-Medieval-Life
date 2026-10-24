@@ -4560,6 +4560,23 @@ func ref_name(ref: String, subject := false) -> String:
 ## `exclude` a building not to name it by itself, `avoid` a name not to name it by ("the Stone family's
 ## house north of the Stone family's house").
 func where(r: Rect2i, exclude := "", avoid := "") -> String:
+	var lm := _nearest_landmark(r, exclude, avoid)
+	var best := str(lm[0])
+	var bd: float = lm[1]
+	var bc: Vector2 = lm[2]
+	if best == "":
+		return "in the village"
+	if bd <= 1.0:
+		return "beside " + best
+	var d := (Vector2(r.position) + Vector2(r.size) / 2.0) - bc
+	var ns := "north" if d.y < 0 else "south"
+	var ew := "west" if d.x < 0 else "east"
+	var dir := ns if absf(d.y) > 2.0 * absf(d.x) else (ew if absf(d.x) > 2.0 * absf(d.y) else ns + "-" + ew)
+	return "%s of %s" % [dir, best]
+
+
+## The nearest landmark to `r` (see where): [name, gap in tiles, its centre]; ["", 1e9, (0, 0)] when there is none.
+func _nearest_landmark(r: Rect2i, exclude := "", avoid := "") -> Array:
 	var best := ""
 	var bd := 1e9
 	var bc := Vector2.ZERO
@@ -4572,15 +4589,12 @@ func where(r: Rect2i, exclude := "", avoid := "") -> String:
 			bd = gap
 			best = lm[1]
 			bc = Vector2(lr.position) + Vector2(lr.size) / 2.0
-	if best == "":
-		return "in the village"
-	if bd <= 1.0:
-		return "beside " + best
-	var d := (Vector2(r.position) + Vector2(r.size) / 2.0) - bc
-	var ns := "north" if d.y < 0 else "south"
-	var ew := "west" if d.x < 0 else "east"
-	var dir := ns if absf(d.y) > 2.0 * absf(d.x) else (ew if absf(d.x) > 2.0 * absf(d.y) else ns + "-" + ew)
-	return "%s of %s" % [dir, best]
+	return [best, bd, bc]
+
+
+## The name of the landmark where(r) would name ("the smithy").
+func nearest_landmark(r: Rect2i, exclude := "") -> String:
+	return str(_nearest_landmark(r, exclude)[0])
 
 
 ## [id, name, rect] of each landmark, in a fixed order.

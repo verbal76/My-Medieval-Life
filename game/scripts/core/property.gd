@@ -204,7 +204,13 @@ func describe(thing: Dictionary) -> String:
 	var name := _base_name(thing)
 	for r in heads():
 		if r != thing and r != head(thing) and _base_name(r) == name:
-			return "%s %s" % [name, w.where(_rect(thing), _own_id(thing), name)]
+			var b := building_on(thing) if is_parcel(thing) else thing
+			if not b.is_empty():
+				return "%s %s" % [name, w.where(_rect(thing), _own_id(thing), name)]
+			# GP-PROPERTY-NAME-DOUBLE: a parcel's own name already says where it lies, by its nearest landmark ("the farmland
+			# north-west of the Stone family's house"): the place that tells it from its twin is by another landmark, never
+			# the same one again ("... north-west of the Stone family's house north-west of the Stone family's house")
+			return "%s, %s" % [name, w.where(_rect(thing), _own_id(thing), w.nearest_landmark(_rect(thing), ""))]
 	return name
 
 

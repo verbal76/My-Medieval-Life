@@ -31,6 +31,7 @@ func _init() -> void:
 	test_doorways()
 	test_plots()
 	test_old_plots()
+	test_name_double()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -346,3 +347,34 @@ func test_old_plots() -> void:
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(saved))
 	var d3 := JSON.stringify(w3.to_dict())
 	check(d3 == saved, "and the old world's save is stable from then on")
+
+
+## GP-PROPERTY-NAME-DOUBLE: two parcels whose names are alike (the same kind of land by the same landmark) are told apart
+## by another landmark, never by the same location again ("beside the smithy beside the smithy").
+func test_name_double() -> void:
+	var w := new_world()
+	var base: Dictionary = {}
+	for r in w.property.heads():
+		if w.property.is_parcel(r) and w.property.building_on(r).is_empty():
+			base = r
+			break
+	check(not base.is_empty(), "GP-PROPERTY-NAME-DOUBLE: a bare parcel to copy")
+	var twins := []
+	for k in [1, 2]:
+		var t: Dictionary = base.duplicate(true)
+		t.id = str(base.id) + "_twin%d" % k
+		t.x = int(base.x) + k
+		t.farm = {}
+		w.plots.append(t)
+		twins.append(t)
+	var a := w.property.describe(twins[0])
+	var b := w.property.describe(twins[1])
+	print("     twins: %s | %s" % [a, b])
+	var lm := w.nearest_landmark(Rect2i(int(twins[0].x), int(twins[0].y), int(twins[0].w), int(twins[0].h)), "")
+	check(a.count(lm) == 1 and b.count(lm) == 1, "GP-PROPERTY-NAME-DOUBLE: the landmark (%s) is named once, not twice" % lm)
+	check(a.begins_with("the farmland ") and a.contains(", "), "GP-PROPERTY-NAME-DOUBLE: the second place comes after the parcel's own, by another landmark")
+	for r in w.property.heads():
+		var d := w.property.describe(r)
+		var near := w.nearest_landmark(Rect2i(int(r.x), int(r.y), int(r.get("w", 1)), int(r.get("h", 1))), "")
+		check(near == "" or d.count(near) <= 1, "GP-PROPERTY-NAME-DOUBLE: \"%s\" names %s at most once" % [d, near])
+	w.dispose()
