@@ -70,6 +70,34 @@ func _ore_residual(w: World, g0: int, s0: Dictionary) -> int:
 	return int(Census.goods(w).get(id, 0)) - (g0 + produced + net - consumed)
 
 
+## Every contract on record: id -> [paid, delivered] (ended ones stay keep_days, longer than these runs).
+func _books(w: World) -> Dictionary:
+	var out := {}
+	for k: Dictionary in w.contracts.list:
+		out[int(k.id)] = [int(k.paid), int(k.delivered)]
+	return out
+
+
+## What every contract but `skip` paid and delivered since `books0` (new contracts from zero).
+func _books_since(w: World, books0: Dictionary, skip: int) -> Dictionary:
+	var paid := 0
+	var units := 0
+	var which := []
+	for k: Dictionary in w.contracts.list:
+		if int(k.id) == skip:
+			continue
+		var was: Array = books0.get(int(k.id), [0, 0])
+		var dp := int(k.paid) - int(was[0])
+		var du := int(k.delivered) - int(was[1])
+		if dp != 0 or du != 0:
+			which.append("%s<-%s %s x%d" % [k.buyer, k.seller, k.item, du])
+		paid += dp
+		units += du
+	for id in books0:
+		check(w.contracts.list.any(func(k): return int(k.id) == int(id)), "contract %d is still on record (keep_days) to account for" % int(id))
+	return {"paid": paid, "units": units, "which": which}
+
+
 func _leak(w: World, coins0: int, s0: Dictionary) -> int:
 	var c_in := _d(w, s0, "caravan_coins_in") + _d(w, s0, "newcomer_coins_in") + _d(w, s0, "scenario_coins_in")
 	return w.total_coins() - coins0 - c_in + _d(w, s0, "caravan_coins_out")
@@ -97,6 +125,7 @@ func test_fifty_ore() -> void:
 	var ore0 := Census.goods(w).get("iron_ore", 0) as int
 	var coins0 := w.total_coins()
 	var stats0 := w.stats.duplicate()
+	var books0 := _books(w)
 	var miner0 := m.coins
 	var chest0 := w.player.chest.count("iron_ore")
 	var deadline := int(c.deadline_day)
@@ -128,7 +157,12 @@ func test_fifty_ore() -> void:
 	check(_d(w, stats0, "made_iron_ore") == 0 and _d(w, stats0, "imported_iron_ore") == 0, "none was made or imported; the ore came out of the seams")
 	check(w.player.chest.count("iron_ore") - chest0 == delivered, "the player's chest holds exactly the %d delivered (+%d)" % [delivered, w.player.chest.count("iron_ore") - chest0])
 	# (c) payment per unit, from the player's real coins to the miner
-	check(int(c.paid) == delivered * PRICE and _d(w, stats0, "contract_paid") == int(c.paid) and _d(w, stats0, "contract_units") == delivered, "paid %d = %d units x %d (the world's contract_paid and contract_units agree)" % [int(c.paid), delivered, PRICE])
+	# The world's contract_paid / contract_units count every contract in the village, and the live world goes on around
+	# this one (a prospector's kit ordered from the smith, MIN-C, may be delivered in the same days). So they must equal
+	# this contract's payments plus exactly what every other contract on record paid over the same days, unit for unit.
+	var others := _books_since(w, books0, int(c.id))
+	print("     other contracts over these days: %d units, %d coins %s" % [int(others.units), int(others.paid), str(others.which)])
+	check(int(c.paid) == delivered * PRICE and _d(w, stats0, "contract_paid") == int(c.paid) + int(others.paid) and _d(w, stats0, "contract_units") == delivered + int(others.units), "paid %d = %d units x %d (the world's contract_paid and contract_units agree, with %d units and %d coins of the village's other contracts)" % [int(c.paid), delivered, PRICE, int(others.units), int(others.paid)])
 	check(w.player.coins == 1000 - int(c.paid) and int(c.reserved) == 0, "the player is out exactly the %d paid (purse %d), nothing left set aside" % [int(c.paid), w.player.coins])
 	print("     miner's purse %d -> %d (it also spends on its own keep; the %d paid is in the conserved total)" % [miner0, m.coins, int(c.paid)])
 	# (d) conservation
