@@ -47,5 +47,17 @@ class AndroidNetworkPermissions(unittest.TestCase):
             self.assertIn(p, wf)
 
 
+    def test_workflow_signs_with_the_permanent_release_key_only(self):
+        # owner, 2026-10-24: the four ANDROID_RELEASE_* secrets, no throwaway fallback, the signature verified and recorded
+        wf = (ROOT / ".github" / "workflows" / "release.yml").read_text()
+        for name in ["ANDROID_RELEASE_KEYSTORE_BASE64", "ANDROID_RELEASE_KEYSTORE_PASSWORD",
+                     "ANDROID_RELEASE_KEY_ALIAS", "ANDROID_RELEASE_KEY_PASSWORD"]:
+            self.assertIn("secrets." + name, wf)
+        for gone in ["allow_temporary_key", "genkeypair", "ANDROID_TEST_"]:
+            self.assertNotIn(gone, wf)
+        self.assertIn("--key-pass env:KEY_PASSWORD", wf)
+        self.assertIn("apksigner\" verify", wf)
+        self.assertIn("certificate SHA-256 digest", wf)
+
 if __name__ == "__main__":
     unittest.main()

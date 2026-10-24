@@ -9,10 +9,11 @@
 # an approval in the "public-release" environment (the owner makes their own account its required reviewer in
 # Settings > Environments; see docs/release/AUDIT_REMEDIATION.md).
 #
-# Android test builds are signed with the owner's private test key from repository secrets, so each
-# build installs over the last and keeps the player's save (docs/release/ANDROID_SIGNING.md). Without
-# those secrets the build stops, unless "allow_temporary_key" is ticked: then a throwaway key is
-# made, as before, and the notes say the APK cannot update an earlier install.
+# Android builds are signed with the owner's permanent release identity from the four ANDROID_RELEASE_* repository
+# secrets (owner, 2026-10-24, from Build 21; docs/release/ANDROID_SIGNING.md). Godot exports the APK unsigned and
+# apksigner signs it with the keystore password and the key password as given (never assumed equal), then verifies it
+# and records the certificate's SHA-256 fingerprint. There is no fallback: a missing secret or a failed signing stops
+# the build, and no credential is ever printed.
 #
 # SIM-GATE-01 (owner, 2026-10-24, permanent; amended the same day): before anything is packaged, the "sim-gate" job runs the
 # village simulation suite with the flight recorder on (tools/sim_suite.py) on this same commit, writes the analysis
@@ -34,10 +35,6 @@ on:
         description: "Only for visibility=public: type exactly  publish publicly"
         type: string
         default: ""
-      allow_temporary_key:
-        description: "Sign the APK with a throwaway key if the test-signing secrets are missing (it will not update earlier installs)"
-        type: boolean
-        default: false
       build_number:
         description: "Build number to stamp (digits only; empty = this run's number). Use it when a failed run used up a number"
         type: string
@@ -168,40 +165,39 @@ jobs:
       - name: Put Godot on the path
         run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
 
-      - name: Point Godot at the Android SDK, the JDK and the test-signing key
+      - name: Point Godot at the Android SDK and the JDK, and check the release-signing secrets are present
         env:
-          KEYSTORE_B64: ${{ secrets.ANDROID_TEST_KEYSTORE_B64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_TEST_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_TEST_KEY_ALIAS }}
-          ALLOW_TEMPORARY: ${{ inputs.allow_temporary_key }}
+          KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
         run: |
-          keystore="$RUNNER_TEMP/android-test.keystore"
-          if [ -n "$KEYSTORE_B64" ] && [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ]; then
-            printf '%s' "$KEYSTORE_B64" | base64 -d > "$keystore"
-            chmod 600 "$keystore"
-            alias="$KEY_ALIAS"; pass="$KEYSTORE_PASSWORD"
-            echo "SIGNING=stable" >> "$GITHUB_ENV"
-          elif [ "$ALLOW_TEMPORARY" = "true" ]; then
-            echo "::warning::No test-signing secrets: signing with a throwaway key. This APK cannot update an earlier install."
-            alias="androiddebugkey"; pass="android"
-            keytool -genkeypair -keystore "$keystore" -storepass "$pass" -keypass "$pass" -alias "$alias" \
-              -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000 -noprompt
-            echo "SIGNING=temporary" >> "$GITHUB_ENV"
-          else
-            echo "::error::The test-signing secrets are missing (docs/release/ANDROID_SIGNING.md). Add them, or tick allow_temporary_key."
+          missing=""
+          for name in KEYSTORE_B64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Android release signing secrets missing (ANDROID_RELEASE_*:$missing; docs/release/ANDROID_SIGNING.md). No fallback key is made: the build stops."
             exit 1
           fi
-          mkdir -p "$HOME/.config/godot"
           umask 077
+          if ! printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/android-release.keystore" 2>/dev/null \
+             || [ ! -s "$RUNNER_TEMP/android-release.keystore" ]; then
+            echo "::error::ANDROID_RELEASE_KEYSTORE_BASE64 does not decode to a keystore file. The build stops."
+            exit 1
+          fi
+          # Godot exports the APK unsigned (package/signed=false below) and apksigner signs it in the export step. The
+          # keystore is also named here only because Godot's export check may ask for one; it signs nothing with it.
+          mkdir -p "$HOME/.config/godot"
           cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
           export/android/android_sdk_path = "${ANDROID_SDK_ROOT}"
           export/android/java_sdk_path = "${JAVA_HOME}"
-          export/android/debug_keystore = "${keystore}"
-          export/android/debug_keystore_user = "${alias}"
-          export/android/debug_keystore_pass = "${pass}"
+          export/android/debug_keystore = "${RUNNER_TEMP}/android-release.keystore"
+          export/android/debug_keystore_user = "${KEY_ALIAS}"
+          export/android/debug_keystore_pass = "${KEYSTORE_PASSWORD}"
           EOF
 
       - name: Fetch the music as WAV (Windows and Linux carry it; Android carries Ogg)
@@ -231,8 +227,8 @@ jobs:
           n="$BUILD_N"
           case "$n" in ''|*[!0-9]*) echo "::error::build_number must be digits only"; exit 1 ;; esac
           # Android needs a rising version code to update an install; Windows shows the file version
-          sed -i -E "s/^version\/code=.*/version\/code=${n}/; s/^version\/name=.*/version\/name=\"0.1.${n}-test\"/; s/^application\/file_version=.*/application\/file_version=\"0.1.${n}.0\"/; s/^application\/product_version=.*/application\/product_version=\"0.1.${n}.0\"/" game/export_presets.cfg
-          grep -E '^(version/code|version/name|application/file_version|application/product_version)=' game/export_presets.cfg
+          sed -i -E "s/^package\/signed=.*/package\/signed=false/; s/^version\/code=.*/version\/code=${n}/; s/^version\/name=.*/version\/name=\"0.1.${n}-test\"/; s/^application\/file_version=.*/application\/file_version=\"0.1.${n}.0\"/; s/^application\/product_version=.*/application\/product_version=\"0.1.${n}.0\"/" game/export_presets.cfg
+          grep -E '^(package/signed|version/code|version/name|application/file_version|application/product_version)=' game/export_presets.cfg
           # the build the game reports at run time (saves record the builds they passed through: SAVE-02)
           sed -i "/^\[application\]/a config/version=\"0.1.${n}-test\"" game/project.godot
           grep -E '^config/version=' game/project.godot
@@ -240,16 +236,41 @@ jobs:
       - name: Export Android, Windows and Linux
         env:
           BUILD_N: ${{ inputs.build_number || github.run_number }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
         run: |
           mkdir -p out/pc/windows out/pc/linux release
-          godot --headless --path game --export-debug "Android" ../out/mymedievallife-dev.apk
+          godot --headless --path game --export-debug "Android" ../out/mymedievallife-unsigned.apk
           # SIM-GATE-01 amendment: the APK carries no workbook or desktop export code (export_presets.cfg exclude_filter)
-          if unzip -l out/mymedievallife-dev.apk | grep -E "recorder_export|sim_workbook"; then
+          if unzip -l out/mymedievallife-unsigned.apk | grep -E "recorder_export|sim_workbook"; then
             echo "::error::the Android package contains the desktop recording export (scripts/recorder_export or data/sim_workbook.json)"
             exit 1
           fi
+          # sign with the permanent release identity (the two passwords are passed separately, never assumed equal)
+          tools_dir="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)"
+          # 16 KB page alignment for native libraries (Android 15 devices); older build-tools know only -p (4 KB)
+          "${tools_dir}zipalign" -f -P 16 4 out/mymedievallife-unsigned.apk out/mymedievallife-aligned.apk \
+            || "${tools_dir}zipalign" -f -p 4 out/mymedievallife-unsigned.apk out/mymedievallife-aligned.apk
+          if ! "${tools_dir}apksigner" sign --ks "$RUNNER_TEMP/android-release.keystore" \
+               --ks-pass env:KEYSTORE_PASSWORD --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD \
+               --out out/mymedievallife-dev.apk out/mymedievallife-aligned.apk > out/apksigner-sign.log 2>&1; then
+            # the log is kept on the runner only and never printed (no credential can reach the job log)
+            echo "::error::apksigner could not sign the APK with the ANDROID_RELEASE_* identity (wrong keystore password, alias or key password, or an unreadable keystore). No fallback key is used: the build stops."
+            exit 1
+          fi
+          "${tools_dir}apksigner" verify --verbose --print-certs out/mymedievallife-dev.apk > out/apk-signature.txt
+          grep -E "^Verifies|Verified using|Signer #1 certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt
+          fingerprint="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' out/apk-signature.txt | tr 'a-f' 'A-F' | sed 's/../&:/g; s/:$//')"
+          if [ -z "$fingerprint" ] || ! grep -q "^Verifies" out/apk-signature.txt; then
+            echo "::error::the signed APK did not verify (apksigner verify)"
+            exit 1
+          fi
+          echo "APK_CERT_SHA256=${fingerprint}" >> "$GITHUB_ENV"
+          echo "Release certificate SHA-256: ${fingerprint}"
           # Build 21 (LAN play): the APK's manifest must ask for the network permissions (granted at install, no prompt)
           aapt="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)aapt"
+          "$aapt" dump badging out/mymedievallife-dev.apk | grep -E "^package:" | tee out/apk-package.txt
           "$aapt" dump permissions out/mymedievallife-dev.apk | tee out/apk-permissions.txt
           for perm in INTERNET ACCESS_NETWORK_STATE ACCESS_WIFI_STATE CHANGE_WIFI_MULTICAST_STATE; do
             if ! grep -q "android.permission.${perm}'\?\$" out/apk-permissions.txt; then
@@ -266,15 +287,15 @@ jobs:
           (cd out/pc/windows && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-windows-x86_64.zip" MyMedievalLife.exe)
           (cd out/pc/linux && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-linux-x86_64.zip" MyMedievalLife.x86_64)
           ls -la release
+          { echo "Android signing certificate of MyMedievalLife-build${n}-android.apk (apksigner verify --print-certs)"
+            echo "SHA-256 fingerprint: ${fingerprint}"
+            cat out/apk-package.txt
+            grep -E "^Verifies|Verified using|Signer #1 certificate|Number of signers" out/apk-signature.txt; } > "release/MyMedievalLife-build${n}-android-signature.txt"
           sha256sum release/* > release/SHA256SUMS.txt
           { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution."; echo; fi
             echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
             echo
-            if [ "$SIGNING" = "stable" ]; then
-              echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (test-signed with the stable test key: installs over earlier stable-key builds and keeps the save; allow installs from unknown sources)"
-            else
-              echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (signed with a throwaway key: it cannot update an earlier install; uninstalling deletes the save)"
-            fi
+            echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\`, signed with the permanent release key (certificate SHA-256 \`${fingerprint}\`; details in \`MyMedievalLife-build${n}-android-signature.txt\`). Later builds signed with this key install over it and keep the save. Builds signed with earlier keys cannot be updated by it: in the earlier build export your save (Settings > Saves) to a folder outside the app, check the file is there, uninstall the earlier build, install this one (allow installs from unknown sources) and import the save."
             echo "- **Windows:** unzip and run \`MyMedievalLife.exe\`"
             echo "- **Linux:** unzip and run \`MyMedievalLife.x86_64\`"
             echo "- \`SHA256SUMS.txt\` lists each file's checksum."
@@ -304,7 +325,7 @@ jobs:
 
       - name: Remove the signing key from the runner
         if: always()
-        run: rm -f "$RUNNER_TEMP/android-test.keystore" "$HOME/.config/godot/editor_settings-4.7.tres"
+        run: rm -f "$RUNNER_TEMP/android-release.keystore" "$HOME/.config/godot/editor_settings-4.7.tres"
 
       - uses: softprops/action-gh-release@v2
         with:
