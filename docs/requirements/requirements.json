@@ -21612,6 +21612,41 @@
    ]
   },
   {
+   "id": "GP-BACK-DOORS",
+   "kind": "approved",
+   "title": "Back doors not drawn on roofs; a trail leads to every door",
+   "description": "Back doors not drawn on roofs; a trail leads to every door",
+   "source": "docs/gameplay_polish/reference/back_door_on_roof_2026-10-24.png",
+   "owner_wording": "Doors shouldn't show on the back roofs of houses like that. You should know that there's a door there because a trail should lead to every single door ... every single door, whether they can be seen or not.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "A door on a building's back (roof-covered) side is not drawn over the roof from outside; it still works and shows from inside; every door of every building, front, back and side, visible or not, has a trail that reaches it and joins the trail network; no other roof artefacts (e.g. trail lines showing through the roof); village regenerated with the tool; walkability and G0 unchanged or any change reported; verified by screenshots and a check that every door has a connected trail"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/back_door_on_roof_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch, with GP-TRAIL-EDGES and GP-INTERIOR-WALLS"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-BANDIT-CAMP-ART",
    "kind": "approved",
    "title": "Bandit camp: crates, barrels and campfire drawn with the wrong tiles",

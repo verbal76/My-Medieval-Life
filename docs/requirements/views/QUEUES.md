@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (40)
+## Workers and task branches (41)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -14,6 +14,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
 | GP-ACTIONBAR | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-ANVIL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-BACK-DOORS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-BANDIT-CAMP-ART | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-INTERIOR-WALLS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
