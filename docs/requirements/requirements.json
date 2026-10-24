@@ -28,9 +28,9 @@
   "19": {
    "name": "NPC Judgment",
    "implementation_authorized": true,
-   "integration_branch": "",
-   "released": "",
-   "authority": "PROS-01: prospective work on wip/expansion19-preparation only, isolated until Build 18 is complete"
+   "integration_branch": "wip/build19",
+   "released": "private playtest draft (code 2f72ec3, run 40044931601, 2026-10-24); complete as the development milestone (owner 2026-10-24)",
+   "authority": "X19-SCOPE; owner 2026-10-24: Build 19 complete and accepted as the development baseline; the owner's playtest is not a prerequisite"
   },
   "20": {
    "name": "Living Economy",
@@ -27372,7 +27372,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -27406,9 +27406,16 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "owner accepted the plan at a7d88aa as the development requirements (docs/directives/2026-10-24_multiplayer_implementation_readiness.md); readiness checks done: decisions and gates recorded, Build 19 unchanged, prototype preserved, roadmap order confirmed, Batch A base wip/build19 42c33e0 on a new wip/multiplayer-b19"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> multiplayer worker (subagent), lead integrates; branch: None -> wip/multiplayer-b19; next_action",
+     "why": "owner authorized implementation now (docs/directives/2026-10-24_owner_start_multiplayer_now.md): Build 19 accepted as the baseline, no playtest hold; continue through the batches without routine approval; private draft builds and CI authorized; no public release or paid service"
     }
    ],
-   "next_action": "on Build 19's owner acceptance and the Batch A authorization: create wip/multiplayer-b19 from the accepted Build 19 commit and start Batch A (docs/multiplayer/MULTIPLAYER_PREPARATION.md s.12)"
+   "next_action": "Batch A on wip/multiplayer-b19 from wip/build19 42c33e0",
+   "assigned_worker": "multiplayer worker (subagent), lead integrates",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "MSW-01",
@@ -53138,9 +53145,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "RELEASE CANDIDATE",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -53216,13 +53223,18 @@
      "date": "2026-10-24",
      "change": "release_status: RELEASED -> RELEASE CANDIDATE",
      "why": "release status kept at RELEASE CANDIDATE: RELEASED needs COMPLETE, which needs the owner's playtest; the private playtest draft is out (run 40044931601)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; test_commit: a7c84e9 -> 2f72ec3; completion",
+     "why": "owner 2026-10-24 (docs/directives/2026-10-24_owner_start_multiplayer_now.md): Build 19 complete and accepted as the development baseline; the owner's playtest is not a prerequisite. Evidence: release workflow suites (run_tests 3595, start_test 506) passed on the integrated commit 2f72ec3, plus 18 targeted suites, determinism and conservation on seeds 1-4"
     }
    ],
    "next_action": "owner playtest (phone, Windows); public publication only with the owner's approval",
    "assigned_worker": "lead",
    "branch": "wip/build19",
    "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass",
-   "test_commit": "a7c84e9",
+   "test_commit": "2f72ec3",
    "commits": [
     "b7f832e",
     "b2f7dc2",

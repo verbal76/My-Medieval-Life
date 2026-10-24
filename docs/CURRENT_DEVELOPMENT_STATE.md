@@ -49,7 +49,8 @@ Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
 | REC-19 | recorder worker (done); lead | `wip/recorder` | 2d5d49c | identity merged, D3 instrumentation done (824e32c); FIX-RECF1/SIM-F9 merged by the lead (2d5d49c); combined gate running; next: into the Build 19 integration branch |
 | FIX-RECF1 | lead (done) | `wip/fix-recf1` merged into `wip/recorder` 2d5d49c | b113f73 | integrated; bandit starvation differences unattributed until the recorder shows causes (SIM-F4 open) |
 | FAM-SAC-01 | family worker (done) | `wip/expansion19-preparation` | fff48a4 | built behind the switch, tests pass, gate identical; danger behaviour answered by the owner (shield and fetch help), added by the X19 completion worker |
-| X19-SCOPE | lead (done) | `wip/build19` | 2f72ec3 (packet 42c33e0) | Build 19 private draft released (run 40044931601), packages checked; next: the owner's playtest; public publication only with the owner's approval |
+| X19-SCOPE | lead (done) | `wip/build19` | 2f72ec3 (packet 42c33e0) | Build 19 private draft released (run 40044931601), packages checked; complete as the development milestone (owner 2026-10-24); public publication only with the owner's approval |
+| MP-MASTER | multiplayer worker (subagent); lead integrates | `wip/multiplayer-b19` (worktree `.claude/worktrees/mp`) | 42c33e0 (Build 19) | Batch A1: World.players, actor-parameterized verbs, per-player ids and refs, save 20 to 21; G0 at its end; then A2 networking carried forward from d18d7d1 and G1 |
 | REC-DIAG | lead | recorder archives (scratchpad), read-only runs of `wip/recorder` | 94b1304 | simulation-first analysis (docs/directives/2026-10-23_simulation_first_diagnostics.md); findings in docs/design/SIM_FINDINGS.md |
 
 Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
