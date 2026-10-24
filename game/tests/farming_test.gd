@@ -90,6 +90,7 @@ func test_land_and_clearing() -> void:
 	w.trees.append(tree)
 	check(w.farm.till_refusal(tcell, p).begins_with("Clear"), "a stump stands in the way of the plough")
 	p.inv.items.erase("axe")
+	p.inv.items.erase("rusty_axe")           # the start kit's rusty axe (GP-START-RUSTY-AXE) set aside too
 	check(w.farm.clear_tree_refusal(tree, p) != "" and w.farm.targets_at(tcell, p)[0].act == "clear_tree", "digging out a stump needs an axe; the action is offered")
 	p.inv.add("axe")
 	var s0 := p.stamina

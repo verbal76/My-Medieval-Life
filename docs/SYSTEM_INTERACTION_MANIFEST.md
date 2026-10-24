@@ -103,8 +103,8 @@ Rules:
 - **Trigger:** The player interacts with a ripe field.
 - **Source:** `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::player_harvest`, `game/scripts/core/world.gd::take_crop`
 - **Affects:** Fields, Inventory, Ledger, Crime
-- **Expected:** A handful (`harvest_handful`) leaves the field's crop and goes to the pack, counted as made wheat. When the crop is gone the field is tilled. A field is the manor's (INT-051) and its crop its farmers' (those whose workplace it is, `World.field_workers`): taking it is theft from the first of them (INT-008), except the wheat a farmer hired the player to cut there (INT-046); a farmer who has left the field is never named.
-- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
+- **Expected:** A handful (`harvest_handful`) leaves the field's crop and goes to the pack, counted as made wheat. When the crop is gone the field is tilled. A field is the manor's (INT-051) and its crop its farmers' (those whose workplace it is, `World.field_workers`): taking it is theft from the first of them (INT-008), except the wheat a farmer hired the player to cut there (INT-046); a farmer who has left the field is never named. GP-WHEAT-PICKED (owner 2026-10-24): the field shows stubble on the share of its cells matching the share of its crop taken since it ripened (`crop_full`), nearest where the player took the first handful (`cut_from`, saved with the field) first; a farmer's cutting shows the same by its work done, from where the farmer stands (`CropView.cut_cells`, looks only). A wheat cell of the player's farm or a plot remembers it was cut (`cut`, saved) and shows stubble until sown.
+- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`, `game/tests/polish_p2_test.gd`
 
 ### INT-008 · Theft is witnessed
 - **Trigger:** The player takes something that belongs to someone: wheat from a farmed field, anything from a container or an unattended stall (INT-043), or a pocket picked or tried (INT-044).

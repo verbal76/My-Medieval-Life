@@ -282,7 +282,7 @@ func harvest(c: Vector2i, p: PlayerState) -> Dictionary:
 		p.inv.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))
 	w.player_xp("farming", Skills.action_xp("harvest"))   # DVW-B8
-	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0}
+	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0, "cut": str(cells[c].crop)}    # GP-WHEAT-PICKED: what was cut (CropView)
 	_show(c)
 	return out
 
@@ -1003,7 +1003,7 @@ func to_dict() -> Dictionary:
 	keys.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	for c: Vector2i in keys:
 		var cell: Dictionary = cells[c]
-		cs.append([c.x, c.y, cell.crop, cell.state, cell.progress])
+		cs.append([c.x, c.y, cell.crop, cell.state, cell.progress, str(cell.get("cut", ""))])
 	return {"cells": cs, "next_pen": next_pen}
 
 
@@ -1012,6 +1012,8 @@ func load_dict(d: Dictionary) -> void:
 	cells.clear()
 	for e in d.get("cells", []):
 		cells[Vector2i(int(e[0]), int(e[1]))] = {"crop": str(e[2]), "state": str(e[3]), "progress": float(e[4])}
+		if e.size() > 5 and str(e[5]) != "":
+			cells[Vector2i(int(e[0]), int(e[1]))].cut = str(e[5])      # GP-WHEAT-PICKED (a save from before it has none)
 	next_pen = int(d.get("next_pen", 0))
 	for pen in player_pens():
 		_fence_solid(pen)

@@ -357,6 +357,7 @@ func sow(c: Vector2i, crop: String, stores: Array) -> String:
 		if inv.remove(seed, 1):
 			w.stat("used_" + seed)
 			cells[c].crop = crop
+			cells[c].erase("cut")
 			cells[c].state = "growing"
 			cells[c].progress = 0.0
 			w.stat("farm_sown_" + crop)
@@ -389,7 +390,7 @@ func harvest(c: Vector2i, into: Inventory) -> Dictionary:
 		into.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))
 		w.stat("farm_plot_harvest_" + id, float(out[id]))
-	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0, "plot": str(cells[c].plot)}
+	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0, "plot": str(cells[c].plot), "cut": str(cells[c].crop)}    # GP-WHEAT-PICKED
 	_show(c)
 	return out
 
@@ -1061,7 +1062,7 @@ func to_dict() -> Dictionary:
 	keys.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	for c: Vector2i in keys:
 		var cell: Dictionary = cells[c]
-		cs.append([c.x, c.y, cell.crop, cell.state, cell.progress, cell.plot])
+		cs.append([c.x, c.y, cell.crop, cell.state, cell.progress, cell.plot, str(cell.get("cut", ""))])
 	return {"cells": cs}
 
 
@@ -1071,6 +1072,8 @@ func load_dict(d: Dictionary) -> void:
 	busy.clear()
 	for e in d.get("cells", []):
 		cells[Vector2i(int(e[0]), int(e[1]))] = {"crop": str(e[2]), "state": str(e[3]), "progress": float(e[4]), "plot": str(e[5])}
+		if e.size() > 6 and str(e[6]) != "":
+			cells[Vector2i(int(e[0]), int(e[1]))].cut = str(e[6])      # GP-WHEAT-PICKED (a save from before it has none)
 	for p in plots():
 		p.farm.gate = [int(p.farm.gate[0]), int(p.farm.gate[1])]
 		if bool(p.farm.get("fence", false)):

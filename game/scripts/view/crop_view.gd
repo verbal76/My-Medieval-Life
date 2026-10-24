@@ -9,8 +9,11 @@ extends Node2D
 ##  - growing: the crop's plant a quarter, half, three quarters or nearly grown, by its growth so far;
 ##  - ripe: the grown plant (for wheat, golden ears of grain);
 ##  - tilled: bare soil, except a manor wheat field cut since it was last ripe and not sown again (it was ripe once,
-##    `ripe_at`, and is tilled now), which shows stubble. A cut cell of a player's or a household's plot is not told
-##    apart from freshly tilled soil in the game's data, so it shows bare soil.
+##    `ripe_at`, and is tilled now), which shows stubble, and a cell of a player's or a household's plot whose wheat was
+##    cut (its `cut`, until it is sown again; other crops leave bare soil).
+##  - GP-WHEAT-PICKED (owner 2026-10-24): a ripe manor field being cut shows stubble on the share of its cells that matches
+##    the share of its crop taken (World.field_full_crop), or the share of a farmer's cutting done, the cells nearest the
+##    harvester first (the player's first handful, World.player_harvest `cut_from`; a cutting farmer where they stand).
 ## The art is game/assets/tiles/crops.png (tools/import_game_assets.py _import_crops): a row per crop, columns 0-3
 ## growing, 4 ripe, 5 stubble (wheat).
 
@@ -57,9 +60,11 @@ func plants() -> Array:
 		var col := field_column(f)
 		if col < 0:
 			continue
+		var cut := cut_cells(f) if col == RIPE else {}
 		for j in int(f.h):
 			for i in int(f.w):
-				out.append([int(f.x) + i, int(f.y) + j, ROWS.wheat, col])
+				var c := Vector2i(int(f.x) + i, int(f.y) + j)
+				out.append([c.x, c.y, ROWS.wheat, STUBBLE if cut.has(c) else col])
 	for cells: Dictionary in [world.farm.cells, world.farm_plots.cells]:
 		var keys := cells.keys()
 		keys.sort()
@@ -68,6 +73,8 @@ func plants() -> Array:
 			var col := stage_column(str(cell.state), float(cell.get("progress", 0.0)))
 			if col >= 0 and ROWS.has(str(cell.crop)):
 				out.append([c.x, c.y, int(ROWS[str(cell.crop)]), col])
+			elif str(cell.state) == "tilled" and str(cell.get("cut", "")) == "wheat":
+				out.append([c.x, c.y, ROWS.wheat, STUBBLE])          # GP-WHEAT-PICKED: cut wheat leaves stubble
 	return out
 
 
@@ -81,6 +88,41 @@ func field_column(f: Dictionary) -> int:
 		"growing":
 			return stage_column("growing", field_growth(f))
 	return -1
+
+
+## GP-WHEAT-PICKED: the cells of a ripe manor field already cut, as a set: as many as the share cut (the crop taken since
+## it ripened, or the furthest a farmer cutting it has got through the work), nearest the harvester first (ties by row,
+## then column, so it is the same every time). Looks only.
+func cut_cells(f: Dictionary) -> Dictionary:
+	var n := int(f.w) * int(f.h)
+	var full := world.field_full_crop(f)
+	var share := 0.0 if full <= 0 else 1.0 - float(f.get("crop", full)) / float(full)
+	var from := Vector2(float(f.x), float(f.y) + float(f.h))        # no harvester known: from the south-west corner
+	if f.has("cut_from"):
+		from = Vector2(float(f.cut_from[0]), float(f.cut_from[1]))
+	for o: NPC in world.npcs:
+		if o.plan.is_empty() or not o.alive:
+			continue
+		var st: Dictionary = o.plan[0]
+		if str(st.get("k", "")) != "work" or str(st.get("act", "")) != "harvest" or str((st.get("args", {}) as Dictionary).get("field", "")) != str(f.id):
+			continue
+		var done := clampf(1.0 - o.work_left / maxf(float(st.get("min", 1.0)), 1.0), 0.0, 1.0)
+		if done > share:
+			share = done
+			from = o.pos
+	var k := clampi(floori(share * n + 1e-6), 0, n)
+	if k == 0:
+		return {}
+	var cells := []
+	for j in int(f.h):
+		for i in int(f.w):
+			var c := Vector2i(int(f.x) + i, int(f.y) + j)
+			cells.append([(Vector2(c) + Vector2(0.5, 0.5)).distance_squared_to(from), j, i, c])
+	cells.sort()
+	var out := {}
+	for e in cells.slice(0, k):
+		out[e[3]] = true
+	return out
 
 
 ## How far a manor field has grown, 0..1: its seasonal growth (FSE-13) or, on the clock, the share of its growing

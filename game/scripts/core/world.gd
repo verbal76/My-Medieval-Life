@@ -2507,7 +2507,15 @@ func grow_field(f: Dictionary) -> void:
 		# the old field model's fixed yield; under the shared model (FSE-12) the crop of the cells sown (Farming.sow_field)
 		f.crop = Farming.field_crop(int(f.get("sown", 0))) if Farming.shared_manor() else int(GameData.b("field_yield"))
 		f.ripe_at = f.ready
+		f.crop_full = int(f.crop)          # GP-WHEAT-PICKED: the crop it ripened with, to show how much has been cut
 		_field_tiles(f)
+
+
+## GP-WHEAT-PICKED: the crop a ripe field had when it ripened (crop_full; a save from before it, the rule's yield), never
+## less than what is on it now. CropView shows the share cut since as stubble.
+func field_full_crop(f: Dictionary) -> int:
+	var full := int(f.get("crop_full", Farming.field_crop(int(f.get("sown", 0))) if Farming.shared_manor() else int(GameData.b("field_yield"))))
+	return maxi(full, int(f.get("crop", 0)))
 
 
 func field_grow_days(_f: Dictionary) -> float:
@@ -2522,6 +2530,7 @@ func field_cuttable(f: Dictionary) -> bool:
 
 func set_field(f: Dictionary, state: String) -> void:
 	f.state = state
+	f.erase("cut_from")                    # GP-WHEAT-PICKED: a new state, a new start (only a ripe field is cut part way)
 	if state == "growing":
 		f.ready = minutes + field_grow_days(f) * DAY
 		if Farming.seasonal_fields():     # FSE-13: ripe when its seasonal growth is done (hour())
@@ -3290,6 +3299,8 @@ func take_crop(f: Dictionary, most: int, actor: PlayerState = null) -> int:
 func player_harvest(f: Dictionary, actor: PlayerState = null) -> int:
 	if actor != null and actor != player:
 		return as_actor(actor, player_harvest.bind(f))
+	if f.state == "ripe" and not f.has("cut_from"):
+		f.cut_from = [player.pos.x, player.pos.y]       # GP-WHEAT-PICKED: the field is cut from where the first handful was taken
 	var n := take_crop(f, int(GameData.b("harvest_handful")))
 	if n <= 0:
 		return 0
