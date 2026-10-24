@@ -21836,6 +21836,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner 2026-10-24: Checkpoint 1 ships as Build 20, three platforms, private draft, disposable Android key by one-time exception (docs/directives/2026-10-24_build20_signing_exception.md); out tonight if otherwise ready"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner overnight directive (docs/directives/2026-10-24_overnight_build20_delivery.md): finish and release Build 20 tonight under the existing verification, disposable key, disclosed as predating SIM-GATE-01"
     }
    ],
    "assigned_worker": "primary development agent",
