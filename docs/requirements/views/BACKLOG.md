@@ -138,7 +138,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (46)
+## Multiplayer track (45)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -169,7 +169,6 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | approved | OWNER APPROVED | NOT STARTED |
-| GP-PROGRESS-BAR | One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | GP-PROPERTY-NAME-DOUBLE | Village log doubles a property's location ('beside the smithy beside the smithy') | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-REPAIR-SOCIAL | Master gameplay repair: dialogue, social awareness, crime response and guard AI | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | OWNER APPROVED | IN DEVELOPMENT |

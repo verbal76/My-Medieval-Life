@@ -22744,10 +22744,10 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTATION BLOCKED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "OWNER PLAYTESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-24",
@@ -22768,9 +22768,23 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTATION BLOCKED",
      "why": "blocked: the overhead labelled bar already draws on every platform and no small white centre-screen bar exists in the code; needs the owner's PC screenshot to identify what was seen"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTATION BLOCKED -> INTEGRATED; verification_status: NOT TESTED -> OWNER PLAYTESTED; completion: OPEN -> COMPLETE; tests: None -> owner confirmation; the bar's code present on wip/build19 and wip/multiplayer-b19; test_commit: None -> 42c33e0; playtest_done: None -> owner confirmed done, 2026-10-24; commits + 42c33e0; integrated_in + Build 19 wip/build19 (42c33e0) and later",
+     "why": "owner, 2026-10-24: already taken care of in a previous build and not annotated; the labelled overhead bar (game_ui.gd ACTION_BAR_RISE) is in Build 19 (42c33e0) and later on every platform; removed from the Build 21 run"
     }
    ],
-   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
+   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
+   "tests": "owner confirmation; the bar's code present on wip/build19 and wip/multiplayer-b19",
+   "test_commit": "42c33e0",
+   "playtest_done": "owner confirmed done, 2026-10-24",
+   "commits": [
+    "42c33e0"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 (42c33e0) and later"
+   ]
   },
   {
    "id": "GP-PROPERTY-NAME-DOUBLE",
