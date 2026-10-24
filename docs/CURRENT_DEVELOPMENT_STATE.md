@@ -12,8 +12,9 @@ context, where measurable) and before a session ends. The previous long-form sta
 
 ## Build 21 scope freeze (owner, 2026-10-24, `docs/directives/2026-10-24_build21_scope_freeze.md`)
 
-Build 21 frozen at `wip/multiplayer-b19` `089366e` (agent work to `c33d7c2`, signing merge `5cef194`); private release run
-40116740018 dispatched (build_number 21). Deferred to the Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`, not started):
+Build 21 frozen at `wip/multiplayer-b19` `089366e` (agent work to `c33d7c2`, signing merge `5cef194`); private release: first run 40116740018 failed only at reading the fingerprint (fixed in `6567c04`); run 40117759608
+on `6567c04` passed (sim-gate and build), draft release 422895130 "My Medieval Life — Build 21" (APK, Windows, Linux, signature file,
+SHA256SUMS; certificate SHA-256 31:70:4B:...:80:E6). Project on hold awaiting the owner's playtest. Deferred to the Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`, not started):
 GP-BUSINESS-DESK (unfinished work on `wip/build22-business-desk` `e25eec9`), GP-TABLE-ITEMS, GP-FARMER-TENDING, GP-LOCKPICK,
 MP-PLAYER-FAMILY. The Build 21 agent is stopped. After the release: report to the owner and stop.
 

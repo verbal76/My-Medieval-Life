@@ -9,20 +9,25 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 6 |
-| Integrated | 0 of 6 (0%) |
+| Integrated | 1 of 6 (17%) |
 | Automated tests passed | 2 of 6 (33%) |
-| Integration verified | 0 of 6 (0%) |
+| Integration verified | 1 of 6 (17%) |
 | Gameplay verified | 0 of 6 (0%) |
 | Owner playtested | 0 of 6 (0%) |
 | Complete | 0 of 6 (0%) |
 | Open (release blockers) | 6 |
 | Open owner decisions (blocking) | 9 (7) |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (6)
+## Integrated, awaiting gameplay or owner verification (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/android-signing | TARGETED TESTS PASSED |  | BUILD-3PLATFORM, design: UNKNOWN | UNKNOWN |
+| ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+
+## Blocked (open owner decision, unfinished dependency or unsettled design) (5)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
 | P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | owner review | design: UNKNOWN | UNKNOWN |
 | P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) / wip/expansion21-preparation | TARGETED TESTS PASSED | treasury attribution through Expansion 20's event record; election record design against P21-MAYOR once P21-STRUCTURE and P21-RESIDENCY are answered | design: UNKNOWN | UNKNOWN |
 | P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | owner answers the packet (structure and noble authority first) | design: UNKNOWN | UNKNOWN |

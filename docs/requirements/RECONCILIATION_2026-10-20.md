@@ -94,7 +94,7 @@ None.
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 16 |
-| ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 21 |
+| ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 21 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | APPROVED | owner decision |

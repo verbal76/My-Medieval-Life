@@ -179,8 +179,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -193,14 +193,22 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> lead; branch: None -> wip/android-signing; tests: None -> tests/test_android_export.py (4 tests OK); YAML parses; test_commit: None -> 8f38920; commits + 8f38920",
      "why": "release.yml rewritten on wip/android-signing (8f38920): four ANDROID_RELEASE_* secrets, unsigned export then zipalign and apksigner with separate passwords, verify and record the certificate SHA-256, no fallback; local apksigner check with a scratch PKCS12 key (wrong key password stops, no password in the log); not yet run on GitHub"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; test_commit: 8f38920 -> 6567c04; integrated_in + Build 21 wip/multiplayer-b19 6567c04",
+     "why": "Build 21 (run 40117759608, 6567c04): APK signed with the release key, apksigner verify passed (v2, v3), one signer CN=Hot Attic Games, certificate SHA-256 31:70:4B:80:25:A4:58:5C:F4:11:9E:26:8E:E6:C8:B3:0D:5A:39:D1:C6:2C:DC:00:EE:CF:0B:7E:76:CB:80:E6, package com.hotatticgames.mymedievallife.dev, versionCode 21; checked again locally by the lead; owner to compare with the signing manager"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/android-signing",
    "tests": "the Android export unit tests on the signing branch (4 tests OK); YAML parses",
-   "test_commit": "8f38920",
+   "test_commit": "6567c04",
    "commits": [
     "8f38920"
+   ],
+   "integrated_in": [
+    "Build 21 wip/multiplayer-b19 6567c04"
    ]
   },
   {
@@ -8573,6 +8581,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner 2026-10-24 (docs/directives/2026-10-24_permanent_android_signing_integration.md): the stable signing identity is the permanent release key in the four ANDROID_RELEASE_* secrets, from Build 21; allow_temporary_key is removed from the workflow (ANDROID-RELEASE-SIGNING)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "Build 21: all three platforms from 6567c04 with build number 21 in one private draft (422895130), checksums and APK signature verified by the lead; sim-gate passed in the same run"
     }
    ]
   },
