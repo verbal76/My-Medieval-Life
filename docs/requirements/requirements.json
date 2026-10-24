@@ -22473,8 +22473,14 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_master_gameplay_repair_dialogue_crime_guards.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "Phase 1 root-cause audit and Phase 2 plan done, read-only at 9304446 (docs/design/REPAIR_AUDIT_DIALOGUE_CRIME_GUARDS.md): witness records exist but dialogue reads the global log; guards drop the chase at the first wall step (SIM-F4 fix) and at 25 tiles; no coordination or wanted status; steps S1-S3 small, A1-A9 architecture"
     }
-   ]
+   ],
+   "next_action": "Owner answers on the alarm, arrest/yield and heir questions; then S1-S3 after Build 20, then A1-A9"
   },
   {
    "id": "GP-SHARPEN",
