@@ -7,16 +7,21 @@ extends RefCounted
 ## window is narrower than WIDE_MIN (a phone with a large interface, a portrait phone) the navigation
 ## panel is hidden and the article panel is the one column: its Contents page lists the categories,
 ## and the search box sits atop the article and scrolls with it, so a small screen keeps room to read.
-## Lists of pages are grids of buttons of one size whose words wrap rather than clip.
+## GP-WIKI-LAYOUT (owner, 2026-10-24: "this is what a wiki page looks like"): a classic wiki page in dark ink on parchment: a
+## narrow sidebar of plain text links, the search box, a page title and short intro, sections whose entries are rows of
+## underlined inline links separated by dashes (no large button tiles), articles as running text with inline links. Every
+## link is a LinkButton: touch, mouse, and the pad's focus moving link to link.
 ## Content comes from Wiki (scripts/core/wiki.gd) and its providers; this file only draws it.
 ## Everything is a Button or a link, so keyboard, mouse, gamepad and touch all navigate it;
 ## step_back() is the Back step (the previous view, at the scroll place it was left) that
 ## GameUI.go_back tries before leaving the window.
 
-const GOLD := Color(1, 0.85, 0.5)
-const DIM := Color8(214, 200, 170)
-const WARN := Color8(255, 190, 150)
-const TEXT := Color8(246, 236, 214)
+const GOLD := Color8(120, 44, 24)       # GP-WIKI-LAYOUT: titles and headings, a rubric red-brown on parchment
+const DIM := Color8(112, 86, 58)
+const WARN := Color8(150, 40, 24)
+const TEXT := Color8(52, 34, 20)        # ink
+const LINK := Color8(30, 58, 132)       # a link, underlined
+const PARCHMENT := Color8(236, 214, 170)
 const WIDE_MIN := 840.0          # below this window width: one column, no navigation panel
 const CELL := 250.0              # the width a grid of page buttons gives each column
 const ITEM_H := 46.0             # every navigation item and page button is at least this tall
@@ -90,10 +95,20 @@ func open(owner_ui, body: Control) -> void:
 	split.name = "WikiSplit"
 	split.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	split.add_theme_constant_override("separation", 10)
-	root.add_child(split)
+	var page := PanelContainer.new()               # GP-WIKI-LAYOUT: the parchment page under the sidebar and the article
+	page.name = "WikiPage"
+	page.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var parch := StyleBoxFlat.new()
+	parch.bg_color = PARCHMENT
+	parch.border_color = Color8(111, 74, 44)
+	parch.set_border_width_all(2)
+	parch.set_content_margin_all(10)
+	page.add_theme_stylebox_override("panel", parch)
+	root.add_child(page)
+	page.add_child(split)
 	nav_panel = PanelContainer.new()
 	nav_panel.name = "WikiNav"
-	nav_panel.add_theme_stylebox_override("panel", _box(Color(0, 0, 0, 0.22)))
+	nav_panel.add_theme_stylebox_override("panel", _box(Color(0, 0, 0, 0.06)))
 	split.add_child(nav_panel)
 	var nav_scroll := ScrollContainer.new()
 	nav_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -152,7 +167,7 @@ func _relayout() -> void:
 	var was := narrow
 	narrow = w < WIDE_MIN
 	nav_panel.visible = not narrow
-	nav_panel.custom_minimum_size.x = clampf(w * 0.24, 220.0, 300.0)
+	nav_panel.custom_minimum_size.x = clampf(w * 0.2, 170.0, 230.0)       # a narrow sidebar
 	var want: Control = search_row if narrow else top
 	if search_edit.get_parent() != want:
 		var had_focus := search_edit.has_focus()
@@ -309,7 +324,7 @@ func _settle(focus: bool, scroll: int, target: String) -> void:
 func _focus_first() -> void:
 	if host == null or not is_instance_valid(host):
 		return
-	for b in host.find_children("*", "Button", true, false):
+	for b in host.find_children("*", "BaseButton", true, false):
 		if is_instance_valid(b) and b.is_inside_tree() and b.visible and not b.disabled:
 			b.grab_focus()
 			return
@@ -323,7 +338,7 @@ func _box(color: Color) -> StyleBoxFlat:
 	return sb
 
 
-func _label(text: String, size := 18, color := TEXT, parent: Control = null) -> Label:
+func _label(text: String, size := 16, color := TEXT, parent: Control = null) -> Label:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -335,7 +350,7 @@ func _label(text: String, size := 18, color := TEXT, parent: Control = null) -> 
 
 
 ## An article heading: gold words over a thin rule.
-func _heading(text: String, size := 21) -> void:
+func _heading(text: String, size := 19) -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 4
 	host.add_child(gap)
@@ -364,6 +379,53 @@ func _bar_button(text: String, cb: Callable, parent: Control) -> Button:
 	b.pressed.connect(cb)
 	parent.add_child(b)
 	return b
+
+
+## GP-WIKI-LAYOUT: a link, underlined ink-blue words, focusable (the pad moves link to link).
+func _link(text: String, cb: Callable, parent: Control, size := 16) -> LinkButton:
+	var l := LinkButton.new()
+	l.text = text
+	l.underline = LinkButton.UNDERLINE_MODE_ALWAYS
+	l.focus_mode = Control.FOCUS_ALL
+	l.add_theme_font_size_override("font_size", size)
+	for k in ["font_color", "font_hover_color", "font_focus_color", "font_hover_pressed_color"]:
+		l.add_theme_color_override(k, LINK)
+	l.add_theme_color_override("font_pressed_color", GOLD)
+	var fb := StyleBoxFlat.new()
+	fb.draw_center = false
+	fb.border_color = TEXT
+	fb.set_border_width_all(1)
+	l.add_theme_stylebox_override("focus", fb)
+	l.pressed.connect(cb)
+	parent.add_child(l)
+	return l
+
+
+## A row of inline entries that wraps like a line of text.
+func _flow(parent: Control = null) -> HFlowContainer:
+	var f := HFlowContainer.new()
+	f.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	f.add_theme_constant_override("h_separation", 4)
+	f.add_theme_constant_override("v_separation", 2)
+	(parent if parent else host).add_child(f)
+	return f
+
+
+## Pages as inline links separated by dashes (with each one's topic in brackets when `with_cat`).
+func _inline_links(ids: Array, parent: Control = null, with_cat := false) -> HFlowContainer:
+	var f := _flow(parent)
+	for i in ids.size():
+		if i > 0:
+			_plain("–", 16, DIM, f)
+		_page_link(str(ids[i]), f, with_cat)
+	return f
+
+
+func _page_link(id: String, parent: Control, with_cat := false) -> LinkButton:
+	var pg: Dictionary = wiki.pages[id]
+	var l := _link(pg.title + (" (%s)" % _cat_title(pg.category) if with_cat else ""), func(): goto(id), parent)
+	l.name = "Link_" + id.replace(":", "_")
+	return l
 
 
 ## A grid of equal buttons, its columns set from the article's width.
@@ -433,21 +495,17 @@ func _cats() -> Array:
 
 # --- the navigation panel --------------------------------------------------------------------
 func _build_nav() -> void:
-	_label("Topics", 18, GOLD, nav_list)
+	_label("Topics", 16, GOLD, nav_list)
 	var home := _nav_item("Contents", show_home)
 	home.name = "Nav_home"
 	for c in _cats():
 		var cid: String = c.id
-		var b := _nav_item("%s (%d)" % [c.title, wiki.in_category(cid).size()], func(): show_category(cid))
+		var b := _nav_item(str(c.title), func(): show_category(cid))      # GP-UI-COMPACT: no tooltip over its neighbours
 		b.name = "Nav_" + cid
-		b.tooltip_text = c.blurb
 
 
-func _nav_item(text: String, cb: Callable) -> Button:
-	var b := _button(text, cb, nav_list)
-	b.toggle_mode = true
-	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+func _nav_item(text: String, cb: Callable) -> LinkButton:
+	var b := _link(text, cb, nav_list, 15)
 	return b
 
 
@@ -462,82 +520,70 @@ func _mark_nav() -> void:
 		"search":
 			on = ""
 	for b in nav_list.get_children():
-		if b is Button:
-			b.set_pressed_no_signal(b.name == "Nav_" + on)
+		if b is LinkButton:
+			var here: bool = b.name == "Nav_" + on       # the topic shown: ink and not underlined, as a wiki marks the page you are on
+			b.underline = LinkButton.UNDERLINE_MODE_NEVER if here else LinkButton.UNDERLINE_MODE_ALWAYS
+			for k in ["font_color", "font_hover_color", "font_focus_color"]:
+				b.add_theme_color_override(k, TEXT if here else LINK)
 
 
 # --- the article panel -----------------------------------------------------------------------
 func _home() -> void:
-	_label("Village Encyclopedia", 28, GOLD).name = "PageTitle"
-	_label("Built from the game's own data: what you can find, make and do, and how. Search above, or choose a topic.", 16, DIM)
+	_label("Village Encyclopedia", 24, GOLD).name = "PageTitle"
+	_label("Built from the game's own data: what you can find, make and do, and how. Search above, or choose a topic.", 15, DIM)
 	var guides := wiki.in_category("guides")
 	if not guides.is_empty():
 		_heading("How do I...?")
-		var g := _grid()
-		for id in guides:
-			_page_button(id, g)
+		_inline_links(guides)
 	_heading("Topics")
 	for c in _cats():
 		if c.id == "guides":
 			continue
 		var cid: String = c.id
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 12)
-		host.add_child(row)
-		var b := _button("%s (%d)" % [c.title, wiki.in_category(cid).size()], func(): show_category(cid), row)
+		var row := _flow()
+		var b := _link("%s (%d)" % [c.title, wiki.in_category(cid).size()], func(): show_category(cid), row)
 		b.name = "Cat_" + cid
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size.x = 210 if narrow else 240
 		if c.blurb != "":
-			var l := _label(c.blurb, 17, DIM, row)
-			l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		else:
-			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			_plain("— " + str(c.blurb), 15, DIM, row)
 
 
 func _category(cid: String) -> void:
-	_label(_cat_title(cid), 28, GOLD).name = "PageTitle"
+	_label(_cat_title(cid), 24, GOLD).name = "PageTitle"
 	for c in wiki.categories:
 		if c.id == cid and c.blurb != "":
-			_label(c.blurb, 16, DIM)
+			_label(c.blurb, 15, DIM)
 	var ids := wiki.in_category(cid)
-	_label("%d page%s" % [ids.size(), "" if ids.size() == 1 else "s"], 14, DIM)
-	var g := _grid()
-	for id in ids:
-		_page_button(id, g)
+	_heading("%d page%s" % [ids.size(), "" if ids.size() == 1 else "s"], 16)
+	_inline_links(ids)
 
 
 func _results(q: String) -> void:
 	var found := wiki.search(q)
-	_label("%d result%s for \"%s\"" % [found.size(), "" if found.size() == 1 else "s", q], 22, GOLD).name = "WikiResultsTitle"
+	_label("%d result%s for \"%s\"" % [found.size(), "" if found.size() == 1 else "s", q], 20, GOLD).name = "WikiResultsTitle"
 	if found.is_empty():
 		_label("Nothing found. Try a shorter word (for example 'iron' or 'wood').", 16, DIM)
 		return
 	if found.size() > 40:
 		_label("Showing the first 40. Add a word to narrow the search.", 14, DIM)
-	var g := _grid()
-	for id in found.slice(0, 40):
-		_page_button(id, g, true)
+	_inline_links(found.slice(0, 40), null, true)
 
 
 func _page(id: String) -> void:
 	if ui != null:
 		ui.sfx("book_page")
 	var pg: Dictionary = wiki.pages[id]
-	var crumb := _button("%s" % _cat_title(pg.category), func(): show_category(pg.category))
+	var crumbs := _flow()
+	_plain("Topic:", 14, DIM, crumbs)
+	var crumb := _link("%s" % _cat_title(pg.category), func(): show_category(pg.category), crumbs, 14)
 	crumb.name = "PageCategory"
-	crumb.autowrap_mode = TextServer.AUTOWRAP_OFF
-	crumb.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	crumb.custom_minimum_size = Vector2(150, 40)
-	crumb.tooltip_text = "All pages in this topic"
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 12)
 	host.add_child(head)
 	if pg.icon != "":
-		var ic := _tex(pg.icon, 56)
+		var ic := _tex(pg.icon, 40)
 		ic.name = "PageIcon"
 		head.add_child(ic)
-	var t := _label(pg.title, 28, GOLD, head)
+	var t := _label(pg.title, 24, GOLD, head)
 	t.name = "PageTitle"
 	t.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var rule := ColorRect.new()
@@ -563,17 +609,17 @@ func _block(b: Dictionary) -> void:
 				list.add_child(row)
 				var dot := _plain("  -", 17, GOLD, row)
 				dot.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-				_label(str(r), 17, TEXT, row)
+				_label(str(r), 15, TEXT, row)
 		"note":
 			var pc := PanelContainer.new()
-			var sb := _box(Color8(96, 40, 26))
+			var sb := _box(Color8(240, 198, 168))
 			sb.set_content_margin_all(10)
 			pc.add_theme_stylebox_override("panel", sb)
 			host.add_child(pc)
-			_label(b.text, 17, WARN, pc)
+			_label(b.text, 15, WARN, pc)
 		"stats":
 			var pc := PanelContainer.new()
-			pc.add_theme_stylebox_override("panel", _box(Color(0, 0, 0, 0.2)))
+			pc.add_theme_stylebox_override("panel", _box(Color(0, 0, 0, 0.07)))
 			host.add_child(pc)
 			var g := GridContainer.new()
 			g.columns = 2
@@ -581,16 +627,13 @@ func _block(b: Dictionary) -> void:
 			g.add_theme_constant_override("v_separation", 4)
 			pc.add_child(g)
 			for r in b.rows:
-				var k := _label(str(r[0]), 17, DIM, g)
+				var k := _label(str(r[0]), 15, DIM, g)
 				k.size_flags_horizontal = Control.SIZE_FILL
 				k.custom_minimum_size.x = 140 if narrow else 170
-				_label(str(r[1]), 17, TEXT, g)
+				_label(str(r[1]), 15, TEXT, g)
 		"links":
-			_label(str(b.label) if str(b.get("label", "")) != "" else "See also", 17, DIM)
-			var g := _grid()
-			for id in b.ids:
-				if wiki.pages.has(id):
-					_page_button(id, g)
+			_heading(str(b.label) if str(b.get("label", "")) != "" else "See also", 16)
+			_inline_links((b.ids as Array).filter(func(id): return wiki.pages.has(id)))
 		"recipe":
 			_recipe_row(str(b.id))
 		"chain":
@@ -608,7 +651,7 @@ func _recipe_row(rid: String) -> void:
 	if r.is_empty():
 		return
 	var pc := PanelContainer.new()
-	pc.add_theme_stylebox_override("panel", _box(Color(0, 0, 0, 0.2)))
+	pc.add_theme_stylebox_override("panel", _box(Color(0, 0, 0, 0.07)))
 	host.add_child(pc)
 	var col := VBoxContainer.new()
 	pc.add_child(col)
@@ -627,10 +670,8 @@ func _recipe_row(rid: String) -> void:
 		row.add_child(_tex(Wiki.icon_path(o), 28))
 		_plain("%d %s" % [int(r.out[o]), GameData.item_name(o)], 16, GOLD, row)
 	var st: String = Wiki.STATION_NAMES.get(r.station, str(r.station).capitalize())
-	var d := _button("at the %s, %s %d" % [st.to_lower(), str(r.skill).capitalize(), int(r.level)], func(): goto("recipe:" + rid), col)
-	d.autowrap_mode = TextServer.AUTOWRAP_OFF
-	d.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	d.custom_minimum_size = Vector2(0, 40)
+	var d := _link("at the %s, %s %d" % [st.to_lower(), str(r.skill).capitalize(), int(r.level)], func(): goto("recipe:" + rid), _flow(col), 15)
+	d.name = "Recipe_" + rid
 
 
 func _controls_block(scheme: String) -> void:
