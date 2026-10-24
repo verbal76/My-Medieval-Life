@@ -27739,8 +27739,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -27778,11 +27778,21 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> multiplayer worker (subagent), lead integrates; branch: None -> wip/multiplayer-b19; next_action",
      "why": "owner authorized implementation now (docs/directives/2026-10-24_owner_start_multiplayer_now.md): Build 19 accepted as the baseline, no playtest hold; continue through the batches without routine approval; private draft builds and CI authorized; no public release or paid service"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; test_commit: None -> a0bd3bb; commits + a0bd3bb",
+     "why": "Batch A1 (players foundation) landed on wip/multiplayer-b19 a0bd3bb: World.players by pid, as_actor acting-player context, actor-parameterized verbs, save v21 players section; G0 PASS (sim_gate seeds 1-2 identical to the Build 19 baseline); multiplayer_a1_test 59 checks pass"
     }
    ],
    "next_action": "Batch A on wip/multiplayer-b19 from wip/build19 42c33e0",
    "assigned_worker": "multiplayer worker (subagent), lead integrates",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/multiplayer-b19",
+   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json",
+   "test_commit": "a0bd3bb",
+   "commits": [
+    "a0bd3bb"
+   ]
   },
   {
    "id": "MSW-01",
@@ -53595,6 +53605,11 @@
      "date": "2026-10-24",
      "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; test_commit: a7c84e9 -> 2f72ec3; completion",
      "why": "owner 2026-10-24 (docs/directives/2026-10-24_owner_start_multiplayer_now.md): Build 19 complete and accepted as the development baseline; the owner's playtest is not a prerequisite. Evidence: release workflow suites (run_tests 3595, start_test 506) passed on the integrated commit 2f72ec3, plus 18 targeted suites, determinism and conservation on seeds 1-4"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "known_defects + contract_50ore_test.gd: 1 of 18 checks fails ('paid 400 = 50 units x 8'); judgment_decay_demo.gd: 'Out of bounds get index 42', never exits",
+     "why": "Two tests in tests.yml fail on the Build 19 base (42c33e0) and predate multiplayer; the release workflow ran only run_tests and start_test, so they were not seen; fix by root cause on wip/multiplayer-b19"
     }
    ],
    "next_action": "owner playtest (phone, Windows); public publication only with the owner's approval",
@@ -53611,6 +53626,9 @@
    ],
    "integrated_in": [
     "Build 19 wip/build19 2685a26"
+   ],
+   "known_defects": [
+    "contract_50ore_test.gd: 1 of 18 checks fails ('paid 400 = 50 units x 8'); judgment_decay_demo.gd: 'Out of bounds get index 42', never exits"
    ]
   },
   {
