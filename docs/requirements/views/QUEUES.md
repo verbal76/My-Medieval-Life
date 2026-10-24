@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (33)
+## Workers and task branches (36)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -12,9 +12,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FAM-SAC-01 | 19 | IMPLEMENTED ON TASK BRANCH | family worker (Sonnet subagent) | wip/expansion19-preparation |
 | FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
+| GP-ACTIONBAR | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-ANVIL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PACK-DETAIL-FIT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PAUSE-PANEL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-PICKAXE-ANIM | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-STALL-PRICE-ON-PUTUP | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-STALL-TABLE-10 | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-START-RUSTY-AXE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |

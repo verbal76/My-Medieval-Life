@@ -21525,8 +21525,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21544,9 +21544,19 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P1 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at; test_commit: None -> bf27ff2; commits + bf27ff2",
+     "why": "nine touch actions in two right-edge columns"
     }
    ],
-   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
+   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
+   "tests": "start_test layout checks at 16:9, 20:9, 4:3; touch_bar_shot at 2404x1080 looked at",
+   "test_commit": "bf27ff2",
+   "commits": [
+    "bf27ff2"
+   ]
   },
   {
    "id": "GP-ANVIL",
@@ -21568,8 +21578,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21587,9 +21597,19 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P1 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> station_tap_test 25 checks (real touch and mouse events); screenshots looked at; test_commit: None -> cbf4000; commits + cbf4000",
+     "why": "tap or click on a station's drawn cell walks to its use cell and opens it; station audit done"
     }
    ],
-   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
+   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
+   "tests": "station_tap_test 25 checks (real touch and mouse events); screenshots looked at",
+   "test_commit": "cbf4000",
+   "commits": [
+    "cbf4000"
+   ]
   },
   {
    "id": "GP-DRAW-UNDER-HOUSE",
@@ -21881,8 +21901,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -21900,9 +21920,19 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "placed in polish slot P1 (docs/gameplay_polish/SCHEDULE.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> start_test: swing in every working frame (0/120 and 0/215 frames without the fix); test_commit: None -> 70dfdff; commits + 70dfdff",
+     "why": "idle branch no longer resets the work swing begun by Gather mode or a tap"
     }
    ],
-   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19"
+   "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
+   "tests": "start_test: swing in every working frame (0/120 and 0/215 frames without the fix)",
+   "test_commit": "70dfdff",
+   "commits": [
+    "70dfdff"
+   ]
   },
   {
    "id": "GP-POLISH",
@@ -28133,15 +28163,21 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; test_commit: None -> a0bd3bb; commits + a0bd3bb",
      "why": "Batch A1 (players foundation) landed on wip/multiplayer-b19 a0bd3bb: World.players by pid, as_actor acting-player context, actor-parameterized verbs, save v21 players section; G0 PASS (sim_gate seeds 1-2 identical to the Build 19 baseline); multiplayer_a1_test 59 checks pass"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; test_commit: a0bd3bb -> 1c0f854; commits + 1c0f854",
+     "why": "Batch A2 on wip/multiplayer-b19 1c0f854: LAN session carried forward from d18d7d1 onto the A1 players; G1 two-process loopback test 44 checks; G0 identical per the commit; no menu entry or Android network permission yet"
     }
    ],
    "next_action": "Batch A on wip/multiplayer-b19 from wip/build19 42c33e0",
    "assigned_worker": "multiplayer worker (subagent), lead integrates",
    "branch": "wip/multiplayer-b19",
-   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json",
-   "test_commit": "a0bd3bb",
+   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress",
+   "test_commit": "1c0f854",
    "commits": [
-    "a0bd3bb"
+    "a0bd3bb",
+    "1c0f854"
    ]
   },
   {
@@ -53960,13 +53996,18 @@
      "date": "2026-10-24",
      "change": "known_defects + contract_50ore_test.gd: 1 of 18 checks fails ('paid 400 = 50 units x 8'); judgment_decay_demo.gd: 'Out of bounds get index 42', never exits",
      "why": "Two tests in tests.yml fail on the Build 19 base (42c33e0) and predate multiplayer; the release workflow ran only run_tests and start_test, so they were not seen; fix by root cause on wip/multiplayer-b19"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass -> judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass; contract_50ore_test and judgment_decay_demo pass on wip/multiplayer-b19; test_commit: 2f72ec3 -> b16e791",
+     "why": "both pre-existing test defects fixed by root cause on wip/multiplayer-b19: contract_50ore_test now accounts for the village's other contracts (c9cb495, no tolerance); judgment_decay_demo demonstrates the approved rate 42 (b16e791, 29 checks)"
     }
    ],
    "next_action": "owner playtest (phone, Windows); public publication only with the owner's approval",
    "assigned_worker": "lead",
    "branch": "wip/build19",
-   "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass",
-   "test_commit": "2f72ec3",
+   "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass; contract_50ore_test and judgment_decay_demo pass on wip/multiplayer-b19",
+   "test_commit": "b16e791",
    "commits": [
     "b7f832e",
     "b2f7dc2",
