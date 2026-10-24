@@ -21799,6 +21799,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-GIFT-QUANTITY",
+   "kind": "approved",
+   "title": "Gifts: give one by default, with a number picker; never the whole stack by accident",
+   "description": "Gifts: give one by default, with a number picker; never the whole stack by accident",
+   "source": "owner message, 2026-10-24 (gameplay polish session)",
+   "owner_wording": "when I give somebody a gift, it doesn't just give one, it gives them the whole stack. I just gave somebody 35 herbal poultices. By accident. We need to either get it automatically to be one or a picker of a number when you pick the item.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Choosing an item to give opens a quantity picker that starts at 1 (-, +, Max; touch, gamepad, mouse), and only the chosen number moves; a quick single tap or press gives exactly one; the path by which the owner's 35 herbal poultices were given is found and reproduced in a test (the gift code moves one per call in Build 19 and on wip/multiplayer-b19, so another path or repeated input is suspected) and fixed so no single action moves a whole stack unintentionally; regard and judgment effects stay per gift as now (no farming regard by count); actor-aware; wiki updated; tested"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "owner message, 2026-10-24 (gameplay polish session)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-HARVEST-CONT",
    "kind": "approved",
    "title": "Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer",

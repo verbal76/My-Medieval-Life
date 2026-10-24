@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (45)
+## Workers and task branches (46)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -19,6 +19,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BUSINESS-DESK | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-FARMER-TENDING | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-GIFT-QUANTITY | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-INTERIOR-WALLS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PACK-DETAIL-FIT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PAUSE-PANEL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
