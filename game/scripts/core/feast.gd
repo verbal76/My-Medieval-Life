@@ -20,7 +20,7 @@ extends RefCounted
 ## calls the feast off and nothing is paid. Saved in the World's optional key "feast"; a save without it starts empty.
 
 const KEY := "feast"
-const PLAYER := -2                    # Life.PLAYER_ID
+const PLAYER := Life.PLAYER_ID        # -2; compared through Life.is_player_id
 
 var w: World
 var weddings: Array = []              # {a, b, day, done}: partnerships awaiting their feast (a may be the player, PLAYER)
@@ -41,8 +41,8 @@ static func cfg() -> Dictionary:
 func on_partnered(a: int, b: int) -> void:
 	weddings.append({"a": a, "b": b, "day": w.day(), "done": false})
 	w.stat("feast_weddings_due")
-	if a == PLAYER or b == PLAYER:
-		var other: NPC = w.npc(b if a == PLAYER else a)
+	if Life.is_player_id(a) or Life.is_player_id(b):
+		var other: NPC = w.npc(b if Life.is_player_id(a) else a)
 		if other != null:
 			w.note("You and %s may hold a wedding feast: ask the tavern keeper on an evening when %s family have come to the tavern." % [other.name, other.name + "'s"])
 
@@ -173,11 +173,11 @@ func _plan_wedding(i: int, keeper: NPC, hosts_today: Dictionary) -> void:
 	var a: int = int(wd.a)
 	var b: int = int(wd.b)
 	var c := cfg()
-	var na: NPC = w.npc(a) if a != PLAYER else null
-	var nb: NPC = w.npc(b) if b != PLAYER else null
-	var other: NPC = nb if a == PLAYER else na
-	if a == PLAYER or b == PLAYER:
-		other = nb if a == PLAYER else na
+	var na: NPC = w.npc(a) if not Life.is_player_id(a) else null
+	var nb: NPC = w.npc(b) if not Life.is_player_id(b) else null
+	var other: NPC = nb if Life.is_player_id(a) else na
+	if Life.is_player_id(a) or Life.is_player_id(b):
+		other = nb if Life.is_player_id(a) else na
 		if other == null or not other.alive or w.player.partner != other.id:
 			wd.done = true
 			return
@@ -296,7 +296,7 @@ func resolve() -> void:
 		return
 	var keeper: NPC = w.tavern_keeper()
 	for p in plans:
-		if int(p.host) == PLAYER:
+		if Life.is_player_id(int(p.host)):
 			w.stat("feast_player_unhosted")           # the player did not pay: nothing is bought
 			continue
 		var host: NPC = w.npc(int(p.host))
@@ -423,7 +423,7 @@ func _player_wedding_plan() -> Dictionary:
 	if planned_day != w.day():
 		return {}
 	for p in plans:
-		if int(p.host) == PLAYER:
+		if Life.is_player_id(int(p.host)):
 			return p
 	return {}
 

@@ -93,8 +93,8 @@ Recorded, not changed (changing them alters ties, hashes or order, or needs the 
 5. **Succession:** `continue_as_heir` works for the acting player (the setter replaces a guest's character in `players`), but
    `Identity.succeed` keeps the village's ties under -2, `Life.retire_player_id`, one `FORMER_PLAYER` (-3), `quests.release_all()`
    and `manor_work.release_player()` still release for the host, and `credit.on_player_died` / `contracts.on_player_died` are not per player.
-6. **Station and loot reservation** (`reserve_for_player`, `release_player_station`, `player_at_station`) are per actor but the
-   reservation key is the single `"player"` entry in `stations`; two players can share one key.
+6. **Station reservation** (`reserve_for_player`, `release_player_station`, `player_at_station`) take an actor but the
+   reservation is one `player_until` field on the station, so two players cannot hold one station apart.
 7. **Business and stalls:** `Business.mine()` / `premises()` / `attendant_of` take the one player stall; the courier booth keeper,
    `Stalls.built(ref)` and the shop/stall owner checks use `acting_ref()`, but the data model has one `player` stall slot in places.
 8. **Client code** (`main.gd`, `ui/*`): about 230 reads of `world.player` in `main.gd`, 46 in `game_ui.gd`: movement, action timers and
@@ -130,4 +130,17 @@ Recorded, not changed (changing them alters ties, hashes or order, or needs the 
   a tick, save 21 (round trip, older build shape, foreign record, a level that is gone) and the version 20 fixture.
 - Changed: `identity_test.gd` asserts the current save version where it said 20 (the bump is the change).
 
-Evidence: see the report at the end of the batch (suite counts and the determinism gate), recorded in the commit messages.
+### Evidence (G0, 2026-10-24, final code of this batch)
+
+- The full Godot list of `.github/workflows/tests.yml` (98 scripts, 4 in parallel): 96 exit 0; 88 of them print a count: 10,461 checks,
+  1 failure. `run_tests.gd` 3,595 checks, 0 failures; `start_test.gd` 506 steps, 0 failures; `multiplayer_a1_test.gd` 59 checks, 0 failures.
+  The two that do not pass fail identically on the unmodified Build 19 base `42c33e0` (run there for comparison): `contract_50ore_test.gd`
+  (1 failure, "paid 400 = 50 units x 8 ... contract_paid and contract_units agree") and `judgment_decay_demo.gd` (a script error,
+  "Out of bounds get index '42'", then it never exits; it is a demo, not a test).
+- After the last code change (feast ids through `Life.is_player_id`): `run_tests`, `start_test`, `multiplayer_a1_test`, `feast_test` 37,
+  `aging_test` 136, `identity_test` 98, `save_transfer_test` 21, `conservation_test` 8, `wiki_test`: all 0 failures; every script loads.
+- `python3 tools/sim_gate.py` (no `--write`, `docs/release/sim_baseline.json` untouched): **determinism gate: PASS, identical to the
+  baseline** for seeds 1 and 2, days 10 and 30 (seed 1 day 30 fingerprint `60742ce2...`, seed 2 day 30 `573d6000...`), currency and item
+  leaks 0 at every checkpoint, run twice (before and after the last change).
+- `python3 -m unittest discover -s tests` 115 OK; `check_interactions` 286 interactions, 0 problems; `check_requirements` 0 problems;
+  `check_resources` 0 problems; `check_materials` unchanged (18 open violations, none new).
