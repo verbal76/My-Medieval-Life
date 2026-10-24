@@ -1,12 +1,13 @@
 extends SceneTree
-## PROSPECTIVE (Expansion 19, PROS-19; owner decision SJD-Q02, 2026-10-21): demonstrates the long-term effect of the
-## proposed ordinary judgment decay before anyone approves a rate. A judgment-only scenario over 365 game days (a game
+## Expansion 19 (owner decision SJD-Q02, 2026-10-21; rate approved X19-DECAY, 2026-10-23): demonstrates the long-term
+## effect of the ordinary judgment decay at several rates beside the approved one. A judgment-only scenario over 365 game days (a game
 ## year is 8 days: 365 days is about 45 game years): on day 0 Bob is robbed ten times by a thief (10 BAD), sees the same
 ## thief murder his cousin (kin: 3 x 0.55 = 1.65 BAD, permanent), and is helped twenty times by a neighbour
 ## (20 x 0.5 = 10 GOOD). It prints Bob's NET judgment of each at days 0, 8, 30, 90, 180 and 365 for several rates,
-## the proposed one (judgment.json decay.ordinary_permille_per_day, 3) marked, and the disposition the trade decisions
-## would read. It checks the invariants: the murder part never decays at any rate, fading parts never grow and never go
-## below 0, the lifetime totals are kept, and the result is deterministic. It does not approve any rate.
+## the approved one (judgment.json decay.ordinary_permille_per_day, 42: a half-life of 16 game days, 2 game years) always
+## among them and marked, and the disposition the trade decisions would read. It checks the invariants: the murder part
+## never decays at any rate, fading parts never grow and never go below 0, the lifetime totals are kept, the approved
+## rate's half-life is the configured half_life_days, and the result is deterministic.
 ##   godot --headless --path game --script res://tests/judgment_decay_demo.gd
 
 var failures := 0
@@ -29,13 +30,19 @@ func check(cond: bool, what: String) -> void:
 
 
 func _init() -> void:
-	var proposed := int(JudgmentStore.default_cfg().decay.ordinary_permille_per_day)
+	var decay: Dictionary = JudgmentStore.default_cfg().decay
+	var approved := int(decay.ordinary_permille_per_day)
+	var rates: Array = RATES.duplicate()
+	if not rates.has(approved):
+		rates.append(approved)                               # the configured rate is always demonstrated (X19-DECAY: 42)
+	rates.sort()
+	check(approved > 0 and roundi(log(0.5) / log(1.0 - approved / 1000.0)) == int(decay.half_life_days), "the approved rate %d permille a day halves in the configured %d days" % [approved, int(decay.half_life_days)])
 	print("Q02 decay demonstration: Bob's NET judgment, points, at days 0, 8, 30, 90, 180, 365 (the disposition the decisions read, 0..100, below each rate)")
 	print("rate permille/day | half-life days | thief: 10 thefts             | thief: 10 thefts + murder of kin | helper: 20 helps")
 	var hashes := {}
-	for rate in RATES:
+	for rate in rates:
 		var r := run(rate)
-		var line := "%3d%s | %14s | " % [rate, " (proposed)" if rate == proposed else "           ", "none" if rate == 0 else "%d" % roundi(log(0.5) / log(1.0 - rate / 1000.0))]
+		var line := "%3d%s | %14s | " % [rate, " (approved)" if rate == approved else "           ", "none" if rate == 0 else "%d" % roundi(log(0.5) / log(1.0 - rate / 1000.0))]
 		for who in ["thief", "both", "helper"]:
 			var bits := []
 			for d in DAYS:
@@ -49,7 +56,7 @@ func _init() -> void:
 		if rate > 0:
 			check(int(r.thief[365]) > -10000 and int(r.both[365]) <= -1650, "rate %d: after a year the thefts have faded but the murder holds the opinion at least at -1.65" % rate)
 		print("     disposition toward the thief (thefts + murder): day 0 %s, day 90 %s, day 365 %s" % [JudgmentMath.pts(int(r.disp[0])), JudgmentMath.pts(int(r.disp[90])), JudgmentMath.pts(int(r.disp[365]))])
-	check(run(proposed).hash == hashes[proposed], "the same scenario gives the same result twice")
+	check(run(approved).hash == hashes[approved], "the same scenario gives the same result twice")
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
