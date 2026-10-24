@@ -625,6 +625,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `roast_meat` Roast meat | food | recipe `roast_meat` ×2; start_stock `start_0` | buyer `merchant_food` ×10; buyer `tavernkeeper` ×20; export `caravan`; food `roast_meat` |
 | `rotten_apple` Rotten apple | food | start_kit `player_start_items` ×1 | food `rotten_apple` |
 | `rubble` Rubble | resource | recipe `dress_stone` ×1 | buyer `merchant_raw` ×20; manor_job `rubble` |
+| `rusty_axe` Rusty axe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `tree` |
 | `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `open_pit`; tool `stone_seam`; tool `tunnel_rock` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
 | `shovel` Shovel | tool | recipe `assemble_shovel` ×1 | buyer `merchant_goods` ×2; equip `tool`; export `caravan` |
@@ -709,11 +710,11 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `chisel`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `fine_cloth`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `jewellery`, `ladder`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rubble`, `rusty_pickaxe`, `rusty_sword`, `shovel`, `spice`, `spoil`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
+`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `chisel`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `fine_cloth`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `jewellery`, `ladder`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rubble`, `rusty_axe`, `rusty_pickaxe`, `rusty_sword`, `shovel`, `spice`, `spoil`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
 
 ### Orphaned items
 
-Items with no source at all: none. Items only in the player's start kit: `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
+Items with no source at all: none. Items only in the player's start kit: `plain_clothes`, `rotten_apple`, `rusty_axe`, `rusty_pickaxe`, `rusty_sword`.
 
 ### Recipes needing materials with no legitimate source
 
@@ -756,6 +757,7 @@ finding not recorded here.
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |
 | `rusty_sword` | start_kit_only | implemented | Only in the player's start kit; nobody buys it. |
 | `rusty_pickaxe` | start_kit_only | implemented | Only in the player's start kit; a slower pickaxe nobody buys. |
+| `rusty_axe` | start_kit_only | implemented | Only in the player's start kit (owner, GP-START-RUSTY-AXE 2026-10-24); a slower axe nobody buys. |
 | `plain_clothes` | start_kit_only | implemented | Only in the player's start kit; nobody buys them. |
 | `iron_ore` | import | implemented | After the iron seams are worked out, the smiths' iron comes only by caravan. |
 | `coal` | import | implemented | After the coal seams are worked out, the smiths' coal comes only by caravan. |

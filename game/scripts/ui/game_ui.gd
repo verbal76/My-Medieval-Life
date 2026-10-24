@@ -1555,7 +1555,7 @@ func show_origin() -> void:
 	var p: PlayerState = main.world.player
 	_open("origin", "%s %s" % [p.name, p.family], true)
 	_label("You worked another family's farm three valleys over until the harvest failed and the farmer could no longer feed you. There were hard words, and you left before dawn.")
-	_label("You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, a loaf of bread, an apple going soft, two linen bandages and %d coins." % int(GameData.b("start_coins_player")))
+	_label("You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, an axe as rusty, a loaf of bread, an apple going soft, two linen bandages and %d coins." % int(GameData.b("start_coins_player")))
 	_label("This is the first village you have seen with smoke in its chimneys. A hundred people live here, and every one of them has their own work and their own worries. None of them owes you anything.")
 	_label("Find a way to live.", 20, Color(1, 0.85, 0.5))
 	_button("Begin", func():

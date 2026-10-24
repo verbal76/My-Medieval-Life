@@ -761,7 +761,7 @@ def main():
         dest = icons / f"{item}.png"
         img.save(dest)
         record(dest, COZY_ZIP, member, how)
-    for item, src in (("rusty_sword", "Tools/Sword-01"), ("rusty_pickaxe", "Tools/Pickaxe-02")):
+    for item, src in (("rusty_sword", "Tools/Sword-01"), ("rusty_pickaxe", "Tools/Pickaxe-02"), ("rusty_axe", "Tools/Axe-02")):
         member = f"16x16 Survival RPG Icons/{src}.png"
         img = tint(Image.open(io.BytesIO(iz.read(member))).convert("RGBA"), (140, 70, 30), 0.45)
         dest = icons / f"{item}.png"

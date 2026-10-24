@@ -574,7 +574,8 @@ func _guides() -> void:
 		links(["item:pickaxe", "item:rusty_pickaxe", "recipe:forge_pickaxe", "station:anvil", "guide:mine"])])
 	guide.call("planks", "Make planks", [
 		p("Fell a tree with an axe to get logs, then saw them at the sawhorse: %s makes %s." % [_amounts(plank_r["in"]), _amounts(plank_r.out)]),
-		{"t": "chain", "id": "plank"}, links(["recipe:saw_planks", "item:log", "item:plank", "node:tree", "station:sawhorse"])])
+		p("You start with a rusty axe: it fells trees, but more slowly and it wears out. The smith and the goods merchant sell proper axes."),
+		{"t": "chain", "id": "plank"}, links(["recipe:saw_planks", "item:log", "item:plank", "node:tree", "station:sawhorse", "item:axe", "item:rusty_axe"])])
 	guide.call("mine", "Mine", [
 		p("Stand in front of a seam or boulder with a pickaxe and press Use (E, or A on a pad), or press G for Gather mode and click it. The prompt says how much is left. Mining skill unlocks more ore and slower tool wear. Seams do not refill and boulders do not come back; when a seam's ore is out, the grey rock round it can still be quarried for stone. Prospecting finds new seams, open pits and tunnels go deeper: see Mining and quarrying."),
 		links(["sys:mining", "sys:prospecting", "sys:open_pits", "sys:mining_underground", "node:iron_seam", "node:coal_seam", "node:copper_seam", "node:stone_seam", "node:boulder", "skill:mining", "sys:gather"])])

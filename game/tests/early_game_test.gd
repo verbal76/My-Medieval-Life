@@ -33,8 +33,26 @@ func _test_start(seed_value: int) -> void:
 	var p := w.player
 	var coins0 := w.total_coins()
 	check(p.coins == int(GameData.b("start_coins_player")) and p.coins == 20, "seed %d: the player starts with 20 coins" % seed_value)
-	check(p.inv.has("rusty_pickaxe") and p.inv.has("rusty_sword") and not p.inv.has("axe"), "seed %d: a rusty pickaxe and a rusty sword, no axe" % seed_value)
+	check(p.inv.has("rusty_pickaxe") and p.inv.has("rusty_sword") and p.inv.has("rusty_axe") and not p.inv.has("axe"), "seed %d: a rusty pickaxe, a rusty axe and a rusty sword, no axe" % seed_value)
 	check(p.tool_of("pickaxe") == "rusty_pickaxe", "seed %d: the rusty pickaxe serves as a pickaxe" % seed_value)
+	# GP-START-RUSTY-AXE (owner 2026-10-24): the rusty axe fells, more slowly than an axe
+	check(p.tool_of("axe") == "rusty_axe", "seed %d: the rusty axe serves as an axe" % seed_value)
+	var tree := {}
+	for t in w.trees:
+		if str(t.state) == "grown":
+			tree = t
+			break
+	if not tree.is_empty():
+		var pos0 := p.pos
+		p.pos = Vector2(int(tree.x), int(tree.y) + 1) + Vector2(0.5, 0.5)
+		var plan := w.player_fell_plan(tree)
+		check(plan.get("ok", false) and str(plan.get("tool", "")) == "rusty_axe", "seed %d: a grown tree can be felled with the rusty axe: %s" % [seed_value, str(plan)])
+		p.inv.add("axe")
+		var plan2 := w.player_fell_plan(tree)
+		check(str(plan2.get("tool", "")) == "axe" and float(plan2.get("secs", 0.0)) < float(plan.get("secs", 0.0)), "seed %d: a proper axe is preferred and quicker" % seed_value)
+		p.inv.remove("axe")
+		p.pos = pos0
+	check(FarmPlots.has_axe(p.inv), "seed %d: the rusty axe digs out a plot's stumps (FarmPlots.has_axe)" % seed_value)
 	# mining route: the starting pickaxe on a real deposit, then a sale to a real buyer
 	var got := {}
 	for ore in ["stone", "iron_ore", "coal"]:

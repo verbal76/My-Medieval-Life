@@ -1097,6 +1097,7 @@
     {"item": "rotten_apple", "finding": "start_kit_only", "reason": "Only in the player's start kit: spoiled food that harms when eaten.", "status": "implemented"},
     {"item": "rusty_sword", "finding": "start_kit_only", "reason": "Only in the player's start kit; nobody buys it.", "status": "implemented"},
     {"item": "rusty_pickaxe", "finding": "start_kit_only", "reason": "Only in the player's start kit; a slower pickaxe nobody buys.", "status": "implemented"},
+    {"item": "rusty_axe", "finding": "start_kit_only", "reason": "Only in the player's start kit (owner, GP-START-RUSTY-AXE 2026-10-24); a slower axe nobody buys.", "status": "implemented"},
     {"item": "plain_clothes", "finding": "start_kit_only", "reason": "Only in the player's start kit; nobody buys them.", "status": "implemented"},
     {"item": "iron_ore", "finding": "import", "reason": "After the iron seams are worked out, the smiths' iron comes only by caravan.", "status": "implemented"},
     {"item": "coal", "finding": "import", "reason": "After the coal seams are worked out, the smiths' coal comes only by caravan.", "status": "implemented"},

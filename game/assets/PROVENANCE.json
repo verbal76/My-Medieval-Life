@@ -1598,6 +1598,13 @@
    "sha256": "0511a3466b894899a4333b12f38fba90cc3ad1ca734d798f46681625f69941c7"
   },
   {
+   "file": "assets/icons/rusty_axe.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Axe-02.png",
+   "transform": "tinted rust-brown 45%",
+   "sha256": "cc8a68d6df58cc71063754cd921ea7d6f64d6d4c199ed44a072ccaa4f7861e0a"
+  },
+  {
    "file": "assets/fx/blood_0.png",
    "source": "kenney_splatpack.zip",
    "member": "PNG/Default (256px)/splat00.png",

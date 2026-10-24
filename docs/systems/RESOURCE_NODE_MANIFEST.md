@@ -400,7 +400,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Status:** implemented. **Category:** wood, natural. **Found by:** `{"kind": "tree"}`.
 - **Where:** The woods west and east of the village and the woodland at its edge, and every tree across the map. **In the world:** 193 trees, 772 logs while all are grown.
 - **Action:** Felling (interact): "Fell this tree". **Range (tiles):** 1. The trunk or the canopy top above it, in the cell 0.9 tiles in front of the player or one of its four neighbours (World.tree_at, main.gd _find_target).
-- **Tool:** axe (required). You need an axe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `axe`: recipe (forge_axe); resold by the merchant_goods.
+- **Tool:** axe (required). You need an axe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `axe`: recipe (forge_axe); resold by the merchant_goods; `rusty_axe`: start kit (player_start_items).
 - **Skill:** woodcutting, level 1.
 - **Time:** `chop_minutes` (40 game minutes). A villager works chop_minutes game minutes a tree. The player's takes chop_minutes / game_minutes_per_second x 0.5 real seconds, divided by the axe's speed, and 30% less from Woodcutting 3.
 - **Cost:** stamina 0, tool wear 3. No stamina. The axe wears 3 a tree.

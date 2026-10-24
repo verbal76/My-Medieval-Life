@@ -3379,6 +3379,8 @@ func test_resource_registry() -> void:
 	check(ResourceNodes.can_harvest(w, seam, dep).contains("pickaxe"), "without a pickaxe: you need one, and where to get it")
 	var tree: Dictionary = w.trees[0]
 	var td := ResourceNodes.def("tree")
+	check(ResourceNodes.can_harvest(w, td, tree) == "", "GP-START-RUSTY-AXE: with the start kit's rusty axe a grown tree can be felled")
+	p.inv.remove("rusty_axe", p.inv.count("rusty_axe"))
 	check(ResourceNodes.can_harvest(w, td, tree).contains("axe"), "without an axe: you need one, and where to get it")
 	p.inv.add("axe")
 	check(ResourceNodes.can_harvest(w, td, tree) == "", "with an axe a grown tree can be felled")

@@ -5088,7 +5088,7 @@ func _swing_panel(mining: bool, frame: int) -> void:
 			if tr.state == "grown":
 				cell = Vector2i(int(tr.x), int(tr.y))
 				break
-	var tool_id := "rusty_pickaxe" if mining else "axe"
+	var tool_id := "rusty_pickaxe" if mining else "rusty_axe"
 	p.inv.add(tool_id, 1)
 	p.tool = tool_id
 	var c: Vector2i = world.brain.beside(cell, cell + shot_side)

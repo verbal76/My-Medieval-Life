@@ -194,6 +194,7 @@ func _run() -> void:
 	# 4-5. the origin story, then the village
 	check(ui.is_open("origin") and main.paused, "the origin story is shown and the world waits")
 	check(_texts(ui.panel_body).contains("%d coins" % int(GameData.b("start_coins_player"))) and not _texts(ui.panel_body).contains("five coins"), "the origin story names the real starting coins")
+	check(_texts(ui.panel_body).contains("an axe as rusty"), "GP-START-RUSTY-AXE: the origin story names the rusty axe")
 	_press("Begin")
 	check(not ui.modal() and not main.paused and main.running, "into the village")
 	check(ui.toast.visible and ui.toast.text.contains("Any work for me?") and ui.toast.text.contains("reeve") and ui.toast.text.contains("journal"),
@@ -201,7 +202,7 @@ func _run() -> void:
 
 	# the starting kit (balance.json)
 	check(p.hp == 100.0 and p.max_hp == 100.0 and p.coins == 20, "100 health and 20 coins (owner, provisional)")
-	for id in ["rusty_sword", "rusty_pickaxe", "bread", "rotten_apple", "plain_clothes"]:
+	for id in ["rusty_sword", "rusty_pickaxe", "rusty_axe", "bread", "rotten_apple", "plain_clothes"]:
 		check(p.inv.count(id) == 1, "carries %s" % GameData.item_name(id))
 	check(p.armor == "plain_clothes" and p.weapon == "" and p.tool == "", "wearing plain clothes, nothing in hand")
 
@@ -238,7 +239,7 @@ func _run() -> void:
 	pack_win.choose("rusty_pickaxe")
 	check(_press("Use") and p.tool == "rusty_pickaxe", "the rusty pickaxe is the tool")
 	# INV-18: each tab its own category; worn and wielded things are in their gear slots, not the grid
-	var tab_shows := {"food": ["bread", "rotten_apple"], "raw": [], "tools": [], "weapons": [], "armour": [] if p.armor == "plain_clothes" else ["plain_clothes"],
+	var tab_shows := {"food": ["bread", "rotten_apple"], "raw": [], "tools": ["rusty_axe"], "weapons": [], "armour": [] if p.armor == "plain_clothes" else ["plain_clothes"],
 		"medicine": ["linen_bandage"], "general": [], "crafted": []}
 	for t in tab_shows:
 		pack_win.tab_buttons[pack_win.TABS.map(func(x): return x[0]).find(t)].pressed.emit()
@@ -1312,8 +1313,9 @@ func _gather_tests() -> void:
 	check(int(dep.amount) == 0 and p.inv.count("iron_ore") >= ore0 + 3, "the player walks to it and mines it, cycle after cycle, until it is worked out (%d ore)" % (p.inv.count("iron_ore") - ore0))
 	check(main.gather.is_empty() and main.gather_mode, "then gathering stops and Gather mode stays on")
 	check(p.stamina >= stamina0, "mining costs no stamina (the existing rule; ResourceNodes action_cost)")
-	# no tool: a tree without an axe says so and does nothing
+	# no tool: a tree without an axe says so and does nothing (the start kit's rusty axe set aside too)
 	p.inv.remove("axe", p.inv.count("axe"))
+	p.inv.remove("rusty_axe", p.inv.count("rusty_axe"))
 	var tree: Dictionary = {}
 	for t in w.trees:
 		if t.state == "grown" and (tree.is_empty() or Vector2(t.x, t.y).distance_to(p.pos) < Vector2(tree.x, tree.y).distance_to(p.pos)):

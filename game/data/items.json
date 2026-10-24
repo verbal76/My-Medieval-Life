@@ -242,6 +242,15 @@
       "speed": 0.7,
       "category": "tools"
     },
+    "rusty_axe": {
+      "name": "Rusty axe",
+      "type": "tool",
+      "tool": "axe",
+      "value": 8,
+      "durability": 60,
+      "speed": 0.7,
+      "category": "tools"
+    },
     "bread": {
       "name": "Loaf of bread",
       "type": "food",

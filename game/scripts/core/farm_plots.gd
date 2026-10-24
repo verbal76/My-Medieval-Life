@@ -413,7 +413,7 @@ func clear(p: Dictionary, c: Vector2i, inv: Inventory, store: Inventory) -> Stri
 			var t: Dictionary = o.ref
 			if str(t.state) == "grown":
 				return "A grown tree is felled first."
-			if str(t.state) in ["stump", "growing"] and not (inv.has("axe") or store.has("axe")):
+			if str(t.state) in ["stump", "growing"] and not (has_axe(inv) or has_axe(store)):
 				return "Digging out a stump needs an axe."
 			t.state = "cleared"
 			w.map.set_solid(c, false)
@@ -534,7 +534,19 @@ func clearable(c: Vector2i, inv: Inventory, store: Inventory, light: bool) -> bo
 		return false
 	if o.kind == "plant" or (o.kind == "tree" and str(o.ref.state) in ["sapling", "young"]):
 		return true
-	return not light and o.kind == "tree" and str(o.ref.state) in ["stump", "growing"] and (inv.has("axe") or store.has("axe"))
+	return not light and o.kind == "tree" and str(o.ref.state) in ["stump", "growing"] and (has_axe(inv) or has_axe(store))
+
+
+## Whether `inv` holds an axe: any item that is an axe tool (the axe, the player's rusty axe; GP-START-RUSTY-AXE).
+static func has_axe(inv: Inventory) -> bool:
+	if inv == null:
+		return false
+	if inv.has("axe"):
+		return true
+	for id in inv.ids():
+		if str(GameData.item(id).get("tool", "")) == "axe":
+			return true
+	return false
 
 
 ## Plan a work step on as many cells as BATCH_MINUTES allows (at least one), the cells kept for `n` meanwhile.
