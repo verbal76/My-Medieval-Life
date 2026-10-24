@@ -331,7 +331,7 @@ jobs:
         with:
           tag_name: build-${{ inputs.build_number || github.run_number }}
           target_commitish: ${{ github.sha }}
-          name: My Medieval Life Build ${{ inputs.build_number || github.run_number }}
+          name: My Medieval Life — Build ${{ inputs.build_number || github.run_number }}
           prerelease: ${{ github.ref != 'refs/heads/main' }}
           draft: ${{ inputs.visibility != 'public' }}
           body_path: notes.md

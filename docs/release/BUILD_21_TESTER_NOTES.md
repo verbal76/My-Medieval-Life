@@ -1,9 +1,9 @@
-# Build 21: tester notes (prepared, not built)
+# Build 21: tester notes
 
-A private playtest build for the owner, built from `wip/multiplayer-b19` by the lead (owner directive
-`docs/directives/2026-10-24_build21_final_integration.md`): Android and Windows (and Linux, which the workflow makes from the same
-commit) with one build number, the Android package signed with the permanent test key from the secrets. Nothing has been built or
-published from this branch for Build 21 at the time of writing; the lead fills in the build number, commit and checksums.
+A private playtest build for the owner, built from `wip/multiplayer-b19` (scope frozen by the owner, 2026-10-24): Android,
+Windows and Linux from one commit with one build number. The APK is signed with the owner's permanent release key (its
+certificate fingerprint is above and in the signature file). Builds up to 20 used other keys, so this APK cannot update them:
+export your save first, uninstall, install Build 21, then import (steps below).
 
 ## Saves: export yours first
 
@@ -11,6 +11,10 @@ published from this branch for Build 21 at the time of writing; the lead fills i
   save); loading it twice gives the same world.
 - **Build 20 cannot open a Build 21 save** (it says the save is from a newer version and leaves the file alone). Before installing,
   open Settings, Saves, **Copy my save to a file...**, so you can go back to Build 20 with it.
+- **Android, once (new signing key):** in Build 20, Settings, Saves, **Copy my save to a file...** into a folder outside the app
+  (for example Downloads); check with a file manager that the file is there; uninstall Build 20 (this deletes its private save);
+  install Build 21 (allow installs from unknown sources); in Build 21, Settings, Saves, import that file; load it and check your
+  character and world. Later builds signed with the same key will install over Build 21 and keep the save.
 
 ## What is new since Build 20
 
@@ -81,8 +85,9 @@ Report what you see; nothing about real devices is verified until you have tried
 - A PC hosts; a phone joins. Phone hosting, internet play and dedicated servers are not in the game. Two players were tested; three
   or four may work but are untested.
 - A guest's pause menu has no Save: the host's game keeps the world and the guest's character.
-- Players who marry each other have no children (an open owner question).
-- Not in this build yet: the business desk, items on tables, farmers tending their fields, lockpicking and children for married
-  players; the lead's reconciliation report lists each with its status.
+- Players who marry each other have no children yet (decided by the owner; the repair is deferred to Build 22).
+- Deferred to the Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`): the business desk and courier, merchandise
+  previews on tables, farmers tending their fields, lockpicking and children for married players. Shopkeepers buy and sell
+  as before.
 - The thumbstick, the smaller windows and the shelves were checked in screenshots, not yet on a phone.
 - The simulation warning thresholds are still proposals awaiting the owner.
