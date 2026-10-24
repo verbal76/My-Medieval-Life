@@ -2597,6 +2597,16 @@ func _find_target() -> void:
 					if spare != null:
 						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
 					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
+	var gu = map.data.get("spawns", {}).get("grindstone_use")
+	if gu != null and world.player_level == 0 and (Vector2(int(gu[0]), int(gu[1])) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
+		# GP-SHARPEN: the smithy's grinding wheel: each worn weapon carried, sharpened by the smith for a coin
+		var worn: Array = p.inv.ids().filter(func(i): return World.weapon_wear(p.inv, i) > 0)
+		if worn.is_empty():
+			here.append({"kind": "info", "label": "The grinding wheel: nothing of yours needs sharpening", "text": "The smith sharpens a worn weapon here for %d coin." % World.SHARPEN_COINS})
+		for wid in worn:
+			var nos := world.sharpen_refusal(p.inv, p.coins, wid)
+			here.append({"kind": "sharpen" if nos == "" else "info", "id": wid, "text": nos,
+				"label": ("Sharpen your %s (%d coin to the smith)" % [GameData.item_name(wid).to_lower(), World.SHARPEN_COINS]) if nos == "" else "Grinding wheel: %s" % nos})
 	if world.couriers != null:                                # REG-COURIER-01: the village's courier booth (a stall kept by a villager)
 		var cb: Dictionary = world.couriers.booth_near(p.pos, 1.8)
 		if not cb.is_empty():
@@ -3243,6 +3253,9 @@ func _use() -> void:
 		"courier_shop_booth":
 			var why_booth: String = world.couriers.open_shop_booth(world.acting_ref())
 			ui.message(why_booth if why_booth != "" else "You set a courier booth at your stall: your deliveries can leave from it.")
+		"sharpen":                                       # GP-SHARPEN: at the grinding wheel, 1 coin to the smith
+			var whyw: String = world.player_sharpen(str(target.id))
+			ui.message(whyw if whyw != "" else "The smith puts your %s to the wheel: it is sharp again (%d coin)." % [GameData.item_name(str(target.id)).to_lower(), World.SHARPEN_COINS])
 		"pen_buy":
 			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
 			ui.message(no if no != "" else "You buy it and walk it into your pen.")

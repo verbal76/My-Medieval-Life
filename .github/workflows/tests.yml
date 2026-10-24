@@ -132,6 +132,8 @@ jobs:
           $godot --headless --path game --script res://tests/joystick_test.gd
           # GP-HARVEST-CONT (Build 21): the Harvesting setting, continuous or manual, the same yield and time a cycle
           $godot --headless --path game --script res://tests/harvest_setting_test.gd
+          # GP-SMITHY-WORKBENCH, GP-SHARPEN (Build 21): the workbench table, sharpening at the grinding wheel
+          $godot --headless --path game --script res://tests/sharpen_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd

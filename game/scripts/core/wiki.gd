@@ -610,6 +610,9 @@ func _systems() -> void:
 		p("Three bars top left. Health: how much you can take; at 0 you die. Food: falls %s a game hour; at 0 you starve and lose health, so eat. Stamina: spent by Fireball (%d) and sprinting; it refills by itself. A bar turns red and blinks when low." % [str(GameData.b("player_hunger_per_hour")), int(GameData.b("fireball_stamina"))]),
 		p("Time: one real second is %s game minutes, so a day lasts about %d real minutes." % [str(gmps), roundi(1440.0 / gmps / 60.0)]),
 		links(["guide:heal", "sys:resting", "sys:sprint", "sys:magic"])])
+	sys.call("sharpening", "Sharpening a weapon", [
+		p("In the smithy, stand at the grinding wheel (beside the workbench, the table with the hammer and tongs) and choose Sharpen: the smith, when at work there, puts a worn weapon to the wheel for %d coin, paid to the smith, and it is as good as new (its wear mended; it does not hit harder). A weapon that is not worn, an empty purse or the smith away and it cannot be done. Villagers and guards pay the smith the same." % World.SHARPEN_COINS),
+		links(["job:smith", "sys:needs"])])
 	sys.call("multiplayer", "Playing with friends", [
 		p("A friend can play in your village with you on the same Wi-Fi or home network. Your world stays yours: it runs on your device, is saved there, and your friend's character is kept in it."),
 		h("Open your world"),

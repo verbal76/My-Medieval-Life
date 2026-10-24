@@ -34,6 +34,9 @@ drawn by the game as a sprite at spawns.campfire, so the camp's tile 5958 (trans
 entry go; the fire's cell stays solid (camp_fire). Its crates and barrels are Shade's whole crate (797) and barrel (358)
 instead of pieces of other objects (3500, 3502, still used by the stalls and the mine yard). Nothing walkable changes.
 
+Generator v14 (GP-SMITHY-WORKBENCH): the smithy's workbench table is cleared and drawn with a hammer and tongs; the grinding
+wheel is named in spawns (grindstone, its use cell) for sharpening (GP-SHARPEN). Collision unchanged.
+
 Generator v13 (GP-TARGET-ART-MATCH): a container records what its art shows (`look`: woodpile, plank pile, counter, stall
 crate) where that is not its kind, so its prompt names what is drawn; nothing else changes.
 
@@ -876,6 +879,15 @@ class Village:
         self.station("forge", (77, 42), smithy, at=(77, 41))
         self.station("anvil", (78, 44), smithy, at=(77, 43))
         self.station("workbench", (79, 46), smithy, at=(79, 47))
+        # generator v14 (GP-SMITHY-WORKBENCH, owner: "That's not a workbench, that's a grinding wheel ... put a hammer or
+        # two on top of it"): the workbench's table (79-80, 47) is cleared of its sack and pots and Shade's hammer and
+        # tongs (1249) lie on it; the grinding wheel (79-80, 45) is the smith's sharpening wheel (GP-SHARPEN, spawns.grindstone)
+        for x, old in ((79, 2559), (80, 2337)):
+            for i in range(6):
+                if self.get("below", i, x, 47) % 100000 == old:
+                    self.put("below", i, x, 47, tile_val(0, 1249) if x == 79 else -1)
+        self.ents["spawns"]["grindstone"] = [79, 45]
+        self.ents["spawns"]["grindstone_use"] = [80, 46]
         ox, oy = sawmill["x"], sawmill["y"]
         self.station("sawhorse", (ox + 3, oy + 6), sawmill["id"], at=(ox + 2, oy + 6))
         self.station("armory_counter", (71, 44), smithy, at=(71, 43))

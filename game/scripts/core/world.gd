@@ -4653,6 +4653,93 @@ func player_sell_many(buyer: NPC, id: String, qty: int, actor: PlayerState = nul
 	return {"result": "sold", "text": "", "sold": sold, "paid": paid}
 
 
+# ---------------------------------------------------------------- sharpening (GP-SHARPEN) ----
+## Owner, 2026-10-24 ("charge them a gold piece to sharpen a weapon there"; answers: repair wear, pay the smith): at the
+## smithy's grinding wheel (village.json spawns.grindstone) the smith, when there, sharpens a worn weapon for
+## SHARPEN_COINS paid to the smith: its wear is mended to full (no damage bonus). Players and villagers alike, through
+## sharpen_for (a guest's request goes to the host). Coins move purse to purse; nothing is made.
+const SHARPEN_COINS := 1
+
+
+## The grinding wheel's cell, Vector2i(-1, -1) on a map without one.
+func grindstone() -> Vector2i:
+	var g = map.data.get("spawns", {}).get("grindstone")
+	return Vector2i(int(g[0]), int(g[1])) if g != null else Vector2i(-1, -1)
+
+
+## The smith at the grinding wheel now (awake, in the smithy, within 6 tiles of it), else null.
+func smith_at_grindstone() -> NPC:
+	var g := grindstone()
+	if g.x < 0:
+		return null
+	var at := Vector2(g) + Vector2(1.0, 1.0)
+	var best: NPC = null
+	for n: NPC in npcs:
+		if n.alive and n.job == "smith" and n.depth == 0 and not asleep(n) and n.pos.distance_to(at) <= 6.0 \
+				and place_of(n.pos) == place_of(at) and (best == null or n.id < best.id):
+			best = n
+	return best
+
+
+## A weapon's wear left to mend: 0 when it is whole (or not a weapon).
+static func weapon_wear(inv: Inventory, id: String) -> int:
+	var it: Dictionary = GameData.item(id)
+	if str(it.get("type", "")) != "weapon" or not inv.has(id):
+		return 0
+	var full := int(it.get("durability", 0))
+	return maxi(0, full - int(inv.durability.get(id, full)))
+
+
+## Why weapon `id` of this inventory and purse cannot be sharpened now, or "".
+func sharpen_refusal(inv: Inventory, coins: int, id: String) -> String:
+	if str(GameData.item(id).get("type", "")) != "weapon":
+		return "Only a weapon is sharpened at the grinding wheel."
+	if not inv.has(id):
+		return "You have no %s." % GameData.item_name(id).to_lower()
+	if weapon_wear(inv, id) <= 0:
+		return "Your %s is already sharp." % GameData.item_name(id).to_lower()
+	if smith_at_grindstone() == null:
+		return "The smith is not at the grinding wheel."
+	if coins < SHARPEN_COINS:
+		return "Sharpening costs %d coin." % SHARPEN_COINS
+	return ""
+
+
+## The acting player has weapon `id` sharpened (GP-SHARPEN). "" when done, else why not.
+func player_sharpen(id: String, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_sharpen", player_sharpen.bind(id), [id])
+	if actor != null and actor != player:
+		return as_actor(actor, player_sharpen.bind(id))
+	var why := sharpen_refusal(player.inv, player.coins, id)
+	if why != "":
+		return why
+	var smith := smith_at_grindstone()
+	player.coins -= SHARPEN_COINS
+	smith.coins += SHARPEN_COINS
+	smith.earned += SHARPEN_COINS
+	player.inv.durability.erase(id)
+	stat("sharpened")
+	return ""
+
+
+## A villager, guard or bandit has their weapon `id` sharpened by the same rule, paying from their own purse.
+func npc_sharpen(n: NPC, id: String) -> String:
+	var why := sharpen_refusal(n.inv, n.coins, id)
+	if why != "":
+		return why
+	var smith := smith_at_grindstone()
+	if smith == n:
+		n.inv.durability.erase(id)                 # the smith sharpens their own for nothing
+		return ""
+	n.coins -= SHARPEN_COINS
+	smith.coins += SHARPEN_COINS
+	smith.earned += SHARPEN_COINS
+	n.inv.durability.erase(id)
+	stat("sharpened")
+	return ""
+
+
 func player_eat(id: String, actor: PlayerState = null) -> bool:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if mirrors():
