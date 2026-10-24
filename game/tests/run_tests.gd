@@ -3676,8 +3676,10 @@ func test_door_view() -> void:
 			var v := view.tile_value(layer, d.cell)
 			if v >= 0 and DoorView.DOOR_COPY.has(v % 100000):
 				left.append(d.cell)
-			elif v >= 0:
+			elif v >= 0 and (d.out as Vector2).y < 0.0:   # a back door (it opens north): its roof may cover it (GP-BACK-DOORS)
 				roofed.append(d.cell)
+			elif v >= 0:                                    # any other doorway stays clear of every tile drawn over the people
+				left.append(d.cell)
 		check(not w.map.is_solid(d.step) and not w.map.is_solid(d.cell) and w.place_of(Vector2(d.step) + Vector2(0.5, 0.5)) != d.building,
 			"%s's doorway %s opens onto %s, outside and walkable" % [d.building, d.cell, d.step])
 	check(left.is_empty(), "no door is drawn over the people in its doorway (%s)" % [left])
