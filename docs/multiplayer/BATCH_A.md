@@ -137,6 +137,8 @@ Recorded, not changed (changing them alters ties, hashes or order, or needs the 
   The two that do not pass fail identically on the unmodified Build 19 base `42c33e0` (run there for comparison): `contract_50ore_test.gd`
   (1 failure, "paid 400 = 50 units x 8 ... contract_paid and contract_units agree") and `judgment_decay_demo.gd` (a script error,
   "Out of bounds get index '42'", then it never exits; it is a demo, not a test).
+  (Correction, Batch B: both were fixed later, `judgment_decay_demo.gd` by `b16e791`; on `75fa491` both exit 0, 29 and 19 checks,
+  0 failures. Neither is a known failure any more.)
 - After the last code change (feast ids through `Life.is_player_id`): `run_tests`, `start_test`, `multiplayer_a1_test`, `feast_test` 37,
   `aging_test` 136, `identity_test` 98, `save_transfer_test` 21, `conservation_test` 8, `wiki_test`: all 0 failures; every script loads.
 - `python3 tools/sim_gate.py` (no `--write`, `docs/release/sim_baseline.json` untouched): **determinism gate: PASS, identical to the

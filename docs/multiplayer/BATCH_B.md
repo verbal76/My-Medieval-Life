@@ -65,8 +65,18 @@ their own until Batch C5) and are done only for the host. With one player each o
 
 ### Evidence (2026-10-24)
 
-See the final section of this file's commit and the batch report: G0, the SIM-GATE-01 suite, the full `tests.yml` inventory and
-unittest, all run on the final code of this batch.
+All on the final code of this batch (`75fa491`, documentation after it only):
+
+- **G0** (`python3 tools/sim_gate.py`, no `--write`, baseline untouched): **PASS, identical to the baseline** (seeds 1 and 2, days 10
+  and 30; seed 1 day 30 `60742ce2...`, seed 2 day 30 `573d6000...`), currency and item leaks 0.
+- **SIM-GATE-01** (`python3 tools/sim_suite.py --out out/sim-gate --godot /opt/godot/godot --jobs 4`): **PASS**, 0 blocking findings,
+  12 runs, 275 simulated days, accepted baseline identical, determinism and recorder neutrality identical (716 s).
+- **The full `tests.yml` Godot inventory** (109 scripts, trailing comments stripped, 4 in parallel, each with its own data dir, the
+  economy simulation with `$RUNNER_TEMP` set): **109 exit 0**, no script errors; the 98 that print a count: **10,514 checks, 0
+  failures** (`run_tests` 3,598, `start_test` 523 steps, `multiplayer_a1_test` 67, `net_g1_test` 44, `multiplayer_b_test` 31,
+  `net_batch_b_test` 44, `contract_50ore_test` 19, `judgment_decay_demo` 29); the 10-day economy simulation: leaks 0.
+- `python3 -m unittest discover -s tests`: 140 OK; `check_interactions` 295, 0 problems; `check_requirements --against HEAD~1` 0
+  problems; `check_resources` 0 problems; `check_materials` unchanged (18 open, none new); `wiki_test` all passed.
 
 ## 4. Left for Batch C and later
 
