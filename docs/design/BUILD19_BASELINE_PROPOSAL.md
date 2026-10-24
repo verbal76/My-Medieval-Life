@@ -1,4 +1,8 @@
-# Build 19 determinism baseline: proposal for owner approval (2026-10-24)
+# Build 19 determinism baseline: approved and written (2026-10-24)
+
+**Status:** approved by the owner (`docs/directives/2026-10-24_owner_answers_baseline_bandits.md`) and written on `wip/build19`
+**2685a26** from **417c07f**, after the owner's SIM-F4 rule answers were built and measured (final table below). The
+proposal that follows is kept as it was.
 
 Owner rules: one combined baseline after identity and the wait-plan fixes are integrated (`docs/directives/2026-10-23_simf9_determinism_decision.md`);
 the Build 18 baseline stays as history; differences documented and explained (B19-EMERGE). **Nothing is written to
@@ -43,3 +47,15 @@ days 10 and 30; the recorder changes nothing. **Conservation:** no currency or i
 
 Approve this baseline (seeds 1 and 2, days 10 and 30, on a7c84e9). If SIM-F4's rule answers change bandit behaviour, the
 change is measured and this proposal is updated once more before release, not re-baselined per fix.
+
+## Final: after the SIM-F4 rule answers (417c07f), written as the Build 19 baseline
+
+| Seed, day | Fingerprint | Alive | Households | Currency | Leaks |
+|---|---|---|---|---|---|
+| 1, 10 | `a47f2e6d1d9b8bb756e8080155c1ee52` | 108 | 25 | 3312 | none |
+| 1, 30 | `60742ce25b0ed80dd673c4e969635994` | 116 | 25 | 4664 | none |
+| 2, 10 | `3ec4c34404ba0c7f371e8364731f9596` | 105 | 25 | 3110 | none |
+| 2, 30 | `573d60003ad2c4075787a6ef673fdc27` | 119 | 25 | 4668 | none |
+
+Three independent runs agree (gate, recorded run, `--write` run). Over 30 days (recorded): seed 1, 5 elders of old age, no
+bandit died; seed 2, 5 elders of old age and 4 bandits slain by villagers they attacked (emergent). Nobody starved.

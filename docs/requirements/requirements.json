@@ -4821,7 +4821,16 @@
      "date": "2026-10-23",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner approved (docs/directives/2026-10-24_owner_answers_baseline_bandits.md); to be written on the final commit after the SIM-F4 rule change is measured"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: None -> IMPLEMENTED ON TASK BRANCH; commits + 2685a26",
+     "why": "written on wip/build19 2685a26 from 417c07f (three identical runs); Build 18 baseline kept as sim_baseline_build18.json"
     }
+   ],
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "commits": [
+    "2685a26"
    ]
   },
   {
@@ -42480,14 +42489,23 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "owner answered: health no longer blocks a bandit's food purchase, and a bandit may buy as soon as they can afford one item of food; bandits heal by resting and sleeping at the camp like villagers"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; tests: None -> od16_test 38/0; recf1_test 28/0; world_test 339/0; outlaw_return 24/0; wiki pass; 30-day seeds 1-2 measured; test_commit: None -> 417c07f; commits + 417c07f; next_action",
+     "why": "built 417c07f (owner answers): od16_test covers both rules; 30-day measurement: no starvation on either seed, bandit deaths only in fights with villagers"
     }
    ],
-   "next_action": "implement on wip/build19, test, measure once (30 days, seeds 1-2), update the baseline",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "next_action": "ships with Build 19",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "branch": "wip/build19",
    "commits": [
-    "a7c84e9"
-   ]
+    "a7c84e9",
+    "417c07f"
+   ],
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "od16_test 38/0; recf1_test 28/0; world_test 339/0; outlaw_return 24/0; wiki pass; 30-day seeds 1-2 measured",
+   "test_commit": "417c07f"
   },
   {
    "id": "SIM-F9",
@@ -52495,9 +52513,14 @@
      "date": "2026-10-23",
      "change": "test_commit: b2f7dc2 -> a7c84e9; commits + a7c84e9; next_action",
      "why": "a7c84e9: determinism twice confirmed, no leaks, 30-day recorder run analysed, blocked-chase defect fixed with a test; baseline proposed (B19-BASELINE); recorder off in every build (recorder.json enabled false)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "commits + 2685a26; next_action",
+     "why": "Build 19 candidate wip/build19 2685a26: all Expansion 19 layers on, identity, REC-F1/SIM-F9, recorder (off in every build), blocked-chase fix and the owner's bandit rules; targeted suites pass; determinism three runs identical; no leaks; no starvation in 30 days; baseline written"
     }
    ],
-   "next_action": "owner: B19-BASELINE and SIM-F4 rules; then wiki check and packaging for the owner's release authorization",
+   "next_action": "present Build 19 to the owner for release authorization (release.yml run needs the owner)",
    "assigned_worker": "lead",
    "branch": "wip/build19",
    "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass",
@@ -52505,7 +52528,8 @@
    "commits": [
     "b7f832e",
     "b2f7dc2",
-    "a7c84e9"
+    "a7c84e9",
+    "2685a26"
    ]
   },
   {

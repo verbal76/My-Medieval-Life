@@ -60,3 +60,9 @@ starved. Seed 2: 7 elders (old age), 17 bandits starved. The seed-2 bandits are 
 camp (120-170 hourly samples each), go to market rarely, and most hold 5-14 coins (the market needs 15 and 60% health);
 one held 72 coins and never bought. Classified as a **design question** (SIM-F4): today's rules leave the band without
 enough food. Owner choices: the health condition on buying food, the 15-coin minimum, and whether bandits heal.
+
+## Run 4: the same 30 days on 417c07f (the owner's SIM-F4 answers: food when affordable however hurt, healing at camp)
+
+No leak, no FATAL; gate, recorded and `--write` runs give the same fingerprints. Seed 1: 5 elders of old age, no bandit
+died. Seed 2: 5 elders of old age, 4 bandits slain by the villagers they attacked (emergent). Nobody starved on either seed.
+Written as the Build 19 baseline (2685a26).
