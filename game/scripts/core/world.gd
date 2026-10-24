@@ -104,9 +104,11 @@ var player: PlayerState:
 	set(v):
 		if _actor != null:          # a guest's character is replaced (an heir takes over a guest): the host stays
 			_guests.erase(_actor.pid)
+			_actor.party = ""
 			_actor = v
 			if v.pid > 0:
 				_guests[v.pid] = v
+				v.party = "player:%d" % (v.line if v.line > 0 else v.pid)
 		else:
 			_host_player = v
 var coin_sources := 0              # coins that entered the village (caravan)
@@ -465,6 +467,8 @@ func _on_hour(h: int) -> void:
 
 
 func _new_day() -> void:
+	if not offers.is_empty():
+		_lapse_offers()                       # MP-D8: an offer between players lasts its day
 	# X18 HOOK (X18-CAPCOMP part 1): experience leaves with the person: whoever is no longer a living villager is forgotten
 	for k in experience.minutes.keys():
 		if str(k).begins_with("npc:"):
@@ -703,7 +707,11 @@ func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
 
 ## X18 HOOK (X18-CAPCOMP part 1): credit the player's finished work (`secs` real seconds of an action in `industry`).
 func note_player_work(industry: String, secs: float) -> void:
-	experience.credit(WorkExperience.PLAYER, industry, secs * float(GameData.b("game_minutes_per_second")), minutes)
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		mirror("note_player_work", note_player_work.bind(industry, secs), [industry, secs])
+		return
+	experience.credit(acting_ref(), industry, secs * float(GameData.b("game_minutes_per_second")), minutes)     # MP C: each player's own record ("player" the host's)
 
 
 # ---------------------------------------------------------------- player ---------------------
@@ -778,12 +786,15 @@ func add_guest(p: PlayerState) -> bool:
 	if p == null or p.pid <= 0 or p.pid == _host_player.pid or _guests.has(p.pid):
 		return false
 	_guests[p.pid] = p
+	p.party = "player:%d" % (p.line if p.line > 0 else p.pid)      # MP C: the reference static helpers read (Contracts.ref_of)
 	return true
 
 
 func remove_guest(pid: int) -> PlayerState:
 	var g: PlayerState = _guests.get(pid)
 	_guests.erase(pid)
+	if g != null:
+		g.party = ""
 	return g
 
 
@@ -793,6 +804,214 @@ func remove_guest(pid: int) -> PlayerState:
 func suspend_guests() -> void:
 	for id in _guests:
 		(_guests[id] as PlayerState).away = true
+
+
+## ---- MP Batch C: the guest's verbs go to the host (docs/multiplayer/BATCH_C.md, "Every verb a request") ----
+## On a guest's machine (Main.start_guest_world) `remote` sends a verb and its arguments to the host (NetSession.send_verb);
+## everywhere else it is unset and nothing below runs (single player and the host: unchanged). Every player verb the
+## interface can call begins with
+##     if w.mirrors(): return w.mirror("farm.sow", sow.bind(cell, crop), [cell, crop])
+## so on a guest the outermost verb an interface action calls is sent to the host, which applies the same verb as that guest
+## (NetActions.apply_verb, under as_actor) with its own rules and the authority over coins, goods and records; the guest's copy then
+## runs the verb too (`_mirroring`, so the verbs it calls in turn are not sent again), only so its interface answers at once: the
+## host's answer (the guest's character as the host has it, and the world sections that changed) replaces what it predicted.
+var remote := Callable()
+var remote_done := Callable()       # (request id, the guest's own result): the session compares it with the host's answer
+var _mirroring := false
+
+
+func mirrors() -> bool:
+	return remote.is_valid() and not _mirroring
+
+
+func mirror(path: String, c: Callable, args: Array) -> Variant:
+	var rid = remote.call(path, args)
+	_mirroring = true
+	var r = c.call()
+	_mirroring = false
+	if remote_done.is_valid():
+		remote_done.call(rid, r)
+	return r
+
+
+# ---------------------------------------------------------------- MP-D8: between two players -------------
+## Owner decision MP-D8 (2026-10-24): marriage between two players, and every other action that needs both of them, needs both
+## players' consent. One player offers (player_offer), the other answers (player_answer); nothing happens until they accept, and the
+## offer is checked again then. Kinds: "partner" (the two become partners, Life's rules for a pair: both living adults of partnering
+## age, neither partnered, not kin; no feast and no children are made for a pair of players: births need a villager parent, Life.births)
+## and "gift" (goods handed from one pack to the other, their stolen marks with them). An offer lapses at the end of its day, or when
+## either player leaves play. Saved under the optional key "player_offers".
+var offers: Array = []              # {id, kind, from (ref), to (ref), item, qty, day}
+var next_offer := 1
+const OFFER_REACH := 3.0            # tiles: the two stand together
+
+
+func offers_to(p: PlayerState) -> Array:
+	var ref := player_ref(p)
+	return offers.filter(func(o): return str(o.to) == ref and int(o.day) == day())
+
+
+func offers_from(p: PlayerState) -> Array:
+	var ref := player_ref(p)
+	return offers.filter(func(o): return str(o["from"]) == ref and int(o.day) == day())
+
+
+## Why the two players cannot become partners ("" if they can).
+func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
+	if a == null or b == null or a == b or not a.alive or not b.alive:
+		return "That is not possible."
+	var lo := float(Life.cfg().partner_min_age)
+	if a.partner >= 0 or Life.is_player_id(a.partner):
+		return "You already have a partner."
+	if b.partner >= 0 or Life.is_player_id(b.partner):
+		return "%s already has a partner." % b.name
+	if Life.age_years(a.born, minutes) < lo:
+		return "You are too young."
+	if Life.age_years(b.born, minutes) < lo:
+		return "%s is too young." % b.name
+	if Life.kin(person_id(a), a.mother, a.father, person_id(b), b.mother, b.father):
+		return "%s is your kin." % b.name
+	return ""
+
+
+func _offer_refusal(a: PlayerState, b: PlayerState, kind: String, item: String, qty: int) -> String:
+	if b == null or b.away or not b.alive or a.map_level != b.map_level or a.pos.distance_to(b.pos) > OFFER_REACH:
+		return "Stand beside them to ask."
+	match kind:
+		"partner":
+			return players_partner_refusal(a, b)
+		"gift":
+			if qty < 1 or not a.inv.has(item, qty):
+				return "You do not have that."
+			return ""
+	return "That cannot be offered."
+
+
+## The acting player offers `kind` to the player with pid `to_pid`. "" when offered (the other must accept), else why not.
+func player_offer(kind: String, to_pid: int, item := "", qty := 1, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_offer", player_offer.bind(kind, to_pid, item, qty), [kind, to_pid, item, qty])
+	if actor != null and actor != player:
+		return as_actor(actor, player_offer.bind(kind, to_pid, item, qty))
+	var b := player_by_pid(to_pid)
+	var why := _offer_refusal(player, b, kind, item, qty)
+	if why != "":
+		return why
+	for o in offers_from(player):
+		if str(o.to) == player_ref(b) and str(o.kind) == kind:
+			return "You have asked already."
+	offers.append({"id": next_offer, "kind": kind, "from": acting_ref(), "to": player_ref(b), "item": item, "qty": qty, "day": day()})
+	next_offer += 1
+	stat("player_offers")
+	return ""
+
+
+## The acting player answers offer `id` made to them: accepted, it is done now (checked again); declined, it is gone. "" or why not.
+func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_answer", player_answer.bind(id, accept), [id, accept])
+	if actor != null and actor != player:
+		return as_actor(actor, player_answer.bind(id, accept))
+	var o := {}
+	for x in offers:
+		if int(x.id) == id and str(x.to) == acting_ref():
+			o = x
+	if o.is_empty():
+		return "There is no such offer."
+	offers.erase(o)
+	if not accept:
+		stat("player_offers_declined")
+		return ""
+	var a := player_of_ref(str(o["from"]))
+	var b := player
+	if int(o.day) != day():
+		return "That offer has lapsed."
+	var why := _offer_refusal(a, b, str(o.kind), str(o.item), int(o.qty)) if a != null else "They are gone."
+	if why != "":
+		return why if str(o.kind) == "gift" else "You cannot: %s" % why.to_lower()
+	match str(o.kind):
+		"partner":
+			a.partner = person_id(b)
+			b.partner = person_id(a)
+			Life.kin_version += 1
+			stat("partnerships")
+			stat("player_partnerships")
+			note("%s %s and %s %s become partners." % [a.name, a.family, b.name, b.family])
+		"gift":
+			var item := str(o.item)
+			var qty := int(o.qty)
+			if not b.inv.can_add(item):
+				return b.inv.full_text(item)
+			var marks: Dictionary = (a.stolen.get(item, {}) as Dictionary).duplicate()
+			a.inv.remove(item, qty)
+			b.inv.add(item, qty)
+			var left := qty
+			var owners := marks.keys()
+			owners.sort()
+			for ow in owners:
+				var k := mini(left, int(marks[ow]))
+				if k > 0:
+					a.unmark(item, int(ow), k)
+					b.mark_stolen(item, int(ow), k)
+					left -= k
+			stat("player_gifts")
+	return ""
+
+
+## Offers of a day gone, or with a player out of play, lapse (World._new_day).
+func _lapse_offers() -> void:
+	offers = offers.filter(func(o): return int(o.day) == day())
+
+
+# ---------------------------------------------------------------- MP C1: walking in the core -------------
+const PLAYER_BODY := [Vector2(-0.38, -0.15), Vector2(0.38, -0.15), Vector2(-0.38, 0.2), Vector2(0.38, 0.2)]   # the player's feet, about as wide as the sprite (tiles; Build 8: walls overlapped the sprite)
+
+
+## How many corners of player `p`'s feet, standing at `at`, are on a cell blocked on `p`'s level.
+func body_blocked(p: PlayerState, at: Vector2) -> int:
+	var n := 0
+	for c in PLAYER_BODY:
+		var q: Vector2 = at + c
+		if solid_for_player(Vector2i(floori(q.x), floori(q.y)), p):     # the level the player is on (MIN-A)
+			n += 1
+	return n
+
+
+## Whether player `p` may stand at `to` coming from where it is: the feet fit there, or (feet already on something solid: a tree
+## that grew back under them, a building finished around them) they overlap no more than now, so a player can always walk out
+## (Build 8 report: trapped between trees). The one rule for every player's step, the host's own and a guest's.
+func step_ok(p: PlayerState, to: Vector2) -> bool:
+	var after := body_blocked(p, to)
+	if after == 0:
+		return true
+	var now := body_blocked(p, p.pos)
+	return now > 0 and after <= now
+
+
+## Move `p` by `step` if step_ok. True when it moved.
+func try_step(p: PlayerState, step: Vector2) -> bool:
+	var np := p.pos + step
+	if step_ok(p, np):
+		p.pos = np
+		return true
+	return false
+
+
+## Pushing into a wall beside an opening (a doorway, the gap between two trees): when the feet would fit through less than about
+## half a tile to the side, slide toward it, as most games do (Build 8 report: trapped just inside a door).
+func slide_to_gap(p: PlayerState, step: Vector2) -> void:
+	var side := Vector2(0, 1) if step.x != 0.0 else Vector2(1, 0)
+	var base: float = p.pos.y if step.x != 0.0 else p.pos.x
+	var best := INF
+	for k in [-1, 0, 1]:
+		var off: float = floorf(base) + 0.5 + k - base
+		if absf(off) > 0.55 or absf(off) < 0.001 or absf(off) >= absf(best):
+			continue
+		var at := p.pos + side * off
+		if body_blocked(p, at) == 0 and body_blocked(p, at + step) == 0:
+			best = off
+	if best != INF:
+		try_step(p, side * signf(best) * minf(absf(best), step.length()))
 
 
 ## The player a verb is acting for right now (the host unless inside as_actor).
@@ -835,12 +1054,64 @@ static func is_player_ref(x: Variant) -> bool:
 	return x is int and Life.is_player_id(int(x))
 
 
-## True when `x` (a reference, or the legacy person id -2) names the acting player: the question "is this mine?" of the interface and of
-## the verbs. "player" is the host's, so while a guest acts it is not the acting player's.
+## True when `x` (a reference, or a player's person id) names the acting player: the question "is this mine?" of the interface and of
+## the verbs. "player" (and -2) is the host's, so while a guest acts it is not the acting player's.
 func is_acting_ref(x: Variant) -> bool:
 	if x is String:
 		return x == acting_ref()
-	return x is int and Life.is_player_id(int(x)) and player == _host_player
+	return x is int and Life.is_player_id(int(x)) and int(x) == acting_id()
+
+
+## MP Batch C: a player's person id, the id that stands for them wherever a villager's id would (ties, family links, judgment,
+## NPC.target, reports): the legacy -2 for the host's line (ID-D1: every save, unchanged in single player), and for a guest the
+## negative of its line's pid (`-(line)`, the first guest character's pid; its own pid while it never died), so a guest's heir keeps
+## the village's view of the family as the host's heir keeps -2, and the reference "player:<line>" and the id -line name one line.
+func person_id(p: PlayerState) -> int:
+	if p == null or p == _host_player:
+		return Life.PLAYER_ID
+	return -(p.line if p.line > 0 else p.pid)
+
+
+## The acting player's person id (-2 in single player).
+func acting_id() -> int:
+	return person_id(player)
+
+
+## The person id of a party to a trade or a deal: a villager's id, a player's person id (any other: the host's, as before).
+func id_of_party(x) -> int:
+	if x is NPC:
+		return (x as NPC).id
+	return person_id(x as PlayerState) if x is PlayerState else Life.PLAYER_ID
+
+
+## The living character of the line a player person id names (-2: the host's), null for any other id or a line with no character here.
+func player_of_id(id: int) -> PlayerState:
+	if id == Life.PLAYER_ID:
+		return _host_player
+	if not Life.is_player_id(id):
+		return null
+	return player_of_ref("player:%d" % -id)
+
+
+## MP C: the player character a party reference names, for the many helpers that take a reference (a purse, a pack, a chest, a
+## signer): that player's own, whoever is acting; the acting player for a reference that names no player here (as before).
+func player_for(ref) -> PlayerState:
+	var p := player_of_ref(ref)
+	return p if p != null else player
+
+
+## The reference of a player person id ("player" for -2, "player:<line>" for a guest's), "" for an id that names no player.
+static func ref_of_id(id: int) -> String:
+	if id == Life.PLAYER_ID:
+		return PLAYER
+	return "player:%d" % -id if Life.is_player_id(id) else ""
+
+
+## The person id of a player reference (-2 for "player", -line for "player:<line>"), -1 for anything else.
+static func id_of_ref(ref: String) -> int:
+	if ref == PLAYER:
+		return Life.PLAYER_ID
+	return -pid_of_ref(ref) if ref.begins_with("player:") and pid_of_ref(ref) > 0 else -1
 
 
 ## The pid in "player:<pid>", 0 for anything else.
@@ -861,7 +1132,7 @@ func player_of_ref(x: Variant) -> PlayerState:
 					return _guests[id]
 			return player_by_pid(n)
 		return null
-	return _host_player if x is int and Life.is_player_id(int(x)) else null
+	return player_of_id(int(x)) if x is int else null
 
 
 func _update_player(real_dt: float, gm: float) -> void:
@@ -880,6 +1151,8 @@ func _update_one_player(real_dt: float, gm: float) -> void:
 	if p.hunger <= 0.0:
 		damage_player(gm / 60.0 * float(GameData.b("starve_damage_per_hour")), "hunger")     # TIME-04: the villagers' rule
 	p.stamina = minf(p.stamina_cap(), p.stamina + real_dt * float(GameData.b("player_stamina_regen_per_second")))
+	if p.rest_until >= 0.0 and minutes >= p.rest_until:
+		_end_rest(p, true)             # MP-D2: a rest in real time ran its course
 	relations.player_tick(gm)          # time spent near villagers builds ties (CRT-10)
 	p.fireball_cd = maxf(0.0, p.fireball_cd - real_dt)
 	p.attack_cd = maxf(0.0, p.attack_cd - real_dt)
@@ -897,6 +1170,8 @@ func damage_player(amount: float, source: String, actor: PlayerState = null, flo
 	if floor_hp > 0.0 and p.hp < floor_hp:
 		p.hp = minf(floor_hp, p.hp_cap())
 	p.last_damage = source              # what hurt the player last: the death screen's cause (B8-020)
+	if p.rest_until >= 0.0 and source != "hunger":
+		_end_rest(p, false)             # MP-D2: a blow wakes a player resting in real time
 	Decay.blow_player(self, source)     # DVW-B4: a blow wears the armour and clothes worn
 	if p.hp <= 0.0:
 		p.alive = false
@@ -911,6 +1186,9 @@ func damage_player(amount: float, source: String, actor: PlayerState = null, flo
 ## A3 (owner answer 2, 2026-10-24): a beaten player yields to a guard of their case in sight (Justice.yield_guard): taken
 ## in, the stolen goods back, a heavy fine to the manor (Justice.take_in). Returns {ok, text}.
 func player_yield(actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_yield", player_yield.bind(), [])
 	if actor != null and actor != player:
 		return as_actor(actor, player_yield)
 	var ref := acting_ref()
@@ -966,8 +1244,8 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	heir.appearance = p.heir_appearance.duplicate(true)      # CC-01: the looks are recipes now
 	heir.heir_appearance = p.appearance.duplicate(true)
 	var kid := Life.player_heir_child(self)        # B8-029: the player's own eldest child of 16+, if there is one
-	if dead_host:
-		Life.retire_player_id(self)                # the family links under -2 are the host's line's (a guest's line has none yet: Batch C)
+	var dead_id := person_id(p)                # MP C5: the line's person id (-2 the host's), which the heir takes up
+	Life.retire_player_id(self, p)             # the links to the dead (the line's id) now name an ancestor: -3 for the host, the dead's own id for a guest
 	if kid != null:
 		Life.make_heir(self, heir, kid, p)
 	else:
@@ -997,7 +1275,7 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	quests.start_story()                   # the heir must seek the sage again: spells are not inherited
 	# whoever was fighting the dead player has no quarrel with the heir
 	for n: NPC in npcs:
-		if Life.is_player_id(n.target) and ((n.target_ref == "" and n.pursuit.is_empty() and dead_host) or n.target_ref == dead_ref or str(n.pursuit.get("ref", "")) == dead_ref):
+		if n.target == dead_id and ((n.target_ref == "" and n.pursuit.is_empty() and dead_host) or n.target_ref == dead_ref or str(n.pursuit.get("ref", "")) == dead_ref):
 			n.target = -1                      # A8: only those fighting the dead player, never a guest's or the host's other foes
 			n.target_ref = ""
 			n.plan.clear()
@@ -1034,7 +1312,7 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
 	if relations:                      # X18 HOOK (X18-Q12-POST): the pair become commercial contacts (a record only)
-		relations.note_trade(buyer.id if buyer is NPC else Life.PLAYER_ID, seller.id if seller is NPC else Life.PLAYER_ID, day())
+		relations.note_trade(id_of_party(buyer), id_of_party(seller), day())     # MP C3: a guest trades as itself
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
 		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
@@ -1082,7 +1360,7 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 		if (o.job in jobs or at_post(o)) and o.inv.has(id) and not brain.keeps(o, id) \
 				and (o.job == "merchant" or not NPCBrain.BUYS.get(brain.buy_role(o), {}).has(id)):     # a trade's own materials are not for sale
 			n += o.inv.count(id)
-	for s: Dictionary in business.premises() + business.stalls.npc_built():     # and villagers' built stalls (STALL-06)
+	for s: Dictionary in business.all_premises() + business.stalls.npc_built():     # and villagers' built stalls (STALL-06)
 		if s != skip and s.has("stock") and Vector2(int(s.x), int(s.y)).distance_squared_to(at) <= r2:
 			n += int(s.stock.get(id, 0))
 	return n
@@ -1327,6 +1605,9 @@ func player_quote(n: NPC, id: String, qty: int, buying: bool, actor: PlayerState
 ## Buy `qty` of `id` from `vendor` at player_quote prices, all or nothing: the vendor must hold them, the
 ## pack must have room and the player's own coins must cover the whole bill. Returns {result, text, bought, paid}.
 func player_buy_many(vendor: NPC, id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_buy_many", player_buy_many.bind(vendor, id, qty), [vendor, id, qty])
 	if actor != null and actor != player:
 		return as_actor(actor, player_buy_many.bind(vendor, id, qty))
 	if recorder == null:
@@ -1528,6 +1809,48 @@ func plant_at(c: Vector2i) -> Dictionary:
 
 ## Pick a ripe plant: returns what it gave (item id -> count, from its resources.json node), {} if it
 ## is not ripe. The plant is bare until plant_regrow_seasons (provisional; whole days) later, at dawn.
+## MP C2: the player picks a ripe wild plant, the whole action the interface completes (it was composed in Main): the goods
+## into the pack, then the cutting or seed by its chance (propagation_drop, counted by player_gain). Returns what came, {} for nothing.
+func player_pick_plant(pl: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_pick_plant", player_pick_plant.bind(pl), [pl])
+	if actor != null and actor != player:
+		return as_actor(actor, player_pick_plant.bind(pl))
+	var got := pick_plant(pl)
+	for id in got:
+		player.inv.add(id, int(got[id]))
+	if not got.is_empty():
+		var cut := propagation_drop(pl)        # SEED-02: a cutting or seed by its chance, as for villagers
+		for id in cut:
+			if player_gain(id, int(cut[id])) > 0:
+				got[id] = int(cut[id])
+	return got
+
+
+## MP C2: the player picks a tree's ripe fruit into the pack (the action Main completed). Returns what came.
+func player_pick_fruit(t: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_pick_fruit", player_pick_fruit.bind(t), [t])
+	if actor != null and actor != player:
+		return as_actor(actor, player_pick_fruit.bind(t))
+	var got := pick_fruit(t)
+	for id in got:
+		player.inv.add(id, int(got[id]))
+	return got
+
+
+## MP C2: the player sets a handcart from the pack down at `at` (the action Main completed). The cart, or {} without one.
+func player_set_down_cart(at: Vector2, actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_set_down_cart", player_set_down_cart.bind(at), [at])
+	if actor != null and actor != player:
+		return as_actor(actor, player_set_down_cart.bind(at))
+	if not player.inv.has("handcart"):
+		return {}
+	player.inv.remove("handcart", 1)
+	return carts.place(acting_ref(), at)
+
+
 func pick_plant(pl: Dictionary, actor: PlayerState = null) -> Dictionary:
 	if actor != null and actor != player:
 		return as_actor(actor, pick_plant.bind(pl))
@@ -1607,6 +1930,9 @@ func plant_bush_refusal(cell: Vector2i, item: String) -> String:
 ## `from` and counted used_), and a young wild plant of its kind stands there, belonging to no one like any wild plant; it
 ## bears propagation grow_seasons later (season_plants). Returns the plant, {} if refused.
 func plant_bush(cell: Vector2i, item: String, from: Inventory, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("plant_bush", plant_bush.bind(cell, item, from), [cell, item, from])
 	if actor != null and actor != player:
 		return as_actor(actor, plant_bush.bind(cell, item, from))
 	if plant_bush_refusal(cell, item) != "" or not from.has(item):
@@ -1889,6 +2215,9 @@ func player_mine_plan(d: Dictionary, actor: PlayerState = null) -> Dictionary:
 ## (PAR-01), into the pack (a full pack sets the ore down: `full`); a broken pickaxe leaves the hand empty.
 ## Returns work_mine's result plus `full` (the pack could not take the ore).
 func player_mine(d: Dictionary, tool: String, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_mine", player_mine.bind(d, tool), [d, tool])
 	if actor != null and actor != player:
 		return as_actor(actor, player_mine.bind(d, tool))
 	var p := player
@@ -1928,6 +2257,9 @@ func player_fell_plan(t: Dictionary, actor: PlayerState = null) -> Dictionary:
 ## the pack is full (`full`); the tree may drop saplings (sapling_drop, with the sapling_bonus), and `saplings` holds
 ## those the pack took whole; a broken axe leaves the hand. Returns {result, logs, full, saplings, broke, up}.
 func player_chop(t: Dictionary, side: int, tool: String, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_chop", player_chop.bind(t, side, tool), [t, side, tool])
 	if actor != null and actor != player:
 		return as_actor(actor, player_chop.bind(t, side, tool))
 	var p := player
@@ -1969,6 +2301,9 @@ func player_craft_refusal(recipe: String, actor: PlayerState = null) -> String:
 ## player_craft_refusal. The time: the recipe's minutes at the game's speed, by the skill's craft_time effect; the
 ## station is held for the player meanwhile (reserve_for_player). Returns {ok: true, station, secs} or {ok: false, why}.
 func player_craft_begin(recipe: String, station := "", actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_craft_begin", player_craft_begin.bind(recipe, station), [recipe, station])
 	if actor != null and actor != player:
 		return as_actor(actor, player_craft_begin.bind(recipe, station))
 	var r: Dictionary = GameData.recipes[recipe]
@@ -1996,6 +2331,9 @@ func player_craft_begin(recipe: String, station := "", actor: PlayerState = null
 ## DVW-A12 R3: the player's work on `recipe` is done: work_craft from the pack into the pack, as a villager's (PAR-01,
 ## PAR-04). Returns work_craft's result.
 func player_craft(recipe: String, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_craft", player_craft.bind(recipe), [recipe])
 	if actor != null and actor != player:
 		return as_actor(actor, player_craft.bind(recipe))
 	if recorder == null:
@@ -2023,6 +2361,9 @@ func harm_npc(n: NPC, dmg: float) -> float:
 ## DVW-A12 R7: the damage of one blow of the player's: their weapon's (PlayerState.damage), doubled by the Combat
 ## tier's crit_chance. Returns {dmg, crit}.
 func player_strike(actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_strike", player_strike.bind(), [])
 	if actor != null and actor != player:
 		return as_actor(actor, player_strike)
 	var d := player.damage()
@@ -2034,6 +2375,9 @@ func player_strike(actor: PlayerState = null) -> Dictionary:
 ## DVW-A12 R7: the player's sword blow lands on villager `n`: player_strike, player_hit_npc, and 4 Combat xp a blow.
 ## Returns player_hit_npc's result plus {crit, up} (up: a new Combat level, or 0).
 func player_melee_npc(n: NPC, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_melee_npc", player_melee_npc.bind(n), [n])
 	if actor != null and actor != player:
 		return as_actor(actor, player_melee_npc.bind(n))
 	var s := player_strike()
@@ -2048,6 +2392,9 @@ func player_melee_npc(n: NPC, actor: PlayerState = null) -> Dictionary:
 ## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
 ## slain by the player, and a bandit put down near villagers is a defence (CRT-10). Returns {dealt, killed}.
 func player_hit_npc(n: NPC, dmg: float, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_hit_npc", player_hit_npc.bind(n, dmg), [n, dmg])
 	if actor != null and actor != player:
 		return as_actor(actor, player_hit_npc.bind(n, dmg))
 	if recorder == null:
@@ -2065,7 +2412,7 @@ func _player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 	if n.role != "bandit":
 		player_assault(n)
 	elif n.target == -1:
-		n.target = Life.PLAYER_ID
+		n.target = acting_id()                  # MP C6: the player who struck (a guest's own id)
 		n.target_ref = acting_ref()             # A8
 	var killed := false
 	if n.hp <= 0.0:
@@ -2088,6 +2435,9 @@ const FIREBALL_HIT_RADIUS := 0.6
 ## down or without the stamina (balance fireball_cooldown and fireball_stamina, by the Magic tier); a cast starts the
 ## cooldown, spends the stamina and earns 6 Magic xp. Returns {ok, why}.
 func player_cast_fireball(actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_cast_fireball", player_cast_fireball.bind(), [])
 	if actor != null and actor != player:
 		return as_actor(actor, player_cast_fireball)
 	var p := player
@@ -2108,6 +2458,9 @@ func player_cast_fireball(actor: PlayerState = null) -> Dictionary:
 ## and a spell that lands earns 6 more Magic xp (`up`: a new level, shown by the caller after the hit). Returns {who:
 ## the one struck or null, before: their health before, dealt, guard: a guard's words, up}.
 func player_fireball_hit(pos: Vector2, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_fireball_hit", player_fireball_hit.bind(pos), [pos])
 	if actor != null and actor != player:
 		return as_actor(actor, player_fireball_hit.bind(pos))
 	var dmg := FIREBALL_DAMAGE * Skills.value(player, "magic", "fireball_damage", 1.0)
@@ -2128,11 +2481,14 @@ func player_fireball_hit(pos: Vector2, actor: PlayerState = null) -> Dictionary:
 ## defence (CRT-10); livestock is theft from its keeper, known the way a theft is (witness, PAR-05): the keeper
 ## remembers it, and one who saw it comes after the player. Returns {killed, guard: a guard's words, "" for none}.
 func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_hit_animal", player_hit_animal.bind(a, dmg), [a, dmg])
 	if actor != null and actor != player:
 		return as_actor(actor, player_hit_animal.bind(a, dmg))
 	a.hp -= dmg
 	if a.hp > 0.0:
-		fauna.provoke(a, "player")
+		fauna.provoke(a, acting_ref())            # MP C6: the player who struck it
 		return {"killed": false, "guard": ""}
 	player_xp("combat", Skills.kill_xp(a.species, player.damage()))
 	player_xp("hunting" if a.wild() else "husbandry", Skills.action_xp("hunt" if a.wild() else "slaughter"))    # DVW-B8
@@ -2153,7 +2509,7 @@ func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dict
 		witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
 		keeper.remember(("%s killed my %s" % [player.name, what]) if saw else ("found my %s dead" % what))
 		if saw and keeper.role == "adult" and keeper.target == -1:
-			keeper.target = Life.PLAYER_ID
+			keeper.target = acting_id()
 			keeper.target_ref = acting_ref()    # A8
 		guard = last_guard
 		note("%s %s killed one of %s %s's animals." % [player.name, player.family, keeper.name, keeper.family])
@@ -2171,7 +2527,7 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 	victim.remember("attacked by %s" % p.name)
 	relations.harmed(victim, float(Relations.cfg().victim_harm))
 	if victim.role == "adult":
-		victim.target = Life.PLAYER_ID
+		victim.target = acting_id()
 		victim.target_ref = acting_ref()        # A8: they fight the player who struck them, a guest or the host
 	var aware := aware_of_attack(p.pos, victim)
 	var seen := 0
@@ -2188,7 +2544,7 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 	var fresh := ci < 0                   # A3: blow after blow of one attack is one assault on the record
 	if fresh:
 		ci = crime_record({"day": day(), "kind": kind, "what": "%s %s" % [victim.name, victim.family], "victim": victim.id, "witnesses": seen}, victim)
-	raise_alarm(aware, Life.PLAYER_ID, ref, [ci])
+	raise_alarm(aware, acting_id(), ref, [ci])
 	for n: NPC in aware.seen:
 		if n.role != "bandit" and n.job != "guard":
 			justice.case_of(ref).aware[str(n.id)] = maxi(int(justice.case_of(ref).aware.get(str(n.id), -1)), ci)   # A3: they know who did it
@@ -2433,6 +2789,9 @@ func plant_tree(cell: Vector2i, item: String, actor: PlayerState = null) -> Dict
 ## DVW-A12 R6: the player earns `n` xp in `skill` (PlayerState.gain); a new level is announced by player_leveled.
 ## Returns the new level, or 0.
 func player_xp(skill: String, n: int, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_xp", player_xp.bind(skill, n), [skill, n])
 	if actor != null and actor != player:
 		return as_actor(actor, player_xp.bind(skill, n))
 	var up := player.gain(skill, n)
@@ -2444,6 +2803,9 @@ func player_xp(skill: String, n: int, actor: PlayerState = null) -> int:
 ## DVW-A12 R6: the player tries the lock of chest unit `u` (Chests.attempt) and earns Stealth xp for it: 4 when it
 ## opens, 1 otherwise. Returns Chests.attempt's result.
 func player_pick_lock(u: Dictionary, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_pick_lock", player_pick_lock.bind(u), [u])
 	if actor != null and actor != player:
 		return as_actor(actor, player_pick_lock.bind(u))
 	var r: Dictionary = chests.attempt(u)
@@ -2455,6 +2817,9 @@ func player_pick_lock(u: Dictionary, actor: PlayerState = null) -> Dictionary:
 ## coins at the market: what the site still needs beyond the family chest, at today's estimate (Construction.estimate),
 ## but never more than the player holds after the day's wage (helper_wage).
 func player_helper_budget(p: Dictionary, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_helper_budget", player_helper_budget.bind(p), [p])
 	if actor != null and actor != player:
 		return as_actor(actor, player_helper_budget.bind(p))
 	var need: Dictionary = p.site.need.duplicate()
@@ -2467,6 +2832,9 @@ func player_helper_budget(p: Dictionary, actor: PlayerState = null) -> int:
 ## or nothing (transfer); that many stolen marks go with them (PlayerState.store_marks, take_marks), so the chest does
 ## not wash stolen goods clean. True if they moved.
 func player_home_move(id: String, from_chest: bool, qty: int, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_home_move", player_home_move.bind(id, from_chest, qty), [id, from_chest, qty])
 	if actor != null and actor != player:
 		return as_actor(actor, player_home_move.bind(id, from_chest, qty))
 	var p := player
@@ -2485,6 +2853,9 @@ func player_home_move(id: String, from_chest: bool, qty: int, actor: PlayerState
 ## all its coins; a pile left empty is gone. Returns {items: [[id, n], ...] taken in the pile's order, coins, left:
 ## the goods still in the pile, far: why it is out of reach, R15, "" if it is not (then nothing is taken)}.
 func player_loot(i: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_loot", player_loot.bind(i), [loot[i] if i >= 0 and i < loot.size() else i])     # the pile itself: indices differ between machines
 	if actor != null and actor != player:
 		return as_actor(actor, player_loot.bind(i))
 	if recorder == null:
@@ -2521,6 +2892,9 @@ func _player_loot(i: int) -> Dictionary:
 ## where plant_refusal says no; else the tree is planted (plant_tree) and the sapling is used up, counted for the
 ## ledger (used_, SEED-02). Returns the tree record, {} if refused.
 func player_plant_sapling(cell: Vector2i, item: String, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_plant_sapling", player_plant_sapling.bind(cell, item), [cell, item])
 	if actor != null and actor != player:
 		return as_actor(actor, player_plant_sapling.bind(cell, item))
 	if not player.inv.has(item) or plant_refusal(cell) != "":
@@ -2701,7 +3075,7 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	if by_ref != "" and n.role != "bandit":
 		relations.slain_by_player(n, by_ref)       # family and friends never forget it (CRT-12)
 		if judgment != null:
-			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
+			JudgmentLive.on_killing(self, n, id_of_ref(by_ref) if id_of_ref(by_ref) != -1 else acting_id())        # PROSPECTIVE (PROS-19); MP C6: the killer's own id
 		_player_killing(n, by_ref)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
@@ -2752,7 +3126,7 @@ func _player_killing(n: NPC, ref: String) -> void:
 		if o.job == "guard":
 			justice.learn(o, ref, [ci], player.pos)
 		else:
-			report_crime(o, Life.PLAYER_ID, "saw", "attack", ref, [ci])
+			report_crime(o, id_of_ref(ref), "saw", "attack", ref, [ci])
 			justice.case_of(ref).aware[str(o.id)] = ci
 	if not seen.is_empty():
 		# A3 (owner answer 1): a murder seen raises the hue and cry: everyone within earshot learns of it at once
@@ -2844,18 +3218,71 @@ func wake(n: NPC) -> bool:
 
 ## DVW-A12 R18: the player rests: at night until six in the morning, by day for balance rest.day_minutes; the world
 ## runs on meanwhile (update in half-second steps of the game's speed), then rest_recover. Returns {minutes, night}.
+## MP-D2 (owner, 2026-10-24): in a session (more than one player in active play) the clock runs quickly only when every living
+## player in play has asked to rest; until then the one who rests rests in real time (PlayerState.rest_until: woken by the clock
+## when the rest is over, _update_one_player, or by acting, player_wake) and the world goes on at its own pace for everyone. When
+## the last one asks, the world runs quickly until the first of them is due to wake; the others then rest on in real time. The
+## recovery is the one model (rest_recover). One player in play: the rest of Build 19, unchanged. `waiting` in the answer: the
+## rest is a real-time one.
 func player_rest(actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		remote.call("player_rest", [])          # a guest's copy never runs the clock: the host decides (MP-D2)
+		return {"minutes": 0.0, "night": hour() >= 18.0 or hour() < 6.0, "waiting": true}
 	if actor != null and actor != player:
 		return as_actor(actor, player_rest)
 	var h := hour()
 	var until := 6.0 if h < 6.0 else 30.0
 	var night := h >= 18.0 or h < 6.0
 	var mins := (until - h) * 60.0 if night else float(GameData.b("rest").day_minutes)
+	if active_players().size() > 1:
+		return _rest_by_agreement(mins, night)
 	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
 	for i in steps:
 		update(0.5)
 	rest_recover(player, mins, night)
 	return {"minutes": mins, "night": night}
+
+
+func _rest_by_agreement(mins: float, night: bool) -> Dictionary:
+	var p := player
+	p.rest_since = minutes
+	p.rest_until = minutes + mins
+	p.rest_night = night
+	stat("player_rests_asked")
+	var end := INF
+	for q: PlayerState in active_players():
+		if not q.alive:
+			continue
+		if q.rest_until < 0.0:
+			return {"minutes": 0.0, "night": night, "waiting": true}      # someone is awake: real time for everyone
+		end = minf(end, q.rest_until)
+	stat("player_rests_together")
+	var start := minutes
+	var steps := int((end - minutes) / float(GameData.b("game_minutes_per_second")) / 0.5)
+	for i in steps:
+		update(0.5)
+		if active_players().any(func(q): return q.alive and q.rest_until < 0.0):
+			break                                  # the first woke (its rest ran its course, or it was struck): real time again
+	return {"minutes": minutes - start, "night": night, "waiting": p.rest_until >= 0.0}
+
+
+## The acting player stops resting (moves, acts, or is struck): the time they rested counts (rest_recover). False when not resting.
+func player_wake(actor: PlayerState = null) -> bool:
+	if mirrors():
+		return mirror("player_wake", player_wake.bind(), [])
+	if actor != null and actor != player:
+		return as_actor(actor, player_wake)
+	if player.rest_until < 0.0:
+		return false
+	_end_rest(player, false)
+	return true
+
+
+func _end_rest(p: PlayerState, done: bool) -> void:
+	rest_recover(p, minutes - p.rest_since, p.rest_night and done)
+	p.rest_until = -1.0
+	p.rest_since = -1.0
+	stat("player_rests_ended")
 
 
 ## PAR-03 (owner OD-18.3): the one recovery model, the player's, for everyone. A rest of `minutes` that lasted to the
@@ -3219,6 +3646,10 @@ func plot(id: String) -> Dictionary:
 ## `owner`'s, the parcel's holder by default (the owner, or the tenant on leased ground), whoever
 ## brings the materials: the player, a hired helper or a villager founding a household.
 func start_site(p: Dictionary, kind := "house", owner := "") -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		mirror("start_site", start_site.bind(p, kind, owner), [p, kind, owner])
+		return
 	var cost: Dictionary = construction.cost_of(kind).duplicate()
 	var ground := property.describe(p)
 	farm.give_up_cells(p)              # a field on the ground is ploughed under for the building (PL2-015)
@@ -3237,6 +3668,9 @@ func _frame_cell(p: Dictionary) -> Vector2i:
 ## Deliver materials from `inv` to a site; returns true when the building is complete. Anyone may
 ## deliver (`by`, a reference, for the record): the building is the site's owner's.
 func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("deliver", deliver.bind(p, inv, by), [p, inv, by])
 	if p.site.is_empty() or p.site.done:
 		return false
 	var need: Dictionary = p.site.need
@@ -3373,6 +3807,9 @@ func site_progress(p: Dictionary) -> float:
 ## back into `inv`; what it has no room for is left in a bundle at the plot's door. The frame comes
 ## down and the plot stays the owner's. Returns what was given back.
 func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("cancel_site", cancel_site.bind(p, inv), [p, inv])
 	if p.site.is_empty() or p.site.done:
 		return {}
 	var back := site_delivered(p)
@@ -3423,6 +3860,9 @@ func take_crop(f: Dictionary, most: int, actor: PlayerState = null) -> int:
 ## work it (field_workers): taking from it without being one of them is theft, and anyone within sight remembers it, except what a farmer
 ## hired the player to cut there (Quests.hired_harvest).
 func player_harvest(f: Dictionary, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_harvest", player_harvest.bind(f), [f])
 	if actor != null and actor != player:
 		return as_actor(actor, player_harvest.bind(f))
 	if f.state == "ripe" and not f.has("cut_from"):
@@ -3649,7 +4089,7 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := 
 	if crime != "attack":
 		n.report.crime = crime
 	if Life.is_player_id(offender):
-		n.report.ref = ref if ref != "" else acting_ref()
+		n.report.ref = ref if ref != "" else ref_of_id(offender)        # MP C6: the offender's own line
 		var who: PlayerState = player_of_ref(str(n.report.ref))
 		var seen_at: Vector2 = who.pos if who != null else player.pos
 		n.report.at = [seen_at.x, seen_at.y]             # S3: where the player was seen (a report on a villager is unchanged)
@@ -3667,7 +4107,8 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := 
 ## Whether the offender of a report can still be pursued: alive (the player alive, or the villager).
 func offender_alive(offender: int) -> bool:
 	if Life.is_player_id(offender):
-		return player.alive
+		var p := player_of_id(offender)                 # MP C6: that player, not whoever is acting
+		return p != null and p.alive
 	var o := npc(offender)
 	return o != null and o.alive
 
@@ -3691,8 +4132,9 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 	if crime == "theft":
 		g.remember("told by %s %s of a theft" % [n.name, n.family])
 		stat("theft_reports_delivered")
-		if Life.is_player_id(off) and g.target == -1 and near(player.pos, float(GameData.b("witness_radius"))).has(g):
-			last_guard = guard_confront(g, {}, null, null, cis)
+		var thief: PlayerState = player_of_id(off)
+		if thief != null and g.target == -1 and near(thief.pos, float(GameData.b("witness_radius"))).has(g):
+			last_guard = as_actor(thief, guard_confront.bind(g, {}, null, null, cis))     # MP C6: the thief is fined, whoever is acting
 		return true
 	g.remember("told by %s %s of an attack" % [n.name, n.family])
 	if g.target == -1 and g.id != off:
@@ -3704,7 +4146,7 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 				justice.engage(g, ref, "pursuing")
 			elif at.size() == 2:
 				justice.engage(g, ref, "responding", Vector2(float(at[0]), float(at[1])), told_t)
-		elif Life.is_player_id(off) and at.size() == 2 and g.pos.distance_to(player.pos) > NPCBrain.CHASE_RANGE:
+		elif Life.is_player_id(off) and at.size() == 2 and player_of_id(off) != null and g.pos.distance_to(player_of_id(off).pos) > NPCBrain.CHASE_RANGE:
 			# S3 (a report with no case: older saves): go to the reported place, take the offender on there if still in sight
 			g.plan = [brain.go(Vector2i(Vector2(float(at[0]), float(at[1])).floor())), brain.doit("respond", {"offender": off})]
 			g.doing = "answering a report"
@@ -3798,6 +4240,9 @@ func _is_tavern(at: String) -> bool:
 ## The goods a container holds (see `containers`), or null when nobody owns it now (an empty house,
 ## a stall without a merchant, a tavern without keepers).
 func container_store(c: Dictionary, actor: PlayerState = null) -> Inventory:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("container_store", container_store.bind(c), [c])
 	if actor != null and actor != player:
 		return as_actor(actor, container_store.bind(c))
 	if c.kind == "table":
@@ -3862,6 +4307,9 @@ func container_goods(c: Dictionary) -> Array:
 
 ## The item one take takes: the one there is most of (the first by id on a tie).
 func container_pick(c: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("container_pick", container_pick.bind(c), [c])
 	if actor != null and actor != player:
 		return as_actor(actor, container_pick.bind(c))
 	var store := container_store(c)
@@ -3877,6 +4325,9 @@ func container_pick(c: Dictionary, actor: PlayerState = null) -> String:
 ## there was nothing, "full" if the pack has no room, or "far" if it is out of the player's reach (DVW-A12 R15:
 ## player_container_reach says why).
 func player_take(c: Dictionary, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_take", player_take.bind(c), [c])
 	if actor != null and actor != player:
 		return as_actor(actor, player_take.bind(c))
 	if recorder == null:
@@ -4039,6 +4490,9 @@ func pickpocket_chance() -> float:
 ## a theft nobody sees is known to no guard. Each try earns Stealth xp (DVW-A12 R6): 8 when it works, 2 otherwise; a
 ## pocket out of reach is no try (`refused`, R14). Returns {ok, what, text} (and `refused`).
 func pickpocket(n: NPC) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("pickpocket", pickpocket.bind(n), [n])
 	var r := _pickpocket_try(n)
 	if not r.get("refused", false):
 		player_xp("stealth", 8 if r.ok else 2)
@@ -4100,9 +4554,9 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 		var ci := last_crime                  # A1: the case's record of this try (witness)
 		for o: NPC in near(player.pos, sight):
 			if o != n and o.role != "bandit" and o.job != "guard":
-				report_crime(o, Life.PLAYER_ID, "saw", "theft", acting_ref(), [ci])
+				report_crime(o, acting_id(), "saw", "theft", acting_ref(), [ci])
 		if n.alive and n.job != "guard":
-			report_crime(n, Life.PLAYER_ID, "victim", "theft", acting_ref(), [ci])
+			report_crime(n, acting_id(), "victim", "theft", acting_ref(), [ci])
 	if last_guard != "":
 		text += " " + last_guard
 	elif seen > 1:
@@ -4171,6 +4625,9 @@ func _player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 ## recognition, guard questions), so a stolen piece being recognised stops the sale at that unit; `sold`
 ## says how many went and `paid` what they fetched. Returns {result, text, sold, paid}.
 func player_sell_many(buyer: NPC, id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_sell_many", player_sell_many.bind(buyer, id, qty), [buyer, id, qty])
 	if actor != null and actor != player:
 		return as_actor(actor, player_sell_many.bind(buyer, id, qty))
 	if qty < 1 or not player.inv.has(id, qty):
@@ -4197,6 +4654,9 @@ func player_sell_many(buyer: NPC, id: String, qty: int, actor: PlayerState = nul
 
 
 func player_eat(id: String, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_eat", player_eat.bind(id), [id])
 	if actor != null and actor != player:
 		return as_actor(actor, player_eat.bind(id))
 	var it: Dictionary = GameData.item(id)
@@ -4217,6 +4677,9 @@ func player_eat(id: String, actor: PlayerState = null) -> bool:
 ## Use a medicine (items.json type "medicine": it heals `heal` health and feeds nobody). Consumed only
 ## when it heals: at full health nothing is used up. Never above the health cap (PL1-04).
 func player_use_medicine(id: String, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_use_medicine", player_use_medicine.bind(id), [id])
 	if actor != null and actor != player:
 		return as_actor(actor, player_use_medicine.bind(id))
 	var it: Dictionary = GameData.item(id)
@@ -4245,6 +4708,9 @@ func pack_full_text(ids: Array) -> String:
 ## unit leaves its backpack position; what it replaces goes back to its category, and the swap is refused,
 ## nothing moved, when that category is full (equip_refusal says why). The one store never gains or loses a unit.
 func player_equip(id: String, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_equip", player_equip.bind(id), [id])
 	if actor != null and actor != player:
 		return as_actor(actor, player_equip.bind(id))
 	return equip_refusal(id) == ""
@@ -4266,6 +4732,9 @@ func equip_refusal(id: String) -> String:
 ## Take off what `slot` holds: it goes back to its category, or stays worn when that category is full
 ## (unequip_refusal says so). True when the slot is empty after.
 func player_unequip(slot: String, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_unequip", player_unequip.bind(slot), [slot])
 	if actor != null and actor != player:
 		return as_actor(actor, player_unequip.bind(slot))
 	return unequip_refusal(slot) == ""
@@ -4282,6 +4751,9 @@ func unequip_refusal(slot: String) -> String:
 
 ## Drop items on the ground where the player stands: they can be picked up again by anyone looking.
 func player_drop(id: String, qty: int, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_drop", player_drop.bind(id, qty), [id, qty])
 	if actor != null and actor != player:
 		return as_actor(actor, player_drop.bind(id, qty))
 	if qty <= 0 or not player.inv.remove(id, qty):
@@ -4320,6 +4792,9 @@ func player_gain(id: String, n: int, kind := "made_", actor: PlayerState = null)
 ## completed (Quests.on_learned). Refused if it is known already or the player cannot pay. `thanks`: the story's
 ## thanks line from the teacher, read before the quest is completed ("" for none). Returns {ok, why, thanks}.
 func player_learn_fireball(teacher: NPC, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_learn_fireball", player_learn_fireball.bind(teacher), [teacher])
 	if actor != null and actor != player:
 		return as_actor(actor, player_learn_fireball.bind(teacher))
 	var price := int(GameData.b("fireball_price"))
@@ -4377,6 +4852,9 @@ func pack_row_refusal(t: NPC) -> String:
 ## the tailor's own (theirs to spend by their usual rules; no coin made or lost) and pack_level rises by one, opening
 ## that row in all eight categories. Returns {ok, why, level, paid}.
 func player_buy_pack_row(t: NPC, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_buy_pack_row", player_buy_pack_row.bind(t), [t])
 	if actor != null and actor != player:
 		return as_actor(actor, player_buy_pack_row.bind(t))
 	var why := pack_row_refusal(t)
@@ -4443,6 +4921,9 @@ func barber_refusal(b: NPC, want: Dictionary) -> String:
 ## price goes from the player's purse to the barber's own (no coin made or lost), only those features of the saved
 ## recipe change (gear drawn over it is untouched). Returns {ok, why, paid}.
 func player_barber_visit(b: NPC, want: Dictionary, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_barber_visit", player_barber_visit.bind(b, want), [b, want])
 	if actor != null and actor != player:
 		return as_actor(actor, player_barber_visit.bind(b, want))
 	var why := barber_refusal(b, want)
@@ -4460,6 +4941,9 @@ func player_barber_visit(b: NPC, want: Dictionary, actor: PlayerState = null) ->
 
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
 func buy_plot(p: Dictionary, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("buy_plot", buy_plot.bind(p), [p])
 	if actor != null and actor != player:
 		return as_actor(actor, buy_plot.bind(p))
 	return property.buy(p, acting_ref()) == ""
@@ -4482,7 +4966,7 @@ func buy_plot(p: Dictionary, actor: PlayerState = null) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 21          # 21: MP Batch A1 (multiplayer foundation): the optional World key "players" {host: the host's pid, by_pid: {pid: PlayerState dict}} lists every player character (the host's is also written, as always, in "player", which stays the host's authoritative record, so an older build reads the save and ignores the new key), and a PlayerState carries "map_level" when it is not on the surface (the host's level stays in "underground"); a 20 or older save has no "players" key and loads with its "player" as the only player (no migration of data, nothing dropped); 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 22          # 22: MP Batch C (per-player identities): a guest is its own person wherever a villager's id would stand (ties, family links, judgment facts, NPC targets and reports, feasts): the negative of its line's pid (World.person_id; the host's line stays -2, ID-D1), so an older build (which reads -2 only) must not open it; a 21 save is read with everything it holds as it was (World.migrate_21_to_22: what save 21 kept under -2 stays the host's line's, including ties and judgment a guest made then, its facts still told apart by their "by:player:<pid>" tag; a villager's report on a guest names the guest's own id); nothing is dropped; 21: MP Batch A1 (multiplayer foundation): the optional World key "players" {host: the host's pid, by_pid: {pid: PlayerState dict}} lists every player character (the host's is also written, as always, in "player", which stays the host's authoritative record, so an older build reads the save and ignores the new key), and a PlayerState carries "map_level" when it is not on the surface (the host's level stays in "underground"); a 20 or older save has no "players" key and loads with its "player" as the only player (no migration of data, nothing dropped); 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -4770,6 +5254,8 @@ func station_refusal(id: String) -> String:
 	if busy.size() >= int(st.get("capacity", 1)):
 		var o: NPC = busy[0]
 		return "%s %s is using the %s. Wait a little, or use another." % [o.name, o.family, st.type]
+	if busy.size() + players_at(st, _station_key()) >= int(st.get("capacity", 1)):
+		return "Someone else is using the %s. Wait a little, or use another." % st.type     # MP C2: another player holds it
 	return ""
 
 
@@ -4779,23 +5265,42 @@ func reserve_for_player(id: String, mins: float, actor: PlayerState = null) -> v
 		as_actor(actor, reserve_for_player.bind(id, mins))
 		return
 	if stations.has(id):
-		stations[id].player_until = minutes + mins
+		stations[id][_station_key()] = minutes + mins
 
 
 ## The player's work at a station ended or was cut short: the place is free at once (Build 13).
 func release_player_station(id: String, actor: PlayerState = null) -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		mirror("release_player_station", release_player_station.bind(id), [id])
+		return
 	if actor != null and actor != player:
 		as_actor(actor, release_player_station.bind(id))
 		return
 	if stations.has(id):
-		stations[id].erase("player_until")
+		stations[id].erase(_station_key())
 
 
 ## Whether the player is working at station `id` now.
 func player_at_station(id: String, actor: PlayerState = null) -> bool:
 	if actor != null and actor != player:
 		return as_actor(actor, player_at_station.bind(id))
-	return stations.has(id) and float(stations[id].get("player_until", -1.0)) > minutes
+	return stations.has(id) and float(stations[id].get(_station_key(), -1.0)) > minutes
+
+
+## MP C2: each player holds a station under their own key ("player_until" the host's, as before; "player_until:<ref>" a guest's), so
+## two players work at two places of a station apart and neither frees the other's.
+func _station_key() -> String:
+	return "player_until" if player == _host_player else "player_until:" + acting_ref()
+
+
+## How many players hold station `st` now (villagers count them as taken places), `but` a key not to count ("" none).
+func players_at(st: Dictionary, but := "") -> int:
+	var k := 0
+	for key in st:
+		if str(key).begins_with("player_until") and str(key) != but and float(st[key]) > minutes:
+			k += 1
+	return k
 
 
 ## Owners at the start (agent proposal): a house and the sage's hut are their household's own; the
@@ -4873,7 +5378,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -4980,7 +5485,34 @@ func _settlement_section() -> Dictionary:
 	return out
 
 
+## MP Batch C (save 22): the raw step from a version 21 save (World.load_dict and SaveTransfer.MIGRATIONS). Save 21 named every
+## player -2 in person-id records, the host and the guests alike, and told guests apart only by references ("player:<pid>": cases,
+## pursuits, killings, reports, the "by:" tag of a judgment fact). Nothing that names -2 can be split by person after the fact (a tie or
+## an opinion a guest earned then was everyone's), so it all stays the host's line's (ID-D1) and a guest starts its own records from
+## this load on, as a newcomer (MP-D7); the facts keep their tags, which the talk reads (EventTalk.person_of_id). One record is
+## unambiguous and is moved: a villager's report on a guest's crime (offender -2 with the guest's reference) names the guest's own id,
+## so the guard it reaches answers that guest. Returns a deep copy; nothing is dropped.
+static func migrate_21_to_22(src: Dictionary) -> Dictionary:
+	var d: Dictionary = src.duplicate(true)
+	if int(d.get("save_version", 0)) != 21:
+		return d                                       # idempotent: a 22 (or anything else) is not a 21, and is left as it is
+	var moved := 0
+	for nd in d.get("npcs", []):
+		var r = nd.get("report", {})
+		if r is Dictionary and not r.is_empty() and int(r.get("offender", -1)) == Life.PLAYER_ID and str(r.get("ref", "")).begins_with("player:"):
+			var id := id_of_ref(str(r.ref))
+			if id != -1:
+				r.offender = float(id)                 # as a save holds every number (JSON), so a second round trip is the same
+				moved += 1
+	d.save_version = 22
+	d.format = "mml-save/22"
+	d["_migrated_21"] = {"reports": moved}             # read once by load_dict (a stat), never written back
+	return d
+
+
 func load_dict(m: VillageMap, d: Dictionary) -> void:
+	if int(d.get("save_version", 0)) == 21:
+		d = migrate_21_to_22(d)                    # MP Batch C: save 21 to 22 (above)
 	map = m
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
@@ -5198,6 +5730,15 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
+	offers = []                                                               # MP-D8: absent: none
+	var po = d.get("player_offers", {})
+	if po is Dictionary and not po.is_empty():
+		next_offer = int(po.get("next", 1))
+		for o in po.get("list", []):
+			offers.append({"id": int(o.id), "kind": str(o.kind), "from": str(o["from"]), "to": str(o.to), "item": str(o.item), "qty": int(o.qty), "day": int(o.day)})
+	if d.has("_migrated_21"):
+		stat("save_21_loaded")                                                    # MP Batch C: read from a version 21 save
+		stat("save_21_reports_moved", int(d._migrated_21.get("reports", 0)))
 	outlaw_gone_day = int(d.get("outlaw_gone_day", -1))     # BANDIT-RETURN: absent in an older save
 	Outlaws.after_load(self)
 	_guard_posts()
@@ -5508,6 +6049,9 @@ func path_for_player(from: Vector2i, to: Vector2i, actor: PlayerState = null) ->
 ## (a handcart is not taken through; MIN-F: a minecart goes through on its rails when track lies on both stands);
 ## else {level, pos, portal}.
 func player_through(dir: Vector2, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_through", player_through.bind(dir), [dir])
 	if actor != null and actor != player:
 		return as_actor(actor, player_through.bind(dir))
 	if underground == null or not player.alive:

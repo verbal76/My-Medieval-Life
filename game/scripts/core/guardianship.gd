@@ -79,8 +79,8 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 		var p := w.npc(int(pid)) if int(pid) >= 0 else null
 		if p != null and p.alive and p.role != "bandit" and _eligible(w, p.household, k):
 			parents.append(p.household)
-		elif Life.is_player_id(int(pid)) and _player_eligible(w, k):
-			parents.append(player_household(w))
+		elif Life.is_player_id(int(pid)) and _player_eligible(w, k, w.player_of_id(int(pid))):      # MP C5: that player, any line
+			parents.append(player_household(w, w.player_of_id(int(pid))))
 	out.parent = _ranked(w, k, parents)
 	var grand := []
 	for pid in [k.mother, k.father]:
@@ -91,8 +91,9 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 			var g := w.npc(int(gid)) if int(gid) >= 0 else null
 			if g != null and g.alive and g.role != "bandit" and _eligible(w, g.household, k) and not grand.has(g.household):
 				grand.append(g.household)
-			if Life.is_player_id(int(gid)) and _player_eligible(w, k) and not grand.has(player_household(w)):
-				grand.append(player_household(w))
+			var gp: PlayerState = w.player_of_id(int(gid)) if Life.is_player_id(int(gid)) else null
+			if gp != null and _player_eligible(w, k, gp) and not grand.has(player_household(w, gp)):
+				grand.append(player_household(w, gp))
 	out.grandparent = _ranked(w, k, grand)
 	var dist := kin_distances(w, k)
 	var best := 1 << 30
@@ -102,9 +103,10 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 	for id in ids:
 		var hh := -1
 		if Life.is_player_id(int(id)):
-			if not _player_eligible(w, k):
+			var rp: PlayerState = w.player_of_id(int(id))
+			if rp == null or not _player_eligible(w, k, rp):
 				continue
-			hh = player_household(w)
+			hh = player_household(w, rp)
 		else:
 			var o := w.npc(int(id))
 			if o == null or not o.alive or o.role == "child" or o.role == "bandit" or not _eligible(w, o.household, k):
@@ -128,13 +130,14 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 ## Genealogical distance from the child to every relative reachable through parent and child links (the
 ## dead too, as links: a dead parent still joins a child to its grandparents and aunts). A parent is 1, a
 ## grandparent or sibling 2, an aunt or uncle 3, a first cousin 4. The living player is a node like any villager
-## (Life.PLAYER_ID, REC-001); an earlier generation's player (FORMER_PLAYER) is not.
+## (their person id, World.person_id; REC-001); an earlier generation's player (FORMER_PLAYER) is not.
 static func kin_distances(w: World, k: NPC) -> Dictionary:
 	var dist := {k.id: 0}
 	var queue := [k.id]
 	while not queue.is_empty():
 		var id: int = queue.pop_front()
-		var o = (w.player if w.player.alive else null) if Life.is_player_id(id) else w.npc(id)
+		var pl: PlayerState = w.player_of_id(id) if Life.is_player_id(id) else null      # MP C5: each player's line its own node
+		var o = (pl if pl != null and pl.alive else null) if Life.is_player_id(id) else w.npc(id)
 		if o == null:
 			continue
 		var next: Array = [o.mother, o.father] + o.children
@@ -280,19 +283,19 @@ static func _take_share(w: World, k: NPC, old: int, into: Inventory) -> void:
 
 ## The household the player's family lives in with the player's partner (where the player's own children are raised,
 ## Life.births), or -1: without a partner the player has no household of villagers to raise a child in.
-static func player_household(w: World) -> int:
-	var p := w.player
+static func player_household(w: World, who: PlayerState = null) -> int:
+	var p: PlayerState = who if who != null else w.player          # MP C5: any player (default the acting one)
 	if not p.alive or p.partner < 0:
 		return -1
 	var o := w.npc(p.partner)
-	if o == null or not o.alive or not Life.is_player_id(o.partner):
+	if o == null or not o.alive or o.partner != w.person_id(p):
 		return -1
 	return o.household
 
 
 ## Whether the player's household can take child `k` in, by the test every household passes (_eligible, has_room).
-static func _player_eligible(w: World, k: NPC) -> bool:
-	var h := player_household(w)
+static func _player_eligible(w: World, k: NPC, who: PlayerState = null) -> bool:
+	var h := player_household(w, who)
 	return h >= 0 and _eligible(w, h, k) and Life.has_room(w, h, k)
 
 
@@ -317,7 +320,7 @@ static func player_adopt_refusal(w: World, k: NPC) -> String:
 		return "There is no sleeping place for %s in your home." % k.name
 	# family first: kin at least as close as the player who already care for the child keep them
 	var dist := kin_distances(w, k)
-	var mine := int(dist.get(Life.PLAYER_ID, 1 << 30))
+	var mine := int(dist.get(w.acting_id(), 1 << 30))
 	if k.household >= 0 and k.clan == "":
 		for o: NPC in w.brain._members(k.household):
 			if o.alive and o.role != "child" and dist.has(o.id) and int(dist[o.id]) <= mine:
@@ -328,6 +331,9 @@ static func player_adopt_refusal(w: World, k: NPC) -> String:
 ## The player takes child `k` into their household (REC-001): "" when done, else why not. The child becomes a
 ## dependant there as any taken-in child does (move); one from the bandits' camp leaves the clan.
 static func player_adopt(w: World, k: NPC, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("Guardianship:player_adopt", player_adopt.bind(w, k), [k])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, player_adopt.bind(w, k))
 	var why := player_adopt_refusal(w, k)

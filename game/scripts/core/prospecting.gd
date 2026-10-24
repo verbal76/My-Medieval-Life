@@ -236,6 +236,9 @@ func stain(c: Dictionary) -> String:
 
 ## Where a clue lies, in the village's words ("north of the mine").
 func place(c: Dictionary) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("prospecting.place", place.bind(c), [c])
 	return w.where(Rect2i(int(c.x), int(c.y), 1, 1))
 
 
@@ -282,6 +285,9 @@ func sample_refusal(who, c: Dictionary, cell: Vector2i) -> String:
 ## the sample (an ore_sample, counted mined_ore_sample) goes to their pack and its origin to their bag, and the work
 ## earns sample_xp Mining xp. Returns {result: "ok" | "refused", why, sample, broke, up}.
 func take_sample(who, c: Dictionary, cell: Vector2i) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("prospecting.take_sample", take_sample.bind(who, c, cell), [who, c, cell])
 	var why := sample_refusal(who, c, cell)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -341,6 +347,9 @@ func assayer_refusal(who, a: NPC) -> String:
 ## Smithing xp, and the reading becomes a record that `who` and the smith know. Returns {result: "ok" | "refused", why,
 ## record, up}.
 func assay(who, a: NPC, pick := -1) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("prospecting.assay", assay.bind(who, a, pick), [who, a, pick])
 	var why := assayer_refusal(who, a)
 	if why != "":
 		return {"result": "refused", "why": why}

@@ -24,9 +24,10 @@ const BACKUP_DIR := "user://save_backups/"
 const FILE_FILTER := "*.json;My Medieval Life save;application/json"
 
 ## Raw-data steps that must run before World.load_dict, keyed by the version they upgrade from (to the
-## next). Empty while every supported version (MIN_VERSION 14 to World.SAVE_VERSION) is read directly by
-## World.load_dict; a change that load_dict cannot absorb adds a step here and a fixture test.
-const MIGRATIONS := {}
+## next). Every supported version (MIN_VERSION 14 to World.SAVE_VERSION) is otherwise read directly by World.load_dict;
+## a change that load_dict cannot absorb adds a step here and a fixture test (21: multiplayer_c_test.gd, the fixture
+## tests/fixtures/mp_save_v21_guest.json written by the Batch B code). World.load_dict runs the same step on a 21 save.
+static var MIGRATIONS := {21: World.migrate_21_to_22}     # MP Batch C: save 21 to 22
 
 ## Test hook: "migrate" or "validate" pretends that step failed; "" in the game.
 static var fail_at := ""

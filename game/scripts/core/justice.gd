@@ -349,7 +349,7 @@ func engage(g: NPC, ref: String, state: String, at := Vector2.INF, t := -1.0) ->
 		var fresh: bool = g.pursuit.is_empty() or str(g.pursuit.state) != "pursuing"
 		g.pursuit = {"ref": ref, "state": "pursuing", "at": [p.pos.x, p.pos.y], "t": w.minutes, "until": -1.0, "cells": [], "i": 0,
 			"share": float(g.pursuit.get("share", w.minutes))}
-		g.target = Life.PLAYER_ID
+		g.target = World.id_of_ref(ref)             # MP C6: the offender's own person id
 		g.plan.clear()
 		saw_at(ref, p.pos, w.minutes, p.map_level)
 		g.doing = "chasing %s" % p.name
@@ -406,7 +406,7 @@ func release(g: NPC, why: String) -> void:
 	if cases.has(ref):
 		cases[ref].pursuers.erase(str(g.id))
 	g.pursuit = {}
-	if Life.is_player_id(g.target):
+	if Life.is_player_id(g.target) and (ref == "" or g.target == World.id_of_ref(ref)):      # MP C6: only that case's player
 		g.target = -1
 	g.chase_route = false
 	w.stat("justice_released_" + why)
@@ -544,11 +544,18 @@ func _join(g: NPC, from: NPC, ref: String) -> void:
 
 
 ## The hue and cry (owner answer 1, 2026-10-24: "a murder makes guards or villagers raise a shout or ring a bell, and
-## everyone within earshot learns of it at once"; the one exception to PAR-05's no-unsupported-sensing rule). Raised from
-## `at` by someone who saw crimes `cis` of `ref` (a witness of a killing, a guard struck, a pursuer who saw violence
-## again). Everyone awake within `radius` tiles on that level hears it, indoors or out: every guard among them learns of
-## the crimes and where the offender was, and comes (a guard in sight of the offender takes them on); every villager
-## learns who is cried after (the case's aware list, and their memory). Returns how many guards it reached.
+## everyone within earshot learns of it"; owner decision 2026-10-24, docs/directives/2026-10-24_multiplayer_batch_c_g2.md section 5:
+## "local audible propagation through witnesses and existing communication mechanics. The village bell carries farther but does not
+## instantly inform every NPC regardless of distance"). Raised from `at` by someone who saw crimes `cis` of `ref` (a witness of a
+## killing, a guard struck, a pursuer who saw violence again).
+##  - kind "hue_and_cry": a shout. It is heard by those awake within earshot of the one who shouts (World.near: witness_radius, the
+##    same building or the open air, the same level: walls and rock stop it), and every villager who hears it takes up the cry where
+##    they stand, so it travels from hearer to hearer; it dies away `radius` tiles from where it was raised (hue_and_cry_tiles). Nobody
+##    out of earshot of every voice hears it, however near.
+##  - kind "bell": the alarm bell, rung where the crime was: heard by those awake within `radius` (bell_tiles), indoors or out (a
+##    bell carries through walls); its hearers do not ring it further.
+## Every guard who hears learns of the crimes and where the offender was, and comes (a guard in sight of the offender takes them on);
+## every villager learns who is cried after (the case's aware list, and their memory). Returns how many guards it reached.
 func hue_and_cry(ref: String, cis: Array, at: Vector2, radius: float, kind := "hue_and_cry") -> int:
 	var c: Dictionary = cases.get(ref, {})
 	var p: PlayerState = w.player_of_ref(ref)
@@ -557,10 +564,30 @@ func hue_and_cry(ref: String, cis: Array, at: Vector2, radius: float, kind := "h
 	var level: int = w.level_at(at)
 	var guards := 0
 	var heard := 0
+	var shouts := 0
 	var crime := _crime_words(c, cis)
-	for n: NPC in w.npcs:
-		if not n.alive or n.role == "bandit" or n.depth != level or w.asleep(n) or n.pos.distance_to(at) > radius:
-			continue
+	var hearers: Array = []
+	if kind == "bell":
+		for n: NPC in w.npcs:
+			if n.alive and n.role != "bandit" and n.depth == level and not w.asleep(n) and n.pos.distance_to(at) <= radius:
+				hearers.append(n)
+	else:
+		var earshot := float(GameData.b("witness_radius"))
+		var reached := {}
+		var voices: Array = [at]                    # where the cry is raised, then each hearer who takes it up
+		while not voices.is_empty():
+			var v: Vector2 = voices.pop_front()
+			shouts += 1
+			var near: Array = w.near(v, earshot)
+			near.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
+			for n: NPC in near:
+				if reached.has(n.id) or n.role == "bandit" or n.pos.distance_to(at) > radius:
+					continue
+				reached[n.id] = true
+				hearers.append(n)
+				if n.job != "guard" and n.role != "child":
+					voices.append(n.pos)            # they cry it on
+	for n: NPC in hearers:
 		heard += 1
 		if n.job == "guard":
 			learn(n, ref, cis, at, w.minutes)
@@ -580,6 +607,8 @@ func hue_and_cry(ref: String, cis: Array, at: Vector2, radius: float, kind := "h
 	w.stat("justice_" + kind)
 	w.stat("justice_" + kind + "_guards", guards)
 	w.stat("justice_" + kind + "_heard", heard)
+	if shouts > 0:
+		w.stat("justice_" + kind + "_voices", shouts)
 	if w.recorder != null:
 		w.recorder.occurrence("crime", kind, "crime", kind, w.recorder.ref_of(p), [[w.recorder.ref_of(p), "offender"]], [], "ok", "",
 				"radius=%d heard=%d guards=%d crimes=%s" % [int(radius), heard, guards, str(cis)], {"x": int(at.x), "y": int(at.y)})
@@ -689,7 +718,7 @@ func _take_in(g: NPC, ref: String, how: String, c: Dictionary, p: PlayerState) -
 		var o: NPC = w.npc(int(key))
 		if o != null:
 			release(o, how)
-	if Life.is_player_id(g.target):
+	if g.target == World.id_of_ref(ref):
 		g.target = -1
 	g.plan.clear()
 	for o: NPC in w.near(p.pos, float(GameData.b("witness_radius"))):
@@ -725,7 +754,7 @@ func sighting(n: NPC) -> bool:
 			continue
 		seen[str(n.id)] = w.minutes
 		c.sighted = seen
-		w.report_crime(n, Life.PLAYER_ID, "sighting", "attack", ref, [int(c.aware[str(n.id)])])
+		w.report_crime(n, World.id_of_ref(ref), "sighting", "attack", ref, [int(c.aware[str(n.id)])])
 		w.stat("justice_sightings")
 		return true
 	return false

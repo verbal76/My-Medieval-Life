@@ -324,7 +324,8 @@ func provoke(a: Animal, who: String) -> void:
 ## The position of whoever `who` names, or INF if they are gone.
 func _foe_pos(who: String) -> Vector2:
 	if World.is_player_ref(who):
-		return w.player.pos if w.player.alive and w.player_level == 0 else Vector2.INF      # MIN-A: animals live on the surface
+		var pl: PlayerState = w.player_of_ref(who)       # MP C6: the player it is fighting, whoever is acting
+		return pl.pos if pl != null and pl.alive and not pl.away and pl.map_level == 0 else Vector2.INF      # MIN-A: animals live on the surface
 	var n: NPC = w.npc(int(who.trim_prefix("npc:")))
 	return n.pos if n != null and n.alive and n.depth == 0 else Vector2.INF
 
@@ -333,7 +334,10 @@ func _foe_pos(who: String) -> Vector2:
 func _hunt_people(a: Animal) -> void:
 	if a.anger != "" or not bool(a.spec().get("people", false)) or a.hunger >= float(wl().people_hunger):
 		return
-	var people := [["player", w.player.pos]] if w.player.alive and w.player_level == 0 else []     # MIN-A: nobody below
+	var people := []
+	for pl: PlayerState in w.active_players():       # MP C6: every player in play, the host first (single player: the one)
+		if pl.alive and pl.map_level == 0:
+			people.append([w.player_ref(pl), pl.pos])     # MIN-A: nobody below
 	for n: NPC in w.npcs:
 		if n.alive and not w.asleep(n) and n.depth == 0 and n.pos.distance_to(a.pos) <= w.detail_radius:
 			people.append(["npc:%d" % n.id, n.pos])
@@ -361,7 +365,7 @@ func _bite(a: Animal, foe: Vector2) -> void:
 	a.act_left = 0.5
 	var dmg := float(a.spec().get("bite", 0))
 	if World.is_player_ref(a.anger):
-		w.damage_player(dmg, "a " + a.label())
+		w.damage_player(dmg, "a " + a.label(), w.player_of_ref(a.anger))      # MP C6: the player it is fighting
 	else:
 		var n: NPC = w.npc(int(a.anger.trim_prefix("npc:")))
 		if n == null:
@@ -483,6 +487,9 @@ func _has_mate(f: Animal) -> bool:
 
 ## Put wheat in a pen's trough (from any inventory). Returns how much went in.
 func feed(pen: Dictionary, from: Inventory, qty: int) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("fauna.feed", feed.bind(pen, from, qty), [pen, from, qty])
 	var n := mini(qty, from.count("wheat"))
 	if n > 0:
 		from.remove("wheat", n)
@@ -687,7 +694,11 @@ func _move(a: Animal, dt: float) -> void:
 		a.goal = prey.pos
 		a.wait = 0.0
 	else:
-		var threat: Vector2 = w.player.pos if w.player.alive and w.player_level == 0 and w.player.pos.distance_to(a.pos) < flee else Vector2.INF
+		var threat := Vector2.INF
+		for pl: PlayerState in w.active_players():   # MP C6: the first player in play near enough (single player: the one)
+			if pl.alive and pl.map_level == 0 and pl.pos.distance_to(a.pos) < flee:
+				threat = pl.pos
+				break
 		if flee > 0.0:
 			for b: Animal in animals:                       # prey run from a hunter that could take them (the last one found)
 				if b.alive and b.area == a.area and b.pos.distance_to(a.pos) < flee and (b.spec().get("prey", []) as Array).has(a.species):

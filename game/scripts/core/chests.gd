@@ -169,6 +169,9 @@ func cannot_open(u: Dictionary) -> String:
 
 ## Fit a padlock to your own chest (it uses one up) or turn the key. Returns "" or why not.
 func set_own_lock(u: Dictionary, shut: bool, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("chests.set_own_lock", set_own_lock.bind(u, shut), [u, shut])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, set_own_lock.bind(u, shut))
 	var i := info(u)
@@ -191,6 +194,9 @@ func set_own_lock(u: Dictionary, shut: bool, actor: PlayerState = null) -> Strin
 # ---------------------------------------------------------------- storing and taking ------------
 ## Put `qty` from the pack into a chest the player owns. Returns "" or why not.
 func store(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("chests.store", store.bind(u, id, qty), [u, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, store.bind(u, id, qty))
 	var i := info(u)
@@ -211,6 +217,9 @@ func store(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> St
 ## Take `qty` from a chest into the pack. In your own it is free; in anyone else's it is theft, seen by
 ## whoever is in the room (the same crime, witness and guard rules as before). Returns {ok, text, seen}.
 func take(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("chests.take", take.bind(u, id, qty), [u, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, take.bind(u, id, qty))
 	var i := info(u)

@@ -33,8 +33,10 @@ static func where_of(n: NPC) -> String:
 
 ## A link in an NPC's or a member's record as a person id: the player (-2) is the current player's own id.
 static func link(w: World, v: int) -> int:
-	if Life.is_player_id(v) and w.player.pid > 0:
-		return w.player.pid
+	if Life.is_player_id(v):
+		var p := w.player_of_id(v)                       # MP C5: the line's living character (-2: the host's)
+		if p != null and p.pid > 0:
+			return p.pid
 	return v
 
 
@@ -93,12 +95,13 @@ static func succeed(w: World, parent: PlayerState, heir: PlayerState, kid: NPC) 
 	if parent.pid <= 0:
 		register_player(w, parent)
 	var ties := {}
-	var keys: Array = w.relations.ties.keys() if w.is_host(parent) else []     # MP Batch B: the ties under -2 are the host's line's (a guest's are Batch C)
+	var keys: Array = w.relations.ties.keys()
 	keys.sort()
+	var line := w.person_id(parent)                  # MP C5: the line's own ties (-2 the host's, -line a guest's)
 	for k in keys:
 		var parts: PackedStringArray = str(k).split(":")
-		if parts.size() == 2 and (Life.is_player_id(int(parts[0])) or Life.is_player_id(int(parts[1]))):
-			var other := int(parts[1]) if Life.is_player_id(int(parts[0])) else int(parts[0])
+		if parts.size() == 2 and (int(parts[0]) == line or int(parts[1]) == line):
+			var other := int(parts[1]) if int(parts[0]) == line else int(parts[0])
 			ties[str(other)] = (w.relations.ties[k] as Dictionary).duplicate(true)
 	w.tie_history[str(parent.pid)] = {"day": w.day(), "ties": ties}
 	move(w, parent.pid, ANCESTOR)

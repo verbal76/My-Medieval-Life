@@ -2064,7 +2064,7 @@ func to_dict() -> Dictionary:
 		var fl := []
 		for k in _sorted(fights):
 			var f: Array = fights[k]
-			fl.append([int((k >> 32) - JudgmentBonds.FAR), int((k & 0xFFFFFFFF) - JudgmentBonds.FAR), int(f[0]), int(f[1]), int(f[2])])
+			fl.append([int((k >> 32) - JudgmentBonds.FAR), JudgmentBonds._lo(k), int(f[0]), int(f[1]), int(f[2])])
 		out.fights = fl                          # fights under way (self-defence)
 	return out
 

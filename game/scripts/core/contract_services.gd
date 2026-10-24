@@ -180,8 +180,8 @@ static func _stone_to(k, c: Dictionary) -> Inventory:
 	var w: World = k.w
 	if c.buyer == World.MANOR:
 		return w.manor_work.yard
-	if World.is_player_ref(c.buyer) and w.player.home != "" and w.buildings.has(w.player.home):
-		return w.player.chest
+	if World.is_player_ref(c.buyer) and w.player_for(c.buyer).home != "" and w.buildings.has(w.player_for(c.buyer).home):
+		return w.player_for(c.buyer).chest
 	return null
 
 
@@ -283,7 +283,7 @@ static func _buyer_cell(k, c: Dictionary) -> Vector2i:
 	if c.buyer == World.MANOR:
 		return w.building_door(w.brain._manor_id())
 	if World.is_player_ref(c.buyer):
-		return Vector2i(w.player.pos.floor())
+		return Vector2i(w.player_for(c.buyer).pos.floor())
 	var b: NPC = k._npc_of(c.buyer)
 	return b.cell() if b != null else Vector2i(-1, -1)
 
@@ -365,6 +365,9 @@ static func tell(k, c: Dictionary, recs: Array) -> int:
 ## The player as a survey seller: readings the player took for this contract (their samples of its clue, assayed
 ## since it was made) are told to the buyer in the contract window (face to face). Returns the readings told.
 static func player_report(k, c: Dictionary, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if k.w.mirrors():
+		return k.w.mirror("ContractServices:player_report", player_report.bind(k, c), [c])
 	if actor != null and actor != k.w.player:
 		return k.w.as_actor(actor, player_report.bind(k, c))
 	if not Contracts.is_open(c) or not World.is_player_ref(c.seller) or str(c.get("service", "")) != "survey":
@@ -379,6 +382,9 @@ static func player_report(k, c: Dictionary, actor: PlayerState = null) -> int:
 
 ## The player collects stone dug for them that has nowhere to be brought (no home): from the seller's load, face to face.
 static func player_collect(k, c: Dictionary, actor: PlayerState = null) -> int:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if k.w.mirrors():
+		return k.w.mirror("ContractServices:player_collect", player_collect.bind(k, c), [c])
 	if actor != null and actor != k.w.player:
 		return k.w.as_actor(actor, player_collect.bind(k, c))
 	if not World.is_player_ref(c.buyer) or str(c.get("service", "")) != "dig":

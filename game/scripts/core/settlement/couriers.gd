@@ -94,7 +94,7 @@ func _npc(ref: String):
 ## its goods move with `outside_*` flow lines, so the settlement's audit still balances).
 func inv_of(ref: String):
 	if World.is_player_ref(ref):
-		return w.player.inv
+		return _player(ref).inv
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
 		return n.inv if n != null else null
@@ -144,7 +144,7 @@ class _Edge:
 
 func coins_of(ref: String) -> int:
 	if World.is_player_ref(ref):
-		return w.player.coins
+		return _player(ref).coins
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
 		return n.coins if n != null else 0
@@ -156,7 +156,7 @@ func coins_of(ref: String) -> int:
 
 func add_coins(ref: String, k: int) -> void:
 	if World.is_player_ref(ref):
-		w.player.coins += k
+		_player(ref).coins += k
 	elif ref.begins_with("npc:"):
 		var n = _npc(ref)
 		n.coins += k
@@ -175,9 +175,15 @@ func add_coins(ref: String, k: int) -> void:
 			l.coins += k
 
 
+## MP C3: the player a party reference names (each player their own; the acting player for a reference that names none here).
+func _player(ref: String) -> PlayerState:
+	var p: PlayerState = w.player_of_ref(ref)
+	return p if p != null else w.player
+
+
 func alive(ref: String) -> bool:
 	if World.is_player_ref(ref):
-		return w.player.alive
+		return _player(ref).alive
 	if ref.begins_with("npc:"):
 		var n = _npc(ref)
 		return n != null and n.alive
@@ -185,7 +191,7 @@ func alive(ref: String) -> bool:
 
 
 func rel_id(ref: String) -> int:
-	return Life.PLAYER_ID if World.is_player_ref(ref) else (int(ref.trim_prefix("npc:")) if ref.begins_with("npc:") else -1)
+	return World.id_of_ref(ref) if World.is_player_ref(ref) else (int(ref.trim_prefix("npc:")) if ref.begins_with("npc:") else -1)     # MP C3: each player their own id
 
 
 ## The settlement a party is in: "region:<settlement>/<holder>" is in <settlement> (a fixture "region:<id>" is its own place).
@@ -240,6 +246,9 @@ func open_region_booth(region) -> void:
 ## stall of their own). The booth stands at the shop (its market stall, else its workplace) and has a route to each settlement,
 ## carried by the village booth's keeper. "" when done, else why not.
 func open_shop_booth(owner: String) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("couriers.open_shop_booth", open_shop_booth.bind(owner), [owner])
 	if w == null or not alive(owner) or not (World.is_player_ref(owner) or owner.begins_with("npc:")):
 		return "There is nobody to keep a booth."
 	if booths.any(func(b): return b.keeper == owner):
@@ -362,10 +371,13 @@ func known_recipients(sender: String) -> Array:
 				out.append(_entry(ref, "person", "knows them"))
 			if traded and is_business(ref):
 				out.append(_entry(ref, "business", "has traded there"))
-		if not World.is_player_ref(sender) and w.player.alive:
-			var tp: Dictionary = w.relations.peek(me, Life.PLAYER_ID)
-			if int(tp.days_known) >= 1:
-				out.append(_entry("player", "person", "knows them"))
+		if not World.is_player_ref(sender):
+			for pl: PlayerState in w.player_list():       # MP C3: every player the sender knows (single player: the one)
+				if not pl.alive:
+					continue
+				var tp: Dictionary = w.relations.peek(me, w.person_id(pl))
+				if int(tp.days_known) >= 1:
+					out.append(_entry(w.player_ref(pl), "person", "knows them"))
 	var seen := {}
 	for id in regions:
 		var l = regions[id]
@@ -407,7 +419,7 @@ func _entry(ref: String, kind: String, why: String) -> Dictionary:
 	var loc := location(ref, kind)
 	var name := ""
 	if World.is_player_ref(ref):
-		name = w.player.name
+		name = _player(ref).name
 	elif ref.begins_with("npc:"):
 		var n = _npc(ref)
 		name = "%s %s" % [n.name, n.family]
@@ -433,7 +445,7 @@ func location(ref: String, kind := "person") -> Dictionary:
 		var b := booth_of(place_of(ref))
 		return {"settlement": place_of(ref), "x": int(b.get("x", 0)), "y": int(b.get("y", 0)), "what": "the booth of " + place_name(place_of(ref))}
 	if World.is_player_ref(ref):
-		var at: Vector2 = w.player.pos
+		var at: Vector2 = _player(ref).pos
 		return {"settlement": SettlementFacts.VILLAGE, "x": int(at.x), "y": int(at.y), "what": "where you are"}
 	var n = _npc(ref)
 	if kind == "business":
@@ -657,6 +669,9 @@ func describe(order: Dictionary) -> String:
 ## A regular-route booking: the flat fee is paid at the booth (to its keeper) and the goods handed over into the booth's
 ## store until the courier leaves. Returns the job, or {error}.
 func book_route(order: Dictionary) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("couriers.book_route", book_route.bind(order), [order])
 	order.kind = "route"
 	var why := refusal(order)
 	if why != "":
@@ -683,6 +698,9 @@ func book_route(order: Dictionary) -> Dictionary:
 ## accepts at that price if it covers the computed work, else counters with its least acceptable fee.
 ## {answer: accept|counter|refuse, fee, quote, record}.
 func negotiate(order: Dictionary, offer: int) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("couriers.negotiate", negotiate.bind(order, offer), [order, offer])
 	order.kind = "special"
 	var q := quote(order)
 	var least := int(q.fee)
@@ -699,6 +717,9 @@ func negotiate(order: Dictionary, offer: int) -> Dictionary:
 ## A special delivery, at an agreed fee: the fee is held at the sender's booth until the contract is fulfilled; the
 ## goods go into the delivery's cargo. Returns the job, or {error}.
 func book_special(order: Dictionary, fee: int) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("couriers.book_special", book_special.bind(order, fee), [order, fee])
 	order.kind = "special"
 	order.fee = fee
 	var why := refusal(order)

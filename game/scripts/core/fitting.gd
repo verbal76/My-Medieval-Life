@@ -93,6 +93,9 @@ func has_kind(b: Dictionary, kind: String) -> bool:
 ## What the equipment makes the place: forge and anvil a smithy, an oven a bakery, a workbench a carpenter's
 ## shop, a stove a kitchen, otherwise a general store.
 func trade(b: Dictionary) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("fitting.trade", trade.bind(b), [b])
 	var k := station_kinds(b)
 	if k.has("forge") and k.has("anvil"):
 		return "smithy"
@@ -231,6 +234,9 @@ func why_not(b: Dictionary, kind: String, cell: Vector2i) -> String:
 
 ## Place a piece. "" when done, else why not.
 func place(b: Dictionary, kind: String, cell: Vector2i, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("fitting.place", place.bind(b, kind, cell), [b, kind, cell])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, place.bind(b, kind, cell))
 	var why := why_not(b, kind, cell)
@@ -283,6 +289,9 @@ func restore_all() -> void:
 ## Take a piece up: the materials return to the pack. A counter takes its open shop with it (the goods and
 ## coins return to the player). "" when done, else why not.
 func remove(b: Dictionary, kind: String, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("fitting.remove", remove.bind(b, kind), [b, kind])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, remove.bind(b, kind))
 	var e := entry(b, kind)

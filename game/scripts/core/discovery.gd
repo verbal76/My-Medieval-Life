@@ -178,6 +178,9 @@ static func pile_cell(cell: Vector2i) -> Vector2i:
 ## (owner MIN-D-Q3). If the clue's body lies within `trial.reach` cells (Chebyshev) of the pit, the body is opened there
 ## as a seam. Returns {result: "ok" | "refused", why, found (the seam opened, or {}), broke, up, earth: {item: units}}.
 func trial_dig(who, c: Dictionary, cell: Vector2i, tool := "shovel") -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("discovery.trial_dig", trial_dig.bind(who, c, cell, tool), [who, c, cell, tool])
 	var why := trial_refusal(who, c, cell, tool)
 	if why != "":
 		return {"result": "refused", "why": why}

@@ -210,7 +210,7 @@ func free_station(n: NPC, kind: String) -> String:
 			if float(users[u]) < w.minutes or o == null or not o.alive or o.target != -1 \
 					or not o.plan.any(func(p): return str(p.get("args", {}).get("station", "")) == id):
 				users.erase(u)
-		var player_there := 1 if float(st.get("player_until", -1.0)) > w.minutes else 0
+		var player_there: int = w.players_at(st)        # MP C2: every player at it (single player: 0 or 1)
 		if users.has(n.id) or users.size() + player_there < int(st.get("capacity", 1)):
 			return id
 	return ""

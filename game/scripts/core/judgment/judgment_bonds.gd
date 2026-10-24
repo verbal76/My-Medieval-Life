@@ -125,12 +125,22 @@ func is_empty() -> bool:
 	return pairs.is_empty() and betrayal_log.is_empty() and resent.is_empty()
 
 
+## MP C5: a guest's person id is far below zero (World.person_id), so the low half is masked to 32 bits and read back signed
+## (_lo); for every villager and the host (ids from -2 up) the keys and their order are exactly as before.
 static func _pk(a: int, b: int) -> int:
-	return ((mini(a, b) + FAR) << 32) | (maxi(a, b) + FAR)
+	return ((mini(a, b) + FAR) << 32) | ((maxi(a, b) + FAR) & 0xFFFFFFFF)
 
 
 static func _dk(victim: int, actor: int) -> int:
-	return ((victim + FAR) << 32) | (actor + FAR)
+	return ((victim + FAR) << 32) | ((actor + FAR) & 0xFFFFFFFF)
+
+
+## The low id of a key (_pk, _dk), signed again.
+static func _lo(k: int) -> int:
+	var v := k & 0xFFFFFFFF
+	if v >= 0x80000000:
+		v -= 0x100000000
+	return v - FAR
 
 
 ## One in-game year in days: the hard floor for a serious grievance, unless serious_floor_days sets another.
@@ -426,7 +436,7 @@ func to_dict() -> Dictionary:
 	ks.sort()
 	for k in ks:
 		var r: PackedInt64Array = pairs[k]
-		ps.append([int((k >> 32) - FAR), int((k & 0xFFFFFFFF) - FAR), r[0], r[1]])
+		ps.append([int((k >> 32) - FAR), _lo(k), r[0], r[1]])
 	var bs := []
 	var bk := betrayal_log.keys()
 	bk.sort()
@@ -438,7 +448,7 @@ func to_dict() -> Dictionary:
 	rk.sort()
 	for k in rk:
 		var r: PackedInt64Array = resent[k]
-		rs.append([int((k >> 32) - FAR), int((k & 0xFFFFFFFF) - FAR), r[0], r[1], r[2], r[3]])
+		rs.append([int((k >> 32) - FAR), _lo(k), r[0], r[1], r[2], r[3]])
 	return {"pairs": ps, "betrayals": bs, "resentment": rs}
 
 

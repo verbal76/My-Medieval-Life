@@ -5,7 +5,7 @@ extends RefCounted
 ## and NPC, friendship and regard in Relations. This base class is the adapter contract; JudgmentSocial itself is the
 ## fixture used by isolated tests (pairs set by hand), and JudgmentLive.Social reads the live World.
 ##
-## Ids are people's ids: villagers' NPC.id, the player Life.PLAYER_ID (-2). The player is judged, and could judge, by
+## Ids are people's ids: villagers' NPC.id, a player their person id (World.person_id: -2 the host's line, -line a guest's). The player is judged, and could judge, by
 ## exactly the same rules as anyone else (PAR: player and villagers by the same rules).
 
 var _kin := {}
@@ -23,9 +23,10 @@ func graph_version() -> int:
 
 
 
-## A pair's key: both ids offset to stay positive (the player is -2), the lower in the high bits.
+## A pair's key: both ids offset (the host's player id is -2), the lower in the high bits. MP C5: a guest's person id is
+## far below zero (World.person_id), so the low half is masked to 32 bits; every key of a villager or the host is as before.
 static func _k(a: int, b: int) -> int:
-	return ((mini(a, b) + 1024) << 32) | (maxi(a, b) + 1024)
+	return ((mini(a, b) + 1024) << 32) | ((maxi(a, b) + 1024) & 0xFFFFFFFF)
 
 
 ## Family: parents, children, siblings, partners.

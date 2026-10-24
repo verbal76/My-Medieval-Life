@@ -21,7 +21,7 @@ static func person(w: World, ref: String):
 	if w == null:
 		return null
 	if World.is_player_ref(ref):
-		return w.player
+		return w.player_for(ref)
 	if ref.begins_with("npc:"):
 		return w.npc(int(ref.trim_prefix("npc:")))
 	return null

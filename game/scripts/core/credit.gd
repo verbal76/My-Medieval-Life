@@ -39,6 +39,7 @@ var next_id := 1
 var requests: Array = []       # villagers' asks of the player today: {id, npc, item, qty, mode (barter|credit), give, value, day}
 var next_req := 1
 var refused := {}              # villager id -> the day until which they do not ask the player again (saved with the asks)
+var refused_by := {}           # MP C3: a guest's own refusals: player reference -> {villager id -> day} (saved under "refused_by" only when set)
 var _hh_day := {}              # household -> the day it last made a deal (derived, not saved: one a day)
 
 const OPEN := "open"
@@ -63,7 +64,7 @@ static func ref_of(who) -> String:
 
 func party(ref: String):
 	if World.is_player_ref(ref):
-		return w.player
+		return w.player_for(ref)
 	return w.npc(World.ref_id(ref)) if ref.begins_with("npc:") else null
 
 
@@ -238,7 +239,7 @@ func barter(seller: Object, buyer: Object, want: String, qty: int, give: String)
 
 
 func _note_deal(seller: Object, buyer: Object) -> void:
-	w.relations.note_trade(seller.id if seller is NPC else Life.PLAYER_ID, buyer.id if buyer is NPC else Life.PLAYER_ID, w.day())
+	w.relations.note_trade(w.id_of_party(seller), w.id_of_party(buyer), w.day())     # MP C3: each player their own
 
 
 # ---------------------------------------------------------------- credit ---------------------
@@ -306,6 +307,9 @@ func can_repay(d: Dictionary) -> bool:
 
 ## The debtor pays the creditor in coins. False when they cannot (the player may always choose to pay what they hold).
 func repay(id: int, force := false, actor: PlayerState = null) -> bool:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("credit.repay", repay.bind(id, force), [id, force])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, repay.bind(id, force))
 	var d := _debt(id)
@@ -370,6 +374,12 @@ func dawn() -> void:
 	for k in refused.keys():
 		if int(refused[k]) <= d:
 			refused.erase(k)
+	for ref in refused_by.keys():
+		for k in (refused_by[ref] as Dictionary).keys():
+			if int(refused_by[ref][k]) <= d:
+				refused_by[ref].erase(k)
+		if (refused_by[ref] as Dictionary).is_empty():
+			refused_by.erase(ref)
 	for x in debts.duplicate():
 		if str(x.state) != OPEN:
 			continue
@@ -407,8 +417,8 @@ func _villager_deals() -> void:
 		var bill := _sum(ask_prices(s, b, id, qty))
 		if b.coins >= bill:
 			continue                                     # they can pay: the ordinary market serves them
-		if s == w.player:                                # the player is the neighbour to ask: the villager asks them
-			if _ask_player(b, id, qty, bill):
+		if s is PlayerState:                             # a player is the neighbour to ask: the villager asks them (MP C3: that player)
+			if w.as_actor(s, _ask_player.bind(b, id, qty, bill)):
 				_hh_day[b.household] = w.day()
 				continue
 			best = _cheapest_food(b, reach, true)        # nothing the player could be asked: the other neighbours
@@ -460,8 +470,9 @@ func _cheapest_food(buyer: NPC, reach: float, no_player := false) -> Dictionary:
 			if mine < per:
 				per = mine
 				best = {"seller": s, "id": mine_id}
-	var p: PlayerState = w.player
-	if not (no_player or not p.alive or w.player_level != 0 or p.pos.distance_to(buyer.pos) > reach or refused.has(buyer.id) or request_for(buyer.id).size() > 0):
+	for p: PlayerState in w.active_players():                  # MP C3: every player in play may be asked (the host first; single player: the one)
+		if no_player or not p.alive or p.map_level != 0 or p.pos.distance_to(buyer.pos) > reach or _refused(p, buyer.id) or any_request(buyer.id):
+			continue
 		var mine := INF                                       # the player is last: a villager wins a tie
 		var mine_id := ""
 		for id in NPCBrain.FOOD:
@@ -491,9 +502,22 @@ func _cheapest_food(buyer: NPC, reach: float, no_player := false) -> Dictionary:
 
 
 # ---------------------------------------------------------------- asks of the player ---------
-## The asks `npc_id` has put to the player (empty when none).
+## The asks `npc_id` has put to the acting player (empty when none). MP C3: an ask names the player it was put to (`to`, written for a
+## guest only; absent: the host).
 func request_for(npc_id: int) -> Array:
-	return requests.filter(func(r): return int(r.npc) == npc_id)
+	var me: String = w.acting_ref()
+	return requests.filter(func(r): return int(r.npc) == npc_id and str(r.get("to", World.PLAYER)) == me)
+
+
+## Whether `npc_id` has an ask open with any player (then it asks nobody else).
+func any_request(npc_id: int) -> bool:
+	return requests.any(func(r): return int(r.npc) == npc_id)
+
+
+func _refused(p: PlayerState, npc_id: int) -> bool:
+	if w.is_host(p):
+		return refused.has(npc_id)
+	return (refused_by.get(w.player_ref(p), {}) as Dictionary).has(npc_id)
 
 
 ## The villager `b` asks the player for `qty` of `id` (bill `bill` at the player's ask): by barter if it has goods the
@@ -504,6 +528,8 @@ func _ask_player(b: NPC, id: String, qty: int, bill: int) -> bool:
 	if qty < 1:
 		return false
 	var r := {"id": next_req, "npc": b.id, "item": id, "qty": qty, "mode": "", "give": "", "give_qty": 0, "value": bill, "day": w.day()}
+	if not w.is_host(p):
+		r["to"] = w.acting_ref()                     # MP C3: the guest it is put to
 	for give in b.inv.ids():
 		if NPCBrain.FOOD.has(give) or spare(b, give) < 1:
 			continue
@@ -531,11 +557,14 @@ func _ask_player(b: NPC, id: String, qty: int, bill: int) -> bool:
 ## The player answers a villager's ask. Returns {result: "bartered"|"credited"|"refused"|"failed", text}. An accepted ask is
 ## re-checked by the rules as they stand now; a refusal is remembered (refuse_days) and costs nothing.
 func answer_request(req_id: int, accept: bool, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("credit.answer_request", answer_request.bind(req_id, accept), [req_id, accept])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, answer_request.bind(req_id, accept))
 	var r := {}
 	for x in requests:
-		if int(x.id) == req_id:
+		if int(x.id) == req_id and str(x.get("to", World.PLAYER)) == w.acting_ref():     # MP C3: only an ask put to this player
 			r = x
 	if r.is_empty():
 		return {"result": "failed", "text": "That ask has lapsed."}
@@ -544,7 +573,12 @@ func answer_request(req_id: int, accept: bool, actor: PlayerState = null) -> Dic
 	if b == null or not b.alive:
 		return {"result": "failed", "text": "They are gone."}
 	if not accept:
-		refused[b.id] = w.day() + int(cfg().refuse_days)
+		if w.is_host(w.player):
+			refused[b.id] = w.day() + int(cfg().refuse_days)
+		else:
+			if not refused_by.has(w.acting_ref()):
+				refused_by[w.acting_ref()] = {}
+			refused_by[w.acting_ref()][b.id] = w.day() + int(cfg().refuse_days)
 		return {"result": "refused", "text": "You turn %s down." % b.name}
 	if str(r.mode) == "barter":
 		var q := barter(w.player, b, str(r.item), int(r.qty), str(r.give))
@@ -601,7 +635,7 @@ func on_player_died(slain := false, kid: NPC = null) -> void:
 # ---------------------------------------------------------------- saving ---------------------
 ## Nothing to save: no debt, ask or remembered refusal.
 func is_empty() -> bool:
-	return debts.is_empty() and requests.is_empty() and refused.is_empty()
+	return debts.is_empty() and requests.is_empty() and refused.is_empty() and refused_by.is_empty()
 
 
 func to_dict() -> Dictionary:
@@ -619,6 +653,14 @@ func to_dict() -> Dictionary:
 		d["requests"] = rs
 		d["next_req"] = next_req
 		d["refused"] = rf
+	if not refused_by.is_empty():
+		var rb := {}
+		for ref in refused_by:
+			var one := {}
+			for k in refused_by[ref]:
+				one[str(k)] = int(refused_by[ref][k])
+			rb[str(ref)] = one
+		d["refused_by"] = rb
 	return d
 
 
@@ -626,11 +668,19 @@ func load_dict(dd: Dictionary) -> void:
 	debts.clear()
 	requests.clear()
 	refused.clear()
+	refused_by.clear()
+	for ref in dd.get("refused_by", {}):
+		var one := {}
+		for k in dd.refused_by[ref]:
+			one[int(k)] = int(dd.refused_by[ref][k])
+		refused_by[str(ref)] = one
 	next_id = int(dd.get("next_id", 1))
 	next_req = int(dd.get("next_req", 1))
 	for x in dd.get("requests", []):
 		requests.append({"id": int(x.id), "npc": int(x.npc), "item": str(x.item), "qty": int(x.qty), "mode": str(x.mode), "give": str(x.give),
 				"give_qty": int(x.give_qty), "value": int(x.value), "day": int(x.day)})
+		if x.has("to"):
+			requests[requests.size() - 1]["to"] = str(x.to)
 	var rf: Dictionary = dd.get("refused", {})
 	for k in rf:
 		refused[int(k)] = int(rf[k])

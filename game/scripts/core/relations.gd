@@ -40,7 +40,7 @@ const FAVOURITES := {
 const MEDICINE := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_healing_tonic"]
 
 var w
-var ties := {}          # "a:b" (a < b; the player is Life.PLAYER_ID) -> tie (see _blank)
+var ties := {}          # "a:b" (a < b; a player is their person id, World.person_id: -2 the host) -> tie (see _blank)
 var interests := {}     # villager id -> the id of the one they are courting (CRT-04)
 var trades := {}         # X18 (Expansion 18, X18-Q12-POST): "a:b" -> {n, last}: the pair traded n times, the last on day
                          # `last`. A commercial contact: a courier may deliver to a business one has traded with. Saved
@@ -97,7 +97,7 @@ func friends(a: int, b: int) -> bool:
 
 
 func player_friend(n: NPC) -> bool:
-	return n != null and friends(Life.PLAYER_ID, n.id)
+	return n != null and friends(w.acting_id(), n.id)
 
 
 # ---------------------------------------------------------------- gifts ----------------------
@@ -175,7 +175,13 @@ func gift_effect(giver: int, n: NPC, id: String) -> Dictionary:
 ## Give one `id` from `giver` (the player or a villager) to villager `n`. Returns what they say; the goods
 ## move from the giver's pack to the receiver's (refused when they have no room).
 func give(giver: int, n: NPC, id: String) -> String:
-	var from: Inventory = w.player.inv if Life.is_player_id(giver) else w.npc(giver).inv
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("relations.give", give.bind(giver, n, id), [giver, n, id])
+	var gp: PlayerState = w.player_of_id(giver) if Life.is_player_id(giver) else null      # MP C5: whichever player gives
+	if Life.is_player_id(giver) and gp == null:
+		return ""
+	var from: Inventory = gp.inv if gp != null else w.npc(giver).inv
 	if not from.has(id):
 		return ""
 	if not n.inv.can_add(id):
@@ -183,8 +189,8 @@ func give(giver: int, n: NPC, id: String) -> String:
 	var e := gift_effect(giver, n, id)
 	from.remove(id)
 	n.inv.add(id)
-	if Life.is_player_id(giver):
-		w.player.unmark(id, n.id, 1)
+	if gp != null:
+		gp.unmark(id, n.id, 1)
 	var t := tie(giver, n.id)
 	var first_today: bool = int(t.gift_day) != w.day()
 	t.gift_day = w.day()
@@ -277,7 +283,7 @@ func harmed(n: NPC, amount: float, spread := true) -> void:
 	if n == null or n.role == "bandit":
 		return
 	if n.alive:
-		_raise(tie(Life.PLAYER_ID, n.id), -amount, -amount * 0.5, false, Vector2i(Life.PLAYER_ID, n.id))
+		_raise(tie(w.acting_id(), n.id), -amount, -amount * 0.5, false, Vector2i(w.acting_id(), n.id))
 	if not spread:
 		return
 	var c := cfg()
@@ -290,7 +296,7 @@ func harmed(n: NPC, amount: float, spread := true) -> void:
 		elif friends(o.id, n.id):
 			share = float(c.friend_harm_share)
 		if share > 0.0:
-			_raise(tie(Life.PLAYER_ID, o.id), -amount * share, -amount * share * 0.5, false, Vector2i(Life.PLAYER_ID, o.id))
+			_raise(tie(w.acting_id(), o.id), -amount * share, -amount * share * 0.5, false, Vector2i(w.acting_id(), o.id))
 
 
 ## The player slew a villager (World.kill): their family and friends turn hard against the player
@@ -312,10 +318,11 @@ func killings_of(ref: String) -> int:
 
 ## How the village sees the player (CRT-12): crimes seen in the last notoriety_days, and every villager slain
 ## counts killing_weight.
-func notoriety() -> int:
+func notoriety(who: PlayerState = null) -> int:
 	var c := cfg()
-	var n := killings_of(w.acting_ref()) * int(c.killing_weight)       # A8: the acting player's own
-	for cr in w.player.crimes:
+	var p: PlayerState = who if who != null else w.player          # MP C5: any player's own (default the acting player)
+	var n := killings_of(w.player_ref(p)) * int(c.killing_weight)       # A8: the player's own
+	for cr in p.crimes:
 		if Justice.is_violent(str(cr.get("kind", ""))):
 			continue                 # GP-CRIME-PURSUIT A1: blows and killings are on the record too; killings count above, as before
 		if int(cr.get("witnesses", 0)) > 0 and w.day() - int(cr.get("day", 0)) <= int(c.notoriety_days):
@@ -352,9 +359,9 @@ func refusal(suitor: int, n: NPC) -> String:
 		return "I'm fond of you, but I don't mean to marry. Not now, maybe not ever."
 	var t := peek(suitor, n.id)
 	if Life.is_player_id(suitor):
-		if killings_of(w.acting_ref()) > 0:
+		if killings_of(w.ref_of_id(suitor)) > 0:
 			return "Marry you? You have killed people of this village. No."
-		if notoriety() >= int(c.notoriety_refuse):
+		if notoriety(w.player_of_id(suitor)) >= int(c.notoriety_refuse):
 			return "Everyone knows what you've been doing. I won't marry a thief."
 	if float(t.regard) < float(c.marry_regard):
 		return "I don't think well enough of you for that."
@@ -370,17 +377,17 @@ func defended(at: Vector2) -> void:
 	for n: NPC in w.near(at, float(GameData.b("witness_radius"))):
 		if n.role == "bandit" or w.asleep(n):
 			continue
-		var t := tie(Life.PLAYER_ID, n.id)
+		var t := tie(w.acting_id(), n.id)
 		if int(t.defend_day) == w.day():
 			continue
 		t.defend_day = w.day()
-		_raise(t, float(cfg().defend_regard), float(cfg().defend_regard) * 0.3 if can_court(Life.PLAYER_ID, n.id) else 0.0, true, Vector2i(Life.PLAYER_ID, n.id))
+		_raise(t, float(cfg().defend_regard), float(cfg().defend_regard) * 0.3 if can_court(w.acting_id(), n.id) else 0.0, true, Vector2i(w.acting_id(), n.id))
 	if w.judgment != null:
 		JudgmentLive.on_defence(w, at)                             # PROSPECTIVE (PROS-19)
 
 
 # ---------------------------------------------------------------- the player's closeness ------
-var _near_acc := 0.0
+var _near_acc := {}            # MP C5: person id -> game minutes near villagers since the last sample (each player's own; one in single player)
 
 
 ## As the game runs (World._update_player): every close.sample_minutes the villagers within close.tiles of the
@@ -388,11 +395,13 @@ var _near_acc := 0.0
 ## counts close.focus_factor.
 func player_tick(gm: float) -> void:
 	var cl: Dictionary = cfg().close
-	_near_acc += gm
-	if _near_acc < float(cl.sample_minutes):
+	var me: int = w.acting_id()
+	var acc := float(_near_acc.get(me, 0.0)) + gm
+	_near_acc[me] = acc
+	if acc < float(cl.sample_minutes):
 		return
-	var mins := _near_acc
-	_near_acc = 0.0
+	var mins := acc
+	_near_acc[me] = 0.0
 	var p = w.player
 	if not p.alive:
 		return
@@ -412,7 +421,7 @@ func player_tick(gm: float) -> void:
 ## close.daily_regard a day from closeness; after close.known_minutes in a day the day counts as known.
 func _presence(n: NPC, mins: float, weight := 1.0) -> void:
 	var cl: Dictionary = cfg().close
-	var t := tie(Life.PLAYER_ID, n.id)
+	var t := tie(w.acting_id(), n.id)
 	var d: int = w.day()
 	if int(t.near_day) != d:
 		t.near_day = d
@@ -420,11 +429,11 @@ func _presence(n: NPC, mins: float, weight := 1.0) -> void:
 		t.near_reg = 0.0
 	var before := float(t.near_min)
 	t.near_min = before + mins
-	var full := _bonus(Life.PLAYER_ID, n.id, float(cl.regard_per_hour) * mins * weight / 60.0)    # X19-FOUND-BONDS: before close.daily_regard
+	var full := _bonus(w.acting_id(), n.id, float(cl.regard_per_hour) * mins * weight / 60.0)    # X19-FOUND-BONDS: before close.daily_regard
 	var reg := minf(full, maxf(0.0, float(cl.daily_regard) - float(t.near_reg)))
 	t.near_reg = float(t.near_reg) + reg
-	var att := float(cl.attraction_per_hour) * mins * weight / 60.0 * chemistry(Life.PLAYER_ID, n.id) if can_court(Life.PLAYER_ID, n.id) else 0.0
-	_raise_noted(t, reg, att, Life.PLAYER_ID, n.id, false)
+	var att := float(cl.attraction_per_hour) * mins * weight / 60.0 * chemistry(w.acting_id(), n.id) if can_court(w.acting_id(), n.id) else 0.0
+	_raise_noted(t, reg, att, w.acting_id(), n.id, false)
 	if before < float(cl.known_minutes) and float(t.near_min) >= float(cl.known_minutes):
 		_touch(t)
 
@@ -432,10 +441,14 @@ func _presence(n: NPC, mins: float, weight := 1.0) -> void:
 # ---------------------------------------------------------------- befriending ----------------
 ## The player may befriend a villager once help and gifts have raised their regard (CRT-02): no proposal.
 func can_befriend(n: NPC) -> bool:
-	return n.role != "bandit" and n.role != "child" and not friends(Life.PLAYER_ID, n.id) and float(peek(Life.PLAYER_ID, n.id).regard) >= float(cfg().befriend_at)
+	return n.role != "bandit" and n.role != "child" and not friends(w.acting_id(), n.id) and float(peek(w.acting_id(), n.id).regard) >= float(cfg().befriend_at)
 
 
 func befriend(a: int, b: int) -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		w.mirror("relations.befriend", befriend.bind(a, b), [a, b])
+		return
 	var t := tie(a, b)
 	t.friends = true
 	t.last = w.day()
@@ -479,10 +492,13 @@ func stage(a: int, b: int) -> String:
 ## The player (or a villager) asks to court: accepted once attraction reaches court_at and they have known each
 ## other on court_min_days separate days.
 func ask_court(a: int, n: NPC) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("relations.ask_court", ask_court.bind(a, n), [a, n])
 	var t := tie(a, n.id)
 	if not can_court(a, n.id):
 		return "That's not for us."
-	if Life.is_player_id(a) and (killings_of(w.acting_ref()) > 0 or notoriety() >= int(cfg().notoriety_refuse)):
+	if Life.is_player_id(a) and (killings_of(w.ref_of_id(a)) > 0 or notoriety(w.player_of_id(a)) >= int(cfg().notoriety_refuse)):
 		return "Walk out with you? After what you've done? No."
 	if float(t.attraction) < float(cfg().court_at) or int(t.days_known) < int(cfg().court_min_days):
 		_raise(t, 0.0, -float(cfg().too_soon_penalty) * 0.5, false)
@@ -497,6 +513,9 @@ func ask_court(a: int, n: NPC) -> String:
 ## A proposal (CRT-01): accepted when courting long enough (propose_min_days), known on marry_min_days separate
 ## days, with attraction at propose_at; asked too early it is declined and cools things a little.
 func propose(a: int, n: NPC) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("relations.propose", propose.bind(a, n), [a, n])
 	var t := tie(a, n.id)
 	if str(t.stage) != "courting" or not can_court(a, n.id):
 		return "We aren't courting."
@@ -613,8 +632,12 @@ func _befriend_if_close(a: int, b: int, t: Dictionary) -> void:
 ## (player_tick); the conversation adds talk_first the first time that day, talk_more the next and talk_decay
 ## as much again each time after, so pressing the button over and over adds almost nothing.
 func talked(n: NPC) -> void:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		w.mirror("relations.talked", talked.bind(n), [n])
+		return
 	var sh: Dictionary = cfg().shared
-	var t := tie(Life.PLAYER_ID, n.id)
+	var t := tie(w.acting_id(), n.id)
 	if int(t.get("shared_day", -1)) != w.day():
 		t.shared_day = w.day()
 		t.shared_today = 0.0
@@ -622,7 +645,7 @@ func talked(n: NPC) -> void:
 	var k := int(t.get("talks_today", 0))
 	var reg := float(sh.talk_first) if k == 0 else float(sh.talk_more) * pow(float(sh.talk_decay), k - 1)
 	t.talks_today = k + 1
-	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(Life.PLAYER_ID, n.id) else 0.0, true, Vector2i(Life.PLAYER_ID, n.id))
+	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(w.acting_id(), n.id) else 0.0, true, Vector2i(w.acting_id(), n.id))
 
 
 # ---------------------------------------------------------------- every dawn -----------------
@@ -732,7 +755,7 @@ func to_dict() -> Dictionary:
 	return out_d
 
 
-## X18-Q12-POST: a trade between two parties (ids; the player is Life.PLAYER_ID) makes them commercial contacts.
+## X18-Q12-POST: a trade between two parties (ids; a player is their person id, World.person_id) makes them commercial contacts.
 func note_trade(a: int, b: int, day: int) -> void:
 	if a == b:
 		return

@@ -59,11 +59,11 @@ var left_job := ""           # the job given up at the last change (not taken up
 # B8-029: age and explicit relationships (Life). A shared house implies none of these.
 var born := 0.0              # game minutes (negative: older than the game); age in years is Life.age_years
 var sex := "male"            # male | female
-var mother := -1             # npc id; Life.PLAYER_ID (-2) is the player; -1 unknown
+var mother := -1             # npc id; a player's person id (World.person_id: -2 the host's line); -1 unknown
 var birth_family := ""       # the surname born with, kept when a child taken in takes another (FAM-04); "" unchanged
 var clan := ""               # "bandit": an orphan no household could take, a dependant of the bandit camp (FAM-07, OD-11); "" none
 var father := -1
-var partner := -1            # npc id, Life.PLAYER_ID for the player, -1 none
+var partner := -1            # npc id, a player's person id, -1 none
 var children: Array = []     # npc ids
 var away := ""               # MIGRATE-18: the settlement this villager moved to (alive is false then; Migration); "" otherwise
 var became_player := false   # ID-01: this child became the player character (Life.make_heir): the record is kept (alive is false), not a body
@@ -171,7 +171,9 @@ static func from_dict(d: Dictionary) -> NPC:
 	if not n.pursuit.is_empty():
 		n.pursuit.i = int(n.pursuit.get("i", 0))
 		if str(n.pursuit.get("state", "")) == "pursuing":
-			n.target = Life.PLAYER_ID          # a guard who had the offender in sight at the save still has (fight() checks the sight at once)
+			n.target = World.id_of_ref(str(n.pursuit.get("ref", World.PLAYER)))     # a guard who had the offender in sight at the save still has (fight() checks the sight at once); MP C6: that player's own id
+			if n.target == -1:
+				n.target = Life.PLAYER_ID
 	for k in d.get("skills", {}):                             # older saves (< 15): World.load_dict seeds them (Skills.seed_villagers)
 		n.skills[str(k)] = int(d.skills[k])
 	return n

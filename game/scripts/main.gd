@@ -94,6 +94,7 @@ var walking := false           # the player moved this frame (resource prompts w
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
 var avatar_sprites := {}       # the other players in the session, by pid
+var _offers_seen := 0           # MP-D8: offers made to this player today that it was told of
 var _guest_note_t := -100.0
 ## Gather mode (B7-012, owner 2026-10-18): the Gather button; a tap (or Use) on a resource walks to it
 ## and gathers it, cycle after cycle by the usual actions, until it runs out or something stops it.
@@ -956,6 +957,8 @@ func start_guest_world(d: Dictionary, pid: int) -> bool:
 		return false
 	world = w
 	world.set_local_player(me)
+	world.remote = net.send_verb               # MP Batch C: this machine's verbs are the host's to apply (World.mirror)
+	world.remote_done = net.note_prediction
 	guest_world = true
 	_build_scene()
 	_apply_world_changes()
@@ -967,8 +970,12 @@ func start_guest_world(d: Dictionary, pid: int) -> bool:
 func adopt_own_state(d: Dictionary) -> void:
 	var mine := world.player
 	var fresh := PlayerState.from_dict(d)
-	for k in ["inv", "chest", "coins", "hp", "max_hp", "hunger", "stamina", "skills", "spells", "alive", "tool", "weapon", "armor", "head", "amulet", "ring", "crimes", "quests", "stolen", "chest_stolen", "pack_level"]:
-		mine.set(k, fresh.get(k))
+	# MP C: every record of the character (family, home, partner, children, quests, crimes...), not its place (walked here) or
+	# its party reference (this world's own)
+	for pr in fresh.get_property_list():
+		var k := str(pr.name)
+		if int(pr.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE and not k in ["pos", "party", "map_level"]:
+			mine.set(k, fresh.get(k))
 
 
 ## Guest (MP-D4): the host made the heir this player chose: it replaces the dead character on this machine.
@@ -1000,13 +1007,19 @@ func leave_guest_world(text := "") -> void:
 ## True (with a short note now and then) when this machine is a guest and the action is not yet one the host applies for
 ## guests (NetActions.KINDS; the rest come with Batch C): nothing is done to the guest's copy of the world.
 func guest_blocked() -> bool:
-	if not guest_world:
+	return false                    # MP Batch C: every player verb goes to the host (World.mirror, NetActions.VERBS); nothing is blocked
+
+
+## MP-D8: another player in play stands beside this one (or has made it an offer today).
+func _beside_player() -> bool:
+	if world == null or (net.role == "" and world.player_list().size() < 2):
 		return false
-	var now := Time.get_ticks_msec() / 1000.0
-	if now - _guest_note_t > 4.0:
-		_guest_note_t = now
-		ui.message("In a friend's world you can walk, eat and pick wild plants for now. Working, fighting and trading there come later.", 5.0)
-	return true
+	if not world.offers_to(world.player).is_empty():
+		return true
+	for q: PlayerState in world.active_players():
+		if q != world.player and q.alive and q.map_level == world.player.map_level and q.pos.distance_to(world.player.pos) <= World.OFFER_REACH:
+			return true
+	return false
 
 
 ## The other players: one sprite each, eased toward where the host says they are.
@@ -1128,6 +1141,7 @@ func _clear_world() -> void:
 		if is_instance_valid(s):
 			s.queue_free()
 	avatar_sprites.clear()
+	cart_sprites.clear()             # their nodes go with the scene (a world loaded after one with carts: MP C, a guest rejoining)
 	chase = null
 	talk_to = null
 	reach_to = Vector2.INF
@@ -1584,6 +1598,13 @@ func _process(delta: float) -> void:
 			save_game(false)
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
+	if running and not world.offers.is_empty():
+		var mine: Array = world.offers_to(world.player)
+		if mine.size() > _offers_seen:
+			var o: Dictionary = mine[mine.size() - 1]
+			var from: PlayerState = world.player_of_ref(str(o["from"]))
+			ui.message("%s asks you something: press Use beside them to answer." % (from.name if from != null else "Someone"), 6.0)   # MP-D8
+		_offers_seen = mine.size()
 	_sync_sprites()
 	_sync_levels(delta)
 	_sync_gather_mark()
@@ -2073,6 +2094,8 @@ func _player_step(delta: float) -> void:
 	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if v.length() > 0.1 and not gather.is_empty():
 		stop_gather("You stop gathering.")          # walking away stops it; Gather mode stays on
+	if v.length() > 0.1 and world.player.rest_until >= 0.0:
+		world.player_wake()                          # MP-D2: a player resting in real time gets up by moving
 	if v.length() > 0.1:
 		chase = null
 		talk_to = null
@@ -2340,50 +2363,21 @@ func station_tapped(wpos: Vector2) -> String:
 	return ""
 
 
-const BODY := [Vector2(-0.38, -0.15), Vector2(0.38, -0.15), Vector2(-0.38, 0.2), Vector2(0.38, 0.2)]   # the player's feet, about as wide as the sprite (tiles; Build 8: walls overlapped the sprite)
+## MP C1: walking and its collision are the core's (World.try_step, step_ok and slide_to_gap: the player's feet, World.PLAYER_BODY), the same rule the host
+## checks a guest's steps by (NetSession.move_ok). These keep their names for the callers here.
+const BODY := World.PLAYER_BODY     # the player's feet (tests read it here)
 
 
-## How many corners of the player's feet, standing at `at`, are on a blocked cell.
 func _blocked_corners(at: Vector2) -> int:
-	var n := 0
-	for c in BODY:
-		var q: Vector2 = at + c
-		if world.solid_for_player(Vector2i(floori(q.x), floori(q.y))):     # the level the player is on (MIN-A)
-			n += 1
-	return n
+	return world.body_blocked(world.player, at)
 
 
-## Move by `step` if the feet fit there. Feet already on something solid (a tree that grew back
-## under them, a building finished around them) may move wherever they overlap no more than now,
-## so the player can always walk out (Build 8 report: trapped between trees).
 func _try_move(step: Vector2) -> bool:
-	var p := world.player
-	var np := p.pos + step
-	var now := _blocked_corners(p.pos)
-	var after := _blocked_corners(np)
-	if after == 0 or (now > 0 and after <= now):
-		p.pos = np
-		return true
-	return false
+	return world.try_step(world.player, step)
 
 
-## Pushing into a wall beside an opening (a doorway, the gap between two trees): when the feet would
-## fit through less than about half a tile to the side, slide toward it, as most games do, instead of
-## needing the stick lined up to a fifth of a tile (Build 8 report: trapped just inside a door).
 func _slide_to_gap(step: Vector2) -> void:
-	var p := world.player
-	var side := Vector2(0, 1) if step.x != 0.0 else Vector2(1, 0)
-	var base: float = p.pos.y if step.x != 0.0 else p.pos.x
-	var best := INF
-	for k in [-1, 0, 1]:
-		var off: float = floorf(base) + 0.5 + k - base
-		if absf(off) > 0.55 or absf(off) < 0.001 or absf(off) >= absf(best):
-			continue
-		var at := p.pos + side * off
-		if _blocked_corners(at) == 0 and _blocked_corners(at + step) == 0:
-			best = off
-	if best != INF:
-		_try_move(side * signf(best) * minf(absf(best), step.length()))
+	world.slide_to_gap(world.player, step)
 
 
 func facing_vec() -> Vector2:
@@ -2903,6 +2897,8 @@ func interact() -> void:
 	if guest_blocked():
 		return
 	if target.is_empty():
+		if _beside_player():
+			ui.show_players()                      # MP-D8: another player stands here: ask, or answer what they asked
 		return
 	# in Gather mode, Use (keys, pad, the touch button) on a resource in front chooses it to gather
 	if gather_mode and target.kind in ["deposit", "tree", "field", "plant"]:
@@ -3103,9 +3099,8 @@ func _use() -> void:
 				return
 			next_sound = "fruit_drop"
 			start_action("Picking", 1.5, func():
-				var got := world.pick_fruit(ftree)
+				var got := world.player_pick_fruit(ftree)          # MP C2: one verb, applied by the host for a guest
 				for id in got:
-					p.inv.add(id, int(got[id]))
 					_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
 				if got.is_empty():
 					ui.message("Nothing left to pick."))
@@ -3117,16 +3112,9 @@ func _use() -> void:
 				return
 			next_sound = "bush_rustling"
 			start_action("Picking", 1.2, func():
-				var got := world.pick_plant(pl)
-				for id in got:
-					p.inv.add(id, int(got[id]))
+				var got := world.player_pick_plant(pl)          # MP C2: the goods and the cutting (SEED-02) in one verb
 				if got.is_empty():
 					ui.message("Nothing left to pick.")
-				else:
-					var cut := world.propagation_drop(pl)        # SEED-02: a cutting or seed by its chance, as for villagers
-					for id in cut:
-						if world.player_gain(id, int(cut[id])) > 0:
-							got[id] = int(cut[id])
 				for k in got:
 					_gain("+%d %s" % [int(got[k]), GameData.item_name(k)], k))
 		"pen":
@@ -3685,8 +3673,7 @@ func set_down_cart(item := "handcart") -> void:
 	var at := p.pos + facing_vec()
 	if map.is_solid_world(Vector2i(floori(at.x), floori(at.y))):
 		at = p.pos
-	p.inv.remove("handcart", 1)
-	world.carts.place(world.acting_ref(), at)
+	world.player_set_down_cart(at)                 # MP C2: one verb, applied by the host for a guest
 	ui.message("You set the handcart down. Use it to pull it, or open it to load it.")
 
 
@@ -5112,7 +5099,11 @@ func _sync_player_pose() -> void:
 
 
 func _rest_now() -> void:
-	world.player_rest()                         # how long, the world going on and the recovery are core's (DVW-A12 R18)
+	var r: Dictionary = world.player_rest()     # how long, the world going on and the recovery are core's (DVW-A12 R18)
+	if bool(r.get("waiting", false)):
+		# MP-D2: in a shared world the day goes on until everyone rests; this player rests meanwhile, until the rest is over or they move
+		ui.message("You rest. The day goes on until everyone in the world rests too; moving or acting wakes you.", 6.0)
+		return
 	audio.play_sfx("jingle_inn_rest")
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
@@ -5656,11 +5647,6 @@ func _resource_tap(wpos: Vector2) -> Dictionary:
 ## warn once before taking someone's field, then walk to it and gather (`continuous`: until it runs
 ## out; else once).
 func select_resource(hit: Dictionary, continuous: bool) -> void:
-	if guest_world and str(hit.def.match.kind) == "plant" and hit.ref is Dictionary:
-		var pc := Vector2i(int(hit.ref.x), int(hit.ref.y))
-		player_sprite.face(Vector2(pc) + Vector2(0.5, 0.5) - world.player.pos)
-		net.request("pick_plant", {"x": pc.x, "y": pc.y})      # MP A2: the host picks it for this player
-		return
 	if guest_blocked():
 		return
 	var d: Dictionary = hit.def

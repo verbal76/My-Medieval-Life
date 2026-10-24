@@ -10,9 +10,9 @@ extends RefCounted
 ##   - the speaker's memory (NPC.memory), keyed by the listener's name: "saw <listener> attack <victim>" (a witness,
 ##     World.player_assault), "<victim> died (slain by <listener>)" (the household, World.kill);
 ##   - the judgment store (when attached), whose beliefs carry how they were learned (witnessed, told, rumour). Its
-##     records name every player as Life.PLAYER_ID until multiplayer Batch C; A8: a player's fact carries the tag
-##     "by:<player ref>", so it names the right player (a guest's deed is never pinned on the host, nor the host's on a
-##     guest); an untagged fact (an older save) names the player only while one is in play.
+##     records name each player by their person id (World.person_id: -2 the host's line, -line a guest's; MP Batch C, save 22),
+##     and a player's fact also carries the tag "by:<player ref>" (A8), so a guest's deed is never pinned on the host, nor the
+##     host's on a guest.
 ## Nobody knows what they did not see or learn: a villager with none of these records says nothing of it.
 
 const CLOSE := ["parent", "child", "partner", "sibling", "grandchild", "grandparent"]
@@ -23,9 +23,10 @@ static func listener_name(w: World) -> String:
 	return "%s %s" % [w.player.name, w.player.family]
 
 
-## Whether a record that names "the player" (Life.PLAYER_ID) names this listener: only while one player is in play.
+## Whether the listener's own ties (Relations, by the listener's person id) are the ones read: always, since MP Batch C keys
+## every player's ties by their own id (before it every player shared -2, so only a lone player could be sure).
 static func player_id_is_listener(w: World) -> bool:
-	return w.players.size() == 1 and w.is_acting_ref(Life.PLAYER_ID)
+	return Life.is_player_id(w.acting_id())
 
 
 static func full(o) -> String:
@@ -265,13 +266,13 @@ static func _tags(tags: Array) -> Dictionary:
 	return o
 
 
-## The person a fact names: a villager by id; Life.PLAYER_ID is the player the fact's "by" tag names (multiplayer: the
-## right player), else, with one player in play, that player; else null (a player the speaker cannot tell apart).
+## The person a fact names: a villager by id; a player by their person id (World.player_of_id), or by the fact's "by" tag where
+## it has one (A8; the tag and the id agree in a save 22, and the tag is what told players apart in a save 21 fact that named -2).
 static func person_of_id(w: World, id: int, tags: Dictionary):
 	if Life.is_player_id(id):
 		if tags.has("by"):
 			return w.player_of_ref(str(tags.by))
-		return w.host_player() if w.players.size() == 1 else null
+		return w.player_of_id(id)
 	return w.npc(id)
 
 

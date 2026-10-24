@@ -172,6 +172,9 @@ func deal_refusal(rect: Rect2i, ref: String, lease: bool) -> String:
 ## Mark out farmland and lease or buy it from the manor (Property.claim: the first week's rent, or the price, goes
 ## to the treasury at once). Nothing on it is cleared for free. Returns the parcel, or {} with the reason in `why`.
 func claim(rect: Rect2i, ref: String, lease: bool) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm_plots.claim", claim.bind(rect, ref, lease), [rect, ref, lease])
 	why = deal_refusal(rect, ref, lease)
 	if why != "":
 		return {}
@@ -223,6 +226,9 @@ func fence_refusal(p: Dictionary, ref: String, stores: Array) -> String:
 ## Put up the fence and gate: the materials are taken from `stores` in order and used up (counted as used_, the
 ## goods ledger's drain), the fence is solid but for the gate. "" when done.
 func build_fence(p: Dictionary, ref: String, stores: Array) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("farm_plots.build_fence", build_fence.bind(p, ref, stores), [p, ref, stores])
 	var no := fence_refusal(p, ref, stores)
 	if no != "":
 		return no

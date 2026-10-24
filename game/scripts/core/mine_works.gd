@@ -228,6 +228,9 @@ func dig_refusal(who, c: Vector2i, tool := "pickaxe") -> String:
 ## unit opens it (floor, its A* at once) and exposes hidden ore beside it; a filled or collapsed cell is walkable again
 ## once it holds less than a full cell. Returns {result: "ok" | "refused", why, item, n, broke, up, opened, exposed}.
 func dig(who, c: Vector2i, into: Inventory, tool := "pickaxe") -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("mine_works.dig", dig.bind(who, c, into, tool), [who, c, into, tool])
 	var why := dig_refusal(who, c, tool)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -794,6 +797,9 @@ func shaft_done(sh: Dictionary) -> bool:
 ## rock as an ordinary cell; the landing opens as floor and hidden ore beside it is exposed. The mouth is not walkable
 ## from the first unit. The pickaxe wears, Mining xp. {result, why, item, broke, up, done, exposed}.
 func dig_shaft(who, c: Vector2i, into: Inventory, tool := "pickaxe") -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("mine_works.dig_shaft", dig_shaft.bind(who, c, into, tool), [who, c, into, tool])
 	var why := shaft_refusal(who, c, tool)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -1014,6 +1020,9 @@ func _occupied(level: int, c: Vector2i) -> bool:
 ## `who` puts one unit of spoil from `from` into `c` (filled_spoil; the cell's fill): the passage fills a unit at a time
 ## and, full, is solid (its A* at once). Only the player's own hands or a worker on the player's order call this.
 func fill(who, c: Vector2i, from: Inventory) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("mine_works.fill", fill.bind(who, c, from), [who, c, from])
 	var why := fill_refusal(who, c, from)
 	if why != "":
 		return {"result": "refused", "why": why}
@@ -1163,6 +1172,9 @@ func minecart_refusal(who, c: Vector2i) -> String:
 ## `who` sets a minecart down on track cell `c`: the item becomes a cart of kind minecart (Carts.place: used_minecart)
 ## owned by `owner` ("player" or "hh:<n>"), on their level. {result, why, cart}.
 func set_down_minecart(who, owner: String, c: Vector2i) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if w.mirrors():
+		return w.mirror("mine_works.set_down_minecart", set_down_minecart.bind(who, owner, c), [who, owner, c])
 	var why := minecart_refusal(who, c)
 	if why != "":
 		return {"result": "refused", "why": why}
