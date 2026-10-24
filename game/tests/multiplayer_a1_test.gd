@@ -195,7 +195,7 @@ func test_save_21() -> void:
 	g.skills["woodcutting"] = 25
 	w.add_guest(g)
 	var d := _norm(w.to_dict())
-	check(int(d.save_version) == 21 and World.SAVE_VERSION == 21 and str(d.format) == "mml-save/21", "the save is version 21")
+	check(int(d.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 21 and str(d.format) == "mml-save/%d" % World.SAVE_VERSION, "the save is version 21 or later (22: MP Batch C)")
 	check(d.has("player") and d.has("players") and int(d.players.host) == w.player.pid and (d.players.by_pid as Dictionary).size() == 2, "it writes the host's \"player\" as always and a \"players\" section with every player by pid")
 	check(JSON.stringify(d.player, "", true) == JSON.stringify(d.players.by_pid[str(w.player.pid)], "", true), "the host's record in players is the same as \"player\"")
 	var w2 := World.new()
@@ -254,7 +254,7 @@ func test_save_20_fixture() -> void:
 	check(same and w.player.coins == 137 and w.player.pid == int(d.player.pid), "the player's state is identical to the saved one")
 	check(w.player_level == int(d.underground.player_level) and w.player.map_level == w.player_level, "the level comes from the saved underground section")
 	var d21 := _norm(w.to_dict())
-	check(int(d21.save_version) == 21 and (d21.players.by_pid as Dictionary).size() == 1 and JSON.stringify(d21.player, "", true) == JSON.stringify(d21.players.by_pid[str(w.player.pid)], "", true), "it saves as version 21 with the host as the one player")
+	check(int(d21.save_version) == World.SAVE_VERSION and (d21.players.by_pid as Dictionary).size() == 1 and JSON.stringify(d21.player, "", true) == JSON.stringify(d21.players.by_pid[str(w.player.pid)], "", true), "it saves as version 21 with the host as the one player")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d21)
 	check(w2.load_error == "" and _same_sections(_norm(w2.to_dict()), d21, ["player", "players", "underground", "people", "next_band_id", "save_version"]), "and the version 21 save round-trips (the players' sections)")
@@ -268,7 +268,7 @@ func test_save_20_fixture() -> void:
 			print("   missing: ", k)
 	check(untouched, "every section of the old save is still written")
 	var m := SaveTransfer.migrate(JSON.parse_string(text), VillageMap.load_default())
-	check(m.ok and int(m.data.save_version) == 21 and m.data.has("players"), "importing the old save migrates it to 21 (%s)" % m.get("reason", ""))
+	check(m.ok and int(m.data.save_version) == World.SAVE_VERSION and m.data.has("players"), "importing the old save migrates it to the current version, 21 or later (%s)" % m.get("reason", ""))
 	w2.dispose()
 	w.dispose()
 

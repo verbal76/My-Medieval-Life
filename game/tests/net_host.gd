@@ -125,10 +125,25 @@ func _commands() -> void:
 				w.as_actor(g, func(): w.crime_record({"day": w.day(), "kind": "theft", "what": "bread", "victim": v.id, "witnesses": 1}, v))
 				w.relations.guest_killings[w.player_ref(g)] = int(w.relations.guest_killings.get(w.player_ref(g), 0)) + 1
 				if w.judgment != null:
-					w.as_actor(g, func(): JudgmentLive.on_gift(w, Life.PLAYER_ID, v, "bread"))
+					w.as_actor(g, func(): JudgmentLive.on_gift(w, w.person_id(g), v, "bread"))      # MP C: the guest gives as itself
 				main.net.rpc_id(id, "s_self", g.to_dict())
 		"census":
 			census = {"at": "now", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
+		"give":                                      # MP C: goods for the guests' tests, entered in the books as imported
+			for id in main.net.by_peer:
+				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
+				gp.inv.add(str(c.id), int(c.n))
+				w.stat("imported_" + str(c.id), float(c.n))
+				main.net.rpc_id(id, "s_self", gp.to_dict())
+		"dump":                                      # MP C: the shared world's sections as the host has them (NetSync), for comparing copies
+			main.net.send_syncs(true)                # the guests' copies take this same moment's sections
+			var dd: Dictionary = w.to_dict()
+			var out := {"digest": NetSync.digest(dd), "sections": {}}
+			for k in c.get("keys", []):
+				out.sections[k] = dd.get(k)
+			var df := FileAccess.open(dir + "dump.json", FileAccess.WRITE)
+			df.store_string(JSON.stringify(out))
+			df.close()
 		"save_storm":
 			storm = float(c.secs)
 		"kill_guest":
@@ -144,7 +159,8 @@ func _status() -> void:
 		players[str(p.pid)] = {"name": p.name, "pos": [p.pos.x, p.pos.y], "inv": p.inv.items.duplicate(), "coins": p.coins, "hunger": p.hunger,
 			"away": p.away, "host": w.is_host(p), "ref": ref, "key": p.net_key,
 			"alive": p.alive, "line": p.line, "skills": p.skills.duplicate(), "crimes": p.crimes.size(), "case": (w.justice.case_of(ref).get("crimes", []) as Array).size(),
-			"killings": w.relations.killings_of(ref), "jtag": _tagged(w, ref)}
+			"killings": w.relations.killings_of(ref), "jtag": _tagged(w, ref), "resting": p.rest_until >= 0.0, "quests": p.quests.size(),
+			"carts": w.carts.of(ref).size(), "id": w.person_id(p), "partner": p.partner}
 	var connected := []
 	for id in main.net.by_peer:
 		connected.append(int(main.net.by_peer[id]))

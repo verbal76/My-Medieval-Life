@@ -182,6 +182,8 @@ func joining_and_moving() -> void:
 		if w.player.pos.distance_to(from) > 1.0:
 			break
 	await wait(0.6)
+	# MP C: under load the host's status can lag the guest's last steps a moment (it also sends world sections now): wait for it
+	await until(func(): var q: Array = me().get("pos", [0, 0]); return Vector2(q[0], q[1]).distance_to(w.player.pos) < 0.3, 3.0)
 	var mp: Array = me().get("pos", [0, 0])
 	var on_host := Vector2(mp[0], mp[1])
 	check(w.player.pos.distance_to(from) > 1.0, "the guest walked %.1f tiles on its screen" % w.player.pos.distance_to(from))
