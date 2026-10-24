@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 561 (293 of them still open) |
-| **Open entries now** (rules excluded) | | **470** |
+| Entries added since | | 562 (294 of them still open) |
+| **Open entries now** (rules excluded) | | **471** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,11 +89,12 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (561)
+## Added since the baseline (562)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 16 |
+| ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 21 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | APPROVED | owner decision |

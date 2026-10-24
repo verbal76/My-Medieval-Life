@@ -309,8 +309,11 @@ corresponding documentation.** Every agent and worker, on every task:
   - **Three platforms, always (owner, 2026-10-24, BUILD-3PLATFORM, `docs/directives/2026-10-24_mandatory_three_platform_build_policy.md`;
     permanent).** "Build" means Android APK, Windows ZIP and Linux ZIP together, for every checkpoint, playtest, candidate and
     release: one commit, one version and build number, checksums and the source commit, one private draft release. A build
-    with one or two platforms is not complete: repair the failing one. Sign Android with the established test key from the
-    secrets only; never tick `allow_temporary_key` (no throwaway keys).
+    with one or two platforms is not complete: repair the failing one. Sign Android only with the owner's permanent release
+    identity in the four `ANDROID_RELEASE_*` secrets (owner, 2026-10-24, ANDROID-RELEASE-SIGNING,
+    `docs/directives/2026-10-24_permanent_android_signing_integration.md`; `docs/release/ANDROID_SIGNING.md`): never print,
+    rename, regenerate or replace them, never fall back to a throwaway key (the `allow_temporary_key` input is removed from
+    Build 21's workflow), and never change the package id `com.hotatticgames.mymedievallife.dev` without the owner.
     One exception: Build 20 (Checkpoint 1) only, signed with a throwaway key (owner, 2026-10-24,
     `docs/directives/2026-10-24_build20_signing_exception.md`); every later build needs the stable key.
   - **Build 17 exception (owner, 2026-10-21, B17-DIR, `docs/directives/2026-10-21_build17_combined_integration_direction.md`):**

@@ -160,6 +160,50 @@
    "completion": "COMPLETE"
   },
   {
+   "id": "ANDROID-RELEASE-SIGNING",
+   "kind": "approved",
+   "title": "Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback",
+   "description": "Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback",
+   "source": "docs/directives/2026-10-24_permanent_android_signing_integration.md",
+   "owner_wording": "Beginning with Build 21, every My Medieval Life Android release must use the existing permanent signing identity supplied through the four ANDROID_RELEASE_* GitHub secrets. Never silently regenerate or replace the key. Never fall back to disposable signing. Never change the Android package identifier without explicit owner approval.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "release.yml signs the APK only with ANDROID_RELEASE_KEYSTORE_BASE64, ANDROID_RELEASE_KEYSTORE_PASSWORD, ANDROID_RELEASE_KEY_ALIAS and ANDROID_RELEASE_KEY_PASSWORD, never printing them; a missing secret or failed signing stops the build; no throwaway or fallback key exists",
+    "the signed APK passes apksigner verify and its certificate SHA-256 is recorded in the release evidence for comparison with the owner's signing manager; package id com.hotatticgames.mymedievallife.dev unchanged; version code equals the build number and rises",
+    "release notes give the one-time export, uninstall, install, import steps and never claim the build updates an earlier throwaway-key install; Windows and Linux packaging unchanged; private draft"
+   ],
+   "target_build": "21",
+   "parent": null,
+   "depends_on": [
+    "BUILD-3PLATFORM"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_permanent_android_signing_integration.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> lead; branch: None -> wip/android-signing; tests: None -> tests/test_android_export.py (4 tests OK); YAML parses; test_commit: None -> 8f38920; commits + 8f38920",
+     "why": "release.yml rewritten on wip/android-signing (8f38920): four ANDROID_RELEASE_* secrets, unsigned export then zipalign and apksigner with separate passwords, verify and record the certificate SHA-256, no fallback; local apksigner check with a scratch PKCS12 key (wrong key password stops, no password in the log); not yet run on GitHub"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/android-signing",
+   "tests": "the Android export unit tests on the signing branch (4 tests OK); YAML parses",
+   "test_commit": "8f38920",
+   "commits": [
+    "8f38920"
+   ]
+  },
+  {
    "id": "AR-OWNER",
    "title": "Audit remediation owner checklist: public-release environment, repository visibility, private infrastructure repository",
    "kind": "approved",
@@ -8524,6 +8568,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "Build 20: all three platforms from 56c24cb with build number 20 in one private draft (422532601), checksums verified by the lead"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner 2026-10-24 (docs/directives/2026-10-24_permanent_android_signing_integration.md): the stable signing identity is the permanent release key in the four ANDROID_RELEASE_* secrets, from Build 21; allow_temporary_key is removed from the workflow (ANDROID-RELEASE-SIGNING)"
     }
    ]
   },
@@ -29363,6 +29412,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
      "why": "within the approved multiplayer family scope (Batch C families, MP-D8); existing code: births skip player-player couples (Life.births considers a player mother only with a villager partner) and player adoption links the adopter; small change; added to the end of the Build 21 agent's list"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner 2026-10-24 clarification (docs/directives/2026-10-24_mp_player_family_minimal_fix.md): include in Build 21 if the two gaps close with small localized changes to existing mechanics; defer if it needs a new subsystem, data-model change or sync redesign; verify the five listed cases only"
     }
    ],
    "assigned_worker": "Build 21 agent",

@@ -2,10 +2,11 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (59)
+## Workers and task branches (60)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| ANDROID-RELEASE-SIGNING | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/android-signing |
 | B21-LAN-PLAYTEST | multiplayer | IN DEVELOPMENT | Build 21 integration agent | wip/multiplayer-b19 |
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

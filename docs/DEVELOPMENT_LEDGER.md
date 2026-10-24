@@ -4,10 +4,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (649)
+## Approved requirement (650)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
+| ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | 21 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | AR-OWNER | Audit remediation owner checklist: public-release environment, repository visibility, private infrastructure repository | owner action | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | AR-P0-1 | Fixed `21647e2` |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | AR-P0-2 | Assessed; remediation needs owner |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
