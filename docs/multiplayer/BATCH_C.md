@@ -134,7 +134,7 @@ Earlier, on the checkpoint `3d988d0`:
   parent (`Life.births`), so two players who are partners have none. Kept as it is; no mechanic added.
 - The other players' private records are not sent to a guest (public looks only), so a guest's copy cannot show another player's
   pack or partner; the shared sections (stalls, contracts...) show what is in the world.
-- Fauna (animals' places and pens' animals) is not synchronized to guests.
+- Fauna: synchronized to guests since Build 21 (INT-431: snapshots near each guest, births and deaths at once, the "fauna" section).
 - The section sync sends whole sections by hash (about 25 ms of the host's time a sync on this machine; the villagers' records every
   fifth timer tick): three and four players and phones are Batch E's measurements.
 
@@ -143,4 +143,4 @@ Earlier, on the checkpoint `3d988d0`:
 - Menus to host and join; Android permissions; real devices and networks (G3-G8). Taking over a stale connection (MP-D6).
 - Three and four players, performance of section synchronization with many villagers (Batch E: the sync sends whole sections).
 - Owner question: should a marriage between two players have children? Today births need a villager parent, so none come.
-- Animals' positions are not yet synchronized to guests (they render as at join); fauna is a host-only section for now.
+- Animals: done in Build 21 (INT-431, `net_fauna_test`).

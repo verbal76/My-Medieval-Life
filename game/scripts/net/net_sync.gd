@@ -14,11 +14,15 @@ const SYNC_SECONDS := 3.0
 ## time only; after a guest's own request they go at once (a trade, a gift, a blow changes a villager it then shows).
 const NPCS_EVERY := 5
 ## The sections a guest's copy takes from the host. Not here: the map and its generator data (the same seed on both), the
-## other players' private records, the overworld, fauna (animals arrive as they are seen, not yet synchronized: Batch E), the
-## settlements and couriers' books, the judgment store (read by villagers only, on the host), identity and the clock (s_npcs).
+## other players' private records, the overworld, the settlements and couriers' books, the judgment store (read by villagers
+## only, on the host), identity and the clock (s_npcs). Build 21: "fauna", the animals' records (health, hunger, which pen or
+## wood) and the pens (trough, keeper, tenant, products, the players' own pens); the animals' places, facing and animation come
+## in the faster snapshots (NetSession.s_animals), their births and deaths at once (NetSession.s_fauna_life).
 const KEYS := ["buildings", "stalls", "plots", "fields", "households", "loot", "containers", "trees", "plants", "deposits", "boulders",
 	"treasury", "granary", "vacancies", "wage_offers", "manor_orders", "coin_sources", "log", "carts", "relations", "credit", "justice",
-	"contracts", "quest_offers", "feast", "farm", "farm_plots", "chapel", "chests", "manor_work", "npcs", "player_offers"]
+	"contracts", "quest_offers", "feast", "farm", "farm_plots", "chapel", "chests", "manor_work", "npcs", "player_offers", "fauna"]
+## The sections sent on the timer only every NPCS_EVERY-th time (their live parts come in the snapshots); at once after a request.
+const SLOW := ["npcs", "fauna"]
 ## NPC fields the snapshots carry, so a section update leaves them as the snapshots have them.
 const NPC_LIVE := ["pos", "facing", "anim"]
 
@@ -165,6 +169,9 @@ static func adopt(w: World, sections: Dictionary) -> void:
 				w.manor_work.load_dict(d.manor_work)
 			"npcs":
 				_adopt_npcs(w, d.npcs)
+			"fauna":
+				if not (d.fauna as Dictionary).is_empty():
+					adopt_fauna(w, d.fauna)
 			"player_offers":
 				w.offers = []
 				for o in (d.player_offers as Dictionary).get("list", []):
@@ -190,3 +197,53 @@ static func _adopt_npcs(w: World, list: Array) -> void:
 			continue
 		for k in _npc_props:
 			n.set(k, fresh.get(k))
+
+
+## Build 21: the host's animals and pens in place (the same Animal objects stay: the sprites hold them). An animal near the local
+## player keeps the place, facing and animation the snapshots gave it (NetSession.s_animals); one farther off takes the host's
+## place. An animal the host has and this copy lacks is added (a birth, a spawn), one the host no longer has is removed (a death,
+## a sale, a despawn); a guest never simulates them (the guest's World.update never runs).
+static func adopt_fauna(w: World, d: Dictionary) -> void:
+	var f: Fauna = w.fauna
+	f.next_id = int(d.get("next_id", f.next_id))
+	for rec in d.get("player_pens", []):
+		var id := str(rec.id)
+		if f.pens.has(id):
+			(f.pens[id] as Dictionary).merge(rec, true)
+		else:
+			f.pens[id] = rec.duplicate(true)
+	var ps: Dictionary = d.get("pens", {})
+	for id in ps:
+		if f.pens.has(id):
+			var pen: Dictionary = f.pens[id]
+			pen.trough = int(ps[id].trough)
+			pen.owner = str(ps[id].get("owner", pen.get("owner", "manor")))
+			pen.tenant = str(ps[id].get("tenant", pen.get("tenant", "")))
+			pen["products"] = (ps[id].get("products", {}) as Dictionary).duplicate()
+	var host := {}
+	for ad in d.get("animals", []):
+		host[int(ad.id)] = ad
+	for a: Animal in f.animals.duplicate():
+		if not host.has(a.id):
+			f.remove(a)
+	var near := NetProtocol.NPC_RANGE
+	for aid in host:
+		var fresh := Animal.from_dict(host[aid])
+		var a := f.by_id(aid)
+		if a == null:
+			add_animal(w, fresh)
+			continue
+		for k in ["species", "skin", "sex", "born", "area", "alive", "hp", "hunger", "next_birth", "next_product", "dest", "settle_by", "origin"]:
+			a.set(k, fresh.get(k))
+		if a.pos.distance_to(w.player.pos) > near:
+			a.pos = fresh.pos                         # out of the snapshots' reach: the host's place, standing
+			a.moving = false
+
+
+## An animal the host made, put in this copy's list in id order (Fauna keeps its animals ordered by id).
+static func add_animal(w: World, a: Animal) -> void:
+	if w.fauna.by_id(a.id) != null:
+		return
+	w.fauna.animals.append(a)
+	if w.fauna.animals.size() > 1 and (w.fauna.animals[-2] as Animal).id > a.id:
+		w.fauna.animals.sort_custom(func(x: Animal, y: Animal): return x.id < y.id)

@@ -146,6 +146,26 @@ func _commands() -> void:
 			df.close()
 		"save_storm":
 			storm = float(c.secs)
+		"animal_to":                                 # Build 21: a host animal put somewhere on its own ground, standing there a while
+			var a: Animal = w.fauna.by_id(int(c.id))
+			if a != null:
+				a.pos = Vector2(float(c.x), float(c.y))
+				a.goal = Vector2.INF
+				a.wait = 30.0
+				a.moving = false
+		"animal_hurt":
+			var a2: Animal = w.fauna.by_id(int(c.id))
+			if a2 != null:
+				a2.hp = float(c.hp)
+		"animal_kill":
+			var a3: Animal = w.fauna.by_id(int(c.id))
+			if a3 != null:
+				w.fauna.kill(a3)
+		"animal_spawn":
+			var a4: Animal = w.fauna.spawn(str(c.area), str(c.species), "f", null)
+			a4.wait = 30.0
+		"pen_trough":
+			w.fauna.pens[str(c.id)].trough = int(c.n)
 		"kill_guest":
 			for id in main.net.by_peer:
 				w.damage_player(99999.0, "a test", w.player_by_pid(int(main.net.by_peer[id])))
@@ -169,7 +189,13 @@ func _status() -> void:
 		plants["%d,%d" % [int(pl.x), int(pl.y)]] = str(pl.state)
 	var c_in := int(w.stats.get("newcomer_coins_in", 0)) - int(stats0.get("newcomer_coins_in", 0)) + int(w.stats.get("caravan_coins_in", 0)) - int(stats0.get("caravan_coins_in", 0)) \
 		- int(w.stats.get("caravan_coins_out", 0)) + int(stats0.get("caravan_coins_out", 0)) + int(w.stats.get("scenario_coins_in", 0)) - int(stats0.get("scenario_coins_in", 0))
-	var d := {"hosting": main.net.is_host(), "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
+	var animals := {}
+	for a: Animal in w.fauna.animals:
+		animals[str(a.id)] = {"pos": [a.pos.x, a.pos.y], "hp": a.hp, "species": a.species, "area": a.area, "wild": a.wild()}
+	var troughs := {}
+	for pid2 in w.fauna.pens:
+		troughs[str(pid2)] = int(w.fauna.pens[pid2].trough)
+	var d := {"hosting": main.net.is_host(), "animals": animals, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
 		"census": census, "saves": saves, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}

@@ -33,6 +33,9 @@ const REFUSALS := {
 const LOOKS := ["res://assets/characters/player_02.png", "res://assets/characters/player_03.png", "res://assets/characters/player_00.png", "res://assets/characters/player_01.png"]
 const NPCS_PER_PACKET := 16          # villagers per snapshot packet (under 1 KB: ENet warns above its 1392-byte MTU)
 const ANIMS := ["idle", "walk", "sword", "swing", "gather", "work"]
+const ANIMALS_PER_PACKET := 24       # Build 21: animals per snapshot packet (8 floats each: under the MTU, as the villagers')
+const ANIMAL_ACTS := ["", "attack", "hit"]   # an animal's one-off animation, sent as its index
+const ANIMALS_KEY_EVERY := 4         # every 4th animal snapshot (once a second) carries every animal near the guest, moved or not
 
 var main                            # the game's main node (main.gd)
 var role := ""                      # "", "host" or "guest"
@@ -63,6 +66,7 @@ var my_pid := 0
 var version_sent := ""              # tests: send another version to see the refusal
 var avatars := {}                   # every other player: pid -> {pid, name, sprite, pos, dir, anim, alive}
 var npc_target := {}                # npc id -> the last position the host sent (the view eases toward it)
+var animal_target := {}             # Build 21: animal id -> the last position the host sent (the view eases toward it)
 var refusal := ""                   # the last refusal's code
 var replies := {}                   # request id -> the host's answer
 var _next_request := 1
@@ -75,6 +79,11 @@ var sync_due := {}                  # peer id -> true: send its changed sections
 var _t_sync := 0.0
 var _n_sync := 0
 var sync_bytes := 0                 # bytes of sections sent (the measurements)
+
+# host, Build 21: each guest's copy of the animals (NetSync "fauna" for their records; these for their live state)
+var fauna_known := {}               # peer id -> {animal id: true}: the animals that guest's copy holds
+var fauna_sent := {}                # peer id -> {animal id: [x, y, fx, fy, moving, act, hp]}: the live state last sent to it (as floats)
+var _n_animals := 0
 
 var _t_players := 0.0
 var _t_npcs := 0.0
@@ -151,9 +160,12 @@ func stop() -> void:
 	queue.clear()
 	synced.clear()
 	sync_due.clear()
+	fauna_known.clear()
+	fauna_sent.clear()
 	predicted.clear()
 	avatars.clear()
 	npc_target.clear()
+	animal_target.clear()
 	DisplayServer.screen_set_keep_on(false)
 	players_changed.emit()
 
@@ -171,6 +183,8 @@ func _on_peer_disconnected(id: int) -> void:
 	moves.erase(id)
 	synced.erase(id)
 	sync_due.erase(id)
+	fauna_known.erase(id)
+	fauna_sent.erase(id)
 	queue = queue.filter(func(q): return int(q.peer) != id)        # a request from someone gone is not applied
 	discovery.info = _answer()
 	if g != null:
@@ -349,6 +363,11 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
 	synced[id] = _welcome_digest
+	var known := {}
+	for a: Animal in main.world.fauna.animals:        # the welcome's save holds every animal there is now
+		known[a.id] = true
+	fauna_known[id] = known
+	fauna_sent[id] = {}
 	changed.emit("%s joined the world." % p.name)
 	main.save_game(false)
 	players_changed.emit()
@@ -458,6 +477,41 @@ func s_npcs(minutes: float, list: Array) -> void:
 
 
 var _welcome_digest := {}
+
+
+## Guest (Build 21): the animals near this player as the host has them: place, facing, walking or not, a one-off animation
+## (attack, hit) and health. An animal this copy does not hold yet waits for s_fauna_life.
+## Eight floats an animal: id, x, y, facing x and y, walking (1 or 0), the animation's index (ANIMAL_ACTS), health.
+@rpc("authority", "call_remote", "unreliable_ordered")
+func s_animals(list: PackedFloat32Array) -> void:
+	if main.world == null or not main.guest_world:
+		return
+	for i in range(0, list.size() - 7, 8):
+		var a: Animal = main.world.fauna.by_id(int(list[i]))
+		if a == null:
+			continue
+		animal_target[a.id] = Vector2(list[i + 1], list[i + 2])
+		a.facing = Vector2(list[i + 3], list[i + 4])
+		a.moving = list[i + 5] > 0.5
+		a.act = ANIMAL_ACTS[clampi(int(list[i + 6]), 0, ANIMAL_ACTS.size() - 1)]
+		a.act_left = 0.4 if a.act != "" else 0.0
+		a.hp = list[i + 7]
+
+
+## Guest (Build 21): animals the host made (births, spawns: their whole records) and animals gone from the host's world (killed,
+## taken by a predator, sold, died), at once and reliably; the view fades a gone animal out as it does on the host.
+@rpc("authority", "call_remote", "reliable")
+func s_fauna_life(born: Array, gone: Array) -> void:
+	if main.world == null or not main.guest_world:
+		return
+	var d: Array = JSON.parse_string(JSON.stringify(born))      # as a save is read
+	for ad in d:
+		NetSync.add_animal(main.world, Animal.from_dict(ad))
+	for aid in gone:
+		var a: Animal = main.world.fauna.by_id(int(aid))
+		if a != null:
+			main.world.fauna.remove(a)
+		animal_target.erase(int(aid))
 
 
 # ---------------------------------------------------------------- RPCs: actions --------------
@@ -600,7 +654,7 @@ func _host_step(dt: float) -> void:
 	if _t_sync >= NetSync.SYNC_SECONDS:
 		_t_sync = 0.0
 		_n_sync += 1
-		send_syncs(true, [] if _n_sync % NetSync.NPCS_EVERY == 0 else ["npcs"])     # MP C: the shared world as it went on (the villagers' records less often)
+		send_syncs(true, [] if _n_sync % NetSync.NPCS_EVERY == 0 else NetSync.SLOW)     # MP C: the shared world as it went on (the villagers' and animals' records less often)
 	_t_self += dt
 	if _t_self >= 1.0 / NetProtocol.SELF_HZ:
 		_t_self = 0.0
@@ -621,6 +675,51 @@ func _host_step(dt: float) -> void:
 					list.append([n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive])
 			for i in range(0, maxi(1, list.size()), NPCS_PER_PACKET):      # unreliable packets stay under the MTU
 				rpc_id(id, "s_npcs", main.world.minutes, list.slice(i, i + NPCS_PER_PACKET))
+		_n_animals += 1
+		for id in by_peer:
+			var g2: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+			if g2 != null:
+				send_animals(id, g2, _n_animals % ANIMALS_KEY_EVERY == 0)
+
+
+## Host (Build 21): guest `id`'s copy of the animals follows the host's. Births and deaths anywhere go reliably (s_fauna_life); the
+## live state of the animals near the guest goes in unreliable snapshots, only what changed since it was last sent, and every
+## animal near it on a key snapshot (`all`), so a lost packet is put right within a second. The guest never simulates animals.
+func send_animals(id: int, g: PlayerState, all: bool) -> void:
+	var f: Fauna = main.world.fauna
+	if not fauna_known.has(id):
+		fauna_known[id] = {}
+		fauna_sent[id] = {}
+	var known: Dictionary = fauna_known[id]
+	var sent: Dictionary = fauna_sent[id]
+	var here := {}
+	var born := []
+	for a: Animal in f.animals:
+		here[a.id] = true
+		if not known.has(a.id):
+			known[a.id] = true
+			born.append(a.to_dict())
+	var gone := []
+	for aid in known.keys():
+		if not here.has(aid):
+			known.erase(aid)
+			sent.erase(aid)
+			gone.append(aid)
+	if not born.is_empty() or not gone.is_empty():
+		rpc_id(id, "s_fauna_life", born, gone)
+	if g.map_level != 0:
+		return                                     # animals live above ground
+	var list := PackedFloat32Array()
+	for a: Animal in f.near(g.pos, NetProtocol.NPC_RANGE):
+		var fc := a.facing.normalized() if a.facing.length() > 0.001 else Vector2.DOWN
+		var live := PackedFloat32Array([a.pos.x, a.pos.y, snappedf(fc.x, 0.01), snappedf(fc.y, 0.01), 1.0 if a.moving else 0.0, maxi(0, ANIMAL_ACTS.find(a.act)), a.hp])
+		if not all and sent.get(a.id) == live:
+			continue
+		sent[a.id] = live
+		list.append(float(a.id))
+		list.append_array(live)
+	for i in range(0, list.size(), ANIMALS_PER_PACKET * 8):
+		rpc_id(id, "s_animals", list.slice(i, i + ANIMALS_PER_PACKET * 8))
 
 
 ## Every player in active play as the others see them, by pid: names, looks, place, facing and animation only.
@@ -645,6 +744,13 @@ func _guest_step(dt: float) -> void:
 		var n: NPC = main.world.npc(id)
 		if n != null:
 			n.pos = n.pos.lerp(npc_target[id], k) if n.pos.distance_to(npc_target[id]) < 3.0 else npc_target[id]
+	for id in animal_target.keys():                  # Build 21: the animals near this player ease toward the host's places
+		var a: Animal = main.world.fauna.by_id(id)
+		if a == null:
+			animal_target.erase(id)
+			continue
+		a.pos = a.pos.lerp(animal_target[id], k) if a.pos.distance_to(animal_target[id]) < 3.0 else animal_target[id]
+		a.act_left = maxf(0.0, a.act_left - dt)
 
 
 ## The other players to draw: pid -> {pid, name, sprite, pos, dir, anim, alive}. On the host, the connected guests.
