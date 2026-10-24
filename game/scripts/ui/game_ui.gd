@@ -137,7 +137,8 @@ const CORNER_MARGIN := Vector2(28, 14)
 ## The HUD's distance from the screen edges (interface units): small and the same in every corner.
 ## Windows keep CORNER_MARGIN; the HUD sits closer, moving only off a camera cutout it would overlap.
 const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
-const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
+const BUTTON_H := 42.0                  # GP-UI-COMPACT: a window button's height (was 48); still a comfortable touch target
+const BUTTON_MIN_WIDTH := 220.0       # window buttons are at least this wide, else as wide as their text (GP-UI-COMPACT: was 260)
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -262,7 +263,7 @@ func _backed(l: Label) -> void:
 ## near-black, square like the pack's.
 func _theme() -> Theme:
 	var t := Theme.new()
-	t.default_font_size = 22
+	t.default_font_size = 19              # GP-UI-COMPACT (owner: "the text can be a little smaller"): was 22
 	var tex: Texture2D = load(UI % "button")
 	var states := {"normal": Color(1, 1, 1), "hover": Color(1.35, 1.35, 1.4), "pressed": Color(0.7, 0.7, 0.75),
 		"disabled": Color(0.55, 0.55, 0.55), "hover_pressed": Color(1.2, 1.2, 1.25)}
@@ -270,7 +271,7 @@ func _theme() -> Theme:
 		var sb := StyleBoxTexture.new()
 		sb.texture = tex
 		sb.modulate_color = states[k]
-		sb.set_content_margin_all(10)
+		sb.set_content_margin_all(7)          # GP-UI-COMPACT: tighter buttons (was 10)
 		t.set_stylebox(k, "Button", sb)
 	var focus := StyleBoxFlat.new()
 	focus.draw_center = false
@@ -879,7 +880,7 @@ func _build_panel() -> void:
 	var top := HBoxContainer.new()
 	top_row = top
 	title_label = Label.new()
-	title_label.add_theme_font_size_override("font_size", 28)
+	title_label.add_theme_font_size_override("font_size", 24)      # GP-UI-COMPACT: was 28
 	var tab := StyleBoxTexture.new()
 	tab.texture = load(UI % "button")
 	tab.content_margin_left = 18
@@ -1251,7 +1252,7 @@ func _fit_title() -> void:
 	title_label.custom_minimum_size.x = clampf(want, 40.0, maxf(room, 40.0))
 
 
-func _label(text: String, size := 18, color := Color8(246, 236, 214)) -> Label:
+func _label(text: String, size := 16, color := Color8(246, 236, 214)) -> Label:      # GP-UI-COMPACT: 16 (was 18)
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1277,7 +1278,7 @@ func _fit_columns(labels: Array, most: int) -> int:
 func _button(text: String, cb: Callable, enabled := true, parent: Control = null) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(0, 48)
+	b.custom_minimum_size = Vector2(0, BUTTON_H)
 	if parent == null:
 		# a button in a window is as wide as its words (at least BUTTON_MIN_WIDTH), centred, not a
 		# bar across the screen (owner: "they are buttons")
