@@ -144,3 +144,68 @@ Recorded, not changed (changing them alters ties, hashes or order, or needs the 
   leaks 0 at every checkpoint, run twice (before and after the last change).
 - `python3 -m unittest discover -s tests` 115 OK; `check_interactions` 286 interactions, 0 problems; `check_requirements` 0 problems;
   `check_resources` 0 problems; `check_materials` unchanged (18 open violations, none new).
+
+# Multiplayer Batch A2: networking on the A1 architecture
+
+Branch `wip/multiplayer-b19`. The MP-01 prototype `wip/multiplayer` `d18d7d1` was read (never merged or rebased) and carried forward file by
+file onto A1: a host-authoritative simulation, guests full players of `World.players` by pid, their actions applied by the host under
+`World.as_actor`, refs `"player:<pid>"`. LAN and loopback only (ENet and UDP broadcast, both in Godot): no relay, no paid service, no new
+dependency (MP-D5's later steps are Batch D).
+
+## 1. What carried forward, and how
+
+| File | From `d18d7d1` | Now |
+|---|---|---|
+| `game/scripts/net/net_discovery.gd` | reused | unchanged in behaviour (UDP query and answer; the answer names no one) |
+| `game/scripts/net/net_protocol.gd` | reused, updated | `mml-net/2`; the full version carries save 21; identity key, its SHA-256 hash, salted password hash |
+| `game/scripts/net/net_actions.gd` | generalized | each kind calls the World verb the host's character uses, as the guest (`player_eat`, `player_reach_cell`, `pick_plant`), and answers with the guest's character as the host has it and the changed records (`apply_patch` on the guest). Kinds so far: `eat`, `pick_plant` |
+| `game/scripts/net/net_session.gd` | adapted | the ENet transport, handshake and refusals (version, password, name, duplicate identity, full, busy) kept; `World.guests` (a side list by key hash) replaced by `World.players` by pid; requests queued on arrival and applied once each at one fixed point of the host's frame (`apply_requests`, before `World.update`, by arrival then pid); snapshots of players (10 Hz), nearby villagers (4 Hz, in packets under the MTU) and each guest's own character (1 Hz) |
+| `game/tests/net_host.gd`, `net_guest.gd` | reused, adapted | the host and the extra guest processes of the test |
+| `game/tests/net_g1_test.gd` | from `net_test.gd` | gate G1 (section 4) |
+| Multiplayer menus, Android permissions | not yet | no menu hosts or joins a game yet, and the Android export preset still has no network permission: both are for the next step (the wiki says it cannot be played yet) |
+
+## 2. The model
+
+- **A guest is a player.** On a first visit the host makes a newcomer (MP-D7): a band pid (`Identity.register_player`), the starting
+  kit beside the host, its purse counted in as `newcomer_coins_in` and its pack as `imported_` (coin conservation is checked in G1;
+  the item ledger with guests is not yet checked). The identity is the
+  hash of the device key, kept on the character (`PlayerState.net_key`), never the key. The same key returns the same character.
+- **The host applies everything.** A guest walks on its own screen and sends its place 15 times a second; the host accepts a step up to
+  the sprint speed onto ground open on that player's level (`World.solid_for_player`), else sends it back. An action is a request,
+  applied by `NetActions` with the same verb as the host's own character, as the guest; the second of two players reaching for one
+  plant finds it taken.
+- **The guest only shows.** A guest's machine loads what the host sends (the save, with its own character in full and the other players'
+  public records only: looks, name, place) and shows it from its own character (`World.set_local_player`). It never runs `World.update`
+  and never saves. Actions the host does not take from guests yet (`Main.guest_blocked`: work, combat, trade, crafting) do nothing there
+  and say so.
+- **Leaving (MP-D1).** A guest who disconnects, or whose host stops, is marked `PlayerState.away`: out of active play (`World.active_players`:
+  no needs, no clothes wear, not a centre of the detail tier), every record kept and saved; it comes back in play when it rejoins.
+- **Menus do not stop a session (MP-D3).** While guests are connected the host's world runs (and their requests are applied) with the
+  host's menu open or the host fallen.
+
+## 3. Save 21 (no version change)
+
+Two optional `PlayerState` keys, written only when set, so the host's record and every single-player save are unchanged: `net_key` (a
+guest's identity hash) and `away` (true while out of play). An older build ignores them.
+
+## 4. Gate G1 (`game/tests/net_g1_test.gd`, in tests.yml)
+
+Two Godot processes on one machine over 127.0.0.1, both running the real game scene: discovery (names, players, version, no identities);
+refusals of another version and a wrong password with no character made; the join; the guest a player of the host's `World.players` with
+a band pid and the ref `player:<pid>`, the host keeping the hash, never the key; the guest's copy with the host's public record only; the same
+seed and clock; the guest walking (the host has it where it is) and the host walking (the guest sees it); a 30-tile jump refused and
+corrected; small traffic; eating from the pack and picking a wild plant through the guest's own tap path, applied once by the host, the
+two records of the guest agreeing after each (pack, hunger) and both seeing the plant picked; the host picking first and the guest's
+request refused; unknown, out-of-reach and invalid requests refused; actions not yet shared doing nothing; coins conserved on the host;
+the needs synchronized each second; the same identity from a third process refused as a duplicate and another refused as full; leaving
+(out of play, records kept) and rejoining as the same character; the host quitting, its save keeping the guest by pid with its hash and
+away mark, and the guest restored after the host continues from that save. 44 checks.
+
+`multiplayer_a1_test.gd` gains the A2 rules of a guest away (not in active play, no needs, counted in the census, saved with its mark
+and hash) and the guest machine's own view.
+
+## 5. Not done in A2 (next steps)
+
+- Menus to host and join (the prototype's, adapted to today's interface) and the Android network permissions (export preset).
+- Every other verb as a request (Batch C), NPCs and animals noticing guests (targets name a pid), per-player ties and judgment.
+- Real devices and real networks (Batch D: G3-G8); three and four players (Batch E).

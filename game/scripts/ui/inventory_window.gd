@@ -326,6 +326,10 @@ func _build_details() -> void:
 	var iid: String = id
 	if it.has("food"):
 		_action("Eat", func():
+			if ui.main.guest_world:
+				ui.main.net.request("eat", {"id": iid})          # MP A2: the host eats it for this player; the answer updates the pack
+				_after()
+				return
 			var hp0 := p.hp
 			if w.player_eat(iid) and it.has("heal"):      # a healing food or drink is heard; a plain meal is not
 				ui.sfx("potion_drink")
