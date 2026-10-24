@@ -113,6 +113,8 @@ jobs:
           $godot --headless --path game --script res://tests/net_c_test.gd
           # Build 21 over loopback: the guest's copy of the animals follows the host's (moved, hurt, killed, born, pens)
           $godot --headless --path game --script res://tests/net_fauna_test.gd
+          # Build 21: the host and join menus (compact, on screen at phone and PC sizes) and a two-process smoke over loopback through them
+          $godot --headless --path game --script res://tests/net_ui_test.gd
           # GP-POLISH P1 (owner directive 2026-10-24): stations opened by a tap on them; the mining swing on touch; the touch action columns
           $godot --headless --path game --script res://tests/station_tap_test.gd
           # (GP-ACTIONBAR and GP-PICKAXE-ANIM are checked in start_test.gd)

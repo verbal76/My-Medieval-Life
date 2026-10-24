@@ -385,6 +385,14 @@ func _ready() -> void:
 				follow_at = _in_view(world.player.pos * T)
 			"title":
 				ui.show_title(false)
+			"pause":
+				ui.show_pause()
+			"host":
+				NetWindow.show_host(ui)            # Build 21: Open to friends (add --phone for a phone's layout)
+			"join":
+				NetWindow.show_join(ui, "Connecting to 192.168.1.20...")
+				net.discovery.found = {"a": {"ip": "192.168.1.20", "port": NetProtocol.GAME_PORT, "name": "Edmund", "world": "Thorne's village",
+					"players": 1, "max": 2, "version": NetProtocol.full_version(), "locked": true, "seen": 1e9}}
 			"creation":
 				ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female"})
 			"origin":
@@ -940,6 +948,15 @@ func host_game(opts: Dictionary) -> String:
 	if why == "":
 		save_game(false)
 	return why
+
+
+## Host (Build 21): close the world to friends. The guests are told the host left and their characters go out of play (every
+## record kept, MP-D1); the world carries on alone and is saved. Nothing when not hosting.
+func stop_hosting() -> void:
+	if not net.is_host():
+		return
+	net.stop()
+	save_game(false)
 
 
 ## Guest: the host's world arrived (NetSession.s_welcome): show it from this player's own character (pid), which the

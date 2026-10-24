@@ -79,6 +79,22 @@ func _ask(port: int) -> void:
 		udp.put_packet(NetProtocol.DISCOVER.to_utf8_buffer())
 
 
+## Build 21: this device's addresses on the local network that a friend can type to join (IPv4, not loopback or link-local),
+## private-network ones first (home Wi-Fi: 192.168.x.x, 10.x.x.x, 172.16-31.x.x).
+static func lan_addresses() -> Array:
+	var private := []
+	var other := []
+	for a: String in IP.get_local_addresses():
+		if not a.is_valid_ip_address() or a.contains(":") or a.begins_with("127.") or a.begins_with("169.254.") or a == "0.0.0.0":
+			continue
+		var p := a.split(".")
+		var is_private := a.begins_with("192.168.") or a.begins_with("10.") or (p[0] == "172" and int(p[1]) >= 16 and int(p[1]) <= 31)
+		(private if is_private else other).append(a)
+	private.sort()
+	other.sort()
+	return private + other
+
+
 ## The games found, sorted by name then address (a stable list for the menu).
 func games() -> Array:
 	var out := found.values()

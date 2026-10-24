@@ -42,6 +42,12 @@ func _start() -> void:
 		main.new_game()
 	main.ui.hide_all()
 	census = {"at": "load", "coins": main.world.total_coins(), "goods": _goods(), "away": _aways()}
+	if mode == "ui":                                  # Build 21: opened by the player's own menus (the pause menu, Open to friends)
+		started = await _open_by_menu()
+		coins0 = main.world.total_coins()
+		stats0 = main.world.stats.duplicate()
+		_status()
+		return
 	var why: String = main.host_game({"port": port, "discovery_port": dport, "max_players": max_players, "password": "oak",
 		"host_name": "Hosta", "world_name": "Test Vale"})
 	started = why == ""
@@ -50,6 +56,34 @@ func _start() -> void:
 	coins0 = main.world.total_coins()
 	stats0 = main.world.stats.duplicate()
 	_status()
+
+
+## Build 21: the pause menu, its Open to friends button, the password "oak", Open: as a player does it (the default ports).
+func _open_by_menu() -> bool:
+	var ui: GameUI = main.ui
+	ui.show_pause()
+	await process_frame
+	if not _press(ui.panel_body, "Open to friends"):
+		printerr("host: no Open to friends in the pause menu")
+		return false
+	await process_frame
+	var pw: LineEdit = ui.panel_body.find_child("HostPassword", true, false)
+	if pw == null:
+		printerr("host: no password field")
+		return false
+	pw.text = "oak"
+	_press(ui.panel_body, "Open to friends")
+	await process_frame
+	port = main.net.port
+	return main.net.is_host()
+
+
+func _press(node: Node, text: String) -> bool:
+	for b in node.find_children("*", "BaseButton", true, false):
+		if b is Button and (b as Button).text == text and not (b as Button).disabled and (b as Button).is_visible_in_tree():
+			(b as Button).pressed.emit()
+			return true
+	return false
 
 
 func _process(delta: float) -> bool:
@@ -166,6 +200,8 @@ func _commands() -> void:
 			a4.wait = 30.0
 		"pen_trough":
 			w.fauna.pens[str(c.id)].trough = int(c.n)
+		"ui_stop":                                   # Build 21: Stop hosting, pressed in the host's Open to friends window
+			_press(main.ui.panel_body, "Stop hosting")
 		"kill_guest":
 			for id in main.net.by_peer:
 				w.damage_player(99999.0, "a test", w.player_by_pid(int(main.net.by_peer[id])))
@@ -195,7 +231,9 @@ func _status() -> void:
 	var troughs := {}
 	for pid2 in w.fauna.pens:
 		troughs[str(pid2)] = int(w.fauna.pens[pid2].trough)
-	var d := {"hosting": main.net.is_host(), "animals": animals, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
+	var who: Label = main.ui.panel_body.find_child("HostPlayers", true, false)
+	var d := {"hosting": main.net.is_host(), "animals": animals, "ui_kind": main.ui.panel_kind, "ui_players": who.text if who != null and main.ui.panel_kind == "host" else "",
+		"running": main.running, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
 		"census": census, "saves": saves, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}

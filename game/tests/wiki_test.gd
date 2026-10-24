@@ -136,6 +136,10 @@ func _data_tests() -> void:
 			"injuries", "illness", "treatment", "practitioners", "medical_costs", "lasting_harm"]
 	check(todo_ids.all(func(t): return w.pages.has("todo:" + t) and w.pages["todo:" + t].category == "notyet" and w.pages["todo:" + t].blocks[0].t == "note" and str(w.pages["todo:" + t].blocks[0].text).begins_with("Not in the game yet.")),
 		"every approved-but-unbuilt Build 17 idea and health placeholder is marked Not in the game yet")
+	var mpt: String = w.pages["sys:multiplayer"].text if w.pages.has("sys:multiplayer") else ""
+	check(mpt.contains("open to friends") and mpt.contains("join a game") and mpt.contains("leave the game") and mpt.contains("47810") and mpt.contains("firewall")
+		and not w.pages.has("todo:multiplayer") and w.pages["todo:multiplayer_more"].text.contains("internet") and w.pages["todo:multiplayer_more"].text.contains("phone"),
+		"Build 21: Playing with friends is a page of how to host and join on the same network; internet play and phone hosting stay Not in the game yet")
 	check("todo:injuries" in w.search("injury") or "todo:injuries" in w.search("injuries"), "search finds the health placeholders")
 	var plain := true
 	var odd := []

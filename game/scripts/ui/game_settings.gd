@@ -23,6 +23,8 @@ var touch_buttons := "auto"        # auto (when touch is in use) | always | neve
 var phone := false                 # a phone or tablet: no windows, a larger interface
 var save_copy := ""                # SAVE-05: a file outside the game kept up to date with the save ("" none)
 var record_gameplay := false       # SIM-GATE-01 amendment: the flight recorder in play, Windows and Linux only (off by default)
+var net_name := ""                 # Build 21: the name last used to join a friend's game
+var net_address := ""              # Build 21: the host's address last typed to join ("" none)
 
 
 func _init() -> void:
@@ -47,6 +49,8 @@ func load_file(path := PATH) -> void:
 	touch_buttons = t if t in ["auto", "always", "never"] else "auto"
 	save_copy = str(cf.get_value("saves", "copy", save_copy))
 	record_gameplay = bool(cf.get_value("developer", "record_gameplay", record_gameplay))
+	net_name = str(cf.get_value("multiplayer", "name", net_name)).left(16)
+	net_address = str(cf.get_value("multiplayer", "address", net_address)).left(64)
 
 
 func save_file(path := PATH) -> void:
@@ -62,6 +66,8 @@ func save_file(path := PATH) -> void:
 	cf.set_value("interface", "touch_buttons", touch_buttons)
 	cf.set_value("saves", "copy", save_copy)
 	cf.set_value("developer", "record_gameplay", record_gameplay)
+	cf.set_value("multiplayer", "name", net_name)
+	cf.set_value("multiplayer", "address", net_address)
 	cf.save(path)
 
 

@@ -12,6 +12,8 @@ const BAR_COLOURS := {"hp": Color8(173, 34, 19), "hunger": Color8(122, 176, 58),
 
 var main
 var root: Control
+var compact_width := 0.0         # Build 21: > 0 while the open window is sized to its content (compact), centred
+var compact_top := false         # ... and placed at the top (a phone's keyboard covers the lower half)
 var hud: Control
 var hud_root: Control            # the HUD's own full-screen root: system bars kept clear, cutouts avoided per element
 var status_box: PanelContainer   # health, hunger, stamina, coins and the clock, in the top-left corner
@@ -156,6 +158,7 @@ func build(m) -> void:
 	_build_panel()
 	fit_safe_area()
 	get_viewport().size_changed.connect(fit_safe_area)
+	root.resized.connect(_fit_compact)
 
 
 ## Keep the whole interface inside the part of the screen that shows: the device's safe area (notches,
@@ -1187,6 +1190,8 @@ func hide_all() -> void:
 
 func _open(kind: String, title: String, pause := true) -> void:
 	panel_kind = kind
+	compact_width = 0.0
+	compact_top = false
 	panel_back = Callable()
 	inner_back = Callable()
 	title_label.text = title.to_upper()
@@ -1208,6 +1213,32 @@ func _open(kind: String, title: String, pause := true) -> void:
 		main.paused = true
 	if scheme != "touch":
 		_focus_first.call_deferred()
+
+
+## Build 21 (owner: no giant background panels, no clipped controls): the open window as small as its content, at most `width`
+## wide and never beyond the screen, centred (or at the top, `top`); a body taller than the screen scrolls as before. Called once
+## the window's rows are in; refitted when the screen changes. The next window opened is full-screen again (_open).
+func compact(width := 560.0, top := false) -> void:
+	compact_width = width
+	compact_top = top
+	_fit_compact()
+	for i in 2:                                   # wrapped labels take their height once they have their width
+		await get_tree().process_frame
+		_fit_compact()
+
+
+func _fit_compact() -> void:
+	if compact_width <= 0.0 or not panel.visible:
+		return
+	var view := root.size
+	var w := minf(compact_width, view.x - 16.0)
+	panel.offset_left = (view.x - w) / 2.0
+	panel.offset_right = -(view.x - w) / 2.0
+	var chrome := panel.get_combined_minimum_size().y          # the frame and the title row (the body scrolls: no height of its own)
+	var h := minf(chrome + panel_body.get_combined_minimum_size().y + 4.0, view.y - 16.0)
+	var y := 8.0 if compact_top else (view.y - h) / 2.0
+	panel.offset_top = y
+	panel.offset_bottom = -(view.y - h - y)
 
 
 ## GP-PACK-DETAIL-FIT: the window's title is as wide as its words, but never wider than leaves room for the close X on
@@ -1295,6 +1326,7 @@ func show_title(can_continue: bool) -> void:
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
 	_button("Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
+	_button("Join a game", func(): NetWindow.show_join(self))      # Build 21: a friend's world on this network
 	_button("Settings", func(): show_settings(func(): show_title(main.can_continue()), "audio"))
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
@@ -1584,17 +1616,35 @@ func show_origin() -> void:
 
 func show_pause() -> void:
 	_open("pause", "Paused")
-	_button("Resume", hide_all)
-	_button("Save", func(): main.save_game())
-	_button("Journal", func(): show_journal(-1))
-	_button("Build", show_build_menu)
-	_button("Settings", func(): show_settings(show_pause, "audio"))
-	_button("Controls", func(): show_controls(show_pause))
-	_button("Encyclopedia", func(): show_wiki(show_pause))
-	_button("Save and quit to title", func():
-		main.save_game(false)
-		main.running = false
-		show_title(true))
+	# Build 21 (owner: the giant brown pause background): a compact window, its buttons in two columns where they fit
+	var grid := HFlowContainer.new()
+	grid.name = "PauseButtons"
+	grid.alignment = FlowContainer.ALIGNMENT_CENTER
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 6)
+	panel_body.add_child(grid)
+	var add := func(text: String, cb: Callable) -> void:
+		var b := _button(text, cb, true, grid)
+		b.custom_minimum_size.x = 250
+	add.call("Resume", hide_all)
+	if not main.guest_world:
+		add.call("Save", func(): main.save_game())
+	add.call("Journal", func(): show_journal(-1))
+	add.call("Build", show_build_menu)
+	if main.guest_world:                     # Build 21: a guest plays in the host's world (saved there)
+		add.call("Leave the game", func(): main.leave_guest_world("You left %s's world. Your character waits there for your return." % main.world.host_player().name))
+	else:
+		add.call("Playing with friends (%d)" % main.net.by_peer.size() if main.net.is_host() else "Open to friends", func(): NetWindow.show_host(self))
+	add.call("Settings", func(): show_settings(show_pause, "audio"))
+	add.call("Controls", func(): show_controls(show_pause))
+	add.call("Encyclopedia", func(): show_wiki(show_pause))
+	if not main.guest_world:
+		add.call("Save and quit to title", func():
+			main.stop_hosting()
+			main.save_game(false)
+			main.running = false
+			show_title(true))
+	compact(580.0)
 
 
 const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["saves", "Saves"], ["wiki", "Encyclopedia"]]
