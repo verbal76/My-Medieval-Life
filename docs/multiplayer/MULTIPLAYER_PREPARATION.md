@@ -179,6 +179,21 @@ device checks (register `playtest`).
 Multiplayer appears in every status and release-readiness report until the owner accepts it, with its stage (designed,
 implemented on a branch, integrated, tested locally, tested on devices, accepted, released) and the open gates.
 
+## 12. Batch A starting point (readiness check, 2026-10-24)
+
+Owner directive `docs/directives/2026-10-24_multiplayer_implementation_readiness.md`: the plan at `a7d88aa` is the development
+requirement; implementation waits for Build 19's acceptance and the owner's Batch A authorization.
+
+- **Base:** `wip/build19` at `42c33e0`, the Build 19 release commit `2f72ec3` plus the release packet only (no game change). If the
+  owner's playtest acceptance names another commit, that commit is the base.
+- **Branch:** a new `wip/multiplayer-b19`, created from that base. `wip/build19` and the Build 19 draft release (built from
+  `2f72ec3`) stay untouched; `wip/multiplayer` (`d18d7d1`) stays as the reference prototype.
+- **First steps:** `World.players` with the host's character as one player and every verb taking the acting player (no behaviour
+  change), per-player ids and refs, and the save migration 20 to 21; G0 at the end of that step (focused suites throughout; the full
+  Build 19 regression and determinism baseline at the checkpoint). Then the prototype's transport, identity, discovery and
+  handshake carried forward file by file, and G1.
+- **Then:** Batch B and the C sub-batches in order, with the gates in section 10.
+
 ## 9. Interactions with the roadmap
 
 Multiplayer goes before Expansion 20 (MP-MASTER). ROAD-Q5's Batch 0 (bringing the Expansion 20 and 21 preparation branches onto

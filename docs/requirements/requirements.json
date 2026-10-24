@@ -27401,9 +27401,14 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "owner approved the architecture in principle and decided MP-D1..D8 (docs/directives/2026-10-24_owner_multiplayer_decisions.md); integration plan updated with the decisions and gates G0-G10"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "owner accepted the plan at a7d88aa as the development requirements (docs/directives/2026-10-24_multiplayer_implementation_readiness.md); readiness checks done: decisions and gates recorded, Build 19 unchanged, prototype preserved, roadmap order confirmed, Batch A base wip/build19 42c33e0 on a new wip/multiplayer-b19"
     }
    ],
-   "next_action": "after Build 19's owner acceptance and an explicit authorization: Batch A (docs/multiplayer/MULTIPLAYER_PREPARATION.md)"
+   "next_action": "on Build 19's owner acceptance and the Batch A authorization: create wip/multiplayer-b19 from the accepted Build 19 commit and start Batch A (docs/multiplayer/MULTIPLAYER_PREPARATION.md s.12)"
   },
   {
    "id": "MSW-01",
