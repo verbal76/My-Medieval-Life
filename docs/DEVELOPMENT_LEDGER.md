@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (637)
+## Approved requirement (639)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -296,7 +296,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-ANVIL | Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch | multiplayer | OWNER APPROVED | IN DEVELOPMENT | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| GP-CHECKPOINT-1 | Checkpoint 1: private Android playtest build of the quick-win polish fixes | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |

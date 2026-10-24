@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 548 (282 of them still open) |
-| **Open entries now** (rules excluded) | | **459** |
+| Entries added since | | 550 (284 of them still open) |
+| **Open entries now** (rules excluded) | | **461** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (548)
+## Added since the baseline (550)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -246,7 +246,9 @@ None.
 | GP-ANVIL | Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch | approved | IN DEVELOPMENT / TARGETED TESTS PASSED / OPEN | multiplayer |
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-CHECKPOINT-1 | Checkpoint 1: private Android playtest build of the quick-win polish fixes | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |

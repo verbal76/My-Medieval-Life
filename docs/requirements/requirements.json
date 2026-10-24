@@ -21694,6 +21694,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-BASELINE-POLICY",
+   "kind": "approved",
+   "title": "Single-player baseline may be updated for intentional approved changes, with each difference explained",
+   "description": "Single-player baseline may be updated for intentional approved changes, with each difference explained",
+   "source": "docs/directives/2026-10-24_audit_decisions_checkpoint1_authorization.md",
+   "owner_wording": "You are authorized to update the single-player regression baseline for intentional, approved gameplay changes, provided that: You identify the exact reason for every difference. You verify the difference against the actual implementation. You confirm that unrelated simulation values remain unchanged. You preserve the previous baseline for comparison. You document each authorized baseline change. You do not weaken tests, ignore unexplained differences, or automatically accept new failures.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Each baseline update names the approved change, the exact differing values and why, shows every unrelated value identical, keeps the previous baseline file, and is recorded in docs/DECISIONS.md and the register; first case: the rusty axe in the start kit (GP-START-RUSTY-AXE) as the sole cause of the item_ledger difference, confirmed before updating"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_audit_decisions_checkpoint1_authorization.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19",
+     "why": "first case assigned: confirm the rusty axe is the sole item_ledger difference, then update"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-BUSINESS-DESK",
    "kind": "approved",
    "title": "Every business has a business desk: trade and courier in one place",
@@ -21723,6 +21758,41 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with GP-TARGET-ART-MATCH on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-CHECKPOINT-1",
+   "kind": "approved",
+   "title": "Checkpoint 1: private Android playtest build of the quick-win polish fixes",
+   "description": "Checkpoint 1: private Android playtest build of the quick-win polish fixes",
+   "source": "docs/directives/2026-10-24_audit_decisions_checkpoint1_authorization.md",
+   "owner_wording": "You are authorized to prepare a private Android Checkpoint 1 playtest build once the identified quick wins are complete and the required tests pass.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Built from wip/multiplayer-b19 by the existing release workflow and signing as a private draft (never public); contains the completed polish fixes (anvil tap and prompt reach, pickaxe swing, action columns, drawing under houses, rusty axe, cut wheat, trail edges, off-screen buttons, indoor walls, bandit camp, entrances and paths, gift quantity, and any other quick win finished and tested); the complete tests.yml inventory and the unittest suite pass on the build commit; G0 identical to the baseline in force (any baseline change authorized and documented under GP-BASELINE-POLICY); Build 19 and its artifacts unchanged; multiplayer foundations present but not exposed as a working feature"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_audit_decisions_checkpoint1_authorization.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "authorized; quick wins in progress with the polish agent"
     }
    ],
    "assigned_worker": "primary development agent",

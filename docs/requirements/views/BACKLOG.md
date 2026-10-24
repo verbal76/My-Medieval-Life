@@ -138,7 +138,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (35)
+## Multiplayer track (37)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -148,7 +148,9 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-ANVIL | Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-CHECKPOINT-1 | Checkpoint 1: private Android playtest build of the quick-win polish fixes | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | approved | OWNER APPROVED | IN DEVELOPMENT |
