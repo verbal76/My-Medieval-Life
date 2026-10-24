@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (629)
+## Approved requirement (630)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -297,6 +297,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-HARVEST-CONT | Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | GP-INPUT-CONSIST | Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| GP-INTERIOR-WALLS | Building interiors: side walls missing when inside | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |

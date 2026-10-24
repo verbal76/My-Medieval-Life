@@ -21728,6 +21728,41 @@
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
   },
   {
+   "id": "GP-INTERIOR-WALLS",
+   "kind": "approved",
+   "title": "Building interiors: side walls missing when inside",
+   "description": "Building interiors: side walls missing when inside",
+   "source": "owner message with a screenshot, 2026-10-24 (gameplay polish session; image not saved to the repository)",
+   "owner_wording": "why is the right wall missing",
+   "approval": "owner, 2026-10-24 (reported defect)",
+   "acceptance": [
+    "When a character is inside a building, every side of the room shows its wall (top, bottom, left and right), so the floor never runs straight into the grass; checked for every building and workshop interior; walkability unchanged; verified by screenshots of the reported building and an audit over every interior"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "owner message with a screenshot, 2026-10-24 (gameplay polish session; image not saved to the repository)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-JOYSTICK",
    "kind": "approved",
    "title": "Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player",
