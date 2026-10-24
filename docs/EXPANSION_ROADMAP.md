@@ -1,3 +1,24 @@
+# Current priority for Expansions 20-27 (owner, 2026-10-24, register ROAD-03)
+
+**This section is current; everything below it is the historical record for Builds 15-19, kept as it was.** Directive
+`docs/directives/2026-10-24_expansion_roadmap_reprioritization.md`; full review in `docs/design/ROADMAP_20_27_PRIORITY.md`
+(scope from each source, dependencies, shared infrastructure, batches, checkpoints, open questions). Numbers unchanged; only the
+development order. Planning only: no expansion is authorized for implementation by it.
+
+| Priority | Expansion | Status |
+|---|---|---|
+| 1 | 20 Living Economy | phase 1 foundation done (off); LE-01 onward awaits authorization |
+| 2 | 21 Politics | phase 1 done (off); elections await P21-STRUCTURE, P21-RESIDENCY and authorization |
+| 3 | 23 Bandit Factions and Criminal Careers | BAN-A audit done; BAN-B awaits E23-OD-01 and authorization |
+| 4 | 22 Settlement Advancement Phase 2 | audit done; architecture awaits authorization |
+| 5 | 24 Generational Legacy | not authorized |
+| 6 | 25 Weather, Seasons and Disasters | design only |
+| 7 | 26 Creatures and Heroes | design only |
+| Pending | 27 | no specification found; ROAD-Q1 |
+
+Build 19 (private playtest draft) is frozen pending the owner's playtest. Moving 23 ahead of 22 is safe within the boundary in
+the review (section 3).
+
 # Roadmap: Builds 15-19 and the three expansions
 
 **Owner directive:** 2026-10-20 (`docs/directives/2026-10-20_two_decisions_three_expansions.md`). The three supporting documents in `docs/directives/` are the primary specifications.

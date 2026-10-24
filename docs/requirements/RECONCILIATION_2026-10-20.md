@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 498 (246 of them still open) |
-| **Open entries now** (rules excluded) | | **423** |
+| Entries added since | | 504 (252 of them still open) |
+| **Open entries now** (rules excluded) | | **429** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (498)
+## Added since the baseline (504)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -468,6 +468,12 @@ None.
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
+| ROAD-03 | Expansion development priority 2026-10-24: 20 Living Economy, 21 Politics, 23 Bandits & Crime, 22 Settlement Advancement, 24 Legacy, 25 Weather & Disasters, 26 Creatures & Heroes, 27 to be verified; numbers unchanged; planning only | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | owner decision |
+| ROAD-Q1 | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer) | decision | OPEN | owner decision |
+| ROAD-Q2 | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E? | decision | OPEN | owner decision |
+| ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | decision | OPEN | owner decision |
+| ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | decision | OPEN | owner decision |
+| ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | decision | OPEN | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |

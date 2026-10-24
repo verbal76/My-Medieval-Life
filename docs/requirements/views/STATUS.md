@@ -42,5 +42,5 @@ Build authority:
 - **Build 25 (Weather, Seasons and Disasters):** implementation **NOT AUTHORIZED**. WEATHER-01 (owner 2026-10-23): design only, no code
 - **Build 26 (Creatures and Heroes):** implementation **NOT AUTHORIZED**. PET-01, MON-01 (owner 2026-10-23): design only, no code
 
-Future backlog and unassigned: 113 open records (`BACKLOG.md`). Open owner decisions: 38 (`DECISIONS.md`).
+Future backlog and unassigned: 119 open records (`BACKLOG.md`). Open owner decisions: 43 (`DECISIONS.md`).
 

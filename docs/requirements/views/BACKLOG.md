@@ -78,7 +78,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | OWNER APPROVED | NOT STARTED |
 
-## Waiting on an owner decision for its build (43)
+## Waiting on an owner decision for its build (44)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -125,6 +125,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | OWNER DECISION REQUIRED | NOT STARTED |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | OWNER DECISION REQUIRED | NOT STARTED |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | PROPOSED | NOT STARTED |
+| ROAD-03 | Expansion development priority 2026-10-24: 20 Living Economy, 21 Politics, 23 Bandits & Crime, 22 Settlement Advancement, 24 Legacy, 25 Weather & Disasters, 26 Creatures & Heroes, 27 to be verified; numbers unchanged; planning only | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 
 ## Owner or external action (6)
 

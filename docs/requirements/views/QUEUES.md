@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (22)
+## Workers and task branches (23)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -21,6 +21,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-19 | 19 | IN DEVELOPMENT | recorder worker (Sonnet subagent) | wip/recorder |
 | REC-DIAG | 19 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | RECON-01 | unassigned | IMPLEMENTED ON TASK BRANCH | reconciliation worker (Sonnet subagent) | wip/expansion19-preparation, wip/expansion20-preparation |
+| ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | SJD-B | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-C | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
 | SJD-D | 19 | IMPLEMENTED ON TASK BRANCH | none | wip/expansion19-preparation |
@@ -29,7 +30,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/expansion19-preparation |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (46)
+## Implemented but not tested (47)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -67,6 +68,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | PL2-013 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-014 | 18 | INTEGRATED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
+| ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-009-C | 19 | PARTIALLY IMPLEMENTED |  |

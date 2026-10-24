@@ -99,6 +99,9 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    `docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md` (WEATHER-01) and `docs/design/EXPANSION26_CREATURES_AND_HEROES.md`
    (PET-01, MON-01, B14-09, FR-01); split per `docs/directives/2026-10-23_split_expansions_25_26.md`; open questions in each
    packet's section 6 / 5. They never delay Build 19.
+10. **Roadmap reprioritization (owner 2026-10-24, ROAD-03, planning only):** order 20, 21, 23, 22, 24, 25, 26, 27 (to verify);
+   review `docs/design/ROADMAP_20_27_PRIORITY.md`; questions ROAD-Q1..Q5. No expansion implementation until separately
+   authorized. Build 19 frozen pending the owner's playtest.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner

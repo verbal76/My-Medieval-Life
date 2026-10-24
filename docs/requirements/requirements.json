@@ -40446,6 +40446,151 @@
    "completion": "OPEN"
   },
   {
+   "id": "ROAD-03",
+   "kind": "approved",
+   "title": "Expansion development priority 2026-10-24: 20 Living Economy, 21 Politics, 23 Bandits & Crime, 22 Settlement Advancement, 24 Legacy, 25 Weather & Disasters, 26 Creatures & Heroes, 27 to be verified; numbers unchanged; planning only",
+   "description": "Expansion development priority 2026-10-24: 20 Living Economy, 21 Politics, 23 Bandits & Crime, 22 Settlement Advancement, 24 Legacy, 25 Weather & Disasters, 26 Creatures & Heroes, 27 to be verified; numbers unchanged; planning only",
+   "source": "docs/directives/2026-10-24_expansion_roadmap_reprioritization.md",
+   "owner_wording": "Expansion numbers remain unchanged. Only their development priority changes. ... This directive authorizes roadmap planning and documentation updates only. It does not authorize implementation of any expansion.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Roadmap review docs/design/ROADMAP_20_27_PRIORITY.md with scope, dependencies, shared infrastructure, batches, checkpoints, authorization status and open questions",
+    "docs/EXPANSION_ROADMAP.md carries the current order without overwriting history"
+   ],
+   "target_build": "owner decision",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion_roadmap_reprioritization.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; next_action",
+     "why": "review written (docs/design/ROADMAP_20_27_PRIORITY.md) and the roadmap updated; five questions for the owner (ROAD-Q1..Q5)"
+    }
+   ],
+   "next_action": "owner answers ROAD-Q1..Q5; Expansion 20 implementation needs a separate authorization"
+  },
+  {
+   "id": "ROAD-Q1",
+   "kind": "decision",
+   "title": "Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer)",
+   "description": "Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer)",
+   "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    }
+   ]
+  },
+  {
+   "id": "ROAD-Q2",
+   "kind": "decision",
+   "title": "Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E?",
+   "description": "Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E?",
+   "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    }
+   ]
+  },
+  {
+   "id": "ROAD-Q3",
+   "kind": "decision",
+   "title": "Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track?",
+   "description": "Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track?",
+   "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    }
+   ]
+  },
+  {
+   "id": "ROAD-Q4",
+   "kind": "decision",
+   "title": "Building condition: design it with 22-D (abandonment) or with 25 (disasters)?",
+   "description": "Building condition: design it with 22-D (abandonment) or with 25 (disasters)?",
+   "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    }
+   ]
+  },
+  {
+   "id": "ROAD-Q5",
+   "kind": "decision",
+   "title": "Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance?",
+   "description": "Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance?",
+   "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    }
+   ]
+  },
+  {
    "id": "ROOMS-18",
    "title": "Inner doorways between joined house rooms, and the two survey plots relaid onto open ground",
    "kind": "approved",
