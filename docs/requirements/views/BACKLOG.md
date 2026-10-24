@@ -138,7 +138,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (46)
+## Multiplayer track (41)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -151,19 +151,16 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-CRIME-PURSUIT | Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-DIALOGUE-PERSPECTIVE | NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-GOSSIP-NATURAL | Gossip combines related events naturally without repeating names, households and places | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-HARVEST-CONT | Continuous harvesting on all platforms with a setting (continuous or manual) for mining and other suitable gathering chores: normal timing, same output per simulated hour, same tool wear, stamina, skill gain and depletion; stops on cancel, movement, danger, exhaustion, invalid target or other interruptions; no duplicated rewards, no invisible or idle work; per player and validated by the host in multiplayer | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-INPUT-CONSIST | Cross-platform input consistency: Android, Windows, Linux, Steam Deck, keyboard, mouse, touch and gamepad reach the same gameplay systems with device-appropriate controls; better Android interactions extended to other platforms, missing Android behaviour corrected; input and presentation separated from authoritative gameplay actions; no duplicated simulation logic per input method | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-INTERIOR-WALLS | Building interiors: side walls missing when inside | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
@@ -176,7 +173,6 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | OWNER APPROVED | READY |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | OWNER APPROVED | IN DEVELOPMENT |
@@ -186,6 +182,5 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | OWNER APPROVED | NOT STARTED |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | OWNER APPROVED | NOT STARTED |
 | MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
-| MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | approved | OWNER APPROVED | IN DEVELOPMENT |
 | SIM-GATE-01 | Permanent pre-build simulation, flight recorder and Excel quality gate | approved | OWNER APPROVED | INTEGRATED |
 

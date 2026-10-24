@@ -21923,12 +21923,12 @@
    "acceptance": [
     "Each business (smithy, tavern, shops, workshops, the player's own shop) has one business desk on a drawn desk or counter in its premises (the smithy's is the table with the open ledger); using it (E, tap, click, gamepad) opens a short menu: trade with the keeper (buy, sell), and, where the business keeps a courier booth (Q18-15), the courier; when the keeper is away it says so and offers what the existing counter rules allow (ring for service, or the courier if staffed); business courier booths stand at the desk, never on a station; the desk is offered only beside it and facing it; works for every player (actor-aware); existing saves load; wiki and manifest updated; verified by screenshots of several businesses and a test"
    ],
-   "target_build": "multiplayer",
+   "target_build": "22",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21952,10 +21952,23 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
+     "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; branch: wip/multiplayer-b19 -> wip/build22-business-desk; commits + e25eec9",
+     "why": "unfinished work preserved on wip/build22-business-desk e25eec9"
     }
    ],
    "assigned_worker": "Build 21 agent",
-   "branch": "wip/multiplayer-b19"
+   "branch": "wip/build22-business-desk",
+   "commits": [
+    "e25eec9"
+   ]
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -22182,12 +22195,12 @@
    "acceptance": [
     "A villager (or player helper) sowing, tending or harvesting a field moves between cells of that field during the work, stops now and then and plays a work animation with a hand tool (a shovel or hoe from the art packs, else the pickaxe), instead of standing still beside it; the same for the player's own farm helpers; field work amounts, timing and yields unchanged; deterministic; any G0 change (positions) reported and explained; verified by a screenshot sequence and a test that a tending farmer occupies several field cells and plays the tool animation"
    ],
-   "target_build": "multiplayer",
+   "target_build": "22",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22211,6 +22224,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
+     "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
     }
    ],
    "assigned_worker": "Build 21 agent",
@@ -22517,12 +22535,12 @@
     "Cancelled or interrupted attempts never succeed; rewards cannot be duplicated, also with two players on one lock",
     "Existing skill, tool, lock difficulty, crime, ownership and reputation rules unchanged"
    ],
-   "target_build": "multiplayer",
+   "target_build": "22",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22546,6 +22564,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
+     "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
     }
    ],
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
@@ -23164,12 +23187,12 @@
    "acceptance": [
     "Every item drawn on a table (village, tavern, interiors) is a real item of the matching kind held by the table's owner; the prompt names it ('Take the tavern's ale (theft)'), taking it moves it into the taker's pack, counts as theft when the table is not the taker's (free on one's own table or an ownerless one) and removes its drawing; the table is drawn bare until its owner puts a new one out from their own stock (no item created from nothing; the ledger conserves); 'empty' is said only of a table with nothing on it; works for every player (actor-aware); saved and loaded; manifest INT entry; verified by screenshots, a test of take, theft, restock and conservation, and G0 checked (report any simulation change)"
    ],
-   "target_build": "multiplayer",
+   "target_build": "22",
    "parent": "GP-POLISH",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23193,6 +23216,16 @@
      "date": "2026-10-24",
      "change": "implementation_status: READY -> IN DEVELOPMENT; assigned_worker:  -> Build 21 agent; branch:  -> wip/multiplayer-b19",
      "why": "owner's final Build 21 execution directive (docs/directives/2026-10-24_build21_final_execution.md): complete every approved item not explicitly deferred"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
+     "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner clarification 2026-10-24: tables show a visual preview of the business's merchandise, no pickup or transaction"
     }
    ],
    "assigned_worker": "Build 21 agent",
@@ -29393,12 +29426,12 @@
    "acceptance": [
     "Life.births lets a female player whose partner is a male player (in play or away) have children under the existing rules (ages, chances, interval), both recorded as parents; same-sex player couples never get births; player adoption (Guardianship.player_adopt) records both spouses as parents and joins the child to the couple's household, for any player couple; children persist and keep both parent links through save, load, host restart and reconnect; host-authoritative and deterministic; G0 unchanged; tests for each case"
    ],
-   "target_build": "multiplayer",
+   "target_build": "22",
    "parent": null,
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -29417,6 +29450,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner 2026-10-24 clarification (docs/directives/2026-10-24_mp_player_family_minimal_fix.md): include in Build 21 if the two gaps close with small localized changes to existing mechanics; defer if it needs a new subsystem, data-model change or sync redesign; verify the five listed cases only"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; target_build: multiplayer -> 22",
+     "why": "owner 2026-10-24 Build 21 scope freeze: deferred to the Build 22 mini-build (docs/backlog/BUILD22_MINI_BUILD.md; docs/directives/2026-10-24_build21_scope_freeze.md)"
     }
    ],
    "assigned_worker": "Build 21 agent",

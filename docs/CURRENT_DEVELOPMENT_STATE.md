@@ -10,6 +10,13 @@ context, where measurable) and before a session ends. The previous long-form sta
 
 **Updated:** 2026-10-23 (Build 18 delivered as a private draft; Expansions 19-21 progress directive: docs/directives/2026-10-23_expansions_19_20_21_progress.md).
 
+## Build 21 scope freeze (owner, 2026-10-24, `docs/directives/2026-10-24_build21_scope_freeze.md`)
+
+Build 21 frozen at `wip/multiplayer-b19` `089366e` (agent work to `c33d7c2`, signing merge `5cef194`); private release run
+40116740018 dispatched (build_number 21). Deferred to the Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`, not started):
+GP-BUSINESS-DESK (unfinished work on `wip/build22-business-desk` `e25eec9`), GP-TABLE-ITEMS, GP-FARMER-TENDING, GP-LOCKPICK,
+MP-PLAYER-FAMILY. The Build 21 agent is stopped. After the release: report to the owner and stop.
+
 ## Read first (after a compaction or in a new session)
 
 1. `CLAUDE.md` section 0. Then this file.

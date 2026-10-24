@@ -8,17 +8,17 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 4 |
-| Integrated | 0 of 4 (0%) |
-| Automated tests passed | 0 of 4 (0%) |
-| Integration verified | 0 of 4 (0%) |
-| Gameplay verified | 0 of 4 (0%) |
-| Owner playtested | 0 of 4 (0%) |
-| Complete | 0 of 4 (0%) |
-| Open (release blockers) | 4 |
+| Approved requirements in scope | 9 |
+| Integrated | 0 of 9 (0%) |
+| Automated tests passed | 0 of 9 (0%) |
+| Integration verified | 0 of 9 (0%) |
+| Gameplay verified | 0 of 9 (0%) |
+| Owner playtested | 0 of 9 (0%) |
+| Complete | 0 of 9 (0%) |
+| Open (release blockers) | 9 |
 | Open owner decisions (blocking) | 3 (0) |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (4)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -26,6 +26,11 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | E22-OD-01 | Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | E22-OD-02 | Continuous geography: streamed regions, persistent world coordinates, persistent player and NPC modifications | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | E22-P1 | Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / staging/my-medieval-life | NOT TESTED | owner reviews the audit and approves the architecture | design: UNKNOWN | UNKNOWN |
+| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 21 agent / wip/build22-business-desk | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | OWNER APPROVED | NOT STARTED | Build 21 agent / wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | OWNER APPROVED | NOT STARTED | Build 21 agent / wip/multiplayer-b19 | NOT TESTED | P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19 | design: UNKNOWN | UNKNOWN |
+| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | OWNER APPROVED | NOT STARTED | Build 21 agent / wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | NOT STARTED | Build 21 agent / wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (3)
 

@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (60)
+## Workers and task branches (55)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -19,19 +19,16 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BACK-DOORS | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-BANDIT-CAMP-ART | multiplayer | IMPLEMENTED ON TASK BRANCH | Build 21 integration agent | wip/multiplayer-b19 |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-BUSINESS-DESK | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CRIME-PURSUIT | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-DIALOGUE-PERSPECTIVE | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-FARMER-TENDING | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-GIFT-QUANTITY | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-GOSSIP-NATURAL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-HARVEST-CONT | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-INPUT-CONSIST | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-INTERIOR-WALLS | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-JOYSTICK | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
-| GP-LOCKPICK | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-MARKET-SHELVES | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-PACK-DETAIL-FIT | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-PAUSE-PANEL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
@@ -42,7 +39,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-SMITHY-WORKBENCH | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-STALL-PRICE-ON-PUTUP | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-START-RUSTY-AXE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-TABLE-ITEMS | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-TARGET-ART-MATCH | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | GP-TRAIL-EDGES | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-UI-COMPACT | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
@@ -51,7 +47,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
-| MP-PLAYER-FAMILY | multiplayer | IN DEVELOPMENT | Build 21 agent | wip/multiplayer-b19 |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -67,7 +62,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X19-FOUND-PERS | 19 | IMPLEMENTED ON TASK BRANCH | X19 Worker A personality (Sonnet subagent) | wip/expansion19-preparation |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (48)
+## Implemented but not tested (49)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -87,6 +82,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
+| GP-BUSINESS-DESK | 22 | PARTIALLY IMPLEMENTED |  |
 | GP-PAUSE-PANEL | multiplayer | IMPLEMENTED ON TASK BRANCH |  |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH |  |
 | MIN-G | 17 | INTEGRATED |  |
