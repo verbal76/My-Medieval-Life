@@ -260,10 +260,12 @@ jobs:
             exit 1
           fi
           "${tools_dir}apksigner" verify --verbose --print-certs out/mymedievallife-dev.apk > out/apk-signature.txt
-          grep -E "^Verifies|Verified using|Signer #1 certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt
-          fingerprint="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' out/apk-signature.txt | tr 'a-f' 'A-F' | sed 's/../&:/g; s/:$//')"
-          if [ -z "$fingerprint" ] || ! grep -q "^Verifies" out/apk-signature.txt; then
-            echo "::error::the signed APK did not verify (apksigner verify)"
+          # the certificate lines' labels differ between apksigner versions ("Signer #1 ...", "Signer (minSdkVersion=...) ...")
+          grep -E "^Verifies|Verified using|certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt
+          digests="$(sed -n 's/^.*certificate SHA-256 digest: *//p' out/apk-signature.txt | sort -u)"
+          fingerprint="$(printf '%s' "$digests" | tr 'a-f' 'A-F' | sed 's/../&:/g; s/:$//')"
+          if [ -z "$digests" ] || [ "$(printf '%s\n' "$digests" | wc -l)" != "1" ] || ! grep -q "^Verifies" out/apk-signature.txt; then
+            echo "::error::the signed APK did not verify, or apksigner printed no single certificate SHA-256 (apksigner verify)"
             exit 1
           fi
           echo "APK_CERT_SHA256=${fingerprint}" >> "$GITHUB_ENV"
@@ -290,7 +292,7 @@ jobs:
           { echo "Android signing certificate of MyMedievalLife-build${n}-android.apk (apksigner verify --print-certs)"
             echo "SHA-256 fingerprint: ${fingerprint}"
             cat out/apk-package.txt
-            grep -E "^Verifies|Verified using|Signer #1 certificate|Number of signers" out/apk-signature.txt; } > "release/MyMedievalLife-build${n}-android-signature.txt"
+            grep -E "^Verifies|Verified using|certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt; } > "release/MyMedievalLife-build${n}-android-signature.txt"
           sha256sum release/* > release/SHA256SUMS.txt
           { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution."; echo; fi
             echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
