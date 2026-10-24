@@ -21578,7 +21578,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21602,6 +21602,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> station_tap_test 25 checks (real touch and mouse events); screenshots looked at; test_commit: None -> cbf4000; commits + cbf4000",
      "why": "tap or click on a station's drawn cell walks to its use cell and opens it; station audit done"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT",
+     "why": "owner, 2026-10-24: 'that's too far away to spawn anvil instructions' (screenshot anvil_prompt_too_far_2026-10-24.png): the player stands about two tiles below the anvil, not facing it, and 'Use the anvil' is offered; the prompt must need the player beside the drawn station and facing it (all stations, consistent with GP-TARGET-ART-MATCH ordering)"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
