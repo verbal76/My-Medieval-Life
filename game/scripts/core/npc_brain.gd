@@ -8,6 +8,7 @@ const WORK_START := 7.0
 const WORK_END := 18.0
 const SLEEP := 21.5
 const WAKE := 6.0
+const CHASE_RANGE := 25.0    # a chase is given up beyond this many tiles (NPCBrain.fight; World.deliver_report)
 
 # what each job buys, with the stock it stops buying at
 const BUYS := {
@@ -2355,6 +2356,12 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"leave":
 			n.anim = "idle"
 			return true
+		"respond":                            # S3: a guard sent by a report to where the offender was seen takes them on if still there
+			var off := int(a.offender)
+			if n.target == -1 and Life.is_player_id(off) and w.offender_alive(off) and w.player_level == n.depth \
+					and w.near(w.player.pos, float(GameData.b("witness_radius"))).has(n):
+				n.target = off
+			return true
 		"report":                             # PAR-05: at the guard (if they are still within sight)
 			var g := w.npc(int(a.guard))
 			if not n.report.is_empty() and g != null and g.alive and w.near(n.pos, float(GameData.b("witness_radius"))).has(g):
@@ -2770,16 +2777,23 @@ func fight(n: NPC, dt: float) -> void:
 			n.plan = [go(w.bandit_camp, 1.2)]
 		return
 	var d := tpos - n.pos
-	if d.length() > 25.0 or (n.job == "guard" and tpos.distance_to(Vector2(w.bandit_camp)) < 12.0):
+	if d.length() > CHASE_RANGE or (n.job == "guard" and tpos.distance_to(Vector2(w.bandit_camp)) < 12.0):
 		n.target = -1
 		n.plan.clear()
 		return
 	n.facing = d
 	if d.length() > 1.1:
 		n.anim = "walk"
+		# S3 (REPAIR_AUDIT): a guard chasing a player goes round a wall by the village's path-finding instead of giving
+		# up at it. Only this case: bandits, and guards chasing bandits, keep the SIM-F4 give-up below unchanged.
+		var pursuit := n.job == "guard" and Life.is_player_id(n.target)
+		if pursuit and n.chase_route and _follow_route(n, tpos, dt):
+			return
 		n.pos += d.normalized() * minf(d.length() - 0.9, float(GameData.b("walk_tiles_per_second")) * 1.3 * dt)
 		if w.map.is_solid(n.cell()):
 			n.pos -= d.normalized() * float(GameData.b("walk_tiles_per_second")) * 1.3 * dt
+			if pursuit and _route_to(n, tpos):
+				return
 			# SIM-F4 (recorder run 2): the chase walks straight at the target, so a wall or fence between them held the
 			# chaser on the spot for good, never deciding again (bandits starved stalking). A blocked chase is given up as
 			# one whose target is gone.
@@ -2837,6 +2851,44 @@ func fight(n: NPC, dt: float) -> void:
 			if w.judgment != null and tnpc.role != "bandit":
 				JudgmentLive.on_killing(w, tnpc, n.id)         # PROSPECTIVE (PROS-19): a villager's killing
 			n.target = -1
+
+
+## S3: plan the way from the chaser to the target's cell (the walk's own path-finding, on the chaser's level) and start
+## following it. False when there is no way round: the chase is then given up as before.
+func _route_to(n: NPC, tpos: Vector2) -> bool:
+	var to := Vector2i(tpos.floor())
+	var p: PackedVector2Array = w.map.find_path(n.cell(), to) if n.depth == 0 else w.underground.find_path(n.depth, n.cell(), to)
+	if p.size() < 2:
+		n.chase_route = false
+		return false
+	n.path = p
+	n.path_i = 1 if Vector2i(p[0]) == n.cell() else 0
+	n.chase_route = true
+	return true
+
+
+## S3: one tick along the planned way at the chase's pace. It is planned again when the target has moved more than 2
+## cells from where it leads; at its end the straight chase takes over. False when there is no route to follow.
+func _follow_route(n: NPC, tpos: Vector2, dt: float) -> bool:
+	if n.path_i >= n.path.size() or Vector2(n.path[n.path.size() - 1]).distance_to(tpos.floor()) > 2.0:
+		if not _route_to(n, tpos):
+			return false
+	var budget := float(GameData.b("walk_tiles_per_second")) * 1.3 * dt
+	while budget > 0.0 and n.path_i < n.path.size():
+		var goal: Vector2 = n.path[n.path_i] + Vector2(0.5, 0.5)
+		var dd := goal - n.pos
+		if dd.length() <= budget:
+			n.pos = goal
+			budget -= dd.length()
+			n.path_i += 1
+		else:
+			n.pos += dd.normalized() * budget
+			budget = 0.0
+		if dd.length() > 0.0:
+			n.facing = dd
+	if n.path_i >= n.path.size():
+		n.chase_route = false
+	return true
 
 
 # ---------------------------------------------------------------- village events -------------

@@ -3505,6 +3505,8 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack") -> void
 	n.report = {"offender": offender, "t": minutes, "how": how}
 	if crime != "attack":
 		n.report.crime = crime
+	if Life.is_player_id(offender):
+		n.report.at = [player.pos.x, player.pos.y]       # S3: where the player was seen (a report on a villager is unchanged)
 	stat("crime_reports_made")
 	if recorder != null:
 		recorder.report(n, offender, how, crime)      # REC-19
@@ -3524,6 +3526,7 @@ func offender_alive(offender: int) -> bool:
 func deliver_report(n: NPC, g: NPC) -> bool:
 	var off := int(n.report.offender)
 	var crime := str(n.report.get("crime", "attack"))
+	var at: Array = n.report.get("at", [])
 	n.report = {}
 	if not offender_alive(off):
 		return true
@@ -3536,7 +3539,13 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 		return true
 	g.remember("told by %s %s of an attack" % [n.name, n.family])
 	if g.target == -1 and g.id != off:
-		g.target = off
+		if Life.is_player_id(off) and at.size() == 2 and g.pos.distance_to(player.pos) > NPCBrain.CHASE_RANGE:
+			# S3: too far off to chase from here (the chase would be dropped at once): go to the reported place, and take
+			# the offender on there if they are still in sight ("respond"). No search yet (audit A2).
+			g.plan = [brain.go(Vector2i(Vector2(float(at[0]), float(at[1])).floor())), brain.doit("respond", {"offender": off})]
+			g.doing = "answering a report"
+		else:
+			g.target = off
 	return true
 
 

@@ -43,6 +43,7 @@ var anim := "idle"           # "sleep": lying in bed (World.asleep); indoors is 
 var facing := Vector2.DOWN
 var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
+var chase_route := false     # S3: a guard chasing a player is following `path` round what stands between them (NPCBrain.fight; not saved, as `target` is not)
 var memory: Array = []       # notable events this NPC knows about
 var skills := {}             # skill -> xp, as the player's (PAR-01: the same curve, gates and effects; Skills)
 var report := {}             # an attack this villager knows of and will tell a guard: {offender, t, how} (PAR-05)
