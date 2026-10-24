@@ -21954,6 +21954,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: 31d81a3 -> d6d4aab; commits + d6d4aab",
      "why": "A1-A3, A7, A8 on wip/multiplayer-b19 (f846ccc, 5984def, b3ff749, 27446fe, 74a6da4): cases per offender keyed by player ref and saved; pursuit states with search from the last-known place and wanted status through save/load; hue and cry (30 tiles) and bell (80 tiles), PROPOSED distances; guards share cases; villagers report sightings; yield and fine to the treasury with stolen goods returned; lethal force after resistance or multiple murder; per-player attribution; also fixed a killer misattributed by first name"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner (docs/directives/2026-10-24_multiplayer_batch_c_g2.md section 5): the hue and cry propagates locally through witnesses and existing communication; the village bell carries farther but never informs every NPC regardless of distance; no automatic universal refusal of trade with known killers (existing judgment, reputation, necessity, risk, scarcity and incentives decide)"
     }
    ],
    "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
@@ -29092,6 +29097,11 @@
      "date": "2026-10-24",
      "change": "tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; test_commit: 1c0f854 -> 805a1c9; commits + 805a1c9; next_action",
      "why": "Batch B on wip/multiplayer-b19 (80b25e1, 75fa491, 805a1c9): guests' characters saved in the host's world and restored on reconnect, including after a host restart; MP-D1 away guests out of play and not attackable after load; MP-D4 guest death offers 'Continue as the heir' or 'Leave for now', applied by the host's succession code (guest family keeps one owner ref across generations: agent decision, provisional); MP-D7 newcomers logged and counted; duplicate identity refused; join during saves; whole-or-nothing actions on disconnect; lead reran the tests and G0"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner directive (docs/directives/2026-10-24_multiplayer_batch_c_g2.md): complete Batch C (independent identity, reputation, families, full verb parity, host authority), migrate Build 20 saves idempotently, verify the G2 matrix on the exact commit with the lead's independent check; single-player results must not change"
     }
    ],
    "next_action": "Batch C (full gameplay parity: per-player relationships, notoriety and judgment, quests, families for guests); then D (menus, Android interruption, internet), E, F",
@@ -44953,6 +44963,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/sim-gate -> wip/multiplayer-b19; test_commit: e63a6ab -> 95249b7; commits + 95249b7; integrated_in + wip/multiplayer-b19 95249b7; next_action",
      "why": "merged into wip/multiplayer-b19 (95249b7) and verified there by the lead; the release workflow on that branch now runs the gate before packaging"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner (docs/directives/2026-10-24_multiplayer_batch_c_g2.md section 5): the five warning thresholds are proposed from measured baseline evidence and presented for approval before they are finalized; they stay report-only until then"
     }
    ],
    "assigned_worker": "",
