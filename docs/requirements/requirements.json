@@ -21612,6 +21612,41 @@
    ]
   },
   {
+   "id": "GP-BANDIT-CAMP-ART",
+   "kind": "approved",
+   "title": "Bandit camp: crates, barrels and campfire drawn with the wrong tiles",
+   "description": "Bandit camp: crates, barrels and campfire drawn with the wrong tiles",
+   "source": "docs/gameplay_polish/reference/bandit_camp_wrong_tiles_2026-10-24.png",
+   "owner_wording": "what are these wooden things where the bandits spawn at?",
+   "approval": "owner, 2026-10-24 (reported defect)",
+   "acceptance": [
+    "The bandit camp shows what tools/build_village.py camp() intends: a burning campfire in the middle with two crates and two barrels round it, each drawn whole from the right tiles (no cut-off halves, no blank campfire); the tile ids are checked against the art by a test (every named tile constant in the village builder renders non-empty and is the object it names); other uses of the same constants (CRATE_TILES, BARREL_TILES) checked; village regenerated with the tool; walkability and G0 unchanged or any change reported; verified by a screenshot"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/bandit_camp_wrong_tiles_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-DRAW-UNDER-HOUSE",
    "kind": "approved",
    "title": "Player drawn half under a house wall (Marsh house front)",
