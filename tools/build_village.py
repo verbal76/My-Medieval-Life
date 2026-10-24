@@ -25,6 +25,9 @@ What is laid out
       and no tree tile is left in any tile layer. Wild flowers and berry bushes are the gatherable
       plants of generator v5.
 
+Generator v10 (GP-TRAIL-EDGES, 2026-10-24): a road cell whose pathway tile would lay grass over a yard's dirt joins
+the yard (merge_road_edges); only the ground's and the roads' tiles change.
+
 Tall objects (the tops of tables, benches, racks and armour stands that Shade drew in his "Object Top"
 layers) are put in "below" layers over their base (below3, below4): the player is drawn over them and
 can never stand under half an object. A cell holding only the top of a taller object is solid.
@@ -1391,6 +1394,7 @@ class Village:
         (the yard is the road there) nor on a doorway."""
         dirs = ((0, -1), (1, 0), (0, 1), (-1, 0))
         paths = self.paths
+        self.merge_road_edges()
         for (x, y) in sorted(self.road):
             if (x, y) in self.walkable_override or (x, y) in self.yard:
                 continue
@@ -1401,6 +1405,64 @@ class Village:
             con = tuple(con)
             if con in paths["dirt"]:
                 self.put("path", 0, x, y, tile_val(1, self.rng.choice(sorted(paths["dirt"][con]))))
+
+    def merge_road_edges(self):
+        """Generator v10 (GP-TRAIL-EDGES, owner 2026-10-24: "why do the trails have weird grass edges?"): the pathway
+        tiles know only their four sides, so a road cell at a dirt yard's edge drew grass over the yard's dirt: the
+        notches of a junction opening towards the yard (Main Street across the tavern's court, Mill Road past the
+        sawmill's and the quarry's yards) or the fringe of a side between two dirt corners. Such a cell
+        (road_over_dirt) joins the yard: its four corners become dirt, and the ground of the cells round it is
+        chosen again by a hash (nothing is drawn from the RNG, so everything laid out later is as before). Repeated
+        until no road cell lays grass over dirt; it stops where a road meets a yard end-on (a straight tile, its
+        fringes against grass). The cell is then yard and draws no road tile. Only the ground's and the roads' art
+        change: the road cells, collision and every record stay. Cells by the rocky hill and doorways are left."""
+        for _ in range(64):
+            edge = [c for c in sorted(self.road)
+                    if c not in self.yard and c not in self.walkable_override and self.road_over_dirt(c)]
+            touched = set()
+            for x, y in edge:
+                pts = ((x, y), (x + 1, y), (x + 1, y + 1), (x, y + 1))
+                if any(self.corner[py + dy][px + dx] == self.CLIFF for px, py in pts for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                       if 0 <= px + dx <= W and 0 <= py + dy <= H):
+                    continue              # a dirt corner may not meet a cliff corner in one tile (paint_ground's rule)
+                for px, py in pts:
+                    self.corner[py][px] = self.DIRT
+                for dy in (-1, 0, 1):
+                    for dx in (-1, 0, 1):
+                        if 0 <= x + dx < W and 0 <= y + dy < H:
+                            touched.add((x + dx, y + dy))
+            if not touched:
+                return
+            for x, y in sorted(touched):
+                key = (self.corner[y][x], self.corner[y][x + 1], self.corner[y + 1][x + 1], self.corner[y + 1][x])
+                assert not (self.CLIFF in key and self.DIRT in key), f"cliff meets dirt at {(x, y)}"
+                opts = sorted(self.wang[key])
+                if self.get("ground", 0, x, y) not in [tile_val(1, t) for t in opts]:      # a tile that fits is kept
+                    self.put("ground", 0, x, y, tile_val(1, opts[int(_hash(x, y, 97) * len(opts))]))
+                if key == (self.DIRT,) * 4:
+                    self.yard.add((x, y))
+        raise AssertionError("merge_road_edges did not settle")
+
+    def road_over_dirt(self, c):
+        """Whether the pathway tile of road cell `c` would lay grass over dirt: a notch (the corner between two open
+        sides; a side is open towards road, yard or the map's edge) on a dirt corner of the ground, or the fringe of
+        a closed side over a dirt corner, unless that dirt is the yard's the road runs into (round that corner)."""
+        x, y = c
+        con = [n in self.road or n in self.yard or not (0 <= n[0] < W and 0 <= n[1] < H)
+               for n in ((x, y - 1), (x + 1, y), (x, y + 1), (x - 1, y))]
+        dirt = [self.corner[py][px] == self.DIRT for px, py in ((x, y), (x + 1, y), (x + 1, y + 1), (x, y + 1))]
+        for a, b, k in ((0, 1, 1), (1, 2, 2), (2, 3, 3), (3, 0, 0)):     # sides N E S W; corners tl tr br bl
+            if con[a] and con[b] and dirt[k]:
+                return True
+        nbr = ((x, y - 1), (x + 1, y), (x, y + 1), (x - 1, y))
+        # a closed side's corners, each with the other side that meets there: (corner, side)
+        for side, ends in enumerate((((0, 3), (1, 1)), ((1, 0), (2, 2)), ((3, 3), (2, 1)), ((0, 0), (3, 2)))):
+            if con[side]:
+                continue
+            for k, other in ends:
+                if dirt[k] and nbr[other] not in self.yard:
+                    return True           # its fringe over dirt the yard round the corner does not explain (a road meeting a yard end-on)
+        return False
 
     # ---- output -----------------------------------------------------------------------------
     def workshop_stamp(self, kind, house):

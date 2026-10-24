@@ -38,6 +38,18 @@ class VillageTest(unittest.TestCase):
         self.assertEqual(json.loads(build_village.OUT.read_text()), D)
         self.assertEqual(build_village.build(), D)
 
+    def test_trails_lay_no_grass_over_dirt(self):
+        """GP-TRAIL-EDGES (generator v10): no trail cell's pathway tile lays its grass notches or fringes over the dirt
+        of a yard (Village.road_over_dirt, checked over every road cell drawn with a pathway tile); a road cell that
+        would has joined the yard, its ground dirt and no pathway tile drawn."""
+        v = build_village.Village(1).build()
+        drawn = [c for c in sorted(v.road) if c not in v.yard and c not in v.walkable_override]
+        self.assertGreater(len(drawn), 500)
+        self.assertEqual([c for c in drawn if v.road_over_dirt(c)], [])
+        path0 = next(l["data"] for l in D["layers"] if l["name"] == "path0")
+        self.assertEqual([c for c in sorted(v.road) if c in v.yard and path0[c[1] * W + c[0]] >= 0], [])
+        self.assertEqual(sorted(map(tuple, D["road"])), sorted(v.road))     # the road itself is unchanged: only its art
+
     def test_built_rooms_have_floors(self):
         """Every interior floor cell of a stamp the player builds (house, workshops, rooms) has a floor
         tile, so a room built on grass never shows grass inside, under its beds either."""

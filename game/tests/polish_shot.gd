@@ -1,7 +1,8 @@
 extends SceneTree
 ## GP-POLISH P2: screenshots of the owner's reports of 2026-10-24 in the real game scene, to be looked at. Needs a display:
 ##   xvfb-run -a godot --rendering-driver opengl3 --resolution WxH --path game --script res://tests/polish_shot.gd -- OUT.png MODE
-## MODE: wheat (a ripe manor field half cut by the player, a cut cell of the player's farm beside it)
+## MODE: wheat (a ripe manor field half cut by the player, a cut cell of the player's farm beside it); at:X:Y[:ZOOM] (the
+## player and the camera at cell X, Y)
 
 var main
 var out := "/tmp/polish.png"
@@ -29,6 +30,13 @@ func _setup() -> void:
 
 func _place() -> void:
 	var w: World = main.world
+	if mode.begins_with("at:"):
+		var a := mode.split(":")
+		w.player.pos = Vector2(int(a[1]) + 0.5, int(a[2]) + 0.5)
+		main.camera.zoom = Vector2(float(a[3]) if a.size() > 3 else 3.0, float(a[3]) if a.size() > 3 else 3.0) * main.view_scale
+		main.camera.position_smoothing_enabled = false
+		main.follow_at = main._in_view(w.player.pos * main.T)
+		return
 	match mode:
 		"wheat":
 			var f: Dictionary = w.fields[0]
