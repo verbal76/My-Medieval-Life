@@ -1,0 +1,67 @@
+{
+  "format": "mml-sim-workbook/1",
+  "note": "SIM-GATE-01 (owner, 2026-10-24; amendment of the same day): the one definition of the flight recorder's analysis workbook, read by the GDScript builder (scripts/recorder_export/workbook_builder.gd: the CI gate workbook and the desktop game's live export) and by the Python validator (tools/check_workbook.py). Desktop and CI only: excluded from the Android export (export_presets.cfg). The groupings below are reading aids for the analysis, never game rules; a stat key is matched by its prefix, the first group that matches wins.",
+  "schema": "mml-recorder/2",
+  "required_sheets": ["Executive Summary", "Population and Households", "Economy", "NPC Activity", "Relationships and Morality", "Crime and Justice", "Production and Resources", "Performance", "Historical Comparison", "Regression Register"],
+  "extra_sheets": ["Runs", "Proposed Thresholds", "Events"],
+  "required_charts": {
+    "Population and Households": ["Population over time", "Household wealth (median purse)"],
+    "Economy": ["Currency circulation", "Household wealth distribution", "Resource shortages: food in store"],
+    "NPC Activity": ["Employment and idle time"],
+    "Relationships and Morality": ["Relationship changes"],
+    "Crime and Justice": ["Crime and guard response"],
+    "Production and Resources": ["Production versus consumption"],
+    "Performance": ["Simulation performance"],
+    "Historical Comparison": ["Changes from previous builds"]
+  },
+  "runs_columns": ["run", "scenario", "seed", "days", "recorded", "result", "alive_start", "alive_end", "currency_end", "treasury_end", "households_end", "villager_deaths", "births", "newcomers", "trades", "crimes", "chases", "unattributed_total_alerts", "wall_seconds"],
+  "runs_note": "For a recorded run every value from alive_end on (except wall_seconds) is read from its flight recorder archive by the workbook builder (the closing snapshot in session.json; newcomers counts newcomers, outlaws, arrivals and people returning from a settlement); tools/check_workbook.py compares them with the simulation's own output (economy_sim.gd --out). For a run without the recorder they come from that output.",
+  "chart_runs": 4,
+  "event_rows_max": 20000,
+  "production_groups": {
+    "Mining": ["mined_", "found_", "cut_stone", "tunnel_units_cut"],
+    "Forestry": ["felled_", "trees_felled"],
+    "Farming": ["farm_harvest_", "farm_made_", "keeper_collected_", "made_wheat", "made_egg", "made_milk"],
+    "Gathering": ["villager_foraged_", "picked_", "villager_picked_", "made_blueberries", "made_red_berries", "made_flower"],
+    "Hunting": ["hunted_", "poached_", "made_meat", "made_hide"],
+    "Cooking and brewing": ["home_cooked", "home_brewed", "made_pottage", "made_roast_meat", "made_bread", "made_ale", "made_cheese"],
+    "Crafting": ["made_", "equipment_made_"]
+  },
+  "consumption_groups": {
+    "Food eaten": ["eaten_"],
+    "Inputs used": ["used_"],
+    "Spoiled": ["spoiled_"],
+    "Burned": ["burned_"]
+  },
+  "trade_groups": {
+    "Imports": ["imported_", "caravan_in_"],
+    "Exports": ["exported_"],
+    "Stalls": ["stall_session_sales", "stall_net_paid"],
+    "Contracts": ["contract_"],
+    "Manor work": ["manor_job", "gov_manor_jobs"]
+  },
+  "facility_prefixes": ["station_busy_"],
+  "activity_classes": {
+    "note": "A villager's hourly 'doing' text (sample table) sorted into a class by the first pattern it contains (no text at all is idle); anything else is work. An approximation: the game's own words, read as text.",
+    "order": ["sleep", "lost", "idle", "rest and leisure", "need", "crime and alarm", "travel", "work"],
+    "patterns": {
+      "sleep": ["asleep", "sleeping", "going home to sleep"],
+      "lost": ["lost"],
+      "idle": ["idle", "waiting for materials", "waiting at"],
+      "travel": ["going ", "taking ", "walking", "heading", "on the way", "carrying"],
+      "rest and leisure": ["resting", "taking the air", "playing", "at the tavern", "at home", "pondering", "watching", "evening", "company", "feast"],
+      "need": ["to eat", "eating", "buying food", "drinking"],
+      "crime and alarm": ["tell a guard", "fleeing", "stalking", "lurking", "fighting", "defending"]
+    }
+  },
+  "wealth_buckets": [0, 1, 25, 50, 100, 200, 500],
+  "proposed": {
+    "note": "Values the gate measures and reports but does not block on: no approved requirement sets a number. Each is shown as PROPOSED for the owner, with the value measured in this run.",
+    "stuck_hours": 3,
+    "stuck_note": "A villager counts as stuck when their hourly sample shows them on the same cell, travelling (going, taking, carrying ...) or lost, for this many hours in a row: a walk of three game hours that never leaves its cell. Work, rest and waiting on one cell are normal and not counted.",
+    "walk_lost_per_villager_day": "measured",
+    "unattributed_holder_alerts_per_day": "measured",
+    "seconds_per_sim_day": "measured",
+    "recorder_overhead_share": "measured"
+  }
+}

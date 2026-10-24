@@ -13,6 +13,13 @@
 # build installs over the last and keeps the player's save (docs/release/ANDROID_SIGNING.md). Without
 # those secrets the build stops, unless "allow_temporary_key" is ticked: then a throwaway key is
 # made, as before, and the notes say the APK cannot update an earlier install.
+#
+# SIM-GATE-01 (owner, 2026-10-24, permanent; amended the same day): before anything is packaged, the "sim-gate" job runs the
+# village simulation suite with the flight recorder on (tools/sim_suite.py) on this same commit, writes the analysis
+# workbook with the game's own exporter and checks it. The "build" job needs it: a failed gate packages nothing. The gate's
+# results (workbook, summary, gate.json, logs, analyses) are uploaded as the workflow artifact "sim-gate" whether it passes
+# or fails; the workbook is an internal CI artifact, never attached to the release; the release notes carry a short
+# summary with the gate's run id and the recorder schema.
 name: Build and release
 
 on:
@@ -47,7 +54,74 @@ env:
   GODOT_VERSION: "4.7.2"
 
 jobs:
+  sim-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and its export templates
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates
+
+      - name: Install Godot and its export templates
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
+          curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
+          rm godot.zip templates.tpz
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Import the project
+        run: ~/godot-bin/godot --headless --path game --import
+
+      - name: Run the simulation gate (SIM-GATE-01)
+        env:
+          BUILD_N: ${{ inputs.build_number || github.run_number }}
+        run: |
+          # every scenario with the flight recorder on, in parallel; exit 1 on any blocking finding (never on hardship)
+          python3 tools/sim_suite.py --out out/sim-gate --godot ~/godot-bin/godot --jobs "$(nproc)"
+
+      - name: Keep the gate's results (also when it fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate
+          retention-days: 90
+          if-no-files-found: warn
+          path: |
+            out/sim-gate/gate.json
+            out/sim-gate/SIM_GATE_SUMMARY.md
+            out/sim-gate/sim_gate_workbook.xlsx
+            out/sim-gate/*/sim.json
+            out/sim-gate/*/run.log
+            out/sim-gate/*/analysis.json
+            out/sim-gate/*/probe.json
+
+      - name: Keep the recorder archives (also when the gate fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate-archives
+          retention-days: 14
+          if-no-files-found: warn
+          path: out/sim-gate/*/rec/
+
   build:
+    needs: sim-gate
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # a public release waits here for the owner's approval in the protected environment
@@ -169,6 +243,11 @@ jobs:
         run: |
           mkdir -p out/pc/windows out/pc/linux release
           godot --headless --path game --export-debug "Android" ../out/mymedievallife-dev.apk
+          # SIM-GATE-01 amendment: the APK carries no workbook or desktop export code (export_presets.cfg exclude_filter)
+          if unzip -l out/mymedievallife-dev.apk | grep -E "recorder_export|sim_workbook"; then
+            echo "::error::the Android package contains the desktop recording export (scripts/recorder_export or data/sim_workbook.json)"
+            exit 1
+          fi
           godot --headless --path game --export-release "Windows Desktop" ../out/pc/windows/MyMedievalLife.exe
           # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
           python3 tools/check_exe_icon.py out/pc/windows/MyMedievalLife.exe
@@ -194,6 +273,25 @@ jobs:
             # the build's own tester notes (what is new, known limitations) when they exist (owner release condition 5)
             if [ -f "docs/release/BUILD_${n}_TESTER_NOTES.md" ]; then cat "docs/release/BUILD_${n}_TESTER_NOTES.md"; echo; fi
             cat docs/release/TESTING_CHECKLIST.md; } > notes.md
+
+      - name: Add the simulation gate's summary to the notes
+        uses: actions/download-artifact@v4
+        with:
+          name: sim-gate
+          path: sim-gate
+
+      - name: Check the gate ran on this commit and write its section of the notes
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          g = json.load(open("sim-gate/gate.json"))
+          if g["commit"] != os.environ["GITHUB_SHA"] or not g["result"].startswith("PASS") or g.get("subset") or g.get("injected"):
+              sys.exit("::error::the simulation gate did not pass on this commit (%s, %s)" % (g["commit"], g["result"]))
+          summary = open("sim-gate/SIM_GATE_SUMMARY.md").read()
+          with open("notes.md", "a") as f:
+              f.write("\n" + summary + "\n- Simulation gate run: %s/%s/actions/runs/%s (artifact `sim-gate`); recorder schema `%s`.\n" % (
+                  os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_RUN_ID"], g["schema"]))
+          PY
 
       - name: Remove the signing key from the runner
         if: always()

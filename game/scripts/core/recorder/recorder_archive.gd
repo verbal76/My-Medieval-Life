@@ -1,6 +1,6 @@
 class_name RecorderArchive
 extends RefCounted
-## Reads and writes the flight recorder's chunk files (schema mml-recorder/1). A chunk is a gzip text file of JSON lines:
+## Reads and writes the flight recorder's chunk files (schema mml-recorder/1 and /2). A chunk is a gzip text file of JSON lines:
 ## line 1 the header {schema, session, table, day, hour, part, columns, first_seq, last_seq}, then one JSON array per row
 ## (columns in header order, `seq` first), then the footer {"footer": true, "rows": N, "sha256": "<hash of the row lines>"}.
 ## A chunk without its footer (or whose rows do not match it) is truncated: reported, never deleted.

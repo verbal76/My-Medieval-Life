@@ -11,6 +11,9 @@ extends SceneTree
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
 ##       [--record DIR]   (REC-19: the flight recorder writes its archive under DIR; changes nothing in the run)
+##       [--scenario crime_spree --at DAY]   (SIM-GATE-01: the player commits scripted crimes from DAY: a theft, a pocket picked,
+##       a killing in sight of the village and a flight along a path, an assault, another killing; the village's own
+##       witnesses, reports and guards respond; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
@@ -51,6 +54,8 @@ var watch_lost := {}           # households that lost someone to hunger while wa
 var herd_log: Array = []       # FARM-08B: each pen kind's herd, a row on every day it changed (read only, changes nothing)
 var herd_last := {}            # kind -> the last row's key, to keep only the days that changed
 var herd_care := {}            # kind -> hours a pen had a hungry animal and too little in the trough, and why it was not fed
+var flee_path := PackedVector2Array()   # SIM-GATE-01 crime_spree: the player's flight after a crime, cell by cell
+const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guards chase at 1.3 x walk_tiles_per_second)
 
 
 func _init() -> void:
@@ -114,10 +119,14 @@ func _init() -> void:
 		if scenario != "" and d == scenario_day:
 			_intervene(scenario)
 		for i in per_day:
+			if scenario == "crime_spree" and i % 60 == 0 and w.day() >= scenario_day:
+				_crime_step(w.day() - scenario_day, int(fmod(w.minutes, World.DAY) / 60.0))
 			var tu := Time.get_ticks_usec()
 			w.update(STEP)
 			update_us += Time.get_ticks_usec() - tu
 			w.player.hunger = 100.0            # the inert player is fed; it is not part of what is measured
+			if not flee_path.is_empty():
+				_flee_step()
 			if i % 60 == 59:
 				var th := Time.get_ticks_usec()
 				_hourly()
@@ -365,6 +374,111 @@ func _intervene(name: String) -> void:
 					w.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + a.species, "t": w.minutes})
 					scenario_log.hunted = int(scenario_log.get("hunted", 0)) + 1
 	print("SCENARIO %s on day %d: %s" % [name, w.day(), JSON.stringify(scenario_log)])
+
+
+## SIM-GATE-01 crime_spree: the player's crimes, by day after --at and hour of the game clock: day 0 10:00 a theft from a
+## household's crate, 11:00 a pocket picked, 14:00 a killing in sight of the village and a flight; day 1 14:00 an assault; day 2
+## 14:00 another killing and flight. A step after the player's death is skipped and logged (the village's answer, not the script's). Each uses the game's own verbs (player_take,
+## pickpocket, player_hit_npc); witnesses, reports, alarms, guards and chases are the village's own response. The player is
+## put beside the victim (the harness's player is otherwise inert). Victims: adult villagers who are not guards, in id order,
+## the one with the most villagers in sight (witness_radius) for the violent crimes.
+func _crime_step(day_n: int, hour: int) -> void:
+	var p := w.player
+	var step := ""
+	if not p.alive:
+		if [day_n, hour] in [[0, 10], [0, 11], [0, 14], [1, 14], [2, 14]]:
+			scenario_log["skipped_%d_%d" % [day_n, hour]] = "the player is dead"
+		return
+	match [day_n, hour]:
+		[0, 10]:
+			step = "theft"
+			for c in w.containers:
+				if w.container_pick(c) == "" or w.container_owner(c) == null:
+					continue
+				for o in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
+					var cell: Vector2i = Vector2i(int(c.x), int(c.y)) + o
+					if not w.map.is_solid(cell):
+						p.pos = Vector2(cell) + Vector2(0.5, 0.5)
+						if w.player_container_reach(c) == "":
+							scenario_log.theft = w.player_take(c)
+							break
+				if scenario_log.has("theft"):
+					break
+		[0, 11]:
+			step = "pickpocket"
+			var v := _crime_victim(false)
+			if v != null:
+				p.pos = v.pos + Vector2(0.4, 0)
+				scenario_log.pickpocket = w.pickpocket(v).get("ok", false)
+		[1, 14]:
+			step = "assault"
+			var v := _crime_victim(true)
+			if v != null:
+				p.pos = v.pos + Vector2(0.4, 0)
+				scenario_log.assault = w.player_hit_npc(v, 1.0).get("dealt", 0.0)
+		[0, 14], [2, 14]:
+			step = "killing"
+			var v := _crime_victim(true)
+			if v != null:
+				p.pos = v.pos + Vector2(0.4, 0)
+				var killed := false
+				for k in 20:                            # blow after blow, as a player would strike
+					if w.player_hit_npc(v, 10.0).get("killed", false):
+						killed = true
+						break
+				scenario_log["killing_%d" % day_n] = killed
+				_start_flight()
+	if step != "":
+		scenario_log.steps = int(scenario_log.get("steps", 0)) + 1
+		print("CRIME day %d %02d:00 %s: %s" % [w.day(), hour, step, JSON.stringify(scenario_log)])
+
+
+func _crime_victim(violent: bool) -> NPC:
+	var best: NPC = null
+	var best_n := -1
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult" or n.job == "guard" or n.depth != 0 or w.place_of(n.pos) != "":
+			continue
+		var k := w.near(n.pos, float(GameData.b("witness_radius"))).size() if violent else 0
+		if k > best_n:
+			best = n
+			best_n = k
+	return best
+
+
+## After a killing the player walks away along a path to the open cell farthest from them within 40 cells (the guards'
+## pursuit is the village's own: NPCBrain.fight).
+func _start_flight() -> void:
+	var from := Vector2i(floori(w.player.pos.x), floori(w.player.pos.y))
+	var best := from
+	var best_d := 0
+	for dy in range(-40, 41, 4):
+		for dx in range(-40, 41, 4):
+			var c := from + Vector2i(dx, dy)
+			if w.map.is_solid(c) or absi(dx) + absi(dy) <= best_d:
+				continue
+			var path := w.map.find_path(from, c)
+			if path.size() > 1:
+				best = c
+				best_d = absi(dx) + absi(dy)
+	flee_path = w.map.find_path(from, best)
+	scenario_log.flight_cells = flee_path.size()
+
+
+func _flee_step() -> void:
+	var left := FLEE_TILES_PER_SECOND * STEP
+	while left > 0.0 and not flee_path.is_empty():
+		var to := flee_path[0] + Vector2(0.5, 0.5)
+		var d := to - w.player.pos
+		if d.length() <= left:
+			w.player.pos = to
+			left -= d.length()
+			flee_path.remove_at(0)
+		else:
+			w.player.pos += d.normalized() * left
+			left = 0.0
+	if not w.player.alive:
+		flee_path = PackedVector2Array()
 
 
 func _hourly() -> void:

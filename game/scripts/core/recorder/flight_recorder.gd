@@ -1,8 +1,8 @@
 class_name FlightRecorder
 extends RefCounted
-## The flight recorder core (REC-19, schema mml-recorder/1; docs/design/FLIGHT_RECORDER.md). A passive, game-agnostic
+## The flight recorder core (REC-19, schema mml-recorder/2; docs/design/FLIGHT_RECORDER.md). A passive, game-agnostic
 ## event store: tables of rows (event, participant, decision, alternative, factor, state_change, link, alert, sample), a
-## context stack that gives events their causal parent, object threads, a bounded buffer, and an append-only gzip
+## snapshot (schema 2: one village-wide aggregate row an hour), a context stack that gives events their causal parent, object threads, a bounded buffer, and an append-only gzip
 ## archive of chunk files with headers and footers.
 ##
 ## Rules it keeps (owner decisions REC-D1..D4, 2026-10-23):
@@ -15,7 +15,7 @@ extends RefCounted
 ##     and sequence (never deletes or overwrites); a full buffer is flushed early, rows are never dropped silently.
 ## Subclasses (WorldRecorder) add the instrumentation points that know the game.
 
-const SCHEMA := "mml-recorder/1"
+const SCHEMA := "mml-recorder/2"     # 2 (SIM-GATE-01): adds the hourly snapshot table and the combat chase events; /1 archives read the same
 const NOT_EVALUATED := "not evaluated"
 const CONFIG_PATH := "res://data/recorder.json"
 const CODES_PATH := "res://data/recorder_codes.json"
@@ -32,8 +32,16 @@ const COLUMNS := {
 	"link": ["seq", "from", "to", "kind", "via"],
 	"alert": ["seq", "id", "severity", "rule", "entities", "values", "event", "day"],
 	"sample": ["seq", "day", "hour", "entity", "hunger", "hp", "x", "y", "doing", "coins"],
+	# SIM-GATE-01: one village-wide aggregate row an hour (WorldRecorder.snapshot_row; docs/design/FLIGHT_RECORDER.md section 3).
+	# The *_h columns count what the recorder saw in the hour before; stats_delta is the game's own w.stats counters that changed
+	# in that hour ({key: change}); wall_ms and mem_bytes are measurements of the machine, never part of a determinism comparison.
+	"snapshot": ["seq", "day", "hour", "alive", "households", "adults", "employed", "children", "elders", "bandits", "mean_hunger",
+		"min_hunger", "starving", "mean_hp", "idle", "lost", "fighting", "guards", "guards_engaged", "total_coins", "villager_coins",
+		"treasury", "coin_sources", "hh_purse_min", "hh_purse_median", "hh_purse_max", "food_days", "granary_wheat", "births", "deaths",
+		"ties", "friends", "courting", "facts", "player_crimes", "events_h", "trades_h", "trade_coins_h", "transfers_h", "actions_h",
+		"actions_failed_h", "walk_lost_h", "crimes_h", "chases_h", "alerts_h", "stats_delta", "wall_ms", "mem_bytes"],
 }
-const TABLES := ["event", "participant", "decision", "alternative", "factor", "state_change", "link", "alert", "sample"]
+const TABLES := ["event", "participant", "decision", "alternative", "factor", "state_change", "link", "alert", "sample", "snapshot"]
 const EV_ID := 1
 const EV_PARENT := 2
 const EV_INTERACTION := 3
@@ -44,6 +52,9 @@ const EV_DETAIL := 18
 
 ## Tests only: switch the recorder on without editing recorder.json (like JudgmentLive.test_enabled).
 static var test_enabled := false
+## SIM-GATE-01 amendment: the desktop game's own switch (Settings, Saves, "Record gameplay"; GameSettings.record_gameplay), set by
+## main before a game starts or loads. Only on Windows and Linux; never set on Android. recorder.json stays "enabled": false.
+static var live_enabled := false
 static var _cfg_cache := {}
 static var _codes_cache := {}
 
@@ -103,7 +114,7 @@ static func default_codes() -> Dictionary:
 
 
 static func enabled() -> bool:
-	return test_enabled or bool(default_cfg().get("enabled", false))
+	return test_enabled or live_enabled or bool(default_cfg().get("enabled", false))
 
 
 ## Start a session. `config` overrides recorder.json keys (root, buffer_rows, storage_cap_bytes, ...).
@@ -294,6 +305,11 @@ func alert(severity: String, rule: String, entities: String, values: String, ev 
 func sample(entity: String, hunger, hp, x: int, y: int, doing: String, coins) -> void:
 	var now := _now()
 	_add("sample", [0, int(now[0]), int(float(now[1]) / 60.0), entity, hunger, hp, x, y, doing, coins])
+
+
+## One snapshot row (the values in COLUMNS.snapshot order after seq).
+func snapshot(values: Array) -> void:
+	_add("snapshot", [0] + values)
 
 
 # ---------------------------------------------------------------- archive --------------------

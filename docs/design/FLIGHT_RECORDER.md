@@ -1,8 +1,9 @@
-# Flight recorder: implemented data contract (REC-19, schema `mml-recorder/1`)
+# Flight recorder: implemented data contract (REC-19, schema `mml-recorder/2`)
 
-Status: stage D1 (core), the D2 choke points and the D3 systems (identity, life, employment, government, crime, player verbs, save and load), on `wip/recorder`, merged with the identity foundation (ID-01, save version 20). Design and decisions: `docs/design/FLIGHT_RECORDER_DESIGN.md`,
+Status: stage D1 (core), the D2 choke points and the D3 systems (identity, life, employment, government, crime, player verbs, save and load), on `wip/recorder`, merged with the identity foundation (ID-01, save version 20). Schema 2 (SIM-GATE-01, 2026-10-24, `wip/sim-gate`): the hourly village snapshot, combat chase events and the closing snapshot; the pre-build simulation gate and the analysis workbook that read it are in `docs/design/SIM_GATE_AUDIT.md`. A schema 1 archive reads the same (it has no snapshot table). Design and decisions: `docs/design/FLIGHT_RECORDER_DESIGN.md`,
 `docs/directives/2026-10-23_recorder_decisions.md` (REC-D1 to REC-D4). Developer reference only; the recorder is not a player feature and
-has no wiki page (it is off by default and absent from public releases).
+has no wiki page (it is off by default). Since SIM-GATE-01's amendment the Windows and Linux game offer it as a testing option
+(Settings, Saves, "Record gameplay", off by default) with an export of the recording (section 8); Android does not.
 
 ## 1. What exists
 
@@ -11,13 +12,15 @@ has no wiki page (it is off by default and absent from public releases).
 | Core: tables, context stack, object threads, bounded buffer, chunk writer, session record, recovery, storage cap | `game/scripts/core/recorder/flight_recorder.gd` (`FlightRecorder`) |
 | Archive reader and chunk format | `game/scripts/core/recorder/recorder_archive.gd` (`RecorderArchive`) |
 | The game's instrumentation points (decide, act, interruptions, trade, transfer, coin audit, hourly samples; D3: identity, life, employment, government, crime, player verbs, save and load) | `game/scripts/core/recorder/world_recorder.gd` (`WorldRecorder extends FlightRecorder`) |
-| Switch and limits | `game/data/recorder.json` (`mml-recorder-config/1`) |
+| Switch and limits | `game/data/recorder.json` (`mml-recorder-config/1`); the desktop setting `GameSettings.record_gameplay` sets `FlightRecorder.live_enabled` |
+| Analysis, workbook and export (desktop and CI only; not in the Android package) | `game/scripts/recorder_export/` (`recorder_analysis.gd`, `workbook_builder.gd`, `xlsx_writer.gd`, `live_export.gd`), `game/data/sim_workbook.json` |
 | The one code table (shared with XEXPL-01 later) | `game/data/recorder_codes.json` (`mml-recorder-codes/1`) |
 | Coverage, status per system, never wider than what is instrumented | `game/data/recorder_coverage.json` (`mml-recorder-coverage/1`) |
 | Tests | `game/tests/recorder_test.gd`; the on/off determinism comparison is `economy_sim.gd --record DIR` |
 
 Switch: `recorder.json "enabled"` is `false`. `World.setup` creates a recorder only when `FlightRecorder.enabled()` is true
-(`FlightRecorder.test_enabled` for tests, or `WorldRecorder.attach(world, {"root": dir})` as `economy_sim.gd --record DIR` does).
+(`FlightRecorder.test_enabled` for tests, `FlightRecorder.live_enabled` for the desktop setting, or `WorldRecorder.attach(world, {"root": dir})`
+as `economy_sim.gd --record DIR` and the CI gate do).
 When off, `World.recorder` is `null`: no object, no file, no directory; each instrumentation point is one guarded call
 (`if recorder != null`). The recorder never draws from `w.rng` or any generator, never calls planning or decision code, and never
 changes game state; it stores what the instrumented code already computed. The world's `to_dict` has no recorder section.
@@ -29,7 +32,9 @@ changes game state; it stores what the instrumented code already computed. The w
 - `World._act_step` wraps the two `brain.act` calls of `_run_plan` (event begins before the action, ends with ok or failed).
 - `World._walk` (two "lost" returns) and the station wait give-up call `recorder.interruption` before the plan is cleared.
 - `World.trade` and `World.transfer`: begin before the mutation, end after it (before and after values), refused calls recorded too.
-- `World._on_hour` calls `recorder.hour()` first: flush, coin audit, hourly samples. `World.dispose` calls `recorder.finish()`.
+- `World._on_hour` calls `recorder.hour()` first: flush, coin audit, hourly samples, the village snapshot. `World.dispose` calls
+  `recorder.finish()` (which writes the closing snapshot into `session.json`).
+- `NPCBrain.fight` (schema 2): `chase_tick` at its top, `chase_strike` with each blow, `chase_end` before each line that clears the target.
 
 D3 hooks (each a guarded `if recorder != null:` call; none changes what the game does):
 
@@ -68,6 +73,7 @@ A value the engine did not evaluate is the string `not evaluated`, never an inve
 | link | `from, to, kind, via` (object threads: `same_object` to the object's previous event) |
 | alert | `id, severity, rule, entities, values, event, day` |
 | sample | `day, hour, entity, hunger, hp, x, y, doing, coins` |
+| snapshot | (schema 2) `day, hour, alive, households, adults, employed, children, elders, bandits, mean_hunger, min_hunger, starving, mean_hp, idle, lost, fighting, guards, guards_engaged, total_coins, villager_coins, treasury, coin_sources, hh_purse_min, hh_purse_median, hh_purse_max, food_days, granary_wheat, births, deaths, ties, friends, courting, facts, player_crimes, events_h, trades_h, trade_coins_h, transfers_h, actions_h, actions_failed_h, walk_lost_h, crimes_h, chases_h, alerts_h, stats_delta, wall_ms, mem_bytes` |
 | session | not a chunked table: `session.json` (below) |
 
 `event.parent` is the open event when this one began (decision -> action -> trade); `event.interaction` is the root of that chain.
@@ -102,6 +108,29 @@ previous event; the mechanism is in the core and tested, and no game system uses
   `World.trade` moves part of the price into the till (`BusinessMoney`), which is not recorded, so the keeper's purse is flagged.
 - **samples (REC-D3)**: each hour, hunger, health, cell, doing and coins of every living villager and the player. Samples never replace
   interaction records.
+
+### Schema 2 (SIM-GATE-01): the village snapshot and chases
+
+- **snapshot**: one row at every hour boundary, after the samples. Levels at that moment (villagers alive, not bandits; households
+  with a living member; adults with a job; hunger and health means; villagers at zero hunger; `doing` "idle" and "lost"; villagers
+  with a target; guards and guards with a target; `World.total_coins`, the villagers' coins, the treasury, `coin_sources`; the
+  households' purses, min, median, max; `food_days`; granary wheat; ties, friendships and courting pairs from `Relations.ties`;
+  judgment facts (`facts.size()`, not `counts()`, which flushes gossip); the player's crime count), the recorder's own counts
+  since the last snapshot (`*_h`: events ended, accepted trades and the coins they moved, transfers, plan-step actions and failed
+  ones, walk-lost interruptions, crime events, chases, alerts), births and deaths recorded since the session began, `stats_delta`
+  (every `w.stats` counter that changed in the hour, as {key: change}; unchanged state is not repeated) and two measurements of the
+  machine, `wall_ms` (since the last snapshot) and `mem_bytes` (`OS.get_static_memory_usage`), which differ between runs and are
+  never compared for determinism. About 48 values an hour: 2 to 3 KB a game day.
+- **final_snapshot**: the same values, keyed by column, written into `session.json` by `finish()`: the world as the session left
+  it (the last hourly row is taken before that hour's own processing, so a newcomer arriving at the hour is in the closing
+  snapshot only). The gate reconciles it with the simulation's own output.
+- **chase** (`category combat`, `system combat`, `subsystem chase`, `subtype chase_guard | chase_bandit | chase_villager`): one event
+  per chase, written when it ends, actor the fighter, participants the fighter and the target (`target:player` for the player),
+  outcome `ok` (`target_slain`, `robbed`), `abandoned` (`blocked`: the straight-line step hit a wall, the SIM-F4 rule and the owner's
+  corner case; `out_of_range`: beyond 25 tiles; `near_bandit_camp`; `bandit_low_hp`) or `interrupted` (`target_gone`,
+  `retargeted`, `cleared_elsewhere`: cleared by other code, seen at the next hour), detail `start_day start_minute minutes seconds
+  d0 d_end strikes`. A target set far away and dropped on the same tick is a chase of 0 seconds (`out_of_range`): the late reports
+  of `REPAIR_AUDIT_DIALOGUE_CRIME_GUARDS.md` section 9 show as these.
 
 ### D3 events (what each records)
 
@@ -201,9 +230,30 @@ the winner is the first reduction if volume matters.
 
 ## 7. Known limits (also in `recorder_coverage.json`)
 
+Schema 2 adds the snapshot and chases; the limits below stand. A chase does not name the code that set the target.
+
 Not recorded: production and consumption effects, relations (courting stages, gifts, regard), contracts, credit, business, stalls, property,
 construction, farming, mining, manor work, chapel, feasts, quests, the settlements' daily phases, judgment (stages D4 to D6). Partly recorded
 (see the coverage file for what is and is not): life, employment, government, crime, the player's verbs, save and load, the settlements'
 register transitions. Coin changes outside the instrumented sites are detected hourly, not attributed. Item changes outside
 `World.trade`/`transfer` and the verbs' summaries are not seen. Chests, carts, stalls and loot appear as `inv:?` in transfers. Decision records
 stop at the top-level branch. Jobs that run `_plan_job` internally (most villagers by day) show only `job` as the chosen branch.
+
+## 8. Desktop recording and export (SIM-GATE-01 amendment, 2026-10-24)
+
+- **Setting:** Settings, Saves, "Record gameplay: on/off" (Windows and Linux only; `Main.recording_supported` needs a PC build and
+  the export scripts, which the Android package does not carry). Off by default; stored as `[developer] record_gameplay` in
+  `user://settings.cfg`. Switching it on attaches a recorder to the running world at once (and to every game started or loaded);
+  switching it off closes the session. Nothing in the game reads the recorder, so recording changes no decision and draws no
+  random number.
+- **Storage:** the recorder's own bounds: a buffer of at most `buffer_rows` (50,000) rows, written to chunk files at every game
+  hour (incremental), under `user://recorder/<session>/` (Linux `~/.local/share/godot/app_userdata/My Medieval Life/recorder`,
+  Windows `%APPDATA%\Godot\app_userdata\My Medieval Life\recorder`); at `storage_cap_bytes` (1 GiB) it stops, keeps everything
+  and marks the session incomplete. Measured: about 0.5 to 0.6 MB a game day for a village of about 110 people.
+- **Export:** "Export the recording..." writes into `Documents/My Medieval Life/recordings/` (`user://recordings` when the system
+  has no Documents folder): `<session>_day<N>.xlsx` (the workbook: every sheet and chart of `game/data/sim_workbook.json`, with
+  up to 20,000 event records), `<session>_day<N>_analysis.json` (the analysis as data) and `<session>_day<N>_archive.zip` (the
+  session's chunk files and `session.json`), then opens the folder. With no recording running it exports the newest session.
+- **Android:** the export folder and the workbook definition are excluded from the Android preset (`exclude_filter`), the setting
+  is not shown, and nothing in the shipped code names the export scripts (`tests/test_sim_gate.py` checks the preset and the
+  references; the release workflow lists the APK's files).

@@ -166,6 +166,8 @@ jobs:
           $godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10
           # REC-19 (wip/recorder): the flight recorder, off by default; archive, context links, cap, recovery, coin audit
           $godot --headless --path game --script res://tests/recorder_test.gd
+          # SIM-GATE-01: the desktop live export (workbook, analysis, archive) by the one GDScript XLSX writer
+          $godot --headless --path game --script res://tests/live_export_test.gd
           # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
           $godot --headless --path game --script res://tests/interdependency_test.gd   # WDR-002-C: Rule 2 verification scenario
           $godot --headless --path game --script res://tests/settlement_test.gd

@@ -1,7 +1,7 @@
 {
  "format": "mml-recorder-coverage/1",
  "note": "What the flight recorder instruments, system by system (docs/design/FLIGHT_RECORDER_DESIGN.md section 2). Never read a row as broader than its scope text. A row is 'Fully instrumented' only when it names a test in game/tests/recorder_test.gd that exercises it (checked by that test); everything not listed as instrumented is not recorded. Updated by the stage that instruments a system.",
- "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23",
+ "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24",
  "rows": [
   {
    "system": "Decisions",
@@ -108,7 +108,25 @@
    "status": "Partially instrumented",
    "stage": "D3",
    "test": "test_crime_events",
-   "note": "Not recorded: pickpocketing attempts and their odds, fencing recognition detail beyond the sell verb, the Expansion 19 judgment of a crime, bandit raids on stalls, villagers fighting each other, guards chasing, deliver_report. witness records the witnesses present, not those who failed to notice."
+   "note": "Not recorded: pickpocketing attempts and their odds, fencing recognition detail beyond the sell verb, the Expansion 19 judgment of a crime, bandit raids on stalls, deliver_report (the chases that fights, alarms and reports start are recorded since schema 2: see Combat chases), wanted status and reinforcements (they do not exist in the game: GP-CRIME-PURSUIT). witness records the witnesses present, not those who failed to notice."
+  },
+  {
+   "system": "Village snapshot",
+   "interaction": "one row an hour of village-wide aggregates (population by role, employment, hunger, health, idle and lost villagers, fighters and engaged guards, currency, treasury, household purses, food in store, births, deaths, ties, friendships, courting pairs, judgment facts, the player's crimes, the hour's counts of events, trades, coins traded, actions, failed actions, walk-lost, crimes, chases and alerts, the game's w.stats counters that changed, wall time and memory); the same values at the session's end in session.json final_snapshot",
+   "where": "WorldRecorder.hour (snapshot_row), WorldRecorder.finish",
+   "status": "Fully instrumented",
+   "stage": "SIM-GATE-01",
+   "test": "test_live_world",
+   "note": "Aggregates only, read without side effects (judgment facts counted directly: its counts() flushes gossip). The *_h columns count what the recorder saw in the hour, so they share the recorder's own limits (an uninstrumented coin site is not a trade). wall_ms and mem_bytes describe the machine and differ between runs."
+  },
+  {
+   "system": "Combat chases",
+   "interaction": "each chase of NPCBrain.fight: from the tick a fighter's target is new to the line of fight() that clears it, with that line's reason (blocked, out_of_range, near_bandit_camp, target_gone, robbed, target_slain, bandit_low_hp), or cleared_elsewhere / retargeted; fighter, target (the player marked), start and end distance, game minutes and seconds, blows struck",
+   "where": "NPCBrain.fight (chase_tick, chase_strike, chase_end), WorldRecorder.hour (stale chases)",
+   "status": "Partially instrumented",
+   "stage": "SIM-GATE-01",
+   "test": "test_chase_events",
+   "note": "Which code set NPC.target (raise_alarm, deliver_report, a blow answered, a bandit's choice) is not named: the chase begins at the first fight() tick. A target cleared outside fight() (the player's death, a kill by another) is closed at the next hour, so its end time is that hour. Villager-against-villager fights are recorded as chases too (fighter 'villager')."
   },
   {
    "system": "Relationships",
