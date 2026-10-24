@@ -2130,6 +2130,13 @@ func test_households_split() -> void:
 	check(not site.is_empty() and w.owner_of(site) == ref and str(site.site.owner) == ref and str(site.site.kind) == "house", "with no empty house for sale, they buy ground and mark out a house")
 	check(c.contracts.any(func(k): return str(k.employer) == ref), "and set someone to carry for it")
 	check(coins.call() == c0, "coins only moved (the family's gift, the ground to the manor, the wage)")
+	# the band is out of this scene: it tests building, and since SIM-F4 (owner 2026-10-24: bandits buy food when they can
+	# afford it and heal at camp) a living band can rob the family of its building money first, a legitimate outcome
+	# (B19-EMERGE) that is not this test's subject. Their coins stay counted (World.total_coins counts every NPC).
+	for o: NPC in w.npcs:
+		if o.role == "bandit":
+			o.alive = false
+	NPC.roles_version += 1
 	var built := _run_until(w, 6 * 1440, func() -> bool: return site.site.get("done", false))
 	var hid := "house_" + str(site.id)
 	check(built and w.buildings.has(hid) and w.owner_of(w.buildings[hid]) == ref, "the house is built in the days that follow (%s)" % ("done" if built else "%.0f%%" % (w.site_progress(site) * 100.0)))
