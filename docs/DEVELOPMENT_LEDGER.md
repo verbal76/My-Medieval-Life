@@ -748,7 +748,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (226)
+## Owner decisions (227)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -822,6 +822,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | multiplayer | APPROVED | yes |
 | MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | multiplayer | APPROVED | yes |
 | MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | multiplayer | APPROVED | yes |
+| MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | multiplayer | OPEN |  |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
 | OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | OPEN |  |

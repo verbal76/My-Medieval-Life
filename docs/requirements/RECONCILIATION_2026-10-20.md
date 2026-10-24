@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 557 (291 of them still open) |
-| **Open entries now** (rules excluded) | | **468** |
+| Entries added since | | 558 (292 of them still open) |
+| **Open entries now** (rules excluded) | | **469** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (557)
+## Added since the baseline (558)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -363,6 +363,7 @@ None.
 | MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | decision | APPROVED | multiplayer |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | multiplayer |
+| MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | decision | OPEN | multiplayer |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |

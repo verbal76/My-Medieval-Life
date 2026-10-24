@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 37 |
+| OPEN | 38 |
 | APPROVED | 185 |
 | PROVISIONAL | 1 |
 | SUPERSEDED | 2 |
@@ -85,6 +85,12 @@ The decision register is the `decision` records of the register. A recommendatio
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | OPEN | no |  | docs/directives/2026-10-23_id_d2_succession_decisions.md |
+
+## Multiplayer track (isolated branch): open, reopened or provisional (1)
+
+| ID | Question | Disposition | Blocks implementation | Affects | Source |
+|---|---|---|---|---|---|
+| MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | OPEN | no |  | Batch C report, 2026-10-24 (BATCH_C.md on wip/multiplayer-b19 7bae490) |
 
 ## Waiting on an owner decision for its build: open, reopened or provisional (5)
 

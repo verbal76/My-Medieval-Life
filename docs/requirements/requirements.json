@@ -29102,17 +29102,45 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner directive (docs/directives/2026-10-24_multiplayer_batch_c_g2.md): complete Batch C (independent identity, reputation, families, full verb parity, host authority), migrate Build 20 saves idempotently, verify the G2 matrix on the exact commit with the lead's independent check; single-player results must not change"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; test_commit: 805a1c9 -> 7bae490; commits + 7bae490; next_action",
+     "why": "Batch C checkpoint on wip/multiplayer-b19 7bae490 (10b231a, 0709340, 3d988d0, 7bae490): per-player identity, relationships, Good/Bad reputation, judgment, crime and family links by person id; 130 guest verbs applied by the host under the same rules with validation; guest families, marriage and heirs with MP-D8 consent; save 22 with an idempotent migration from Build 20 saves (21); hue and cry hearer to hearer; lead verified on 7bae490: multiplayer_c 241, net_c 35, net_g1 44, net_batch_b 44, world 339, manhunt 60, multiplayer_a1 67, multiplayer_b 31, all 0 failures, G0 identical; agent: full inventory 110/111 on 3d988d0 (net_g1 bandwidth 20.1 KB/s, fixed in 7bae490), SIM-GATE PASS on 3d988d0. G2 not fully passed: guest-specific tests missing for employment, manor work, couriers, farms and pens, construction and fittings, guardianship, feasts (BATCH_C.md section 7)"
     }
    ],
-   "next_action": "Batch C (full gameplay parity: per-player relationships, notoriety and judgment, quests, families for guests); then D (menus, Android interruption, internet), E, F",
+   "next_action": "One test-only pass for the untested guest subsystems to complete G2; owner decision: should two-player marriages have children",
    "assigned_worker": "multiplayer worker (subagent), lead integrates",
    "branch": "wip/multiplayer-b19",
-   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS",
-   "test_commit": "805a1c9",
+   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical",
+   "test_commit": "7bae490",
    "commits": [
     "a0bd3bb",
     "1c0f854",
-    "805a1c9"
+    "805a1c9",
+    "7bae490"
+   ]
+  },
+  {
+   "id": "MP-Q-PLAYER-CHILDREN",
+   "kind": "decision",
+   "title": "Should a marriage between two players have children? (births currently need a villager parent)",
+   "description": "Should a marriage between two players have children? (births currently need a villager parent)",
+   "source": "Batch C report, 2026-10-24 (BATCH_C.md on wip/multiplayer-b19 7bae490)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "multiplayer",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/BATCH_C.md on wip/multiplayer-b19 7bae490"
+    }
    ]
   },
   {
