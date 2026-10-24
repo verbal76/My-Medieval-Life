@@ -2624,6 +2624,9 @@ func _find_target() -> void:
 	# (whether a choice is theft is core's: World.chest_is_theft, container_is_theft, field_is_theft, DVW-A12 R16)
 	var lawful := cands.filter(func(c): return not c.get("theft", false))
 	cands = lawful + cands.filter(func(c): return c.get("theft", false))
+	var yg: NPC = world.justice.yield_guard(world.acting_ref())     # A3: beaten, with a guard of the case in sight: yield first
+	if yg != null:
+		cands.push_front({"kind": "yield", "npc": yg, "label": "Yield to the guard %s" % yg.name})
 	target_options = cands
 	var pick := 0
 	for i in cands.size():
@@ -3179,6 +3182,8 @@ func _use() -> void:
 			ui.show_chest(target.id)
 		"rest":
 			rest()
+		"yield":
+			ui.message(str(world.player_yield().text))       # A3: taken in and fined (core's: World.player_yield)
 		"sit":
 			sit_down(target.spot)
 		"manor_job":

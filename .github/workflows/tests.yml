@@ -124,6 +124,7 @@ jobs:
           $godot --headless --path game --script res://tests/combat_test.gd
           $godot --headless --path game --script res://tests/pursuit_test.gd   # REPAIR S3: a guard chasing the player goes round walls
           $godot --headless --path game --script res://tests/justice_test.gd   # GP-CRIME-PURSUIT A1: one case per offender, by player reference
+          $godot --headless --path game --script res://tests/manhunt_test.gd   # GP-CRIME-PURSUIT A3: hue and cry, sharing, sightings, yield, proportionate force
           $godot --headless --path game --script res://tests/relations_test.gd
           $godot --headless --path game --script res://tests/dialogue_perspective_test.gd   # REPAIR S1-S2: who speaks to whom, from what they know
           $godot --headless --path game --script res://tests/save_transfer_test.gd

@@ -1062,10 +1062,12 @@ func _pick01_reports() -> void:
 	var guard: NPC = null
 	var victim: NPC = null
 	var wit: NPC = null
+	w.justice = Justice.new(w)                       # GP-CRIME-PURSUIT: the PAR-05 assaults above are not this test's case
 	for n: NPC in w.npcs:
 		n.plan.clear()
 		n.target = -1
 		n.report = {}
+		n.pursuit = {}
 		n.pos = Vector2(116.5, 86.5)                 # everyone far away
 		if n.alive and n.job == "guard" and guard == null:
 			guard = n

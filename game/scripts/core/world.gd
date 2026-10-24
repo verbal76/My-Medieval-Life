@@ -873,14 +873,17 @@ func _update_one_player(real_dt: float, gm: float) -> void:
 	p.attack_cd = maxf(0.0, p.attack_cd - real_dt)
 
 
-func damage_player(amount: float, source: String, actor: PlayerState = null) -> void:
+## `floor_hp` (A3): a blow meant to beat the player down, not kill (a guard who may not kill): health stops there.
+func damage_player(amount: float, source: String, actor: PlayerState = null, floor_hp := 0.0) -> void:
 	if actor != null and actor != player:
-		as_actor(actor, damage_player.bind(amount, source))
+		as_actor(actor, damage_player.bind(amount, source, null, floor_hp))
 		return
 	var p := player
 	if not p.alive:
 		return
 	p.hp -= maxf(0.0, amount * Skills.value(p, "combat", "damage_taken", 1.0) - p.defense() * 0.5) if source != "hunger" else amount
+	if floor_hp > 0.0 and p.hp < floor_hp:
+		p.hp = minf(floor_hp, p.hp_cap())
 	p.last_damage = source              # what hurt the player last: the death screen's cause (B8-020)
 	Decay.blow_player(self, source)     # DVW-B4: a blow wears the armour and clothes worn
 	if p.hp <= 0.0:
@@ -891,6 +894,18 @@ func damage_player(amount: float, source: String, actor: PlayerState = null) -> 
 		note("%s %s died (%s)." % [p.name, p.family, source])
 		if recorder != null:
 			recorder.player_died(p, source)     # REC-19
+
+
+## A3 (owner answer 2, 2026-10-24): a beaten player yields to a guard of their case in sight (Justice.yield_guard): taken
+## in, the stolen goods back, a heavy fine to the manor (Justice.take_in). Returns {ok, text}.
+func player_yield(actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_yield)
+	var ref := acting_ref()
+	var g: NPC = justice.yield_guard(ref)
+	if g == null:
+		return {"ok": false, "text": "There is no guard here to yield to." if justice.status(ref) in ["pursued", "wanted"] else "Nobody is after you."}
+	return {"ok": true, "text": justice.take_in(g, ref, "yielded")}
 
 
 ## Permanent death: the next of the family line takes over. The world is not reset.
@@ -2144,8 +2159,19 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 			relations.harmed(n, float(Relations.cfg().witness_harm))
 	# A1: an assault is a crime on the record and in the case; a blow at a guard is its own kind (escalation)
 	var kind := "guard_assault" if victim.job == "guard" else "assault"
-	var ci := crime_record({"day": day(), "kind": kind, "what": "%s %s" % [victim.name, victim.family], "victim": victim.id, "witnesses": seen}, victim)
-	raise_alarm(aware, Life.PLAYER_ID, acting_ref(), [ci])
+	var ref := acting_ref()
+	var pursued := justice.status(ref) == "pursued"
+	var ci := justice.recent(ref, kind, victim.id, float(Justice.cfg().same_attack_minutes))
+	var fresh := ci < 0                   # A3: blow after blow of one attack is one assault on the record
+	if fresh:
+		ci = crime_record({"day": day(), "kind": kind, "what": "%s %s" % [victim.name, victim.family], "victim": victim.id, "witnesses": seen}, victim)
+	raise_alarm(aware, Life.PLAYER_ID, ref, [ci])
+	for n: NPC in aware.seen:
+		if n.role != "bandit" and n.job != "guard":
+			justice.case_of(ref).aware[str(n.id)] = maxi(int(justice.case_of(ref).aware.get(str(n.id), -1)), ci)   # A3: they know who did it
+	if fresh and (kind == "guard_assault" or (pursued and seen > 0)):
+		# A3: a guard struck calls for help; violence with the guards already after them brings more (the hue and cry)
+		justice.hue_and_cry(ref, [ci], p.pos, float(Justice.cfg().hue_and_cry_tiles))
 	stat("player_assault")
 	note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
@@ -2695,6 +2721,15 @@ func _player_killing(n: NPC, ref: String) -> void:
 			justice.learn(o, ref, [ci], player.pos)
 		else:
 			report_crime(o, Life.PLAYER_ID, "saw", "attack", ref, [ci])
+			justice.case_of(ref).aware[str(o.id)] = ci
+	if not seen.is_empty():
+		# A3 (owner answer 1): a murder seen raises the hue and cry: everyone within earshot learns of it at once
+		var blows: Array = []
+		var c: Dictionary = justice.case_of(ref)
+		for i in c.crimes.size():
+			if str(c.crimes[i].kind) in ["assault", "guard_assault"] and int(c.crimes[i].victim) == n.id and str(c.crimes[i].settled) == "":
+				blows.append(i)
+		justice.hue_and_cry(ref, blows + [ci], n.pos, float(Justice.cfg().hue_and_cry_tiles))
 
 
 ## Who inherits (B8-029, owner 2026-10-19): the family first (Life.heir_of: eldest adult child, partner, other
@@ -3465,6 +3500,13 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC, cis 
 	for slot in ["weapon", "armor", "tool"]:
 		if player.get(slot) != "" and not player.inv.has(player.get(slot)):
 			player.set(slot, "")
+	if Justice.tier_rank(justice.tier_for(g, acting_ref())) >= Justice.tier_rank("assault"):
+		# A3: this guard knows of an assault or worse: no fine for the theft, the case is taken up (the goods went back above)
+		justice.engage(g, acting_ref(), "pursuing")
+		if recorder != null:
+			recorder.guard_end(rec_guard, g, owner, 0, 0, false)
+		note("The guard %s %s knew %s %s and drew a weapon." % [g.name, g.family, player.name, player.family])
+		return "The guard %s knows you: \"You'll answer for what you did!\" %s draws a weapon!" % [g.name + " " + g.family, g.name]
 	var fine := theft_fine_for(taken)
 	# friends back the player up (CRT-06). Judgment off (Build 18): a guard who is a friend lets them off with a warning and
 	# a friend among those near halves the fine. Judgment attached (X19-GUARD, owner 2026-10-23 "reduce, never waive"): a
@@ -3575,8 +3617,10 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := 
 	if crime != "attack":
 		n.report.crime = crime
 	if Life.is_player_id(offender):
-		n.report.at = [player.pos.x, player.pos.y]       # S3: where the player was seen (a report on a villager is unchanged)
 		n.report.ref = ref if ref != "" else acting_ref()
+		var who: PlayerState = player_of_ref(str(n.report.ref))
+		var seen_at: Vector2 = who.pos if who != null else player.pos
+		n.report.at = [seen_at.x, seen_at.y]             # S3: where the player was seen (a report on a villager is unchanged)
 		var all: Array = (had.get("cis", []) as Array).duplicate() if str(had.get("ref", "")) == str(n.report.ref) else []
 		for ci in cis:
 			if not all.has(int(ci)):
@@ -3610,7 +3654,7 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 	if not offender_alive(off):
 		return true
 	if ref != "":
-		justice.learn(g, ref, cis, Vector2(float(at[0]), float(at[1])) if at.size() == 2 else Vector2.INF, float(minutes))   # A1: the guard is told
+		justice.learn(g, ref, cis, Vector2(float(at[0]), float(at[1])) if at.size() == 2 else Vector2.INF, told_t)   # A1: the guard is told (where, and when it was seen)
 	stat("crime_reports_delivered")
 	if crime == "theft":
 		g.remember("told by %s %s of a theft" % [n.name, n.family])

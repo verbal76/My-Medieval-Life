@@ -230,6 +230,8 @@ func _decide(n: NPC) -> String:
 	if n.clan == "bandit":
 		_clan_child(n, h)
 		return "clan_child"
+	if not w.justice.cases.is_empty() and n.job != "guard" and n.report.is_empty():
+		w.justice.sighting(n)                  # A3: one who knows whom the guards are after, seeing them, will tell a guard
 	if not n.report.is_empty() and _report(n):
 		return "report"
 	if JudgmentLive.on(w, JudgmentFamily.FLAG) and JudgmentFamily.danger(w, n):      # FAMILY-01: shield the family, fetch help
@@ -2863,6 +2865,16 @@ func fight(n: NPC, dt: float) -> void:
 	if Life.is_player_id(n.target):
 		# the death screen names who struck: "Wat the guard", "Rob the bandit", or just the name
 		var who := n.job if n.job != "" else ("bandit" if n.role == "bandit" else "")
+		var on_case_strike := n.job == "guard" and not n.pursuit.is_empty() and tplayer != null
+		if on_case_strike and not w.justice.lethal(n, str(n.pursuit.ref)):
+			# A3: a guard who may not kill beats the offender down and takes them in (owner answer 2)
+			var floor_hp := float(Justice.cfg().subdue_hp)
+			w.damage_player(dmg, n.name + (" the " + who if who != "" else ""), tplayer, floor_hp)
+			if tplayer.alive and tplayer.hp <= floor_hp + 0.001:
+				if w.recorder != null:
+					w.recorder.chase_end(n, "taken")
+				w.justice.take_in(n, str(n.pursuit.ref), "taken")      # the village record says it (World.note)
+			return
 		w.damage_player(dmg, n.name + (" the " + who if who != "" else ""), tplayer)
 	else:
 		w.harm_npc(tnpc, dmg)
@@ -2896,6 +2908,7 @@ func _pursuit_sight(n: NPC) -> bool:
 		n.pursuit.at = [p.pos.x, p.pos.y]
 		n.pursuit.t = w.minutes
 		w.justice.saw_at(ref, p.pos, w.minutes, p.map_level)
+		w.justice.share_tick(n)                     # A3: guards in sight learn of it and join
 		return false
 	if w.recorder != null:
 		w.recorder.chase_end(n, "lost_sight")      # A2: out of sight: the search begins at the last-known place
@@ -2924,7 +2937,7 @@ func pursue(n: NPC) -> void:
 		w.justice.engage(n, ref, "pursuing")
 		return
 	w.justice.share_tick(n)                         # A3: what this guard knows passes to guards in sight
-	if str(p.state) == "searching" and w.minutes >= float(p.until):
+	if (str(p.state) == "searching" and w.minutes >= float(p.until)) or (str(p.state) == "responding" and w.justice.cold(n, ref)):
 		w.justice.release(n, "searched")            # a meaningful search found nothing: the case stays (wanted)
 		n.plan.clear()
 		return

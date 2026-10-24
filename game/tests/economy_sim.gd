@@ -13,7 +13,8 @@ extends SceneTree
 ##       [--record DIR]   (REC-19: the flight recorder writes its archive under DIR; changes nothing in the run)
 ##       [--scenario crime_spree --at DAY]   (SIM-GATE-01: the player commits scripted crimes from DAY: a theft, a pocket picked,
 ##       a killing in sight of the village and a flight along a path, an assault, another killing; the village's own
-##       witnesses, reports and guards respond; tools/sim_suite.py)
+##       witnesses, reports and guards respond; GP-CRIME-PURSUIT A3: a beaten player yields to a guard of the case
+##       an hour after the second killing (day 2 15:00), if still alive and the case still open; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
@@ -386,9 +387,11 @@ func _crime_step(day_n: int, hour: int) -> void:
 	var p := w.player
 	var step := ""
 	if not p.alive:
-		if [day_n, hour] in [[0, 10], [0, 11], [0, 14], [1, 14], [2, 14]]:
+		if [day_n, hour] in [[0, 10], [0, 11], [0, 14], [1, 14], [2, 14], [2, 15]]:
 			scenario_log["skipped_%d_%d" % [day_n, hour]] = "the player is dead"
 		return
+	if hour == 6:
+		w.rest_recover(p, 480.0, true)        # the scripted player sleeps the night, as any player does (PAR-03)
 	match [day_n, hour]:
 		[0, 10]:
 			step = "theft"
@@ -416,6 +419,27 @@ func _crime_step(day_n: int, hour: int) -> void:
 			if v != null:
 				p.pos = v.pos + Vector2(0.4, 0)
 				scenario_log.assault = w.player_hit_npc(v, 1.0).get("dealt", 0.0)
+		[2, 15]:
+			# A3: the player, beaten, gives themselves up to a guard who knows of the case (the scenario walks them there)
+			step = "yield"
+			scenario_log.status_before_yield = w.justice.status("player")
+			for g: NPC in w.npcs:
+				if g.alive and g.job == "guard" and w.justice.knows(g, "player") and g.depth == 0 and not w.asleep(g):
+					for k in 8:
+						var c := Vector2i((g.pos + Vector2.RIGHT.rotated(TAU * k / 8.0) * 2.0).floor())
+						if not w.map.is_solid(c) and w.place_of(Vector2(c) + Vector2(0.5, 0.5)) == w.place_of(g.pos):
+							p.pos = Vector2(c) + Vector2(0.5, 0.5)
+							break
+					break
+			flee_path = PackedVector2Array()
+			var hp0 := p.hp
+			p.hp = minf(p.hp, p.hp_cap() * float(Justice.cfg().yield_below) * 0.9)
+			var y := w.player_yield()
+			scenario_log.yielded = bool(y.ok)
+			scenario_log.yield_text = str(y.text)
+			if not y.ok:
+				p.hp = hp0
+			scenario_log.status_after_yield = w.justice.status("player")
 		[0, 14], [2, 14]:
 			step = "killing"
 			var v := _crime_victim(true)
@@ -479,6 +503,17 @@ func _flee_step() -> void:
 			left = 0.0
 	if not w.player.alive:
 		flee_path = PackedVector2Array()
+
+
+## GP-CRIME-PURSUIT (A1-A3): the player's case and the response so far, from Justice and the w.stats counters (read only).
+func _justice() -> Dictionary:
+	var j := {"status": w.justice.status("player"), "tier": w.justice.known_tier("player"), "open_cases": w.justice.cases.size(),
+		"closed_cases": w.justice.closed.size(), "crimes": (w.justice.case_of("player").get("crimes", []) as Array).size(),
+		"guards_on_case": w.npcs.filter(func(n: NPC) -> bool: return n.alive and not n.pursuit.is_empty()).size()}
+	for k in ["pursuits", "responses", "searches", "reacquired", "shared", "joined", "sightings", "hue_and_cry", "hue_and_cry_guards", "bell",
+			"bell_guards", "released_searched", "released_case_closed", "settled_yielded", "settled_taken", "settled_fined", "returned_items"]:
+		j[k] = int(w.stats.get("justice_" + k, 0))
+	return j
 
 
 func _hourly() -> void:
@@ -639,6 +674,7 @@ func _contracts_summary() -> Dictionary:
 
 func _sample(start: Dictionary) -> Dictionary:
 	var s := {"day": w.day(), "clock": w.clock_text(), "fingerprint": _fingerprint()}       # the determinism gate compares these (PERF-03)
+	s.justice = _justice()                # GP-CRIME-PURSUIT: the case record and the guards' response (read only)
 	# people
 	var by_role := {}
 	var by_job := {}

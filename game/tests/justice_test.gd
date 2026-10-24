@@ -148,7 +148,7 @@ func test_violence() -> void:
 	b.pos = w.player.pos + Vector2(0.5, 0)
 	w.player_hit_npc(b, 500.0)
 	check(w.justice.tier_for(g, "player") == "multiple_murder", "a second killing seen: multiple murder")
-	check(w.justice.score("player") == 2000 * 3 + 3000 * 2, "the severity score is the catalog's: three blows and two killings (%d)" % w.justice.score("player"))
+	check(w.justice.score("player") == 2000 * 2 + 3000 * 2, "the severity score is the catalog's: two attacks and two killings (blow after blow of one attack is one assault) (%d)" % w.justice.score("player"))
 	# a blow at a guard is its own kind
 	w.player.pos = g.pos + Vector2(0.5, 0)
 	w.player_hit_npc(g, 1.0)

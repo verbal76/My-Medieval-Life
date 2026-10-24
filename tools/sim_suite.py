@@ -180,7 +180,7 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
     findings, runs, history, proposals, notes = [], [], [], [], []
     by_run = {j["run"]: j for j in jobs}
     sims = {}
-    pursuit, saveload, perf_rows, profile = {}, [], [], []
+    pursuit, manhunt, saveload, perf_rows, profile = {}, {}, [], [], []
     for j in jobs:
         j["reproduce"] = reproduce_line(j)
         res = results.get(j["run"])
@@ -211,11 +211,17 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
                     findings.append(finding(j, "the loader fills in %d keys the save lacked (no value lost or changed; the second round trip is identical)" % diff["added"],
                                             "minor", False, "a loaded save writes back the same keys", ex[0]["path"] + " added: " + str(ex[0]["after"]) if ex else "",
                                             day=r.get("day")))
+            elif j["probe"] == "manhunt":
+                manhunt = r
+                if not r.get("meets_requirement"):
+                    findings.append(finding(j, "the manhunt does not behave as GP-CRIME-PURSUIT A1-A3 requires (hue and cry, search of the last-known place, wanted after the search and after save and load, yielding)",
+                                            "critical", True, "every measure true", json.dumps({k: r.get(k) for k in ("hue_and_cry", "searched", "searched_from_last_known", "last_known_is_hideout",
+                                            "status_after_search", "status_after_load", "guards_knowing_after_load", "yielded", "status_after_yield", "fine_paid", "coins_conserved", "error")})[:600]))
             else:
                 pursuit = r
                 if r and not r.get("meets_requirement"):
-                    findings.append(finding(j, "guard pursuit ends at a corner (the owner's case): known, open requirement GP-CRIME-PURSUIT (owner approved, not started)",
-                                            "major", False, "the corner does not end the chase; the guard reaches the player by path",
+                    findings.append(finding(j, "guard pursuit ends at a corner (the owner's case): a regression of GP-CRIME-PURSUIT (repair S3)",
+                                            "critical", True, "the corner does not end the chase; the guard reaches the player by path",
                                             "chase held %s min, closest %s tiles, ended: %s; the guard then: %s" % (r.get("chase_held_minutes"), r.get("closest_tiles"),
                                                                                                                 r.get("end_reason"), r.get("guard_doing_after")),
                                             entity="guard"))
@@ -237,6 +243,7 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
             continue
         sims[j["run"]] = str(sp)
         last = data["samples"][-1]
+        row["justice"] = last.get("justice", {})
         row.update({"alive_start": data["samples"][0]["people"]["alive"], "alive_end": last["people"]["alive"], "currency_end": last["currency"]["total"],
                     "treasury_end": last["money"]["treasury"], "households_end": last["people"]["households"], "villager_deaths": len(data.get("deaths", [])),
                     "births": last["people"]["births"], "reached": data.get("reached")})
@@ -359,13 +366,13 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
             covered |= set(row.get("cover", ""))
     if perf_rows:
         covered.add("H")
-    if pursuit:
+    if pursuit and manhunt:
         covered.add("F")
     missing = [c for c in COVERAGE if c not in covered]
     if missing:
         findings.append(finding({"run": "suite", "seed": None, "scenario": "coverage"}, "required scenario coverage missing: %s" % ", ".join("%s %s" % (c, COVERAGE[c]) for c in missing),
                                 "critical", not partial, "A to H covered", ", ".join(missing)))
-    return {"findings": findings, "runs": runs, "history": history, "notes": notes, "pursuit": pursuit, "saveload": saveload,
+    return {"findings": findings, "runs": runs, "history": history, "notes": notes, "pursuit": pursuit, "manhunt": manhunt, "saveload": saveload,
             "population_scaling": [{"size": p.get("n"), "line": "%.1f ms a simulated day; worst frame %.2f ms; p99 %.2f ms; memory %.1f MB; save %d KB" % (
                 p.get("total_ms", 0), p.get("max_frame_ms", 0), p.get("p99_frame_ms", 0), p.get("mem_mb", 0), p.get("save_kb", 0))} for p in perf_rows],
             "perf_rows": perf_rows, "profile": profile, "build_points": build_points, "sims": sims, "covered": sorted(covered)}
@@ -461,6 +468,7 @@ def main():
     jobs += [{"run": "probe_saveload_s1", "kind": "probe", "probe": "saveload", "seed": 1, "scenario": "save and load integrity", "args": ["--days", "2"]},
              {"run": "probe_saveload_s2", "kind": "probe", "probe": "saveload", "seed": 2, "scenario": "save and load integrity", "args": ["--days", "2"]},
              {"run": "probe_pursuit", "kind": "probe", "probe": "pursuit", "seed": 1, "scenario": "F guard pursuit: the owner's corner case", "record": True},
+             {"run": "probe_manhunt", "kind": "probe", "probe": "manhunt", "seed": 1, "scenario": "F the manhunt: hue and cry, search, wanted across save and load, yielding"},
              {"run": "perf_scaling", "kind": "perf", "seed": 0, "scenario": "H population scaling 100 and 500 (judgment harness)",
               "args": ["--sizes", "100,500", "--days", "10", "--rates", "live", "--variants", "spread"]}]
     if a.only:                           # a targeted subset while developing: suite-level checks (determinism pair, coverage)

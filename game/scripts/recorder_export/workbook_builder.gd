@@ -314,7 +314,7 @@ func crime(rec_runs: Array, chart_runs: Array, gate: Dictionary) -> void:
 	_chart("bar", "Crime and guard response", 1, 2, [2, keys.size() + 1], "how chases ended", "chases")
 	_blank(2)
 	x.row(["run", "crime events", "of which by the player", "witnesses (sum)", "guard alarms answered", "robberies by bandits", "player deaths", "guard chases of the player",
-		"ended by a wall (blocked)", "ended out of range", "player escaped (no blow landed)"])
+		"ended by a wall (blocked)", "ended out of range", "player escaped (no blow landed)", "lost sight: searched (A2)", "taken in (A3)", "hue and cry or bell (A3)"])
 	for r in rec_runs:
 		var a: Dictionary = r.analysis
 		var by_player := 0
@@ -332,7 +332,9 @@ func crime(rec_runs: Array, chart_runs: Array, gate: Dictionary) -> void:
 		var pd: int = a.deaths.filter(func(d): return str(d[3]).contains("player character died")).size()
 		var gp: Array = a.chases.filter(func(c): return c.who == "guard" and c.target_is_player)
 		x.row([_label(r), a.crime.size(), by_player, wit, answered, robberies, pd, gp.size(), gp.filter(func(c): return c.reason == "blocked").size(),
-			gp.filter(func(c): return c.reason == "out_of_range").size(), gp.filter(func(c): return c.reason in ["blocked", "out_of_range"] and int(c.strikes) == 0).size()])
+			gp.filter(func(c): return c.reason == "out_of_range").size(), gp.filter(func(c): return c.reason in ["blocked", "out_of_range"] and int(c.strikes) == 0).size(),
+			gp.filter(func(c): return c.reason == "lost_sight").size(), gp.filter(func(c): return c.reason == "taken").size(),
+			a.crime.filter(func(c): return str(c.kind) in ["hue_and_cry", "bell"]).size()])
 	_blank(2)
 	x.row(["run", "player crime", "day", "minute", "witnesses", "first guard chase of the player after it (game minutes)", "its end", "its seconds", "outcome"])
 	for r in rec_runs:
@@ -350,7 +352,18 @@ func crime(rec_runs: Array, chart_runs: Array, gate: Dictionary) -> void:
 			x.row([_label(r), c.kind, c.day, c.minute, c.witnesses, (_fmt(float(resp.start_day) * 1440.0 + float(resp.start_minute) - t) if resp != null else "no guard chased"),
 				resp.reason if resp != null else "", resp.seconds if resp != null else null, c.detail])
 	_blank(2)
-	x.row(["not in the game yet", "Wanted status, reinforcements (guards calling guards), arrests and a pursuit that survives loss of sight do not exist in this build: GP-CRIME-PURSUIT (owner approved, not started). Guards learn of a crime by seeing it or by a report delivered face to face; a chase ends at the first wall step, beyond 25 tiles or near the bandit camp. The pursuit probe below reproduces the owner's corner case."])
+	x.row(["run", "the player's case at the end (GP-CRIME-PURSUIT)", "tier", "crimes", "pursuits", "searches", "reacquired", "shared", "joined", "sightings", "hue and cry", "bell", "yielded", "taken in", "fined", "goods returned", "guards on the case"])
+	for r in gate.get("runs", []):
+		var j: Dictionary = r.get("justice", {})
+		if j.is_empty() or int(j.get("crimes", 0)) + int(j.get("closed_cases", 0)) == 0:
+			continue
+		x.row([_label(r), str(j.get("status", "")), str(j.get("tier", "")), j.get("crimes"), j.get("pursuits"), j.get("searches"), j.get("reacquired"), j.get("shared"), j.get("joined"),
+			j.get("sightings"), j.get("hue_and_cry"), j.get("bell"), j.get("settled_yielded"), j.get("settled_taken"), j.get("settled_fined"), j.get("returned_items"), j.get("guards_on_case")])
+	_blank(2)
+	x.row(["how it works", "GP-CRIME-PURSUIT A1-A3: one case per offender (Justice); guards know a crime by seeing it, a report, the hue and cry or another guard's word; out of sight a guard searches the last-known place and around it, then the case is wanted; a beaten offender yields or is taken in (fined, goods back); murder after resistance and multiple murder may be met with lethal force."])
+	var hunt: Dictionary = gate.get("manhunt", {})
+	if not hunt.is_empty():
+		x.row(["manhunt probe", "meets GP-CRIME-PURSUIT A1-A3: %s; hue and cry %s (guards reached %s); searched from the last-known place %s; wanted after the search %s, after save and load %s (%s guards know); yielded %s, fined %s to the treasury" % [str(hunt.get("meets_requirement")), str(hunt.get("hue_and_cry")), str(hunt.get("hue_and_cry_guards")), str(hunt.get("searched_from_last_known")), str(hunt.get("status_after_search")), str(hunt.get("status_after_load")), str(hunt.get("guards_knowing_after_load")), str(hunt.get("yielded")), str(hunt.get("fine_paid"))]])
 	var probe: Dictionary = gate.get("pursuit", {})
 	if not probe.is_empty():
 		x.row(["corner pursuit probe", "meets GP-CRIME-PURSUIT: %s; chase held %s minutes; closest %s tiles; ended: %s; guard then: %s" % [str(probe.get("meets_requirement")), str(probe.get("chase_held_minutes")), str(probe.get("closest_tiles")), str(probe.get("end_reason")), str(probe.get("guard_doing_after"))]])

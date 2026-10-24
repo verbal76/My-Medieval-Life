@@ -30,6 +30,7 @@ extends RefCounted
 var w
 var cases := {}            # offender ref -> case
 var closed: Array = []     # the last closed cases (oldest first): case + {resolution, closed_t}
+var _ringing := false      # A3: the bell's own learning does not ring it again
 
 
 func _init(world) -> void:
@@ -85,17 +86,61 @@ func _open(ref: String) -> Dictionary:
 ## A blow at a guard or a killing while a guard is on the case is resistance (lethal force may follow, response.lethal).
 func record(ref: String, kind: String, victim, at: Vector2, seen: int, rec := -1) -> int:
 	var c := _open(ref)
+	var pursued := not (c.pursuers as Dictionary).is_empty()
 	var cr := {"kind": kind, "day": w.day(), "t": w.minutes, "victim": victim.id if victim != null else -1, "at": [at.x, at.y],
-		"seen": seen, "rec": rec, "settled": ""}
-	c.crimes.append(cr)
+		"seen": seen, "rec": rec, "settled": "", "pursued": pursued}
 	if kind == "guard_assault":
 		c.guard_struck = int(c.guard_struck) + 1
-	if (kind == "guard_assault" or kind == "killing") and not (c.pursuers as Dictionary).is_empty():
-		c.resisted = true
+		if pursued:
+			c.resisted = true
+	if kind == "killing" and pursued:
+		# violence again with a guard already on the case; the blow that began this same attack (on this victim) counts
+		# from when it fell, so a killing the guards answered as it happened is not resistance by itself
+		var began_pursued := true
+		for e in c.crimes:
+			if str(e.kind) in ["assault", "guard_assault"] and int(e.victim) == int(cr.victim) and str(e.settled) == "":
+				began_pursued = bool(e.get("pursued", true))
+				break
+		if began_pursued:
+			c.resisted = true
+	c.crimes.append(cr)
 	if kind == "guard_assault" and _known_rank(c) >= tier_rank("murder"):
 		c.resisted = true
 	w.stat("justice_crimes_" + kind)
 	return c.crimes.size() - 1
+
+
+## The outstanding crime of `kind` against `victim_id` begun within `minutes` (blow after blow of one attack is one
+## assault), or -1.
+func recent(ref: String, kind: String, victim_id: int, minutes: float) -> int:
+	var c: Dictionary = cases.get(ref, {})
+	for i in range(c.get("crimes", []).size() - 1, -1, -1):
+		var cr: Dictionary = c.crimes[i]
+		if w.minutes - float(cr.t) > minutes:
+			break
+		if str(cr.kind) == kind and int(cr.victim) == victim_id and str(cr.settled) == "":
+			return i
+	return -1
+
+
+## The minute the authorities last saw `ref` (-1 never).
+func last_t(ref: String) -> float:
+	var c: Dictionary = cases.get(ref, {})
+	return float(c.last[2]) if not c.is_empty() and not (c.last as Array).is_empty() else -1.0
+
+
+## Whether the trail guard `g` would follow is cold: the authorities last saw `ref` more than the tier's search_minutes
+## (plus late_search_minutes for the walk there) ago.
+func cold(g: NPC, ref: String) -> bool:
+	var seen := maxf(last_t(ref), float(g.pursuit.get("t", -1.0)))
+	return w.minutes - seen > float(response(tier_for(g, ref)).search_minutes) + float(cfg().late_search_minutes)
+
+
+## When a search of `ref`'s case ends: search_minutes after the last sighting, with a few minutes to look for a guard who
+## only now reaches the place. However many guards join, the hunt dies down that long after the offender was last seen.
+func search_until(g: NPC, ref: String) -> float:
+	var mins := float(response(tier_for(g, ref)).search_minutes)
+	return maxf(maxf(last_t(ref), float(g.pursuit.get("t", -1.0))) + mins, w.minutes + minf(mins, float(cfg().late_search_minutes)))
 
 
 ## Guard `g` now knows of crimes `cis` of `ref`'s case (seeing them, being told, A3: hearing the hue and cry, another
@@ -114,6 +159,10 @@ func learn(g: NPC, ref: String, cis: Array, at := Vector2.INF, t := -1.0) -> voi
 	c.known[key] = k
 	if at != Vector2.INF:
 		saw_at(ref, at, t if t >= 0.0 else w.minutes, 0)
+	if not _ringing:
+		_ringing = true
+		escalate(ref, cis)                      # A3: a second killing known rings the bell
+		_ringing = false
 
 
 ## Where the offender was last seen by the authorities (a guard's eyes, or a place a report or the hue and cry named):
@@ -139,16 +188,21 @@ func knows(g: NPC, ref: String) -> bool:
 	return not known_by(g, ref).is_empty()
 
 
-## The tier of a set of crimes (indices into the case's crimes; settled ones ignored): multiple_murder for two or more
-## killings, murder for one, assault for any blow, repeated_theft for repeat_theft thefts within repeat_days (settled
-## ones count towards the repeat, one must be outstanding), theft, else minor.
+## The tier of a set of crimes (indices into the case's crimes): multiple_murder for two or more killings (one at least
+## outstanding; one already answered, by a fine or by being taken in, still counts: who kills again is a multiple
+## murderer), murder for one outstanding, assault for any outstanding blow, repeated_theft for repeat_theft thefts within
+## repeat_days (settled ones count towards the repeat, one must be outstanding), theft, else minor. Lapsed crimes count
+## for nothing.
 func tier_of(c: Dictionary, cis: Array) -> String:
 	var kills := 0
+	var answered := 0
 	var blows := 0
 	var thefts := 0
 	for ci in cis:
 		var cr: Dictionary = c.crimes[int(ci)]
 		if str(cr.settled) != "":
+			if str(cr.kind) == "killing" and str(cr.settled) != "lapsed":
+				answered += 1
 			continue
 		match str(cr.kind):
 			"killing":
@@ -158,7 +212,7 @@ func tier_of(c: Dictionary, cis: Array) -> String:
 			_:
 				if is_theft(str(cr.kind)):
 					thefts += 1
-	if kills >= 2:
+	if kills >= 2 or (kills == 1 and answered >= 1):
 		return "multiple_murder"
 	if kills == 1:
 		return "murder"
@@ -173,10 +227,10 @@ func tier_of(c: Dictionary, cis: Array) -> String:
 	return "minor"
 
 
-## The tier guard `g` acts on: of the outstanding crimes they know.
+## The tier guard `g` acts on: of the crimes they know (tier_of weighs which are outstanding).
 func tier_for(g: NPC, ref: String) -> String:
 	var c: Dictionary = cases.get(ref, {})
-	return "minor" if c.is_empty() else tier_of(c, known_by(g, ref))
+	return "minor" if c.is_empty() or g == null else tier_of(c, c.known.get(str(g.id), []))
 
 
 ## The case's tier over every outstanding crime any guard knows of (what the authorities as a whole know).
@@ -288,6 +342,8 @@ func engage(g: NPC, ref: String, state: String, at := Vector2.INF, t := -1.0) ->
 		return
 	if not g.pursuit.is_empty() and str(g.pursuit.ref) != ref:
 		return
+	if not knows(g, ref):
+		return                                  # nothing outstanding that this guard knows of (settled, or never told)
 	c.pursuers[str(g.id)] = true
 	if state == "pursuing":
 		var fresh: bool = g.pursuit.is_empty() or str(g.pursuit.state) != "pursuing"
@@ -326,7 +382,7 @@ func search(g: NPC) -> void:
 	p.state = "searching"
 	p.cells = search_cells(at, g, tier_for(g, ref))
 	p.i = 0
-	p.until = w.minutes + mins
+	p.until = search_until(g, ref)
 	var o: PlayerState = w.player_of_ref(ref)
 	g.doing = "searching for %s" % (o.name if o != null else "someone")
 	w.stat("justice_searches")
@@ -340,7 +396,7 @@ func begin_search(g: NPC) -> void:
 		release(g, "searched")
 		return
 	p.state = "searching"
-	p.until = w.minutes + mins
+	p.until = search_until(g, str(p.ref))
 	w.stat("justice_searches")
 
 
@@ -439,10 +495,240 @@ func _open_toward(at: Vector2, to: Vector2, level: int) -> Vector2i:
 	return Vector2i(-1, -1)
 
 
-## A3: what a guard on a case knows passes to the guards in its sight (stub until A3).
-func share_tick(_g: NPC) -> void:
-	pass
+# ---------------------------------------------------------------- coordination and force (A3)
+## What guard `g` knows passes to the guards in its sight (World.near: the one channel of sight), and theirs to it, at
+## most every share_minutes: the crimes of each case either knows, and the newer last-known place. A free guard who
+## now knows of an assault or worse joins: it goes to where the offender was last seen (responding), or takes them on
+## if it sees them. Guards are never made: only those there are come. Event-light: one look round a minute per guard
+## on a case, nothing for the rest.
+func share_tick(g: NPC) -> void:
+	if g.pursuit.is_empty() or w.minutes - float(g.pursuit.get("share", -1e9)) < float(cfg().share_minutes):
+		return
+	g.pursuit.share = w.minutes
+	var ref := str(g.pursuit.ref)
+	w.stat("justice_share_looks")
+	for o: NPC in w.near(g.pos, float(GameData.b("witness_radius"))):
+		if o == g or o.job != "guard":
+			continue
+		share(g, o, ref)
 
+
+## Guard `a` and guard `b` (in each other's sight) share what they know of `ref`'s case.
+func share(a: NPC, b: NPC, ref: String) -> void:
+	var c: Dictionary = cases.get(ref, {})
+	if c.is_empty():
+		return
+	var ka := known_by(a, ref)
+	var kb := known_by(b, ref)
+	learn(b, ref, ka)
+	learn(a, ref, kb)
+	if ka != known_by(b, ref) or kb != known_by(a, ref) or not ka.is_empty():
+		w.stat("justice_shared")
+	_join(b, a, ref)
+	_join(a, b, ref)
+
+
+## A guard who knows of an assault or worse and is free joins the hunt from what `from` knows (its last-known place).
+func _join(g: NPC, from: NPC, ref: String) -> void:
+	if g.target != -1 or not g.pursuit.is_empty() or tier_rank(tier_for(g, ref)) < tier_rank("assault"):
+		return
+	if w.minutes - last_t(ref) > float(response(tier_for(g, ref)).search_minutes):
+		return                                  # the trail is cold: nobody is set searching by stale word
+	var p: PlayerState = w.player_of_ref(ref)
+	if w.sees(g, p):
+		engage(g, ref, "pursuing")
+	elif not from.pursuit.is_empty():
+		engage(g, ref, "responding", Vector2(float(from.pursuit.at[0]), float(from.pursuit.at[1])), float(from.pursuit.t))
+	if not g.pursuit.is_empty():
+		w.stat("justice_joined")
+
+
+## The hue and cry (owner answer 1, 2026-10-24: "a murder makes guards or villagers raise a shout or ring a bell, and
+## everyone within earshot learns of it at once"; the one exception to PAR-05's no-unsupported-sensing rule). Raised from
+## `at` by someone who saw crimes `cis` of `ref` (a witness of a killing, a guard struck, a pursuer who saw violence
+## again). Everyone awake within `radius` tiles on that level hears it, indoors or out: every guard among them learns of
+## the crimes and where the offender was, and comes (a guard in sight of the offender takes them on); every villager
+## learns who is cried after (the case's aware list, and their memory). Returns how many guards it reached.
+func hue_and_cry(ref: String, cis: Array, at: Vector2, radius: float, kind := "hue_and_cry") -> int:
+	var c: Dictionary = cases.get(ref, {})
+	var p: PlayerState = w.player_of_ref(ref)
+	if c.is_empty() or p == null:
+		return 0
+	var level: int = w.level_at(at)
+	var guards := 0
+	var heard := 0
+	var crime := _crime_words(c, cis)
+	for n: NPC in w.npcs:
+		if not n.alive or n.role == "bandit" or n.depth != level or w.asleep(n) or n.pos.distance_to(at) > radius:
+			continue
+		heard += 1
+		if n.job == "guard":
+			learn(n, ref, cis, at, w.minutes)
+			if n.target == -1 or Life.is_player_id(n.target):
+				if w.sees(n, p):
+					engage(n, ref, "pursuing")
+				else:
+					engage(n, ref, "responding", at, w.minutes)
+			guards += 1
+		else:
+			for ci in cis:
+				c.aware[str(n.id)] = maxi(int(c.aware.get(str(n.id), -1)), int(ci))
+			var line := ("heard the alarm bell: %s %s" if kind == "bell" else "heard the hue and cry: %s %s") % [c.name, crime]
+			if not n.memory.has(line):
+				n.remember(line)
+	c[kind + "_t"] = w.minutes
+	w.stat("justice_" + kind)
+	w.stat("justice_" + kind + "_guards", guards)
+	w.stat("justice_" + kind + "_heard", heard)
+	if w.recorder != null:
+		w.recorder.occurrence("crime", kind, "crime", kind, w.recorder.ref_of(p), [[w.recorder.ref_of(p), "offender"]], [], "ok", "",
+				"radius=%d heard=%d guards=%d crimes=%s" % [int(radius), heard, guards, str(cis)], {"x": int(at.x), "y": int(at.y)})
+	return guards
+
+
+## "killed Rose Dale", "attacked Hugh Reed": the gravest of the crimes, as the cry names it.
+func _crime_words(c: Dictionary, cis: Array) -> String:
+	var best := {}
+	for ci in cis:
+		var cr: Dictionary = c.crimes[int(ci)]
+		if best.is_empty() or severity(str(cr.kind)) > severity(str(best.kind)):
+			best = cr
+	if best.is_empty():
+		return "for a crime"
+	var v: NPC = w.npc(int(best.victim))
+	var who := ("%s %s" % [v.name, v.family]) if v != null else "someone"
+	return ("killed %s" if str(best.kind) == "killing" else "attacked %s") % who
+
+
+## After crimes of `ref` became known: a second killing known to the authorities rings the bell (the multiple-murder
+## tier's alarm), once per killing, from where it was done; heard within bell_tiles.
+func escalate(ref: String, cis: Array) -> void:
+	var c: Dictionary = cases.get(ref, {})
+	if c.is_empty():
+		return
+	var all := _known_all(c)
+	var kills := all.filter(func(i): return str(c.crimes[i].kind) == "killing" and str(c.crimes[i].settled) != "lapsed").size()
+	var outstanding := all.filter(func(i): return str(c.crimes[i].kind) == "killing" and str(c.crimes[i].settled) == "").size()
+	if kills >= 2 and outstanding >= 1 and kills > int(c.get("bell_kills", 0)):
+		c.bell_kills = kills
+		var cr: Dictionary = c.crimes[int(cis.max())] if not cis.is_empty() else c.crimes[all.max()]
+		hue_and_cry(ref, all, Vector2(float(cr.at[0]), float(cr.at[1])), float(cfg().bell_tiles), "bell")
+
+
+## Whether guard `g` may kill `ref` (response.lethal of the tier g knows): never for theft and assault (they beat the
+## offender down and take them in), for murder once the offender resisted (struck a guard, killed again with a guard on
+## the case), always for multiple murder (owner answer 2: "a known multiple murderer who keeps fighting can still be killed").
+func lethal(g: NPC, ref: String) -> bool:
+	var c: Dictionary = cases.get(ref, {})
+	if c.is_empty():
+		return true
+	var l := str(response(tier_for(g, ref)).lethal)
+	return l == "always" or (l == "resist" and bool(c.resisted))
+
+
+## A guard of `ref`'s case the player can yield to: one on the case or knowing of it, in sight; null when none, or when
+## the player is not beaten (health above yield_below of its cap; owner answer 2: "a beaten player can yield").
+func yield_guard(ref: String) -> NPC:
+	var c: Dictionary = cases.get(ref, {})
+	var p: PlayerState = w.player_of_ref(ref)
+	if c.is_empty() or p == null or not p.alive or p.hp > float(cfg().yield_below) * p.hp_cap():
+		return null
+	var best: NPC = null
+	for key in c.known:
+		var g: NPC = w.npc(int(key))
+		if g != null and knows(g, ref) and w.sees(g, p) and (best == null or g.pos.distance_to(p.pos) < best.pos.distance_to(p.pos)):
+			best = g
+	return best
+
+
+## The offender yields to guard `g` ("yielded") or is beaten down and taken in by one who may not kill ("taken") (owner
+## answer 2: "guards take them in and fine them heavily, and take stolen goods back"). The stolen goods they carry go
+## back to their owners; they pay the tier's yield_fine plus the theft fine for the goods, to the manor's treasury
+## (what they cannot pay is let go: they have nothing more); every outstanding crime is settled, every guard leaves the
+## case. The morality ledgers are untouched: what people think of the deeds stays. Returns what the player is told.
+func take_in(g: NPC, ref: String, how: String) -> String:
+	var p: PlayerState = w.player_of_ref(ref)
+	var c: Dictionary = cases.get(ref, {})
+	if p == null or c.is_empty():
+		return ""
+	return w.as_actor(p, _take_in.bind(g, ref, how, c, p))
+
+
+func _take_in(g: NPC, ref: String, how: String, c: Dictionary, p: PlayerState) -> String:
+	var tier := known_tier(ref)
+	var rec: Array = w.recorder.guard_begin(g) if w.recorder != null else []
+	var back := {}
+	var words := []
+	p.trim_stolen()
+	var ids: Array = p.stolen.keys()
+	ids.sort()
+	for id in ids:
+		var owners: Array = (p.stolen[id] as Dictionary).keys()
+		owners.sort_custom(func(a, b): return int(a) < int(b))
+		for o in owners:
+			var owner: NPC = w.npc(int(o))
+			var k := mini(int(p.stolen[id][o]), p.inv.count(str(id)))
+			if owner == null or not owner.alive or k <= 0 or not owner.inv.can_add(str(id)):
+				continue
+			p.inv.remove(str(id), k)
+			owner.inv.add(str(id), k)
+			p.unmark(str(id), int(o), k)
+			back[id] = int(back.get(id, 0)) + k
+			words.append("%d %s to %s" % [k, GameData.item_name(str(id)).to_lower(), owner.name])
+			w.stat("justice_returned_items", k)
+	for slot in ["weapon", "armor", "tool"]:
+		if p.get(slot) != "" and not p.inv.has(p.get(slot)):
+			p.set(slot, "")
+	var fine := int(response(tier).yield_fine) + (World.theft_fine_for(back) if not back.is_empty() else 0)
+	var paid := mini(fine, p.coins)
+	p.coins -= paid
+	w.treasury += paid
+	w.stat("gov_fines", paid)
+	settle(ref, [], how)
+	for key in (c.pursuers as Dictionary).keys():
+		var o: NPC = w.npc(int(key))
+		if o != null:
+			release(o, how)
+	if Life.is_player_id(g.target):
+		g.target = -1
+	g.plan.clear()
+	for o: NPC in w.near(p.pos, float(GameData.b("witness_radius"))):
+		if o.role != "bandit" and Life.is_player_id(o.target) and w.brain.foe_player(o) == p:
+			o.target = -1                       # taken in: the villagers fighting them leave it to the guards
+			o.plan.clear()
+	g.remember("took %s in" % c.name)
+	if w.recorder != null:
+		w.recorder.guard_end(rec, g, null, fine, paid, false)
+	w.note("The guard %s %s took %s in and fined them %d coins." % [g.name, g.family, c.name, paid])
+	var text := ("You yield to the guard %s." % g.name) if how == "yielded" else ("The guard %s beats you down and takes you in." % g.name)
+	if not words.is_empty():
+		text += " The stolen goods go back: %s." % ", ".join(words)
+	text += " You are fined %d coins%s." % [fine, "" if paid == fine else (" and can pay only %d" % paid)]
+	return text
+
+
+## A villager who knows whom the guards are after (the case's aware list: they saw the violence, or heard the hue and cry)
+## and sees the offender will tell a guard where (a report, PAR-05's walk; at most once each sighting_minutes). Called
+## when the villager decides what to do next, never by a scan of the village.
+func sighting(n: NPC) -> bool:
+	var refs := cases.keys()
+	refs.sort()
+	for ref in refs:
+		var c: Dictionary = cases[ref]
+		if not c.aware.has(str(n.id)) or status(ref) == "clear":
+			continue
+		var seen: Dictionary = c.get("sighted", {})
+		if w.minutes - float(seen.get(str(n.id), -1e9)) < float(cfg().sighting_minutes):
+			continue
+		var p: PlayerState = w.player_of_ref(ref)
+		if not w.sees(n, p):
+			continue
+		seen[str(n.id)] = w.minutes
+		c.sighted = seen
+		w.report_crime(n, Life.PLAYER_ID, "sighting", "attack", ref, [int(c.aware[str(n.id)])])
+		w.stat("justice_sightings")
+		return true
+	return false
 
 # ---------------------------------------------------------------- save
 func to_dict() -> Dictionary:
@@ -477,4 +763,5 @@ static func _norm(c: Dictionary) -> Dictionary:
 		for k in ["day", "victim", "seen", "rec"]:
 			cr[k] = int(cr.get(k, -1))
 		cr.settled = str(cr.get("settled", ""))
+		cr.pursued = bool(cr.get("pursued", false))
 	return o
