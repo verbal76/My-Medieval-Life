@@ -262,7 +262,7 @@ func manhunt(seed: int) -> Dictionary:
 		"hue_and_cry_guards": int(w.stats.get("justice_hue_and_cry_guards", 0)), "guards": guards.size(), "chasing_after_crime": g.target == Life.PLAYER_ID}
 	# flight: the player is set 35 tiles off (out of anyone's sight); the village runs a game hour
 	var seen_at := p.pos
-	p.pos = _open_near(w, at, 35.0)
+	p.pos = _hideout(w, at, 35.0, guards)
 	var hideout := p.pos
 	var closest := 1e9
 	var searched := false
@@ -323,6 +323,25 @@ func manhunt(seed: int) -> Dictionary:
 	w.dispose()
 	w2.dispose()
 	return r
+
+
+## The probe's hiding place (Build 21: the walled smithy moved the chapel lane and a patrol then passed the old one, so a
+## guard reacquired the player and the case stayed "pursued"; the requirement checked is unchanged): of the open outdoor
+## cells `d` tiles from `at` in 16 directions, the one farthest from every guard now (ties: the first direction).
+func _hideout(w: World, at: Vector2, d: float, guards: Array) -> Vector2:
+	var best := at
+	var best_gap := -1.0
+	for k in 16:
+		var c := Vector2i((at + Vector2.RIGHT.rotated(TAU * k / 16.0) * d).floor())
+		if w.map.is_solid(c) or w.place_of(Vector2(c) + Vector2(0.5, 0.5)) != "" or w.map.find_path(Vector2i(at.floor()), c).size() == 0:
+			continue
+		var gap := 1e9
+		for g: NPC in guards:
+			gap = minf(gap, g.pos.distance_to(Vector2(c) + Vector2(0.5, 0.5)))
+		if gap > best_gap:
+			best_gap = gap
+			best = Vector2(c) + Vector2(0.5, 0.5)
+	return best
 
 
 ## The open outdoor cell `d` tiles from `at` in the first of 16 directions that has one (and a path from `at`).
