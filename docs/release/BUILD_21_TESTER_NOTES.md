@@ -24,6 +24,8 @@ published from this branch for Build 21 at the time of writing; the lead fills i
 - Animals now move, fight, die and are born on a guest's screen as on the host's (they were frozen before).
 - The **pause menu is a small window** in two columns over the game (no more full-screen brown panel); the new windows are small too.
 - The Village Encyclopedia has a **Playing with friends** page.
+- **The bandit camp** has its campfire: your chosen animated campfire by SMStudios (credited, with a link), with a crate and a barrel
+  round it instead of the market-stall pieces; you can walk behind and in front of the fire.
 
 **Single player** (unchanged from the earlier Build 21 notes):
 - **Crime and the guards**: the guards keep a case on you; one who loses sight of you searches where you were last seen, and you stay
@@ -62,7 +64,6 @@ Report what you see; nothing about real devices is verified until you have tried
   or four may work but are untested.
 - A guest's pause menu has no Save: the host's game keeps the world and the guest's character.
 - Players who marry each other have no children (an open owner question).
-- From the earlier lists, still open: the smithy wall indoors (needs your decision), the bandit camp's pictures and the campfire art,
-  the gift number picker, and the other Build 20 items still on the list; the lead's reconciliation report lists each with its status.
+- From the earlier lists, still open: the smithy wall indoors (needs your decision), the gift number picker, and the other Build 20 items still on the list; the lead's reconciliation report lists each with its status.
 - The recorder's findings for this build (repeated news among a few villagers, and the rest) are in the lead's report.
 - The simulation warning thresholds are still proposals awaiting the owner.

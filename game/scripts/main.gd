@@ -21,6 +21,10 @@ var above: Node2D
 const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
 var canopy: CanopyFade         # fades the tile canopies the player walks behind (the trees are TreeView's sprites)
 var tree_view: TreeView        # every tree as a sprite, in `actors` so characters walk behind them
+var campfire: Sprite2D         # GP-BANDIT-CAMP-ART: the bandit camp's animated fire (SMStudios), in `actors`, y-sorted
+const CAMPFIRE_FRAMES := 24    # one row of 64 x 64 frames (game/assets/fx/campfire.png)
+const CAMPFIRE_MS := 150       # a frame's time, as the art's own preview (Campfire2D.gif)
+const CAMPFIRE_OFFSET := Vector2(0, -17)   # the bottom of the logs (the frame's row 48) on the ground point
 var roofs: RoofFade            # fades the roof of the building the player is in (or behind)
 var blankets := {}             # bed tile -> its blanket (AtlasTexture), drawn over a sleeper
 var camera: Camera2D
@@ -216,6 +220,17 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"campfire":
+				# GP-BANDIT-CAMP-ART: the camp's fire with a bandit behind it and the player in front
+				var fc: Array = map.data.spawns.campfire
+				var at := Vector2(int(fc[0]), int(fc[1])) + Vector2(0.5, 0.5)
+				var band := world.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "bandit")
+				for i in band.size():
+					band[i].plan = [world.brain.work(600, "", {}, "idle")]
+					band[i].pos = at + (Vector2(-0.3, 0.9) if i == 0 else Vector2(-4.0 + i, 3.5))
+				world.player.pos = at + Vector2(0.3, -0.8)          # behind the fire; a bandit in front of it
+				follow_at = _in_view(at * T)
+				camera.zoom = Vector2(6, 6) * view_scale
 			"underground":
 				# MIN-A: the player walks into the adit; the gallery shows and the surface is faded out
 				world.player.pos = Vector2(world.underground.portals[0].ends[0].stand) + Vector2(0.5, 0.5)
@@ -1248,6 +1263,17 @@ func _build_scene() -> void:
 	add_child(actors)
 	tree_view = TreeView.new()
 	actors.add_child(tree_view)
+	campfire = null
+	var cf = map.data.spawns.get("campfire")
+	if cf != null:
+		campfire = Sprite2D.new()
+		campfire.name = "Campfire"
+		campfire.texture = load("res://assets/fx/campfire.png")
+		campfire.hframes = CAMPFIRE_FRAMES
+		campfire.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		campfire.position = (Vector2(int(cf[0]), int(cf[1])) + Vector2(0.5, 0.8)) * T     # the ground point, low in its (solid) cell
+		campfire.offset = CAMPFIRE_OFFSET
+		actors.add_child(campfire)
 	above = Node2D.new()
 	above.z_index = 10
 	add_child(above)
@@ -1747,6 +1773,8 @@ func _sync_sprites() -> void:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
+	if campfire != null:
+		campfire.frame = int(Time.get_ticks_msec() / CAMPFIRE_MS) % CAMPFIRE_FRAMES      # loops; nothing allocated
 	_sync_countryside()
 	_sync_carts()
 	_sync_caravan()

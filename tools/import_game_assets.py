@@ -21,6 +21,8 @@ records each file's source archive and path. This is that step. It writes:
                                                      drawn at run time from a recipe (CharacterLook), with
     game/data/character_style.json                   the draw order, palette ramps and choice lists they use
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
+    game/assets/fx/campfire.png                      Animated Pixel Campfire (SMStudios)/Sprite-sheet-campfire.png: 24 frames,
+                                                     box-reduced by 10 to 64 x 64 (GP-BANDIT-CAMP-ART, CC BY 4.0)
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
     game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
     game/assets/ui/hud_<name>.png                    16x16 Survival RPG Icons.zip (HUD status icons, HUD_ICONS)
@@ -68,6 +70,7 @@ import terrain_art  # noqa: E402
 import game_audio  # noqa: E402
 
 OUT = REPO / "game" / "assets"
+CAMPFIRE_SHEET = "Animated Pixel Campfire (SMStudios)/Sprite-sheet-campfire.png"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
 ICON_ZIP = "16x16 Survival RPG Icons.zip"
 COZY_ZIP = "CozyFarm_full_version.zip"
@@ -784,6 +787,16 @@ def main():
         dest = fx / f"blood_{i}.png"
         out.save(dest)
         record(dest, SPLAT_ZIP, member, "resized to 16 px, alpha cut at 50%, dark red with a darker edge")
+    # GP-BANDIT-CAMP-ART (owner, 2026-10-24): the owner's animated campfire, drawn at the bandit camp (CampfireSprite). The
+    # sheet is one row of 24 frames of 640 x 640 drawn on a 10 px grid: box-reduced by 10 (every 10 x 10 block is one colour,
+    # so the reduction is exact) to 64 x 64 frames, alpha cut at half; nothing else changed
+    member = CAMPFIRE_SHEET.split("/", 1)[1]
+    src = Image.open(REPO / CAMPFIRE_SHEET).convert("RGBA")
+    small = src.resize((src.width // 10, src.height // 10), Image.BOX)
+    small.putalpha(small.getchannel("A").point(lambda a: 255 if a >= 128 else 0))
+    dest = fx / "campfire.png"
+    small.save(dest)
+    record(dest, CAMPFIRE_SHEET.split("/", 1)[0], member, "box-reduced by 10 to 24 frames of 64 x 64 (exact: drawn on a 10 px grid), alpha cut at 50%")
     # the app icon: the owner's pictures, copied unchanged; a plain dark background for the adaptive icon
     icon_dir = OUT / "icon"
     icon_dir.mkdir(parents=True, exist_ok=True)

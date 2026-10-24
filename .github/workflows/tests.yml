@@ -120,6 +120,8 @@ jobs:
           # (GP-ACTIONBAR and GP-PICKAXE-ANIM are checked in start_test.gd)
           # GP-POLISH P2 (the owner's reports of 2026-10-24): drawing order at house fronts and the rest of the batch
           $godot --headless --path game --script res://tests/polish_p2_test.gd
+          # GP-BANDIT-CAMP-ART (Build 21): the camp's animated campfire, grounded and y-sorted; the camp's tiles; the credit
+          $godot --headless --path game --script res://tests/campfire_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd

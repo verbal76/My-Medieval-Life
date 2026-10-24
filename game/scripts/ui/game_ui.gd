@@ -1352,6 +1352,13 @@ func show_credits() -> void:
 	_label("My Medieval Life, by Hot Attic Games.", 18)
 	for p in c.packs:
 		_label("%s: %s (%s)" % [p.creator if p.creator != "to be confirmed" else "Creator to be confirmed", p.packs, p.licence], 15)
+		for key in ["url", "licence_url"]:          # GP-BANDIT-CAMP-ART: the creator's page and the licence, opened in the browser
+			if str(p.get(key, "")) != "":
+				var link := LinkButton.new()
+				link.text = str(p[key])
+				link.uri = str(p[key])
+				link.add_theme_font_size_override("font_size", 14)
+				panel_body.add_child(link)
 	_label(str(c.story), 15)
 	_button("Back", func(): show_title(main.can_continue()))
 

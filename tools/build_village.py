@@ -29,6 +29,11 @@ Generator v10 (GP-TRAIL-EDGES, 2026-10-24): a road cell whose pathway tile would
 the yard (merge_road_edges); only the ground's and the roads' tiles change. GP-BACK-DOORS: every door that opens outside has
 a drawn trail to the roads (door_trails, not added to the walking roads).
 
+Generator v11 (GP-BANDIT-CAMP-ART, owner 2026-10-24): the bandit camp's fire is the owner's animated campfire (SMStudios),
+drawn by the game as a sprite at spawns.campfire, so the camp's tile 5958 (transparent in this atlas) and the "animated"
+entry go; the fire's cell stays solid (camp_fire). Its crates and barrels are Shade's whole crate (797) and barrel (358)
+instead of pieces of other objects (3500, 3502, still used by the stalls and the mine yard). Nothing walkable changes.
+
 Tall objects (the tops of tables, benches, racks and armour stands that Shade drew in his "Object Top"
 layers) are put in "below" layers over their base (below3, below4): the player is drawn over them and
 can never stand under half an object. A cell holding only the top of a taller object is solid.
@@ -115,8 +120,9 @@ def field_cell_tile(base, w, h, i, j, cols=PAID_COLS):
 
 
 FRAME = 3499                                 # wooden construction frame (build sites)
-CAMPFIRE = 5958                              # animated in the tileset (5958-5961)
+CAMPFIRE = 5958                              # transparent in this atlas: not drawn since generator v11 (the campfire sprite)
 CRATE, BARREL = 3500, 3502
+CAMP_CRATE, CAMP_BARREL = 797, 358           # generator v11: whole crate and barrel tiles for the bandit camp
 RAIL_V, RAIL_TOP, RAIL_END = 1083, 863, 1303  # the track: a straight rail, its top end and its bottom end
 MINE_CART = 3009                             # the mine cart on its rail
 ROCK_FILL = (16750, 16751, 16752, 16753, 16970, 16971, 16972, 16973, 17190, 17191, 17192, 17193, 17410, 17411, 17412, 17413)
@@ -317,6 +323,7 @@ class Village:
         self.walls = set()          # cells holding a wall tile (Shade's "Wall" layers)
         self.late_roof = set()      # roof cells of the hidden roofs (the tavern's and the smithy's)
         self.floor = set()          # walkable interior floor (interiors())
+        self.camp_fire = None       # generator v11: the camp's fire cell (a sprite drawn by the game; solid)
         self.hill = set()           # cells of the mine's hill: solid rock
         self.road = set()
         self.yard = set()           # cells all of whose corners are dirt: no road tile is drawn there
@@ -888,11 +895,13 @@ class Village:
                                   "gate": list(gate), "feed_at": [gate[0], gate[1] - 1]})
 
     def camp(self, cx, cy):
-        """The bandits' camp: a campfire with crates and barrels round it, in a clearing of the forest."""
-        self.put("below", 0, cx, cy, tile_val(0, CAMPFIRE))
-        for dx, dy, t in ((-2, -1, CRATE), (2, -1, BARREL), (-2, 2, BARREL), (2, 2, CRATE)):
+        """The bandits' camp: a campfire with crates and barrels round it, in a clearing of the forest. Generator v11: the
+        fire is the game's animated campfire sprite on its cell (spawns.campfire), which stays solid (camp_fire)."""
+        self.camp_fire = (cx, cy)
+        for dx, dy, t in ((-2, -1, CAMP_CRATE), (2, -1, CAMP_BARREL), (-2, 2, CAMP_BARREL), (2, 2, CAMP_CRATE)):
             self.put("below", 0, cx + dx, cy + dy, tile_val(0, t))
         self.ents["spawns"]["bandit_camp"] = [cx, cy + 1]
+        self.ents["spawns"]["campfire"] = [cx, cy]
 
     def plots(self, corners):
         for i, (x, y) in enumerate(corners):
@@ -1378,7 +1387,7 @@ class Village:
         for y in range(H):
             for x in range(W):
                 c = (x, y)
-                s = (self.has_object(x, y) and c not in self.decor) or c in self.roof or c in self.hill
+                s = (self.has_object(x, y) and c not in self.decor) or c in self.roof or c in self.hill or c == self.camp_fire
                 if c in self.walkable_override or c in self.floor:
                     s = False
                 solid[y][x] = s
@@ -1637,7 +1646,7 @@ class Village:
                         {"name": "free", "image": "res://assets/tiles/punyworld-overworld-tiles.png",
                          "columns": free_img.width // 16},
                         {"name": "cozy", "image": "res://assets/tiles/cozyfarm-tiles.png", "columns": COZY_COLS}],
-            "animated": {str(CAMPFIRE): [CAMPFIRE, CAMPFIRE + 1, CAMPFIRE + 2, CAMPFIRE + 3]},
+            "animated": {},
             "tiles": {"ore": ORE, "depleted_rock": DEPLETED_ROCK, "stump": STUMP, "sapling": SAPLING,
                       "field": FIELD_TILES, "frame": FRAME,
                       "canopy": [list(p) for p in self.canopy_pairs()]},

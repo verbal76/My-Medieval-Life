@@ -1661,6 +1661,13 @@
    "sha256": "5412c67dc0e17b260984cdf1fd324d23975aafd4ba4929c3ebfab166e0799861"
   },
   {
+   "file": "assets/fx/campfire.png",
+   "source": "Animated Pixel Campfire (SMStudios)",
+   "member": "Sprite-sheet-campfire.png",
+   "transform": "box-reduced by 10 to 24 frames of 64 x 64 (exact: drawn on a 10 px grid), alpha cut at 50%",
+   "sha256": "c577715c06403a9db59c5edb1f905422c58b97c7294d24831da2685743ea2fa9"
+  },
+  {
    "file": "assets/icon/icon_192.png",
    "source": "My_Medieval_Life_Icon_Pack.zip",
    "member": "My_Medieval_Life_192x192.png",
