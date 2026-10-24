@@ -108,7 +108,7 @@
    "status": "Partially instrumented",
    "stage": "D3",
    "test": "test_crime_events",
-   "note": "Not recorded: pickpocketing attempts and their odds, fencing recognition detail beyond the sell verb, the Expansion 19 judgment of a crime, bandit raids on stalls, deliver_report (the chases that fights, alarms and reports start are recorded since schema 2: see Combat chases), wanted status and reinforcements (they do not exist in the game: GP-CRIME-PURSUIT). witness records the witnesses present, not those who failed to notice."
+   "note": "Not recorded: pickpocketing attempts and their odds, fencing recognition detail beyond the sell verb, the Expansion 19 judgment of a crime, bandit raids on stalls, deliver_report (the chases that fights, alarms and reports start are recorded since schema 2: see Combat chases), the case record and the pursuit states (GP-CRIME-PURSUIT A1-A3: read from World.stats justice_* counters in the hourly snapshot, the economy run's samples and the gate's manhunt probe; the hue and cry and the bell are recorded as crime occurrences; a chase that loses sight ends with reason lost_sight, one taken in with taken). witness records the witnesses present, not those who failed to notice."
   },
   {
    "system": "Village snapshot",
