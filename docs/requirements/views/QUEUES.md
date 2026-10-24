@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (27)
+## Workers and task branches (28)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -13,6 +13,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-PACK-DETAIL-FIT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-START-RUSTY-AXE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-TRAIL-EDGES | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-WHEAT-PICKED | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |

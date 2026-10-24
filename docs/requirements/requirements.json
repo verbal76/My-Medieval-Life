@@ -21794,6 +21794,41 @@
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
   },
   {
+   "id": "GP-PACK-DETAIL-FIT",
+   "kind": "approved",
+   "title": "Pack item detail panel: action buttons cut off the bottom of the screen",
+   "description": "Pack item detail panel: action buttons cut off the bottom of the screen",
+   "source": "docs/gameplay_polish/reference/pack_buttons_offscreen_2026-10-24.webp",
+   "owner_wording": "bottom options are off the screen",
+   "approval": "owner, 2026-10-24 (reported defect)",
+   "acceptance": [
+    "The Pack's item detail panel and its action buttons (Eat, Drop, Drop all, Equip and the rest) are fully on screen and reachable by touch, gamepad and mouse at every supported resolution and aspect ratio, phones in landscape included, and with the longest descriptions; verified by screenshots at the phone, 16:9 and Steam Deck sizes and a layout test"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/pack_buttons_offscreen_2026-10-24.webp"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-PICKAXE-ANIM",
    "kind": "approved",
    "title": "Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged",
