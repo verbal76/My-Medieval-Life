@@ -52466,7 +52466,7 @@
    "approval_status": "OWNER APPROVED",
    "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
-   "release_status": "NOT READY",
+   "release_status": "RELEASE CANDIDATE",
    "completion": "OPEN",
    "history": [
     {
@@ -52523,6 +52523,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "owner authorized a private draft release of Build 19 from 2685a26 after 30-day runs on seeds 3 and 4 (docs/directives/2026-10-24_owner_build19_release_authorization.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "release_status: NOT READY -> RELEASE CANDIDATE",
+     "why": "release gate seeds 3 and 4 (30 days, 2685a26): no leak, no FATAL, no starvation; private draft release workflow started, run 40043968310 on 2685a26, build number 19, temporary signing key"
     }
    ],
    "next_action": "present Build 19 to the owner for release authorization (release.yml run needs the owner)",
