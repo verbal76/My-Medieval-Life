@@ -47,6 +47,7 @@ var pursuit := {}            # A2 (GP-CRIME-PURSUIT): a guard on a player's case
 var chase_route := false     # S3: a guard chasing a player is following `path` round what stands between them (NPCBrain.fight; not saved, as `target` is not)
 var memory: Array = []       # notable events this NPC knows about
 var skills := {}             # skill -> xp, as the player's (PAR-01: the same curve, gates and effects; Skills)
+var talked := {}             # A6 (GP-DIALOGUE): what this villager has told each listener: {player ref: {event key: day}}; saved (optional key), so nothing is said over and over
 var report := {}             # an attack this villager knows of and will tell a guard: {offender, t, how} (PAR-05)
 var earned := 0
 var spent := 0
@@ -122,6 +123,8 @@ func to_dict() -> Dictionary:
 	}
 	if not pursuit.is_empty():
 		d.pursuit = pursuit.duplicate(true)  # A2: written only for a guard on a case
+	if not talked.is_empty():
+		d.talked = talked.duplicate(true)    # A6: written only once they have told a player something
 	if depth != 0:
 		d.level = depth                  # MIN-A: written only below the surface
 	if away != "":
@@ -159,6 +162,11 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.clan = str(d.get("clan", ""))                           # older saves: none
 	n.report = (d.get("report", {}) as Dictionary).duplicate()        # older saves: none
 	n.pursuit = (d.get("pursuit", {}) as Dictionary).duplicate(true)  # A2: older saves (a Build 20 save): no guard on a case
+	for ref in d.get("talked", {}):                                   # A6: older saves: nothing told yet
+		var t := {}
+		for k in d.talked[ref]:
+			t[str(k)] = int(d.talked[ref][k])
+		n.talked[str(ref)] = t
 	if not n.pursuit.is_empty():
 		n.pursuit.i = int(n.pursuit.get("i", 0))
 		if str(n.pursuit.get("state", "")) == "pursuing":

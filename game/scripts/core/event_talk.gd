@@ -394,6 +394,11 @@ static func news_tier(w: World, n: NPC, it: Dictionary) -> int:
 ## The `k` events the speaker would tell first (news_tier, then the newest), with what another event already tells
 ## left out: an attack whose victim the same hand killed, as the speaker knows it.
 static func news_items(w: World, n: NPC, k: int) -> Array:
+	return news_candidates(w, n).slice(0, k)
+
+
+## Every event the speaker could tell, gravest for them first, with what another tells left out (see news_items).
+static func news_candidates(w: World, n: NPC) -> Array:
 	var all := events(w, n)
 	var keep := []
 	for it in all:
@@ -416,7 +421,7 @@ static func news_items(w: World, n: NPC, k: int) -> Array:
 		if int(a.ev) != int(b.ev):
 			return int(a.ev) > int(b.ev)
 		return str(a.key) > str(b.key))
-	return keep.slice(0, k)
+	return keep
 
 
 const HOW := ["saw", "part", "told", "rumour"]     # how surely one knows, surest first
@@ -454,3 +459,143 @@ static func killer_of(w: World, n: NPC, victim: NPC) -> Variant:
 		if (str(it.type) == "killing" or seen_fall) and (it.victims as Array).has(victim) and not (it.actors as Array).is_empty():
 			return it.actors[0]
 	return null
+
+
+
+# ---------------------------------------------------------------- A6: related events as one, priority, what was said
+static var _rules: Array = []
+
+
+## The merge rules (game/data/dialogue_events.json "merge"): which related events are told as one (REPAIR_AUDIT D3).
+static func rules() -> Array:
+	if _rules.is_empty():
+		var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/dialogue_events.json"))
+		_rules = (d.merge.rules as Array) if d is Dictionary else []
+	return _rules
+
+
+static func _field(it: Dictionary, f: String) -> String:
+	match f:
+		"hh":
+			return str(it.get("hh", -1))
+		"victim":
+			return str((it.get("victims", []) as Array).map(func(p): return p.get_instance_id() if p != null else 0))
+	return str((it.get("tags", {}) as Dictionary).get(f, ""))
+
+
+static func _same_by(a: Dictionary, b: Dictionary, fields: Array) -> bool:
+	for f in fields:
+		if _field(a, str(f)) != _field(b, str(f)) or _field(a, str(f)) in ["", "-1"]:
+			return false
+	return true
+
+
+## The events as the speaker would tell them (REPAIR_AUDIT D3, D5): each rule's related events joined into one group (in
+## the order they happened), the rest alone; each group {rule (the rule's id, "" alone), items (oldest first), times,
+## tier (the gravest of its items, news_tier), day (the newest), keys (what it tells, for the said history)}; gravest
+## first, then the newest.
+static func groups(w: World, n: NPC, items: Array) -> Array:
+	var used := {}
+	var out := []
+	for r in rules():
+		var types: Array = r.types
+		var fields: Array = r.get("same", [])
+		var days := int(r.get("days", 7))
+		if bool(r.get("count", false)):
+			var buckets := {}
+			for i in items.size():
+				var it: Dictionary = items[i]
+				if used.has(i) or str(it.type) != str(types[0]):
+					continue
+				var key := "|".join(fields.map(func(f): return _field(it, str(f))))
+				if not buckets.has(key):
+					buckets[key] = []
+				buckets[key].append(i)
+			var bkeys := buckets.keys()
+			bkeys.sort()
+			for key in bkeys:
+				var idx: Array = buckets[key]
+				var newest := 0
+				for i in idx:
+					newest = maxi(newest, int(items[i].day))
+				idx = idx.filter(func(i): return newest - int(items[i].day) <= days and _same_by(items[i], items[idx[0]], fields))
+				if idx.size() < 2:
+					continue
+				for i in idx:
+					used[i] = true
+				var its := idx.map(func(i): return items[i])
+				its.sort_custom(func(a, b): return int(a.day) < int(b.day) or (int(a.day) == int(b.day) and int(a.ev) < int(b.ev)))
+				out.append({"rule": str(r.id), "items": [its[-1]], "times": its.size(), "all": its})
+			continue
+		for i in items.size():
+			if used.has(i) or str(items[i].type) != str(types[0]):
+				continue
+			for j in items.size():
+				if j == i or used.has(j) or str(items[j].type) != str(types[1]):
+					continue
+				if not _same_by(items[i], items[j], fields) or absi(int(items[i].day) - int(items[j].day)) > days:
+					continue
+				used[i] = true
+				used[j] = true
+				out.append({"rule": str(r.id), "items": [items[i], items[j]], "times": 2, "all": [items[i], items[j]]})
+				break
+	for i in items.size():
+		if not used.has(i):
+			out.append({"rule": "", "items": [items[i]], "times": 1, "all": [items[i]]})
+	for g in out:
+		var tier := 9
+		var day := 0
+		var keys := []
+		for it in g.all:
+			tier = mini(tier, news_tier(w, n, it))
+			day = maxi(day, int(it.day))
+			keys.append(str(it.key))
+		g.tier = tier
+		g.day = day
+		g.keys = keys
+	out.sort_custom(func(a, b):
+		if int(a.tier) != int(b.tier):
+			return int(a.tier) < int(b.tier)
+		if int(a.day) != int(b.day):
+			return int(a.day) > int(b.day)
+		return str(a["keys"][-1]) > str(b["keys"][-1]))
+	return out
+
+
+## What the speaker has already told this listener (NPC.talked, by the listener's player reference): key -> the day.
+static func told(w: World, n: NPC) -> Dictionary:
+	return n.talked.get(w.acting_ref(), {})
+
+
+## Record that the speaker has told the listener these things today (NPC.talked; the newest TALKED_KEEP kept a listener).
+## Like Dialogue.meet, the one thing talking changes: so nothing is said over and over.
+const TALKED_KEEP := 40
+
+
+static func mark_said(w: World, n: NPC, keys: Array) -> void:
+	if keys.is_empty() or n.role == "bandit":
+		return
+	var ref := w.acting_ref()
+	var t: Dictionary = n.talked.get(ref, {})
+	for k in keys:
+		t[str(k)] = w.day()
+	if t.size() > TALKED_KEEP:
+		var ks := t.keys()
+		ks.sort_custom(func(a, b): return int(t[a]) < int(t[b]) or (int(t[a]) == int(t[b]) and str(a) < str(b)))
+		for i in t.size() - TALKED_KEEP:
+			t.erase(ks[i])
+	n.talked[ref] = t
+
+
+## Whether every key of a group was told this listener before.
+static func all_said(w: World, n: NPC, keys: Array) -> bool:
+	var t := told(w, n)
+	for k in keys:
+		if not t.has(str(k)):
+			return false
+	return not keys.is_empty()
+
+
+## Whether a key was told this listener today.
+static func said_today(w: World, n: NPC, key: String) -> bool:
+	return int(told(w, n).get(key, -1)) == w.day()

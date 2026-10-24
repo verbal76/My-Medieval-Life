@@ -203,6 +203,11 @@ static func opening(w: World, n: NPC) -> String:
 	# an attack on someone else
 	var harm := EventTalk.violence(w, n)
 	if not harm.is_empty() and (harm.crime == "killing" or not attacked(w, n)):
+		# A6: said in full once a day to this listener; asked again the same day, a short answer (no loop)
+		var wkey := "witness:%d" % harm.victim.id
+		if EventTalk.said_today(w, n, wkey):
+			return DialogueVoice.said_line(w, n, "again_witness", EventTalk.stance(w, n, harm))
+		EventTalk.mark_said(w, n, [wkey])
 		return DialogueVoice.witness_line(w, n, harm)
 	var animal := animal_killed(w, n)
 	if animal != "" and not attacked(w, n):
@@ -372,8 +377,13 @@ static func home(w: World, n: NPC) -> String:
 			death = DialogueVoice.home_death(w, n, m.substr(0, m.find(" died (")), m.substr(m.find(" died (") + 7).trim_suffix(")"))
 			break
 	var relief: Array = hh.get("relief_days", []).filter(func(d) -> bool: return int(d) > w.day() - 7)
+	var known := _home_news(w, n)
 	if death != "":
 		lines.append(death)
+	elif known.thanks != "":
+		lines.append(known.thanks)              # A6: a gift from the listener to their own, which they know of
+	elif known.relief != "":
+		lines.append(known.relief)              # A6: the relief they know of, with its reason when they know it
 	elif not relief.is_empty():
 		lines.append("The manor has had to send us food this week.")
 	elif econ.has("sustainable") and not bool(econ.sustainable) and int(econ.get("streak", 0)) > 0:
@@ -381,6 +391,21 @@ static func home(w: World, n: NPC) -> String:
 	elif hh.pantry.count("log") < 1:
 		lines.append(("%s have no firewood for tonight." % we) if not kid else "It's cold at home. We've no wood.")
 	return " ".join(lines.slice(0, 3))
+
+
+## A6: what the speaker knows of their own household's week that home() can tell: thanks for a gift from the listener to
+## their own people, and the relief they were given (joined with its reason by the merge rules: "The church gave us food.
+## Mum has no axe and cannot get one, so things have been hard."). Only what they saw, took part in or were told.
+static func _home_news(w: World, n: NPC) -> Dictionary:
+	var out := {"thanks": "", "relief": ""}
+	var items := EventTalk.news_candidates(w, n).filter(func(it): return w.day() - int(it.day) <= 7)
+	for g in EventTalk.groups(w, n, items):
+		var first: Dictionary = g.items[0]
+		if out.thanks == "" and str(first.type) == "gift" and DialogueVoice._gift_to_ours(w, n, first):
+			out.thanks = DialogueVoice.group_line(w, n, g, {})
+		elif out.relief == "" and str(first.type) == "relief" and int(first.get("hh", -1)) == n.household:
+			out.relief = DialogueVoice.group_line(w, n, g, {})
+	return out
 
 
 ## "Any news?" (A4, REPAIR_AUDIT D1-D4): what the speaker knows, never the village record. A theft they found, then
@@ -396,16 +421,36 @@ static func news(w: World, n: NPC) -> String:
 		if m.begins_with(prefix) and m.ends_with(" missing"):
 			lines.append(str(DialogueVoice.talk().missing).format({"what": _plain_what(w, n, m.substr(prefix.length(), m.length() - prefix.length() - 8)).trim_suffix(".")}))
 			break
-	var picked := EventTalk.news_items(w, n, 2)
+	# A6: related events as one (the merge rules), the gravest for this speaker and listener first, and nothing told this
+	# listener before told again in full (NPC.talked)
+	var groups := EventTalk.groups(w, n, EventTalk.news_candidates(w, n))
 	var said := {}
 	var told: Array = []
-	for it in picked:
-		var line := DialogueVoice.event_line(w, n, it, said)
+	var keys: Array = []
+	var lead_tier := -1
+	for g in groups:
+		if told.size() >= 2:
+			break
+		if EventTalk.all_said(w, n, g.keys):
+			continue
+		var line := DialogueVoice.group_line(w, n, g, said)
 		if line != "" and not told.has(line):
 			told.append(line)
+			keys.append_array(g.keys)
+			if lead_tier < 0:
+				lead_tier = int(g.tier)
 	if not told.is_empty():
-		var lead := EventTalk.news_tier(w, n, picked[0]) >= 4 and lines.is_empty()
+		var lead := lead_tier >= 4 and lines.is_empty()
 		lines.append(((_pick(w, n, DialogueVoice.talk().intro.ordinary, 4) + " ") if lead else "") + " ".join(told))
+		EventTalk.mark_said(w, n, keys)
+	elif not groups.is_empty():
+		# all told before: a grief or a harm to the listener is touched on at most once a day, then nothing new
+		var grave: bool = int(groups[0].tier) <= 1
+		if grave and not EventTalk.said_today(w, n, "again:news"):
+			lines.append(DialogueVoice.said_line(w, n, "again_news"))
+			EventTalk.mark_said(w, n, ["again:news"])
+		elif lines.is_empty():
+			lines.append(DialogueVoice.said_line(w, n, "nothing_new"))
 	if w.relations.player_friend(n):             # a friend tells the player who is courting (CRT-06)
 		var gossip := _courting_gossip(w, n)
 		if gossip != "":

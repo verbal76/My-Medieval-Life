@@ -200,7 +200,7 @@
     ]
   },
   "talk": {
-    "_doc": "A4 (the perspective renderer, REPAIR_AUDIT D4): how a villager tells an event they know, from their own place in it. A clause per event type; {A} the actor as the subject, {A2} a second actor, {V} the victim, {B} the beneficiaries, {Vs} and {Bs} their possessives, {As} the actor's; each is said from the speaker's side: the listener 'you'/'your', the speaker 'I'/'me'/'my', their household 'we'/'us'/'our' (a household is named 'our family' the first time), a relative as family name them ('Mum', 'my daughter Rose'), anyone else by name, an unknown person 'someone'. A type may give clauses by the subject's person (i, we, you; 'default' for anyone else) where the verb changes. frames: how the clause is framed by how the speaker knows it: saw (witnessed), part (took part: the victim, the beneficiary, their household), told ({T}: who told them), rumour (further along). A list is chosen from by Dialogue._pick (by villager and day; no random numbers). Presentation only. A5 news types: {place} the parcel or building as the village names it, {price}/{rent} coins, {thing} the item's name, {G} who gave (household_word aside, 'givers'); a type in household_types is said with the household as its subject ('our family', 'we', 'the Lamberts'); death is worded by its kind (slain, starvation, old_age; never by whom).",
+    "_doc": "A4 (the perspective renderer, REPAIR_AUDIT D4): how a villager tells an event they know, from their own place in it. A clause per event type; {A} the actor as the subject, {A2} a second actor, {V} the victim, {B} the beneficiaries, {Vs} and {Bs} their possessives, {As} the actor's; each is said from the speaker's side: the listener 'you'/'your', the speaker 'I'/'me'/'my', their household 'we'/'us'/'our' (a household is named 'our family' the first time), a relative as family name them ('Mum', 'my daughter Rose'), anyone else by name, an unknown person 'someone'. A type may give clauses by the subject's person (i, we, you; 'default' for anyone else) where the verb changes. frames: how the clause is framed by how the speaker knows it: saw (witnessed), part (took part: the victim, the beneficiary, their household), told ({T}: who told them), rumour (further along). A list is chosen from by Dialogue._pick (by villager and day; no random numbers). Presentation only. A5 news types: {place} the parcel or building as the village names it, {price}/{rent} coins, {thing} the item's name, {G} who gave (household_word aside, 'givers'); a type in household_types is said with the household as its subject ('our family', 'we', 'the Lamberts'); death is worded by its kind (slain, starvation, old_age; never by whom). gift.you_to_ours: a gift from the listener to the speaker or their own people, which the speaker knows of (seen or told): thanks.",
     "frames": {
       "saw": [
         "I saw it myself: {c}.",
@@ -234,7 +234,8 @@
       },
       "gift": {
         "default": "{A} gave {B} {item}",
-        "noitem": "{A} gave {B} a present"
+        "noitem": "{A} gave {B} a present",
+        "you_to_ours": "{B} was so happy when you brought {item}. Thank you"
       },
       "help_minor": {
         "default": "{A} did {B} a good turn"
@@ -316,5 +317,95 @@
       "manor": "the manor",
       "chapel": "the church"
     }
+  },
+  "merge": {
+    "_doc": "A6 (REPAIR_AUDIT D3, D5): related events told as one, by rule, in the order given; each rule joins events of its types (the first type first: that is the order they happened) that share what `same` lists (hh: the household; place: the parcel; giver: who gave; victim: the victim) within `days` days. line: by the first event's subject (we, you, i, default); {c1} the first event's clause, {C2} the second's capitalised, {P} the first subject's pronoun (We, You, I, They, He, She) and {have} (have, has), {times} how many when a rule counts (count: true). The joined line is framed by how the speaker knows the first event. Nothing is dropped: every event's own facts (price, place, people) are in its clause. Read by EventTalk (the grouping) and DialogueVoice (the words).",
+    "rules": [
+      {
+        "id": "bought_fenced",
+        "types": [
+          "land_bought",
+          "fenced"
+        ],
+        "same": [
+          "hh",
+          "place"
+        ],
+        "days": 30,
+        "line": {
+          "default": "{c1}. {P} {have} already fenced it off",
+          "we": "{c1}. {P} have already fenced it off"
+        }
+      },
+      {
+        "id": "leased_fenced",
+        "types": [
+          "land_leased",
+          "fenced"
+        ],
+        "same": [
+          "hh",
+          "place"
+        ],
+        "days": 30,
+        "line": {
+          "default": "{c1}. {P} {have} put up a fence there already"
+        }
+      },
+      {
+        "id": "relief_reason",
+        "types": [
+          "relief",
+          "no_tool"
+        ],
+        "same": [
+          "hh"
+        ],
+        "days": 7,
+        "line": {
+          "default": "{c1}. {C2}, so things have been hard"
+        }
+      },
+      {
+        "id": "relief_again",
+        "types": [
+          "relief"
+        ],
+        "same": [
+          "hh",
+          "giver"
+        ],
+        "days": 7,
+        "count": true,
+        "line": {
+          "default": "{G} has had to feed {B} {times} times this week"
+        }
+      }
+    ]
+  },
+  "said": {
+    "_doc": "A6 (D5): what a villager says once they have already told this listener something (NPC.talked, by the listener's player reference). again_witness: the opening of a witness who has already said it today, by stance. again_news: an event of their own family's grief or the listener's harm already told, said again at most once a day. nothing_new: no news they have not told this listener.",
+    "again_witness": {
+      "confront": [
+        "I've said what I have to say to you.",
+        "I know what you did. Go."
+      ],
+      "afraid": [
+        "Please, just go.",
+        "Leave me alone."
+      ],
+      "guarded": [
+        "I have nothing more to say to you.",
+        "Go about your business."
+      ]
+    },
+    "again_news": [
+      "I haven't forgotten what happened.",
+      "I've told you what I know."
+    ],
+    "nothing_new": [
+      "Nothing new since we last spoke.",
+      "Nothing more than I told you."
+    ]
   }
 }

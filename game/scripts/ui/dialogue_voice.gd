@@ -226,3 +226,78 @@ static func frame(w: World, n: NPC, it: Dictionary, c: String) -> String:
 	var line := str(Dialogue._pick(w, n, lines, 11 + str(it.get("key", "")).hash() % 7))
 	var tname := name_for(w, n, teller) if teller != null else ""
 	return Dialogue.sentence(line.format({"c": c, "C": _cap(c), "T": tname}))
+
+
+# ---------------------------------------------------------------- A6: related events as one
+## A group of related events (EventTalk.groups) as the speaker says it: one event alone as event_line; a rule's events
+## joined by its line (dialogue_events.json "merge"), every event's own facts kept, framed by how the speaker knows the
+## first. A gift from the listener to the speaker's own people is thanks.
+static func group_line(w: World, n: NPC, g: Dictionary, said: Dictionary) -> String:
+	var items: Array = g.items
+	var first: Dictionary = items[0]
+	if str(g.rule) == "":
+		if str(first.type) == "gift" and _gift_to_ours(w, n, first):
+			var c := clause_as(w, n, first, said, "you_to_ours")
+			return Dialogue.sentence(_cap(c)) if c != "" else ""
+		return event_line(w, n, first, said)
+	var rule: Dictionary = {}
+	for r in EventTalk.rules():
+		if str(r.id) == str(g.rule):
+			rule = r
+	var actors: Array = first.get("actors", [])
+	var a0 = actors[0] if not actors.is_empty() else null
+	var hh := int(first.get("hh", -1))
+	var key := "we" if hh >= 0 and hh == n.household else person_class(w, n, a0)
+	var line := str((rule.line as Dictionary).get(key, rule.line.default))
+	var c1 := clause(w, n, first, said)
+	var c2 := clause(w, n, items[1], said) if items.size() > 1 else ""
+	var pr := _pronoun(w, n, first)
+	var tags: Dictionary = first.get("tags", {})
+	var f := {"c1": c1, "C1": _cap(c1), "C2": _cap(c2), "c2": c2, "P": pr[0], "have": pr[1], "times": Dialogue.NUMBERS[mini(int(g.times), 12)] if int(g.times) <= 12 else str(g.times),
+		"G": str((talk().givers as Dictionary).get(str(tags.get("giver", "")), "someone")),
+		"B": group(w, n, first.get("benef", []), "obj", hh, said)}
+	return frame(w, n, first, line.format(f))
+
+
+## The first event's subject as a pronoun starting a sentence, and its verb "have"/"has": We, You, I, They, He, She.
+static func _pronoun(w: World, n: NPC, it: Dictionary) -> Array:
+	var hh := int(it.get("hh", -1))
+	if hh >= 0 and (talk().household_types as Array).has(str(it.type)):
+		return ["We", "have"] if hh == n.household else ["They", "have"]
+	var actors: Array = it.get("actors", [])
+	var r := EventTalk.role_of(w, n, actors[0] if not actors.is_empty() else null)
+	match str(r.kind):
+		"you":
+			return ["You", "have"]
+		"i":
+			return ["I", "have"]
+		"none":
+			return ["They", "have"]
+	var who = r.get("who")
+	return (["She", "has"] if who != null and who.sex == "female" else ["He", "has"])
+
+
+static func _gift_to_ours(w: World, n: NPC, it: Dictionary) -> bool:
+	var actors: Array = it.get("actors", [])
+	if actors.is_empty() or not (actors[0] is PlayerState and actors[0] == w.player):
+		return false
+	for b in it.get("benef", []):
+		if b is NPC and (b == n or EventTalk.relation(w, n, b) != ""):
+			return true
+	return false
+
+
+## An event's clause from a named variant of its type ("you_to_ours"), the people as in clause().
+static func clause_as(w: World, n: NPC, it: Dictionary, said: Dictionary, variant: String) -> String:
+	var t: Dictionary = talk().types.get(str(it.type), {})
+	if not t.has(variant):
+		return clause(w, n, it, said)
+	var tags: Dictionary = it.get("tags", {})
+	return str(t[variant]).format({"B": _cap(group(w, n, it.get("benef", []), "subj", -1, said)), "item": _item_words(str(tags.get("item", ""))) if tags.has("item") else "a present"})
+
+
+## What a speaker says who has already told this listener everything they know (A6 said history).
+static func said_line(w: World, n: NPC, kind: String, stance := "") -> String:
+	var s: Dictionary = data().said
+	var lines: Array = s[kind] if kind != "again_witness" else s.again_witness[stance]
+	return Dialogue._pick(w, n, lines, 13)

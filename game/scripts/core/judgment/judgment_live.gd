@@ -177,7 +177,7 @@ static func _event(w, type: String, actors: Array, victims: Array, beneficiaries
 static func on_gift(w, giver: int, n: NPC, id: String) -> void:
 	if GameData.value(id) < 1:
 		return                                  # worth nothing: trivia (SJD-Q12)
-	_event(w, "gift", [giver], [], [n.id], GameData.value(id), n.pos)
+	_event(w, "gift", [giver], [], [n.id], GameData.value(id), n.pos, ["item:" + id] + (["by:" + w.acting_ref()] if Life.is_player_id(giver) else []))   # A6: what was given, and by which player
 
 
 ## Help given: a quest done (help_minor), a relative's money toward a home (help_build). `helper` a person id.

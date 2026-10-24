@@ -10,6 +10,9 @@ extends SceneTree
 ##   A5: village news as facts that travel by knowledge: the Lambert purchase (bought through Property.buy) told by a
 ##   member as "our family" and unknown to a stranger until told; the Oakley child's chapel food and Mum's missing axe;
 ##   the household learns of a death but not the killer; news is never judged and keeps out of the moral memory.
+##   A6: related events told as one (the purchase and its fence; the relief and its reason), the place named once; a
+##   relative's murder before a fence; nothing told this listener before told again in full (said history, saved); a
+##   witness's accusation once a day; thanks for a gift only from one who knows of it.
 ## Run headless:
 ##   godot --headless --path game --script res://tests/dialogue_perspective_test.gd
 
@@ -34,6 +37,9 @@ func _init() -> void:
 	test_lambert_facts()
 	test_oakley_facts()
 	test_news_not_judged()
+	test_merge_and_priority()
+	test_said_history()
+	test_gift_thanks()
 	print("dialogue_perspective_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -391,4 +397,120 @@ func test_news_not_judged() -> void:
 		return EventTalk.events(w, o).any(func(it): return str(it.type) == "death" and (it.victims as Array).has(victim))
 	check(knows_death.call(member), "the household learns of the death")
 	check(not knows_death.call(far), "a villager far off, of another household, does not")
+	w.dispose()
+
+
+# ---------------------------------------------------------------- A6: related events as one, and priority
+func test_merge_and_priority() -> void:
+	var w := _world(true)
+	var hs := _household(w)
+	var h: int = hs[0]
+	var adult: NPC = hs[1]
+	var member: NPC = hs[2]
+	var fam: String = w.households[h].family
+	var parcel: Dictionary = {}
+	for r in w.property.market():
+		if w.property.is_parcel(r) and w.property.building_on(r).is_empty():
+			parcel = r
+			break
+	adult.coins += w.property.price_of(parcel) + 5
+	var price := w.property.price_of(parcel)
+	w.property.buy(parcel, "hh:%d" % h)
+	JudgmentLive.on_news(w, "fenced", "hh:%d" % h, ["place:" + str(parcel.id)], null)
+	var place := w.property.describe(parcel)
+	var said := Dialogue.news(w, member)
+	print("     merged, a member: %s" % said)
+	check(said.count(place) == 1, "the purchase and the fence are one statement: the place named once")
+	check(said.find("bought") >= 0 and said.find("fenced") > said.find("bought") and said.contains("%d coins" % price), "bought first, then fenced, the price kept")
+	check(not said.contains("We fenced") and not said.contains("Our family fenced"), "not told as a second report")
+	var outsider: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household != h and o.job != "guard":
+			outsider = o
+			break
+	for e in w.judgment.memories.get(member.id, {}):
+		var b: Dictionary = w.judgment.belief(member.id, int(e))
+		if str(b.type) in ["land_bought", "fenced"]:
+			w.judgment.learn(outsider.id, int(e), "told", member.id, 1, 900, b.actors)
+	var other := Dialogue.news(w, outsider)
+	print("     merged, an outsider told of both: %s" % other)
+	check(other.contains("the %ss bought" % fam) and other.contains("They have already fenced it off"), "an outsider: \"the %ss bought ... They have already fenced it off\"" % fam)
+	# a relative killed before the speaker's eyes comes before the fence
+	var victim: NPC = null
+	for m in w.households[h].members:
+		var o := w.npc(m)
+		if o and o.alive and o != member and o != adult:
+			victim = o
+			break
+	if victim == null:
+		victim = adult
+	_kill_before(w, victim, member)
+	var first := Dialogue.news(w, member)
+	print("     after a relative's killing: %s" % first)
+	check(first.contains("you killed") and (first.find("bought") < 0 or first.find("you killed") < first.find("bought")), "a relative's killing comes before the household's land")
+	w.dispose()
+
+
+# ---------------------------------------------------------------- A6: what was said is not said again
+func test_said_history() -> void:
+	var w := _world(true)
+	var pair := _child_and_relative(w)
+	var child: NPC = pair[0]
+	var elder: NPC = pair[1]
+	_kill_before(w, child, elder)
+	var o1 := Dialogue.opening(w, elder)
+	var o2 := Dialogue.opening(w, elder)
+	print("     opening, then again the same day: %s | %s" % [o1, o2])
+	check(o1.contains("you") and o2 != o1 and not o2.contains(child.name), "the accusation is said in full once; asked again the same day, a short answer")
+	var n1 := Dialogue.news(w, elder)
+	var n2 := Dialogue.news(w, elder)
+	var n3 := Dialogue.news(w, elder)
+	print("     news three times: %s | %s | %s" % [n1, n2, n3])
+	check(n1.contains("killed") and not n2.contains("killed") and not n3.contains("killed"), "news already told is not told again in full")
+	check(n2 != n3, "and the reminder of a grief is said at most once a day: then nothing new")
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(not Dialogue.news(w2, w2.npc(elder.id)).contains("killed"), "what was told survives save and load")
+	w.minutes += World.DAY
+	check(Dialogue.opening(w, elder).contains(child.name), "another day, the witness says it again")
+	w.dispose()
+	w2.dispose()
+
+
+# ---------------------------------------------------------------- A6: thanks only from one who knows
+func test_gift_thanks() -> void:
+	var w := _world(true)
+	var kid: NPC = null
+	var mum: NPC = null
+	var sib: NPC = null
+	for c: NPC in w.npcs:
+		if c.alive and c.role == "child" and c.mother >= 0:
+			var m := w.npc(c.mother)
+			if m != null and m.alive and m.household == c.household:
+				for s2 in w.households[c.household].members:
+					var o := w.npc(s2)
+					if o and o.alive and o != c and o != m and o.role != "bandit":
+						sib = o
+				kid = c
+				mum = m
+				if sib != null:
+					break
+	var at := _spot(w)
+	for n: NPC in w.npcs:
+		if n.alive and n.pos.distance_to(at) < 14.0:
+			n.pos = at + Vector2(40, 40)
+	mum.pos = at
+	kid.pos = at + Vector2(2, 0)
+	sib.pos = at + Vector2(60, 0)
+	for o: NPC in [mum, kid, sib]:
+		o.anim = "idle"
+		o.plan.clear()
+	JudgmentLive.on_gift(w, Life.PLAYER_ID, mum, "bread")
+	var h1 := Dialogue.home(w, kid)
+	var h2 := Dialogue.home(w, sib)
+	print("     the child who saw it: %s" % h1)
+	print("     one who did not: %s" % h2)
+	check(h1.contains("Mum was so happy when you brought") and h1.contains("bread") and h1.contains("Thank you"), "a child who saw the gift to Mum thanks the player")
+	check(not h2.contains("Thank you") and not h2.contains("bread"), "one of the household who neither saw it nor was told does not")
 	w.dispose()
