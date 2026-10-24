@@ -17,13 +17,17 @@ var sorted_of := {}              # an "above" layer -> its twin that is drawn am
 var _sorted_parent: Node2D       # the y-sorted node the twins live in (the characters' own), null: no twins
 var _canopy := {}                # tile ids that are tree canopies: never sorted (CanopyFade fades them)
 const SORT_ORIGIN := 8           # a tile sorts by its cell's bottom edge (the tile's centre plus half a tile)
+var roof_layers: Array[TileMapLayer] = []   # the "above" layers that are roofs (village.json roof_layers), in draw order
 
 
 ## `sorted_parent`: the characters' y-sorted node. With it, the overlay tiles of solid cells in the
 ## non-roof "above" layers (the upper half of an anvil, a bench, a rack, a wall top) are drawn among the
 ## characters by their cell's bottom edge, so someone standing south of the object is in front of it
 ## and someone north of it behind it, never clipped by its upper half (Build 8 report B8-025). Roofs,
-## canopies and the overlays of cells one can walk through (a lintel, an awning) stay over everyone.
+## canopies and the overlays of cells one can walk through (a lintel, an awning) stay over everyone,
+## except a building's front edge (GP-DRAW-UNDER-HOUSE): a solid roof-layer cell with no roof-layer tile
+## south of it (the bottom row of the front wall) is drawn among the characters too, so someone standing
+## on the grass in front of a house is drawn over its wall, not half under it (see _refront).
 func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) -> void:
 	map = m
 	_sorted_parent = sorted_parent
@@ -50,7 +54,9 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 			layer.z_index = 10
 			above_parent.add_child(layer)
 			above_layers.append(layer)
-			if sorted_parent != null and not roofs.has(lay.name):
+			if roofs.has(lay.name):
+				roof_layers.append(layer)
+			if sorted_parent != null:
 				var twin := TileMapLayer.new()
 				twin.name = str(lay.name) + "_sorted"
 				twin.tile_set = tileset
@@ -65,6 +71,11 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 			var v := int(d[i])
 			if v >= 0:
 				set_tile(layer, Vector2i(i % m.w, i / m.w), v)
+	if not sorted_of.is_empty():                 # once every roof layer is in (a later layer can roof a cell's south)
+		for layer in roof_layers:
+			var twin: TileMapLayer = sorted_of[layer]
+			for cell in layer.get_used_cells() + twin.get_used_cells():
+				_refront(cell)
 
 
 ## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the
@@ -91,6 +102,12 @@ func _add_small_boulder(m: VillageMap) -> void:
 
 func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	var twin: TileMapLayer = sorted_of.get(layer)
+	if twin != null and roof_layers.has(layer):
+		twin.erase_cell(cell)
+		_put(layer, cell, v)
+		_refront(cell)                    # this cell, and the one above (its south neighbour changed)
+		_refront(cell + Vector2i.UP)
+		return
 	if twin != null:
 		if v < 0:
 			twin.erase_cell(cell)
@@ -99,6 +116,10 @@ func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 			layer = twin                     # drawn among the characters, by its cell's bottom edge
 		else:
 			twin.erase_cell(cell)
+	_put(layer, cell, v)
+
+
+func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	if v < 0:
 		layer.erase_cell(cell)
 		return
@@ -117,8 +138,46 @@ func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	layer.set_cell(cell, atlas, coords)
 
 
-## The tile value (atlas * 100000 + tile id, as in village.json) at a cell of a layer, or -1.
+## GP-DRAW-UNDER-HOUSE: a building's front edge is drawn among the characters. A cell is on it when it is solid,
+## has a tile in a roof layer and the cell south of it has none (the wall's bottom row; a door is open ground, so
+## it stays over everyone). Its roof-layer tiles then live in the layers' y-sorted twins, sorted by the cell's
+## bottom edge: a character on the ground in front (feet below that edge) is drawn over the wall, one inside or
+## behind is drawn under it. Every other roof tile stays over everyone (a villager indoors stays under the roof).
+## Decided from the cells alone, whatever order the tiles are set in (a building built in play sets its stamp
+## row by row), and cells keep their place in RoofFade's lifted copies (it lifts the twins' cells too).
+func _refront(cell: Vector2i) -> void:
+	if map == null or roof_layers.is_empty() or sorted_of.is_empty():
+		return
+	var front := map.is_solid(cell) and _roofed(cell) and not _roofed(cell + Vector2i.DOWN)
+	for layer in roof_layers:
+		var twin: TileMapLayer = sorted_of.get(layer)
+		if twin == null:
+			continue
+		var from: TileMapLayer = layer if front else twin
+		var to: TileMapLayer = twin if front else layer
+		var id := from.get_cell_source_id(cell)
+		if id < 0:
+			continue
+		to.set_cell(cell, id, from.get_cell_atlas_coords(cell), from.get_cell_alternative_tile(cell))
+		from.erase_cell(cell)
+
+
+## Whether any roof layer (or its sorted twin) has a tile at `cell`.
+func _roofed(cell: Vector2i) -> bool:
+	for layer in roof_layers:
+		if layer.get_cell_source_id(cell) >= 0:
+			return true
+		var twin: TileMapLayer = sorted_of.get(layer)
+		if twin != null and twin.get_cell_source_id(cell) >= 0:
+			return true
+	return false
+
+
+## The tile value (atlas * 100000 + tile id, as in village.json) at a cell of a layer, or -1. A roof layer's
+## front-edge cell (in its sorted twin) reads as the layer's own.
 func tile_value(layer: TileMapLayer, cell: Vector2i) -> int:
+	if layer.get_cell_source_id(cell) < 0 and roof_layers.has(layer) and sorted_of.has(layer):
+		layer = sorted_of[layer]
 	var atlas := layer.get_cell_source_id(cell)
 	if atlas < 0:
 		return -1

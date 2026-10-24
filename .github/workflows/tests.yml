@@ -106,6 +106,8 @@ jobs:
           # GP-POLISH P1 (owner directive 2026-10-24): stations opened by a tap on them; the mining swing on touch; the touch action columns
           $godot --headless --path game --script res://tests/station_tap_test.gd
           # (GP-ACTIONBAR and GP-PICKAXE-ANIM are checked in start_test.gd)
+          # GP-POLISH P2 (the owner's reports of 2026-10-24): drawing order at house fronts and the rest of the batch
+          $godot --headless --path game --script res://tests/polish_p2_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd

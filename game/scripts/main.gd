@@ -5961,6 +5961,8 @@ func _sync_levels(delta: float) -> void:
 		return
 	var fade: Array = [view, ow_view, above, blood_layer, tree_view]
 	fade.append_array(view.sorted_of.values())
+	if roofs != null:
+		fade.append_array(roofs.sorted_dst)
 	fade.append_array(animal_sprites.values())
 	fade.append_array(country_sprites.values())
 	fade.append_array(house_signs.values())

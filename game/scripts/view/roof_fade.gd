@@ -17,6 +17,7 @@ const LEAVE_HOLD := 0.3        # seconds out from under a roof before it comes b
 var view: MapView
 var src: Array[TileMapLayer] = []      # the roof layers, in draw order
 var dst: Array[TileMapLayer] = []      # their faded stand-ins
+var sorted_dst: Array[TileMapLayer] = []   # the stand-ins of the roof layers' y-sorted twins (among the characters)
 var current := ""                      # the building whose roof is lifted (fading or faded), "" none
 var alpha := 1.0
 var goal := 1.0                        # the alpha the current roof is heading for
@@ -41,6 +42,18 @@ func setup(v: MapView, roof_layers: Array) -> void:
 		d.visible = false
 		add_child(d)
 		dst.append(d)
+		# GP-DRAW-UNDER-HOUSE: the front edge of a building lives in the layer's y-sorted twin (MapView._refront);
+		# it lifts with the rest of the roof, into a faded copy that sorts among the characters the same way
+		var twin: TileMapLayer = view.sorted_of.get(l)
+		if twin != null:
+			src.append(twin)
+			var td := TileMapLayer.new()
+			td.tile_set = view.tileset
+			td.y_sort_enabled = true
+			td.visible = false
+			twin.get_parent().add_child(td)
+			dst.append(td)
+			sorted_dst.append(td)
 
 
 ## What the player's position asks of the roofs: {inside, inside_roof, under, under_roof}, the arguments of
