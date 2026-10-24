@@ -29087,16 +29087,22 @@
      "date": "2026-10-24",
      "change": "tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; test_commit: a0bd3bb -> 1c0f854; commits + 1c0f854",
      "why": "Batch A2 on wip/multiplayer-b19 1c0f854: LAN session carried forward from d18d7d1 onto the A1 players; G1 two-process loopback test 44 checks; G0 identical per the commit; no menu entry or Android network permission yet"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; test_commit: 1c0f854 -> 805a1c9; commits + 805a1c9; next_action",
+     "why": "Batch B on wip/multiplayer-b19 (80b25e1, 75fa491, 805a1c9): guests' characters saved in the host's world and restored on reconnect, including after a host restart; MP-D1 away guests out of play and not attackable after load; MP-D4 guest death offers 'Continue as the heir' or 'Leave for now', applied by the host's succession code (guest family keeps one owner ref across generations: agent decision, provisional); MP-D7 newcomers logged and counted; duplicate identity refused; join during saves; whole-or-nothing actions on disconnect; lead reran the tests and G0"
     }
    ],
-   "next_action": "Batch A on wip/multiplayer-b19 from wip/build19 42c33e0",
+   "next_action": "Batch C (full gameplay parity: per-player relationships, notoriety and judgment, quests, families for guests); then D (menus, Android interruption, internet), E, F",
    "assigned_worker": "multiplayer worker (subagent), lead integrates",
    "branch": "wip/multiplayer-b19",
-   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress",
-   "test_commit": "1c0f854",
+   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS",
+   "test_commit": "805a1c9",
    "commits": [
     "a0bd3bb",
-    "1c0f854"
+    "1c0f854",
+    "805a1c9"
    ]
   },
   {
