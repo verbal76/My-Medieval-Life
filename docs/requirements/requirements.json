@@ -21925,7 +21925,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21949,12 +21949,18 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; test_commit: None -> 31d81a3; commits + 64afa57",
      "why": "step S3 (64afa57): a guard chasing a player paths round walls (the owner's corner case caught in 3.8 s), a late report sends the guard to the reported place; bandits keep the SIM-F4 give-up; remaining A1-A3, A7-A8: cases and wanted status, search, coordination, hue and cry, yielding, multiplayer attribution"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: 31d81a3 -> d6d4aab; commits + d6d4aab",
+     "why": "A1-A3, A7, A8 on wip/multiplayer-b19 (f846ccc, 5984def, b3ff749, 27446fe, 74a6da4): cases per offender keyed by player ref and saved; pursuit states with search from the last-known place and wanted status through save/load; hue and cry (30 tiles) and bell (80 tiles), PROPOSED distances; guards share cases; villagers report sightings; yield and fine to the treasury with stolen goods returned; lethal force after resistance or multiple murder; per-player attribution; also fixed a killer misattributed by first name"
     }
    ],
-   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged",
-   "test_commit": "31d81a3",
+   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
+   "test_commit": "d6d4aab",
    "commits": [
-    "64afa57"
+    "64afa57",
+    "d6d4aab"
    ]
   },
   {
@@ -21973,7 +21979,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -21992,12 +21998,18 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; test_commit: None -> 31d81a3; commits + 31d81a3",
      "why": "step S1 and part of S2 on wip/multiplayer-b19 (770a8b1, 1ea050f, 31d81a3): openings, brush-offs and home lines read the existing witness and judgment records (you, I saw, I heard; afraid or confronting by relation and opinion); news re-voiced (you, I, we, Mum, my daughter); wording in game/data/dialogue_events.json; remaining: A4-A6 knowledge-based news, household death knowledge, multiplayer attribution"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: 31d81a3 -> d6d4aab; commits + d6d4aab",
+     "why": "A4, A5, A8 (8da404d, 4fe2fd3, 74a6da4): news is what the speaker knows (saw, took part, told by whom, rumour) in their own voice from a data table; the log-based news removed; a household learns of a death but not the killer unless told; per-player attribution"
     }
    ],
-   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged",
-   "test_commit": "31d81a3",
+   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
+   "test_commit": "d6d4aab",
    "commits": [
-    "31d81a3"
+    "31d81a3",
+    "d6d4aab"
    ]
   },
   {
@@ -22142,7 +22154,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22161,12 +22173,18 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; test_commit: None -> 31d81a3; commits + 1ea050f",
      "why": "stopgap S2 (1ea050f): oldest first, an attack dropped when the same death is reported, self and listener re-voiced; related-event merging and knowledge-based news remain (A4-A6)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged -> dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: 31d81a3 -> d6d4aab; commits + d6d4aab",
+     "why": "A5, A6 (4fe2fd3, 991ac68): six neutral news events travel by knowledge; related events merged by data rules (Lambert, Oakley), priority tiers, an 'already said' history saved per villager, thanks for a gift"
     }
    ],
-   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged",
-   "test_commit": "31d81a3",
+   "tests": "dialogue_perspective_test 56 checks (failed 30 of 42 before); pursuit_test 12 (failed 7 of 12 before); full tests.yml 103 scripts pass; unittest 117; G0 PASS unchanged; justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
+   "test_commit": "d6d4aab",
    "commits": [
-    "1ea050f"
+    "1ea050f",
+    "d6d4aab"
    ]
   },
   {
@@ -22614,8 +22632,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22628,7 +22646,17 @@
      "date": "2026-10-24",
      "change": "parent",
      "why": "child of the gossip repair"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> property_test 123 checks 0 failures (lead rerun); test_commit: None -> d6d4aab; commits + 8e6ace2",
+     "why": "fixed in 8e6ace2 with a test"
     }
+   ],
+   "tests": "property_test 123 checks 0 failures (lead rerun)",
+   "test_commit": "d6d4aab",
+   "commits": [
+    "8e6ace2"
    ]
   },
   {
@@ -22647,8 +22675,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22666,9 +22694,19 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "owner answered the three decisions (docs/directives/2026-10-24_owner_answers_crime_repair.md); schedule: S1-S3 after Build 20, then A1-A9 before multiplayer Batch B (lead recommendation, owner may reorder)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking; test_commit: None -> d6d4aab; commits + d6d4aab; next_action",
+     "why": "S1-S3 and A1-A9 implemented on wip/multiplayer-b19 d6d4aab, verified by the lead; owner questions: earshot distances (proposed 30 and 80 tiles) and whether a known killer should be refused trade (the current morality weights never refuse a shop sale)"
     }
    ],
-   "next_action": "After Build 20: S1-S3 on wip/multiplayer-b19, then A1-A9"
+   "next_action": "Owner: approve earshot distances; decide on trade refusal for known killers; device playtest in the next build",
+   "tests": "justice_test 33, pursuit_test 35, manhunt_test 59, dialogue_perspective_test 83, property_test 123, world_test 339, all 0 failures (lead rerun at d6d4aab); full tests.yml 106 suites pass; unittest 140; G0 identical (lead rerun); SIM-GATE-01 suite PASS with the manhunt and corner probes blocking",
+   "test_commit": "d6d4aab",
+   "commits": [
+    "d6d4aab"
+   ]
   },
   {
    "id": "GP-SHARPEN",

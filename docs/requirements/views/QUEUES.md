@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (34)
+## Workers and task branches (39)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -17,9 +17,14 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BACK-DOORS | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-CRIME-PURSUIT | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-DIALOGUE-PERSPECTIVE | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-GOSSIP-NATURAL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-PACK-DETAIL-FIT | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-PICKAXE-ANIM | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-PROPERTY-NAME-DOUBLE | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-REPAIR-SOCIAL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
 | GP-START-RUSTY-AXE | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-TRAIL-EDGES | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-WHEAT-PICKED | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
