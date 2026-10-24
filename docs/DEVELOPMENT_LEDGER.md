@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (626)
+## Approved requirement (627)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -309,6 +309,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |

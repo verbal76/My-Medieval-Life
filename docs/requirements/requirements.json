@@ -22155,6 +22155,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-UI-COMPACT",
+   "kind": "approved",
+   "title": "Menus: smaller text and tighter boxes so more fits on screen",
+   "description": "Menus: smaller text and tighter boxes so more fits on screen",
+   "source": "owner message with an Encyclopedia screenshot, 2026-10-24 (gameplay polish session)",
+   "owner_wording": "the text can be a little smaller so we dont need so big a box for everything and we can fit more on the screen",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "At the normal interface size the menus (Encyclopedia, Pack, stall, pause, settings and the other windows) use a somewhat smaller font and tighter padding and button heights, so visibly more fits on screen (the Encyclopedia shows more topics and more 'How do I' entries at once); text stays legible on a phone and touch targets stay comfortably tappable; the Interface size setting (small, normal, large) still scales it all; hover tooltips never draw over other buttons' text (in the owner's screenshot the Weapons and armour tooltip covers 'Earn money' and 'Get a pickaxe'); verified by before and after screenshots at phone landscape, 16:9 and Steam Deck sizes and layout tests"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "owner message with an Encyclopedia screenshot, 2026-10-24 (gameplay polish session)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-WHEAT-PICKED",
    "kind": "approved",
    "title": "Harvested wheat shows as picked, cell by cell",

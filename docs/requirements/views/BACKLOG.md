@@ -138,7 +138,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (24)
+## Multiplayer track (25)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -161,6 +161,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | OWNER APPROVED | IN DEVELOPMENT |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | OWNER APPROVED | NOT STARTED |

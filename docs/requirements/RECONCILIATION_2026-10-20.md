@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 537 (271 of them still open) |
-| **Open entries now** (rules excluded) | | **448** |
+| Entries added since | | 538 (272 of them still open) |
+| **Open entries now** (rules excluded) | | **449** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (537)
+## Added since the baseline (538)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -259,6 +259,7 @@ None.
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | HORSE-Q | Plough horse: price and what it does | decision | APPROVED | owner decision |
