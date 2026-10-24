@@ -21980,6 +21980,41 @@
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
   },
   {
+   "id": "GP-STALL-PRICE-ON-PUTUP",
+   "kind": "approved",
+   "title": "Market stall: set the price when putting goods up",
+   "description": "Market stall: set the price when putting goods up",
+   "source": "docs/gameplay_polish/reference/stall_put_up_price_2026-10-24.webp",
+   "owner_wording": "you should set the price as you sell it, not after",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "The stall's Put up dialog sets the price with the quantity: it starts at the current suggested price, can be raised and lowered (buttons, gamepad and touch), and the goods go up at the chosen price; changing a price later still works; the same applies to the player's shop and any other put-up dialog; the stall window fits the screen (no control cut off at the edges) at every supported size; wiki updated; verified by screenshots and a test"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/stall_put_up_price_2026-10-24.webp"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-START-RUSTY-AXE",
    "kind": "approved",
    "title": "The player starts with a rusty axe",
