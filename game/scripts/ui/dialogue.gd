@@ -2,7 +2,7 @@ class_name Dialogue
 extends RefCounted
 ## What a villager says to the player, in their own voice, built only from the simulation's state:
 ## their job and what they are doing, their hunger, their household's reckoning (hh.econ), what
-## they remember of the player (NPC.memory, and the judgment store's beliefs: DialogueVoice) and the
+## they know of the player (NPC.memory and what EventTalk reads; worded by DialogueVoice) and the
 ## village record (World.log_lines). The speaker is `n`; the listener is always the acting player,
 ## World.player (a guest under World.as_actor). Presentation only: nothing here changes the world,
 ## except `meet`, which adds a memory. Wording varies by the villager's id and the day, never by a
@@ -208,7 +208,7 @@ static func opening(w: World, n: NPC) -> String:
 	# S1 (REPAIR_AUDIT): someone who saw or learned that the listener killed or attacked another speaks from that,
 	# as a witness or as one who heard, to the listener's face; a killing before their own hurt, their own hurt before
 	# an attack on someone else
-	var harm := DialogueVoice.violence(w, n)
+	var harm := EventTalk.violence(w, n)
 	if not harm.is_empty() and (harm.crime == "killing" or not attacked(w, n)):
 		return DialogueVoice.witness_line(w, n, harm)
 	var animal := animal_killed(w, n)
@@ -444,7 +444,7 @@ static func news(w: World, n: NPC) -> String:
 static func brush_off(w: World, n: NPC) -> String:
 	if n.role == "bandit":
 		return "Your purse or your life."
-	var harm := DialogueVoice.violence(w, n)            # S1: a witness to the listener's violence is never "a stranger"
+	var harm := EventTalk.violence(w, n)            # S1: a witness to the listener's violence is never "a stranger"
 	if not harm.is_empty() and (harm.crime == "killing" or not attacked(w, n)):
 		return DialogueVoice.witness_brush(w, n, harm)
 	if attacked(w, n):

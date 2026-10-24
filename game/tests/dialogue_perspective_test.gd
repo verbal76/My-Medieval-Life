@@ -170,7 +170,7 @@ func test_guest_listener() -> void:
 # ---------------------------------------------------------------- S1: knowledge, relation, personality
 func test_stance() -> void:
 	var w := _world(true)
-	var V = load("res://scripts/ui/dialogue_voice.gd")
+	var V = load("res://scripts/core/event_talk.gd")
 	check(V != null, "the perspective reader exists")
 	if V == null:
 		w.dispose()
