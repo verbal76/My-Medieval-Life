@@ -5876,6 +5876,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	_unstick()
+	if couriers != null:
+		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
 	if recorder == null and FlightRecorder.enabled():
 		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
 	if recorder != null:

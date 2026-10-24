@@ -34,6 +34,9 @@ drawn by the game as a sprite at spawns.campfire, so the camp's tile 5958 (trans
 entry go; the fire's cell stays solid (camp_fire). Its crates and barrels are Shade's whole crate (797) and barrel (358)
 instead of pieces of other objects (3500, 3502, still used by the stalls and the mine yard). Nothing walkable changes.
 
+Generator v15 (GP-BUSINESS-DESK): the sawmill's table with stools (68, 25) is its business desk, a station
+(sawmill_counter, s11, used from (67, 25)) like the armory's counter; nothing drawn or walkable changes.
+
 Generator v14 (GP-SMITHY-WORKBENCH): the smithy's workbench table is cleared and drawn with a hammer and tongs; the grinding
 wheel is named in spawns (grindstone, its use cell) for sharpening (GP-SHARPEN). Collision unchanged.
 
@@ -893,6 +896,10 @@ class Village:
         self.station("armory_counter", (71, 44), smithy, at=(71, 43))
         self.station("mine_cart", (self.cart[0] + 1, self.cart[1]), None, at=self.cart)
         self.station("prep", (55, 44), tav, at=(55, 45))     # v7: the kitchen table east of the oven
+        # generator v15 (GP-BUSINESS-DESK, owner: "Just make that the business desk, like in all businesses"): the sawmill's
+        # business desk is its small table with stools (68, 25), already drawn; the carpenters keep it as the smiths keep the
+        # armory's counter (Counters.KEEPERS). A new station id (s11) after the others; nothing drawn or walkable changes.
+        self.station("sawmill_counter", (ox + 3, oy + 5), sawmill["id"], at=(ox + 4, oy + 5))
 
     # ---- market, pens, fields, camp, plots --------------------------------------------------------
     def market(self, x0, y0):

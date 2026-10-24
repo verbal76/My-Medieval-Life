@@ -259,11 +259,11 @@ func open_shop_booth(owner: String) -> String:
 	var at := Vector2i.ZERO
 	var stall := ""
 	if World.is_player_ref(owner):
-		var mine: Array = w.business.stalls.built("player")
-		if mine.is_empty():
+		var desk := BusinessDesks.of_business(w, owner)        # GP-BUSINESS-DESK: the player's own stall, storefront or shop: at its desk
+		if desk.is_empty():
 			return "You have no shop to put a booth in."
-		stall = str(mine[0].id)
-		at = Vector2i(int(mine[0].x), int(mine[0].y))
+		stall = str(desk.post) if str(desk.kind) == "stall" else ""
+		at = desk.at
 	else:
 		if not is_business(owner):
 			return "That is not a business."
@@ -282,6 +282,18 @@ func open_shop_booth(owner: String) -> String:
 		if str(sb.settlement) != SettlementFacts.VILLAGE:
 			add_route(str(b.id), str(sb.id), -1.0, w.day() + 1, str(vb.id))
 	return ""
+
+
+## GP-BUSINESS-DESK: a business's courier booth stands at its desk. A save made before the desks had a business's booth at its
+## work station (a smith's at the forge): on load it moves to the desk (its cell only; nothing it holds changes).
+func seat_at_desks() -> void:
+	for b in booths:
+		if not bool(b.get("shop", false)):
+			continue
+		var desk := BusinessDesks.of_business(w, str(b.keeper))
+		if not desk.is_empty():
+			b.x = int(desk.at.x)
+			b.y = int(desk.at.y)
 
 
 func booth_of_keeper(ref: String) -> Dictionary:
@@ -455,8 +467,17 @@ func location(ref: String, kind := "person") -> Dictionary:
 		var built: Array = w.business.stalls.built(ref)
 		if not built.is_empty():
 			return {"settlement": SettlementFacts.VILLAGE, "x": int(built[0].x), "y": int(built[0].y), "what": "their stall"}
+		# GP-BUSINESS-DESK: a business is reached at its desk (the counter of the building it works in), never at a work station;
+		# one with no desk at its building's door
+		var desk := BusinessDesks.of_business(w, ref)
+		if not desk.is_empty():
+			return {"settlement": SettlementFacts.VILLAGE, "x": int(desk.at.x), "y": int(desk.at.y), "what": "the desk of " + str(desk.name)}
 		if w.stations.has(n.workplace):
 			var st: Dictionary = w.stations[n.workplace]
+			var wb := str(st.get("building", ""))
+			if w.buildings.has(wb):
+				var door: Vector2i = w.building_door(wb)
+				return {"settlement": SettlementFacts.VILLAGE, "x": door.x, "y": door.y, "what": "the door of " + str(w.buildings[wb].get("name", "the workshop"))}
 			return {"settlement": SettlementFacts.VILLAGE, "x": int(st.use[0]), "y": int(st.use[1]), "what": "the " + str(st.type)}
 	if w.buildings.has(str(n.home)):
 		var d: Vector2i = w.building_door(n.home)
