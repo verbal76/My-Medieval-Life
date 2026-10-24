@@ -13,7 +13,7 @@ the commit and include `docs/release/TESTING_CHECKLIST.md`.
 | Godot | 4.7.2 stable, with its export templates | the game and all three exports | godotengine/godot GitHub release (installed by the workflow) |
 | Java (Temurin) | 17 | Android export | `actions/setup-java` |
 | Android SDK | the runner's preinstalled SDK | Android export | GitHub's ubuntu runner |
-| Android test key | the owner's keystore in the secrets `ANDROID_TEST_KEYSTORE_B64`, `ANDROID_TEST_KEYSTORE_PASSWORD`, `ANDROID_TEST_KEY_ALIAS` (a throwaway key only if `allow_temporary_key` is ticked) | signing the test APK so builds update each other (`ANDROID_SIGNING.md`) | the owner (secrets) |
+| Android release key | the owner's permanent keystore in the secrets `ANDROID_RELEASE_KEYSTORE_BASE64`, `ANDROID_RELEASE_KEYSTORE_PASSWORD`, `ANDROID_RELEASE_KEY_ALIAS`, `ANDROID_RELEASE_KEY_PASSWORD` (no fallback key: a missing secret stops the build) | signing the APK with `apksigner` so builds from Build 21 update each other (`ANDROID_SIGNING.md`) | the owner (secrets) |
 | Python | 3.12 | the Windows icon check | `actions/setup-python` |
 | Pillow | 10.4.0 | the Windows icon check (decodes the icon images) | PyPI |
 
