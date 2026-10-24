@@ -256,7 +256,7 @@ func activity(rec_runs: Array, chart_runs: Array) -> void:
 			emp += int(a.employment[k])
 		x.row([_label(r), int(a.decisions.get("ok", 0)), int(a.decisions.get("empty", 0)), lost, gave, emp, "not recorded: the game keeps no schedule to compare against"])
 	_blank(2)
-	x.row(["run", "longest hours on one cell while working, travelling or lost", "person", "day", "hour", "doing", "x", "y"])
+	x.row(["run", "longest hours on one cell while travelling or lost", "person", "day", "hour", "doing", "x", "y"])
 	for r in rec_runs:
 		var st: Dictionary = r.analysis.stuck
 		var ents: Array = st.keys()
@@ -422,7 +422,7 @@ func history(gate: Dictionary) -> void:
 	x.begin_sheet("Historical Comparison", ["comparison", "baseline", "seed", "day", "value", "baseline value", "current value", "verdict", "note"])
 	var h: Array = gate.get("history", [])
 	if h.is_empty():
-		x.row(["none", "", null, null, "", "", "", "not applicable", "A live recording has no baseline: historical comparison is made by the CI gate with identical seeds and rules."])
+		x.row(["none", "", null, null, "", "", "", "not applicable", "No baseline was compared here (a live recording, or a subset of the suite): the full CI gate compares identical seeds, scenarios and rules."])
 		return
 	var rows := 0
 	for e in h:
@@ -471,7 +471,8 @@ func runs_sheet(runs: Array) -> void:
 		var vals: Dictionary = r.duplicate()
 		var a = r.get("analysis")
 		if a != null:                                  # a recorded run: its outcomes as the recorder saw them
-			var last: Dictionary = a.hourly[-1] if not a.hourly.is_empty() else {}
+			var fs = a.session.get("final_snapshot")
+			var last: Dictionary = fs if fs is Dictionary else (a.hourly[-1] if not a.hourly.is_empty() else {})
 			vals.alive_end = last.get("alive")
 			vals.currency_end = last.get("total_coins")
 			vals.treasury_end = last.get("treasury")
@@ -480,7 +481,7 @@ func runs_sheet(runs: Array) -> void:
 			vals.births = int(a.life.get("birth", 0))
 			var nc := 0
 			for k in a.events:
-				if str(k).begins_with("identity|registered_newcomer|") or str(k).begins_with("identity|registered_outlaw|") or str(k).begins_with("identity|registered_arrival|"):
+				if str(k).begins_with("identity|registered_newcomer|") or str(k).begins_with("identity|registered_outlaw|") or str(k).begins_with("identity|registered_arrival|") or str(k).begins_with("identity|returned_to_village|"):
 					nc += int(a.events[k])
 			vals.newcomers = nc
 			var tr := 0

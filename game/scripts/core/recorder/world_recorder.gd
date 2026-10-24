@@ -351,6 +351,23 @@ func hour() -> void:
 ## SIM-GATE-01: the village in one row (FlightRecorder.COLUMNS.snapshot). Reads only: no random draw, no call that changes
 ## state (judgment's counts() flushes its gossip, so its facts are counted directly).
 func snapshot_row() -> void:
+	snapshot(snapshot_values())
+
+
+## The closing state: at the end of the session the same values go into session.json as "final_snapshot" (keyed by column),
+## so the archive's last word is the world as it was left, not as it was at the last hour boundary.
+func finish() -> void:
+	if not finished and not stopped and w != null:
+		var v := snapshot_values()
+		var d := {}
+		var cols: Array = COLUMNS.snapshot
+		for i in v.size():
+			d[cols[i + 1]] = v[i]
+		meta["final_snapshot"] = d
+	super.finish()
+
+
+func snapshot_values() -> Array:
 	var alive := 0
 	var adults := 0
 	var employed := 0
@@ -426,7 +443,7 @@ func snapshot_row() -> void:
 	var wall_ms = snappedf((now_us - _snap_us) / 1000.0, 0.1) if _snap_us > 0 else NOT_EVALUATED
 	_snap_us = now_us
 	var nf := float(maxi(1, alive))
-	snapshot([int(_now()[0]), int(float(_now()[1]) / 60.0), alive, purses.size(), adults,
+	var row := [int(_now()[0]), int(float(_now()[1]) / 60.0), alive, purses.size(), adults,
 		employed, children, elders, bandits, snappedf(hunger_sum / nf, 0.1), snappedf(hunger_min if alive > 0 else 0.0, 0.1), starving,
 		snappedf(hp_sum / nf, 0.001), idle, lost, fighting, guards, engaged, int(w.total_coins()), vcoins, int(w.treasury), int(w.coin_sources),
 		int(purses[0]) if not purses.is_empty() else 0, int(purses[purses.size() / 2]) if not purses.is_empty() else 0,
@@ -434,8 +451,9 @@ func snapshot_row() -> void:
 		ties, friends, courting, (w.judgment.facts.size() if w.judgment != null else NOT_EVALUATED), w.player.crimes.size(),
 		int(_hour_n.get("events", 0)), int(_hour_n.get("trades", 0)), int(_hour_n.get("trade_coins", 0)), int(_hour_n.get("transfers", 0)),
 		int(_hour_n.get("actions", 0)), int(_hour_n.get("actions_failed", 0)), int(_hour_n.get("walk_lost", 0)), int(_hour_n.get("crimes", 0)),
-		int(_hour_n.get("chases", 0)), int(_hour_n.get("alerts", 0)), delta, wall_ms, OS.get_static_memory_usage()])
+		int(_hour_n.get("chases", 0)), int(_hour_n.get("alerts", 0)), delta, wall_ms, OS.get_static_memory_usage()]
 	_hour_n.clear()
+	return row
 
 
 # ---------------------------------------------------------------- chases --------------------

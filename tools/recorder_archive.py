@@ -10,8 +10,9 @@ says whether it is whole and consistent, so the simulation gate never trusts the
   - each table's row count equals the session's own count;
   - the hourly snapshots (table "snapshot") follow one another an hour apart.
 
-It also returns the facts the gate reconciles with the simulation's own output: the last snapshot, alert counts by rule,
-villager deaths, births and newcomers, and accepted trades.
+It also returns the facts the gate reconciles with the simulation's own output: the closing snapshot (session.json
+"final_snapshot", the world as the session left it), alert counts by rule, villager deaths, births and arrivals (newcomers,
+outlaws, arrivals and people returning from a settlement), and accepted trades.
 
     python3 tools/recorder_archive.py ARCHIVE_SESSION_DIR      # prints the report; exit 1 if the archive is not valid
 """
@@ -132,7 +133,7 @@ def verify(session_dir):
                     rep["villager_deaths"] += 1
                 elif r[ci] == "life" and r[si] == "birth":
                     rep["births"] += 1
-                elif r[ci] == "identity" and r[si] in ("registered_newcomer", "registered_outlaw", "registered_arrival"):
+                elif r[ci] == "identity" and r[si] in ("registered_newcomer", "registered_outlaw", "registered_arrival", "returned_to_village"):
                     rep["newcomers"] += 1
                 elif r[ci] == "transaction" and r[si] == "trade" and r[oi] == "ok":
                     rep["trades"] += 1
@@ -150,6 +151,9 @@ def verify(session_dir):
         if (b["day"] * 24 + b["hour"]) - (a["day"] * 24 + a["hour"]) != 1:
             rep["problems"].append("snapshots not an hour apart: day %s hour %s -> day %s hour %s" % (a["day"], a["hour"], b["day"], b["hour"]))
             break
+    rep["final_snapshot"] = sess.get("final_snapshot")
+    if sess.get("ended") and not isinstance(sess.get("final_snapshot"), dict):
+        rep["problems"].append("session.json has no final_snapshot (the closing state)")
     if snaps:
         rep["first_snapshot"] = {k: v for k, v in snaps[0].items() if k != "stats_delta"}
         rep["last_snapshot"] = {k: v for k, v in snaps[-1].items() if k != "stats_delta"}

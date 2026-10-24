@@ -129,6 +129,8 @@ def check(path, defs=None, sims=None):
                 if not any(isinstance(v, (int, float)) and not isinstance(v, bool) for v in nums):
                     problems.append("%s (%s): no number in the values %s" % (cpart, title, f.text))
     for sheet, wanted in defs.get("required_charts", {}).items():
+        if sheet == "Historical Comparison" and sheets.get(sheet, {}).get((2, 7)) == "not applicable":
+            continue                                   # no baseline was compared (a live recording): nothing to chart
         for t in wanted:
             if t not in titles.get(sheet, []):
                 problems.append("missing chart %r on sheet %s" % (t, sheet))

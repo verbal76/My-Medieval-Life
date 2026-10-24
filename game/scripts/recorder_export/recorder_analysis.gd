@@ -202,7 +202,7 @@ static func analyse(session_dir: String, defs: Dictionary) -> Dictionary:
 	var activity := {}
 	var activity_daily := {}
 	var last_cell := {}            # entity -> [x, y, doing class, hours in a row there]
-	var stuck := {}                # entity -> longest run of hours on one cell while working or travelling
+	var stuck := {}                # entity -> longest run of hours on one cell while travelling or lost (a walk that never moves)
 	var final_hour := [-1, -1]
 	var final_coins := {}
 	var doing_hours := {}
@@ -221,12 +221,12 @@ static func analyse(session_dir: String, defs: Dictionary) -> Dictionary:
 		_inc(doing_hours, doing)
 		var cell := [int(row[idx.x]), int(row[idx.y])]
 		var lc = last_cell.get(ent)
-		if lc != null and lc[0] == cell[0] and lc[1] == cell[1] and lc[2] == cls and cls in ["work", "travel", "lost"]:
+		if lc != null and lc[0] == cell[0] and lc[1] == cell[1] and lc[2] == cls and cls in ["travel", "lost"]:
 			lc[3] += 1
 		else:
 			lc = [cell[0], cell[1], cls, 1]
 		last_cell[ent] = lc
-		if cls in ["work", "travel", "lost"] and int(lc[3]) > int(stuck.get(ent, [0])[0]):
+		if cls in ["travel", "lost"] and int(lc[3]) > int(stuck.get(ent, [0])[0]):
 			stuck[ent] = [int(lc[3]), day, hour, doing, cell[0], cell[1]]
 		if day > final_hour[0] or (day == final_hour[0] and hour > final_hour[1]):
 			final_hour[0] = day                      # (a lambda cannot reassign a captured variable: change it in place)

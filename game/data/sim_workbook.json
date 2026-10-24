@@ -15,7 +15,7 @@
     "Historical Comparison": ["Changes from previous builds"]
   },
   "runs_columns": ["run", "scenario", "seed", "days", "recorded", "result", "alive_start", "alive_end", "currency_end", "treasury_end", "households_end", "villager_deaths", "births", "newcomers", "trades", "crimes", "chases", "unattributed_total_alerts", "wall_seconds"],
-  "runs_note": "For a recorded run every value from alive_end on (except wall_seconds) is read from its flight recorder archive by the workbook builder; tools/check_workbook.py compares them with the simulation's own output (economy_sim.gd --out). For a run without the recorder they come from that output.",
+  "runs_note": "For a recorded run every value from alive_end on (except wall_seconds) is read from its flight recorder archive by the workbook builder (the closing snapshot in session.json; newcomers counts newcomers, outlaws, arrivals and people returning from a settlement); tools/check_workbook.py compares them with the simulation's own output (economy_sim.gd --out). For a run without the recorder they come from that output.",
   "chart_runs": 4,
   "event_rows_max": 20000,
   "production_groups": {
@@ -43,7 +43,7 @@
   "facility_prefixes": ["station_busy_"],
   "activity_classes": {
     "note": "A villager's hourly 'doing' text (sample table) sorted into a class by the first pattern it contains (no text at all is idle); anything else is work. An approximation: the game's own words, read as text.",
-    "order": ["sleep", "lost", "idle", "travel", "rest and leisure", "need", "crime and alarm", "work"],
+    "order": ["sleep", "lost", "idle", "rest and leisure", "need", "crime and alarm", "travel", "work"],
     "patterns": {
       "sleep": ["asleep", "sleeping", "going home to sleep"],
       "lost": ["lost"],
@@ -57,7 +57,8 @@
   "wealth_buckets": [0, 1, 25, 50, 100, 200, 500],
   "proposed": {
     "note": "Values the gate measures and reports but does not block on: no approved requirement sets a number. Each is shown as PROPOSED for the owner, with the value measured in this run.",
-    "stuck_hours": 6,
+    "stuck_hours": 3,
+    "stuck_note": "A villager counts as stuck when their hourly sample shows them on the same cell, travelling (going, taking, carrying ...) or lost, for this many hours in a row: a walk of three game hours that never leaves its cell. Work, rest and waiting on one cell are normal and not counted.",
     "walk_lost_per_villager_day": "measured",
     "unattributed_holder_alerts_per_day": "measured",
     "seconds_per_sim_day": "measured",

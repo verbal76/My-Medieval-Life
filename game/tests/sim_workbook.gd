@@ -4,7 +4,9 @@ extends SceneTree
 ## flight recorder archive (recorder_analysis.gd), writes that analysis as JSON beside the archive (the structured export)
 ## and builds the workbook (workbook_builder.gd). It changes nothing in the game.
 ##   godot --headless --path game --script res://tests/sim_workbook.gd -- --gate gate.json --out workbook.xlsx
-## Exit 0 when the workbook was written, 1 otherwise; prints one line "WORKBOOK {json}".
+##   godot --headless --path game --script res://tests/sim_workbook.gd -- --gate gate.json --analyse-only
+## (--analyse-only writes the analyses and no workbook: the suite reads them for its measured, proposed thresholds and then
+## asks for the workbook.) Exit 0 when the workbook (or the analyses) were written, 1 otherwise; prints "WORKBOOK {json}".
 
 const Analysis := preload("res://scripts/recorder_export/recorder_analysis.gd")
 const Builder := preload("res://scripts/recorder_export/workbook_builder.gd")
@@ -16,7 +18,8 @@ func _init() -> void:
 		return args[args.find(name) + 1] if name in args and args.find(name) + 1 < args.size() else fallback
 	var gate = RecorderArchive.read_json(str(arg.call("--gate", "")))
 	var out := str(arg.call("--out", ""))
-	if not (gate is Dictionary) or out == "":
+	var analyse_only := "--analyse-only" in args
+	if not (gate is Dictionary) or (out == "" and not analyse_only):
 		printerr("sim_workbook: --gate gate.json --out workbook.xlsx")
 		quit(1)
 		return
@@ -37,6 +40,10 @@ func _init() -> void:
 				f.store_string(JSON.stringify(exported, " ", true))
 				f.close()
 		runs.append(run)
+	if analyse_only:
+		print("WORKBOOK " + JSON.stringify({"ok": true, "analysed": runs.filter(func(x): return x.analysis != null).size(), "ms": Time.get_ticks_msec() - t0}))
+		quit(0)
+		return
 	var res: Dictionary = Builder.new().build(out, runs, gate, defs)
 	res.ms = Time.get_ticks_msec() - t0
 	print("WORKBOOK " + JSON.stringify(res))
