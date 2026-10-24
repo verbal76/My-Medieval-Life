@@ -22264,7 +22264,7 @@
    "kind": "approved",
    "title": "Interaction prompts name what the art shows (tavern 'crate' is a roast)",
    "description": "Interaction prompts name what the art shows (tavern 'crate' is a roast)",
-   "source": "docs/gameplay_polish/reference/tavern_crate_is_roast_2026-10-24.png",
+   "source": "docs/gameplay_polish/reference/tavern_crate_is_roast_2026-10-24.png; docs/gameplay_polish/reference/anvil_prompt_courier_booth_2026-10-24.webp",
    "owner_wording": "what crate, i'm near a roast.",
    "approval": "owner, 2026-10-24 (reported defect)",
    "acceptance": [
@@ -22289,6 +22289,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "assigned with polish P1 on the multiplayer branch, alongside GP-ANVIL's station audit"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "source",
+     "why": "owner reported a second case: at the smithy's anvil the first prompt is 'Courier booth: send goods by the regular route or a special delivery', with 'Use the anvil' second (Q/Tab); the courier booth (REG-COURIER-01, World.couriers.booth_near radius 1.8) is placed where no booth is drawn, and the prompt order does not prefer the station the player faces"
     }
    ],
    "assigned_worker": "primary development agent",
