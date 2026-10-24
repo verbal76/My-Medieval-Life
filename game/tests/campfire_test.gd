@@ -1,6 +1,6 @@
 extends SceneTree
 ## GP-BANDIT-CAMP-ART (owner directive 2026-10-24, docs/directives/2026-10-24_build21_campfire_asset.md), in the real game scene:
-## the bandit camp's fire is the owner's animated campfire (SMStudios): 24 frames of 64 x 64 that loop at 150 ms, drawn with
+## the bandit camp's fire is the owner's animated campfire (SMStudios): 24 frames of 32 x 32 that loop at 150 ms, drawn with
 ## nearest filtering among the characters (y-sorted), the bottom of its logs on its ground point in the camp's solid fire cell;
 ## a character south of it is drawn in front, one north of it behind. The camp's old tiles are gone (the transparent 5958 and
 ## the pieces of other objects) and it has a whole crate and barrel; SMStudios is credited with its page and licence.
@@ -38,8 +38,10 @@ func _run() -> void:
 		return
 	var cell := Vector2i(int(fc[0]), int(fc[1]))
 	var tex := fire.texture
-	check(fire.hframes == 24 and fire.vframes == 1 and tex.get_width() == 24 * 64 and tex.get_height() == 64, "24 frames of 64 x 64 in one row (%dx%d)" % [tex.get_width(), tex.get_height()])
+	check(fire.hframes == 24 and fire.vframes == 1 and tex.get_width() == 24 * 32 and tex.get_height() == 32, "24 frames of 32 x 32 in one row (%dx%d)" % [tex.get_width(), tex.get_height()])
 	check(fire.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST and fire.scale == Vector2.ONE, "nearest filtering, drawn 1:1 (no smoothing, no stretch)")
+	var vis := tex.get_image().get_used_rect()
+	check(vis.size.y <= 24 and vis.size.x <= 24 * 32, "the fire is about a tile and a half high beside one-tile characters (frames' used height %d px)" % vis.size.y)
 	check(fire.get_parent() == main.actors and main.actors.y_sort_enabled, "drawn among the characters, y-sorted")
 	# it plays and loops: frame = ticks / 150 ms mod 24
 	var seen := {}
@@ -52,11 +54,11 @@ func _run() -> void:
 	# grounded: the lowest opaque row of the art lies on the ground point, which is inside the fire's (solid) cell
 	var img := tex.get_image()
 	var lowest := -1
-	for y in 64:
-		for x in 64:
+	for y in 32:
+		for x in 32:
 			if img.get_pixel(x, y).a > 0.5:
 				lowest = maxi(lowest, y)
-	var bottom := fire.position.y + fire.offset.y + (lowest + 1) - 32.0       # centred frame
+	var bottom := fire.position.y + fire.offset.y + (lowest + 1) - 16.0       # centred frame
 	check(absf(bottom - fire.position.y) <= 1.0, "the bottom of the logs is on the ground point (%.1f vs %.1f)" % [bottom, fire.position.y])
 	check(Vector2i((fire.position / main.T).floor()) == cell and map.is_solid(cell), "the ground point is in the camp's fire cell %s, which is solid" % str(cell))
 	var camp: Vector2i = main.world.bandit_camp

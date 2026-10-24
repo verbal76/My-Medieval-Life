@@ -474,6 +474,20 @@ func test_said_history() -> void:
 	check(not Dialogue.news(w2, w2.npc(elder.id)).contains("killed"), "what was told survives save and load")
 	w.minutes += World.DAY
 	check(Dialogue.opening(w, elder).contains(child.name), "another day, the witness says it again")
+	# Build 21 (the recorder audit: 4 of 60 villagers told the same thing twice): two gifts alike on two days read word for
+	# word the same; told once, the other is not told again the same day as if it were new
+	var giver: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o != elder and o.household != elder.household and giver == null:
+			giver = o
+	var day0 := w.day()
+	JudgmentLive.on_gift(w, giver.id, elder, "coal")
+	w.minutes += World.DAY
+	JudgmentLive.on_gift(w, giver.id, elder, "coal")
+	var g1 := Dialogue.news(w, elder)
+	var g2 := Dialogue.news(w, elder)
+	print("     two coals alike, asked twice: %s | %s" % [g1, g2])
+	check(w.day() == day0 + 1 and g1.contains(giver.name) and not g2.contains(giver.name + " gave me"), "the same news on two days is told once: asked again, not repeated")
 	w.dispose()
 	w2.dispose()
 

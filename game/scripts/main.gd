@@ -22,9 +22,9 @@ const MARKER_Z := 20                 # markers draw over roofs and canopies (the
 var canopy: CanopyFade         # fades the tile canopies the player walks behind (the trees are TreeView's sprites)
 var tree_view: TreeView        # every tree as a sprite, in `actors` so characters walk behind them
 var campfire: Sprite2D         # GP-BANDIT-CAMP-ART: the bandit camp's animated fire (SMStudios), in `actors`, y-sorted
-const CAMPFIRE_FRAMES := 24    # one row of 64 x 64 frames (game/assets/fx/campfire.png)
+const CAMPFIRE_FRAMES := 24    # one row of 32 x 32 frames (game/assets/fx/campfire.png)
 const CAMPFIRE_MS := 150       # a frame's time, as the art's own preview (Campfire2D.gif)
-const CAMPFIRE_OFFSET := Vector2(0, -17)   # the bottom of the logs (the frame's row 48) on the ground point
+const CAMPFIRE_OFFSET := Vector2(0, -8)    # the bottom of the logs (the frame's row 23) on the ground point
 var roofs: RoofFade            # fades the roof of the building the player is in (or behind)
 var blankets := {}             # bed tile -> its blanket (AtlasTexture), drawn over a sleeper
 var camera: Camera2D
@@ -246,7 +246,7 @@ func _ready() -> void:
 				for i in band.size():
 					band[i].plan = [world.brain.work(600, "", {}, "idle")]
 					band[i].pos = at + (Vector2(-0.3, 0.9) if i == 0 else Vector2(-4.0 + i, 3.5))
-				world.player.pos = at + Vector2(0.3, -0.8)          # behind the fire; a bandit in front of it
+				world.player.pos = at + Vector2(0.1, -0.35)         # just behind the fire
 				follow_at = _in_view(at * T)
 				camera.zoom = Vector2(6, 6) * view_scale
 			"underground":

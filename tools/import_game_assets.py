@@ -73,6 +73,17 @@ import game_audio  # noqa: E402
 
 OUT = REPO / "game" / "assets"
 CAMPFIRE_SHEET = "Animated Pixel Campfire (SMStudios)/Sprite-sheet-campfire.png"
+CAMPFIRE_HOW = ("box-reduced by 10 to its native 64 x 64 frames (exact: drawn on a 10 px grid), alpha cut at 50%; then halved by "
+                "nearest (every second pixel, so its palette and embers stay crisp) to 24 frames of 32 x 32 (the owner: smaller, beside "
+                "one-tile characters)")
+
+
+def campfire_frames(src):
+    """GP-BANDIT-CAMP-ART: the campfire sheet (24 frames of 640 x 640 on a 10 px grid) as 24 frames of 32 x 32."""
+    from PIL import Image
+    native = src.resize((src.width // 10, src.height // 10), Image.BOX)
+    native.putalpha(native.getchannel("A").point(lambda a: 255 if a >= 128 else 0))
+    return native.resize((native.width // 2, native.height // 2), Image.NEAREST)
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
 ICON_ZIP = "16x16 Survival RPG Icons.zip"
 COZY_ZIP = "CozyFarm_full_version.zip"
@@ -794,11 +805,10 @@ def main():
     # so the reduction is exact) to 64 x 64 frames, alpha cut at half; nothing else changed
     member = CAMPFIRE_SHEET.split("/", 1)[1]
     src = Image.open(REPO / CAMPFIRE_SHEET).convert("RGBA")
-    small = src.resize((src.width // 10, src.height // 10), Image.BOX)
-    small.putalpha(small.getchannel("A").point(lambda a: 255 if a >= 128 else 0))
+    small = campfire_frames(src)
     dest = fx / "campfire.png"
     small.save(dest)
-    record(dest, CAMPFIRE_SHEET.split("/", 1)[0], member, "box-reduced by 10 to 24 frames of 64 x 64 (exact: drawn on a 10 px grid), alpha cut at 50%")
+    record(dest, CAMPFIRE_SHEET.split("/", 1)[0], member, CAMPFIRE_HOW)
     # the app icon: the owner's pictures, copied unchanged; a plain dark background for the adaptive icon
     icon_dir = OUT / "icon"
     icon_dir.mkdir(parents=True, exist_ok=True)

@@ -428,17 +428,29 @@ static func news(w: World, n: NPC) -> String:
 	var told: Array = []
 	var keys: Array = []
 	var lead_tier := -1
+	var heard := EventTalk.told(w, n)
+	var quiet_keys: Array = []
 	for g in groups:
 		if told.size() >= 2:
 			break
 		if EventTalk.all_said(w, n, g.keys):
 			continue
 		var line := DialogueVoice.group_line(w, n, g, said)
+		# Build 21 (the recorder audit's repeated news): another event that reads word for word as one already told this
+		# listener (the church's food on another day, a second coal from the same giver) is not told again: its keys are
+		# marked said, so the next new thing is told instead
+		var tkey := "line:%d" % line.hash()
+		if line != "" and heard.has(tkey):
+			quiet_keys.append_array(g.keys)
+			continue
 		if line != "" and not told.has(line):
 			told.append(line)
 			keys.append_array(g.keys)
+			keys.append(tkey)
 			if lead_tier < 0:
 				lead_tier = int(g.tier)
+	if not quiet_keys.is_empty():
+		EventTalk.mark_said(w, n, quiet_keys)
 	if not told.is_empty():
 		var lead := lead_tier >= 4 and lines.is_empty()
 		lines.append(((_pick(w, n, DialogueVoice.talk().intro.ordinary, 4) + " ") if lead else "") + " ".join(told))

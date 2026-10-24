@@ -1664,8 +1664,8 @@
    "file": "assets/fx/campfire.png",
    "source": "Animated Pixel Campfire (SMStudios)",
    "member": "Sprite-sheet-campfire.png",
-   "transform": "box-reduced by 10 to 24 frames of 64 x 64 (exact: drawn on a 10 px grid), alpha cut at 50%",
-   "sha256": "c577715c06403a9db59c5edb1f905422c58b97c7294d24831da2685743ea2fa9"
+   "transform": "box-reduced by 10 to its native 64 x 64 frames (exact: drawn on a 10 px grid), alpha cut at 50%; then halved by nearest (every second pixel, so its palette and embers stay crisp) to 24 frames of 32 x 32 (the owner: smaller, beside one-tile characters)",
+   "sha256": "c0ae0883aef1b4648ff55ab455861a3ab29cf31d00e09caa11b59d68f58321ac"
   },
   {
    "file": "assets/icon/icon_192.png",

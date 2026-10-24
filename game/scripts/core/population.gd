@@ -158,6 +158,9 @@ static func populate(w: World) -> void:
 		b.name = BANDITS[i % BANDITS.size()]
 		b.sprite = "res://assets/characters/bandit_%02d.png" % (i % 6)
 		b.pos = Vector2(w.bandit_camp) + Vector2(rng.randf_range(-3, 3), rng.randf_range(-2, 2)) + Vector2(0.5, 0.5)
+		var bc := Vector2i(b.pos.floor())
+		if w.map.is_solid(bc):                      # Build 21: never inside the camp's barrels, crates or fire (no random number drawn)
+			b.pos = Vector2(w.map.nearest_walkable(bc)) + Vector2(0.5, 0.5)
 		b.hp = 25.0
 		b.max_hp = 25.0
 		b.damage = 4.0
