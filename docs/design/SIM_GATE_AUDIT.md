@@ -93,6 +93,8 @@ count), longest first; `MML_COMMIT` names the commit in every recorder session.
 | `rot_<seed>` x 2 | rotating sample: seeds `100 + int(commit[0:8], 16) % 9900` and `[8:16]` | from the commit | 20 | on | A C D G |
 | `probe_saveload_s1`, `_s2` | save and load integrity (`sim_probes.gd --probe saveload`, 2 days) | 1, 2 | 2 | | |
 | `probe_pursuit` | F the owner's corner case (`sim_probes.gd --probe pursuit`) | 1 | 1 | on | F |
+| `probe_manhunt` | F the manhunt: hue and cry, search, wanted across save and load, yielding (`--probe manhunt`) | 1 | 1 | | F |
+| `probe_playtest` | the owner's playtest corrections, watched (`--probe playtest`, section 10; never blocking) | 1 | 3 + 4 | | E F |
 | `perf_scaling` | H 100 and 500 people (`judgment_perf.gd --sizes 100,500 --days 10 --rates live`) | | 10 | | H |
 
 **Checks.** For every economy run: exit code and script errors (crash), the FATAL line, currency leak and item ledger
@@ -107,8 +109,9 @@ never blocking: those differences are the approved changes since. Save and load:
 trip identical. Coverage: A to H all ran to their end. The workbook: written by the game's code, then validated by
 `tools/check_workbook.py` (every sheet and chart, every chart range, the Runs sheet against economy_sim's output).
 
-**Never failed:** hardship, deaths, shortages, collapse (WDR-022); measures with no approved number (section 9); the corner
-pursuit until GP-CRIME-PURSUIT is implemented (it is in the Regression Register as a known, open, major item).
+**Never failed:** hardship, deaths, shortages, collapse (WDR-022); measures with no approved number (section 9); the playtest
+watches (section 10). The corner pursuit (`probe_pursuit`) and the manhunt (`probe_manhunt`) block since GP-CRIME-PURSUIT
+landed (repairs S3, A1-A3).
 
 **Release workflow** (`.github/workflows/release.yml`): job `sim-gate` (checkout, Godot, import, the suite) and job `build`
 with `needs: sim-gate`, so a failed gate packages nothing on any platform. Artifacts `sim-gate` (gate.json, the summary, the
@@ -184,10 +187,10 @@ Artifacts of the passing run (git-ignored, this machine): `out/sim-gate/gate.jso
 
 ## 6. Not in the game yet (reported, not faked)
 
-- **Wanted status, reinforcements, arrests, pursuit after loss of sight:** do not exist (GP-CRIME-PURSUIT, owner approved, not
-  started). Guards learn of a crime by seeing it or by a report delivered face to face, one guard each; a chase ends at the first
-  wall step (`blocked`), beyond 25 tiles (`out_of_range`) or near the bandit camp. The workbook shows these ends; the corner probe
-  reproduces the owner's case.
+- **Wanted status, the search, the hue and cry, taking an offender in:** in the game since GP-CRIME-PURSUIT (repairs S3,
+  A1-A3) and checked by `probe_manhunt` and `probe_pursuit` (blocking); the recorder's chase events name the new ends (`taken`,
+  an ok outcome; `lost_sight`, the hand-over to the search; `case_closed`). The search and the wanted state themselves are not
+  recorder events (the probe reads them from the world).
 - **Good/Bad opinion ledger changes, gossip propagation, per-relation changes:** not instrumented (recorder stages D4, D5); the
   snapshot carries hourly totals only.
 - **Production and consumption by item and actor:** the game's counters (`w.stats`) per hour, not per actor; contracts, business,
@@ -235,6 +238,25 @@ Measured in the passing run; none blocks; each needs an owner decision before it
 | Recorder overhead, same seed side by side | +24% (+11.7% in the first suite run, +15% in the 10-day pair) | under 50% | noisy when the runs share the machine |
 | 500-person judgment load (synthetic) | 387 ms a simulated day; worst frame 7.7 ms; p99 2.0 ms | the agent proposal in `docs/expansion19/DESIGN.md` section 7 | proposed budgets, not approved |
 
-The corner pursuit is not a threshold: GP-CRIME-PURSUIT is approved and states its acceptance; the gate reports it as a known
-open major defect and will fail on it only once the requirement is implemented and its probe is made blocking (a one-line change
-in `tools/sim_suite.py`, by the lead, when GP-CRIME-PURSUIT lands).
+The corner pursuit is not a threshold: GP-CRIME-PURSUIT is implemented and its probe blocks.
+
+## 10. Build 21 audit: the owner's playtest corrections (2026-10-24)
+
+Owner directive `docs/directives/2026-10-24_build21_final_integration.md` section 6. Reconciled against the code at `1a6fb4b`:
+the pursuit and manhunt probes already followed the crime repairs; obsolete text above (sections 3, 6, 9) is corrected; the
+recorder's `taken` chase end is an ok outcome (it was counted "interrupted"); the coverage note lists the new chase ends.
+
+Added: `probe_playtest` (`sim_probes.gd --probe playtest`, seed 1, 3 days of the whole village, then the band killed and watched
+for a season and two days). It measures, never blocks (known-defect watches with no approved number; each failing watch is a
+"major", non-blocking finding in the gate):
+
+| Owner correction | Watch | Automatic? |
+|---|---|---|
+| Bandits dying at once, vanishing, not respawning (SIM-F4, BANDIT-RETURN) | a bandit dead within 2 hours of appearing; one gone from the world with no death; at night (01:00-03:00) at the camp, out stalking, or elsewhere; outlaws back a season after the band died, alive, at the camp | yes |
+| Guards' pursuit, search, wanted (GP-CRIME-PURSUIT) | `probe_pursuit`, `probe_manhunt` (blocking) | yes |
+| Station reach, the use cell free (GP-ANVIL) | each station's use cell open, no other station on it, in reach from it, reached by a path; at the start and after 3 days | yes |
+| A trail to every door (GP-BACK-DOORS) | the generator's own check (`tests/test_village.py`) and `polish_p2_test.gd` | yes (static) |
+| Characters walking under building edges / on walls | villagers on a solid cell, every hour | yes |
+| Gossip said over and over (GP-DIALOGUE A6) | every grown villager asked for news twice the same day: a sentence of the first answer in the second | yes |
+| No coins or goods made or lost | every economy run's ledgers and the recorder's coin audit (blocking) | yes |
+| Menus' size, the brown pause background, roofs, back doors on roofs, interior walls, the smithy wall, sprite choices, the bandit camp's pictures, the campfire | none: what it looks like is the owner's to judge on a device | no (visual) |

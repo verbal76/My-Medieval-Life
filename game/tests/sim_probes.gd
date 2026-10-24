@@ -4,6 +4,7 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/sim_probes.gd -- --probe saveload [--seed 1] [--days 2] --out r.json
 ##   godot --headless --path game --script res://tests/sim_probes.gd -- --probe pursuit [--seed 1] [--record DIR] --out r.json
 ##   godot --headless --path game --script res://tests/sim_probes.gd -- --probe manhunt [--seed 1] --out r.json
+##   godot --headless --path game --script res://tests/sim_probes.gd -- --probe playtest [--seed 1] --out r.json
 ## saveload: a world run for --days is saved (World.to_dict, as JSON text, sorted keys, as the game writes it), loaded into a
 ##   new World and saved again. Nothing may be dropped or changed (numbers compared by value: 1780 = 1780.0); a key the loader
 ##   adds (a default filled in) is listed, not failed; the people, coins and items must match; and a second round trip must
@@ -17,6 +18,13 @@ extends SceneTree
 ##   its search of the last-known place once the player is out of sight (never of where the player is), the case wanted
 ##   when the search ends, the wanted status and the guards' knowledge after save and load (with nobody tracking the player),
 ##   and a beaten player yielding (owner answer 2): case settled, the fine in the treasury, no coin made or lost.
+## playtest (Build 21 recorder audit, owner directive 2026-10-24 section 6): the owner's playtest corrections that a running
+##   village can show, measured hour by hour over --days (default 3) of the whole village, then the band killed and watched
+##   until outlaws come back (BANDIT-RETURN) and make camp: bandits not dying at once or vanishing without a death, at the
+##   camp (or out stalking) at night, coming back a season after the last died; nobody standing on a solid (wall) cell;
+##   every station's use cell open, in reach and reached by a path (GP-ANVIL); a villager asked twice the same day does not
+##   tell the same news again (GP-DIALOGUE A6). Measured, reported; the gate never blocks on these (they are known-defect
+##   watches, not approved thresholds). Static map facts (a trail to every door, GP-BACK-DOORS) are tests/test_village.py's.
 
 const STEP := 0.5                    # economy_sim's step: one game minute
 
@@ -37,8 +45,10 @@ func _init() -> void:
 			r = pursuit(seed, str(arg.call("--record", "")))
 		"manhunt":
 			r = manhunt(seed)
+		"playtest":
+			r = playtest(seed, int(arg.call("--days", "3")))
 		_:
-			printerr("sim_probes: --probe saveload|pursuit|manhunt")
+			printerr("sim_probes: --probe saveload|pursuit|manhunt|playtest")
 			quit(2)
 			return
 	r.probe = probe
@@ -322,3 +332,144 @@ func _open_near(w: World, at: Vector2, d: float) -> Vector2:
 		if not w.map.is_solid(c) and w.place_of(Vector2(c) + Vector2(0.5, 0.5)) == "" and w.map.find_path(Vector2i(at.floor()), c).size() > 0:
 			return Vector2(c) + Vector2(0.5, 0.5)
 	return at
+
+
+# ---------------------------------------------------------------- playtest -----------------------
+func playtest(seed: int, days: int) -> Dictionary:
+	var w := new_world(seed)
+	var camp := Vector2(w.bandit_camp) + Vector2(0.5, 0.5)
+	var bandits := {}                        # id -> {name, first (minute), died (minute or -1), cause}
+	var cause_of := {}
+	var last_cause := [""]
+	w.event.connect(func(t: String):
+		var at := t.find("has died (")
+		if at >= 0:
+			last_cause[0] = t.substr(at + 10, t.rfind(")") - at - 10))
+	w.npc_died.connect(func(n: NPC):
+		cause_of[n.id] = last_cause[0]
+		last_cause[0] = "")
+	var on_wall := [0]                       # (an array: the closure below counts into it)
+	var on_wall_examples := []
+	var night := {"samples": 0, "at_camp": 0, "stalking": 0, "elsewhere": 0, "elsewhere_examples": []}
+	var vanished := []
+	var watch := func() -> void:
+		for n: NPC in w.npcs:
+			if n.role == "bandit":
+				if not bandits.has(n.id):
+					bandits[n.id] = {"name": n.name, "first": w.minutes, "died": -1.0, "cause": ""}
+				if not n.alive and float(bandits[n.id].died) < 0.0:
+					bandits[n.id].died = w.minutes
+					bandits[n.id].cause = str(cause_of.get(n.id, "(no death recorded)"))
+			if n.alive and n.depth == 0 and w.map.is_solid(Vector2i(floori(n.pos.x), floori(n.pos.y))):
+				on_wall[0] += 1
+				if on_wall_examples.size() < 8:
+					on_wall_examples.append("day %d %02d:00 %s %s (%s) at %s" % [w.day(), w.hour(), n.name, n.family, n.doing, str(Vector2i(n.pos.floor()))])
+		for id in bandits:
+			if float(bandits[id].died) < 0.0 and (w.npc(int(id)) == null or not w.by_id.has(int(id))):
+				if not vanished.has(id):
+					vanished.append(id)
+		var h := w.hour()
+		if h >= 1 and h <= 3:
+			for n: NPC in w.npcs:
+				if n.alive and n.role == "bandit":
+					night.samples += 1
+					if n.pos.distance_to(camp) <= 8.0:
+						night.at_camp += 1
+					elif n.doing == "stalking" or n.target != -1:
+						night.stalking += 1
+					else:
+						night.elsewhere += 1
+						if (night.elsewhere_examples as Array).size() < 6:
+							night.elsewhere_examples.append("day %d %02d:00 %s (%s) %.0f tiles from camp" % [w.day(), h, n.name, n.doing, n.pos.distance_to(camp)])
+	var stations0 := _stations_check(w)
+	watch.call()
+	for hr in days * 24:
+		run_minutes(w, 60)
+		watch.call()
+	var stations1 := _stations_check(w)
+	var first_band: Array = bandits.keys()
+	var alive0 := w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "bandit").size()
+	# the band is killed (as the player or the guards might); outlaws should come back a season later and make camp
+	for n: NPC in w.npcs.duplicate():
+		if n.alive and n.role == "bandit":
+			w.kill(n, "slain in the probe")
+	var killed_day := w.day()
+	var arrived0 := int(w.stats.get("outlaws_arrived", 0))
+	var wait := Outlaws.wait_days()
+	var back_at := -1
+	for hr in (wait + 2) * 24:
+		run_minutes(w, 60)
+		watch.call()
+		if back_at < 0 and int(w.stats.get("outlaws_arrived", 0)) > arrived0:
+			back_at = w.day()
+	var newcomers := w.npcs.filter(func(n: NPC) -> bool: return n.role == "bandit" and not first_band.has(n.id))
+	var new_alive := newcomers.filter(func(n: NPC) -> bool: return n.alive)
+	var new_at_camp := new_alive.filter(func(n: NPC) -> bool: return n.pos.distance_to(camp) <= 8.0 or n.doing == "stalking" or n.target != -1)
+	# gossip: each grown villager asked for news twice in one day
+	var told := 0
+	var repeated := 0
+	var rep_examples := []
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult" or n.depth != 0:
+			continue
+		var a := Dialogue.news(w, n)
+		var b := Dialogue.news(w, n)
+		var fresh := a.split(". ", false)
+		var again := 0
+		for sent: String in fresh:
+			if sent.length() > 25 and b.contains(sent.strip_edges().trim_suffix(".")):
+				again += 1
+		if a != b or again > 0:
+			told += 1
+		if again > 0:
+			repeated += 1
+			if rep_examples.size() < 4:
+				rep_examples.append("%s %s: %s | then: %s" % [n.name, n.family, a.left(160), b.left(160)])
+	var quick := []
+	for id in bandits:
+		var lived := float(bandits[id].died) - float(bandits[id].first) if float(bandits[id].died) >= 0.0 else -1.0
+		if lived >= 0.0 and lived < 120.0 and not str(bandits[id].cause).contains("probe"):
+			quick.append("%s died %.0f minutes after appearing (%s)" % [bandits[id].name, lived, bandits[id].cause])
+	var deaths := []
+	for id in bandits:
+		if float(bandits[id].died) >= 0.0 and not str(bandits[id].cause).contains("probe"):
+			deaths.append("%s day %d (%s)" % [bandits[id].name, int(float(bandits[id].died) / World.DAY), bandits[id].cause])
+	var r := {"days": days, "bandits_at_start": first_band.size(), "bandits_alive_before_kill": alive0, "bandit_deaths_in_play": deaths,
+		"bandits_dead_within_2_hours": quick, "bandits_vanished_without_death": vanished.size(), "night": night,
+		"band_killed_day": killed_day, "season_days": wait, "outlaws_back_day": back_at, "outlaws_arrived": int(w.stats.get("outlaws_arrived", 0)) - arrived0,
+		"outlaws_alive": new_alive.size(), "outlaws_at_camp_or_stalking": new_at_camp.size(),
+		"on_solid_cell_npc_hours": on_wall[0], "on_solid_examples": on_wall_examples,
+		"stations_day0": stations0, "stations_end": stations1,
+		"gossip": {"asked": told, "repeated": repeated, "examples": rep_examples}, "coins_total_end": w.total_coins(), "ok": true}
+	r.bandits_ok = quick.is_empty() and vanished.is_empty() and (back_at >= 0 and new_alive.size() >= 2)
+	r.walls_ok = on_wall[0] == 0
+	r.stations_ok = (stations0.bad as Array).is_empty() and (stations1.bad as Array).is_empty()
+	r.gossip_ok = repeated == 0
+	w.dispose()
+	return r
+
+
+## GP-ANVIL: every station's use cell is open ground, no other station stands on it, the station is in reach from it, and a
+## path leads to it from the village's open ground (the player's start).
+func _stations_check(w: World) -> Dictionary:
+	var bad := []
+	var from := Vector2i(w.player.pos.floor())
+	var ats := {}
+	for id in w.stations:
+		var st: Dictionary = w.stations[id]
+		if st.has("at"):
+			ats[Vector2i(int(st.at[0]), int(st.at[1]))] = id
+	var ids: Array = w.stations.keys()
+	ids.sort()
+	for id in ids:
+		var st: Dictionary = w.stations[id]
+		var use := Vector2i(int(st.use[0]), int(st.use[1]))
+		if w.map.is_solid(use):
+			bad.append("%s: its use cell %s is solid" % [id, str(use)])
+		elif ats.has(use) and str(ats[use]) != str(id):
+			bad.append("%s: its use cell %s holds %s" % [id, str(use), ats[use]])
+		elif not World.station_in_reach(st, Vector2(use) + Vector2(0.5, 0.5), Vector2.ZERO):
+			bad.append("%s: not in reach from its use cell" % id)
+		elif use != from and w.map.find_path(from, use).size() == 0:
+			bad.append("%s: no path to its use cell %s" % [id, str(use)])
+	return {"stations": ids.size(), "bad": bad}

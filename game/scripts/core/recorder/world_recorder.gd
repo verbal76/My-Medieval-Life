@@ -501,7 +501,7 @@ func _chase_close(n: NPC, reason: String) -> void:
 	var who := "guard" if n.job == "guard" else ("bandit" if n.role == "bandit" else "villager")
 	var tref := ref_of(_player_of(int(c.target))) if Life.is_player_id(int(c.target)) else _pref(int(c.target))
 	var mins := float(w.minutes) - float(c.t0)
-	var outcome := "ok" if reason in ["target_slain", "robbed"] else ("abandoned" if reason in ["out_of_range", "near_bandit_camp", "blocked", "bandit_low_hp"] else "interrupted")
+	var outcome := "ok" if reason in ["target_slain", "robbed", "taken"] else ("abandoned" if reason in ["out_of_range", "near_bandit_camp", "blocked", "bandit_low_hp"] else "interrupted")
 	var ev := begin("combat", "chase", "combat", "chase_" + who, ref_of(n), {"parent": -1, "x": int(c.x), "y": int(c.y)})
 	participant(ev, ref_of(n), who)
 	participant(ev, tref, "target:player" if Life.is_player_id(int(c.target)) else "target")

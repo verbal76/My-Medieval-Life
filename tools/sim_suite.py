@@ -180,7 +180,7 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
     findings, runs, history, proposals, notes = [], [], [], [], []
     by_run = {j["run"]: j for j in jobs}
     sims = {}
-    pursuit, manhunt, saveload, perf_rows, profile = {}, {}, [], [], []
+    pursuit, manhunt, playtest, saveload, perf_rows, profile = {}, {}, {}, [], [], []
     for j in jobs:
         j["reproduce"] = reproduce_line(j)
         res = results.get(j["run"])
@@ -217,6 +217,18 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
                     findings.append(finding(j, "the manhunt does not behave as GP-CRIME-PURSUIT A1-A3 requires (hue and cry, search of the last-known place, wanted after the search and after save and load, yielding)",
                                             "critical", True, "every measure true", json.dumps({k: r.get(k) for k in ("hue_and_cry", "searched", "searched_from_last_known", "last_known_is_hideout",
                                             "status_after_search", "status_after_load", "guards_knowing_after_load", "yielded", "status_after_yield", "fine_paid", "coins_conserved", "error")})[:600]))
+            elif j["probe"] == "playtest":
+                # Build 21 recorder audit: the owner's playtest corrections a running village shows. Watches of known defects with no
+                # approved threshold: reported (major), never blocking (WDR-022; the owner decides what to fix)
+                playtest = r
+                watches = [("bandits_ok", "bandits: one died within two hours of appearing, vanished without a death, or the band did not come back a season after it died (BANDIT-RETURN)",
+                            {k: r.get(k) for k in ("bandits_dead_within_2_hours", "bandits_vanished_without_death", "outlaws_back_day", "outlaws_alive", "outlaws_at_camp_or_stalking")}),
+                           ("walls_ok", "characters stood on solid (wall) cells", {k: r.get(k) for k in ("on_solid_cell_npc_hours", "on_solid_examples")}),
+                           ("stations_ok", "a station's use cell is blocked, out of reach or unreachable (GP-ANVIL)", {k: r.get(k) for k in ("stations_day0", "stations_end")}),
+                           ("gossip_ok", "a villager asked twice the same day tells some of the same news again (GP-DIALOGUE A6)", r.get("gossip", {}))]
+                for key, desc, actual in watches:
+                    if r and not r.get(key, False):
+                        findings.append(finding(j, desc, "major", False, "none", json.dumps(actual)[:600]))
             else:
                 pursuit = r
                 if r and not r.get("meets_requirement"):
@@ -372,7 +384,7 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
     if missing:
         findings.append(finding({"run": "suite", "seed": None, "scenario": "coverage"}, "required scenario coverage missing: %s" % ", ".join("%s %s" % (c, COVERAGE[c]) for c in missing),
                                 "critical", not partial, "A to H covered", ", ".join(missing)))
-    return {"findings": findings, "runs": runs, "history": history, "notes": notes, "pursuit": pursuit, "manhunt": manhunt, "saveload": saveload,
+    return {"findings": findings, "runs": runs, "history": history, "notes": notes, "pursuit": pursuit, "manhunt": manhunt, "playtest": playtest, "saveload": saveload,
             "population_scaling": [{"size": p.get("n"), "line": "%.1f ms a simulated day; worst frame %.2f ms; p99 %.2f ms; memory %.1f MB; save %d KB" % (
                 p.get("total_ms", 0), p.get("max_frame_ms", 0), p.get("p99_frame_ms", 0), p.get("mem_mb", 0), p.get("save_kb", 0))} for p in perf_rows],
             "perf_rows": perf_rows, "profile": profile, "build_points": build_points, "sims": sims, "covered": sorted(covered)}
@@ -469,6 +481,8 @@ def main():
              {"run": "probe_saveload_s2", "kind": "probe", "probe": "saveload", "seed": 2, "scenario": "save and load integrity", "args": ["--days", "2"]},
              {"run": "probe_pursuit", "kind": "probe", "probe": "pursuit", "seed": 1, "scenario": "F guard pursuit: the owner's corner case", "record": True},
              {"run": "probe_manhunt", "kind": "probe", "probe": "manhunt", "seed": 1, "scenario": "F the manhunt: hue and cry, search, wanted across save and load, yielding"},
+             {"run": "probe_playtest", "kind": "probe", "probe": "playtest", "seed": 1, "scenario": "the owner's playtest corrections: bandits, walls, stations, repeated news",
+              "args": ["--days", "3"]},
              {"run": "perf_scaling", "kind": "perf", "seed": 0, "scenario": "H population scaling 100 and 500 (judgment harness)",
               "args": ["--sizes", "100,500", "--days", "10", "--rates", "live", "--variants", "spread"]}]
     if a.only:                           # a targeted subset while developing: suite-level checks (determinism pair, coverage)

@@ -121,7 +121,7 @@
   },
   {
    "system": "Combat chases",
-   "interaction": "each chase of NPCBrain.fight: from the tick a fighter's target is new to the line of fight() that clears it, with that line's reason (blocked, out_of_range, near_bandit_camp, target_gone, robbed, target_slain, bandit_low_hp), or cleared_elsewhere / retargeted; fighter, target (the player marked), start and end distance, game minutes and seconds, blows struck",
+   "interaction": "each chase of NPCBrain.fight: from the tick a fighter's target is new to the line of fight() that clears it, with that line's reason (blocked, out_of_range, near_bandit_camp, target_gone, robbed, target_slain, bandit_low_hp; since GP-CRIME-PURSUIT A1-A3: taken, a beaten offender taken in, an ok outcome; lost_sight, the hand-over to the search of the last-known place; case_closed), or cleared_elsewhere / retargeted; fighter, target (the player marked), start and end distance, game minutes and seconds, blows struck",
    "where": "NPCBrain.fight (chase_tick, chase_strike, chase_end), WorldRecorder.hour (stale chases)",
    "status": "Partially instrumented",
    "stage": "SIM-GATE-01",
