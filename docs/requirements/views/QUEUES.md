@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (42)
+## Workers and task branches (44)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -22,6 +22,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-PACK-DETAIL-FIT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PAUSE-PANEL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PICKAXE-ANIM | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-SHARPEN | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-SMITHY-WORKBENCH | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-STALL-PRICE-ON-PUTUP | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-STALL-TABLE-10 | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-START-RUSTY-AXE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |

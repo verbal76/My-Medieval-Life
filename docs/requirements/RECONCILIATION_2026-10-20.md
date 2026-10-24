@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 544 (278 of them still open) |
-| **Open entries now** (rules excluded) | | **455** |
+| Entries added since | | 546 (280 of them still open) |
+| **Open entries now** (rules excluded) | | **457** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (544)
+## Added since the baseline (546)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -258,6 +258,8 @@ None.
 | GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | multiplayer |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-PROGRESS-BAR | One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
+| GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |

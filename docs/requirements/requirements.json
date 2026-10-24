@@ -22167,6 +22167,76 @@
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
   },
   {
+   "id": "GP-SHARPEN",
+   "kind": "approved",
+   "title": "Sharpen a weapon at the smith's grinding wheel for 1 coin",
+   "description": "Sharpen a weapon at the smith's grinding wheel for 1 coin",
+   "source": "owner message with a smithy screenshot, 2026-10-24 (docs/gameplay_polish/reference/grindstone_not_workbench_2026-10-24.png)",
+   "owner_wording": "You could probably use that to sharpen weapons. Maybe charge them a gold piece to sharpen a weapon there.",
+   "approval": "owner, 2026-10-24 (answers: Repair wear; Pay the smith)",
+   "acceptance": [
+    "At the grinding wheel the smith, when present, sharpens a weapon for 1 coin paid to the smith: the weapon's durability is restored to full (repair of wear only, no damage bonus); offered for each worn weapon carried or worn; refused with a reason when the smith is away, the weapon is unworn or the payer lacks a coin; villagers, guards and bandits who carry weapons can pay for it too through the same verb; the coin is a real transaction (ledger conserved); actor-aware; wiki and manifest updated; tested; G0 change reported"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "owner message with a smithy screenshot, 2026-10-24 (docs/gameplay_polish/reference/grindstone_not_workbench_2026-10-24.png)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
+   "id": "GP-SMITHY-WORKBENCH",
+   "kind": "approved",
+   "title": "Smithy: the grinding wheel is not the workbench; a table dressed with hammers is",
+   "description": "Smithy: the grinding wheel is not the workbench; a table dressed with hammers is",
+   "source": "docs/gameplay_polish/reference/grindstone_not_workbench_2026-10-24.png",
+   "owner_wording": "That's not a workbench, that's a grinding wheel. ... maybe one of these tables can be cleared off and make it a workbench. Like put a hammer or two on top of it so it looks like a work area.",
+   "approval": "owner, 2026-10-24 (answer: A table with hammers)",
+   "acceptance": [
+    "The smithy's workbench station moves from the grinding wheel to one of the smithy's tables, cleared of its jars and sacks and drawn with a hammer or two on it (art through the asset pipeline); its prompt and window name it the workbench; the grinding wheel is no longer a workbench; the same check done for every workshop's stations (prompt matches the art); villagers' use of the workbench follows it (G0 change reported); verified by screenshots and the audit test"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/grindstone_not_workbench_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with GP-TARGET-ART-MATCH on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-STALL-PRICE-ON-PUTUP",
    "kind": "approved",
    "title": "Market stall: set the price when putting goods up",
