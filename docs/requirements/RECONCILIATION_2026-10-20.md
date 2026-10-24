@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 534 (268 of them still open) |
-| **Open entries now** (rules excluded) | | **445** |
+| Entries added since | | 535 (269 of them still open) |
+| **Open entries now** (rules excluded) | | **446** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (534)
+## Added since the baseline (535)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -250,6 +250,7 @@ None.
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | GP-PROGRESS-BAR | One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
