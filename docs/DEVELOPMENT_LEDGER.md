@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (606)
+## Approved requirement (608)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -352,6 +352,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MON-01 | Monsters, village defence, bounties and monster goods: skeletons underground and in the woods, lizards, a crab monster and boss monsters in forests and hills; rare attacks on the village where guards go first and villagers form a defensive line; the player can become a hero of the town; bounties to hunt monsters and bring back their pelts, building prestige; villagers may choose to become monster hunters; a market for specialty goods only monsters give; all of it moving villagers' emotions, their view of the player and their sense of safety | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | multiplayer | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
+| MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | OD01-QUEST | Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -774,14 +776,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-F2-Q1 | Who makes mining equipment: should the carpenter make supports, ladders and minecarts for sale, and the manor buy supports and post repair work? (Without a maker the village never tunnels, hauls by cart or digs shafts on its own) | owner decision | APPROVED |  |
 | MIN-F2-Q2 | Should an underground collapse injure or kill people beneath it (today they are moved to the nearest floor unharmed)? | owner decision | APPROVED |  |
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | owner decision | APPROVED |  |
-| MP-D1 | Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first | multiplayer | OPEN | yes |
-| MP-D2 | Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)? | multiplayer | OPEN | yes |
-| MP-D3 | Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)? | multiplayer | OPEN | yes |
-| MP-D4 | Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)? | multiplayer | OPEN | yes |
-| MP-D5 | Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs? | multiplayer | OPEN | yes |
-| MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | multiplayer | OPEN | yes |
-| MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | multiplayer | OPEN | yes |
-| MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | multiplayer | OPEN | yes |
+| MP-D1 | Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first | multiplayer | APPROVED | yes |
+| MP-D2 | Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)? | multiplayer | APPROVED | yes |
+| MP-D3 | Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)? | multiplayer | APPROVED | yes |
+| MP-D4 | Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)? | multiplayer | APPROVED | yes |
+| MP-D5 | Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs? | multiplayer | APPROVED | yes |
+| MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | multiplayer | APPROVED | yes |
+| MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | multiplayer | APPROVED | yes |
+| MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | multiplayer | APPROVED | yes |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
 | OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | OPEN |  |

@@ -27066,14 +27066,42 @@
    "completion": "OPEN"
   },
   {
+   "id": "MP-ARCH",
+   "kind": "approved",
+   "title": "Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance",
+   "description": "Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance",
+   "source": "docs/directives/2026-10-24_owner_multiplayer_decisions.md",
+   "owner_wording": "The proposed architecture is approved in principle: one authoritative simulation, multiple full player characters, shared gameplay systems, and single-player compatibility.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Each of the eight requirements met and evidenced at its batch gate"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_owner_multiplayer_decisions.md"
+    }
+   ]
+  },
+  {
    "id": "MP-D1",
    "kind": "decision",
    "title": "Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first",
    "description": "Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first",
    "source": "docs/directives/2026-10-24_master_multiplayer_directive.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved: disconnected characters leave active play; every persistent record stays in the host world; ownership, obligations and relationships are never deleted automatically",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27089,6 +27117,11 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "options and consequences in docs/multiplayer/MULTIPLAYER_PREPARATION.md s.5; recommendation (a) leaves the world while disconnected"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27099,8 +27132,8 @@
    "description": "Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved: accelerated resting needs the agreement of every connected player; anyone still active keeps the world at normal speed",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27111,6 +27144,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27121,8 +27159,8 @@
    "description": "Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved: individual menus never pause an active multiplayer world; single-player pause unchanged",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27133,6 +27171,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27143,8 +27186,8 @@
    "description": "Multiplayer: a player dies while others play (continue as heir at once with the world running, or a short wait first)?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Modified: a player's death never freezes the world; the established succession mechanics apply, with the appropriate player choice instead of a forced heir transition",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27155,6 +27198,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27165,8 +27213,8 @@
    "description": "Multiplayer internet connection method: free methods first (LAN, manual address, automatic port mapping, a documented virtual-LAN fallback); relay for cellular decided separately with costs?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved conditionally: free connection methods first; internet multiplayer stays mandatory; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal comes back to the owner before internet support is declared complete",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27177,6 +27225,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27187,8 +27240,8 @@
    "description": "Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Modified: Android backgrounding supports temporary interruption and reconnection where technically possible; the hosted world is safely suspended and recovered when the host process cannot continue; no promise of uninterrupted background hosting without device evidence",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27199,6 +27252,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27209,8 +27267,8 @@
    "description": "Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved: new guest characters arrive as newcomers under the established world rules",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27221,6 +27279,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
     }
    ]
   },
@@ -27231,8 +27294,8 @@
    "description": "Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)?",
    "source": "docs/multiplayer/MULTIPLAYER_PREPARATION.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approved with mutual consent for player-to-player marriage and every other action that needs both participants' agreement; existing family, inheritance and succession mechanics preserved",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "multiplayer",
    "related": [],
@@ -27243,6 +27306,40 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/MULTIPLAYER_PREPARATION.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner decided 2026-10-24 (docs/directives/2026-10-24_owner_multiplayer_decisions.md)"
+    }
+   ]
+  },
+  {
+   "id": "MP-INET",
+   "kind": "approved",
+   "title": "Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete",
+   "description": "Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete",
+   "source": "docs/directives/2026-10-24_owner_multiplayer_decisions.md",
+   "owner_wording": "Implement free connection methods first, but internet multiplayer remains mandatory. A virtual-LAN workaround alone does not satisfy the final usability requirement. Return with a practical connectivity proposal before declaring internet support complete.",
+   "approval": "owner, 2026-10-24 (MP-D5)",
+   "acceptance": [
+    "Practical connectivity proposal presented to and decided by the owner",
+    "Internet sessions work through the approved method on real devices, including a host on a mobile network if the approved method covers it"
+   ],
+   "target_build": "multiplayer",
+   "parent": "MP-MASTER",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_owner_multiplayer_decisions.md"
     }
    ]
   },
@@ -27299,9 +27396,14 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "preparation report written (compatibility assessment, reuse map, architecture, batch plan, decisions MP-D1..D8, effort, connection methods and costs)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "owner approved the architecture in principle and decided MP-D1..D8 (docs/directives/2026-10-24_owner_multiplayer_decisions.md); integration plan updated with the decisions and gates G0-G10"
     }
    ],
-   "next_action": "owner: MP-D1..D8 and, after Build 19's acceptance, authorization of Batch A (docs/multiplayer/MULTIPLAYER_PREPARATION.md)"
+   "next_action": "after Build 19's owner acceptance and an explicit authorization: Batch A (docs/multiplayer/MULTIPLAYER_PREPARATION.md)"
   },
   {
    "id": "MSW-01",

@@ -1,7 +1,8 @@
 # Multiplayer preparation: compatibility assessment, architecture, batch plan and decisions (2026-10-24)
 
 Owner directive `docs/directives/2026-10-24_master_multiplayer_directive.md` (register MP-MASTER). **Preparation only: nothing
-is implemented, merged or activated.** Implementation starts after Build 19's owner acceptance and an explicit authorization.
+is implemented, merged or activated.** **Architecture approved in principle and MP-D1..D8 decided by the owner on 2026-10-24**
+(`docs/directives/2026-10-24_owner_multiplayer_decisions.md`; register MP-ARCH, MP-INET; sections 5, 6 and 10 updated). Implementation starts after Build 19's owner acceptance and an explicit authorization.
 Sequence: Build 19 acceptance → full multiplayer → Expansion 20.
 
 Sources: a read-only audit of `wip/build19` (2026-10-24); the prototype `wip/multiplayer` `d18d7d1` and its notes
@@ -98,27 +99,27 @@ The branch stays as it is (preserved); work starts on a new branch from accepted
 9. **Conservation**: every player's coins and goods count in `World.total_coins` and the census; networking adds no holder.
 10. **Saves**: one world file on the host with all characters; guests never save.
 
-## 5. Owner decisions needed before implementation
+## 5. Owner decisions (decided 2026-10-24)
 
-| Id | Question | Options (consequences) | Recommendation |
-|---|---|---|---|
-| **MP-D1** (directive s.8) | A guest's character while disconnected | (a) **leaves the world**: removed from the map, needs paused, property and coins stay theirs, nobody can rob or kill them; fair and simple, but villagers see them vanish. (b) **stays, asleep at home**: present, ages and grows hungry, can be robbed or attacked, can starve if away long; most "living", but punishes players who leave. (c) **stays and works its job**: an AI runs the character; richest, but an AI makes choices the player did not | (a), with the character returning where it left; property, contracts and debts keep running on the shared clock (rent falls due, contracts can lapse) |
-| MP-D2 | Resting and sleeping that skip time | (a) time skips only when every connected player is resting or asleep (as Minecraft); (b) no skipping while guests are present; (c) each rest skips only for that player (not possible on a shared clock) | (a) |
-| MP-D3 | Menus and placement mode that pause the world | (a) never pause while guests are connected; (b) only the host's menus pause | (a) |
-| MP-D4 | A player dies while others play | (a) that player continues as their heir at once, as today, while the world runs; (b) a short wait screen, then the heir | (a), with the world not frozen for anyone |
-| MP-D5 | Internet connection method (section 8) | see section 8 | LAN + manual address + automatic router port mapping first (free); a relay decided before Batch D |
-| MP-D6 | Android hosting in the background | (a) the world pauses for everyone when the Android host leaves the app (as the host quitting); (b) an Android foreground service keeps hosting (needs a native Android plugin, battery cost) | (a) first; (b) as a later improvement |
-| MP-D7 | New guest characters | (a) a new guest creates a character (name, appearance) and arrives as a newcomer to the village; (b) arrives as a member of an existing household | (a) |
-| MP-D8 | Player-to-player relationships (CRT-03 approved: the other player may decline) | marriage, children and inheritance between two players: confirm they follow the same rules as with villagers | same rules; children of two players are villagers until one becomes an heir |
+| Id | Decision | What the implementation does |
+|---|---|---|
+| MP-D1 | Approved | A disconnected guest's character leaves active play (off the map, not acting, not targetable). Every persistent record stays in the host's world: property, coins, goods, contracts, debts, rent, relationships, family, reputation. Nothing is deleted automatically; obligations keep their own rules on the shared clock |
+| MP-D2 | Approved | Accelerated rest happens only when every connected player agrees (each asks to rest); while anyone stays active the world runs at normal speed and a resting player simply rests in real time |
+| MP-D3 | Approved | In a multiplayer session no individual menu or placement mode pauses the world; single-player pause is unchanged |
+| MP-D4 | Modified | A death never freezes the world. The established succession mechanics apply (heir, inheritance, the village's view of the family, ID-D1), and the player is offered the choice those mechanics allow instead of an automatic transition; the world keeps running for everyone while they choose. The exact choices are those single player already has; no new succession rules are invented |
+| MP-D5 | Approved conditionally | Free methods first (LAN discovery, manual address, automatic port mapping). Internet multiplayer is mandatory (MP-INET); a virtual-LAN workaround alone does not satisfy it. A practical connectivity proposal (costs, dependencies, privacy, alternatives) returns to the owner before internet support is called complete |
+| MP-D6 | Modified | Android interruptions: a guest that is backgrounded or loses the network reconnects to the same character; an Android host that is backgrounded or killed suspends the world safely (save on interruption, guests told the host has paused) and recovers it when the host returns. No claim of uninterrupted background hosting without device evidence |
+| MP-D7 | Approved | A new guest creates a character and arrives as a newcomer under the established world rules (housing, work, the village's opinion from nothing) |
+| MP-D8 | Approved with mutual consent | Player-to-player marriage and every other action that needs both participants (courtship, gifts accepted, contracts, trades between players) require both players' consent; family, inheritance and succession work as they do today |
 
 ## 6. Batch plan (directive section 12)
 
 | Batch | Content | Checkpoint |
 |---|---|---|
 | **A Foundation** | new branch from accepted Build 19; `World.players` with the host as one player; ids and refs per player and the 20-to-21 save migration; actor-parameterized verbs (no behaviour change); then the prototype's transport, identity, discovery and handshake carried forward | single player unchanged: all suites and the Build 19 baseline identical; two processes connect and hold the same world state |
-| **B Persistence** | guest characters in the host's save; reconnect to the same character; MP-D1 policy; duplicate refusal | host restart and guest reconnect tests; coin and item census before and after |
-| **C Full gameplay** (sub-batches) | C1 movement in the core, needs, health, death and heirs (MP-D2, D3, D4); C2 gathering, inventory, equipment, crafting, stations; C3 economy: trade, negotiation, credit, contracts, employment, manor work, couriers; C4 property: land, rent, construction, farms, pens, chests, carts, businesses; C5 society: conversation, ties, judgment, gossip, courtship, marriage, families, guardianship, feasts; C6 crime and combat: theft, witnesses, guards, bandits, animals, family protection; C7 underground levels | each sub-batch: focused two-player tests on the same rules as the host; conservation; single-player baseline unchanged |
-| **D Cross-platform** | Android, Windows and Linux hosting and joining; mixed platforms; LAN and the chosen internet method; Android lifecycle (background, sleep, network change); Steam Deck controls | the nine-cell host-guest matrix on real devices (owner's devices; results recorded) |
+| **B Persistence** | guest characters in the host's save; reconnect to the same character; MP-D1 (leave active play, every record kept); new guests as newcomers (MP-D7); duplicate refusal | host restart and guest reconnect tests; coin and item census before and after |
+| **C Full gameplay** (sub-batches) | C1 movement in the core, needs, health, death and succession with the player's choice (MP-D4), rest by agreement of all (MP-D2), no menu pause in sessions (MP-D3); C2 gathering, inventory, equipment, crafting, stations; C3 economy: trade, negotiation, credit, contracts, employment, manor work, couriers; C4 property: land, rent, construction, farms, pens, chests, carts, businesses; C5 society: conversation, ties, judgment, gossip, courtship, marriage (mutual consent between players, MP-D8), families, guardianship, feasts; C6 crime and combat: theft, witnesses, guards, bandits, animals, family protection; C7 underground levels | each sub-batch: focused two-player tests on the same rules as the host; conservation; single-player baseline unchanged |
+| **D Cross-platform** | Android, Windows and Linux hosting and joining; mixed platforms; LAN and the free internet methods, then the owner-approved connectivity proposal (MP-D5, MP-INET); Android lifecycle: guest reconnect, host safe suspend and recovery (MP-D6); Steam Deck controls | the nine-cell host-guest matrix on real devices (owner's devices; results recorded) |
 | **E Three to four players** | simultaneous actions, conflicting purchases, shared construction, combat, several players with one NPC, disconnects, host restart, performance with normal load | sessions with four players; measured host frame time, bandwidth, memory on the Pixel 10 Pro XL |
 | **F Final integration** | full regression, determinism, conservation, save integrity, security review, performance, packaging | release-readiness review for the owner; no publication without authorization |
 
@@ -153,6 +154,30 @@ uncertainties: Android hosting performance, and internet connectivity across mob
 virtual-LAN fallback for players. Cellular hosting and "always connects" need a relay; before any relay work, a separate decision
 with current prices, privacy terms and alternatives (prices to be checked at that time, not assumed here). No paid service is
 introduced without the owner's approval.
+
+## 10. Verification gates (MP-ARCH requirement 7)
+
+Every gate records the exact build commit, devices, OS versions, network and the result per step; automated runs never count as
+device checks (register `playtest`).
+
+| Gate | When | Evidence required |
+|---|---|---|
+| G0 Single player | every batch | all suites, the Build 19 determinism baseline identical with no guests, conservation |
+| G1 Two processes | A, B | host and guest processes on one machine: join, same state, reconnect, host restart |
+| G2 Gameplay parity | each C sub-batch | two-player tests per system on the host's rules; census before and after |
+| G3 Android | D | Pixel 10 Pro XL hosting and joining; background, lock, network change, interruption save and recovery |
+| G4 Windows | D | hosting and joining; firewall prompt |
+| G5 Linux | D | hosting and joining on a desktop |
+| G6 Steam Deck | D | hosting and joining with Steam Deck controls, in game mode |
+| G7 Mixed platforms | D | the nine-cell host-guest matrix (Android, Windows, Linux each as host with each as guest) |
+| G8 Internet | D | the free methods, then the owner-approved method (MP-INET), across separate networks including mobile data |
+| G9 Four players | E | a session with four players across at least two platforms; simultaneous and conflicting actions; host restart |
+| G10 Release readiness | F | all gates passed, no known critical save, sync or security defect, performance on the supported hardware |
+
+## 11. Reporting
+
+Multiplayer appears in every status and release-readiness report until the owner accepts it, with its stage (designed,
+implemented on a branch, integrated, tested locally, tested on devices, accepted, released) and the open gates.
 
 ## 9. Interactions with the roadmap
 

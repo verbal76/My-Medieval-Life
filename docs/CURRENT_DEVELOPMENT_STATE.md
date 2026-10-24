@@ -106,6 +106,8 @@ Overnight plan (owner authorization 2026-10-23; decisions made on the owner's be
    Build 19 acceptance → full multiplayer → Expansion 20. Preparation only now (assessment, plan, decisions; MP-D1 open);
    implementation after Build 19's owner acceptance and explicit authorization. Prototype `wip/multiplayer` d18d7d1 preserved;
    its notes and the 2026-10-21 audit in `docs/multiplayer/`.
+   Architecture approved in principle; MP-D1..D8 decided 2026-10-24 (MP-ARCH, MP-INET); plan with gates G0-G10 in
+   `docs/multiplayer/MULTIPLAYER_PREPARATION.md`. Report multiplayer's stage in every status report until owner acceptance.
 Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
 
 ## Waiting on the owner
