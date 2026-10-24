@@ -200,3 +200,219 @@ static func stance(w: World, n: NPC, k: Dictionary) -> String:
 	if bold <= -2:
 		return "afraid"
 	return "confront" if bold >= 2 else "guarded"
+
+
+# ---------------------------------------------------------------- A4: what the speaker knows, and how
+## GP-DIALOGUE A4 (REPAIR_AUDIT D1): every event the speaker `n` holds a memory of, with how they came to know it. With
+## judgment attached this is the speaker's judgment memories (JudgmentStore.memories: belief and fact, source, teller);
+## without it, the villager's own memory strings (NPC.memory), which is all the Build 18 path has. Nobody is told
+## anything here: a villager who learned nothing knows nothing (the omniscient village record is not read).
+##
+## Each item: {key, type, how: "saw" | "part" (took part: the victim, the beneficiary, the household) | "told" (by `teller`)
+## | "rumour" (further along), teller: NPC or null, actors, victims, benef: [person], hh: the household an event is about
+## (-1 none), tags: {place, price, item, cause, by, rent}, day, sev, perm, ev (the fact id, -1 from memory)}. A person is
+## an NPC, a PlayerState, or null (unknown or gone).
+static func events(w: World, n: NPC) -> Array:
+	var out := []
+	if w.judgment != null:
+		var mem: Dictionary = w.judgment.memories.get(n.id, {})
+		var evs := mem.keys()
+		evs.sort()
+		for ev in evs:
+			var b: Dictionary = w.judgment.belief(n.id, int(ev))
+			var f: Dictionary = w.judgment.fact(int(ev))
+			if b.is_empty() or f.is_empty() or str(b.type) == "meeting":
+				continue
+			var tags := _tags(f.tags)
+			var how: String = {"participant": "part", "witnessed": "saw", "told": "told", "rumour": "rumour"}.get(str(b.src), "rumour")
+			var it := {"key": "ev:%d" % int(ev), "ev": int(ev), "type": str(b.type), "how": how,
+				"teller": w.npc(int(b.by)) if int(b.by) >= 0 else null, "day": int(f.day), "tags": tags,
+				"actors": (b.actors as Array).map(func(a): return person_of_id(w, int(a[0]), tags)),
+				"victims": (f.victims as Array).map(func(v): return person_of_id(w, int(v), tags)),
+				"benef": (f.beneficiaries as Array).map(func(v): return person_of_id(w, int(v), tags)),
+				"hh": int(tags.get("hh", -1)), "sev": int(w.judgment.definition(str(b.type)).get("severity", 0)), "perm": bool(b.permanent)}
+			out.append(it)
+		return out
+	return _from_memory(w, n)
+
+
+## A fact's tags as a dictionary: "place:<id>", "price:<n>", "hh:<index>", "item:<id>", "cause:<kind>", "by:<player ref>".
+static func _tags(tags: Array) -> Dictionary:
+	var o := {}
+	for t in tags:
+		var s := str(t)
+		var i := s.find(":")
+		if i > 0:
+			o[s.substr(0, i)] = s.substr(i + 1)
+	return o
+
+
+## The person a fact names: a villager by id; Life.PLAYER_ID is the player the fact's "by" tag names (multiplayer: the
+## right player), else, with one player in play, that player; else null (a player the speaker cannot tell apart).
+static func person_of_id(w: World, id: int, tags: Dictionary):
+	if Life.is_player_id(id):
+		if tags.has("by"):
+			return w.player_of_ref(str(tags.by))
+		return w.host_player() if w.players.size() == 1 else null
+	return w.npc(id)
+
+
+## The Build 18 path (judgment off): what the villager's own memory strings say, and nothing more.
+static func _from_memory(w: World, n: NPC) -> Array:
+	var out := []
+	for i in n.memory.size():
+		var s := str(n.memory[i])
+		var it := {}
+		if s.begins_with("saw ") and s.contains(" attack "):
+			var who = _named(w, s.substr(4, s.find(" attack ") - 4))
+			var vic := _person_named(w, n, s.substr(s.find(" attack ") + 8))
+			if who != null and vic != null:
+				it = {"type": "assault", "how": "saw", "actors": [who], "victims": [vic], "benef": []}
+		elif s.ends_with(")") and s.contains(" died ("):
+			var dead := dead_named(w, n, s.substr(0, s.find(" died (")))
+			if dead != null:
+				it = {"type": "death", "how": "part", "actors": [], "victims": [dead], "benef": [], "tags": {"cause": _cause_kind(s.substr(s.find(" died (") + 7).trim_suffix(")"))}}
+		elif s.begins_with("heard the hue and cry: ") or s.begins_with("heard the alarm bell: "):
+			var rest := s.substr(s.find(": ") + 2)
+			for verb in [" killed ", " attacked "]:
+				if rest.contains(verb):
+					var who = _named(w, rest.substr(0, rest.find(verb)))
+					var vic := _person_named(w, n, rest.substr(rest.find(verb) + verb.length()))
+					if vic != null:
+						it = {"type": "killing" if verb == " killed " else "assault", "how": "rumour", "actors": [who] if who != null else [], "victims": [vic], "benef": []}
+					break
+		if not it.is_empty():
+			it.merge({"key": "mem:%d" % i, "ev": -1, "teller": null, "day": w.day(), "tags": it.get("tags", {}), "hh": -1, "sev": 0, "perm": true})
+			out.append(it)
+	return out
+
+
+## A player or villager by full name ("Wat Ashdown"), the players first; null for none.
+static func _named(w: World, full_name: String):
+	for p in w.players.values():
+		if full(p) == full_name:
+			return p
+	for o: NPC in w.npcs:
+		if full(o) == full_name:
+			return o
+	return null
+
+
+static func _person_named(w: World, n: NPC, full_name: String) -> NPC:
+	return _person(w, n, full_name)
+
+
+## "slain" | "starvation" | "old_age" | "other": how someone died, never who did it.
+static func _cause_kind(cause: String) -> String:
+	if cause.begins_with("slain"):
+		return "slain"
+	if cause == "starvation":
+		return "starvation"
+	if cause == "old age":
+		return "old_age"
+	return "other"
+
+
+## What the person is to the speaker, for the wording: "you" (the listener: compared as the player, never by name), "i",
+## "kin" (with `rel`), "household", "player" (another player), "npc", or "none".
+static func role_of(w: World, n: NPC, who) -> Dictionary:
+	if who == null:
+		return {"kind": "none"}
+	if who is PlayerState:
+		return {"kind": "you"} if who == w.player else {"kind": "player", "who": who}
+	var o: NPC = who
+	if o == n:
+		return {"kind": "i"}
+	var rel := relation(w, n, o)
+	if rel == "household":
+		return {"kind": "household", "who": o, "rel": rel}
+	if rel != "":
+		return {"kind": "kin", "who": o, "rel": rel}
+	return {"kind": "npc", "who": o}
+
+
+## Whether the listener (the acting player) is one of the people an event item names.
+static func listener_in(w: World, it: Dictionary) -> bool:
+	for k in ["actors", "victims", "benef"]:
+		for p in it.get(k, []):
+			if p is PlayerState and p == w.player:
+				return true
+	return false
+
+
+## Whether the speaker, their household or their kin is one of the people an event item names (or the household it is about).
+static func ours(w: World, n: NPC, it: Dictionary) -> bool:
+	if int(it.get("hh", -1)) >= 0 and int(it.hh) == n.household:
+		return true
+	for k in ["actors", "victims", "benef"]:
+		for p in it.get(k, []):
+			if p is NPC and (p == n or relation(w, n, p) != ""):
+				return true
+	return false
+
+
+## How much an event matters to the speaker talking to this listener (lower first; the directive's conversation
+## priorities): 0 it involves the listener and the speaker or their people; 1 a serious harm to the speaker or their
+## people (severity 2000 or more, a death); 2 it involves the listener; 3 the speaker's own people or household; 4 news of
+## anyone else.
+static func news_tier(w: World, n: NPC, it: Dictionary) -> int:
+	var li := listener_in(w, it)
+	var ou := ours(w, n, it)
+	var serious := int(it.get("sev", 0)) >= 2000 or str(it.type) in ["killing", "death"]
+	if li and ou:
+		return 0
+	if ou and serious:
+		return 1
+	if li:
+		return 2
+	if ou:
+		return 3
+	return 4
+
+
+## The `k` events the speaker would tell first (news_tier, then the newest), with what another event already tells
+## left out: an attack whose victim the same hand killed, as the speaker knows it.
+static func news_items(w: World, n: NPC, k: int) -> Array:
+	var all := events(w, n)
+	var keep := []
+	for it in all:
+		if str(it.type) in ["meeting"]:
+			continue
+		var kl := _killed_too(all, it) if str(it.type) == "assault" else {}
+		if not kl.is_empty():
+			if HOW.find(str(it.how)) < HOW.find(str(kl.how)):
+				kl.how = it.how                    # the attack seen tells how the speaker knows the killing it led to
+				kl.teller = it.teller
+			continue
+		keep.append(it)
+	keep.sort_custom(func(a, b):
+		var ta := news_tier(w, n, a)
+		var tb := news_tier(w, n, b)
+		if ta != tb:
+			return ta < tb
+		if int(a.day) != int(b.day):
+			return int(a.day) > int(b.day)
+		if int(a.ev) != int(b.ev):
+			return int(a.ev) > int(b.ev)
+		return str(a.key) > str(b.key))
+	return keep.slice(0, k)
+
+
+const HOW := ["saw", "part", "told", "rumour"]     # how surely one knows, surest first
+
+
+## The killing in `all` by the same hand of the same victim as attack `a`, or {}.
+static func _killed_too(all: Array, a: Dictionary) -> Dictionary:
+	for it in all:
+		if str(it.type) == "killing" and _same(it.get("victims", []), a.get("victims", [])) and (_same(it.get("actors", []), a.get("actors", [])) or (it.get("actors", []) as Array).is_empty()):
+			return it
+	return {}
+
+
+static func _same(a: Array, b: Array) -> bool:
+	if a.size() != b.size():
+		return false
+	for i in a.size():
+		if a[i] != b[i]:
+			return false
+	return true

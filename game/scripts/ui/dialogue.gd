@@ -1,9 +1,9 @@
 class_name Dialogue
 extends RefCounted
 ## What a villager says to the player, in their own voice, built only from the simulation's state:
-## their job and what they are doing, their hunger, their household's reckoning (hh.econ), what
-## they know of the player (NPC.memory and what EventTalk reads; worded by DialogueVoice) and the
-## village record (World.log_lines). The speaker is `n`; the listener is always the acting player,
+## their job and what they are doing, their hunger, their household's reckoning (hh.econ), and what
+## they know (NPC.memory and the events EventTalk reads; worded by DialogueVoice). The village record
+## (World.log_lines) is the player's own record, never a villager's knowledge (A4). The speaker is `n`; the listener is always the acting player,
 ## World.player (a guest under World.as_actor). Presentation only: nothing here changes the world,
 ## except `meet`, which adds a memory. Wording varies by the villager's id and the day, never by a
 ## random number generator.
@@ -62,13 +62,6 @@ static func sentence(text: String) -> String:
 	if not t[t.length() - 1] in [".", "!", "?", "\"", "”"]:
 		t += "."
 	return t
-
-
-## Whether a village-record line can be repeated by a villager as news: not addressed to the player
-## ("You ...", "Your ..."), not a bare heading.
-static func _repeatable(text: String) -> bool:
-	var t := text.strip_edges()
-	return t != "" and not (t.begins_with("You ") or t.begins_with("Your ") or t.begins_with("You'") or t.contains(" you ") or t.contains(" your "))
 
 
 static func _job_name(job: String) -> String:
@@ -390,52 +383,36 @@ static func home(w: World, n: NPC) -> String:
 	return " ".join(lines.slice(0, 3))
 
 
-## "Any news?": what they know happened to them (a theft they found), then the latest lines of
-## the village record that name them or their family, else the latest village news. S2 (REPAIR_AUDIT, a stopgap until
-## the event-perspective layer): told in the order it happened; an attack is left out when the record also tells the
-## victim's death by the same hand; and each line is said in the speaker's voice where the record's names allow it
-## (DialogueVoice.revoice: "you", "I", "our family"/"we"/"us", "Mum").
+## "Any news?" (A4, REPAIR_AUDIT D1-D4): what the speaker knows, never the village record. A theft they found, then
+## the events they hold a memory of (EventTalk.events: seen, taken part in, told, rumoured), the gravest for them first:
+## what involves the listener and their own people, then their own people, then the listener, then anyone else; each
+## said from the speaker's side (DialogueVoice.event_line: "you", "I", "we", "Mum") and framed by how they know it ("I
+## saw it myself", "Hugh told me", "they say"). A villager who learned nothing has no news.
 static func news(w: World, n: NPC) -> String:
 	var lines: Array = []
 	var prefix := "found "
 	for i in range(n.memory.size() - 1, -1, -1):
 		var m: String = n.memory[i]
 		if m.begins_with(prefix) and m.ends_with(" missing"):
-			lines.append("Someone took %s." % _plain_what(w, n, m.substr(prefix.length(), m.length() - prefix.length() - 8)).trim_suffix("."))
+			lines.append(str(DialogueVoice.talk().missing).format({"what": _plain_what(w, n, m.substr(prefix.length(), m.length() - prefix.length() - 8)).trim_suffix(".")}))
 			break
-	var ours := RegEx.create_from_string("\\b%s\\b" % n.family) if n.family != "" else null
-	var texts: Array = []
-	for line in w.log_lines:
-		texts.append(line.substr(line.find("] ") + 2) if line.begins_with("[") and line.find("] ") > 0 else line)
-	var deaths := DialogueVoice.death_keys(texts)
-	var about: Array = []
-	var other: Array = []
-	for i in range(texts.size() - 1, -1, -1):
-		var text: String = texts[i]
-		if not _repeatable(text) or DialogueVoice.attack_told_by_death(text, deaths):
-			continue
-		if about.has(text) or other.has(text) or lines.has(sentence(text)):
-			continue
-		if ours and ours.search(text) and about.size() < 2:
-			about.append(text)
-		elif other.size() < 2:
-			other.append(text)
-		if about.size() >= 2 and other.size() >= 2:
-			break
-	about.reverse()                              # oldest first: the story in the order it happened
-	var ments := DialogueVoice.mentions(w, n)
-	var state := {}
-	var voiced := func(t: String) -> String: return sentence(DialogueVoice.revoice(w, n, t, ments, state))
-	if not about.is_empty():
-		lines.append(_pick(w, n, ["Have you heard?", "People are talking."], 4) + " " + " ".join(about.map(voiced)))
-	elif not other.is_empty():
-		lines.append(("Nothing about us. But they say: " if lines.is_empty() else "And they say: ") + voiced.call(other[0]))
+	var picked := EventTalk.news_items(w, n, 2)
+	var said := {}
+	var told: Array = []
+	for it in picked:
+		var line := DialogueVoice.event_line(w, n, it, said)
+		if line != "" and not told.has(line):
+			told.append(line)
+	if not told.is_empty():
+		var lead := EventTalk.news_tier(w, n, picked[0]) >= 4 and lines.is_empty()
+		lines.append(((_pick(w, n, DialogueVoice.talk().intro.ordinary, 4) + " ") if lead else "") + " ".join(told))
 	if w.relations.player_friend(n):             # a friend tells the player who is courting (CRT-06)
 		var gossip := _courting_gossip(w, n)
 		if gossip != "":
 			lines.append(gossip)
 	if lines.is_empty():
-		return "Nothing much has happened." if n.role != "child" else "Nothing happens here. It's boring!"
+		var q: Dictionary = DialogueVoice.talk().quiet
+		return _pick(w, n, q.get(n.role, q.default))
 	return " ".join(lines)
 
 

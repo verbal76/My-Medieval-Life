@@ -1,15 +1,15 @@
 class_name DialogueVoice
 extends RefCounted
-## How a villager words what they know (REPAIR_AUDIT_DIALOGUE_CRIME_GUARDS steps S1 and S2): the speaker's own voice
+## How a villager words what they know (REPAIR_AUDIT_DIALOGUE_CRIME_GUARDS steps S1 and A4-A6): the speaker's own voice
 ## for the listener ("you"), themselves, their household and their family. Presentation only: nothing here changes the
 ## world. What the speaker knows, and how they meet the listener, are EventTalk's (core); the wording is data
-## (res://data/dialogue_events.json, mml-dialogue-events/1).
+## (res://data/dialogue_events.json, mml-dialogue-events/2).
 ##
-## S2 (the stopgap for news, until the event-perspective layer D1-D4): a village-record line is a sentence written when
-## the event happened; it is re-voiced for the speaker only where the people it names can be told apart by name: the
-## listener ("you"), the speaker ("I"), the speaker's own household ("our family", "we", "us") and the speaker's
-## relatives ("Mum", "my daughter Rose"). A line whose subject would need a verb the data does not list, or whose names
-## are shared, is left as it is. The record has no participant data beyond its words, so nothing is guessed.
+## A4 (the perspective renderer, REPAIR_AUDIT D4): an event the speaker knows (EventTalk.events: the people in it and how
+## the speaker learned it) is said from the speaker's place in it, from the data's clause for its type and the frame for
+## how they know it. The people are told apart by who they are, never by their names, so two people of one name, or a
+## household sharing a surname, are never confused. (The S2 stopgap, which re-voiced lines of the village record, went
+## with the record's use as news: a villager tells only what they know.)
 
 static var _data := {}
 
@@ -89,110 +89,124 @@ static func home_death(w: World, n: NPC, first: String, cause: String) -> String
 	return _fill(Dialogue._pick(w, n, t[kind], 9), w, n, o, extra)
 
 
-# ---------------------------------------------------------------- S2: re-voicing the village record
-## The names in a record line the speaker would say otherwise: [{s, kind (you | i | we | kin), phrase}], longest first.
-## Only names that belong to one person (or one household) are listed: a shared name is left alone.
-static func mentions(w: World, n: NPC) -> Array:
-	var out := []
-	var you := EventTalk.listener_name(w)
-	if EventTalk.count_named(w, you) == 1:
-		out.append({"s": you, "kind": "you"})
-	var me := EventTalk.full(n)
-	if me != you and EventTalk.count_named(w, me) == 1:
-		out.append({"s": me, "kind": "i"})
-	if n.household >= 0:
-		var fam: String = w.households[n.household].family
-		var same := 0
-		for hh in w.households:
-			if hh.family == fam:
-				same += 1
-		if same == 1:
-			out.append({"s": "The %s household" % fam, "kind": "we"})
-			out.append({"s": "the %s household" % fam, "kind": "we"})
-	for o: NPC in w.npcs:
-		if o == n or EventTalk.relation(w, n, o) == "":
-			continue
-		var full := EventTalk.full(o)
-		if full != you and full != me and EventTalk.count_named(w, full) == 1:
-			out.append({"s": full, "kind": "kin", "phrase": name_for(w, n, o)})
-	out.sort_custom(func(a, b): return a.s.length() > b.s.length() or (a.s.length() == b.s.length() and a.s < b.s))
-	return out
+# ---------------------------------------------------------------- A4: the perspective renderer
+static func talk() -> Dictionary:
+	return data().talk
 
 
-const SUBJECT := {"you": "you", "i": "I", "we": "we"}
-const OBJECT := {"you": "you", "i": "me", "we": "us"}
-const POSSESSIVE := {"you": "your", "i": "my", "we": "our"}
+## How the speaker names a person in an event, as `form`: "subj" (the subject), "obj" or "poss" ("your", "Mum's").
+## `said` (the reply so far) turns "our family" into "we" after its first time.
+static func person(w: World, n: NPC, who, form: String, said: Dictionary) -> String:
+	var r := EventTalk.role_of(w, n, who)
+	match str(r.kind):
+		"you":
+			return {"subj": "you", "obj": "you", "poss": "your"}[form]
+		"i":
+			return {"subj": "I", "obj": "me", "poss": "my"}[form]
+		"none":
+			return {"subj": "someone", "obj": "someone", "poss": "someone's"}[form]
+		"player":
+			var pn := EventTalk.full(r.who)
+			return Dialogue.possessive(pn) if form == "poss" else pn
+	var phrase := name_for(w, n, r.who)
+	return Dialogue.possessive(phrase) if form == "poss" else phrase
 
 
-## One record line in the speaker's own voice (see the class note), or the line unchanged. `state` carries what the
-## reply has said already: the first time the speaker's household is the subject it is "our family", then "we".
-static func revoice(w: World, n: NPC, text: String, ments: Array, state: Dictionary) -> String:
-	var news: Dictionary = data().news
-	var t := text.strip_edges()
-	var died := RegEx.create_from_string(str(news.died)).search(t)
-	if died != null:
-		for m in ments:
-			if died.get_string("victim") == m.s and m.kind != "you":
-				t = str(news.died_kin).format({"victim": m.s, "cause": died.get_string("cause")})
-				break
-	var verbs: Dictionary = news.verbs
-	var word_re := RegEx.create_from_string("^\\s+([A-Za-z]+)")
-	for m in ments:
-		var from := 0
-		while true:
-			var i := t.find(m.s, from)
-			if i < 0:
-				break
-			var after := t.substr(i + m.s.length())
-			var rep := ""
-			var cut := 0                               # characters after the name the replacement also takes
-			if after.begins_with("'s ") or after.begins_with("' "):
-				cut = 2 if after.begins_with("'s") else 1
-				rep = Dialogue.possessive(m.phrase) if m.kind == "kin" else POSSESSIVE[m.kind]
-			else:
-				var wm := word_re.search(after)
-				var word := wm.get_string(1) if wm != null else ""
-				if m.kind == "kin":
-					rep = m.phrase
-				elif verbs.has(word):
-					var form = verbs[word]
-					var verb: String = form if form is String else str(form[m.kind])
-					if m.kind == "we" and i == 0 and not bool(state.get("we_said", false)):
-						rep = "our family"                 # third person: the verb stays as written
-					else:
-						rep = SUBJECT[m.kind]
-						after = after.substr(0, wm.get_start(1)) + verb + after.substr(wm.get_end(1))
-					if m.kind == "we":
-						state.we_said = true
-				elif i == 0:
-					if m.kind != "we":
-						return text                        # a subject whose verb the data does not list: unchanged
-					rep = "our family"
-					state.we_said = true
-				elif word.length() > 2 and word.ends_with("s") and word == word.to_lower():
-					return text                            # perhaps a verb in the present ("leaves"): unchanged
-				else:
-					rep = OBJECT[m.kind]
-			if i == 0:
-				rep = _cap(rep)
-			t = t.substr(0, i) + rep + after.substr(cut)
-			from = i + rep.length()
-	return t
+## A group of people (an event's beneficiaries or victims): "us" when the speaker is among them, "you" for the listener,
+## "the <Family>s" for a whole household that is not the speaker's, else the first one or two as named.
+static func group(w: World, n: NPC, people: Array, form: String, hh: int, said: Dictionary) -> String:
+	var live := people.filter(func(p): return p != null)
+	if live.is_empty():
+		return "someone" if form != "poss" else "someone's"
+	if live.size() == 1:
+		return person(w, n, live[0], form, said)
+	if live.has(n) or (hh >= 0 and hh == n.household):
+		return {"subj": "we", "obj": "us", "poss": "our"}[form]
+	if live.has(w.player):
+		return {"subj": "you", "obj": "you", "poss": "your"}[form]
+	if hh >= 0:
+		var fam := str(w.households[hh].family) + "s"
+		return ("the " + fam) if form != "poss" else ("the %s'" % fam)
+	var a := person(w, n, live[0], "obj", said)
+	var b := person(w, n, live[1], "obj", said)
+	return ("%s and %s" % [a, b]) if form != "poss" else ("%s and %s's" % [a, b])
 
 
-## Whether a record line is an attack whose victim's death by the same hand is also on the record (`deaths`: the
-## "victim|cause" keys of the record's death lines): the death tells it.
-static func attack_told_by_death(text: String, deaths: Dictionary) -> bool:
-	var a := RegEx.create_from_string(str(data().news.attacked)).search(text.strip_edges())
-	return a != null and deaths.has("%s|slain by %s" % [a.get_string("victim"), a.get_string("attacker")])
+## The subject person class for a clause's verb: "i", "we", "you", else "default".
+static func person_class(w: World, n: NPC, who) -> String:
+	var r := EventTalk.role_of(w, n, who)
+	return str(r.kind) if str(r.kind) in ["i", "you"] else "default"
 
 
-## The "victim|cause" keys of every death line in these record texts.
-static func death_keys(texts: Array) -> Dictionary:
-	var re := RegEx.create_from_string(str(data().news.died))
-	var out := {}
-	for t in texts:
-		var d := re.search(str(t).strip_edges())
-		if d != null:
-			out["%s|%s" % [d.get_string("victim"), d.get_string("cause")]] = true
-	return out
+## One event item (EventTalk.events) as the speaker says it: its type's clause with the people from the speaker's side,
+## framed by how they know it. "" for a type the data does not word.
+static func event_line(w: World, n: NPC, it: Dictionary, said: Dictionary) -> String:
+	var types: Dictionary = talk().types
+	if not types.has(str(it.type)):
+		return ""
+	var c := clause(w, n, it, said)
+	if c == "":
+		return ""
+	return frame(w, n, it, c)
+
+
+## The bare clause of an event item, with no frame ("you killed my daughter Rose").
+static func clause(w: World, n: NPC, it: Dictionary, said: Dictionary) -> String:
+	var t: Dictionary = talk().types.get(str(it.type), {})
+	if t.is_empty():
+		return ""
+	var actors: Array = it.get("actors", [])
+	var a0 = actors[0] if not actors.is_empty() else null
+	var key := person_class(w, n, a0)
+	var hh := int(it.get("hh", -1))
+	if hh >= 0 and (actors.is_empty() or (a0 is NPC and a0.household == hh)):
+		key = "we" if hh == n.household else "default"
+	var tags: Dictionary = it.get("tags", {})
+	var line := ""
+	if (it.get("victims", []) as Array).is_empty() and t.has("novictim"):
+		line = str(t.novictim)
+	elif str(it.type) == "gift" and not tags.has("item") and t.has("noitem"):
+		line = str(t.noitem)
+	else:
+		line = str(t.get(key, t.get("default", "")))
+	var subj := ""
+	if hh >= 0 and (actors.is_empty() or (a0 is NPC and a0.household == hh)):
+		subj = household(w, n, hh, said)
+	else:
+		subj = person(w, n, a0, "subj", said)
+	var f := {"A": subj, "As": person(w, n, a0, "poss", said) if a0 != null else "their",
+		"A2": person(w, n, actors[1], "obj", said) if actors.size() > 1 else "someone",
+		"V": group(w, n, it.get("victims", []), "obj", -1, said), "Vs": group(w, n, it.get("victims", []), "poss", -1, said),
+		"B": group(w, n, it.get("benef", []), "obj", hh, said), "Bs": group(w, n, it.get("benef", []), "poss", hh, said),
+		"item": _item_words(str(tags.get("item", ""))), "price": str(tags.get("price", "")), "rent": str(tags.get("rent", "")),
+		"place": str(tags.get("place_words", "")), "cause": str(tags.get("cause", ""))}
+	return line.format(f)
+
+
+## How the speaker names their own household ("our family" the first time, then "we") or another ("the Lamberts").
+static func household(w: World, n: NPC, hh: int, said: Dictionary) -> String:
+	if hh == n.household:
+		var first := not bool(said.get("we", false))
+		said.we = true
+		return str(talk().household_word.first) if first else str(talk().household_word.then)
+	return "the %ss" % str(w.households[hh].family)
+
+
+static func _item_words(id: String) -> String:
+	if id == "":
+		return ""
+	return Dialogue._article(GameData.item_name(id).to_lower())
+
+
+## A clause framed by how the speaker knows it: seen, taken part in, told by someone, or heard as a rumour.
+static func frame(w: World, n: NPC, it: Dictionary, c: String) -> String:
+	var how := str(it.get("how", "rumour"))
+	var teller: NPC = it.get("teller")
+	if how == "told" and teller == null:
+		how = "rumour"
+	if how == "saw" and EventTalk.role_of(w, n, (it.get("actors", [null]) + [null])[0]).kind == "i":
+		how = "part"                               # one's own deed is not "seen"
+	var lines: Array = talk().frames[how]
+	var line := str(Dialogue._pick(w, n, lines, 11 + str(it.get("key", "")).hash() % 7))
+	var tname := name_for(w, n, teller) if teller != null else ""
+	return Dialogue.sentence(line.format({"c": c, "C": _cap(c), "T": tname}))

@@ -4,8 +4,9 @@ extends SceneTree
 ## cases rebuilt from procedural households (no family is named in the code):
 ##   the Dale witness: a relative who saw the player kill a child speaks to the player as the killer, "you" and "I saw";
 ##   one who only learned of it says "heard"/"they say"; one who knows nothing says nothing of it;
-##   the Lambert self-reference: a household's purchase and fence, told by a member, in the first person, oldest first;
-##   the Oakley child: the chapel's food and the mother's missing axe, told by her child as "us" and "Mum".
+##   A4: news is what the speaker knows (seen, taken part in, told, rumoured), never the village record: the killing
+##   told to the killer as "you", framed by how the speaker knows it ("I saw it myself", "<teller> told me", "they say");
+##   a villager who learned nothing has no news; with judgment off, the villager's own memories only.
 ## Run headless:
 ##   godot --headless --path game --script res://tests/dialogue_perspective_test.gd
 
@@ -25,10 +26,8 @@ func _init() -> void:
 	test_witness(false)
 	test_guest_listener()
 	test_stance()
-	test_lambert()
-	test_oakley()
-	test_dale_news()
-	test_revoice_rules()
+	test_news_from_knowledge(true)
+	test_news_from_knowledge(false)
 	print("dialogue_perspective_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -197,134 +196,51 @@ func test_stance() -> void:
 	w.dispose()
 
 
-# ---------------------------------------------------------------- S2: the Lambert self-reference
-func test_lambert() -> void:
-	var w := _world(true)
-	var h := -1
-	for i in w.households.size():
-		var fam: String = w.households[i].family
-		var same := 0
-		for o in w.households:
-			if o.family == fam:
-				same += 1
-		if same == 1 and w.households[i].members.size() >= 2:
-			h = i
-			break
-	var hh: Dictionary = w.households[h]
-	var member: NPC = null
-	for m in hh.members:
-		var o := w.npc(m)
-		if o and o.alive and o.role != "child":
-			member = o
-			break
-	var outsider: NPC = null
-	for o: NPC in w.npcs:
-		if o.alive and o.role == "adult" and o.family != hh.family:
-			outsider = o
-			break
-	w.log_lines.clear()
-	w.note("The %s household bought the farmland south-west of the market from the manor for 11 coins." % hh.family)
-	w.note("The %s household fenced the farmland south-west of the market." % hh.family)
-	var said := Dialogue.news(w, member)
-	print("     %s, a member: %s" % [Dialogue.full_name(member), said])
-	check(not said.contains("The %s household" % hh.family) and not said.contains("the %s household" % hh.family), "a member does not call their own household a third party")
-	check(said.contains("Our family") or said.contains("We "), "they say \"our family\" or \"we\"")
-	check(said.find("bought") >= 0 and said.find("bought") < said.find("fenced"), "the purchase comes before the fence: oldest first")
-	check(said.contains("11 coins") and said.contains("south-west of the market"), "and the price and the place are kept")
-	var other := Dialogue.news(w, outsider)
-	print("     %s, an outsider: %s" % [Dialogue.full_name(outsider), other])
-	check(other.contains(hh.family) and not other.contains("Our family"), "an outsider still names the household")
-	w.dispose()
-
-
-# ---------------------------------------------------------------- S2: the Oakley child
-func test_oakley() -> void:
-	var w := _world(true)
-	var kid: NPC = null
-	var mum: NPC = null
-	for c: NPC in w.npcs:
-		if c.alive and c.role == "child" and c.mother >= 0:
-			var m := w.npc(c.mother)
-			if m != null and m.alive and m.household == c.household:
-				var same := 0
-				for o in w.households:
-					if o.family == w.households[c.household].family:
-						same += 1
-				if same == 1:
-					kid = c
-					mum = m
-					break
-	check(kid != null, "a child living with their mother")
-	var fam: String = w.households[kid.household].family
-	w.log_lines.clear()
-	w.note("The chapel gave the %s household food." % fam)
-	w.note("%s %s has no axe and cannot get one." % [mum.name, mum.family])
-	var said := Dialogue.news(w, kid)
-	print("     %s (child): %s" % [Dialogue.full_name(kid), said])
-	check(said.contains("gave us food"), "the child says the chapel gave \"us\" food")
-	check(said.contains("Mum has no axe"), "and calls their mother \"Mum\"")
-	check(not said.contains("%s household" % fam) and not said.contains("%s %s" % [mum.name, mum.family]), "never their own family as strangers")
-	check(said.find("gave us food") < said.find("Mum"), "in the order it happened")
-	w.dispose()
-
-
-# ---------------------------------------------------------------- S2: the Dale news
-func test_dale_news() -> void:
-	var w := _world(true)
+# ---------------------------------------------------------------- A4: news from what the speaker knows
+func test_news_from_knowledge(judgment: bool) -> void:
+	var tag := "judgment on" if judgment else "judgment off"
+	var w := _world(judgment)
 	var pair := _child_and_relative(w)
 	var child: NPC = pair[0]
 	var elder: NPC = pair[1]
+	var stranger: NPC = null
+	var friend: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household != child.household and o.job != "guard" and EventTalk.relation(w, o, child) == "":
+			if stranger == null:
+				stranger = o
+			elif friend == null:
+				friend = o
+				break
+	stranger.pos = Vector2(10.5, 10.5)
+	friend.pos = Vector2(12.5, 10.5)
 	_kill_before(w, child, elder)
 	var you := "%s %s" % [w.player.name, w.player.family]
+	w.note("The %s household bought the farmland south-west of the market from the manor for 11 coins." % w.households[stranger.household].family)
 	var said := Dialogue.news(w, elder)
-	print("     %s news to the killer: %s" % [Dialogue.full_name(elder), said])
-	check(not said.contains(you), "the listener is never named to their face in the third person")
-	check(not said.contains("attacked"), "the attack is not told again beside the death it led to")
-	check(said.contains("slain by you"), "the cause is told to the listener as \"you\"")
+	print("     %s news, the witness to the killer: %s" % [tag, said])
+	check(said.contains("you killed") or said.contains("You killed"), "%s: the witness tells the killer \"you killed\"" % tag)
+	check(said.contains(child.name) and not said.contains(you), "%s: names the child as family do, never the listener in the third person" % tag)
+	check(said.contains("I saw") or said.contains("I was there"), "%s: and says they saw it" % tag)
+	check(not said.contains("attacked"), "%s: the blow that killed is not told again beside the killing" % tag)
+	var none := Dialogue.news(w, stranger)
+	print("     %s news, a villager who knows nothing: %s" % [tag, none])
+	check(not none.contains(child.name) and not none.contains("bought") and not none.contains("kill"), "%s: a villager who learned nothing has no news: the village record is not theirs" % tag)
+	if judgment:
+		var ev := -1
+		for e in w.judgment.memories.get(elder.id, {}):
+			if str(w.judgment.belief(elder.id, int(e)).type) == "killing":
+				ev = int(e)
+		check(ev > 0, "the witness holds the killing as a memory")
+		var actors: Array = w.judgment.belief(elder.id, ev).actors
+		w.judgment.learn(stranger.id, ev, "told", elder.id, 1, 900, actors)
+		var told := Dialogue.news(w, stranger)
+		print("     told by the witness: %s" % told)
+		check((told.contains(elder.name) and (told.contains("told me") or told.contains("had it from"))) and told.contains("you killed"), "told by the witness, they say who told them, and that the listener did it")
+		w.judgment.learn(friend.id, ev, "rumour", stranger.id, 2, 600, actors)
+		var heard := Dialogue.news(w, friend)
+		print("     a rumour: %s" % heard)
+		check(heard.begins_with("They say") or heard.begins_with("I heard"), "further along it is a rumour: \"they say\", \"I heard\"")
 	w.dispose()
 
 
-# ---------------------------------------------------------------- S2: re-voicing never guesses
-func test_revoice_rules() -> void:
-	var w := _world(true)
-	var pair := _child_and_relative(w)
-	var n: NPC = pair[1]
-	var you := "%s %s" % [w.player.name, w.player.family]
-	var me := "%s %s" % [n.name, n.family]
-	var ments := DialogueVoice.mentions(w, n)
-	var rv := func(t: String) -> String: return DialogueVoice.revoice(w, n, t, ments, {})
-	check(rv.call("The guard Wat stopped %s for theft." % you) == "The guard Wat stopped you for theft.", "the listener as an object is \"you\"")
-	check(rv.call("%s's pen is full." % you) == "Your pen is full.", "and as an owner \"your\"")
-	check(rv.call("%s leaves for Oakham, where work is to be had." % me) == "I leave for Oakham, where work is to be had.", "the speaker as a subject is \"I\", with the verb agreeing")
-	check(rv.call("%s was seen taking 3 wheat." % you) == "You were seen taking 3 wheat.", "\"was\" agrees with \"you\"")
-	var odd := "%s and Hugh Bell become partners." % you
-	check(rv.call(odd) == odd, "a subject the data has no verb for is left as written")
-	var crowd := "The house is crowded: %s sets about building." % you
-	check(rv.call(crowd) == crowd, "a name before a present-tense verb the data does not list is left as written")
-	var hh: Dictionary = {}
-	for h in w.households:
-		if w.households.filter(func(o): return o.family == h.family).size() == 1 and h.members.any(func(m): return w.npc(m) != null and w.npc(m).alive):
-			hh = h
-			break
-	for m in hh.members:
-		if w.npc(m) != null and w.npc(m).alive:
-			n = w.npc(m)
-			break
-	ments = DialogueVoice.mentions(w, n)
-	var st := {}
-	check(DialogueVoice.revoice(w, n, "The %s household moves into the cottage." % hh.family, ments, st) == "Our family moves into the cottage.", "the household first named is \"our family\" (the verb stays third person)")
-	check(DialogueVoice.revoice(w, n, "The %s household moves out." % hh.family, ments, st) == "We move out.", "and then \"we\"")
-	# a surname two households share is not taken as the speaker's
-	var twin := {}
-	for i in w.households.size():
-		twin[w.households[i].family] = twin.get(w.households[i].family, 0) + 1
-	for i in w.households.size():
-		if twin[w.households[i].family] > 1:
-			for m in w.households[i].members:
-				var o := w.npc(m)
-				if o and o.alive:
-					var line := "The %s household fenced the field." % o.family
-					check(DialogueVoice.revoice(w, o, line, DialogueVoice.mentions(w, o), {}) == line, "a household name two households share is left as written")
-					break
-			break
-	w.dispose()
