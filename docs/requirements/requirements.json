@@ -29334,14 +29334,49 @@
    ]
   },
   {
+   "id": "MP-PLAYER-FAMILY",
+   "kind": "approved",
+   "title": "Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents",
+   "description": "Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents",
+   "source": "docs/directives/2026-10-24_owner_decision_player_marriage_children.md",
+   "owner_wording": "Both player spouses must be recognized as parents.",
+   "approval": "owner, 2026-10-24 (final decision)",
+   "acceptance": [
+    "Life.births lets a female player whose partner is a male player (in play or away) have children under the existing rules (ages, chances, interval), both recorded as parents; same-sex player couples never get births; player adoption (Guardianship.player_adopt) records both spouses as parents and joins the child to the couple's household, for any player couple; children persist and keep both parent links through save, load, host restart and reconnect; host-authoritative and deterministic; G0 unchanged; tests for each case"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_owner_decision_player_marriage_children.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Build 21 agent; branch: None -> wip/multiplayer-b19",
+     "why": "within the approved multiplayer family scope (Batch C families, MP-D8); existing code: births skip player-player couples (Life.births considers a player mother only with a villager partner) and player adoption links the adopter; small change; added to the end of the Build 21 agent's list"
+    }
+   ],
+   "assigned_worker": "Build 21 agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "MP-Q-PLAYER-CHILDREN",
    "kind": "decision",
    "title": "Should a marriage between two players have children? (births currently need a villager parent)",
    "description": "Should a marriage between two players have children? (births currently need a villager parent)",
    "source": "Batch C report, 2026-10-24 (BATCH_C.md on wip/multiplayer-b19 7bae490)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Male+female: biological children through the existing mechanics; male+male and female+female: no biological children, adoption available with both spouses recorded as parents; adopted children are full family members; both spouses parents for all children; families persist offline and through save, load, hosting and reconnecting; reuse existing systems; no new timing, fertility, cost or age rules",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "multiplayer",
    "related": [],
@@ -29352,6 +29387,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/multiplayer/BATCH_C.md on wip/multiplayer-b19 7bae490"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "OWNER DECISION RESOLVED (docs/directives/2026-10-24_owner_decision_player_marriage_children.md): male and female player spouses may have biological children through the existing birth mechanics; same-sex player couples may not, and may adopt; both spouses are parents of biological and adopted children; existing family, household, inheritance and social systems apply; no new mechanics"
     }
    ]
   },

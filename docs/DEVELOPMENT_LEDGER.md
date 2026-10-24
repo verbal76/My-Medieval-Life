@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (648)
+## Approved requirement (649)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -394,6 +394,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | multiplayer | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | OD01-QUEST | Retire the fixed-reward quest 'A shift in the mine' (8 coins for 6 iron ore): never offered again; existing accepted shifts handled safely | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | OPS-01 | Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -824,7 +825,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | multiplayer | APPROVED | yes |
 | MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | multiplayer | APPROVED | yes |
 | MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | multiplayer | APPROVED | yes |
-| MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | multiplayer | OPEN |  |
+| MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | multiplayer | APPROVED |  |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
 | OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | OPEN |  |
