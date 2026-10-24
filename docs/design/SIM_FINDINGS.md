@@ -66,3 +66,9 @@ enough food. Owner choices: the health condition on buying food, the 15-coin min
 No leak, no FATAL; gate, recorded and `--write` runs give the same fingerprints. Seed 1: 5 elders of old age, no bandit
 died. Seed 2: 5 elders of old age, 4 bandits slain by the villagers they attacked (emergent). Nobody starved on either seed.
 Written as the Build 19 baseline (2685a26).
+
+## Release gate: seeds 3 and 4, 30 days on 2685a26 (owner asked for them before the release)
+
+Both reached day 30, no FATAL line, currency leak 0, item leaks none. Seed 3: 5 elders of old age, 2 bandits slain by
+villagers. Seed 4: 10 elders of old age, 2 bandits slain by villagers. Nobody starved (seed 4 day 30: alive 118, food 8.9
+days, treasury 368).
