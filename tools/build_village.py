@@ -26,7 +26,8 @@ What is laid out
       plants of generator v5.
 
 Generator v10 (GP-TRAIL-EDGES, 2026-10-24): a road cell whose pathway tile would lay grass over a yard's dirt joins
-the yard (merge_road_edges); only the ground's and the roads' tiles change.
+the yard (merge_road_edges); only the ground's and the roads' tiles change. GP-BACK-DOORS: every door that opens outside has
+a drawn trail to the roads (door_trails, not added to the walking roads).
 
 Tall objects (the tops of tables, benches, racks and armour stands that Shade drew in his "Object Top"
 layers) are put in "below" layers over their base (below3, below4): the player is drawn over them and
@@ -74,6 +75,7 @@ ORIGIN = {"village-1": (0, CH), "village-2": (2 * CH, CH), "village-3": (CH, CH)
 
 # --- atlas facts (tile ids in punyworld-tiles.png, 220 columns) -------------------------------
 DOORS = {3875, 3799, 3801}                   # doors and archways: walkable
+DOOR_TILE = 3875                             # the wooden door (GP-BACK-DOORS: a door that opens to the outside has a trail)
 # generator v5: gatherable plants, paid-atlas tile values (0 * 100000 + id), identified visually
 # (PL1-12: 2656 is the low red flower, 2659 the white one; both are wild flowers like the purple and yellow)
 PLANTS = {2656: "flower", 2658: "flower", 2657: "flower", 2659: "flower", 2660: "redberry", 2662: "blueberry"}
@@ -657,9 +659,9 @@ class Village:
         # the plants keep the ids they had before the chapel took ground (a save matches its plants by id)
         self.plant_ids = {(x, y): f"pl{i}" for i, (x, y, t) in enumerate(self.plant_cells())}
         self.add_chapel()
-        self.draw_roads()
         self.containers()
         self.interiors()
+        self.draw_roads()            # after the interiors (no RNG drawn between): the doors are known (door_trails)
         return self
 
     # ---- roads and yards ---------------------------------------------------------------------
@@ -1394,17 +1396,81 @@ class Village:
         (the yard is the road there) nor on a doorway."""
         dirs = ((0, -1), (1, 0), (0, 1), (-1, 0))
         paths = self.paths
+        self.door_trails()
+        self.drawn = self.road | self.trail
         self.merge_road_edges()
-        for (x, y) in sorted(self.road):
+        for (x, y) in sorted(self.drawn):
             if (x, y) in self.walkable_override or (x, y) in self.yard:
                 continue
             con = []
             for dx, dy in dirs:
                 n = (x + dx, y + dy)
-                con.append(n in self.road or n in self.yard or not (0 <= n[0] < W and 0 <= n[1] < H))
+                con.append(n in self.drawn or n in self.yard or not (0 <= n[0] < W and 0 <= n[1] < H))
             con = tuple(con)
             if con in paths["dirt"]:
                 self.put("path", 0, x, y, tile_val(1, self.rng.choice(sorted(paths["dirt"][con]))))
+
+    def outer_doors(self):
+        """Every door of every building that opens to the outside: a door cell of its interior with the wooden door
+        drawn in a "below" layer (DOOR_TILE), and its step, the open cell beside it outside every interior (south
+        first). [(building id, door cell, step cell)], in building order."""
+        inside = set()
+        for b in self.ents["buildings"]:
+            inside |= {tuple(c) for c in b.get("interior", {}).get("area", [])}
+        solid = self.solid_grid()
+        out = []
+        for b in self.ents["buildings"]:
+            for dc in b.get("interior", {}).get("doors", []):
+                x, y = dc
+                if not any(self.get("below", i, x, y) == tile_val(0, DOOR_TILE) for i in range(8) if ("below", i) in self.layers):
+                    continue
+                for dx, dy in ((0, 1), (-1, 0), (1, 0), (0, -1)):
+                    n = (x + dx, y + dy)
+                    if 0 <= n[0] < W and 0 <= n[1] < H and not solid[n[1]][n[0]] and n not in inside:
+                        out.append((b["id"], (x, y), n))
+                        break
+        return out
+
+    def door_trails(self):
+        """Generator v10 (GP-BACK-DOORS, owner 2026-10-24: "a trail should lead to every single door ... whether they
+        can be seen or not"): from the step of every outer door (outer_doors) without a road or yard, the shortest
+        way over open ground (outside every interior, field, pen and plot; neighbours in a fixed order) to the roads
+        or a yard is drawn as a trail. Only drawn (self.trail; village.json "door_trails"): it is not added to
+        `road`, so nobody's way through the village changes."""
+        solid = self.solid_grid()
+        blocked = set()
+        for b in self.ents["buildings"]:
+            blocked |= {tuple(c) for c in b.get("interior", {}).get("area", [])}
+        for f in self.ents["fields"] + self.ents["pens"] + self.ents["plots"]:
+            blocked |= {(x, y) for y in range(f["y"], f["y"] + f["h"]) for x in range(f["x"], f["x"] + f["w"])}
+        goal = self.road | self.yard
+        self.trail = set()
+        for _, _, step in self.outer_doors():
+            if step in goal:
+                continue
+            prev = {step: None}
+            q = [step]
+            hit = None
+            while q and hit is None:
+                nq = []
+                for c in q:
+                    for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+                        n = (c[0] + dx, c[1] + dy)
+                        if n in prev or not (0 <= n[0] < W and 0 <= n[1] < H) or solid[n[1]][n[0]] or n in blocked:
+                            continue
+                        prev[n] = c
+                        if n in goal or n in self.trail:
+                            hit = n
+                            break
+                        nq.append(n)
+                    if hit is not None:
+                        break
+                q = nq
+            assert hit is not None, f"no way from the door step {step} to a road"
+            c = prev[hit]
+            while c is not None:
+                self.trail.add(c)
+                c = prev[c]
 
     def merge_road_edges(self):
         """Generator v10 (GP-TRAIL-EDGES, owner 2026-10-24: "why do the trails have weird grass edges?"): the pathway
@@ -1417,7 +1483,7 @@ class Village:
         fringes against grass). The cell is then yard and draws no road tile. Only the ground's and the roads' art
         change: the road cells, collision and every record stay. Cells by the rocky hill and doorways are left."""
         for _ in range(64):
-            edge = [c for c in sorted(self.road)
+            edge = [c for c in sorted(self.drawn)
                     if c not in self.yard and c not in self.walkable_override and self.road_over_dirt(c)]
             touched = set()
             for x, y in edge:
@@ -1448,7 +1514,7 @@ class Village:
         sides; a side is open towards road, yard or the map's edge) on a dirt corner of the ground, or the fringe of
         a closed side over a dirt corner, unless that dirt is the yard's the road runs into (round that corner)."""
         x, y = c
-        con = [n in self.road or n in self.yard or not (0 <= n[0] < W and 0 <= n[1] < H)
+        con = [n in self.drawn or n in self.yard or not (0 <= n[0] < W and 0 <= n[1] < H)
                for n in ((x, y - 1), (x + 1, y), (x, y + 1), (x - 1, y))]
         dirt = [self.corner[py][px] == self.DIRT for px, py in ((x, y), (x + 1, y), (x + 1, y + 1), (x, y + 1))]
         for a, b, k in ((0, 1, 1), (1, 2, 2), (2, 3, 3), (3, 0, 0)):     # sides N E S W; corners tl tr br bl
@@ -1580,6 +1646,7 @@ class Village:
             "roof_layers": list(ROOF_LAYERS),
             "solid": ["".join("1" if s else "0" for s in row) for row in solid],
             "road": sorted([list(c) for c in self.road]),
+            "door_trails": sorted([list(c) for c in self.trail]),
             "plants": [{"id": self.plant_ids[(x, y)], "x": x, "y": y, "kind": PLANTS[t], "tile": t}
                        for (x, y, t) in self.plant_cells()],
             **self.ents,

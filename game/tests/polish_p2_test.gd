@@ -35,6 +35,7 @@ func _run() -> void:
 	main.new_game()
 	_draw_under_house()
 	_wheat_picked()
+	_back_doors()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -153,3 +154,36 @@ func _wheat_picked() -> void:
 	w.farm.load_dict(d)
 	check(not w.farm.cells[c].has("cut"), "wheat: an older save's farm loads (no cut mark)")
 	w.farm.cells.erase(c)
+
+
+## GP-BACK-DOORS (owner: "Doors shouldn't show on the back roofs of houses like that"): seen from outside, a door under a
+## roof is not drawn over the roof; a front door's copy over the doorway is still taken out (VIS-DOOR-01).
+func _back_doors() -> void:
+	var view: MapView = main.view
+	var dv: DoorView = main.door_view
+	var back := 0
+	var front := 0
+	for d in dv.doors:
+		var cell: Vector2i = d.cell
+		var copy := false
+		var roof := false
+		for l in view.above_layers:
+			var v := view.tile_value(l, cell)
+			if v >= 0:
+				if DoorView.DOOR_COPY.has(v % 100000):
+					copy = true
+				else:
+					roof = true
+		check(not copy, "doors: no copy of the door over %s's doorway %s" % [d.building, str(cell)])
+		if roof:
+			back += 1
+		elif dv.stripped.has(cell):
+			front += 1
+	check(back >= 2, "doors: the back doors under a roof keep the roof over them (%d: the tavern's, the smithy's)" % back)
+	check(front >= 25, "doors: the front doors' copies are taken out as before (%d)" % front)
+	var tavern := Vector2i(38, 38)
+	var roofed := false
+	for l in view.above_layers:
+		if view.tile_value(l, tavern) >= 0:
+			roofed = true
+	check(roofed, "doors: the tavern's back door (38, 38) stays under its roof")

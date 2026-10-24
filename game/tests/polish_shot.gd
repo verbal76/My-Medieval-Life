@@ -2,7 +2,7 @@ extends SceneTree
 ## GP-POLISH P2: screenshots of the owner's reports of 2026-10-24 in the real game scene, to be looked at. Needs a display:
 ##   xvfb-run -a godot --rendering-driver opengl3 --resolution WxH --path game --script res://tests/polish_shot.gd -- OUT.png MODE
 ## MODE: wheat (a ripe manor field half cut by the player, a cut cell of the player's farm beside it); at:X:Y[:ZOOM] (the
-## player and the camera at cell X, Y)
+## player and the camera at cell X, Y); at:X:Y:ZOOM:CX:CY (the camera on cell CX, CY)
 
 var main
 var out := "/tmp/polish.png"
@@ -35,7 +35,8 @@ func _place() -> void:
 		w.player.pos = Vector2(int(a[1]) + 0.5, int(a[2]) + 0.5)
 		main.camera.zoom = Vector2(float(a[3]) if a.size() > 3 else 3.0, float(a[3]) if a.size() > 3 else 3.0) * main.view_scale
 		main.camera.position_smoothing_enabled = false
-		main.follow_at = main._in_view(w.player.pos * main.T)
+		var look := w.player.pos if a.size() < 6 else Vector2(int(a[4]) + 0.5, int(a[5]) + 0.5)
+		main.follow_at = main._in_view(look * main.T)
 		return
 	match mode:
 		"wheat":
@@ -61,6 +62,11 @@ func _wait() -> void:
 	if frames < 40:
 		return
 	process_frame.disconnect(_wait)
+	if mode.begins_with("at:"):
+		main.ui.hide_all()
+		for n in main.ui.find_children("*", "PanelContainer", true, false):
+			if n.visible and n.get_global_rect().get_center().y > 300:
+				n.visible = false             # the opening toast and the prompt: out of the way of the art
 	var img := root.get_texture().get_image()
 	img.save_png(out)
 	print("saved ", out, " ", img.get_size())

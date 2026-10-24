@@ -16,6 +16,7 @@ extends Node2D
 ##   same way reversed. When the inside shows (the player is in there and the roof is lifted), nobody fades.
 
 const DOOR_ART := [3875]          # the wooden door tile of the village's and the stamps' doorways (Puny World atlas)
+const DOOR_COPY := [3875, 4095]   # the door's copy over the doorway in an above layer (4095: the door under its lintel)
 const HOLD := 0.4                 # seconds a door stays open after the last person has left its step
 const OPEN_AT := 0.6              # how far through (depth) someone must be for the door to open: past the step's middle,
                                   # so a villager only waiting on the step does not hold it open
@@ -80,10 +81,12 @@ func _step_of(cell: Vector2i, building: String) -> Vector2i:
 	return cell
 
 
+## GP-BACK-DOORS: only the door's own copy (DOOR_COPY) is taken out. A back door under a roof (the tavern's north door,
+## the smithy's) has roof over it in the above layers, not a door: taking that out drew the door on the roof.
 func _strip(cell: Vector2i) -> void:
 	for layer in view.above_layers:
 		var v := view.tile_value(layer, cell)
-		if v >= 0:
+		if v >= 0 and DOOR_COPY.has(v % 100000):
 			stripped[cell] = stripped.get(cell, []) + [[layer, v]]
 			view.set_tile(layer, cell, -1)
 

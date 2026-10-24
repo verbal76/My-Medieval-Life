@@ -50,6 +50,27 @@ class VillageTest(unittest.TestCase):
         self.assertEqual([c for c in sorted(v.road) if c in v.yard and path0[c[1] * W + c[0]] >= 0], [])
         self.assertEqual(sorted(map(tuple, D["road"])), sorted(v.road))     # the road itself is unchanged: only its art
 
+    def test_every_door_has_a_trail(self):
+        """GP-BACK-DOORS (generator v10): every door of every building that opens outside (front, back or side; seen
+        or under a roof) has its step on a road, a yard or a drawn door trail, joined to the village's roads."""
+        v = build_village.Village(1).build()
+        doors = v.outer_doors()
+        self.assertGreaterEqual(len(doors), 30)
+        ways = v.road | v.yard | v.trail
+        self.assertEqual(sorted(map(tuple, D["door_trails"])), sorted(v.trail))
+        self.assertTrue(v.trail.isdisjoint(v.road))           # drawn only: the roads the villagers walk are as before
+        net, todo = {(62, 57)}, [(62, 57)]
+        while todo:
+            x, y = todo.pop()
+            for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if n in ways and n not in net:
+                    net.add(n)
+                    todo.append(n)
+        cut = [(b, door) for b, door, step in doors if step not in net]
+        self.assertEqual(cut, [])
+        self.assertIn(("b2", (38, 38), (38, 37)), doors)          # the tavern's back door (the owner's screenshot)
+        self.assertIn(("b4", (81, 40), (81, 39)), doors)          # the smithy's back door
+
     def test_built_rooms_have_floors(self):
         """Every interior floor cell of a stamp the player builds (house, workshops, rooms) has a floor
         tile, so a room built on grass never shows grass inside, under its beds either."""
