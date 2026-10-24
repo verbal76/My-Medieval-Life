@@ -1731,6 +1731,7 @@ const TARGET_REACH := 1.5
 const CONTAINER_REACH := 2.2
 const CELL_REACH := 2
 const STATION_REACH := 1.2       # a crafting station is offered (its window opened) closer than this to where it is used
+const PLAYER_STATIONS := ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]    # the village's stations a player works at (GP-ANVIL)
 
 
 ## DVW-A12 R15: why the player cannot reach the point `at` (a pile, a container), "" if they can: a wall between

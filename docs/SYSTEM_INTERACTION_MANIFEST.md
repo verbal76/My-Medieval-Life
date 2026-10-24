@@ -280,11 +280,12 @@ Rules:
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
 - **Trigger:** Any input. A tap or click on the map; the touch action bar; a gamepad or key press.
-- **Source:** `game/scripts/main.gd::_input`, `game/scripts/main.gd::_unhandled_input`, `game/scripts/main.gd::_tap`, `game/scripts/main.gd::attack_button`, `game/scripts/main.gd::strike`, `game/scripts/main.gd::_chase_step`, `game/scripts/main.gd::_route_step`, `game/scripts/main.gd::_talk_step`, `game/scripts/ui/game_ui.gd::set_scheme`, `game/scripts/ui/game_ui.gd::blocks`, `game/scripts/main.gd::pan_camera`, `game/scripts/main.gd::look_at_tile`, `game/scripts/main.gd::recenter`, `game/scripts/main.gd::_follow`, `game/scripts/main.gd::_look_step`, `game/scripts/ui/game_ui.gd::toggle_map`, `game/scripts/ui/village_map_view.gd::build_image`
+- **Source:** `game/scripts/main.gd::_input`, `game/scripts/main.gd::_unhandled_input`, `game/scripts/main.gd::_tap`, `game/scripts/main.gd::station_tapped`, `game/scripts/main.gd::_reach_station_step`, `game/scripts/main.gd::attack_button`, `game/scripts/main.gd::strike`, `game/scripts/main.gd::_chase_step`, `game/scripts/main.gd::_route_step`, `game/scripts/main.gd::_talk_step`, `game/scripts/ui/game_ui.gd::set_scheme`, `game/scripts/ui/game_ui.gd::blocks`, `game/scripts/main.gd::pan_camera`, `game/scripts/main.gd::look_at_tile`, `game/scripts/main.gd::recenter`, `game/scripts/main.gd::_follow`, `game/scripts/main.gd::_look_step`, `game/scripts/ui/game_ui.gd::toggle_map`, `game/scripts/ui/village_map_view.gd::build_image`
 - **Affects:** Interface, Combat, Crime, Inventory
 - **Expected:**
   - The scheme follows the last input. Touch buttons show only for touch (setting: auto, always, never). Prompts name the key or pad button. With keys or a pad, panels take focus. The pad's B button closes panels.
   - A tap or click next to the player uses the target; elsewhere the player walks there along the villagers' pathfinder, around walls and trees, finding the way again if stuck. A tap on a villager walks up to them, following as they move, and speaks to them (INT-039). A tap on a button or panel never moves the player.
+  - A tap or click on a crafting station where it is drawn (its `at` cell in `village.json`: the anvil on its table, the forge, the workbench, the sawhorse, the stove, the oven) walks the player to its `use` cell, where its worker stands, turns them to it and opens its window (GP-ANVIL, owner directive 2026-10-24). A tap beside it (the woodpile by the anvil) never opens it, also from next to it; Use still offers it from the use cell. Touch and mouse go through the same `_tap`; the station data and the villagers' use of the stations are unchanged.
   - The Attack button toggles attack mode. In it:
     - A tap on a person or animal puts the sword marker on it. The player walks over and strikes once; each further tap on it strikes again.
     - A tap on someone else moves the marker. A tap on open ground walks there and clears the mark.
@@ -296,7 +297,7 @@ Rules:
   - Several things to use at once (a person beside a forge, a container, a seam, a bed) are all offered, nearest first (B8-014): Q or Tab (D-pad left and right) choose, Use does the chosen one, the prompt shows the next choice on a second line. B stays Cancel, LB and RB Map and Skills.
   - Sprint (B8-027): Shift held (or toggled with the balance's `sprint_toggle`) or LT toggled gives `sprint_speed` times the walking speed for `sprint_stamina_per_sec` stamina a second; it ends when stamina runs out and never starts during work or an attack.
   - The village map (Map button, M, pad LB; closed the same way, the X, Esc, B or Android's Back) pauses the game and draws the map data with the player, the player's home and the named places; a tap on it looks there.
-- **Tests:** `game/tests/start_test.gd`
+- **Tests:** `game/tests/start_test.gd`, `game/tests/station_tap_test.gd`
 
 ### INT-033 · Death shown: flicker and blood
 - **Trigger:** A villager or bandit is slain, or an animal is hunted or slaughtered.

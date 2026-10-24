@@ -58,6 +58,7 @@ var walk_goal := Vector2i(-1, -1)      # the cell walk_path leads to
 var walk_stuck := 0.0                  # seconds without progress along the route
 var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
 var reach_to := Vector2.INF            # a tapped shop counter, stall or container the player walks up to, to use
+var reach_station := ""                # GP-ANVIL: a tapped crafting station; reach_to is then its use cell
 var touch_points := {}
 var pinch_start := 0.0
 var zoom_start := 3.0
@@ -290,7 +291,7 @@ func _ready() -> void:
 			"choice":
 				# a villager standing by a workstation: the prompt offers both
 				for id in world.stations:
-					if world.stations[id].type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+					if world.stations[id].type in World.PLAYER_STATIONS:
 						var st: Dictionary = world.stations[id]
 						world.player.pos = Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
 						player_sprite.face(Vector2(0, 1))
@@ -2136,6 +2137,10 @@ func _talk_step() -> void:
 ## Walk up to a tapped counter, stall or container and use it once beside it.
 func _reach_step() -> void:
 	if reach_to == Vector2.INF:
+		reach_station = ""
+		return
+	if reach_station != "":
+		_reach_station_step()
 		return
 	var d := reach_to - world.player.pos
 	if d.length() > 1.7:
@@ -2148,6 +2153,55 @@ func _reach_step() -> void:
 	_find_target()
 	if not target.is_empty():
 		interact()
+
+
+## GP-ANVIL: walk to a tapped station's use cell (where its worker stands), face what is drawn and open it.
+func _reach_station_step() -> void:
+	var id := reach_station
+	if not world.stations.has(id):
+		reach_to = Vector2.INF
+		reach_station = ""
+		return
+	var d := reach_to - world.player.pos
+	if move_to != Vector2.INF and d.length() > 0.25:
+		return                                # still walking there
+	move_to = Vector2.INF
+	reach_to = Vector2.INF
+	reach_station = ""
+	if d.length() >= World.STATION_REACH:
+		return                                # the walk ended short of it (no way there)
+	var st: Dictionary = world.stations[id]
+	player_sprite.face(Vector2(int(st.at[0]) + 0.5, int(st.at[1]) + 0.5) - world.player.pos)
+	target = _station_target(id)
+	interact()
+
+
+## The interaction target for a crafting station: its window, or why it cannot be used now.
+func _station_target(id: String) -> Dictionary:
+	var st: Dictionary = world.stations[id]
+	var no := world.station_refusal(id)
+	return {"kind": "station", "id": id, "label": ("Use Stove" if st.type == "stove" else "Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]}
+
+
+## GP-ANVIL: the cells a tap or click on a station accepts: where the station is drawn ("at" in village.json), never the
+## cells around it (a woodpile beside the anvil is not the anvil). Its worker stands on its "use" cell.
+func station_tap_cells(id: String) -> Array:
+	var st: Dictionary = world.stations.get(id, {})
+	if st.is_empty() or not st.has("at"):
+		return []
+	return [Vector2i(int(st.at[0]), int(st.at[1]))]
+
+
+## The player's crafting station drawn on the tapped point, or "" (on the player's level: stations are on the surface).
+func station_tapped(wpos: Vector2) -> String:
+	if world.player_level != 0:
+		return ""
+	var cell := Vector2i(floori(wpos.x), floori(wpos.y))
+	for id in world.stations:
+		var st: Dictionary = world.stations[id]
+		if st.type in World.PLAYER_STATIONS and station_tap_cells(id).has(cell):
+			return id
+	return ""
 
 
 const BODY := [Vector2(-0.38, -0.15), Vector2(0.38, -0.15), Vector2(-0.38, 0.2), Vector2(0.38, 0.2)]   # the player's feet, about as wide as the sprite (tiles; Build 8: walls overlapped the sprite)
@@ -2313,9 +2367,8 @@ func _find_target() -> void:
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
-		if u.distance_to(p.pos) < World.STATION_REACH and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
-			var no := world.station_refusal(id)
-			here.append({"kind": "station", "id": id, "label": ("Use Stove" if st.type == "stove" else "Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
+		if u.distance_to(p.pos) < World.STATION_REACH and st.type in World.PLAYER_STATIONS:
+			here.append(_station_target(id))
 	for pl in world.plots:
 		var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
 		if r.has_point(p.pos) and cands.is_empty() and here.is_empty() and world.place_of(p.pos) == "":
@@ -4611,6 +4664,7 @@ func _tap(screen_pos: Vector2) -> void:
 	chase = null
 	talk_to = null
 	reach_to = Vector2.INF
+	reach_station = ""
 	var tapped := _creature_at(wpos)
 	if tapped is NPC and tapped.role != "bandit":
 		talk_to = tapped                  # walk up to them (following if they move) and talk
@@ -4619,6 +4673,16 @@ func _tap(screen_pos: Vector2) -> void:
 	var res := _resource_tap(wpos)
 	if not res.is_empty() and str(res.def.match.kind) != "animal":
 		select_resource(res, false)
+		return
+	var sid := station_tapped(wpos)
+	if sid != "":
+		# GP-ANVIL: the station drawn there (the anvil on its table): walk to where its worker stands, then open it
+		var st: Dictionary = world.stations[sid]
+		reach_station = sid
+		reach_to = Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
+		move_to = reach_to if reach_to.distance_to(world.player.pos) > 0.25 else Vector2.INF
+		if move_to == Vector2.INF:
+			_reach_step()
 		return
 	var use := _usable_at(wpos)
 	if use != Vector2.INF:
@@ -4629,7 +4693,8 @@ func _tap(screen_pos: Vector2) -> void:
 	if wpos.distance_to(world.player.pos) < 1.8:
 		player_sprite.face(wpos - world.player.pos)
 		_find_target()
-		if not target.is_empty():
+		# a station opens only from a tap on it (above): a tap on what stands beside it (the woodpile by the anvil) is not it
+		if not target.is_empty() and str(target.kind) != "station":
 			interact()
 			return
 	move_to = wpos

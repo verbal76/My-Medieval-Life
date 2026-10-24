@@ -431,6 +431,8 @@ func _stations() -> void:
 		var blocks := [p("Found: %s." % ", ".join(where[t]))]
 		if Counters.KEEPERS.has(t):           # a skilled trade's counter (CTR-01..03)
 			blocks.append(p("Nobody stands at this counter all day. Ring for service here and one of the %s who keep it walks over and serves you, if one can come: not asleep, in working hours (%d:00 to %d:00), not eating or fighting. Otherwise you are told why. They put down the work in hand and go back to it when you leave." % [", ".join((Counters.KEEPERS[t] as Array).map(func(j): return j + "s")), int(NPCBrain.WORK_START), int(NPCBrain.WORK_END)]))
+		if World.PLAYER_STATIONS.has(t):          # GP-ANVIL: how to reach it, on every platform
+			blocks.append(p("To work here, tap or click the %s itself, where it is drawn (not what stands beside it, such as the woodpile by the anvil): you walk to the place beside it where its worker stands, turn to it and its window opens. Standing there, Use (E, A or the Use button) opens it too." % STATION_NAMES.get(t, t).to_lower()))
 		if rs.is_empty():
 			blocks.append(p("No crafting here; it is a place to use (trade, draw water, ride)."))
 		else:
