@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 539 (273 of them still open) |
-| **Open entries now** (rules excluded) | | **450** |
+| Entries added since | | 540 (274 of them still open) |
+| **Open entries now** (rules excluded) | | **451** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (539)
+## Added since the baseline (540)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -257,6 +257,7 @@ None.
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |

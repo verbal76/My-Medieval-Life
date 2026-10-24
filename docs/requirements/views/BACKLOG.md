@@ -138,7 +138,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (26)
+## Multiplayer track (27)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -159,6 +159,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | OWNER APPROVED | IN DEVELOPMENT |

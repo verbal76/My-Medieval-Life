@@ -22115,6 +22115,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-TABLE-ITEMS",
+   "kind": "approved",
+   "title": "Anything drawn on a table is a real item that can be taken",
+   "description": "Anything drawn on a table is a real item that can be taken",
+   "source": "docs/gameplay_polish/reference/table_item_not_takeable_2026-10-24.png",
+   "owner_wording": "the game says the table is empty, it is not, if it is on a table it can be taken",
+   "approval": "owner, 2026-10-24 (answers: Owner's, theft; Owner restocks it)",
+   "acceptance": [
+    "Every item drawn on a table (village, tavern, interiors) is a real item of the matching kind held by the table's owner; the prompt names it ('Take the tavern's ale (theft)'), taking it moves it into the taker's pack, counts as theft when the table is not the taker's (free on one's own table or an ownerless one) and removes its drawing; the table is drawn bare until its owner puts a new one out from their own stock (no item created from nothing; the ledger conserves); 'empty' is said only of a table with nothing on it; works for every player (actor-aware); saved and loaded; manifest INT entry; verified by screenshots, a test of take, theft, restock and conservation, and G0 checked (report any simulation change)"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/table_item_not_takeable_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch, with GP-TARGET-ART-MATCH"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-TARGET-ART-MATCH",
    "kind": "approved",
    "title": "Interaction prompts name what the art shows (tavern 'crate' is a roast)",

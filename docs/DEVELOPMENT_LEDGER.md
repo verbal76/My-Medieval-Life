@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (628)
+## Approved requirement (629)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -307,6 +307,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| GP-TABLE-ITEMS | Anything drawn on a table is a real item that can be taken | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
