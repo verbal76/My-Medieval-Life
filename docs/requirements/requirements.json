@@ -44612,6 +44612,42 @@
    "next_action": "integrated with FIX-RECF1"
   },
   {
+   "id": "SIM-GATE-01",
+   "kind": "approved",
+   "title": "Permanent pre-build simulation, flight recorder and Excel quality gate",
+   "description": "Permanent pre-build simulation, flight recorder and Excel quality gate",
+   "source": "docs/directives/2026-10-24_permanent_simulation_recorder_excel_gate.md",
+   "owner_wording": "Every My Medieval Life build must automatically run comprehensive village simulations, capture the results through the black-box flight recorder, analyze those results in an Excel analysis workbook, and pass the established quality gates before generating Android, Windows, or Linux release artifacts.",
+   "approval": "owner, 2026-10-24 (standing; permanent)",
+   "acceptance": [
+    "Audit of the existing recorder, simulations, exports and CI with each component classified; missing parts built on the existing recorder (no second recorder); every release run executes the scenario suite (equilibrium, shortages, population, production, relationships, crime, navigation, performance incl. 500 people) on the exact packaged commit with recording on, exports structured data, generates a validated XLSX workbook with the required sheets and charts and historical comparison against versioned baselines, and blocks packaging on the listed integrity failures (not on legitimate hardship); recorder off by default, RNG- and outcome-neutral, bounded storage, incomplete recording fails the gate; workbook, summary and evidence attached to the private draft with run id and recorder schema version; proof: a full run recorded, exports matching truth, workbook validated, a deliberately failing gate blocking packaging, a passing gate packaging all three platforms, recorder determinism-neutral"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_permanent_simulation_recorder_excel_gate.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> simulation gate agent; branch: None -> wip/sim-gate; next_action",
+     "why": "Build 20 is in its final test run under the current process and is not held (directive section 10); the gate is built on its own branch and must be active before the next release after Build 20"
+    }
+   ],
+   "assigned_worker": "simulation gate agent",
+   "branch": "wip/sim-gate",
+   "next_action": "Audit the recorder and pipeline, then implement and connect the gate before Build 21"
+  },
+  {
    "id": "SJD-A",
    "title": "Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation",
    "kind": "approved",
