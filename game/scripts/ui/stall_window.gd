@@ -19,7 +19,9 @@ class PriceEditor extends PanelContainer:
 	var edit: LineEdit
 	var set_btn: Button
 
-	func setup(title: String, info: String, current: int, p_max: int) -> PriceEditor:
+	## `embedded` (GP-STALL-PRICE-ON-PUTUP): a price row inside the Put up dialog, without its own Set and Cancel (the
+	## quantity picker's Put up uses `price`).
+	func setup(title: String, info: String, current: int, p_max: int, embedded := false) -> PriceEditor:
 		price = current
 		max_price = p_max
 		name = "PriceEditor"
@@ -29,12 +31,13 @@ class PriceEditor extends PanelContainer:
 		sb.set_border_width_all(2)
 		sb.set_corner_radius_all(4)
 		sb.set_content_margin_all(10)
-		add_theme_stylebox_override("panel", sb)
+		add_theme_stylebox_override("panel", sb if not embedded else StyleBoxEmpty.new())     # embedded: inside the picker's own frame
 		var v := VBoxContainer.new()
 		v.add_theme_constant_override("separation", 6)
 		add_child(v)
-		v.add_child(_lab(title, 22, Color8(255, 217, 128)))
-		v.add_child(_lab(info, 16, Color8(246, 236, 214)))
+		v.add_child(_lab(title, 22 if not embedded else 18, Color8(255, 217, 128)))
+		if info != "":
+			v.add_child(_lab(info, 16, Color8(246, 236, 214)))
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
 		row.add_child(_btn("-", func(): _put(price - 1)))
@@ -52,6 +55,10 @@ class PriceEditor extends PanelContainer:
 		unit.autowrap_mode = TextServer.AUTOWRAP_OFF
 		row.add_child(unit)
 		v.add_child(row)
+		if embedded:
+			set_btn = Button.new()                 # never shown: keeps _refresh and _typed simple
+			_refresh()
+			return self
 		var btns := HBoxContainer.new()
 		btns.add_theme_constant_override("separation", 8)
 		set_btn = _btn("Set price", confirm)
@@ -66,6 +73,8 @@ class PriceEditor extends PanelContainer:
 
 	func _typed(t: String) -> void:
 		price = clampi(int(t) if t.is_valid_int() else 0, 0, max_price)
+		if set_btn.get_parent() == null:
+			price = maxi(price, 1)
 		set_btn.disabled = price < 1
 
 	func _put(n: int) -> void:
@@ -488,9 +497,12 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 	var mx := 0
 	var info := ""
 	match mode:
-		"put":
+		"put", "wput":
 			mx = biz.listable(id)
-			info = "You carry %d. They go up at %d coins each (change it after)." % [w.player.inv.count(id), biz.price_of(s, id)]
+			info = ("You carry %d. Choose how many and the price they go up at." if mode == "put" else "You carry %d. They wait in the workroom for your orders.") % w.player.inv.count(id)
+		"shelve", "wfetch":
+			mx = int(biz.works.work_of(s).get(id, 0))
+			info = ("The workroom holds %d. Choose how many and the price they go up at." if mode == "shelve" else "The workroom holds %d. They come back to your pack.") % mx
 		"store":
 			mx = mini(biz.listable(id), biz.store_cap(s) - biz.store_total(s))
 			info = "You carry %d. The back room has room for %d more; it refills the shelf when this sells out." % [w.player.inv.count(id), biz.store_cap(s) - biz.store_total(s)]
@@ -503,21 +515,39 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 	var verb := {"put": "Put up", "store": "Store", "fetch": "Bring out", "wput": "Set aside", "wfetch": "Bring back", "shelve": "Put up"}.get(mode, "Take back") as String
 	var qp := QuantityPicker.new().setup(verb + " " + nm, info, mx, verb, -1,
 		"Nothing to move." if up else w.player.inv.full_text(id) if not w.player.inv.can_add(id) else "Nothing to move.")
+	# GP-STALL-PRICE-ON-PUTUP (owner: "set the price as you sell it, not after"): Put up chooses the price with the number,
+	# from the price asked now (the market value for a new kind); a price can still be changed afterwards
+	var pe: PriceEditor = null
+	if mode == "put" or mode == "shelve":
+		var cap := GameData.value(id) * Business.PRICE_CAP
+		pe = PriceEditor.new().setup("Price: market value %d, up to %d" % [GameData.value(id), cap], "", biz.price_of(s, id), cap, true)
+		pe.name = "PutUpPrice"
 	qp.cancelled.connect(func(): show(ui, sid))
 	qp.confirmed.connect(func(q: int):
 		var why := ""
 		match mode:
-			"put":
-				why = biz.list_item(s, id, q)
+			"put", "shelve":
+				# Build 21: the workroom's Put up moves goods from the workroom (it went to Take back before)
+				why = biz.list_item(s, id, q) if mode == "put" else biz.works.shelve(s, id, q)
+				if why == "" and pe != null and pe.price != biz.price_of(s, id):
+					why = biz.set_price(s, id, clampi(pe.price, 1, GameData.value(id) * Business.PRICE_CAP))
 			"store":
 				why = biz.store_item(s, id, q)
 			"fetch":
 				why = biz.fetch(s, id, q)
+			"wput":
+				why = biz.works.stock_work(s, id, q)           # Build 21: Set aside (it went to Take back before)
+			"wfetch":
+				why = biz.works.fetch_work(s, id, q)           # Build 21: Bring back from the workroom (likewise)
 			_:
 				why = biz.unlist(s, id, q)
-		ui.message(why if why != "" else ("%d %s %s." % [q, nm.to_lower(), {"put": "put up for sale", "store": "stored in the back room", "wput": "set aside in the workroom", "shelve": "put up for sale"}.get(mode, "back in your pack")])))
+		ui.message(why if why != "" else ("%d %s %s." % [q, nm.to_lower(), {"put": "put up for sale", "store": "stored in the back room", "wput": "set aside in the workroom", "shelve": "put up for sale", "wfetch": "back in your pack"}.get(mode, "back in your pack")])))
 	qp.confirmed.connect(func(_q: int): show(ui, sid))
 	ui.panel_body.add_child(qp)
 	ui.panel_body.move_child(qp, 0)
+	if pe != null:                                     # the price row inside the picker, just above Put up and Cancel
+		var row := qp.confirm_btn.get_parent()
+		row.get_parent().add_child(pe)
+		row.get_parent().move_child(pe, row.get_index())
 	if ui.scheme != "touch":
 		qp.focus_default.call_deferred()

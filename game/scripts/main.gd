@@ -220,6 +220,12 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"putup":
+				# GP-STALL-PRICE-ON-PUTUP: the stall's Put up dialog with its price row (screenshots only)
+				world.player.coins = 100
+				world.business.rent()
+				world.player.inv.add("pottage", 12)
+				StallWindow.show(ui, str(world.business.mine().id), {"id": "pottage", "mode": "put"})
 			"market":
 				# GP-MARKET-SHELVES: three pitches side by side: empty, partly stocked (three kinds), ten kinds (screenshots only)
 				var ten := ["wheat", "bread", "pottage", "apple", "cheese", "iron_ore", "plank", "pickaxe", "ale", "herbal_poultice"]

@@ -13,7 +13,7 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("Find an open pitch in the market (beside the merchants' stalls) and press Use: \"Rent this market pitch\" costs %d coins a day, the first day at once." % rent),
 		Wiki.bullets([
 			"Open the stall again later with Use: \"Manage your market stall\".",
-			"Put up: choose an item from your pack and how many. It moves into the stall's stock, priced at its market value.",
+			"Put up: choose an item from your pack, how many, and the price they go up at (it starts at the market value, or the price you already ask). They move into the stall's stock at that price; you can change a price later too.",
 			"Price: type a number or use - and +. You may ask from 1 coin up to %d times the market value." % Business.PRICE_CAP,
 			"Take back moves goods to your pack again; Give up the pitch returns everything, and the till too, after the manor's share.",
 			"Sales are paid into the till and wait there while the stall is open. Close the stall to settle them: the manor takes %d%% of the sales, the rest is yours. Open it again whenever you like; it closes by itself when it sells out (see the market stall guide)." % pct,
