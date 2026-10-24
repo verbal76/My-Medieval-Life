@@ -273,6 +273,177 @@ func close(ref: String, resolution: String) -> void:
 	w.stat("justice_closed_" + resolution)
 
 
+
+# ---------------------------------------------------------------- pursuit (A2)
+## Guard `g` goes on `ref`'s case: "pursuing" (the offender is in sight: the chase, NPC.target -2) or "responding" (to a
+## place: where a report or the hue and cry says they were, `at`; then a search there). A guard fighting someone else
+## (a bandit) keeps that fight, and one already on another player's case stays on it.
+## `t`: when the place `at` was seen (a report's minute); a guard already searching from a later sighting keeps its own.
+func engage(g: NPC, ref: String, state: String, at := Vector2.INF, t := -1.0) -> void:
+	var c: Dictionary = cases.get(ref, {})
+	var p: PlayerState = w.player_of_ref(ref)
+	if c.is_empty() or g == null or not g.alive or p == null or not p.alive:
+		return
+	if g.target != -1 and not Life.is_player_id(g.target):
+		return
+	if not g.pursuit.is_empty() and str(g.pursuit.ref) != ref:
+		return
+	c.pursuers[str(g.id)] = true
+	if state == "pursuing":
+		var fresh: bool = g.pursuit.is_empty() or str(g.pursuit.state) != "pursuing"
+		g.pursuit = {"ref": ref, "state": "pursuing", "at": [p.pos.x, p.pos.y], "t": w.minutes, "until": -1.0, "cells": [], "i": 0,
+			"share": float(g.pursuit.get("share", w.minutes))}
+		g.target = Life.PLAYER_ID
+		g.plan.clear()
+		saw_at(ref, p.pos, w.minutes, p.map_level)
+		g.doing = "chasing %s" % p.name
+		if fresh:
+			w.stat("justice_pursuits")
+		return
+	if Life.is_player_id(g.target) or (not g.pursuit.is_empty() and float(g.pursuit.get("t", -1.0)) > (t if t >= 0.0 else w.minutes)):
+		return                                  # chasing, or searching from a later sighting than the report's
+	var to := at if at != Vector2.INF else (Vector2(float(c.last[0]), float(c.last[1])) if not (c.last as Array).is_empty() else g.pos)
+	var cells := search_cells(to, g, tier_for(g, ref))
+	g.pursuit = {"ref": ref, "state": "responding", "at": [to.x, to.y], "t": t if t >= 0.0 else w.minutes, "until": -1.0, "cells": cells, "i": 1, "share": w.minutes}
+	g.plan = [w.brain.go(Vector2i(int(cells[0][0]), int(cells[0][1])), 1.3), w.brain.doit("search_point")]
+	g.doing = "answering a report"
+	w.stat("justice_responses")
+
+
+## A guard in a chase lost sight of the offender: the search of the last-known place and around it begins, for the
+## tier's search_minutes (a tier with none lets the case go over to wanted at once).
+func search(g: NPC) -> void:
+	var p: Dictionary = g.pursuit
+	var ref := str(p.ref)
+	g.target = -1
+	g.plan.clear()
+	g.chase_route = false
+	var mins := float(response(tier_for(g, ref)).search_minutes)
+	if mins <= 0.0:
+		release(g, "searched")
+		return
+	var at := Vector2(float(p.at[0]), float(p.at[1]))
+	p.state = "searching"
+	p.cells = search_cells(at, g, tier_for(g, ref))
+	p.i = 0
+	p.until = w.minutes + mins
+	var o: PlayerState = w.player_of_ref(ref)
+	g.doing = "searching for %s" % (o.name if o != null else "someone")
+	w.stat("justice_searches")
+
+
+## A guard who was responding reached the place: the search begins there (the first place is behind it).
+func begin_search(g: NPC) -> void:
+	var p: Dictionary = g.pursuit
+	var mins := float(response(tier_for(g, str(p.ref))).search_minutes)
+	if mins <= 0.0:
+		release(g, "searched")
+		return
+	p.state = "searching"
+	p.until = w.minutes + mins
+	w.stat("justice_searches")
+
+
+## The guard is off the case (the search ended, the case closed, the camp): no longer a pursuer; the case remembers.
+func release(g: NPC, why: String) -> void:
+	var ref := str(g.pursuit.get("ref", ""))
+	if cases.has(ref):
+		cases[ref].pursuers.erase(str(g.id))
+	g.pursuit = {}
+	if Life.is_player_id(g.target):
+		g.target = -1
+	g.chase_route = false
+	w.stat("justice_released_" + why)
+
+
+## A guard deciding what to do next who knows of an outstanding crime by a player now in sight takes them on again: the
+## wanted offender is remembered, never tracked (only sight finds them). True when it did.
+func spot(g: NPC) -> bool:
+	if not g.pursuit.is_empty():
+		return false
+	var refs := cases.keys()
+	refs.sort()
+	for ref in refs:
+		if tier_rank(tier_for(g, ref)) < tier_rank("theft"):
+			continue
+		var p: PlayerState = w.player_of_ref(ref)
+		if w.sees(g, p):
+			engage(g, ref, "pursuing")
+			w.stat("justice_reacquired")
+			return true
+	return false
+
+
+## The places a guard looks, in order: the last-known spot `at`; then, up to the tier's search_points, the nearest hiding
+## places (inside a building whose door is within search_tiles: the floor cell nearest its door) and open ground on the
+## ways out (8 directions at half and full search_tiles), those leading on from where the guard came first. Fixed by the
+## map and the positions (no random numbers).
+func search_cells(at: Vector2, g: NPC, tier: String) -> Array:
+	var first := [floori(at.x), floori(at.y)]
+	var out := [first]
+	var want := int(response(tier).search_points)
+	if want <= 1:
+		return out
+	var r := float(cfg().search_tiles)
+	var away := (at - g.pos).normalized() if at.distance_to(g.pos) > 0.5 else Vector2.RIGHT
+	var cand := []                              # [key, x, y]
+	var level := g.depth
+	if level == 0:
+		var ids: Array = w.interiors.keys()
+		ids.sort()
+		for id in ids:
+			var b: Dictionary = w.buildings.get(id, {})
+			var it: Dictionary = w.interiors[id]
+			if b.is_empty() or not b.has("door") or (it.get("floor", []) as Array).is_empty():
+				continue
+			var door := Vector2(float(b.door[0]), float(b.door[1])) + Vector2(0.5, 0.5)
+			if door.distance_to(at) > r:
+				continue
+			var best: Array = it.floor[0]
+			for c in it.floor:
+				if Vector2(float(c[0]), float(c[1])).distance_to(door) < Vector2(float(best[0]), float(best[1])).distance_to(door):
+					best = c
+			cand.append([_key(at, door, away, r), int(best[0]), int(best[1])])
+	for k in 8:
+		var dir := Vector2.RIGHT.rotated(TAU * k / 8.0)
+		for f in [0.5, 1.0]:
+			var c := _open_toward(at, at + dir * r * f, level)
+			if c.x >= 0:
+				cand.append([_key(at, Vector2(c) + Vector2(0.5, 0.5), away, r), c.x, c.y])
+	cand.sort_custom(func(a, b): return a[0] < b[0] or (a[0] == b[0] and (a[1] < b[1] or (a[1] == b[1] and a[2] < b[2]))))
+	for c in cand:
+		if out.size() >= want:
+			break
+		var cell := [int(c[1]), int(c[2])]
+		if not out.has(cell):
+			out.append(cell)
+	return out
+
+
+static func _key(at: Vector2, c: Vector2, away: Vector2, r: float) -> float:
+	var d := c - at
+	var dot := d.normalized().dot(away) if d.length() > 0.01 else 1.0
+	return snappedf(d.length() / r + (1.0 - dot) * 0.5, 0.0001)
+
+
+## The open cell nearest `to` on the line back to `at` (walkable, outdoors on the surface), or (-1, -1).
+func _open_toward(at: Vector2, to: Vector2, level: int) -> Vector2i:
+	for s in range(10, -1, -1):
+		var p := at.lerp(to, s / 10.0)
+		var c := Vector2i(p.floor())
+		if c.x < 0 or c.y < 0 or c.x >= w.map.w or c.y >= w.map.h:
+			continue
+		var solid: bool = w.map.is_solid(c) if level == 0 else w.underground.is_solid(level, c)
+		if not solid and (level != 0 or w.place_of(Vector2(c) + Vector2(0.5, 0.5)) == ""):
+			return c
+	return Vector2i(-1, -1)
+
+
+## A3: what a guard on a case knows passes to the guards in its sight (stub until A3).
+func share_tick(_g: NPC) -> void:
+	pass
+
+
 # ---------------------------------------------------------------- save
 func to_dict() -> Dictionary:
 	return {"cases": cases.duplicate(true), "closed": closed.duplicate(true)}

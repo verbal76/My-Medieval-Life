@@ -702,7 +702,7 @@ func _par05_awareness() -> void:
 	check(w.brain._report(victim) and str(victim.plan[-1].get("act", "")) == "report", "PAR-05: the victim goes to tell the guard (%s)" % victim.doing)
 	victim.pos = guard.pos + Vector2(1.5, 0)
 	w.brain.act(victim, "report", {"guard": guard.id})
-	check(guard.target == -2 and victim.report.is_empty(), "PAR-05: told by the victim, the guard answers it")
+	check(guard.target == -1 and str(guard.pursuit.get("state", "")) == "responding" and victim.report.is_empty(), "PAR-05: told by the victim, the guard answers it (A2: the player out of their sight, they go to where the player was seen)")
 	guard.target = -1
 	var wit: NPC = null
 	for o: NPC in w.npcs:
@@ -717,7 +717,7 @@ func _par05_awareness() -> void:
 	check(int(wit.report.get("offender", 0)) == -2, "PAR-05: a witness will report it too")
 	wit.pos = guard.pos + Vector2(0, 1.5)
 	w.brain._report(wit)
-	check(guard.target == -2 and wit.report.is_empty(), "PAR-05: a witness in sight of a guard tells them at once")
+	check(guard.target == -1 and str(guard.pursuit.get("state", "")) == "responding" and wit.report.is_empty(), "PAR-05: a witness in sight of a guard tells them at once (A2: the guard goes to where the player was seen)")
 	guard.target = -1
 	wit.report = {"offender": -2, "t": w.minutes - float(GameData.b("report").hours) * 60.0 - 1.0, "how": "saw"}
 	w.brain._report(wit)

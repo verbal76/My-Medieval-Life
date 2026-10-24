@@ -1705,6 +1705,8 @@ func _hunter(n: NPC) -> bool:
 
 
 func _guard(n: NPC, h: float) -> void:
+	if not w.justice.cases.is_empty() and w.justice.spot(n):     # A2: a wanted offender this guard knows of, in sight again
+		return
 	_take_guard_post(n)
 	if Decay.plan_rearm(w, n):            # DVW-B4: armour worn out is bought again from a seller, with its own coins
 		return
@@ -2356,6 +2358,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"leave":
 			n.anim = "idle"
 			return true
+		"search_point":                       # A2: a guard on a case reached a place to look (the last-known spot, then nearby)
+			pursue_arrived(n)
+			return true
 		"respond":                            # S3: a guard sent by a report to where the offender was seen takes them on if still there
 			var off := int(a.offender)
 			if n.target == -1 and Life.is_player_id(off) and w.offender_alive(off) and w.player_level == n.depth \
@@ -2761,9 +2766,14 @@ func fight(n: NPC, dt: float) -> void:
 	var tpos: Vector2
 	var tdead := false
 	var tnpc: NPC = null
+	if n.job == "guard" and not n.pursuit.is_empty() and Life.is_player_id(n.target):
+		if _pursuit_sight(n):                 # A2: on a case: out of sight means searching, never dropping the case
+			return
+	var tplayer: PlayerState = foe_player(n) if Life.is_player_id(n.target) else null
 	if Life.is_player_id(n.target):
-		tpos = w.player.pos
-		tdead = not w.player.alive or w.player_level != n.depth        # MIN-A: rock between them
+		tdead = tplayer == null or not tplayer.alive or tplayer.map_level != n.depth        # MIN-A: rock between them
+		if tplayer != null:
+			tpos = tplayer.pos
 	else:
 		tnpc = w.npc(n.target)
 		# gone, or into a building the fighter is not in (a door between them); a sleeper is still
@@ -2781,7 +2791,10 @@ func fight(n: NPC, dt: float) -> void:
 			n.plan = [go(w.bandit_camp, 1.2)]
 		return
 	var d := tpos - n.pos
-	if d.length() > CHASE_RANGE or (n.job == "guard" and tpos.distance_to(Vector2(w.bandit_camp)) < 12.0):
+	var on_case := n.job == "guard" and not n.pursuit.is_empty() and Life.is_player_id(n.target)
+	if (d.length() > CHASE_RANGE and not on_case) or (n.job == "guard" and tpos.distance_to(Vector2(w.bandit_camp)) < 12.0):
+		if on_case:
+			w.justice.release(n, "near_bandit_camp")       # A2: guards do not follow into the camp: the case stays (wanted)
 		if w.recorder != null:
 			w.recorder.chase_end(n, "out_of_range" if d.length() > CHASE_RANGE else "near_bandit_camp")      # SIM-GATE-01
 		n.target = -1
@@ -2850,7 +2863,7 @@ func fight(n: NPC, dt: float) -> void:
 	if Life.is_player_id(n.target):
 		# the death screen names who struck: "Wat the guard", "Rob the bandit", or just the name
 		var who := n.job if n.job != "" else ("bandit" if n.role == "bandit" else "")
-		w.damage_player(dmg, n.name + (" the " + who if who != "" else ""))
+		w.damage_player(dmg, n.name + (" the " + who if who != "" else ""), tplayer)
 	else:
 		w.harm_npc(tnpc, dmg)
 		w.wake_near(tnpc.pos, float(GameData.b("sleep_wake_radius")))    # the blow wakes them, and the noise others
@@ -2865,6 +2878,81 @@ func fight(n: NPC, dt: float) -> void:
 			if w.recorder != null:
 				w.recorder.chase_end(n, "target_slain")      # SIM-GATE-01
 			n.target = -1
+
+
+# ---------------------------------------------------------------- pursuit (A2, GP-CRIME-PURSUIT) -------------
+## A guard on a player's case (NPC.pursuit, Justice) in a chase: while the offender is in sight (World.sees) the
+## last-known place is where they stand now; out of sight the chase becomes a search of that place and around it
+## (Justice.search). Returns true when the chase ended this tick.
+func _pursuit_sight(n: NPC) -> bool:
+	var ref := str(n.pursuit.ref)
+	var p: PlayerState = w.player_of_ref(ref)
+	if p == null or not p.alive or w.justice.case_of(ref).is_empty():
+		if w.recorder != null:
+			w.recorder.chase_end(n, "case_closed")
+		w.justice.release(n, "case_closed")
+		return true
+	if w.sees(n, p):
+		n.pursuit.at = [p.pos.x, p.pos.y]
+		n.pursuit.t = w.minutes
+		w.justice.saw_at(ref, p.pos, w.minutes, p.map_level)
+		return false
+	if w.recorder != null:
+		w.recorder.chase_end(n, "lost_sight")      # A2: out of sight: the search begins at the last-known place
+	w.justice.search(n)
+	return true
+
+
+## The player a fighter targeting "the player" (-2) is after: the one of a guard's case (A2), else the acting player (as before).
+func foe_player(n: NPC) -> PlayerState:
+	if not n.pursuit.is_empty():
+		return w.player_of_ref(str(n.pursuit.ref))
+	return w.player
+
+
+## A guard on a case with no one in sight (responding to a report or the hue and cry, or searching): each tick, the
+## offender in sight brings back the chase; the search ends when its time is up (the case goes over to wanted); with
+## nothing planned the next place is visited. Event-light: one sight test a tick, no scan of the village.
+func pursue(n: NPC) -> void:
+	var p := n.pursuit
+	var ref := str(p.ref)
+	var off: PlayerState = w.player_of_ref(ref)
+	if off == null or not off.alive or w.justice.case_of(ref).is_empty():
+		w.justice.release(n, "case_closed")
+		return
+	if w.sees(n, off):
+		w.justice.engage(n, ref, "pursuing")
+		return
+	w.justice.share_tick(n)                         # A3: what this guard knows passes to guards in sight
+	if str(p.state) == "searching" and w.minutes >= float(p.until):
+		w.justice.release(n, "searched")            # a meaningful search found nothing: the case stays (wanted)
+		n.plan.clear()
+		return
+	if n.plan.is_empty():
+		var i := int(p.i)
+		if i >= (p.cells as Array).size():
+			if str(p.state) == "responding":
+				w.justice.begin_search(n)
+				return
+			w.justice.release(n, "searched")
+			return
+		var c: Array = p.cells[i]
+		p.i = i + 1
+		n.doing = ("answering a report" if str(p.state) == "responding" else "searching for %s" % off.name)
+		n.plan = [go(Vector2i(int(c[0]), int(c[1])), 1.3), doit("search_point")]
+
+
+## A guard on a case reached a place to look: the offender in sight brings back the chase; a guard responding begins
+## the search there.
+func pursue_arrived(n: NPC) -> void:
+	if n.pursuit.is_empty():
+		return
+	var ref := str(n.pursuit.ref)
+	var off: PlayerState = w.player_of_ref(ref)
+	if off != null and w.sees(n, off):
+		w.justice.engage(n, ref, "pursuing")
+	elif str(n.pursuit.state) == "responding":
+		w.justice.begin_search(n)
 
 
 ## S3: plan the way from the chaser to the target's cell (the walk's own path-finding, on the chaser's level) and start

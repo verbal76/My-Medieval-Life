@@ -552,6 +552,10 @@ func _update_npc(n: NPC, dt: float) -> void:
 	if n.target != -1:
 		brain.fight(n, dt)
 		return
+	if not n.pursuit.is_empty():
+		brain.pursue(n)                # A2: a guard on a case looks for the offender (responding, searching); sight brings back the chase
+		if n.target != -1:
+			return
 	if n.plan.is_empty():
 		var t := Time.get_ticks_usec() if profiling else 0
 		brain.decide(n)
@@ -961,6 +965,9 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	for n: NPC in npcs:
 		if Life.is_player_id(n.target):
 			n.target = -1
+			n.plan.clear()
+		if not n.pursuit.is_empty() and player_of_ref(str(n.pursuit.ref)) == p:
+			n.pursuit = {}                     # A2: the case closed with the offender (Justice.on_death)
 			n.plan.clear()
 	note("%s %s (generation %d) takes up the family's life." % [heir.name, heir.family, heir.generation])
 
@@ -2804,6 +2811,13 @@ func wake_near(p: Vector2, r: float) -> void:
 		wake(n)
 
 
+## A2 (GP-CRIME-PURSUIT): whether villager `n` sees player `p`: the one channel of sight (near: awake, within witness_radius,
+## the same place and level). There is no other: a guard who does not see the player does not know where they are.
+func sees(n: NPC, p: PlayerState) -> bool:
+	return n != null and n.alive and not asleep(n) and p != null and p.alive and not p.away and p.map_level == n.depth \
+			and n.pos.distance_to(p.pos) <= float(GameData.b("witness_radius")) and place_of(n.pos) == place_of(p.pos)
+
+
 ## People within `r` tiles of a point who are awake and in the same place: inside the same building,
 ## or both outdoors (walls stand between a building's inside and the rest of the world).
 func near(p: Vector2, r: float) -> Array:
@@ -3490,7 +3504,7 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC, cis 
 			text += " \"Don't let me catch you at it again, friend.\" The fine is lowered for a friend, but a theft is still fined."
 		text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
 	if paid < fine:
-		g.target = Life.PLAYER_ID
+		justice.engage(g, acting_ref(), "pursuing")                # A2: on the case, in sight
 	elif not cis.is_empty():
 		justice.settle(acting_ref(), cis, "fined")                  # A1: the fine paid answers the theft
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
@@ -3527,6 +3541,8 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 			if n.target == -1 and n.id != attacker:
 				n.target = attacker
 				k += 1
+				if ref != "":
+					justice.engage(n, ref, "pursuing")             # A2: the chase is on the case: it survives losing sight
 		elif n.role != "bandit" and n.id != attacker:
 			report_crime(n, attacker, "saw", "attack", ref, cis)
 	var v: NPC = aware.get("victim", null)
@@ -3536,6 +3552,8 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 				justice.learn(v, ref, cis, player.pos)
 			if v.target == -1:
 				v.target = attacker
+				if ref != "":
+					justice.engage(v, ref, "pursuing")
 		else:
 			report_crime(v, attacker, "victim", "attack", ref, cis)
 	if k > 0:
@@ -3586,6 +3604,7 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 	var crime := str(n.report.get("crime", "attack"))
 	var at: Array = n.report.get("at", [])
 	var ref := str(n.report.get("ref", ""))
+	var told_t := float(n.report.get("t", minutes))
 	var cis: Array = (n.report.get("cis", []) as Array).map(func(i): return int(i))
 	n.report = {}
 	if not offender_alive(off):
@@ -3601,9 +3620,16 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 		return true
 	g.remember("told by %s %s of an attack" % [n.name, n.family])
 	if g.target == -1 and g.id != off:
-		if Life.is_player_id(off) and at.size() == 2 and g.pos.distance_to(player.pos) > NPCBrain.CHASE_RANGE:
-			# S3: too far off to chase from here (the chase would be dropped at once): go to the reported place, and take
-			# the offender on there if they are still in sight ("respond"). No search yet (audit A2).
+		if Life.is_player_id(off) and ref != "" and not justice.case_of(ref).is_empty():
+			# A2: a guard told of a player's attack takes them on if they see them; otherwise goes to where they were seen
+			# and searches there (responding, then searching). Never to where the player is now unless they see them (S3).
+			var who: PlayerState = player_of_ref(ref)
+			if sees(g, who):
+				justice.engage(g, ref, "pursuing")
+			elif at.size() == 2:
+				justice.engage(g, ref, "responding", Vector2(float(at[0]), float(at[1])), told_t)
+		elif Life.is_player_id(off) and at.size() == 2 and g.pos.distance_to(player.pos) > NPCBrain.CHASE_RANGE:
+			# S3 (a report with no case: older saves): go to the reported place, take the offender on there if still in sight
 			g.plan = [brain.go(Vector2i(Vector2(float(at[0]), float(at[1])).floor())), brain.doit("respond", {"offender": off})]
 			g.doing = "answering a report"
 		else:

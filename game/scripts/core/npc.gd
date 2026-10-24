@@ -43,6 +43,7 @@ var anim := "idle"           # "sleep": lying in bed (World.asleep); indoors is 
 var facing := Vector2.DOWN
 var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
+var pursuit := {}            # A2 (GP-CRIME-PURSUIT): a guard on a player's case: {ref, state: pursuing | responding | searching, at: [x, y] last-known, t, until, cells: [[x, y]], i, share}; {} none. Saved (optional key): the wanted hunt survives save and load (Justice)
 var chase_route := false     # S3: a guard chasing a player is following `path` round what stands between them (NPCBrain.fight; not saved, as `target` is not)
 var memory: Array = []       # notable events this NPC knows about
 var skills := {}             # skill -> xp, as the player's (PAR-01: the same curve, gates and effects; Skills)
@@ -119,6 +120,8 @@ func to_dict() -> Dictionary:
 		"skills": skills.duplicate(),
 		"report": report.duplicate(),
 	}
+	if not pursuit.is_empty():
+		d.pursuit = pursuit.duplicate(true)  # A2: written only for a guard on a case
 	if depth != 0:
 		d.level = depth                  # MIN-A: written only below the surface
 	if away != "":
@@ -155,6 +158,11 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.birth_family = str(d.get("birth_family", ""))          # older saves: none changed
 	n.clan = str(d.get("clan", ""))                           # older saves: none
 	n.report = (d.get("report", {}) as Dictionary).duplicate()        # older saves: none
+	n.pursuit = (d.get("pursuit", {}) as Dictionary).duplicate(true)  # A2: older saves (a Build 20 save): no guard on a case
+	if not n.pursuit.is_empty():
+		n.pursuit.i = int(n.pursuit.get("i", 0))
+		if str(n.pursuit.get("state", "")) == "pursuing":
+			n.target = Life.PLAYER_ID          # a guard who had the offender in sight at the save still has (fight() checks the sight at once)
 	for k in d.get("skills", {}):                             # older saves (< 15): World.load_dict seeds them (Skills.seed_villagers)
 		n.skills[str(k)] = int(d.skills[k])
 	return n

@@ -47,6 +47,11 @@
     "target_slain": "fight(): the fighter's blow killed the target",
     "cleared_elsewhere": "the target was cleared by other code (the player's death, a kill, a reset); seen at the next hour",
     "retargeted": "the fighter was given a different target before this chase ended",
+    "lost_sight": "fight(): a guard on a player's case lost sight of them (A2): the search of the last-known place begins; the case stays open",
+    "case_closed": "fight() or the search: the case ended (the offender died, yielded or was taken in; A2, A3)",
+    "searched": "the search of the last-known place and around it found nothing in its time (A2): the case goes over to wanted",
+    "yielded": "the offender yielded to the guards (A3): fined, the stolen goods returned",
+    "taken": "a guard who may not kill beat the offender down and took them in (A3): fined, the stolen goods returned",
     "not_reached": "an earlier branch took the decision, so this branch (alternative option \"after:<winner>\" stands for every later branch of the chain) was not evaluated"
   },
   "decision_kinds": ["plan_next"],
