@@ -44836,12 +44836,17 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: simulation gate agent -> ; tests: None -> sim_suite local PASS twice (identical fixed-seed results), tests/test_sim_gate.py, failure injections exit 1; test_commit: None -> e63a6ab; commits + e63a6ab; next_action",
      "why": "built on wip/sim-gate e63a6ab (audit docs/design/SIM_GATE_AUDIT.md there): recorder schema mml-recorder/2 with hourly village snapshots and chase events; scenario suite tools/sim_suite.py (fixed seeds 1-2 x 30 days, shortages, scripted crimes, rotating seeds, save/load and corner-pursuit probes, 100/500 load), one GDScript XLSX writer for CI and the desktop export (13 sheets, 11 charts, no new dependency), release job sim-gate before packaging, workbook as a CI artifact, summary in the notes; desktop 'Record gameplay' setting off by default, exports to Documents/My Medieval Life/recordings; Android preset excludes the export code (checked in the workflow and a unit test); proofs: recorder outcome-neutral, exports reconcile with the simulation, injected leak, torn archive and script error each fail the gate; local full run PASS in about 14 minutes on 4 cores; to merge into wip/multiplayer-b19 after GP-REPAIR S1-S3"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "tests: sim_suite local PASS twice (identical fixed-seed results), tests/test_sim_gate.py, failure injections exit 1 -> sim_suite local PASS twice (identical fixed-seed results), tests/test_sim_gate.py, failure injections exit 1; on wip/sim-gate e63a6ab: sim_suite local PASS twice (identical fixed-seed results), the branch's sim-gate unit tests, failure injections exit 1",
+     "why": "test evidence reworded (files live on wip/sim-gate)"
     }
    ],
    "assigned_worker": "",
    "branch": "wip/sim-gate",
    "next_action": "Merge wip/sim-gate into wip/multiplayer-b19 after S1-S3, run the gate there; owner to approve or adjust the proposed (non-blocking) thresholds",
-   "tests": "sim_suite local PASS twice (identical fixed-seed results), tests/test_sim_gate.py, failure injections exit 1",
+   "tests": "on wip/sim-gate e63a6ab: sim_suite local PASS twice (identical fixed-seed results), the branch's sim-gate unit tests, failure injections exit 1",
    "test_commit": "e63a6ab",
    "commits": [
     "e63a6ab"
