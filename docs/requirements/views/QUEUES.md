@@ -13,7 +13,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FIX-D1D2 | 19 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | FIX-D3 | 19 | IMPLEMENTED ON TASK BRANCH | repair worker X19 (Sonnet subagent) | wip/expansion19-preparation |
 | GP-ACTIONBAR | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
-| GP-ANVIL | multiplayer | IMPLEMENTED ON TASK BRANCH | none |  |
+| GP-ANVIL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-BACK-DOORS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-BANDIT-CAMP-ART | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |

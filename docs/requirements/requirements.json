@@ -21607,6 +21607,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> IN DEVELOPMENT",
      "why": "owner, 2026-10-24: 'that's too far away to spawn anvil instructions' (screenshot anvil_prompt_too_far_2026-10-24.png): the player stands about two tiles below the anvil, not facing it, and 'Use the anvil' is offered; the prompt must need the player beside the drawn station and facing it (all stations, consistent with GP-TARGET-ART-MATCH ordering)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19",
+     "why": "reopened work assigned to the polish batch agent"
     }
    ],
    "next_action": "P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19",
@@ -21614,7 +21619,9 @@
    "test_commit": "cbf4000",
    "commits": [
     "cbf4000"
-   ]
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
   },
   {
    "id": "GP-BACK-DOORS",
