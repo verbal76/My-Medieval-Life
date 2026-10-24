@@ -134,6 +134,7 @@ var experience := WorkExperience.new()   # X18 HOOK (Expansion 18, X18-CAPCOMP p
 var settlement_caps := {}     # SET-A/B: the village's maintained capability history (SettlementProfile; saved under SettlementSave.KEY, optional)
 var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
 var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
+var justice: Justice          # GP-CRIME-PURSUIT A1: the authorities' file on each offender, by player reference (scripts/core/justice.gd). Saved as the optional key "justice" (a Build 20 save has none)
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
@@ -174,6 +175,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	if FlightRecorder.enabled():
 		WorldRecorder.attach(self)     # REC-19: off unless recorder.json enables it (or a test/harness does)
 	credit = Credit.new(self)
+	justice = Justice.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -504,6 +506,7 @@ func _new_day() -> void:
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
 	manor_work.dawn()                  # undone manor jobs are released
+	justice.dawn()                     # GP-CRIME-PURSUIT A1: outstanding crimes past their tier's wanted_days lapse
 	if judgment != null:
 		judgment.begin_day(d)          # PROSPECTIVE (PROS-19): old events retire; each person's fading follows by the hour
 	property.collect_rents()
@@ -880,6 +883,7 @@ func damage_player(amount: float, source: String, actor: PlayerState = null) -> 
 		p.alive = false
 		p.death_cause = source
 		p.deaths += 1
+		justice.on_death(acting_ref())      # GP-CRIME-PURSUIT A1 (owner answer 3): the case ends with the offender
 		note("%s %s died (%s)." % [p.name, p.family, source])
 		if recorder != null:
 			recorder.player_died(p, source)     # REC-19
@@ -2022,7 +2026,7 @@ func _player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 		n.target = Life.PLAYER_ID
 	var killed := false
 	if n.hp <= 0.0:
-		kill(n, "slain by %s %s" % [player.name, player.family])
+		kill(n, "slain by %s %s" % [player.name, player.family], acting_ref() if n.role != "bandit" else "")
 		killed = true
 		if n.role == "bandit":
 			relations.defended(n.pos)        # villagers who saw a bandit put down think better of the player (CRT-10)
@@ -2125,11 +2129,16 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 	if victim.role == "adult":
 		victim.target = Life.PLAYER_ID
 	var aware := aware_of_attack(p.pos, victim)
+	var seen := 0
 	for n: NPC in aware.seen:
 		if n.role != "bandit":
+			seen += 1
 			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
 			relations.harmed(n, float(Relations.cfg().witness_harm))
-	raise_alarm(aware, Life.PLAYER_ID)
+	# A1: an assault is a crime on the record and in the case; a blow at a guard is its own kind (escalation)
+	var kind := "guard_assault" if victim.job == "guard" else "assault"
+	var ci := crime_record({"day": day(), "kind": kind, "what": "%s %s" % [victim.name, victim.family], "victim": victim.id, "witnesses": seen}, victim)
+	raise_alarm(aware, Life.PLAYER_ID, acting_ref(), [ci])
 	stat("player_assault")
 	note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
@@ -2617,7 +2626,9 @@ func offmap_person(event: String, info: Dictionary) -> int:
 	return id
 
 
-func kill(n: NPC, cause: String) -> void:
+## `by_ref` (A1, A8): the reference of the player whose hand killed them ("" for any other death); a killing by a player is
+## a crime on their record and in their case, seen by those who see the body fall (near, PAR-05).
+func kill(n: NPC, cause: String, by_ref := "") -> void:
 	if not n.alive:
 		return
 	n.alive = false
@@ -2630,6 +2641,8 @@ func kill(n: NPC, cause: String) -> void:
 		relations.slain_by_player(n)       # family and friends never forget it (CRT-12)
 		if judgment != null:
 			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
+		if by_ref != "":
+			_player_killing(n, by_ref)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
 	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
@@ -2662,6 +2675,19 @@ func kill(n: NPC, cause: String) -> void:
 	if n.household >= 0 and not property._anyone_alive(n.household):
 		property.household_ended(n.household)
 	npc_died.emit(n)
+
+
+## A1: a villager slain by player `ref` (the acting player): the killing goes on their record and in their case. Those who
+## see it (near the body: awake, the same place) know: a guard among them knows of it at once, and every other witness's
+## report on the player (raise_alarm made one for the blow) now carries it. The victim cannot report it.
+func _player_killing(n: NPC, ref: String) -> void:
+	var seen := near(n.pos, float(GameData.b("witness_radius"))).filter(func(o: NPC) -> bool: return o.role != "bandit" and o != n)
+	var ci := crime_record({"day": day(), "kind": "killing", "what": "%s %s" % [n.name, n.family], "victim": n.id, "witnesses": seen.size()}, n)
+	for o: NPC in seen:
+		if o.job == "guard":
+			justice.learn(o, ref, [ci], player.pos)
+		else:
+			report_crime(o, Life.PLAYER_ID, "saw", "attack", ref, [ci])
 
 
 ## Who inherits (B8-029, owner 2026-10-19): the family first (Life.heir_of: eldest adult child, partner, other
@@ -3333,6 +3359,18 @@ func player_harvest(f: Dictionary, actor: PlayerState = null) -> int:
 	return n
 
 
+## GP-CRIME-PURSUIT A1: a crime of the acting player, written to their own record (PlayerState.crimes: `entry` with at least
+## day, kind, what, victim, witnesses) and to the authorities' file on them (Justice, keyed by the player's reference).
+## Returns the crime's index in the case (also in last_crime).
+var last_crime := -1
+
+
+func crime_record(entry: Dictionary, victim: NPC) -> int:
+	player.crimes.append(entry)
+	last_crime = justice.record(acting_ref(), str(entry.kind), victim, player.pos, int(entry.get("witnesses", 0)), player.crimes.size() - 1)
+	return last_crime
+
+
 ## Record what the village saw the player do: people within sight (awake, and in the same building as
 ## the player or, outdoors, outside: World.near) remember it,
 ## and so does the victim. A guard among them stops the player (guard_confront): `taken` (item ->
@@ -3357,8 +3395,8 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 	var count := 0
 	for id in taken:
 		count += int(taken[id])
-	player.crimes.append({"day": day(), "kind": kind, "what": what, "victim": victim.id if victim else -1, "witnesses": seen.size(),
-			"items": taken.duplicate(), "qty": count, "value": worth})
+	var ci := crime_record({"day": day(), "kind": kind, "what": what, "victim": victim.id if victim else -1, "witnesses": seen.size(),
+			"items": taken.duplicate(), "qty": count, "value": worth}, victim)
 	if worth > 0:
 		stat("player_stolen_value", worth)
 	var rec_ev: int = recorder.witness_begin(kind, what, victim, seen, worth) if recorder != null else 0     # REC-19: stays open over the guard's answer
@@ -3369,7 +3407,8 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 				(" (" + victim.name + " " + victim.family + "'s)") if victim and deed == "" else ""])
 	stat("player_" + kind)
 	if guard:
-		last_guard = guard_confront(guard, taken, back, victim)
+		justice.learn(guard, acting_ref(), [ci], player.pos)       # A1: the guard saw it
+		last_guard = guard_confront(guard, taken, back, victim, [ci])
 	if recorder != null:
 		recorder.end(rec_ev)
 	return seen.size()
@@ -3397,7 +3436,8 @@ static func theft_fine_for(goods: Dictionary) -> int:
 ## proposal): what was taken goes back where it came from (`back`) or to its owner, and the player
 ## pays theft_fine_for(taken) (a base fine plus a share of the goods' value) to the manor's treasury. One who cannot pay it all pays what they have and the
 ## guard comes after them, as for an attack (main.gd::_crime). Coins and goods only move.
-func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> String:
+## `cis`: the crimes of the player's case (Justice) this answers; a fine paid in full settles them (A1).
+func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC, cis := []) -> String:
 	var rec_guard: Array = recorder.guard_begin(g) if recorder != null else []     # REC-19: the fine and the goods returned, before and after
 	var returned := []
 	for id in taken:
@@ -3451,6 +3491,8 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 		text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
 	if paid < fine:
 		g.target = Life.PLAYER_ID
+	elif not cis.is_empty():
+		justice.settle(acting_ref(), cis, "fined")                  # A1: the fine paid answers the theft
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
 	if recorder != null:
 		recorder.guard_end(rec_guard, g, owner, fine, paid, warned)
@@ -3471,25 +3513,31 @@ func aware_of_attack(at: Vector2, victim: NPC) -> Dictionary:
 ## The response to an attack (aware_of_attack): every free guard who saw it takes on the attacker (`attacker` an NPC
 ## id, or -2 for the player); the victim and the others who saw it carry a report to a guard (report_crime). Returns
 ## how many guards answered at once.
-func raise_alarm(aware: Dictionary, attacker: int) -> int:
+## A1: for a player attacker, `ref` is that player's reference and `cis` the crimes of their case (Justice) this is; the
+## guards who answer know of them, and the reports carry them.
+func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 	var rec_alarm: int = recorder.alarm_begin(attacker, aware) if recorder != null else 0     # REC-19: the reports it causes are its children
 	if judgment != null:
 		JudgmentLive.on_attack(self, attacker, aware)              # PROSPECTIVE (PROS-19)
 	var k := 0
 	for n: NPC in aware.seen:
 		if n.job == "guard":
+			if ref != "":
+				justice.learn(n, ref, cis, player.pos)
 			if n.target == -1 and n.id != attacker:
 				n.target = attacker
 				k += 1
 		elif n.role != "bandit" and n.id != attacker:
-			report_crime(n, attacker, "saw")
+			report_crime(n, attacker, "saw", "attack", ref, cis)
 	var v: NPC = aware.get("victim", null)
 	if v != null and v.alive and v.role != "bandit" and v.id != attacker:
 		if v.job == "guard":
+			if ref != "":
+				justice.learn(v, ref, cis, player.pos)
 			if v.target == -1:
 				v.target = attacker
 		else:
-			report_crime(v, attacker, "victim")
+			report_crime(v, attacker, "victim", "attack", ref, cis)
 	if k > 0:
 		stat("guards_alarmed", k)
 	if recorder != null:
@@ -3501,12 +3549,22 @@ func raise_alarm(aware: Dictionary, attacker: int) -> int:
 ## they report it (NPCBrain._report), and seek one out within report.range tiles. The report lapses after
 ## report.hours. `how`: "saw" or "victim". `crime`: "attack", or "theft" for a caught pickpocket (PICK-01). Saved with
 ## the villager (older saves: an attack).
-func report_crime(n: NPC, offender: int, how: String, crime := "attack") -> void:
+## A1: a report on a player carries the player's reference (`ref`, default the acting player's) and the crimes of their case
+## it tells of (`cis`); a report the villager already holds on the same player gains the new crimes.
+func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := []) -> void:
+	var had: Dictionary = n.report
 	n.report = {"offender": offender, "t": minutes, "how": how}
 	if crime != "attack":
 		n.report.crime = crime
 	if Life.is_player_id(offender):
 		n.report.at = [player.pos.x, player.pos.y]       # S3: where the player was seen (a report on a villager is unchanged)
+		n.report.ref = ref if ref != "" else acting_ref()
+		var all: Array = (had.get("cis", []) as Array).duplicate() if str(had.get("ref", "")) == str(n.report.ref) else []
+		for ci in cis:
+			if not all.has(int(ci)):
+				all.append(int(ci))
+		if not all.is_empty():
+			n.report.cis = all
 	stat("crime_reports_made")
 	if recorder != null:
 		recorder.report(n, offender, how, crime)      # REC-19
@@ -3527,15 +3585,19 @@ func deliver_report(n: NPC, g: NPC) -> bool:
 	var off := int(n.report.offender)
 	var crime := str(n.report.get("crime", "attack"))
 	var at: Array = n.report.get("at", [])
+	var ref := str(n.report.get("ref", ""))
+	var cis: Array = (n.report.get("cis", []) as Array).map(func(i): return int(i))
 	n.report = {}
 	if not offender_alive(off):
 		return true
+	if ref != "":
+		justice.learn(g, ref, cis, Vector2(float(at[0]), float(at[1])) if at.size() == 2 else Vector2.INF, float(minutes))   # A1: the guard is told
 	stat("crime_reports_delivered")
 	if crime == "theft":
 		g.remember("told by %s %s of a theft" % [n.name, n.family])
 		stat("theft_reports_delivered")
 		if Life.is_player_id(off) and g.target == -1 and near(player.pos, float(GameData.b("witness_radius"))).has(g):
-			last_guard = guard_confront(g, {}, null, null)
+			last_guard = guard_confront(g, {}, null, null, cis)
 		return true
 	g.remember("told by %s %s of an attack" % [n.name, n.family])
 	if g.target == -1 and g.id != off:
@@ -3919,8 +3981,8 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 			got = {id: 1}
 			worth = goods_value(got)
 		n.remember("found %s missing" % what)
-		player.crimes.append({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0,
-				"items": got, "qty": maxi(1, got.size()), "value": worth})
+		crime_record({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0,
+				"items": got, "qty": maxi(1, got.size()), "value": worth}, n)
 		stat("player_pickpocket")
 		if judgment != null:
 			JudgmentLive.on_unseen_pickpocket(self, n, worth)          # PROSPECTIVE (PROS-19)
@@ -3933,11 +3995,12 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 	var text := "%s catches your hand in their pocket!" % n.name
 	if last_guard == "":
 		# no guard saw it: the victim and the others who saw it will tell one (PICK-01)
+		var ci := last_crime                  # A1: the case's record of this try (witness)
 		for o: NPC in near(player.pos, sight):
 			if o != n and o.role != "bandit" and o.job != "guard":
-				report_crime(o, Life.PLAYER_ID, "saw", "theft")
+				report_crime(o, Life.PLAYER_ID, "saw", "theft", acting_ref(), [ci])
 		if n.alive and n.job != "guard":
-			report_crime(n, Life.PLAYER_ID, "victim", "theft")
+			report_crime(n, Life.PLAYER_ID, "victim", "theft", acting_ref(), [ci])
 	if last_guard != "":
 		text += " " + last_guard
 	elif seen > 1:
@@ -3974,13 +4037,14 @@ func _player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 		if owner and (owner == buyer or (owner.household >= 0 and owner.household == buyer.household)):
 			var item := GameData.item_name(id).to_lower()
 			buyer.remember("caught %s %s selling me my own %s" % [player.name, player.family, item])
-			player.crimes.append({"day": day(), "kind": "fencing", "what": "%s back to %s %s" % [item, buyer.name, buyer.family], "victim": owner.id, "witnesses": 1})
+			var ci := crime_record({"day": day(), "kind": "fencing", "what": "%s back to %s %s" % [item, buyer.name, buyer.family], "victim": owner.id, "witnesses": 1}, owner)
 			stat("player_fencing")
 			note("%s %s knew the %s %s %s offered was theirs." % [buyer.name, buyer.family, item, player.name, player.family])
 			var text := "\"That %s is ours! You stole it!\" %s will not buy it." % [item, buyer.name]
 			var g := guard_near(buyer.pos, float(GameData.b("guard_call_radius")))
 			if g:
-				last_guard = guard_confront(g, {id: int(marks[o])}, null, owner)
+				justice.learn(g, acting_ref(), [ci], player.pos)
+				last_guard = guard_confront(g, {id: int(marks[o])}, null, owner, [ci])
 				text += " " + last_guard
 			return {"result": "recognised", "text": text}
 	if not owners.is_empty():
@@ -4693,7 +4757,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -4818,6 +4882,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	experience.load_dict(d.get(WorkExperience.KEY, {}))   # X18-CAPCOMP: optional; a save without it is seeded once below (D1)
 	credit = Credit.new(self)
 	credit.load_dict(d.get("credit", {}))         # TRADE-CREDIT: saves before it have no debts
+	justice = Justice.new(self)
+	justice.load_dict(d.get("justice", {}))       # GP-CRIME-PURSUIT A1: a Build 20 (save 21) or older save has no cases
 	contracts = Contracts.new(self)
 	contracts.load_dict(d.get("contracts", {}))   # saves before CON-01 have no contracts: nothing open, nothing set aside
 	judgment = null

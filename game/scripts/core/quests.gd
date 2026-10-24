@@ -479,6 +479,7 @@ func settle_harvest(q: Dictionary, n: NPC) -> void:
 		p.chest_stolen["wheat"] = m
 	n.remember("caught %s %s keeping the wheat I hired them to cut" % [p.name, p.family])
 	p.crimes.append({"day": w.day(), "kind": "theft", "what": "%d wheat cut for %s %s and kept" % [owed, n.name, n.family], "victim": n.id, "witnesses": 1})
+	w.justice.record(w.player_ref(p), "theft", n, p.pos, 1, p.crimes.size() - 1)      # GP-CRIME-PURSUIT A1: in the case too (no guard knows of it)
 	w.stat("player_theft")
 	w.note("%s %s kept the %d wheat %s %s hired them to cut." % [p.name, p.family, owed, n.name, n.family])
 

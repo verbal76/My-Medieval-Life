@@ -307,6 +307,8 @@ func notoriety() -> int:
 	var c := cfg()
 	var n := killings * int(c.killing_weight)
 	for cr in w.player.crimes:
+		if Justice.is_violent(str(cr.get("kind", ""))):
+			continue                 # GP-CRIME-PURSUIT A1: blows and killings are on the record too; killings count above, as before
 		if int(cr.get("witnesses", 0)) > 0 and w.day() - int(cr.get("day", 0)) <= int(c.notoriety_days):
 			n += 1
 	return n
