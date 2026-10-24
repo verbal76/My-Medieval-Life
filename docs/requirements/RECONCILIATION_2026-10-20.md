@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 550 (284 of them still open) |
-| **Open entries now** (rules excluded) | | **461** |
+| Entries added since | | 551 (285 of them still open) |
+| **Open entries now** (rules excluded) | | **462** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (550)
+## Added since the baseline (551)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -130,6 +130,7 @@ None.
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
+| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | decision | APPROVED | 18 |
@@ -248,7 +249,7 @@ None.
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
-| GP-CHECKPOINT-1 | Checkpoint 1: private Android playtest build of the quick-win polish fixes | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |

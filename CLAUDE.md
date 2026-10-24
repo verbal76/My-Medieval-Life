@@ -306,6 +306,11 @@ corresponding documentation.** Every agent and worker, on every task:
   - Decide minor implementation details yourself, document them (`docs/DECISIONS.md`, agent decision) and continue;
     escalate only what changes the game's vision, contradicts an explicit owner decision, adds significant cost, or
     commits to an irreversible architecture.
+  - **Three platforms, always (owner, 2026-10-24, BUILD-3PLATFORM, `docs/directives/2026-10-24_mandatory_three_platform_build_policy.md`;
+    permanent).** "Build" means Android APK, Windows ZIP and Linux ZIP together, for every checkpoint, playtest, candidate and
+    release: one commit, one version and build number, checksums and the source commit, one private draft release. A build
+    with one or two platforms is not complete: repair the failing one. Sign Android with the established test key from the
+    secrets only; never tick `allow_temporary_key` (no throwaway keys).
   - **Build 17 exception (owner, 2026-10-21, B17-DIR, `docs/directives/2026-10-21_build17_combined_integration_direction.md`):**
     do not publish a new APK, Windows or Linux distributable without the owner's explicit approval; when Build 17's gate
     passes, report its readiness and wait.

@@ -8455,6 +8455,34 @@
    "blocks_implementation": false
   },
   {
+   "id": "BUILD-3PLATFORM",
+   "kind": "approved",
+   "title": "Every build produces Android, Windows and Linux together, stably signed",
+   "description": "Every build produces Android, Windows and Linux together, stably signed",
+   "source": "docs/directives/2026-10-24_mandatory_three_platform_build_policy.md",
+   "owner_wording": "every authorized My Medieval Life build, including development checkpoints, private playtests, release candidates, and final releases, must produce all three platform artifacts ... Use the established Android signing identity and existing build pipeline. Do not generate temporary replacement signing keys.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Each build (checkpoint, playtest, candidate, release) produces the APK, the Windows ZIP and the Linux ZIP from one commit with one version and build number, with SHA256SUMS and the source commit, uploaded together to one private draft release named as a coordinated set; the APK is signed with the stable test key from the repository secrets (allow_temporary_key never set); a build missing a platform is not complete"
+   ],
+   "target_build": "multiplayer",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_mandatory_three_platform_build_policy.md"
+    }
+   ]
+  },
+  {
    "id": "CAP-TOOLHOLDER",
    "title": "Design review: a villager holding a tool only for sale counts as a capability practitioner",
    "kind": "idea",
@@ -21766,7 +21794,7 @@
   {
    "id": "GP-CHECKPOINT-1",
    "kind": "approved",
-   "title": "Checkpoint 1: private Android playtest build of the quick-win polish fixes",
+   "title": "Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes",
    "description": "Checkpoint 1: private Android playtest build of the quick-win polish fixes",
    "source": "docs/directives/2026-10-24_audit_decisions_checkpoint1_authorization.md",
    "owner_wording": "You are authorized to prepare a private Android Checkpoint 1 playtest build once the identified quick wins are complete and the required tests pass.",
@@ -21793,6 +21821,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
      "why": "authorized; quick wins in progress with the polish agent"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "title",
+     "why": "owner 2026-10-24: Checkpoint 1 is a three-platform private playtest release (BUILD-3PLATFORM), stably signed, no temporary key"
     }
    ],
    "assigned_worker": "primary development agent",

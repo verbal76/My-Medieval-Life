@@ -138,10 +138,11 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (37)
+## Multiplayer track (38)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
+| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | OWNER APPROVED | NOT STARTED |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | OWNER APPROVED | NOT STARTED |
 | DGA-D3 | Connectivity with no server | proposal | PROPOSED | PARTIALLY IMPLEMENTED |
 | GP-ACTIONBAR | Android action controls redesigned into two readable right-side columns (proposed: Run, Gather, Fire, Skills, Menu / Use, Attack, Pack, Map), every action kept, comfortable non-overlapping targets, centre and upper-left HUD clear, insets respected, stable positions, Gather on/off state unmistakable; baseline the owner's screenshot docs/gameplay_polish/reference/android_mining_hud_2026-10-24.png | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
@@ -150,7 +151,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | OWNER APPROVED | IN DEVELOPMENT |
-| GP-CHECKPOINT-1 | Checkpoint 1: private Android playtest build of the quick-win polish fixes | approved | OWNER APPROVED | IN DEVELOPMENT |
+| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | approved | OWNER APPROVED | IN DEVELOPMENT |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | approved | OWNER APPROVED | IN DEVELOPMENT |

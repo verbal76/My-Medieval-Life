@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (639)
+## Approved requirement (640)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -134,6 +134,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B8R-020 | Gathering banners fill phone screen |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -298,7 +299,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| GP-CHECKPOINT-1 | Checkpoint 1: private Android playtest build of the quick-win polish fixes | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-FARMER-TENDING | Farmers tending a field walk through it working the ground with a tool | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-GIFT-QUANTITY | Gifts: give one by default, with a number picker; never the whole stack by accident | multiplayer | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
