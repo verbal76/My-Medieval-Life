@@ -104,7 +104,15 @@ older build reads as villagers' ids; an older build refuses a save 22 (`SaveStor
 
 ## 6. Evidence (2026-10-24)
 
-On the checkpoint `3d988d0` (an exact copy of the commit, nothing edited during the runs):
+**Final commit `36b1e75`** (an exact copy, nothing edited during the runs): G0 **PASS, identical** to the baseline (seed 1 day 30
+`60742ce2...`, seed 2 day 30 `573d6000...`, leaks 0); SIM-GATE-01 **PASS** (0 blocking findings, accepted baseline identical,
+determinism and recorder neutrality identical, 707 s; run because `construction.gd` changed); `multiplayer_c_test` 340 checks
+(the nine host-route scenarios 99 of them), `net_c_test` 35, `net_g1_test` 44, `net_batch_b_test` 44, `multiplayer_a1_test` 67,
+`multiplayer_b_test` 31: 0 failures. Since `7bae490` only `construction.gd` (one mirror prologue), `net_actions.gd` (one catalog
+entry) and `multiplayer_c_test.gd` changed, so the rest of the inventory's evidence below stands.
+
+Earlier, on the checkpoint `3d988d0`:
+
 - **G0** (`python3 tools/sim_gate.py`, baseline untouched): **PASS, identical** (seed 1 day 30 `60742ce2...`, seed 2 day 30 `573d6000...`),
   currency and item leaks 0.
 - **SIM-GATE-01** (`tools/sim_suite.py --jobs 4`): **PASS**, 0 blocking findings, accepted baseline identical, determinism and recorder
