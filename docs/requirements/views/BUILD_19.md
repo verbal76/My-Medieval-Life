@@ -30,7 +30,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | OWNER APPROVED | INTEGRATED | wip/recorder 2d5d49c | TARGETED TESTS PASSED | merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline |  | verification only |
-| X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | OWNER APPROVED | INTEGRATED | Build 19 wip/build19 2685a26 | TARGETED TESTS PASSED | present Build 19 to the owner for release authorization (release.yml run needs the owner) |  | verification only |
+| X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | OWNER APPROVED | INTEGRATED | Build 19 wip/build19 2685a26 | TARGETED TESTS PASSED | owner playtest (phone, Windows); public publication only with the owner's approval |  | verification only |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 

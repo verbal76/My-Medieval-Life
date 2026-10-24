@@ -52533,9 +52533,19 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; integrated_in + Build 19 wip/build19 2685a26",
      "why": "integrated on the Build 19 release branch wip/build19 2685a26 (as Build 18 on wip/build18)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "release_status: RELEASE CANDIDATE -> RELEASED; commits + 2f72ec3; next_action",
+     "why": "Build 19 private playtest draft released: run 40044931601 on wip/build19 2f72ec3 (the first run 40043968310 stopped at run_tests on a household-split fixture the surviving band now disturbs; fixture fixed, checks unchanged). Packages downloaded back, SHA-256 match, Linux binary started cleanly and wrote no recorder data; packet docs/release/BUILD_19_PACKET.md on wip/build19 (42c33e0)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "release_status: RELEASED -> RELEASE CANDIDATE",
+     "why": "release status kept at RELEASE CANDIDATE: RELEASED needs COMPLETE, which needs the owner's playtest; the private playtest draft is out (run 40044931601)"
     }
    ],
-   "next_action": "present Build 19 to the owner for release authorization (release.yml run needs the owner)",
+   "next_action": "owner playtest (phone, Windows); public publication only with the owner's approval",
    "assigned_worker": "lead",
    "branch": "wip/build19",
    "tests": "judgment 217/0; judgment_live 144/0; bonds 98/0; personality 91/0; judgment_x19 101/0; family_first 104/0; world 339/0; run_tests 3595/0; wiki pass; 18 suites on b2f7dc2: 1784 checks, 0 failures; wiki_test pass",
@@ -52544,7 +52554,8 @@
     "b7f832e",
     "b2f7dc2",
     "a7c84e9",
-    "2685a26"
+    "2685a26",
+    "2f72ec3"
    ],
    "integrated_in": [
     "Build 19 wip/build19 2685a26"
