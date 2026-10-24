@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (36)
+## Workers and task branches (37)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -25,6 +25,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-TRAIL-EDGES | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-UI-COMPACT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-WHEAT-PICKED | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-WIKI-LAYOUT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |

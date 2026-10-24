@@ -22255,6 +22255,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-WIKI-LAYOUT",
+   "kind": "approved",
+   "title": "Encyclopedia laid out like a classic wiki page, on parchment",
+   "description": "Encyclopedia laid out like a classic wiki page, on parchment",
+   "source": "docs/gameplay_polish/reference/wiki_layout_reference_2026-10-24.png",
+   "owner_wording": "this is what a wiki page looks like",
+   "approval": "owner, 2026-10-24 (answer: Wiki layout, parchment)",
+   "acceptance": [
+    "The in-game Encyclopedia uses a classic wiki layout: a narrow sidebar of plain text links, a search box, a page title and short intro, and sections with headings whose entries are rows of inline underlined links separated by dashes (no large button tiles); article pages read as continuous text with inline links; drawn as dark ink on a light parchment page in the game's style; every link works by touch, gamepad (focus moves link to link) and mouse; text sized per GP-UI-COMPACT and legible on a phone; wiki_test still passes; verified by screenshots of the contents page and an article at phone landscape, 16:9 and Steam Deck sizes"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/wiki_layout_reference_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with the polish batch on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "HEALTH-01",
    "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
    "kind": "approved",

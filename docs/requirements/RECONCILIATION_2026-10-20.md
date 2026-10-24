@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 538 (272 of them still open) |
-| **Open entries now** (rules excluded) | | **449** |
+| Entries added since | | 539 (273 of them still open) |
+| **Open entries now** (rules excluded) | | **450** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (538)
+## Added since the baseline (539)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -261,6 +261,7 @@ None.
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | HORSE-Q | Plough horse: price and what it does | decision | APPROVED | owner decision |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
