@@ -248,6 +248,15 @@ jobs:
             echo "::error::the Android package contains the desktop recording export (scripts/recorder_export or data/sim_workbook.json)"
             exit 1
           fi
+          # Build 21 (LAN play): the APK's manifest must ask for the network permissions (granted at install, no prompt)
+          aapt="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)aapt"
+          "$aapt" dump permissions out/mymedievallife-dev.apk | tee out/apk-permissions.txt
+          for perm in INTERNET ACCESS_NETWORK_STATE ACCESS_WIFI_STATE CHANGE_WIFI_MULTICAST_STATE; do
+            if ! grep -q "android.permission.${perm}'\?\$" out/apk-permissions.txt; then
+              echo "::error::the APK's manifest lacks android.permission.${perm} (game/export_presets.cfg)"
+              exit 1
+            fi
+          done
           godot --headless --path game --export-release "Windows Desktop" ../out/pc/windows/MyMedievalLife.exe
           # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
           python3 tools/check_exe_icon.py out/pc/windows/MyMedievalLife.exe
