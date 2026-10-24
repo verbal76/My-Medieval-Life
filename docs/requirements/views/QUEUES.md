@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (41)
+## Workers and task branches (42)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -16,6 +16,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-ANVIL | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-BACK-DOORS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-BANDIT-CAMP-ART | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
+| GP-BUSINESS-DESK | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-DRAW-UNDER-HOUSE | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-INTERIOR-WALLS | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |
 | GP-PACK-DETAIL-FIT | multiplayer | IN DEVELOPMENT | primary development agent | wip/multiplayer-b19 |

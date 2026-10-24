@@ -21694,6 +21694,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-BUSINESS-DESK",
+   "kind": "approved",
+   "title": "Every business has a business desk: trade and courier in one place",
+   "description": "Every business has a business desk: trade and courier in one place",
+   "source": "docs/gameplay_polish/reference/smithy_business_desk_2026-10-24.png",
+   "owner_wording": "that table, that person is standing near is where the smithy does business. So maybe you click on that and it asks if you want to talk to the smithy to buy something or sell something. Or speak to a courier. Just make that the business desk, like in all businesses.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Each business (smithy, tavern, shops, workshops, the player's own shop) has one business desk on a drawn desk or counter in its premises (the smithy's is the table with the open ledger); using it (E, tap, click, gamepad) opens a short menu: trade with the keeper (buy, sell), and, where the business keeps a courier booth (Q18-15), the courier; when the keeper is away it says so and offers what the existing counter rules allow (ring for service, or the courier if staffed); business courier booths stand at the desk, never on a station; the desk is offered only beside it and facing it; works for every player (actor-aware); existing saves load; wiki and manifest updated; verified by screenshots of several businesses and a test"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/smithy_business_desk_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with GP-TARGET-ART-MATCH on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "GP-DRAW-UNDER-HOUSE",
    "kind": "approved",
    "title": "Player drawn half under a house wall (Marsh house front)",
