@@ -158,8 +158,9 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 	ui._label("Revenue %d  ·  expenses %d (%s)  ·  profit %s%d coins" % [int(s.earned), biz.expenses(s), ", ".join(parts) if not parts.is_empty() else "none yet",
 		"+" if biz.profit(s) >= 0 else "", biz.profit(s)], 16, GOLD if biz.profit(s) >= 0 else COLD)
 	ui._label("Goods are not costed; expenses are rent or licence, upgrades and wages.", 13)
-	var acts := HBoxContainer.new()
-	acts.add_theme_constant_override("separation", 8)
+	var acts := HFlowContainer.new()            # GP-PACK-DETAIL-FIT: wraps on a narrow screen
+	acts.add_theme_constant_override("h_separation", 8)
+	acts.add_theme_constant_override("v_separation", 8)
 	ui.panel_body.add_child(acts)
 	if till > 0 and not biz.stalls.is_market(s):
 		ui._button("Collect %d coins" % till, func():

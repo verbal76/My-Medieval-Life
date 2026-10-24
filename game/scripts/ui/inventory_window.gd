@@ -60,7 +60,8 @@ const PORTRAIT := Rect2(36, 55, 24, 48)    # inside the portrait frame
 const FIGURE := Rect2(8, 4, 16, 20)        # the figure within the sprite sheet's first 32 px frame
 const PLATE := Rect2(22, 111, 52, 6)       # the name plate under the portrait
 const DETAIL_W := 200.0                    # least width of the item details beside the panel
-const DETAIL_H := 120.0                    # least height of the details below it
+const DETAIL_H := 176.0                    # least height of the details below it: the title, a few lines and a row of buttons
+const ACTION_SIZE := Vector2(104, 44)      # an action button (GP-PACK-DETAIL-FIT: a comfortable touch target)
 const GAP := 8.0
 const INK := Color8(58, 38, 22)
 const TAN := Color8(181, 150, 97)
@@ -82,7 +83,9 @@ var tab_buttons: Array[Button] = []
 var side_buttons: Array[Button] = []     # Skills, Journal
 var details: PanelContainer
 var detail_box: VBoxContainer
-var actions: BoxContainer
+var detail_text: VBoxContainer   # the description, in a scroll of its own: however long, the buttons stay on screen
+var detail_scroll: ScrollContainer
+var actions: HFlowContainer      # the item's actions, always shown under the description, wrapping to more rows
 var tex := {}
 var detail_rect := Rect2()
 var _fitted := Vector4.ZERO
@@ -262,6 +265,17 @@ func _build_details() -> void:
 	var p := _player()
 	var head := HBoxContainer.new()
 	detail_box.add_child(head)
+	# GP-PACK-DETAIL-FIT (owner: "bottom options are off the screen"): the details panel is laid out at a fixed size;
+	# a long description (Ale: what it is, restores, spoils, "Used for" a recipe) pushed the buttons below the
+	# screen. The description scrolls in what room is left; the actions always sit at the bottom, inside the panel.
+	detail_scroll = ScrollContainer.new()
+	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	detail_scroll.custom_minimum_size.y = 24
+	detail_text = VBoxContainer.new()
+	detail_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail_scroll.add_child(detail_text)
+	detail_box.add_child(detail_scroll)
 	var title := _text("", 20)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(title)
@@ -269,9 +283,9 @@ func _build_details() -> void:
 	close.tooltip_text = "Close"
 	close.pressed.connect(ui.hide_all)
 	head.add_child(close)
-	actions = BoxContainer.new()
-	actions.vertical = side
-	actions.add_theme_constant_override("separation", 6)
+	actions = HFlowContainer.new()
+	actions.add_theme_constant_override("h_separation", 6)
+	actions.add_theme_constant_override("v_separation", 6)
 	var id := selected
 	var slot := ""
 	if selected.begins_with("gear:"):
@@ -282,14 +296,14 @@ func _build_details() -> void:
 	if id == "":
 		if slot != "":
 			title.text = GEAR_NAMES[slot]
-			detail_box.add_child(_text(GEAR_HINT[slot], 16))
+			detail_text.add_child(_text(GEAR_HINT[slot], 16))
 		else:
 			title.text = "%s %s" % [p.name, p.family]
 			var used := p.inv.used(tab)
 			var line := "%s: %d of %d places used. Worn and wielded things take no place. Tap a slot to see what is in it." % [GameData.category_name(tab), used, p.pack_cap()]
 			if used > p.pack_cap():
 				line = "%s: %d of %d places used, more kinds than it holds. Nothing is lost, but no new kind fits here until some go." % [GameData.category_name(tab), used, p.pack_cap()]
-			detail_box.add_child(_text(line, 16))
+			detail_text.add_child(_text(line, 16))
 		_fit_details()
 		return
 	var it: Dictionary = GameData.item(id)
@@ -321,7 +335,7 @@ func _build_details() -> void:
 		lines.append("Plant it on open village grass in front of you (not on a road, a door, a field or beside a tree). It grows into a %s that bears in its season." % ("flower" if str(it.propagates) == "flower" else "berry bush"))
 	if it.has("plant"):
 		lines.append("Plant it on open grass in front of you (not on a road, a door, a field or beside another tree). It grows into a tree in a few days.")
-	detail_box.add_child(_text("\n".join(lines), 16))
+	detail_text.add_child(_text("\n".join(lines), 16))
 	detail_box.add_child(actions)
 	var iid: String = id
 	if it.has("food"):
@@ -399,7 +413,7 @@ func _text(s: String, size: int) -> Label:
 	var l := Label.new()
 	l.text = s
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.custom_minimum_size.x = maxf(detail_rect.size.x - 80.0, 60.0) if size > 18 else maxf(detail_rect.size.x - 26.0, 60.0)
+	l.custom_minimum_size.x = maxf(detail_rect.size.x - 80.0, 60.0) if size > 18 else maxf(detail_rect.size.x - 40.0, 60.0)
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", INK)
 	return l
@@ -408,7 +422,7 @@ func _text(s: String, size: int) -> Label:
 func _action(caption: String, cb: Callable) -> void:
 	var b := Button.new()
 	b.text = caption
-	b.custom_minimum_size = Vector2(120, 46)
+	b.custom_minimum_size = ACTION_SIZE
 	b.pressed.connect(cb)
 	actions.add_child(b)
 
@@ -465,9 +479,10 @@ func _layout() -> void:
 	if side:
 		var dw := clampf(size.x - art.x - GAP, DETAIL_W, 380.0)
 		want = Vector2((size.x - art.x - GAP - dw) / 2.0, (size.y - art.y) / 2.0)
-		drect = Rect2(want.x + art.x + GAP, want.y + 8.0 * k, dw, art.y - 8.0 * k)
+		# GP-PACK-DETAIL-FIT: from the panel's top down to the window's foot, so a long description has room
+		drect = Rect2(want.x + art.x + GAP, want.y + 8.0 * k, dw, maxf(art.y - 8.0 * k, size.y - want.y - 8.0 * k - GAP))
 	else:
-		var dh := clampf(size.y - art.y - GAP, DETAIL_H, 170.0)
+		var dh := maxf(size.y - art.y - GAP, DETAIL_H)
 		want = Vector2((size.x - art.x) / 2.0, (size.y - art.y - GAP - dh) / 2.0)
 		drect = Rect2(want.x, want.y + art.y + GAP, art.x, dh)
 	# put the art's corner on a whole screen pixel

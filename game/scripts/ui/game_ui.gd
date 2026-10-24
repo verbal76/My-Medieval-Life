@@ -884,6 +884,11 @@ func _build_panel() -> void:
 	tab.content_margin_top = 4
 	tab.content_margin_bottom = 4
 	title_label.add_theme_stylebox_override("normal", tab)
+	# GP-PACK-DETAIL-FIT: a long title ("Your market stall · you have 100 coins") on a narrow screen ends in "..."
+	# instead of widening the window past the screen's edge and its close X with it
+	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	title_label.clip_text = true
+	title_label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(title_label)
@@ -894,7 +899,10 @@ func _build_panel() -> void:
 	outer.add_child(top)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# GP-PACK-DETAIL-FIT (the talk and stall windows cut off at the right on a phone): a disabled horizontal scroll makes
+	# the body's widest row the window's least width, so one wide row pushed the whole window, its close X too, past
+	# the screen's edge. Never shown, it keeps the window on the screen; rows of buttons wrap (HFlowContainer).
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	scroll.follow_focus = true            # PL2-012: pad/keyboard focus scrolls its row into view
 	body_scroll = scroll
 	outer.add_child(scroll)
@@ -1182,6 +1190,7 @@ func _open(kind: String, title: String, pause := true) -> void:
 	panel_back = Callable()
 	inner_back = Callable()
 	title_label.text = title.to_upper()
+	_fit_title()
 	close_btn.visible = not kind in ["title", "origin", "death", "creation"]
 	for c in panel_body.get_children():
 		panel_body.remove_child(c)
@@ -1199,6 +1208,16 @@ func _open(kind: String, title: String, pause := true) -> void:
 		main.paused = true
 	if scheme != "touch":
 		_focus_first.call_deferred()
+
+
+## GP-PACK-DETAIL-FIT: the window's title is as wide as its words, but never wider than leaves room for the close X on
+## the screen (then it ends in "..."); it clips, so its words never set the window's width.
+func _fit_title() -> void:
+	var font := title_label.get_theme_font("font")
+	var fs := title_label.get_theme_font_size("font_size")
+	var want := font.get_string_size(title_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 36.0 + 4.0
+	var room := panel.get_viewport_rect().size.x - 16.0 - 2.0 * 24.0 - 52.0 - 16.0
+	title_label.custom_minimum_size.x = clampf(want, 40.0, maxf(room, 40.0))
 
 
 func _label(text: String, size := 18, color := Color8(246, 236, 214)) -> Label:

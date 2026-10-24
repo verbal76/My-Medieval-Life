@@ -38,6 +38,27 @@ func _place() -> void:
 		var look := w.player.pos if a.size() < 6 else Vector2(int(a[4]) + 0.5, int(a[5]) + 0.5)
 		main.follow_at = main._in_view(look * main.T)
 		return
+	if mode.begins_with("pack:"):            # pack:ITEM: the pack open on that item (add --phone for the phone layout)
+		var id := mode.substr(5)
+		w.player.inv.add(id, 2)
+		main.ui.show_inventory(GameData.category(id))
+		await process_frame
+		main.ui.inventory_window().choose(id)
+		return
+	if mode == "stall_put" or mode == "talk":     # the stall window with its put-up dialog; a farmer's talk window
+		if mode == "talk":
+			for n: NPC in w.npcs:
+				if n.job == "farmer":
+					main.ui.show_talk(n)
+					break
+			return
+		w.player.coins = 100
+		w.business.rent()
+		var st: Dictionary = w.business.mine()
+		w.player.inv.add("pottage", 58)
+		w.business.list_item(st, "pottage", 3)
+		StallWindow.show(main.ui, str(st.id), {"id": "pottage", "mode": "put"})
+		return
 	match mode:
 		"wheat":
 			var f: Dictionary = w.fields[0]
@@ -57,7 +78,7 @@ func _wait() -> void:
 	frames += 1
 	if frames == 5:
 		_place()
-	if frames == 8:
+	if frames == 8 and not (mode.begins_with("pack:") or mode in ["stall_put", "talk"]):
 		main.ui.hide_all()
 	if frames < 40:
 		return

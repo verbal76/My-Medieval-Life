@@ -1,6 +1,8 @@
 extends SceneTree
 ## GP-POLISH P2 (the owner's polish reports of 2026-10-24), checked in the real game scene, headless:
 ##   godot --headless --path game --script res://tests/polish_p2_test.gd
+## GP-PACK-DETAIL-FIT: every item's details and action buttons in the pack lie inside the screen, on a phone in landscape
+## (2000 x 1119, 2404 x 1080, 2000 x 1145; the phone layout), 16:9, 16:10 and a Steam Deck, at each interface size.
 ## GP-WHEAT-PICKED: cutting a ripe wheat field shows stubble on the cells cut, nearest the harvester first, kept through a
 ## save; a cut wheat cell of the player's farm shows stubble.
 ## GP-DRAW-UNDER-HOUSE: every building's front edge is drawn among the characters, so whoever stands in front is drawn
@@ -36,6 +38,7 @@ func _run() -> void:
 	_draw_under_house()
 	_wheat_picked()
 	_back_doors()
+	await _pack_fit()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -187,3 +190,113 @@ func _back_doors() -> void:
 		if view.tile_value(l, tavern) >= 0:
 			roofed = true
 	check(roofed, "doors: the tavern's back door (38, 38) stays under its roof")
+
+
+## Sets the window to `sz` and the phone or desktop layout at interface size `ui_size`, as Main.apply_settings does.
+func _screen(sz: Vector2i, phone: bool, ui_size: String) -> void:
+	root.size = sz
+	main.settings.phone = phone
+	main.settings.ui_size = ui_size
+	main.settings.apply(self)
+
+
+## The controls of `node` that a player can press (buttons), visible.
+func _pressables(node: Node, out: Array) -> Array:
+	for c in node.get_children():
+		if c is BaseButton and (c as Control).is_visible_in_tree():
+			out.append(c)
+		_pressables(c, out)
+	return out
+
+
+## Whether every visible button under `node` lies inside the visible screen (a pixel of slack); the misfits, named.
+func _outside(node: Node) -> Array:
+	var view := root.get_visible_rect().grow(1.0)
+	var bad := []
+	for b: Control in _pressables(node, []):
+		var r := b.get_global_rect()
+		var scrolled := false                    # in a window's scrolling body: below the screen is reached by scrolling
+		var up := b.get_parent()
+		while up != null and up != node:
+			if up is ScrollContainer and (up as ScrollContainer).vertical_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED \
+					and view.encloses((up as Control).get_global_rect()):
+				scrolled = true
+			up = up.get_parent()
+		if scrolled:
+			r = Rect2(r.position.x, view.position.y + 2.0, r.size.x, 1.0)      # across only
+		if r.size.x > 0.0 and not view.encloses(r):
+			bad.append("%s %s" % [(b as Button).text if b is Button else b.name, str(r)])
+	return bad
+
+
+## GP-PACK-DETAIL-FIT (owner: "bottom options are off the screen", Ale x2 and others).
+func _pack_fit() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var ui = main.ui
+	var sizes := [[Vector2i(2000, 1119), true], [Vector2i(2404, 1080), true], [Vector2i(2000, 1145), true],
+		[Vector2i(1920, 1080), false], [Vector2i(1920, 1200), false], [Vector2i(1280, 800), false]]
+	var ids: Array = GameData.items.keys()
+	ids.sort()
+	var longest := []                      # [text length, id], the ten longest descriptions
+	var saved_ui: String = main.settings.ui_size
+	for si in sizes.size():
+		for ui_size in (["normal", "large", "small"] if si < 2 else ["normal"]):
+			_screen(sizes[si][0], sizes[si][1], ui_size)
+			ui.show_inventory()
+			await process_frame
+			await process_frame
+			var pack: InventoryWindow = ui.inventory_window()
+			var try: Array = ids if (si == 0 and ui_size == "normal") else longest.map(func(e): return e[1])
+			var bad := []
+			for id in try:
+				var had := p.inv.count(id)
+				p.inv.add(id, 2)
+				pack.choose_tab(GameData.category(id))
+				pack.choose(id)
+				await process_frame
+				await process_frame
+				if si == 0 and ui_size == "normal":
+					var n := 0
+					for l in pack.detail_text.get_children():
+						n += (l as Label).text.length()
+					longest.append([n, id])
+				var out := _outside(pack)
+				if pack.actions.get_child_count() < 2:
+					out.append("only %d actions" % pack.actions.get_child_count())
+				if not out.is_empty():
+					bad.append("%s: %s" % [id, str(out)])
+				p.inv.remove(id, p.inv.count(id) - had)
+			if si == 0 and ui_size == "normal":
+				longest.sort()
+				longest.reverse()
+				longest = longest.slice(0, 10)
+				check(not longest.is_empty(), "pack fit: the longest descriptions are %s" % str(longest.slice(0, 3)))
+			check(bad.is_empty(), "pack fit at %s (%s, %s): every item's buttons are on screen (%d items) %s" % [str(sizes[si][0]), "phone" if sizes[si][1] else "desktop", ui_size, try.size(), str(bad.slice(0, 3))])
+			ui.hide_all()
+	# the talk window and the stall window (with its put-up dialog) at the same sizes: nothing cut off at the right
+	var farmer: NPC = null
+	for n: NPC in w.npcs:
+		if n.job == "farmer" and farmer == null:
+			farmer = n
+	p.coins = 100
+	w.business.rent()
+	var stall: Dictionary = w.business.mine()
+	p.inv.add("pottage", 58)
+	w.business.list_item(stall, "pottage", 3)
+	for si in sizes.size():
+		for ui_size in (["normal", "large", "small"] if si < 2 else ["normal"]):
+			_screen(sizes[si][0], sizes[si][1], ui_size)
+			var where := "%s (%s, %s)" % [str(sizes[si][0]), "phone" if sizes[si][1] else "desktop", ui_size]
+			ui.show_talk(farmer)
+			await process_frame
+			await process_frame
+			var out := _outside(ui.panel)
+			check(out.is_empty() and ui.close_btn.is_visible_in_tree(), "talk window fits at %s %s" % [where, str(out.slice(0, 3))])
+			StallWindow.show(ui, str(stall.id), {"id": "pottage", "mode": "put"})
+			await process_frame
+			await process_frame
+			out = _outside(ui.panel)
+			check(out.is_empty(), "stall window and its put-up dialog fit at %s %s" % [where, str(out.slice(0, 3))])
+			ui.hide_all()
+	_screen(Vector2i(1280, 720), false, saved_ui)
