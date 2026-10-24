@@ -2,9 +2,11 @@ class_name Dialogue
 extends RefCounted
 ## What a villager says to the player, in their own voice, built only from the simulation's state:
 ## their job and what they are doing, their hunger, their household's reckoning (hh.econ), what
-## they remember of the player (NPC.memory) and the village record (World.log_lines). Presentation
-## only: nothing here changes the world, except `meet`, which adds a memory. Wording varies by the
-## villager's id and the day, never by a random number generator.
+## they remember of the player (NPC.memory, and the judgment store's beliefs: DialogueVoice) and the
+## village record (World.log_lines). The speaker is `n`; the listener is always the acting player,
+## World.player (a guest under World.as_actor). Presentation only: nothing here changes the world,
+## except `meet`, which adds a memory. Wording varies by the villager's id and the day, never by a
+## random number generator.
 
 const NUMBERS := ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 	"eleven", "twelve"]
@@ -203,6 +205,12 @@ static func busy(n: NPC) -> bool:
 static func opening(w: World, n: NPC) -> String:
 	if n.role == "bandit":
 		return "Your purse or your life."
+	# S1 (REPAIR_AUDIT): someone who saw or learned that the listener killed or attacked another speaks from that,
+	# as a witness or as one who heard, to the listener's face; a killing before their own hurt, their own hurt before
+	# an attack on someone else
+	var harm := DialogueVoice.violence(w, n)
+	if not harm.is_empty() and (harm.crime == "killing" or not attacked(w, n)):
+		return DialogueVoice.witness_line(w, n, harm)
 	var animal := animal_killed(w, n)
 	if animal != "" and not attacked(w, n):
 		return _pick(w, n, ["You killed my %s. Get away from me." % animal, "That %s was mine, and you killed it. Keep away." % animal])
@@ -367,9 +375,8 @@ static func home(w: World, n: NPC) -> String:
 	for i in range(n.memory.size() - 1, -1, -1):
 		var m: String = n.memory[i]
 		if m.ends_with(")") and m.contains(" died ("):
-			var who := m.substr(0, m.find(" died ("))
-			var cause := m.substr(m.find(" died (") + 7).trim_suffix(")")
-			death = ("%s starved to death." % who) if cause == "starvation" else ("We lost %s: %s." % [who, cause])
+			# S1: the dead named as family names them ("our Denise", "my son Hugh"), the listener as "you"
+			death = DialogueVoice.home_death(w, n, m.substr(0, m.find(" died (")), m.substr(m.find(" died (") + 7).trim_suffix(")"))
 			break
 	var relief: Array = hh.get("relief_days", []).filter(func(d) -> bool: return int(d) > w.day() - 7)
 	if death != "":
@@ -428,6 +435,9 @@ static func news(w: World, n: NPC) -> String:
 static func brush_off(w: World, n: NPC) -> String:
 	if n.role == "bandit":
 		return "Your purse or your life."
+	var harm := DialogueVoice.violence(w, n)            # S1: a witness to the listener's violence is never "a stranger"
+	if not harm.is_empty() and (harm.crime == "killing" or not attacked(w, n)):
+		return DialogueVoice.witness_brush(w, n, harm)
 	if attacked(w, n):
 		return _pick(w, n, ["Stay away from me.", "Keep your distance!", "Don't come near me!"], 6)
 	if animal_killed(w, n) != "":

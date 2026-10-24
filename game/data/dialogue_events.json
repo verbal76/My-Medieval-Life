@@ -1,0 +1,60 @@
+{
+  "format": "mml-dialogue-events/1",
+  "_doc": "Wording for what a villager says about an event, by the speaker's own relation to it (REPAIR_AUDIT_DIALOGUE_CRIME_GUARDS steps S1 and S2; read by game/scripts/ui/dialogue_voice.gd). Presentation only. {victim}/{Victim}: the victim as the speaker names them (kin words below, else the name); {them}: her or him. A list is chosen from by Dialogue._pick (by villager and day, no random numbers); a list keyed by speaker role uses 'default' for any other role.",
+  "kin": {
+    "_doc": "How the speaker names a relative, by the relative's relation to the speaker and sex; a 'child' entry is how a child says it. {name}: the relative's first name.",
+    "parent": {"female": {"child": "Mum", "default": "my mother"}, "male": {"child": "Dad", "default": "my father"}},
+    "child": {"female": {"default": "my daughter {name}"}, "male": {"default": "my son {name}"}},
+    "partner": {"female": {"default": "my wife {name}"}, "male": {"default": "my husband {name}"}},
+    "sibling": {"female": {"default": "my sister {name}"}, "male": {"default": "my brother {name}"}},
+    "grandchild": {"female": {"default": "my granddaughter {name}"}, "male": {"default": "my grandson {name}"}},
+    "grandparent": {"female": {"child": "Gran", "default": "my grandmother"}, "male": {"child": "Grandad", "default": "my grandfather"}},
+    "household": {"female": {"child": "{name}", "default": "our {name}"}, "male": {"child": "{name}", "default": "our {name}"}}
+  },
+  "witness": {
+    "_doc": "S1: the opening line of a villager who knows the listener harmed someone. crime: killing | assault; how: saw (witnessed it) | heard (told, or learned as family); stance: confront | afraid | guarded (DialogueVoice.stance).",
+    "killing": {
+      "saw": {
+        "confront": {"child": ["You killed {victim}! I saw you! I saw you do it!", "I saw you kill {victim}! I'll tell everyone!"],
+          "default": ["You killed {victim}! I saw you do it!", "I saw what you did to {victim}. I saw it with my own eyes, murderer."]},
+        "afraid": {"child": ["Don't hurt me! I saw you kill {victim}!", "Go away! You killed {victim}, I saw you!"],
+          "default": ["Stay back! I saw you kill {victim}. Please, leave me be.", "I saw you kill {victim}. Don't come any closer."]},
+        "guarded": ["I saw you kill {victim}. I have nothing to say to you.", "I was there. I saw you kill {victim}. Go."]
+      },
+      "heard": {
+        "confront": ["They say you killed {victim}. Is it true?", "I heard you killed {victim}. Tell me it isn't so."],
+        "afraid": {"child": ["They say you killed {victim}. Please don't hurt me.", "Did you kill {victim}? They say you did. Go away!"],
+          "default": ["I've heard what they say you did to {victim}. Please, I want no trouble.", "They say you killed {victim}. Keep away from me."]},
+        "guarded": ["I've heard what happened to {victim}, and what people say you did. Leave me be.", "People say you killed {victim}. I'll keep my distance."]
+      }
+    },
+    "assault": {
+      "saw": {
+        "confront": {"child": ["You hit {victim}! I saw you!", "I saw you hurt {victim}! That's wicked!"],
+          "default": ["I saw you attack {victim}. Keep away from us.", "You struck {victim}. I saw it, and I won't forget it."]},
+        "afraid": {"child": ["You hurt {victim}! Don't hurt me!", "I saw you hit {victim}. Go away!"],
+          "default": ["I saw you go for {victim}. Please, just leave me alone.", "I saw what you did to {victim}. Don't come near me."]},
+        "guarded": ["I saw you attack {victim}. We've nothing to talk about.", "I saw you strike {victim}. Go about your business."]
+      },
+      "heard": {
+        "confront": ["I heard you attacked {victim}. Is that true?", "They say you went for {victim}. Did you?"],
+        "afraid": ["They say you attacked {victim}. Please, leave me be.", "I heard what you did to {victim}. Keep your distance."],
+        "guarded": ["I've heard about you and {victim}. I'll keep out of your way.", "People say you struck {victim}. Leave me be."]
+      }
+    }
+  },
+  "witness_brush": {
+    "_doc": "S1: the line a busy villager calls out who knows the listener harmed someone, by stance.",
+    "confront": ["Murderer! Get away from me!", "Keep away from us! I know what you did!"],
+    "afraid": ["Don't hurt me!", "Stay back! Please!", "Leave me alone!"],
+    "guarded": ["I know what you did. Go.", "Not you. Leave me be."]
+  },
+  "home_death": {
+    "_doc": "S1: home()'s line for a household death the speaker remembers. listener: slain by the listener; slain: by someone else ({killer}); starvation; old_age; other ({cause}).",
+    "listener": ["We lost {victim}. You know why: you killed {them}.", "We lost {victim}, and it was your hand that did it."],
+    "slain": ["We lost {victim}: {killer} killed {them}.", "We lost {victim}. {Killer} killed {them}."],
+    "starvation": ["{Victim} starved to death."],
+    "old_age": ["{Victim} died of old age."],
+    "other": ["We lost {victim} ({cause})."]
+  }
+}
