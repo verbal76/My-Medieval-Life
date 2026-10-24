@@ -1973,7 +1973,10 @@ func _player_step(delta: float) -> void:
 		player_sprite.speed_scale = _sprint_scale()
 	else:
 		sprinting = false
-		if player_sprite.anim in ["walk", "swing", "gather", "work"]:
+		# GP-PICKAXE-ANIM: work begun this frame by Gather mode, a tapped seam or tree, or a reach (_gather_step, _reach_step:
+		# the touch path) keeps its swing; only a player standing idle goes back to rest. It used to reset the swing begun a
+		# moment before, so on a phone the miner stood still while the bar filled; E began work after this line and kept it.
+		if action.is_empty() and player_sprite.anim in ["walk", "swing", "gather", "work"]:
 			_rest_anim()
 		_through_portal(Vector2.ZERO)        # MIN-A: a tapped adit, reached
 	_find_target()

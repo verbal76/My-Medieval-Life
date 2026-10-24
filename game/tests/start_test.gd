@@ -2182,9 +2182,35 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	var hit := ResourceNodes.node_at(w, Vector2i(int(d.x), int(d.y)), true)
 	main.select_resource(hit, true)
 	run_frames(10, 0.05)
+	# GP-PICKAXE-ANIM: the touch path (Gather mode, then a seam) swings the pickaxe through every cycle, not standing still
+	var swung := 0
+	var working := 0
+	for i in 120:
+		run_frames(1, 0.05)
+		if not main.action.is_empty():
+			working += 1
+			if main.player_sprite.anim == "swing" and main.player_sprite.tool_item != "" and main.player_sprite.tool_item.contains("pickaxe"):
+				swung += 1
+	check(working > 20 and swung == working, "Gather mode's continuous mining swings the pickaxe in every working frame (%d of %d), cycle after cycle" % [swung, working])
 	main._unhandled_input(_pad(JOY_BUTTON_B))
 	check(main.gather.is_empty() and main.action.is_empty() and main.gather_mode and main.player_sprite.anim in ["idle", "walk"], "B stops Gather mode's continuous gathering; Gather mode stays on")
+	run_frames(1, 0.05)
+	check(main.player_sprite.anim == "idle" and main.player_sprite.tool_item == "", "when the mining stops the swing stops and the pickaxe is put away")
 	main.gather_button()
+	# a seam tapped outside Gather mode: one cycle, swinging all through it, then back to rest
+	d = _at_seam(5)
+	tap_at(Vector2(int(d.x), int(d.y)) + Vector2(0.5, 0.5))
+	swung = 0
+	working = 0
+	for i in 1200:
+		run_frames(1, 0.05)
+		if not main.action.is_empty():
+			working += 1
+			if main.player_sprite.anim == "swing" and main.player_sprite.tool_item.contains("pickaxe"):
+				swung += 1
+		elif working > 0 and main.gather.is_empty():
+			break
+	check(working > 5 and swung == working and main.player_sprite.anim == "idle", "a tapped seam swings the pickaxe through its cycle (%d of %d frames), then rests" % [swung, working])
 
 	# B8-010: the Pack opens mid-action: the work stops, nothing is awarded, controls work after closing
 	d = _at_seam()
