@@ -3171,11 +3171,35 @@ func show_gifts(n: NPC) -> void:
 	panel_body.add_child(grid)
 	for id in ids.slice(0, 12):
 		var why := (" ★ " + r.favourite_reason(n, id)) if favs.has(id) else ""
-		var b := _button("%s (%d)%s" % [GameData.item_name(id), w.player.inv.count(id), why], func():
-			var said := r.give(w.acting_id(), n, id)
-			_talk_view(n, said if said != "" else Dialogue.opening(w, n)), true, grid)
+		var b := _button("%s (%d)%s" % [GameData.item_name(id), w.player.inv.count(id), why], func(): _gift_picker(n, id), true, grid)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
+
+
+## GP-GIFT-QUANTITY (owner: "it gives them the whole stack"): choosing a gift asks how many, starting at one; Give moves
+## exactly that many (one gift's regard, whatever the number); one of a kind is given at once. Cancel gives nothing.
+func _gift_picker(n: NPC, id: String) -> void:
+	var w: World = main.world
+	var p := w.player
+	var worn := 0
+	for slot in ["weapon", "armor", "tool", "head", "amulet", "ring"]:
+		if str(p.get(slot)) == id:
+			worn += 1
+	var spare := p.inv.count(id) - worn
+	var give := func(q: int) -> void:
+		var said := w.relations.give(w.acting_id(), n, id, q)
+		_talk_view(n, said if said != "" else Dialogue.opening(w, n))
+	if spare <= 1:
+		give.call(1)
+		return
+	var qp := QuantityPicker.new().setup("Give %s" % GameData.item_name(id).to_lower(), "You have %d. One is a gift; more is still one gift." % spare,
+		spare, "Give", -1, "")
+	qp.cancelled.connect(func(): show_gifts(n))
+	qp.confirmed.connect(func(q: int): give.call(q))
+	panel_body.add_child(qp)
+	panel_body.move_child(qp, 1)
+	if scheme != "touch":
+		qp.focus_default.call_deferred()
 
 
 ## Hiring a helper for the day: for each of the family's sites, carry from the family chest only, or

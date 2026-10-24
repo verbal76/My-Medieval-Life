@@ -174,23 +174,26 @@ func gift_effect(giver: int, n: NPC, id: String) -> Dictionary:
 
 ## Give one `id` from `giver` (the player or a villager) to villager `n`. Returns what they say; the goods
 ## move from the giver's pack to the receiver's (refused when they have no room).
-func give(giver: int, n: NPC, id: String) -> String:
+## GP-GIFT-QUANTITY (owner, 2026-10-24): `qty` of the item (1 unless the giver chose more in the gift window's picker) is
+## one gift: the regard and judgment effects are those of one gift whatever the number, so a gift is never farmed by count.
+func give(giver: int, n: NPC, id: String, qty := 1) -> String:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if w.mirrors():
-		return w.mirror("relations.give", give.bind(giver, n, id), [giver, n, id])
+		return w.mirror("relations.give", give.bind(giver, n, id, qty), [giver, n, id, qty])
 	var gp: PlayerState = w.player_of_id(giver) if Life.is_player_id(giver) else null      # MP C5: whichever player gives
 	if Life.is_player_id(giver) and gp == null:
 		return ""
 	var from: Inventory = gp.inv if gp != null else w.npc(giver).inv
-	if not from.has(id):
+	qty = clampi(qty, 1, from.count(id)) if from.has(id) else 0
+	if qty <= 0:
 		return ""
 	if not n.inv.can_add(id):
 		return "I've no room to carry that, but thank you."
 	var e := gift_effect(giver, n, id)
-	from.remove(id)
-	n.inv.add(id)
+	from.remove(id, qty)
+	n.inv.add(id, qty)
 	if gp != null:
-		gp.unmark(id, n.id, 1)
+		gp.unmark(id, n.id, qty)
 	var t := tie(giver, n.id)
 	var first_today: bool = int(t.gift_day) != w.day()
 	t.gift_day = w.day()
