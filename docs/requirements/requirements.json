@@ -21910,6 +21910,41 @@
    "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19"
   },
   {
+   "id": "GP-START-RUSTY-AXE",
+   "kind": "approved",
+   "title": "The player starts with a rusty axe",
+   "description": "The player starts with a rusty axe",
+   "source": "owner message, 2026-10-24 (gameplay polish session)",
+   "owner_wording": "also lets have the player start with a rusty axe too",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "A new rusty_axe item (an axe tool like rusty_pickaxe: slower, wears out, start kit only) is in player_start_items for every new player, multiplayer guests included; it fells trees; its icon is imported with provenance; the opening text, wiki, resources.json and its manifests are updated; existing saves are unchanged"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "owner message, 2026-10-24 (gameplay polish session)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "HEALTH-01",
    "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
    "kind": "approved",
