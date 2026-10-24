@@ -52464,7 +52464,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "RELEASE CANDIDATE",
    "completion": "OPEN",
@@ -52528,6 +52528,11 @@
      "date": "2026-10-24",
      "change": "release_status: NOT READY -> RELEASE CANDIDATE",
      "why": "release gate seeds 3 and 4 (30 days, 2685a26): no leak, no FATAL, no starvation; private draft release workflow started, run 40043968310 on 2685a26, build number 19, temporary signing key"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; integrated_in + Build 19 wip/build19 2685a26",
+     "why": "integrated on the Build 19 release branch wip/build19 2685a26 (as Build 18 on wip/build18)"
     }
    ],
    "next_action": "present Build 19 to the owner for release authorization (release.yml run needs the owner)",
@@ -52540,6 +52545,9 @@
     "b2f7dc2",
     "a7c84e9",
     "2685a26"
+   ],
+   "integrated_in": [
+    "Build 19 wip/build19 2685a26"
    ]
   },
   {
