@@ -20,6 +20,7 @@ var vsync := true
 var max_fps := 0                   # 0 = no cap
 var ui_size := "normal"            # small | normal | large
 var touch_buttons := "auto"        # auto (when touch is in use) | always | never
+var harvest := "manual"            # GP-HARVEST-CONT: "manual" (Use works a resource once; Gather mode for more) | "continuous" (Use gathers it until it runs out)
 var touch_move := "tap"            # GP-JOYSTICK: walking by touch: "tap" (tap the ground, the default) | "joystick" (an on-screen stick)
 var phone := false                 # a phone or tablet: no windows, a larger interface
 var save_copy := ""                # SAVE-05: a file outside the game kept up to date with the save ("" none)
@@ -50,6 +51,8 @@ func load_file(path := PATH) -> void:
 	touch_buttons = t if t in ["auto", "always", "never"] else "auto"
 	var tm: String = str(cf.get_value("interface", "touch_move", touch_move))
 	touch_move = tm if tm in ["tap", "joystick"] else "tap"
+	var hv: String = str(cf.get_value("gameplay", "harvest", harvest))
+	harvest = hv if hv in ["manual", "continuous"] else "manual"
 	save_copy = str(cf.get_value("saves", "copy", save_copy))
 	record_gameplay = bool(cf.get_value("developer", "record_gameplay", record_gameplay))
 	net_name = str(cf.get_value("multiplayer", "name", net_name)).left(16)
@@ -68,6 +71,7 @@ func save_file(path := PATH) -> void:
 	cf.set_value("interface", "size", ui_size)
 	cf.set_value("interface", "touch_buttons", touch_buttons)
 	cf.set_value("interface", "touch_move", touch_move)
+	cf.set_value("gameplay", "harvest", harvest)
 	cf.set_value("saves", "copy", save_copy)
 	cf.set_value("developer", "record_gameplay", record_gameplay)
 	cf.set_value("multiplayer", "name", net_name)

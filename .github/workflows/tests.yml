@@ -130,6 +130,8 @@ jobs:
           $godot --headless --path game --script res://tests/stall_putup_test.gd
           # GP-JOYSTICK, GP-INPUT-CONSIST (Build 21): the optional thumbstick walks by the same move actions as keys and pads
           $godot --headless --path game --script res://tests/joystick_test.gd
+          # GP-HARVEST-CONT (Build 21): the Harvesting setting, continuous or manual, the same yield and time a cycle
+          $godot --headless --path game --script res://tests/harvest_setting_test.gd
           $godot --headless --path game --script res://tests/outlaw_return_test.gd
           $godot --headless --path game --script res://tests/party_test.gd
           $godot --headless --path game --script res://tests/regional_food_test.gd

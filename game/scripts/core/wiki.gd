@@ -632,6 +632,7 @@ func _systems() -> void:
 		links(["sys:needs", "controls:kbm", "controls:gamepad"])])
 	sys.call("gather", "Gather mode and working", [
 		p("Gather mode (G on keyboard, Gather on touch, D-pad down on a pad) gathers the resource you pick again and again until it is used up or something interrupts you: you walk away, you are hurt, your pack is full or the tool is gone. Cancel stops work at once: Esc or right-click, B on a pad."),
+		p("Settings, Interface, Harvesting: Manual (the default) works a resource once each time you press Use; Continuous makes Use gather it until it runs out, as Gather mode does, on every device. Each round takes the same time and gives the same as a single use."),
 		p("Several things may be usable at once: Q or Tab (D-pad left or right) chooses the next one."),
 		links(["guide:mine", "node:tree", "node:flower_patch", "controls:kbm"])])
 	sys.call("fighting", "Fighting with the sword", [

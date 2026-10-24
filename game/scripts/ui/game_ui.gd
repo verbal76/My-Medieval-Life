@@ -1874,6 +1874,7 @@ func _settings_interface() -> void:
 	var st: GameSettings = main.settings
 	_choice("Interface size", ["small", "normal", "large"], st.ui_size, func(v): st.ui_size = v)
 	_choice("On-screen buttons", ["auto", "always", "never"], st.touch_buttons, func(v): st.touch_buttons = v)
+	_choice("Harvesting", ["manual", "continuous"], st.harvest, func(v): st.harvest = v)     # GP-HARVEST-CONT, every platform
 	if st.phone or scheme == "touch":            # GP-JOYSTICK: walking by touch, a tap on the ground (default) or a thumbstick
 		_choice("Moving by touch", ["tap", "joystick"], st.touch_move, func(v): st.touch_move = v)
 

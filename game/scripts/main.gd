@@ -2973,8 +2973,9 @@ func interact() -> void:
 		if _beside_player():
 			ui.show_players()                      # MP-D8: another player stands here: ask, or answer what they asked
 		return
-	# in Gather mode, Use (keys, pad, the touch button) on a resource in front chooses it to gather
-	if gather_mode and target.kind in ["deposit", "tree", "field", "plant"]:
+	# in Gather mode, Use (keys, pad, the touch button) on a resource in front chooses it to gather; GP-HARVEST-CONT: with
+	# Settings' "Harvesting: continuous", Use on a resource always does, on every platform (the same loop, cycle by cycle)
+	if (gather_mode or settings.harvest == "continuous") and target.kind in ["deposit", "tree", "field", "plant"]:
 		var cell: Vector2i = _target_cell(target)
 		var hit := ResourceNodes.node_at(world, cell, true)
 		if not hit.is_empty():
