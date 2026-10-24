@@ -6,8 +6,8 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 42 |
-| APPROVED | 172 |
+| OPEN | 37 |
+| APPROVED | 177 |
 | PROVISIONAL | 1 |
 | SUPERSEDED | 2 |
 | REOPENED | 0 |
@@ -86,7 +86,7 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | OPEN | no |  | docs/directives/2026-10-23_id_d2_succession_decisions.md |
 
-## Waiting on an owner decision for its build: open, reopened or provisional (10)
+## Waiting on an owner decision for its build: open, reopened or provisional (5)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -95,9 +95,4 @@ The decision register is the `decision` records of the register. A recommendatio
 | OD-04 | Owner decisions: chest and lock questions | OPEN | no |  | docs/BUILD_DECISIONS.md |
 | OD-07 | Owner decision: hunting in Gather mode | OPEN | no |  | docs/HANDOFF.md |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | OPEN | no |  | docs/GAME_DESIGN.md |
-| ROAD-Q1 | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer) | OPEN | no |  | docs/design/ROADMAP_20_27_PRIORITY.md |
-| ROAD-Q2 | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E? | OPEN | no |  | docs/design/ROADMAP_20_27_PRIORITY.md |
-| ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | OPEN | no |  | docs/design/ROADMAP_20_27_PRIORITY.md |
-| ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | OPEN | no |  | docs/design/ROADMAP_20_27_PRIORITY.md |
-| ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | OPEN | no |  | docs/design/ROADMAP_20_27_PRIORITY.md |
 

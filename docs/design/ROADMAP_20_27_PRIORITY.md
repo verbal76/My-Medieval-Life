@@ -1,5 +1,9 @@
 # Expansions 20-27: revised roadmap and dependency review (2026-10-24)
 
+**Status: accepted by the owner, with ROAD-Q1..Q5 answered** (`docs/directives/2026-10-24_owner_roadmap_question_decisions.md`).
+Approved order: **20 → 21 → 23 → 22 → 24 → 25 → 26 → 27**; numbers fixed; multiplayer a separate parallel track. The answers
+are folded in below (sections 1, 3, 8, 10, 11, 12); the text as first proposed is kept in git history.
+
 Owner directive: `docs/directives/2026-10-24_expansion_roadmap_reprioritization.md` (register ROAD-03). **Planning only: no
 expansion is authorized for implementation by it.** Expansion numbers are unchanged; only the development order changes. Every
 scope below is summarized from its source, which stays authoritative; nothing approved is replaced. Build 19 (private playtest
@@ -16,7 +20,7 @@ draft, `wip/build19` 2f72ec3) is frozen and untouched.
 | 5 | **24 Generational Legacy** | `docs/roadmap/23_Legacy.md` (wip/roadmap-docs, written as "Expansion 23" before the renumbering); `docs/directives/2026-10-19_memory_refuges_politics.md` Part I; WDR-014, 017, 021; GM-01, DVW-B7, WDR-014-C | Not authorized |
 | 6 | **25 Weather, Seasons and Disasters** | `docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md` | Design only |
 | 7 | **26 Creatures and Heroes** | `docs/design/EXPANSION26_CREATURES_AND_HEROES.md` | Design only |
-| Pending | **27** | **None found** (see section 8) | |
+| 8 | **27 World Exploration, Dungeons & Encounters** (ROAD-Q1) | `docs/directives/2026-10-21_master_expansion_roadmap.md` lines 222-240 ("Future unnumbered — Exploration, Dungeons & Encounters"); `docs/roadmap/Exploration_Combat.md` (wip/roadmap-docs); register EXP-27 | Numbering and assignment only; not authorized |
 
 ## 2. Scope of each expansion (from its source)
 
@@ -53,7 +57,24 @@ networks on real routes (E22-OD-02, continuous geography). Open: E22-OD-03 knowl
 property histories and genealogy; political, crime and battle integration; long multigenerational runs (phases written P23-A..E,
 now Expansion 24). Avoid a duplicate memory system: it deepens Expansion 19's.
 
-**25 Weather, Seasons and Disasters** and **26 Creatures and Heroes**: the two packets, including every owner answer, unchanged.
+**25 Weather, Seasons and Disasters** and **26 Creatures and Heroes**: the two packets, including every owner answer, unchanged,
+with two ownership answers: 25 reuses Expansion 22's building-condition system (ROAD-Q4); 26 owns creature behaviour, survival
+and combat, 27 their placement (ROAD-Q3).
+
+**27 World Exploration, Dungeons & Encounters** (the existing specification, kept whole; status in its source: "Partially
+approved features; DRAFT grouping only", now numbered 27 by the owner). Purpose: connect the starting village to a larger county
+and broader world, with meaningful encounters and consequences rather than making the player the predetermined hero. Approved
+baseline: skeletons in caves and uncleared woods (B14-09: guarding by day, roaming at night, three-day respawn, bones and rusty
+gear); lizards and spiders as approved enemies (FR-01); earlier owner direction for a vast explorable overworld, a broader county,
+world consequences and learnable, rule-based magic rather than birthright. Proposed phases: WORLD-A audit map scale, streaming,
+navigation, save identities and mining cave entrances; WORLD-B overworld regions, encounter locations and travel persistence
+(no assumed infinite procedural generation); WORLD-C approved skeleton behaviours and loot under existing combat and conservation
+rules; WORLD-D environmental encounters, performance and multiplayer boundaries, with magic defined as separate scoped work before
+coding. Acceptance: travel and encounter state consistent across reload; no enemy respawns into an occupied or invalid place;
+asset and licence validation and device performance. Boundaries kept as written: castles, dungeons, large-world implementation and
+magic mechanics need separate scope decisions; cave mining and dungeon gameplay are not merged merely because both are
+underground. Related: REC-006 (castles, dungeons and caves, deferred). Ownership with 26: WORLD-C's skeleton behaviour is
+Expansion 26's creature system, placed by 27 (ROAD-Q3, CREATURE-OWN).
 
 ## 3. Dependencies and conflicts
 
@@ -67,21 +88,22 @@ now Expansion 24). Avoid a duplicate memory system: it deepens Expansion 19's.
 | 25 | map water (rivers, a map version bump); better after 22's geography | building condition, emergencies, seasons: 26 |
 | 26 | 25 (rivers, winter, building condition, emergency response), 20 (monster goods market), 21 (reeve's bounties) | |
 
-**Moving 23 ahead of 22 is safe, with one boundary.** Nothing in 23's BAN-B to BAN-D needs 22. 22's phase E needs 23 (route
+**Moving 23 ahead of 22 is safe, with one boundary (owner-approved, ROAD-Q2, E23-SCOPE).** Nothing in 23's BAN-B to BAN-D needs 22. 22's phase E needs 23 (route
 banditry), which the new order supplies earlier. The one overlap: 23's raids and resale beyond the village (BAN-C "raids",
 regional fencing) would run over today's route stand-ins (`routes.gd`, `regional.gd`, which the 22 audit says must be
-re-validated). **Smallest adjustment (recommended):** 23 works in the village and on the existing roads and off-map settlement
-books; travel-time route banditry across a continuous region is built in 22-E on 23's faction records. No order change.
+re-validated). **Approved (ROAD-Q2):** 23 implements banditry, crime and their economic consequences within the village, the existing roads
+and the currently represented settlements; travel-time route banditry on 22's completed routes belongs in 22 phase E, built on 23's
+faction records. No temporary route system is built in 23 for 22 to discard.
 
 **Other conflicts found:**
-1. **Skeletons, lizards and spiders.** The master roadmap (2026-10-21) puts B14-09 and FR-01 in the unnumbered "World Exploration,
-   Dungeons & Encounters" track; on 2026-10-23 they were moved into Expansion 26 with the owner's monsters. Owner question Q3.
-2. **Building condition.** 22-D (abandonment, infrastructure) and 25 (disaster damage) both need buildings that decay or are
-   damaged. Design it once in 22-D if 22 needs it; 25 then reuses it. Not built ahead of need.
+1. **Skeletons, lizards and spiders.** Resolved (ROAD-Q3): Expansion 26 owns their behaviour, survival and combat; Expansion 27
+   owns their placement in its environments and encounters; one creature behaviour system.
+2. **Building condition.** Resolved (ROAD-Q4, E22-CONDITION): Expansion 22 owns the one building-condition, damage, deterioration
+   and repair system; Expansion 25 reuses it. 22's design must leave room for causes beyond wear (weather, fire, flood, attack)
+   so 25 and 26 extend it rather than add a second model; it is built in 22, not earlier.
 3. **Map water.** 25 adds rivers (a map version bump); 22-E's continuous geography also changes the map. Designing 25's rivers
    on 22's regional map avoids two map migrations.
-4. **Old document numbering.** The roadmap pack on `wip/roadmap-docs` numbers Bandits 22 and Legacy 23 (written before the
-   2026-10-23 renumbering); the register and this report use 23 and 24.
+4. **Old document numbering.** Resolved by the mapping in section 11 (historical documents are not rewritten).
 
 ## 4. What every expansion must preserve (Builds 16-19)
 
@@ -134,12 +156,9 @@ campaigns without a stated purpose.
 
 ## 8. Expansion 27
 
-No Expansion 27 exists in the register, the builds map, `docs/` or the roadmap pack. Two unnumbered tracks exist and could be what
-was meant; neither is assigned here:
-- **World Exploration, Dungeons & Encounters** (`docs/directives/2026-10-21_master_expansion_roadmap.md` lines 222-234;
-  `docs/roadmap/Exploration_Combat.md` on wip/roadmap-docs; references B14-09, CQ-01, FR-01, sword combat). Depends on combat,
-  caves and the monster art; overlaps Expansion 26 (conflict 1).
-- **Player-hosted Multiplayer** (parallel track, MP-01, `wip/multiplayer`, `docs/directives/2026-10-19_multiplayer_foundation.md`).
+Owner answer ROAD-Q1: Expansion 27 is **World Exploration, Dungeons & Encounters**, with its complete existing specification
+(section 2; register EXP-27). **Multiplayer** stays an independent parallel track (MP-01, `wip/multiplayer`,
+`docs/directives/2026-10-19_multiplayer_foundation.md`) and is not Expansion 27.
 
 ## 9. Is Expansion 20 ready for implementation authorization?
 
@@ -153,7 +172,75 @@ was meant; neither is assigned here:
 
 The Need record and the approved pricing and negotiation need nothing beyond step 1.
 
-## 10. Questions for the owner
+## 10. Owner answers (2026-10-24)
+
+| Id | Answer |
+|---|---|
+| ROAD-Q1 | Approved: 27 is World Exploration, Dungeons & Encounters; multiplayer separate |
+| ROAD-Q2 | Approved: 23 in the village, existing roads and represented settlements; route banditry in 22-E; no temporary systems |
+| ROAD-Q3 | Approved: creatures' behaviour in 26, placement in 27; no duplicate systems |
+| ROAD-Q4 | Approved: 22 owns building condition; 25 reuses it |
+| ROAD-Q5 | Approved with conditions: after Build 19's playtest acceptance; report first (section 12); nothing unfinished activated; Build 19 release unchanged; no merge to main without authorization |
+
+## 11. Numbering history (kept, not rewritten)
+
+| Today (fixed) | Earlier names and numbers | Where the old number still appears |
+|---|---|---|
+| 22 Settlement Advancement Phase 2 | not in the 2026-10-21 numbering (Settlement Advancement was Build 18) | |
+| 23 Bandit Factions and Criminal Careers | 22 (OD-30, 2026-10-21; master roadmap) | `docs/roadmap/22_Bandits.md`, `docs/directives/2026-10-21_master_expansion_roadmap.md` |
+| 24 Generational Legacy | 23 (OD-30; master roadmap; phases written P23-A..E / LEG-A..E) | `docs/roadmap/23_Legacy.md` |
+| 25 Weather, Seasons and Disasters; 26 Creatures and Heroes | a single "Wild World" 25 for one day (2026-10-23) | git history of `docs/design/` |
+| 27 World Exploration, Dungeons & Encounters | unnumbered ("24? / unnumbered", master roadmap line 47) | master roadmap |
+
+Directives and the roadmap pack are historical and are not edited; the register, `docs/EXPANSION_ROADMAP.md` and this review use
+today's numbers.
+
+## 12. Batch 0: the facts for the report the owner asked for (ROAD-Q5; nothing merged)
+
+Read on 2026-10-24 with `git merge-base` and `git merge-tree` (no branch changed). To be re-read just before the work, after Build
+19's playtest acceptance.
+
+| Branch | Head | Commits beyond the base | Merge base with `wip/build19` | Content |
+|---|---|---|---|---|
+| `wip/expansion20-preparation` | `1befd0e` | 7 | `239bdff` (the Build 18 release packet) | LE-00 refresh, LE-01 data contracts, reservation record, economic event record, actor resolver (all off, `economy.json enabled: false`), D2 save fix (`af62948`), reservations recognise contract holds (`1befd0e`) |
+| `wip/expansion21-preparation` | `8ac88f5` | 4 | `239bdff` | P21-00 audit, P21-01 civic records (office registry, tenure, succession, legacy; off, `civic.json enabled: false`), P21-02 decision map |
+
+**Anticipated conflicts:** each branch against Build 19, and the two against each other, conflict only in
+`game/scripts/core/world.gd` (save sections in `to_dict`/`load_dict` and the hourly or daily hooks). Auto-merged without conflict:
+`.github/workflows/tests.yml`, `docs/ASSET_DATA.md`, `contracts.gd` (20); `npc_brain.gd`, `settlement/migration.gd`,
+`economy_sim.gd` (21).
+
+**Preservation plan (proposed):** a new branch from `wip/build19` at its accepted commit (never `wip/build19` itself, which stays the
+released Build 19); merge 20, then 21, resolving `world.gd` by keeping every side (Build 19's identity, judgment and recorder
+sections; 20's `economy_foreign`; 21's `civic_foreign`); both switches stay off; then the targeted suites (economy foundation,
+civic, identity, judgment, recorder, save transfer, world, run_tests) and the determinism gate, which must equal the Build 19
+baseline exactly with both switches off, and conservation. Any difference is a defect of the merge, not a re-baseline. `main` is
+not touched.
+
+## 13. Expansion 20: remaining architectural questions
+
+Already approved: combined pricing and limited negotiation (OD-LE-02), breach and renegotiation (OD-LE-13), credit with
+installments, goods and collateral (OD-LE-05). Still open, by what they block:
+
+| Id | Question | Blocks | Recommendation (2026-10-23 packet s.4) |
+|---|---|---|---|
+| (architecture) | Approve `docs/expansion20/LE00_BUILD18_REFRESH.md` and `docs/expansion20/LE01_DATA_CONTRACTS.md` (on wip/expansion20-preparation) | all integration | approve |
+| OD-LE-02B | How offers are seen | LE-01 Offer record | in person (stalls, storefronts, meetings) or through Expansion 19 gossip; no village-wide board |
+| OD-LE-10 | Economic knowledge | LE-01 Knowledge record | one channel with Expansion 19 gossip; each price carries source, age and trust; stale, not forgotten |
+| OD-LE-04 / 07 | Business identity | LE-03 | a business owns its till and stock, belongs to one person, passes with their estate; several per owner |
+| OD-LE-13B | Death of a contract party | LE-04 | to the estate when the dead party held the goods or money; else it ends and holdings return |
+| OD-LE-05B | Interest and lenders | LE-04 | no interest in the first release; anyone with coins may lend; collection only through the approved terms |
+| OD-LE-15 | Performance budget | LE-01/06 | mid-range phone, 500 villagers, the economy under 4 ms in any frame |
+| OD-LE-03, 06, 08, 09, 11, 12, 14 | wages, manor, barter and rental, bandits' goods, speculation, charity, player visibility | LE-03 to LE-05 | wait for those stages |
+
+Two architectural points raised by this review (no decision needed now, recorded for the architecture approval):
+1. **The coin sites outside trade.** About 150 places move coins outside the trade path (REC-D4 kept them as they are for the
+   recorder). Expansion 20's transaction record should cover them stage by stage as each subsystem comes into scope, not in one
+   rewrite, so conservation and determinism stay checkable at every step.
+2. **The switch for release.** Like Expansion 19, Expansion 20 would ship on in its build; until then `economy.json` stays off and
+   the off path must keep the Build 19 baseline exactly.
+
+## 14. Questions as first put to the owner (answered in section 10)
 
 | Id | Question | Recommendation |
 |---|---|---|

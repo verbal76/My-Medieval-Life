@@ -77,6 +77,12 @@
    "implementation_authorized": false,
    "released": "",
    "authority": "PET-01, MON-01 (owner 2026-10-23): design only, no code"
+  },
+  "27": {
+   "name": "World Exploration, Dungeons & Encounters",
+   "implementation_authorized": false,
+   "released": "",
+   "authority": "ROAD-Q1 (owner 2026-10-24): numbering only"
   }
  },
  "requirements": [
@@ -2630,6 +2636,11 @@
      "date": "2026-10-23",
      "change": "target_build: 25 -> 26; next_action",
      "why": "owner asked to split Wild World into packets from 25 (docs/directives/2026-10-23_split_expansions_25_26.md); moved to Expansion 26, Creatures and Heroes"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner ROAD-Q3 2026-10-24: behaviour, survival and combat in Expansion 26; placement in exploration environments in Expansion 27 (CREATURE-OWN)"
     }
    ],
    "acceptance_derived": true,
@@ -9931,6 +9942,34 @@
    "completion": "OPEN"
   },
   {
+   "id": "CREATURE-OWN",
+   "kind": "approved",
+   "title": "Creature ownership: Expansion 26 owns the behaviour, survival, combat and other creature-specific mechanics of skeletons, lizards, spiders and its other creatures; Expansion 27 owns their placement in its exploration environments and encounters; no duplicate creature behaviour systems",
+   "description": "Creature ownership: Expansion 26 owns the behaviour, survival, combat and other creature-specific mechanics of skeletons, lizards, spiders and its other creatures; Expansion 27 owns their placement in its exploration environments and encounters; no duplicate creature behaviour systems",
+   "source": "docs/directives/2026-10-24_owner_roadmap_question_decisions.md",
+   "owner_wording": "Skeletons, lizards, and spiders belong in Expansion 26, Creatures & Heroes. Expansion 26 owns their behavior, survival, combat, and other creature-specific mechanics defined in its specification. Expansion 27 owns their placement within its exploration environments and encounters. Do not duplicate creature behavior systems.",
+   "approval": "owner, 2026-10-24 (ROAD-Q3)",
+   "acceptance": [
+    "One creature behaviour system (Expansion 26) used by Expansion 27's encounters"
+   ],
+   "target_build": "26",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_owner_roadmap_question_decisions.md"
+    }
+   ]
+  },
+  {
    "id": "CRT-01",
    "title": "Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early",
    "kind": "approved",
@@ -13874,6 +13913,35 @@
    ]
   },
   {
+   "id": "E22-CONDITION",
+   "kind": "approved",
+   "title": "Expansion 22 owns the one shared building-condition, damage, deterioration and repair system; Expansion 25 reuses it for weather and disaster effects (one extensible system, no separate damage models)",
+   "description": "Expansion 22 owns the one shared building-condition, damage, deterioration and repair system; Expansion 25 reuses it for weather and disaster effects (one extensible system, no separate damage models)",
+   "source": "docs/directives/2026-10-24_owner_roadmap_question_decisions.md",
+   "owner_wording": "Expansion 22 owns the shared building-condition, damage, deterioration, and repair infrastructure. Expansion 25 must reuse that infrastructure for weather and disaster effects. Design one extensible system rather than separate damage models.",
+   "approval": "owner, 2026-10-24 (ROAD-Q4)",
+   "acceptance": [
+    "One building-condition model in Expansion 22 (22-D) designed to carry causes beyond wear (weather, fire, flood, attack)",
+    "Expansion 25 and 26 damage goes through it; no second damage model"
+   ],
+   "target_build": "22",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_owner_roadmap_question_decisions.md"
+    }
+   ]
+  },
+  {
    "id": "E22-OD-01",
    "kind": "approved",
    "title": "Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history",
@@ -14098,6 +14166,35 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    }
+   ]
+  },
+  {
+   "id": "E23-SCOPE",
+   "kind": "approved",
+   "title": "Expansion 23 works within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's completed routes belongs in Expansion 22 phase E; no temporary systems to be discarded later",
+   "description": "Expansion 23 works within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's completed routes belongs in Expansion 22 phase E; no temporary systems to be discarded later",
+   "source": "docs/directives/2026-10-24_owner_roadmap_question_decisions.md",
+   "owner_wording": "Expansion 23 may implement banditry, crime, and related economic consequences within the village, existing roads, and currently represented settlements. Regional travel-time route banditry that depends on Expansion 22's completed route infrastructure belongs in Expansion 22, Phase E. Avoid temporary systems that will need to be discarded later.",
+   "approval": "owner, 2026-10-24 (ROAD-Q2)",
+   "acceptance": [
+    "Expansion 23 adds no route-banditry stand-in on routes.gd or regional.gd that 22-E would replace",
+    "22-E builds travel-time route banditry on Expansion 23's faction records"
+   ],
+   "target_build": "23",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_owner_roadmap_question_decisions.md"
     }
    ]
   },
@@ -16184,6 +16281,37 @@
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN"
+  },
+  {
+   "id": "EXP-27",
+   "kind": "approved",
+   "title": "Expansion 27, World Exploration, Dungeons & Encounters: connect the starting village to a larger county and broader world with meaningful encounters and consequences rather than making the player the predetermined hero; phases WORLD-A (audit map scale, streaming, navigation, save identities, mining cave entrances), WORLD-B (overworld regions, encounter locations, travel persistence; no assumed infinite generation), WORLD-C (approved skeleton behaviours and loot under existing combat and conservation rules), WORLD-D (environmental encounters, performance, multiplayer boundaries; magic as separate scoped work before coding)",
+   "description": "Expansion 27, World Exploration, Dungeons & Encounters: connect the starting village to a larger county and broader world with meaningful encounters and consequences rather than making the player the predetermined hero; phases WORLD-A (audit map scale, streaming, navigation, save identities, mining cave entrances), WORLD-B (overworld regions, encounter locations, travel persistence; no assumed infinite generation), WORLD-C (approved skeleton behaviours and loot under existing combat and conservation rules), WORLD-D (environmental encounters, performance, multiplayer boundaries; magic as separate scoped work before coding)",
+   "source": "docs/directives/2026-10-21_master_expansion_roadmap.md",
+   "owner_wording": "Expansion 27 is officially World Exploration, Dungeons & Encounters. Preserve the complete existing specification for that track and assign it to Expansion 27. Do not reduce its scope or invent new features.",
+   "approval": "owner, 2026-10-24 (ROAD-Q1: numbering and assignment of the existing specification; docs/directives/2026-10-24_owner_roadmap_question_decisions.md)",
+   "acceptance": [
+    "Saved travel state and encounter state consistent across reload",
+    "No enemies respawn into occupied or invalid locations; asset and licence validation and device performance",
+    "Scope boundaries kept as specified: castles, dungeons, large-world implementation and magic mechanics need separate scope decisions; cave mining and dungeon gameplay not merged merely because both use underground maps",
+    "Creature behaviour, survival and combat come from Expansion 26 (ROAD-Q3); Expansion 27 places them in its environments and encounters"
+   ],
+   "target_build": "27",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_master_expansion_roadmap.md"
+    }
+   ]
   },
   {
    "id": "EXP-A",
@@ -18714,6 +18842,11 @@
      "date": "2026-10-23",
      "change": "target_build: 25 -> 26; next_action",
      "why": "owner asked to split Wild World into packets from 25 (docs/directives/2026-10-23_split_expansions_25_26.md); moved to Expansion 26, Creatures and Heroes"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner ROAD-Q3 2026-10-24: behaviour, survival and combat in Expansion 26; placement in exploration environments in Expansion 27 (CREATURE-OWN)"
     }
    ],
    "acceptance_derived": true,
@@ -37966,6 +38099,11 @@
      "date": "2026-10-23",
      "change": "schema v2: DEFERRED -> approval DEFERRED; implementation NOT STARTED; verification NOT TESTED; release NOT APPLICABLE; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "related to Expansion 27 (World Exploration, Dungeons & Encounters, ROAD-Q1); its castles and dungeons still need separate scope decisions as the specification says"
     }
    ],
    "target_build": "20+",
@@ -40476,9 +40614,14 @@
      "date": "2026-10-24",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; next_action",
      "why": "review written (docs/design/ROADMAP_20_27_PRIORITY.md) and the roadmap updated; five questions for the owner (ROAD-Q1..Q5)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "next_action",
+     "why": "owner accepted the review and answered ROAD-Q1..Q5 (docs/directives/2026-10-24_owner_roadmap_question_decisions.md); order 20, 21, 23, 22, 24, 25, 26, 27; multiplayer a separate parallel track"
     }
    ],
-   "next_action": "owner answers ROAD-Q1..Q5; Expansion 20 implementation needs a separate authorization"
+   "next_action": "Expansion 20 implementation needs a separate authorization; Batch 0 after Build 19's playtest acceptance, with its report first (ROAD-Q5)"
   },
   {
    "id": "ROAD-Q1",
@@ -40487,8 +40630,8 @@
    "description": "Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer)",
    "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Expansion 27 is World Exploration, Dungeons & Encounters, with its complete existing specification; multiplayer stays a parallel track",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "owner decision",
    "related": [],
@@ -40499,6 +40642,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-24_owner_roadmap_question_decisions.md)"
     }
    ]
   },
@@ -40509,8 +40657,8 @@
    "description": "Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E?",
    "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Expansion 23 within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's routes belongs in 22 phase E; no temporary systems to discard later",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "owner decision",
    "related": [],
@@ -40521,6 +40669,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-24_owner_roadmap_question_decisions.md)"
     }
    ]
   },
@@ -40531,8 +40684,8 @@
    "description": "Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track?",
    "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "skeletons, lizards and spiders in Expansion 26, which owns their behaviour, survival and combat; Expansion 27 owns their placement in its environments and encounters; no duplicate creature systems",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "owner decision",
    "related": [],
@@ -40543,6 +40696,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-24_owner_roadmap_question_decisions.md)"
     }
    ]
   },
@@ -40553,8 +40711,8 @@
    "description": "Building condition: design it with 22-D (abandonment) or with 25 (disasters)?",
    "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Expansion 22 owns the one building-condition, damage, deterioration and repair system; Expansion 25 reuses it",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "owner decision",
    "related": [],
@@ -40565,6 +40723,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-24_owner_roadmap_question_decisions.md)"
     }
    ]
   },
@@ -40575,8 +40738,8 @@
    "description": "Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance?",
    "source": "docs/design/ROADMAP_20_27_PRIORITY.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "after Build 19's playtest acceptance; report branches, merge bases, anticipated conflicts and preservation plan first; nothing unfinished activated; Build 19 release unchanged; no merge to main without authorization",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "owner decision",
    "related": [],
@@ -40587,6 +40750,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/design/ROADMAP_20_27_PRIORITY.md"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved with conditions (docs/directives/2026-10-24_owner_roadmap_question_decisions.md)"
     }
    ]
   },
@@ -50048,6 +50216,11 @@
      "date": "2026-10-23",
      "change": "next_action",
      "why": "split: Expansion 25 is Weather, Seasons and Disasters (docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md)"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "note",
+     "why": "owner ROAD-Q4: building damage and repair reuse Expansion 22's one building-condition system (E22-CONDITION)"
     }
    ],
    "next_action": "owner reviews docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md and answers E25-OD-03, 06-09; no code before approval"

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 504 (252 of them still open) |
-| **Open entries now** (rules excluded) | | **429** |
+| Entries added since | | 508 (251 of them still open) |
+| **Open entries now** (rules excluded) | | **428** |
 | Open entries moved to another build | | 7 |
 
 ## Closed since the baseline (54)
@@ -89,7 +89,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (504)
+## Added since the baseline (508)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -155,6 +155,7 @@ None.
 | CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | decision | APPROVED | owner decision |
 | CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | decision | APPROVED | owner decision |
 | CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | decision | APPROVED | owner decision |
+| CREATURE-OWN | Creature ownership: Expansion 26 owns the behaviour, survival, combat and other creature-specific mechanics of skeletons, lizards, spiders and its other creatures; Expansion 27 owns their placement in its exploration environments and encounters; no duplicate creature behaviour systems | approved | NOT STARTED / NOT TESTED / OPEN | 26 |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
@@ -164,6 +165,7 @@ None.
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | E20-RISK-QUEUES | Unbounded growth and population-wide scans found in Build 18 economic code: NPCBrain.miss_log never cleared; courier jobs, agreements and contacts never pruned; credit._villager_deals O(n^2) at dawn; the heir-removal id reuse (life.gd:660) | proposal | NOT STARTED / NOT TESTED / OPEN | 19 |
+| E22-CONDITION | Expansion 22 owns the one shared building-condition, damage, deterioration and repair system; Expansion 25 reuses it for weather and disaster effects (one extensible system, no separate damage models) | approved | NOT STARTED / NOT TESTED / OPEN | 22 |
 | E22-OD-01 | Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history | approved | NOT STARTED / NOT TESTED / OPEN | 22 |
 | E22-OD-02 | Continuous geography: streamed regions, persistent world coordinates, persistent player and NPC modifications | approved | NOT STARTED / NOT TESTED / OPEN | 22 |
 | E22-OD-03 | Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people | decision | OPEN | 22 |
@@ -172,6 +174,7 @@ None.
 | E22-P1 | Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 22 |
 | E23-BANA | Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 23 |
 | E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | decision | OPEN | 23 |
+| E23-SCOPE | Expansion 23 works within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's completed routes belongs in Expansion 22 phase E; no temporary systems to be discarded later | approved | NOT STARTED / NOT TESTED / OPEN | 23 |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
@@ -183,6 +186,7 @@ None.
 | EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
+| EXP-27 | Expansion 27, World Exploration, Dungeons & Encounters: connect the starting village to a larger county and broader world with meaningful encounters and consequences rather than making the player the predetermined hero; phases WORLD-A (audit map scale, streaming, navigation, save identities, mining cave entrances), WORLD-B (overworld regions, encounter locations, travel persistence; no assumed infinite generation), WORLD-C (approved skeleton behaviours and loot under existing combat and conservation rules), WORLD-D (environmental encounters, performance, multiplayer boundaries; magic as separate scoped work before coding) | approved | NOT STARTED / NOT TESTED / OPEN | 27 |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 15 |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
@@ -469,11 +473,11 @@ None.
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ROAD-03 | Expansion development priority 2026-10-24: 20 Living Economy, 21 Politics, 23 Bandits & Crime, 22 Settlement Advancement, 24 Legacy, 25 Weather & Disasters, 26 Creatures & Heroes, 27 to be verified; numbers unchanged; planning only | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | owner decision |
-| ROAD-Q1 | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer) | decision | OPEN | owner decision |
-| ROAD-Q2 | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E? | decision | OPEN | owner decision |
-| ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | decision | OPEN | owner decision |
-| ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | decision | OPEN | owner decision |
-| ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | decision | OPEN | owner decision |
+| ROAD-Q1 | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer) | decision | APPROVED | owner decision |
+| ROAD-Q2 | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E? | decision | APPROVED | owner decision |
+| ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | decision | APPROVED | owner decision |
+| ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | decision | APPROVED | owner decision |
+| ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | decision | APPROVED | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |

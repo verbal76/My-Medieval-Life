@@ -14,10 +14,12 @@ development order. Planning only: no expansion is authorized for implementation 
 | 5 | 24 Generational Legacy | not authorized |
 | 6 | 25 Weather, Seasons and Disasters | design only |
 | 7 | 26 Creatures and Heroes | design only |
-| Pending | 27 | no specification found; ROAD-Q1 |
+| 8 | 27 World Exploration, Dungeons & Encounters | numbering and assignment of its existing specification (ROAD-Q1, EXP-27); not authorized |
 
-Build 19 (private playtest draft) is frozen pending the owner's playtest. Moving 23 ahead of 22 is safe within the boundary in
-the review (section 3).
+Owner answers ROAD-Q1..Q5 (2026-10-24, `docs/directives/2026-10-24_owner_roadmap_question_decisions.md`): order 20 → 21 → 23 → 22
+→ 24 → 25 → 26 → 27; multiplayer a separate parallel track; 23 within the village, existing roads and represented settlements,
+route banditry in 22-E; creatures' behaviour in 26, placement in 27; 22 owns the one building-condition system, reused by 25;
+Batch 0 after Build 19's playtest acceptance, reported first. Build 19 is frozen pending the owner's playtest.
 
 # Roadmap: Builds 15-19 and the three expansions
 

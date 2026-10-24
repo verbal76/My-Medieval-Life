@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (601)
+## Approved requirement (605)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -146,6 +146,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CON-UX-01 | Contract window needs design work | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| CREATURE-OWN | Creature ownership: Expansion 26 owns the behaviour, survival, combat and other creature-specific mechanics of skeletons, lizards, spiders and its other creatures; Expansion 27 owns their placement in its exploration environments and encounters; no duplicate creature behaviour systems | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -189,10 +190,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| E22-CONDITION | Expansion 22 owns the one shared building-condition, damage, deterioration and repair system; Expansion 25 reuses it for weather and disaster effects (one extensible system, no separate damage models) | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-OD-01 | Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-OD-02 | Continuous geography: streamed regions, persistent world coordinates, persistent player and NPC modifications | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-P1 | Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation | 22 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | E23-BANA | Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour | 23 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
+| E23-SCOPE | Expansion 23 works within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's completed routes belongs in Expansion 22 phase E; no temporary systems to be discarded later | 23 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | ECON-P3 | Household vs business money: a shop has its own till; the owner pays themselves from it and may choose to move money; World.spendable | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -216,6 +219,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| EXP-27 | Expansion 27, World Exploration, Dungeons & Encounters: connect the starting village to a larger county and broader world with meaningful encounters and consequences rather than making the player the predetermined hero; phases WORLD-A (audit map scale, streaming, navigation, save identities, mining cave entrances), WORLD-B (overworld regions, encounter locations, travel persistence; no assumed infinite generation), WORLD-C (approved skeleton behaviours and loot under existing combat and conservation rules), WORLD-D (environmental encounters, performance, multiplayer boundaries; magic as separate scoped work before coding) | 27 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | 19 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -866,11 +870,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REG-DEMO-D1 | Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome? | 18 | APPROVED |  |
 | REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | 18 | APPROVED |  |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | 15 | APPROVED |  |
-| ROAD-Q1 | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer) | owner decision | OPEN |  |
-| ROAD-Q2 | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E? | owner decision | OPEN |  |
-| ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | owner decision | OPEN |  |
-| ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | owner decision | OPEN |  |
-| ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | owner decision | OPEN |  |
+| ROAD-Q1 | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or multiplayer) | owner decision | APPROVED |  |
+| ROAD-Q2 | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across the continuous map built in 22-E? | owner decision | APPROVED |  |
+| ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | owner decision | APPROVED |  |
+| ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | owner decision | APPROVED |  |
+| ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | owner decision | APPROVED |  |
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | 19 | OPEN |  |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | 19 | OPEN |  |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | 19 | OPEN |  |
