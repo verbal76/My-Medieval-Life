@@ -21945,6 +21945,41 @@
    "branch": "wip/multiplayer-b19"
   },
   {
+   "id": "GP-WHEAT-PICKED",
+   "kind": "approved",
+   "title": "Harvested wheat shows as picked, cell by cell",
+   "description": "Harvested wheat shows as picked, cell by cell",
+   "source": "docs/gameplay_polish/reference/wheat_not_picked_2026-10-24.png",
+   "owner_wording": "when i harvest the wheat it doesnt turn into a picked wheat sprite",
+   "approval": "owner, 2026-10-24 (reported defect)",
+   "acceptance": [
+    "As a ripe field (the manor's or the player's) is harvested, by the player or a villager, the harvested cells change to a picked or stubble tile at once, in proportion to the crop taken, nearest the harvester first; the field returns to tilled when empty as now; the art comes through the asset pipeline with provenance; the drawn state survives save and load; verified by a screenshot and a test"
+   ],
+   "target_build": "multiplayer",
+   "parent": "GP-POLISH",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/wheat_not_picked_2026-10-24.png"
+    },
+    {
+     "date": "2026-10-24",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> primary development agent; branch: None -> wip/multiplayer-b19; parent",
+     "why": "assigned with polish P1 on the multiplayer branch"
+    }
+   ],
+   "assigned_worker": "primary development agent",
+   "branch": "wip/multiplayer-b19"
+  },
+  {
    "id": "HEALTH-01",
    "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
    "kind": "approved",
