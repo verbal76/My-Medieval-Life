@@ -103,6 +103,37 @@ func _data_tests() -> void:
 	check(w.pages["sys:trading"].text.contains("every unit is priced in turn") and w.pages["sys:theft"].text.contains("what it was worth"), "the trading and theft pages describe the Build 13 rules")
 	check(w.pages["item:iron_bar"].text.contains("pickaxe"), "an item page links to what it makes (iron bar -> pickaxe)")
 	check(w.chain_lines("pickaxe").size() >= 3, "the pickaxe has a production chain down to ore")
+	# GP-WIKI-RECIPE-TOOLS (owner 2026-10-26): every recipe with a tool shows it, with links and the items that count
+	var no_tools := []
+	for rid in GameData.recipes:
+		var kinds := Wiki.recipe_tool_kinds(rid)
+		if kinds.is_empty():
+			continue
+		var pg: Dictionary = w.pages["recipe:" + rid]
+		var lk := w.links_of("recipe:" + rid)
+		var out_id: String = GameData.recipes[rid].out.keys()[0]
+		for k in kinds:
+			var its := Wiki.tool_kind_items(k)
+			if (its.is_empty() or not its.all(func(i): return lk.has("item:" + i) and pg.text.contains(GameData.item_name(i).to_lower()))
+					or not str(w.chain_lines(out_id)[0]).contains(Wiki.tool_kind_name(k)) or not w.pages["item:" + out_id].text.contains(GameData.item_name(its[0]).to_lower())):
+				no_tools.append("%s/%s" % [rid, k])
+	check(no_tools.is_empty() and not Wiki.recipe_tool_kinds("dress_stone").is_empty(), "every recipe with a tool shows it on its page, its product's page and its chain line, linked to every item that counts %s" % [no_tools])
+	check(w.pages["sys:appearance"].text.contains("leather armour as a leather jerkin") and not w.pages.has("todo:looks_more"), "ARMOR-01: every armour shows on your figure, leather included (no longer a Not yet page)")
+	var lp: String = w.pages["sys:chests"].text
+	check(lp.contains("game of timing") and lp.contains("own input") and lp.contains("never smaller") and lp.contains("nothing has happened"), "GP-LOCKPICK: the chests page explains the pin-tumbler game")
+	var mu: String = w.pages["sys:mining_underground"].text
+	check(mu.contains("daylight falling in") and mu.contains("a beam laid across the passage") and mu.contains("never covers a seam"), "GP-MINE-WOOD-FRAME: the underground page says how the way out and a support look")
+	var th: String = w.pages["sys:theft"].text
+	check(th.contains("red ring") and th.contains("pursued by the guards") and th.contains("never shows where a guard is") and "sys:theft" in w.search("hunted") and "sys:theft" in w.search("chased"),
+		"GP-WANTED-INDICATOR: the theft and guards page explains the red ring and the note")
+	var ch: String = w.pages["item:chisel"].text
+	check(ch.contains("needed for") and ch.contains("making building block") and w.links_of("item:chisel").has("recipe:dress_stone"), "the chisel's page says what it is needed for")
+	var ml: String = w.pages["item:mallet"].text
+	check(ml.contains("timber support") and ml.contains("ladder") and ml.contains("building block") and ml.contains("cliff stairs"), "the mallet's page names the supports, ladders, stone dressing and cliff stairs it is needed for")
+	var pk2: String = w.pages["item:pickaxe"].text
+	check(pk2.contains("cutting new passages") and pk2.contains("gathering: iron seam"), "the pickaxe's page names mining work")
+	var wa: Array = w.pages["item:prospecting_kit"].blocks[0].rows.filter(func(r): return r[0] == "Works as")
+	check(wa.size() == 1 and str(wa[0][1]) == "a prospecting kit", "'Works as' is in words, not a code name %s" % [wa])
 	check(w.pages.has("sys:calendar") and w.pages.has("sys:family") and w.pages.has("sys:inheritance") and w.pages.has("sys:animal_life"), "calendar, ageing, family, inheritance and animal life pages exist")
 	var ms: String = w.pages.get("guide:market_stall", {}).get("text", "")
 	check(ms.contains("3 plank") and ms.contains("open stall") and ms.contains("close stall") and ms.contains("everything has sold") and ms.contains("5%") and ms.contains("daily rent"),

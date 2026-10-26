@@ -2801,15 +2801,21 @@ func player_xp(skill: String, n: int, actor: PlayerState = null) -> int:
 
 
 ## DVW-A12 R6: the player tries the lock of chest unit `u` (Chests.attempt) and earns Stealth xp for it: 4 when it
-## opens, 1 otherwise. Returns Chests.attempt's result.
-func player_pick_lock(u: Dictionary, actor: PlayerState = null) -> Dictionary:
+## opens, 1 otherwise. Returns Chests.attempt's result. GP-LOCKPICK: `played` is how the minigame ended ("open" or
+## "fail"; LockpickPlay), which takes the place of the success roll (the player's skill against the lock now sets the
+## game's difficulty instead); "" rolls as before. Everything else is the existing rule, decided here (the host's in a
+## shared world): the lock must still be locked and foreign and the player hold a lockpick (a second player finishing
+## on a lock another has just opened gets "cant", no xp and nothing more), a failure may snap the pick, the witnesses.
+func player_pick_lock(u: Dictionary, played := "", actor: PlayerState = null) -> Dictionary:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if mirrors():
-		return mirror("player_pick_lock", player_pick_lock.bind(u), [u])
+		return mirror("player_pick_lock", player_pick_lock.bind(u, played), [u, played])
 	if actor != null and actor != player:
-		return as_actor(actor, player_pick_lock.bind(u))
-	var r: Dictionary = chests.attempt(u)
-	player_xp("stealth", 4 if r.result == "open" else 1)
+		return as_actor(actor, player_pick_lock.bind(u, played))
+	var roll := 0.0 if played == "open" else 1.0 if played == "fail" else -1.0
+	var r: Dictionary = chests.attempt(u, roll)
+	if r.result != "cant":
+		player_xp("stealth", 4 if r.result == "open" else 1)
 	return r
 
 

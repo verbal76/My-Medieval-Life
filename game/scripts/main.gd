@@ -220,6 +220,19 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"wanted", "wanted_phone":
+				# GP-WANTED-INDICATOR: a guard in a chase after an assault: the red ring and the note under the status box
+				var jv: NPC = world.npcs.filter(func(n): return n.alive and n.role == "adult" and n.job != "guard")[0]
+				var jg: NPC = world.npcs.filter(func(n): return n.alive and n.job == "guard")[0]
+				var jc := world.justice.record(world.acting_ref(), "assault", jv, world.player.pos, 1)
+				world.justice.learn(jg, world.acting_ref(), [jc], world.player.pos)
+				world.justice.engage(jg, world.acting_ref(), "pursuing")
+				jg.pos = world.player.pos + Vector2(3, 1)
+				if shot_panel == "wanted_phone":
+					settings.phone = true
+					ui.set_scheme("touch")
+					ui.fit_safe_area()
+				ui.update_hud()
 			"joystick":
 				settings.touch_move = "joystick"         # GP-JOYSTICK (screenshots only; not saved)
 				ui.stick.push = Vector2(0.6, -0.4)
@@ -296,6 +309,60 @@ func _ready() -> void:
 										found = true
 										break
 				print("steps shot: found=", found)
+			"lockpick", "lockpick_phone":
+				# GP-LOCKPICK: the minigame on a level 2 lock, two pins set, one wobbling, one rising, frozen for the picture
+				if shot_panel == "lockpick_phone":
+					settings.phone = true
+					ui.fit_safe_area()
+				ui.set_scheme("touch" if shot_panel == "lockpick_phone" else "gamepad")
+				world.player.inv.add("lockpick", 2)
+				for bid in world.buildings:
+					var lu: Array = world.chests.units_in(str(bid)).filter(func(cu): return world.chests.info(cu).access == "foreign")
+					if str(world.buildings[bid].type) == "house" and not lu.is_empty():
+						world.chests.locks[lu[0].id] = {"level": 2, "locked": true}
+						world.player.pos = lu[0].at + Vector2(0, 1)
+						follow_at = _in_view(world.player.pos * T)
+						pick_lock(str(lu[0].id))
+						var lw: LockpickWindow = ui.panel_body.find_child("LockpickWindow", true, false)
+						var lg := lw.play
+						var caught := 0
+						while lg.result == "" and lg.t < 60.0:
+							lg.step(1.0 / 60.0)
+							for i in lg.n:
+								if lg.state[i] == LockpickPlay.WOBBLE and lg.t_in[i] >= 0.3 and caught < 2:
+									lg.press(i)
+									caught += 1
+							if caught >= 2 and lg.state.has(LockpickPlay.WOBBLE) and lg.state.has(LockpickPlay.RISING):
+								break
+						lw.set_process(false)
+						lw.art.queue_redraw()
+						lw._status()
+						break
+			"mine_frame", "mine_exit":
+				# GP-MINE-WOOD-FRAME: below in the gallery, a timber support on the floor cell under a seam in the wall (the
+				# owner's screenshot), and another in the open floor; mine_exit: the player at the way out
+				var u := world.underground
+				var e0: Dictionary = u.portals[0].ends[0]
+				var e1: Dictionary = u.portals[0].ends[1]
+				var lm := u.map_at(int(e1.level), e1.stand)
+				world.player.pos = Vector2(e0.stand) + Vector2(0.5, 0.5)
+				world.player_through(Vector2(e1.stand - e0.stand))
+				if shot_panel == "mine_frame":
+					var under := Vector2i(-1, -1)
+					var open := Vector2i(-1, -1)
+					for f in lm.floor_cells():
+						if under.x < 0 and not world.deposit_at(f + Vector2i(0, -1), lm.level).is_empty():
+							under = f
+						elif open.x < 0 and VillageMap.SIDES.all(func(d): return not lm.is_solid(f + d)):
+							open = f
+					for c in [under, open]:
+						if c.x >= 0:
+							world.mine_works.supports.append([lm.level, c.x, c.y, 1000])
+					world.player.pos = Vector2(under) + Vector2(1.5, 1.5)
+					print("mine_frame: support under a seam at ", under, ", in the open at ", open)
+					world.mine_works.changed.emit(lm.level, under)
+				camera.zoom = Vector2(5, 5) * view_scale
+				follow_at = _in_view(world.player.pos * T)
 			"mine_works", "cave":
 				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
 			"collapse", "shaft", "backfill":
@@ -389,7 +456,7 @@ func _ready() -> void:
 					ui.inventory_window().tab_buttons[2].grab_focus()
 			"worn_none", "worn_iron_armor", "worn_iron_helmet", "worn_iron_both", "worn_leather":
 				# ARMOR-01: the player (made at the creator's defaults) wearing nothing, iron armour, an iron helmet, both,
-				# or leather armour and a cap (no art: unchanged); the other worn panels show the same character
+				# or leather armour and a cap (Build 22: the leather tunic, gloves and boots, a round cap); the same character
 				var gear := {"worn_iron_armor": ["iron_armor"], "worn_iron_helmet": ["iron_helmet"],
 						"worn_iron_both": ["iron_armor", "iron_helmet"], "worn_leather": ["leather_armor", "leather_cap"]}
 				for id in gear.get(shot_panel, []):
@@ -401,6 +468,36 @@ func _ready() -> void:
 					player_worn = "reset"
 				camera.zoom = Vector2(12, 12) * view_scale
 				follow_at = _in_view(world.player.pos * T)
+			"worn_sheet", "worn_sheet_f":
+				# ARMOR-01 (Build 22): composed sheets (a man, or _f a woman): rows bare, iron armour, iron helmet, leather
+				# armour, leather cap, iron both, leather both; columns the eight directions (idle), then a walk, work and
+				# sword frame facing south, on a plain backdrop
+				var back := ColorRect.new()
+				back.color = Color8(96, 128, 72)
+				back.size = Vector2(1280, 720)
+				ui.hud_root.add_child(back)
+				var grid := GridContainer.new()
+				grid.columns = 11
+				grid.position = Vector2(8, 8)
+				grid.add_theme_constant_override("h_separation", 0)
+				grid.add_theme_constant_override("v_separation", 0)
+				ui.hud_root.add_child(grid)
+				var rr := RandomNumberGenerator.new()
+				rr.seed = 12 if shot_panel == "worn_sheet_f" else 11
+				var rec := CharacterLook.random_recipe(rr, "female" if shot_panel == "worn_sheet_f" else "male")
+				for worn in [["", ""], ["iron_armor", ""], ["", "iron_helmet"], ["leather_armor", ""], ["", "leather_cap"], ["iron_armor", "iron_helmet"], ["leather_armor", "leather_cap"]]:
+					var tex := CharacterLook.texture(rec, worn)
+					for cell in [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [0, 3], [0, 14], [0, 6]]:
+						var at := AtlasTexture.new()
+						at.atlas = tex
+						at.region = Rect2(cell[1] * 32, cell[0] * 32, 32, 32)
+						var tr := TextureRect.new()
+						tr.texture = at
+						tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+						tr.custom_minimum_size = Vector2(96, 96)
+						tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+						grid.add_child(tr)
+				ui.hud.visible = false
 			"tailor_pitch", "barber_pitch", "barber", "barber_result":
 				# TAILOR-18 / BARBER-18: the tailor or barber at the manor's pitch; the barber's chair, before and after a visit
 				var job := "tailor" if shot_panel == "tailor_pitch" else "barber"
@@ -442,7 +539,7 @@ func _ready() -> void:
 				ui.show_origin()
 			"settings", "settings_display", "settings_interface", "settings_controls":
 				ui.show_settings(ui.hide_all, shot_panel.trim_prefix("settings_") if shot_panel.begins_with("settings_") else "audio")
-			"settings_wiki", "wiki", "wiki_category", "wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
+			"settings_wiki", "wiki", "wiki_category", "wiki_search", "wiki_item", "wiki_guide", "wiki_recipe", "wiki_tools", "wiki_block", "wiki_mallet":
 				ui.show_wiki(ui.hide_all)        # the Village Encyclopedia (UI-WIKI-01); add --phone for a phone's layout
 				match shot_panel:
 					"wiki_category":
@@ -455,6 +552,8 @@ func _ready() -> void:
 						ui.wiki_win.goto("guide:heal")
 					"wiki_recipe":
 						ui.wiki_win.goto("recipe:forge_pickaxe")
+					"wiki_tools", "wiki_block", "wiki_mallet":     # GP-WIKI-RECIPE-TOOLS: a recipe's tools, a product's, a tool's uses
+						ui.wiki_win.goto({"wiki_tools": "recipe:dress_stone", "wiki_block": "item:building_block", "wiki_mallet": "item:mallet"}[shot_panel])
 			"controls", "controls_pad":
 				if shot_panel == "controls_pad":
 					ui.set_scheme("gamepad")
@@ -650,8 +749,10 @@ func _ready() -> void:
 						if shot_panel == "contract_work":
 							ui.body_scroll.scroll_vertical = 100000
 						break
-			"trade_qty":
-				# PL1-03: the quantity control, buying 3 of 8 affordable
+			"trade_qty", "trade_qty_pad":
+				# PL1-03: the quantity control, buying 3 of 8 affordable; _pad: with the gamepad's X / Y prompt (GP-QTY-PICKER-CONTROLLER)
+				if shot_panel == "trade_qty_pad":
+					ui.set_scheme("gamepad")
 				var tk := world.tavern_keeper()
 				tk.inv.add("pottage", 12)
 				world.player.coins = 17
@@ -1102,6 +1203,14 @@ func _sync_avatars(dt: float) -> void:
 			actors.add_child(s)
 			s.position = (e.pos as Vector2) * T
 			avatar_sprites[id] = s
+		var who2: PlayerState = world.player_by_pid(int(id))
+		if who2 != null:                           # ARMOR-01: redraw when what they wear changes (put on, taken off)
+			var wk := "%s|%s" % [who2.armor, who2.head]
+			if str(s.get_meta("worn", "")) != wk:
+				s.set_meta("worn", wk)
+				var sheet := CharacterLook.player_sheet(who2)
+				if sheet != null:
+					s.texture = sheet
 		var to: Vector2 = (e.pos as Vector2) * T
 		s.position = s.position.lerp(to, minf(1.0, dt * 12.0)) if s.position.distance_to(to) < 48.0 else to
 		if (e.get("dir", Vector2.ZERO) as Vector2).length() > 0.1:
@@ -1359,6 +1468,7 @@ func _build_scene() -> void:
 	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
 	player_worn = _worn_key()
 	actors.add_child(player_sprite)
+	player_sprite.add_child(WantedRing.new())          # GP-WANTED-INDICATOR: shown while guards hunt this player
 	camera = Camera2D.new()
 	camera.zoom = Vector2(3, 3) * view_scale
 	camera.position_smoothing_enabled = true
@@ -1776,6 +1886,9 @@ func _sync_sprites() -> void:
 		s.play(look[0] if look[0] != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
+	var ring := player_sprite.get_node_or_null("WantedRing") as WantedRing
+	if ring != null:
+		ring.set_on(bool(WantedHud.alert_of(world).get("hunted", false)), get_process_delta_time())     # GP-WANTED-INDICATOR
 	# who could be in a doorway, with their sprite when drawn (VIS-DOOR-01); the player opens doors but never fades:
 	# the roof lifts as they step in, so their way in stays in view
 	var people := [[p.pos, null]]
@@ -2976,18 +3089,31 @@ func _chest_target(u: Dictionary) -> Dictionary:
 	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what, "theft": world.chest_is_theft(u)}
 
 
-## Pick a locked chest's lock (PL2-002): takes game time, may snap the pick, and may be seen.
+## Pick a locked chest's lock (PL2-002): GP-LOCKPICK, the pin-tumbler minigame (LockpickWindow) in place of the passive
+## meter. The world is not paused (it never was: the meter took game time). Stopping, or the window closing for any other
+## reason, makes no attempt and leaves the lock as it was; the game's end makes the one attempt, with the existing rules
+## (World.player_pick_lock: open until dawn, the pick may snap on a failure, the witnesses, the crime, Stealth xp).
 func pick_lock(uid: String) -> void:
 	var u := world.chests.unit(uid)
 	var why := world.chests.cannot_pick(u)
 	if why != "":
 		ui.message(why)
 		return
-	var secs := world.chests.pick_minutes(u) / float(GameData.b("game_minutes_per_second"))
-	ui.hide_all()
-	start_action("Picking the lock", secs, func():
-		var r: Dictionary = world.player_pick_lock(u)          # the try and its xp are core's (DVW-A12 R6)
-		ui.message(r.text, 6.0)
+	cancel_action("")
+	var lk: Dictionary = world.chests.lock_of(u)
+	var game := LockpickPlay.from(int(lk.level), world.chests.pick_chance(u), absi(hash(uid)))
+	ui._open("lockpick", "Picking the lock: %d pins" % game.n, false)
+	var win := LockpickWindow.new().setup(game, ui.scheme)
+	win.sounds = func(id: String): audio.play_sfx(id)
+	ui.panel_body.add_child(win)
+	ui.panel_back = win.stop_now                # X, Esc and the pad's Menu stop it
+	win.stopped.connect(func():
+		ui.hide_all()
+		ui.message("You stop. The lock is as it was."))
+	win.finished.connect(func(res: String):
+		var r: Dictionary = world.player_pick_lock(u, res)     # the try and its xp are core's (DVW-A12 R6); the host's in a shared world
+		ui.hide_all()
+		ui.message(str(r.text), 6.0)
 		if r.result == "open":
 			ui.show_chest(uid))
 
@@ -4710,6 +4836,8 @@ func _unhandled_input(e: InputEvent) -> void:
 				ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)    # in a window: step through its buttons
 			elif e.axis == JOY_AXIS_TRIGGER_LEFT and world != null and running:
 				toggle_sprint()                                                  # in play: LT turns sprint on or off (B8-027)
+			elif e.axis == JOY_AXIS_TRIGGER_RIGHT and world != null and running and not paused and world.player.alive and placing.is_empty():
+				ui.toggle_skills()                                               # in play: RT opens Skills too (GP-SKILLS-RT; RB and L stay)
 		trigger_held[e.axis] = down
 		return
 	if world == null:
