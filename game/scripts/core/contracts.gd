@@ -190,10 +190,15 @@ func with_player(n: NPC) -> Array:
 
 ## The units of `id` villager `n` still owes on its open contracts: stock it keeps back from sale (NPCBrain.reserve).
 func held_for(n: NPC, id: String) -> int:
-	var me := World.npc_ref(n.id)
+	return held_for_ref(World.npc_ref(n.id), id)
+
+
+## The same by actor ref (a villager's "npc:<id>" or the player's): the one read of what a seller still owes. The economy
+## foundation's reservations read it, so a reservation can never cover goods a contract already holds (RECON-01).
+func held_for_ref(ref: String, id: String) -> int:
 	var k := 0
 	for c in list:
-		if is_open(c) and c.seller == me and c.item == id:
+		if is_open(c) and c.seller == ref and c.item == id:
 			k += left(c)
 	return k
 

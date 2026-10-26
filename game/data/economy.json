@@ -1,0 +1,12 @@
+{
+  "format": "mml-economy/1",
+  "note": "Expansion 20 (Living Economy) LE-01 foundation. enabled is false: with it off the World builds none of these records and writes no save key. Nothing in live play calls them.",
+  "enabled": false,
+  "reservations": {
+    "keep_finished": 200
+  },
+  "events": {
+    "capacity": 500,
+    "save": true
+  }
+}

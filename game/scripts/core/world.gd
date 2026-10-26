@@ -138,6 +138,8 @@ var settlement_caps := {}     # SET-A/B: the village's maintained capability his
 var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
 var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
 var justice: Justice          # GP-CRIME-PURSUIT A1: the authorities' file on each offender, by player reference (scripts/core/justice.gd). Saved as the optional key "justice" (a Build 20 save has none)
+var economy_foreign := {}   # D2: a saved "economy" section while the foundation is disabled: written back unchanged, never parsed or erased
+var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
@@ -279,6 +281,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	couriers = CourierService.create_live(self)     # REG-COURIER-01: a booth for each of the five settlements; the village's opens at the first dawn
 	couriers.daily()
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
+	economy = EconomyFoundation.attach(self)     # EXPANSION 20 LE-01: null while disabled (nothing built, nothing saved)
 	note("Day 1 begins in the village.")
 
 
@@ -5504,7 +5507,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -5975,6 +5978,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	# uninterrupted game would not (the facts can move during the day, e.g. a stonecutter buying a chisel)
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
+	var economy_saved: Dictionary = d.get(EconomyFoundation.KEY, {})
+	economy = EconomyFoundation.attach(self, economy_saved)   # EXPANSION 20 LE-01: absent or disabled: none
+	economy_foreign = (economy_saved.duplicate(true) if economy == null else {})   # D2: kept untouched while disabled
 	_unstick()
 	if couriers != null:
 		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
@@ -5986,6 +5992,13 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 
 ## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
 ## map) steps to the nearest open cell in the same place, so nobody loads stuck.
+## D2: the optional save key "economy": the live records when on, else a section carried through unchanged.
+func _economy_section() -> Dictionary:
+	if economy != null:
+		return {EconomyFoundation.KEY: economy.to_dict()} if not economy.to_dict().is_empty() else {}
+	return {EconomyFoundation.KEY: economy_foreign.duplicate(true)} if not economy_foreign.is_empty() else {}
+
+
 func _unstick() -> void:
 	for n: NPC in npcs:
 		if not n.alive or n.depth != 0 or not map.is_solid(n.cell()):       # below the surface the level's map holds them
