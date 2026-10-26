@@ -628,7 +628,10 @@
    "approval": "owner directive 2026-10-22 (also docs/directives/2026-10-22_character_creation_armor_correction.md)",
    "acceptance": [
     "Armour bought or made as real goods; worn armour draws on the character in every direction; removing restores",
-    "Classification framework and values presented to and approved by the owner before assignment"
+    "Classification framework and values presented to and approved by the owner before assignment",
+    "Every currently equippable armour (leather, iron, every other existing variant) appears when worn, on male and female sprites, in all directions, in idle, walking, working and combat animations, drawn in the right order against clothing, weapons and equipment",
+    "Unequipping restores the clothing; save and load keep the appearance; multiplayer shows other players' equipment",
+    "The equipment-to-visual link is fixed at its root so no existing armour item can lack a picture again (a test over every equippable armour)"
    ],
    "implementation": "",
    "tests": "character_look_test, equip_test, start_test, wiki_test; all 66 Godot suites (exit 0, 0 SCRIPT ERROR, 0 FAIL) and the Python suite at wip/build18 83d3afc, run by the lead 2026-10-23",
@@ -700,6 +703,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: wip/b18-armour -> wip/b22-ui",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "target_build": "18",
@@ -22806,7 +22814,8 @@
    "owner_wording": "all these people keep saying they're tending their field, or all they do is just stand beside it. They should be walking through their field maybe with a shovel poking the ground every now and then. Or with the pickaxe every now and then.",
    "approval": "owner, 2026-10-24",
    "acceptance": [
-    "A villager (or player helper) sowing, tending or harvesting a field moves between cells of that field during the work, stops now and then and plays a work animation with a hand tool (a shovel or hoe from the art packs, else the pickaxe), instead of standing still beside it; the same for the player's own farm helpers; field work amounts, timing and yields unchanged; deterministic; any G0 change (positions) reported and explained; verified by a screenshot sequence and a test that a tending farmer occupies several field cells and plays the tool animation"
+    "A villager (or player helper) sowing, tending or harvesting a field moves between cells of that field during the work, stops now and then and plays a work animation with a hand tool (a shovel or hoe from the art packs, else the pickaxe), instead of standing still beside it; the same for the player's own farm helpers; field work amounts, timing and yields unchanged; deterministic; any G0 change (positions) reported and explained; verified by a screenshot sequence and a test that a tending farmer occupies several field cells and plays the tool animation",
+    "Farmers move through the field while sowing, tending or harvesting, not one edge; productivity, work time, harvest quantities, tool wear, ownership and scheduling preserved; any genuine simulation-baseline change from movement recorded and explained before it is accepted"
    ],
    "target_build": "20",
    "parent": "GP-POLISH",
@@ -22857,6 +22866,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker C (family and farming); branch: wip/multiplayer-b19 -> wip/b22-family",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "assigned_worker": "worker C (family and farming)",
@@ -23411,7 +23425,8 @@
     "Gamepad mapping and prompts work; rapid alternating presses neither dropped nor doubled",
     "Difficulty scales without shrinking touch targets",
     "Cancelled or interrupted attempts never succeed; rewards cannot be duplicated, also with two players on one lock",
-    "Existing skill, tool, lock difficulty, crime, ownership and reputation rules unchanged"
+    "Existing skill, tool, lock difficulty, crime, ownership and reputation rules unchanged",
+    "The full approved pin-tumbler system (chambers, pins, springs, setting line, feedback); easy locks in about six to eight successful inputs; no duplicate activations, dropped rapid presses or unintended actions on closing; a failed or interrupted attempt leaves the lock as the existing rules specify; never a passive progress bar"
    ],
    "target_build": "20",
    "parent": "GP-POLISH",
@@ -23462,6 +23477,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: wip/multiplayer-b19 -> wip/b22-ui",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
@@ -23544,7 +23564,9 @@
    "approval": "owner, 2026-10-26 (playtest report)",
    "acceptance": [
     "Stalls drawn with the shelf sprite have clear space between them, so each reads as its own stall and can be reached and walked between",
-    "Layout change through the village generator (version bump, G0 evidence per the baseline policy)"
+    "Layout change through the village generator (version bump, G0 evidence per the baseline policy)",
+    "Owner answer 2026-10-26: the booths are too close; space them farther apart, chosen from the stall footprint, player clearance and NPC pathing (no arbitrary fixed gap)",
+    "Walkable access, customer and merchant positions, entrances, stall ids, ownership, listings and NPC navigation preserved; no booth on a building, inaccessible terrain or an obstructed path; the layout change and its baseline effects recorded before a new baseline is accepted"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -23570,6 +23592,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: None -> wip/b22-market",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "related": [
@@ -23591,7 +23618,9 @@
    "approval": "owner, 2026-10-26 (playtest report)",
    "acceptance": [
     "The wooden object in the owner's screenshot is identified (the way out of the level, or a timber support) and drawn so it never covers or seems to block a deposit",
-    "Openings, supports and the way out read clearly as what they are in the open floor, without hiding a deposit or its prompt"
+    "Openings, supports and the way out read clearly as what they are in the open floor, without hiding a deposit or its prompt",
+    "Both sources checked: the frame at the mine or cave entrance and placed timber supports; every one that shares the defect is fixed",
+    "The opening, the deposit and the support read distinctly; no beam cuts through a deposit; correct foreground and background with roof transparency; no flicker; access, mining interaction and collision unchanged; no change to ore depletion, regeneration or mining economics"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -23617,6 +23646,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "related": [
@@ -24034,7 +24068,8 @@
    "acceptance": [
     "On a controller, Max (and Min) are reached with one press: an assigned button or focus placed so the d-pad does not have to step through the numbers first",
     "The same in every quantity picker (stall put-up, gifts, selling, dropping); the on-screen prompt shows the button",
-    "Mouse, touch and keyboard behaviour unchanged"
+    "Mouse, touch and keyboard behaviour unchanged",
+    "Max and Min respect available inventory, affordability, transaction and contract limits, storage and carrying limits, allowed minimums and the existing validation; one press never activates two controls"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -24060,6 +24095,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "related": [
@@ -24221,6 +24261,49 @@
    ]
   },
   {
+   "id": "GP-SKILLS-RT",
+   "kind": "approved",
+   "title": "Controller right trigger opens Skills during normal play (an additional shortcut; RB and L kept)",
+   "description": "Controller right trigger opens Skills during normal play (an additional shortcut; RB and L kept)",
+   "source": "docs/directives/2026-10-26_build22_final_owner_answers_amendment.md",
+   "owner_wording": "Add the controller RIGHT TRIGGER as an additional way to open Skills. Preserve the existing Skills controls. This is an additional shortcut, not a replacement.",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "Right trigger opens Skills during normal gameplay; RB, L, mouse and touch access kept",
+    "The on-screen controller guide shows the new shortcut",
+    "One trigger press never opens twice; inside windows, dialogs, combat and other contexts the trigger keeps its existing action (stepping through a window's buttons)",
+    "Consistent across supported controllers, through the established input mapping"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-26_build22_final_owner_answers_amendment.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS; implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
+     "why": "owner amendment 2026-10-26: item 14 of Build 22"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "GP-INPUT-CONSIST"
+   ],
+   "assigned_worker": "worker B (interface)",
+   "branch": "wip/b22-ui",
+   "next_action": "Build 22: implement on wip/b22-ui"
+  },
+  {
    "id": "GP-SMITHY-WORKBENCH",
    "kind": "approved",
    "title": "Smithy: the grinding wheel is not the workbench; a table dressed with hammers is",
@@ -24375,7 +24458,8 @@
    "acceptance": [
     "Renting from a pitch's window rents that pitch (when it is free), for the player and for a multiplayer guest",
     "After renting, the window shows the rented pitch as the player's own, with no 'You already rent a stall' message",
-    "A test rents a pitch other than the first free one and checks the tenant"
+    "A test rents a pitch other than the first free one and checks the tenant",
+    "The rent is checked against the selected booth (availability, ownership, price, permissions), is atomic, charges correctly and never changes another stall; tested with several empty and occupied booths"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -24401,6 +24485,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: None -> wip/b22-market",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "related": [
@@ -24850,7 +24939,8 @@
    "acceptance": [
     "While any guard is pursuing, searching for or coming to confront the player, a red ring is drawn around the player's character, and it goes when the pursuit ends",
     "A small panel out of the way of play and the HUD names the reason (the crime and where it was seen) and the current state (wanted, pursued, searched for)",
-    "Driven by the existing crime and guard state (GP-CRIME-PURSUIT), not new rules; per player in multiplayer; works on Android, PC and controller; wiki explains it"
+    "Driven by the existing crime and guard state (GP-CRIME-PURSUIT), not new rules; per player in multiplayer; works on Android, PC and controller; wiki explains it",
+    "Reflects the actual pursuit and wanted state only; updates with it; removed when the state legitimately ends (never left after a cleared crime or completed punishment); reveals no hidden guard information; legible on Android without covering controls; no redesign of crime, morality, judgment, pursuit or punishment"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -24876,6 +24966,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "related": [
@@ -25037,7 +25132,8 @@
    "acceptance": [
     "Every recipe's 'How to make it' and 'From raw materials' lines show the tools it needs (recipes.json tool) with links, and which items satisfy each tool kind",
     "Other work that needs a tool (timber supports and ladders with a mallet, stone cutting, mining) says so on its page",
-    "wiki_test checks that every recipe with a tool shows it"
+    "wiki_test checks that every recipe with a tool shows it",
+    "Each recipe shows required tools, the items that qualify, any tool condition or capability restriction, and keeps tools visibly apart from consumed ingredients; built from the game's production data, never a hand-kept list"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -25063,6 +25159,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "related": [
@@ -31068,7 +31169,8 @@
     "Male and female player couples may also adopt; adoption is an active action, never automatic",
     "Biological birth creates a new person; adoption moves an existing child into the family without increasing the population",
     "Both spouses are recognized as parents of every child, biological or adopted",
-    "Player marriage and couple-household records, adoptive-parent links and a save migration from save version 22 (the data-model change that deferred it)"
+    "Player marriage and couple-household records, adoptive-parent links and a save migration from save version 22 (the data-model change that deferred it)",
+    "Disconnected players keep their family relationships; existing NPC family systems unchanged; no duplicated, orphaned or invented children and no lost family records; marriage, reproduction, guardianship and adoption not redesigned; integrated only after its tests pass"
    ],
    "target_build": "20",
    "parent": null,
@@ -31119,6 +31221,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker C (family and farming); branch: wip/multiplayer-b19 -> wip/b22-family",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + owner amendment criteria",
+     "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
     }
    ],
    "assigned_worker": "worker C (family and farming)",

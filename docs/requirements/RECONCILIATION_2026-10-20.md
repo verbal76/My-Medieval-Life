@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 577 (308 of them still open) |
-| **Open entries now** (rules excluded) | | **485** |
+| Entries added since | | 578 (309 of them still open) |
+| **Open entries now** (rules excluded) | | **486** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (54)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (577)
+## Added since the baseline (578)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -290,6 +290,7 @@ None.
 | GP-QTY-PICKER-CONTROLLER | Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | GP-REPAIR-SOCIAL | Master gameplay repair: dialogue, social awareness, crime response and guard AI | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-SKILLS-RT | Controller right trigger opens Skills during normal play (an additional shortcut; RB and L kept) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |

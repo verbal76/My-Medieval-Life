@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (30)
+## Workers and task branches (31)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -20,6 +20,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-MARKET-SPACING | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-MINE-WOOD-FRAME | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
 | GP-QTY-PICKER-CONTROLLER | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-SKILLS-RT | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
 | GP-STALL-RENT-WRONG-PITCH | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-TABLE-ITEMS | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-WANTED-INDICATOR | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |

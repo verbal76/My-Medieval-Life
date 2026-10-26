@@ -8,17 +8,17 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 73 |
-| Integrated | 28 of 73 (38%) |
-| Automated tests passed | 33 of 73 (45%) |
-| Integration verified | 28 of 73 (38%) |
-| Gameplay verified | 0 of 73 (0%) |
-| Owner playtested | 0 of 73 (0%) |
-| Complete | 0 of 73 (0%) |
-| Open (release blockers) | 73 |
+| Approved requirements in scope | 74 |
+| Integrated | 28 of 74 (38%) |
+| Automated tests passed | 33 of 74 (45%) |
+| Integration verified | 28 of 74 (38%) |
+| Gameplay verified | 0 of 74 (0%) |
+| Owner playtested | 0 of 74 (0%) |
+| Complete | 0 of 74 (0%) |
+| Open (release blockers) | 74 |
 | Open owner decisions (blocking) | 14 (11) |
 
-## In development (worker assigned) (14)
+## In development (worker assigned) (15)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -29,6 +29,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | OWNER APPROVED | IN DEVELOPMENT | worker A (market) / wip/b22-market | NOT TESTED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | OWNER APPROVED | IN DEVELOPMENT | worker B (interface) / wip/b22-ui | NOT TESTED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
 | GP-QTY-PICKER-CONTROLLER | Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller | OWNER APPROVED | IN DEVELOPMENT | worker B (interface) / wip/b22-ui | NOT TESTED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
+| GP-SKILLS-RT | Controller right trigger opens Skills during normal play (an additional shortcut; RB and L kept) | OWNER APPROVED | IN DEVELOPMENT | worker B (interface) / wip/b22-ui | NOT TESTED | Build 22: implement on wip/b22-ui | design: UNKNOWN | UNKNOWN |
 | GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | OWNER APPROVED | IN DEVELOPMENT | worker A (market) / wip/b22-market | NOT TESTED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
 | GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | OWNER APPROVED | IN DEVELOPMENT | worker A (market) / wip/b22-market | NOT TESTED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
 | GP-WANTED-INDICATOR | Show the player when guards are hunting them: a red ring around the character and an out-of-the-way note saying why | OWNER APPROVED | IN DEVELOPMENT | worker B (interface) / wip/b22-ui | NOT TESTED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
