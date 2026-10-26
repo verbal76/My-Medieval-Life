@@ -652,8 +652,10 @@ func _ready() -> void:
 						if shot_panel == "contract_work":
 							ui.body_scroll.scroll_vertical = 100000
 						break
-			"trade_qty":
-				# PL1-03: the quantity control, buying 3 of 8 affordable
+			"trade_qty", "trade_qty_pad":
+				# PL1-03: the quantity control, buying 3 of 8 affordable; _pad: with the gamepad's X / Y prompt (GP-QTY-PICKER-CONTROLLER)
+				if shot_panel == "trade_qty_pad":
+					ui.set_scheme("gamepad")
 				var tk := world.tavern_keeper()
 				tk.inv.add("pottage", 12)
 				world.player.coins = 17
@@ -4644,6 +4646,8 @@ func _unhandled_input(e: InputEvent) -> void:
 				ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)    # in a window: step through its buttons
 			elif e.axis == JOY_AXIS_TRIGGER_LEFT and world != null and running:
 				toggle_sprint()                                                  # in play: LT turns sprint on or off (B8-027)
+			elif e.axis == JOY_AXIS_TRIGGER_RIGHT and world != null and running and not paused and world.player.alive and placing.is_empty():
+				ui.toggle_skills()                                               # in play: RT opens Skills too (GP-SKILLS-RT; RB and L stay)
 		trigger_held[e.axis] = down
 		return
 	if world == null:
