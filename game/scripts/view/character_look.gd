@@ -74,8 +74,9 @@ static func _pick(picks: Dictionary, layer: String) -> String:
 
 
 ## The recipe with its worn items' layers applied (the hook for equipment, ARMOR-01): style "worn_layers" maps an
-## item id to {"layer", "option", "swatches", "hides": [layers]}. Empty until the owner settles armour, so worn
-## items change nothing yet.
+## item id to {"layer", "option", "swatches", "hides": [layers], "also": [{"layer", "option"}]} (written by
+## tools/import_game_assets.py WORN_LAYERS): every armour and head item has an entry; plain clothes one with no layer.
+## The recipe itself is never changed, so taking the item off draws the character's own clothes again.
 static func apply_worn(recipe: Dictionary, worn: Array) -> Dictionary:
 	var table: Dictionary = style().get("worn_layers", {})
 	var out := {"picks": (recipe.get("picks", {}) as Dictionary).duplicate(), "swatches": (recipe.get("swatches", {}) as Dictionary).duplicate()}
@@ -87,6 +88,8 @@ static func apply_worn(recipe: Dictionary, worn: Array) -> Dictionary:
 			out.picks[str(layer)] = ""
 		if w.has("layer"):
 			out.picks[str(w.layer)] = str(w.option)
+		for part in w.get("also", []):
+			out.picks[str(part.layer)] = str(part.option)
 		for s in w.get("swatches", {}):
 			out.swatches[str(s)] = int(w.swatches[s])
 	return out
@@ -151,7 +154,32 @@ static func texture(recipe: Dictionary, worn: Array = []) -> Texture2D:
 static func sheet_for(sprite: String, appearance: Dictionary, worn: Array = []) -> Texture2D:
 	if not appearance.is_empty():
 		return texture(appearance, worn)
-	return load(sprite) if sprite != "" and ResourceLoader.exists(sprite) else null
+	var baked: Texture2D = load(sprite) if sprite != "" and ResourceLoader.exists(sprite) else null
+	return over_baked(baked, sprite, worn) if baked != null else null
+
+
+## ARMOR-01 (Build 22): a character with no recipe (an heir who was a villager's child, a pre-CC-01 default sheet) still
+## shows what it wears: the worn items' layers, drawn from their own sheets and ramps, laid over the baked sheet (body
+## armour over the clothes, the helmet over the hair, as the draw order has them); the baked sheet when nothing worn draws.
+static func over_baked(baked: Texture2D, key: String, worn: Array) -> Texture2D:
+	var only := apply_worn({"picks": {}, "swatches": {}}, worn)
+	if (only.picks as Dictionary).values().all(func(v): return str(v) == ""):
+		return baked
+	var ck := "baked:%s|%s" % [key, JSON.stringify(only, "", true)]
+	if _cache.has(ck):
+		return _cache[ck]
+	var img := Image.new()
+	img.copy_from(baked.get_image())             # never the texture's own image
+	img.convert(Image.FORMAT_RGBA8)
+	var top := render(only)                      # the worn layers alone (no race: no eyes; the weapon overlay is the sheet's own)
+	if top.get_size() == img.get_size():
+		img.blend_rect(top, Rect2i(Vector2i.ZERO, top.get_size()), Vector2i.ZERO)
+	var t := ImageTexture.create_from_image(img)
+	_cache[ck] = t
+	_cache_order.append(ck)
+	while _cache_order.size() > CACHE_MAX:
+		_cache.erase(_cache_order.pop_front())
+	return t
 
 
 static func player_sheet(p: PlayerState) -> Texture2D:

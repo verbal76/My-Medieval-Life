@@ -270,6 +270,8 @@ static func public_player(p: PlayerState) -> Dictionary:
 	o.sprite = p.sprite
 	o.heir_sprite = p.heir_sprite
 	o.appearance = p.appearance.duplicate(true)
+	o.armor = p.armor                         # ARMOR-01: worn armour and headgear are seen by everyone (the look, not the pack)
+	o.head = p.head
 	o.sex = p.sex
 	o.born = p.born
 	o.pos = p.pos
@@ -448,6 +450,9 @@ func s_players(list: Array) -> void:
 		var o: PlayerState = main.world.player_by_pid(pid) if main.world != null else null
 		if o != null:
 			o.pos = e.pos                         # the guest's copy of the other players follows the host
+			if e.has("worn") and (e.worn as Array).size() == 2:
+				o.armor = str(e.worn[0])              # ARMOR-01: and what they wear (drawn by main._sync_avatars)
+				o.head = str(e.worn[1])
 			o.alive = bool(e.alive)
 	for pid in avatars.keys():
 		if not seen.has(pid):
@@ -726,11 +731,13 @@ func send_animals(id: int, g: PlayerState, all: bool) -> void:
 func players_list() -> Array:
 	var w: World = main.world
 	var h: PlayerState = w.host_player()
-	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.player_sprite.anim, "alive": h.alive}]
+	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.player_sprite.anim, "alive": h.alive,
+		"worn": [h.armor, h.head]}]                 # ARMOR-01: what each player wears, so the others draw it
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
 		if g != null:
-			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive})
+			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive,
+				"worn": [g.armor, g.head]})
 	return out
 
 

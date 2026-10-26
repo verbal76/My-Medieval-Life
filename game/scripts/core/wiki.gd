@@ -170,6 +170,8 @@ func add_page(id: String, title: String, category: String, blocks: Array, icon :
 			parts.append(page_title(str(l)))
 		if b.get("t", "") == "recipe" or b.get("t", "") == "chain":
 			parts.append(str(b.get("id", "")))
+		if b.get("t", "") == "recipe" and GameData.recipes.has(str(b.get("id", ""))):
+			parts.append(tools_text(str(b.id)))     # GP-WIKI-RECIPE-TOOLS: a page showing a recipe is found by its tools
 	pages[id] = {"id": id, "title": title, "category": category, "icon": icon, "blocks": blocks,
 		"text": " ".join(parts.map(func(x): return str(x))).to_lower()}
 
@@ -302,9 +304,81 @@ func chain_lines(item: String, depth := 0, seen := []) -> Array:
 	if rs.is_empty() or seen.has(item):
 		return []
 	var r: Dictionary = GameData.recipes[rs[0]]
-	var out := ["%s%s: %s at the %s" % ["    ".repeat(depth), _iname(item), " + ".join(r["in"].keys().map(func(i): return "%d %s" % [int(r["in"][i]), _iname(i)])), STATION_NAMES.get(r.station, str(r.station).capitalize())]]
+	var out := ["%s%s: %s at the %s%s" % ["    ".repeat(depth), _iname(item), " + ".join(r["in"].keys().map(func(i): return "%d %s" % [int(r["in"][i]), _iname(i)])), STATION_NAMES.get(r.station, str(r.station).capitalize()), tools_suffix(rs[0])]]
 	for i in r["in"]:
 		out.append_array(chain_lines(i, depth + 1, seen + [item]))
+	return out
+
+
+## GP-WIKI-RECIPE-TOOLS: the tool kinds a recipe needs (recipes.json `tool`: one kind or a list; World.craft_tool_kinds).
+static func recipe_tool_kinds(recipe: String) -> Array:
+	var t = GameData.recipes.get(recipe, {}).get("tool", "")
+	if t is Array:
+		return t.map(func(k): return str(k))
+	return [] if str(t) == "" else [str(t)]
+
+
+## The items that count as a tool of `kind` (items.json `tool`), sorted by name: "chisel" -> [chisel] (the iron chisel).
+static func tool_kind_items(kind: String) -> Array:
+	var out := []
+	for id in GameData.items:
+		if str(GameData.items[id].get("tool", "")) == kind:
+			out.append(str(id))
+	out.sort_custom(func(a, b): return GameData.item_name(a).naturalnocasecmp_to(GameData.item_name(b)) < 0)
+	return out
+
+
+## A tool kind in words: "prospecting_kit" -> "prospecting kit".
+static func tool_kind_name(kind: String) -> String:
+	return kind.replace("_", " ")
+
+
+## "a mallet (Mallet) and a chisel (Iron chisel)": each kind a recipe needs with the items that count as it.
+static func tools_text(recipe: String) -> String:
+	var parts := []
+	for k in recipe_tool_kinds(recipe):
+		var names: Array = tool_kind_items(k).map(func(i): return GameData.item_name(i))
+		parts.append("a %s (%s)" % [tool_kind_name(k), " or ".join(names)] if not names.is_empty() else "a " + tool_kind_name(k))
+	return _and_list(parts)
+
+
+## " with a mallet (Mallet) and a chisel (Iron chisel)" for a chain line, or "" when the recipe needs no tool.
+static func tools_suffix(recipe: String) -> String:
+	var t := tools_text(recipe)
+	return "" if t == "" else ", with " + t
+
+
+## Every piece of work that needs a tool of `kind`, in words, from the data that sets it: recipes (recipes.json), gathering
+## (resources.json nodes), the underground works (mine_works.json), cliff ways (balance terrain_works), trial pits
+## (discovery.json) and open pit layers (open_pit.json). [{text, link}] with link "" when there is no page.
+func tool_uses(kind: String) -> Array:
+	var out := []
+	var rids: Array = GameData.recipes.keys().filter(func(r): return recipe_tool_kinds(str(r)).has(kind))
+	rids.sort()
+	for r in rids:
+		out.append({"text": "Making %s at the %s" % [_iname(str(GameData.recipes[r].out.keys()[0])), STATION_NAMES.get(GameData.recipes[r].station, str(GameData.recipes[r].station)).to_lower()], "link": "recipe:" + str(r)})
+	var nids: Array = GameData.resources.nodes.keys().filter(func(n): return str(GameData.resources.nodes[n].get("tool", "")) == kind)
+	nids.sort()
+	for n in nids:
+		out.append({"text": "Gathering: " + str(GameData.resources.nodes[n].name), "link": "node:" + str(n)})
+	var mw := MineWorks.cfg()
+	if str(mw.get("tool", "")) == kind:
+		out.append({"text": "Cutting new passages into the rock below ground, and sinking a shaft", "link": "sys:mining_underground"})
+	for part in [["support", "Setting up and repairing a timber support below ground", "sys:mining_underground"], ["track", "Laying a track section", "sys:minecarts"], ["ladder", "Setting a ladder into a shaft, and repairing it", "sys:mine_shafts"]]:
+		if str(mw.get(part[0], {}).get("tool", "")) == kind:
+			out.append({"text": part[1], "link": part[2]})
+	var tw: Dictionary = GameData.b("terrain_works")
+	for way in ["steps", "stairs", "walkway"]:
+		if str(tw.get(way, {}).get("tool", "")) == kind:
+			out.append({"text": "Making cliff %s up a mountain's rim" % way, "link": "sys:cliff_ways"})
+	if str(Discovery.cfg().get("trial", {}).get("tool", "")) == kind:
+		out.append({"text": "Digging a trial pit", "link": "sys:prospecting"})
+	var layers := []
+	for l in OpenPits.cfg().get("layers", []):
+		if str(l.get("tool", "")) == kind:
+			layers.append(_iname(str(l.item)).to_lower())
+	if not layers.is_empty():
+		out.append({"text": "Digging an open pit's %s" % _and_list(layers), "link": "sys:open_pits"})
 	return out
 
 
@@ -355,7 +429,8 @@ func _items() -> void:
 		if it.has("speed"):
 			rows.append(["Work speed", "x%s" % str(it.speed)])
 		if it.has("tool"):
-			rows.append(["Works as", str(it.tool)])
+			var kin: Array = tool_kind_items(str(it.tool)).filter(func(t): return t != id).map(func(t): return _iname(t))
+			rows.append(["Works as", "a %s%s" % [tool_kind_name(str(it.tool)), "" if kin.is_empty() else " (so does the " + " or the ".join(kin) + ")"]])     # GP-WIKI-RECIPE-TOOLS
 		if PlayerState.bonus_text(id) != "":
 			rows.append(["Bonus", PlayerState.bonus_text(id) + " while worn"])
 		if it.has("plant"):
@@ -380,6 +455,17 @@ func _items() -> void:
 		if gear_uses > 0:                          # ARMOR-CATALOG-01: the catalogue's pieces, counted, on their own pages
 			blocks.append(p("It goes into %d pieces of armour and weapons made to order (see Armour and weapons)." % gear_uses))
 			blocks.append(links(["sys:armoury"]))
+		if it.has("tool"):                          # GP-WIKI-RECIPE-TOOLS: what work this tool is needed for
+			var tu := tool_uses(str(it.tool))
+			if not tu.is_empty():
+				blocks.append(h("Needed for"))
+				blocks.append(bullets(tu.map(func(u): return str(u.text))))
+				var tl: Array = tu.map(func(u): return str(u.link)).filter(func(l): return l != "")
+				var seen := []
+				for l in tl:
+					if not seen.has(l):
+						seen.append(l)
+				blocks.append(links(seen, "Where it is needed"))
 		var uses := []
 		if WikiMining.USE_TEXT.has(id):
 			uses.append_array(WikiMining.USE_TEXT[id])     # player-facing wording for the Build 17 mining goods
@@ -405,12 +491,19 @@ func _recipes() -> void:
 		var out_id: String = r.out.keys()[0]
 		var st: String = STATION_NAMES.get(r.station, str(r.station).capitalize())
 		var blocks := [
-			stats([["Needs", _amounts(r["in"])], ["Makes", _amounts(r.out)], ["At", st],
-				["Skill", "%s %d" % [str(r.skill).capitalize(), int(r.level)]], ["Work time", "%d game minutes" % int(r.minutes)],
+			stats([["Needs", _amounts(r["in"])], ["Makes", _amounts(r.out)], ["At", st]]
+				+ ([["Tools", tools_text(id)[0].to_upper() + tools_text(id).substr(1)]] if not recipe_tool_kinds(id).is_empty() else [])     # GP-WIKI-RECIPE-TOOLS
+				+ [["Skill", "%s %d" % [str(r.skill).capitalize(), int(r.level)]], ["Work time", "%d game minutes" % int(r.minutes)],
 				["Experience", "%d" % int(r.xp)]]),
 			links(r["in"].keys().map(func(i): return _item_link(i)), "Ingredients"),
 			links(r.out.keys().map(func(i): return _item_link(i)), "Products"),
 			links(["station:" + r.station, "skill:" + r.skill], "See also")]
+		var tools_needed := []
+		for k in recipe_tool_kinds(id):
+			tools_needed.append_array(tool_kind_items(k).map(func(i): return _item_link(i)))
+		if not tools_needed.is_empty():
+			blocks.insert(2, links(tools_needed, "Tools"))
+			blocks.insert(1, p("The work needs %s in your pack, apart from the ingredients. Tools are not used up as ingredients are: any one of the kind will do, whatever its condition, and every piece of work wears it a little until, worn out, it breaks (each tool's page gives its durability)." % tools_text(id)))
 		add_page("recipe:" + id, "Make: " + _iname(out_id) + " (" + st.to_lower() + ")", "recipes", blocks, icon_path(out_id), id.replace("_", " "))
 
 
@@ -713,6 +806,8 @@ func _systems() -> void:
 		p("When a search finds nothing you are wanted: the guards who know remember you, and any of them who sees you again comes after you. A theft is let go after %d days and an attack after %d; a murder never. Your case ends only with you: if you die, the guards hunt no one else, but your family's name carries the stain (see What villagers think of you)." % [int(Justice.response("theft").wanted_days), int(Justice.response("assault").wanted_days)]),
 		p("Beaten (at %d%% of your health or less) with a guard of your case in sight, you can yield: it is the first choice offered. For a theft or an attack, and for a single murder if you have not fought them, a guard will not kill you: they beat you down and take you in. Taken in or yielding, the stolen goods you carry go back to their owners and you are fined to the manor: %d coins for an attack, %d for a murder and %d for more than one, on top of the theft fine for the goods; you pay what you have. Every crime that was outstanding is then settled. A murderer who strikes a guard or attacks again with the guards after them, and anyone who has killed more than once, may be killed by the guards." % [roundi(float(Justice.cfg().yield_below) * 100.0), int(Justice.response("assault").yield_fine), int(Justice.response("murder").yield_fine), int(Justice.response("multiple_murder").yield_fine)]),
 		p("Families take note too: a parent who knows you for a killer and sees you near their children steps between you and them, sends them home and tells a guard, or stands and fights. Nobody takes on contracts from a known killer or walks out with them (see What villagers think of you)."),
+		h("Knowing you are hunted"),
+		p("While a guard is after you, a red ring is drawn round your character, and a small red note under your health and coins says how things stand and why: Pursued by the guards (one has you in sight), The guards are coming for you (one is on the way to where you were reported), The guards are searching for you (they lost you and search where you were last seen), or Wanted by the guards (nobody is after you just now, but the guards who know will come if they see you; there is no ring then). The note names the gravest crime the guards know of, whom it was against and where it was done, and how many more they know. It never shows where a guard is. When your crimes are settled (a fine, yielding, being taken in), let go after their days, or your case ends, the ring and the note go. In a game with friends, each player sees only their own (why am I being chased?)."),
 		links(["skill:stealth", "job:guard", "guide:theft", "sys:opinions", "sys:bandits", "sys:fighting"])])
 	sys.call("property", "Land, houses, workshops and rent", [
 		p("The manor sells and lets ground and empty houses; rent is weekly. You can build on ground you hold from the Build menu, with materials and hired helpers. A new property starts with a house, and rooms and workshops (a smithy, a carpenter's shop, a kitchen, living quarters and more) can be added to it later without pulling anything down. A rented home you cannot pay for is lost after missed weeks."),
@@ -766,7 +861,7 @@ func _systems() -> void:
 		links(["sys:death_causes", "sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
 	sys.call("appearance", "Your appearance", [
 		p("When you start a new game you choose how you look: your skin, hair style and hair colour, a beard or none, eye colour, eyelashes, plain clothes or a tunic and their colour, and leather boots or bare feet. Randomize picks a whole new look; the arrows beside each feature step through its choices, and the figure beside them shows you from the front and three sides."),
-		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. Iron armour and the iron helmet show on your figure while you wear them (the armour over your clothes, the helmet over your hair) and your own look returns when you take them off; leather armour and the leather cap have no picture and change nothing you see. Your look itself is kept in your save."),
+		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. All the armour you can wear shows on your figure, from every side and while you walk, work and fight: iron armour as a grey breastplate and the iron helmet as an open iron helm over your hair; leather armour as a leather jerkin with leather gloves and boots, and the leather cap as a round brown cap. Your own clothes come back when you take them off. Other players in your game see what you wear, and you see theirs. Your look itself is kept in your save, and what you wear stays on after loading."),
 		links(["sys:inheritance", "sys:saving"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
@@ -798,7 +893,6 @@ func _not_yet() -> void:
 		"luxury_status": ["Standing from owning luxuries", "Villagers buy spices, fine cloth and jewellery from the caravan to show they can, and keep them, but the village has no measure of a person's standing yet, so owning them changes nothing about how anyone is treated, you included. They are kept in a pack and go to an heir; they are not worn."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"multiplayer_more": ["Internet play and hosting from a phone", "Playing with friends works on the same Wi-Fi or home network, with a PC hosting (see Playing with friends). Playing over the internet, a phone or tablet hosting a world, dedicated servers and more than one friend tested at a time are not in the game yet."],
-		"looks_more": ["Leather armour on your figure", "Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
 		"farm_more": ["Oxen, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself, and a plough horse from the caravan speeds the plough (see the farming guides), but there are no oxen, no riding or carts drawn by horses, no roofed coops or shelters, no watering or weather, no traps for rabbits, no other animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:

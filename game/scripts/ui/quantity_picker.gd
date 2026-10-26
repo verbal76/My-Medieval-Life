@@ -5,6 +5,9 @@ extends PanelContainer
 ## chosen quantity, a live total, Confirm and Cancel. It only chooses a number; the caller does the
 ## move (World.trade / World.transfer, both all-or-nothing) in `on_confirm.call(qty)`, so Cancel changes
 ## nothing. Keyboard, mouse, pad (the slider takes left/right) and touch all work on the same buttons.
+## GP-QTY-PICKER-CONTROLLER (owner 2026-10-26): on a pad, X sets the least (1) and Y the most (max_qty, which every caller
+## computes from what is carried, the coins, the buyer's coins, the room and the stock) in one press each, shown under the
+## slider when the gamepad is in use; the press is consumed, so it never reaches another control.
 
 signal confirmed(qty: int)
 signal cancelled
@@ -23,6 +26,9 @@ var cancel_btn: Button
 var minus_btn: Button
 var plus_btn: Button
 var max_btn: Button
+var pad_row: HBoxContainer       # GP-QTY-PICKER-CONTROLLER: the X Min / Y Max prompt, shown with a gamepad
+const PAD_MIN := JOY_BUTTON_X
+const PAD_MAX := JOY_BUTTON_Y
 
 
 ## Most you can buy when each unit has its own price (`prices`, in order): units while the coins last.
@@ -90,6 +96,23 @@ func setup(title: String, info: String, max_n: int, p_verb: String, p_unit_price
 		max_btn.custom_minimum_size.x = 80
 		row.add_child(max_btn)
 		v.add_child(row)
+		pad_row = HBoxContainer.new()
+		pad_row.name = "PadPrompts"
+		pad_row.add_theme_constant_override("separation", 6)
+		for pr in [["xbox_button_x", "Min (1)"], ["xbox_button_y", "Max (%d)" % max_qty]]:
+			var t := TextureRect.new()
+			var path := "res://assets/prompts/%s.png" % pr[0]
+			if ResourceLoader.exists(path):
+				t.texture = load(path)
+			t.custom_minimum_size = Vector2(28, 28)
+			t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			pad_row.add_child(t)
+			var l := _label(pr[1], 16, Color8(246, 236, 214))
+			l.autowrap_mode = TextServer.AUTOWRAP_OFF
+			pad_row.add_child(l)
+		pad_row.visible = false
+		v.add_child(pad_row)
 	qty_label = _label("", 18, Color8(246, 236, 214))
 	v.add_child(qty_label)
 	total_label = _label("", 18, Color8(255, 217, 128))
@@ -141,10 +164,30 @@ func cancel() -> void:
 	cancelled.emit()
 
 
+## GP-QTY-PICKER-CONTROLLER: the pad's one-press least and most. Taken in _input, before the focused control sees it, and
+## marked handled, so X or Y never also presses a button or reaches the game (X is Attack, Y Fireball in play).
+func _input(e: InputEvent) -> void:
+	if not (e is InputEventJoypadButton) or not e.pressed or max_qty <= 0 or not is_visible_in_tree():
+		return
+	if e.button_index == PAD_MIN or e.button_index == PAD_MAX:
+		set_qty(1 if e.button_index == PAD_MIN else max_qty)
+		get_viewport().set_input_as_handled()
+
+
+## The pad prompts show while the game is played with a gamepad (GameUI.scheme), wherever the picker sits.
+func _ui_scheme() -> String:
+	var n := get_parent()
+	while n != null and not n is GameUI:
+		n = n.get_parent()
+	return str((n as GameUI).scheme) if n != null else ""
+
+
 ## The whole box in view once it is laid out (TRADE-AXE-01: opened from a row far down a list, the window kept its
 ## scroll and the box stayed above it, out of sight), whatever the controls; focus alone scrolled only to the slider.
 func _enter_tree() -> void:
 	_show_whole.call_deferred()
+	if pad_row != null:
+		pad_row.visible = _ui_scheme() == "gamepad"
 
 
 func _show_whole() -> void:

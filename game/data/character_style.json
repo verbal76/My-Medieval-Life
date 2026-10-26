@@ -40,6 +40,7 @@
   "eyes": "eyes",
   "facial_hair": "hair",
   "hair": "hair",
+  "leather_gloves": "leather",
   "leather_shoes": "leather",
   "metal_armour": "metal",
   "metal_headwear": "metal",
@@ -558,6 +559,17 @@
     "ramps": []
    }
   },
+  "gloves": {
+   "leather-gloves": {
+    "sheet": "res://assets/characters/layers/gloves/leather-gloves.png",
+    "ramps": [
+     [
+      "leather",
+      "leather_gloves"
+     ]
+    ]
+   }
+  },
   "hair": {
    "f1": {
     "sheet": "res://assets/characters/layers/hair/f1.png",
@@ -754,6 +766,15 @@
   "headwear": {
    "novice-helm": {
     "sheet": "res://assets/characters/layers/headwear/novice-helm.png",
+    "ramps": [
+     [
+      "metal",
+      "metal_headwear"
+     ]
+    ]
+   },
+   "grunt-helm": {
+    "sheet": "res://assets/characters/layers/headwear/grunt-helm.png",
     "ramps": [
      [
       "metal",
@@ -1157,15 +1178,44 @@
    "layer": "clothes",
    "option": "metal-armour",
    "swatches": {
-    "metal_armour": 1
+    "metal_armour": 0
    }
   },
   "iron_helmet": {
    "layer": "headwear",
    "option": "novice-helm",
    "swatches": {
-    "metal_headwear": 1
+    "metal_headwear": 0
    }
+  },
+  "leather_armor": {
+   "layer": "clothes",
+   "option": "tunic",
+   "swatches": {
+    "tunic": 1,
+    "leather_gloves": 0,
+    "leather_shoes": 0
+   },
+   "also": [
+    {
+     "layer": "gloves",
+     "option": "leather-gloves"
+    },
+    {
+     "layer": "shoes",
+     "option": "leather-boots"
+    }
+   ]
+  },
+  "leather_cap": {
+   "layer": "headwear",
+   "option": "grunt-helm",
+   "swatches": {
+    "metal_headwear": 3
+   }
+  },
+  "plain_clothes": {
+   "note": "the character's own clothes: nothing drawn over them"
   },
   "archer_hat_cyan": {
    "layer": "headwear",

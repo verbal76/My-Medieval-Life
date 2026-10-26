@@ -51,6 +51,13 @@
    "sha256": "c119efb120231bc99fcef8f10445dfd8d29edb03abdf01663379fc47507f6cec"
   },
   {
+   "file": "assets/characters/layers/gloves/leather-gloves.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/gloves/leather-gloves.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "4b94bdfa4c9d66c261af3027b563f4d0e377c44ff0aebdafc4d1713de337936c"
+  },
+  {
    "file": "assets/characters/layers/hair/f1.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/hair/f1.png",
@@ -231,6 +238,13 @@
    "member": "assets/headwear/novice-helm.png",
    "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
    "sha256": "215256052e6edcf20d190ebb70b4bc75b792c588194a766bbc2824528befdc32"
+  },
+  {
+   "file": "assets/characters/layers/headwear/grunt-helm.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/headwear/grunt-helm.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3d28268797fa0dd6f303ec50535832ea22ef8d2ac3b5c6ba086af4418c5a6a3e"
   },
   {
    "file": "assets/characters/layers/weapon-overlay/weapon-overlay.png",
@@ -2065,6 +2079,48 @@
    "member": "16x16 Survival RPG Icons/Wood/Paper-03.png",
    "transform": "a red wax seal added (the quest marker's scroll, without its outline): the Journal tab",
    "sha256": "435ae26fdf1ed3e02630c9a53edc1e5f96d1cd1fa51965f67da4b1699bf2483f"
+  },
+  {
+   "file": "assets/prompts/keyboard_1.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_1.png",
+   "transform": "copied unchanged",
+   "sha256": "78450dc5650646422a582f7e146377f651301ad5853172d4c03cad76a3a03894"
+  },
+  {
+   "file": "assets/prompts/keyboard_2.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_2.png",
+   "transform": "copied unchanged",
+   "sha256": "ba5483497652bac89efc99b2cfe3e8c7adcf8be6a0cb8283a01d92d8b66ecf7c"
+  },
+  {
+   "file": "assets/prompts/keyboard_3.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_3.png",
+   "transform": "copied unchanged",
+   "sha256": "927dd6e2ef540b5adaf30c0db41a78f3188bf765b1439d0e4ebad9143d3392d6"
+  },
+  {
+   "file": "assets/prompts/keyboard_4.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_4.png",
+   "transform": "copied unchanged",
+   "sha256": "a87afcc608eacc42de09421edc1b1cc5403e4c50454dd71e4b92b8646a5297c6"
+  },
+  {
+   "file": "assets/prompts/keyboard_5.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_5.png",
+   "transform": "copied unchanged",
+   "sha256": "fbb9a5562a04a1aef13d55b63351912f25e3036e3b9496cfb03fcc00ef860465"
+  },
+  {
+   "file": "assets/prompts/keyboard_6.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_6.png",
+   "transform": "copied unchanged",
+   "sha256": "9ae73b6265b4ff54a4dd6da671f75b47ffd6e774c91906c4b252b114a4ddf403"
   },
   {
    "file": "assets/prompts/keyboard_a.png",

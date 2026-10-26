@@ -694,6 +694,27 @@ func _recipe_row(rid: String) -> void:
 	for o in r.out:
 		row.add_child(_tex(Wiki.icon_path(o), 28))
 		_plain("%d %s" % [int(r.out[o]), GameData.item_name(o)], 16, GOLD, row)
+	var kinds := Wiki.recipe_tool_kinds(rid)
+	if not kinds.is_empty():                       # GP-WIKI-RECIPE-TOOLS: the tools the work needs, and which items count
+		var tr := HFlowContainer.new()
+		tr.name = "Tools_" + rid
+		tr.add_theme_constant_override("h_separation", 6)
+		col.add_child(tr)
+		_plain("Tools:", 16, DIM, tr)
+		var firstk := true
+		for k in kinds:
+			if not firstk:
+				_plain("+", 18, DIM, tr)
+			firstk = false
+			var its := Wiki.tool_kind_items(k)
+			if its.is_empty():
+				_plain("a " + Wiki.tool_kind_name(k), 16, TEXT, tr)
+			for j in its.size():
+				if j > 0:
+					_plain("or", 15, DIM, tr)
+				var tid: String = its[j]
+				tr.add_child(_tex(Wiki.icon_path(tid), 28))
+				_link(GameData.item_name(tid), func(): goto("item:" + tid), tr, 16)
 	var st: String = Wiki.STATION_NAMES.get(r.station, str(r.station).capitalize())
 	var d := _link("at the %s, %s %d" % [st.to_lower(), str(r.skill).capitalize(), int(r.level)], func(): goto("recipe:" + rid), _flow(col), 15)
 	d.name = "Recipe_" + rid

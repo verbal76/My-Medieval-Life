@@ -18,6 +18,7 @@ var deep_layer: TileMapLayer
 var wall_layer: TileMapLayer
 var seam_layer: TileMapLayer
 var works_view: WorksView
+var way_out: Node2D
 var dark: Sprite2D
 var _floors: Array = []
 var _walls: Array = []
@@ -50,6 +51,9 @@ func setup_level(src: MapView, w: World, lm: LevelMap, spec: Dictionary) -> void
 	var seam_cells := _seam_cells(w)
 	for c in lm.cells():
 		_draw_cell(w, c, seam_cells)
+	way_out = WayOutMark.new()
+	way_out.setup(w, lm)                     # GP-MINE-WOOD-FRAME: the way up to the surface, lit, at the passage's end
+	add_child(way_out)
 	works_view = WorksView.new()
 	works_view.setup(w.mine_works, lm.level)
 	add_child(works_view)

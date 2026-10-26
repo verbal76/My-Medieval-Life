@@ -3819,6 +3819,7 @@
     "assets/characters/layers/facial-hair/beard1.png",
     "assets/characters/layers/facial-hair/beard2.png",
     "assets/characters/layers/facial-hair/mustache.png",
+    "assets/characters/layers/gloves/leather-gloves.png",
     "assets/characters/layers/hair/f1.png",
     "assets/characters/layers/hair/f2.png",
     "assets/characters/layers/hair/f3.png",
@@ -3845,6 +3846,7 @@
     "assets/characters/layers/headwear/esper_hat_red.png",
     "assets/characters/layers/headwear/esper_hood_cyan.png",
     "assets/characters/layers/headwear/esper_hood_red.png",
+    "assets/characters/layers/headwear/grunt-helm.png",
     "assets/characters/layers/headwear/grunt_helm.png",
     "assets/characters/layers/headwear/high_mage_hat_cyan.png",
     "assets/characters/layers/headwear/high_mage_hat_red.png",
@@ -8835,6 +8837,12 @@
     }
    ],
    "imported": [
+    "assets/prompts/keyboard_1.png",
+    "assets/prompts/keyboard_2.png",
+    "assets/prompts/keyboard_3.png",
+    "assets/prompts/keyboard_4.png",
+    "assets/prompts/keyboard_5.png",
+    "assets/prompts/keyboard_6.png",
     "assets/prompts/keyboard_a.png",
     "assets/prompts/keyboard_b.png",
     "assets/prompts/keyboard_c.png",

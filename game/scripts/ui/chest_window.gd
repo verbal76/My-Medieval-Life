@@ -30,8 +30,9 @@ func show(uid: String, pick := {}, focus := {}) -> void:
 		ui._label("Not yours. Taking from it is theft: whoever is in the room sees it.", 18, Color(1, 0.7, 0.55))
 	if lk.locked and not own:
 		var why: String = w.chests.cannot_pick(u)
-		ui._label("It is locked (lock level %d). Chance to pick it: %d%%. It takes about %d minutes. Lockpicks: %d. A failed try may snap the pick, and a noisy try can be seen." % [
-			lk.level, roundi(w.chests.pick_chance(u) * 100.0), roundi(w.chests.pick_minutes(u)), w.player.inv.count("lockpick")], 18)
+		var lp := LockpickPlay.from(int(lk.level), w.chests.pick_chance(u), 0)     # GP-LOCKPICK: the game this lock gives
+		ui._label("It is locked (lock level %d: %d pins). Picking it is a game of timing: catch each pin as it wobbles at the line; your Stealth gives you about %s seconds for each. Lockpicks: %d. A failed try may snap the pick, and a noisy try can be seen." % [
+			lk.level, lp.n, str(snappedf(lp.window, 0.1)), w.player.inv.count("lockpick")], 18)
 		var b: Button = ui._button("Pick the lock", func(): ui.main.pick_lock(uid), why == "")
 		if why != "":
 			ui._label(why, 16, Color(1, 0.7, 0.55))
