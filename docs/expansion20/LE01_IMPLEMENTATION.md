@@ -103,9 +103,18 @@ death (OD-LE-13B); business accounts and identity (OD-LE-04/07); hoarding and sp
 sees (OD-LE-14); performance targets (OD-LE-15). And any purchase choice weighed by opinion waits for the Build 19 judgment
 recovery (section 2).
 
-## 5. Verification
+## 5. Verification (2026-10-26, code at `fc8f648`; later commits change only comments, docs and tests)
 
-`game/tests/economy_model_test.gd` (every contract above, including a full day stepped with the model on and off: the
-saved world identical apart from the economy key), `game/tests/economy_foundation_test.gd` (unchanged, still passing), and
-the gates recorded in the worker report and the register (G0 with the switch off; `economy_sim.gd --economy` 30 days on
-seeds 1 and 2 for conservation and behaviour).
+| Check | Result |
+|---|---|
+| `economy_model_test.gd` | 113 checks, 0 failures (includes a full day stepped with the model on and off: the saved world identical apart from the economy key; and `test_opinion_is_weighed`) |
+| `economy_foundation_test.gd` | 89 checks, 0 failures (unchanged) |
+| `run_tests.gd`, `start_test.gd`, `multiplayer_c_test.gd` | 3600 checks, 523 steps, 340 checks; 0 failures |
+| G0, switch off (`tools/sim_gate.py`, seeds 1 and 2, 30 days, checks 10 and 30) | PASS, identical to the baseline |
+| `economy_sim.gd --economy`, seeds 1 and 2, 30 days | LEAKS: currency 0, items none, deposits none, animals none (both seeds); fingerprints at days 10 and 30 identical to the G0 baseline, so the model changed no behaviour |
+
+What the model recorded in 30 days: seed 1: 500 events (the ring full, ordered), 1944 knowledge entries, 119 needs recorded
+(13 still dirty), no offers, reservations or links (nothing in live play posts them yet); seed 2: 500, 1712, 127 (9). The
+saved economy section was 442 KB and 401 KB, almost all knowledge from dealings; it grows with who has dealt with whom
+(bounded by pairs and items, not by time). Whether that size is acceptable on a phone is a performance question for
+OD-LE-15; a compact encoding is an engineering option for LE-02 that changes no rule.

@@ -229,7 +229,8 @@ func profile(ref: String) -> Dictionary:
 ## The person the shared Expansion 19 judgment model judges for this actor (JudgmentLive.person_of_ref: a villager, a player,
 ## a household's responsible adult), a till answering to its controller; -1 when nobody is judged (the manor, the chapel,
 ## a settlement, an unknown ref). A ref mapping only: the economy keeps no opinion, trust or reputation of its own (owner
-## rule 2026-10-26, carryover directive s.7) and nothing in LE-01 calls this to decide.
+## rule 2026-10-26, carryover directive s.7) and nothing in LE-01 calls this to decide. When a decision does, opinion is weighed
+## in the shared JudgmentWeighting.choose with the other factors and may lead to a refusal; no fixed cutoff (EconKnowledge).
 func judged_person(ref: String) -> int:
 	var c := controller(ref)
 	return JudgmentLive.person_of_ref(w, c) if c != "" and kind(c) in ["npc", "player", "hh"] else -1

@@ -23,6 +23,10 @@ extends RefCounted
 ## the shared Expansion 19 model's and is read there when a decision needs it: JudgmentStore.trust_of, Relations.peek().regard,
 ## JudgmentSocial.regard, chosen among feasible options by JudgmentWeighting.choose (as JudgmentLive.pick_seller does), with
 ## EconActor.judged_person mapping an economy ref to the person judged. Nothing in LE-01 reads or decides on opinion.
+## DECISION SEAM (LE-02 onward; owner rule 2026-10-26): opinion is ONE weighed factor beside need, scarcity, alternatives,
+## price, relationships and personality in JudgmentWeighting.choose. An NPC may refuse a deal because of it and another in the
+## same circumstances may deal out of necessity: never a fixed regard or reputation cutoff that refuses automatically, never a
+## rule or clamp that keeps every deal possible regardless of preference. Weights and formulas are owner-held.
 ## Reliability and forgetting: OWNER DECISION OD-LE-10. Placeholder: no confidence is computed (reliability() returns
 ## RELIABILITY_UNDECIDED) and nothing is forgotten or decays; an entry only ever has its price and seen_day refreshed.
 ## Travel feasibility (design s.3) is not a stored field: `location` is recorded and LE-02 judges the route.
